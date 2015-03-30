@@ -1,0 +1,2 @@
+# smw
+Simple Monograph Workflow
