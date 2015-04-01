@@ -1,0 +1,25 @@
+{% load static from staticfiles %}
+{% load bootstrap3 %}
+<html>
+	<head>
+	<title>{% block title %}{% endblock title %}</title>
+	{% block head %}{% endblock head %}
+	{% bootstrap_css %}
+	<link href="{% static "css/font-awesome.min.css" %}" rel="stylesheet">
+    {% block css %}{% endblock %}
+	</head>
+
+	<body>
+	{% include "nav.html" %}
+	<div class="container"> 
+		{% block body %}{% endblock body %}
+	</div>
+	</body>
+
+	<footer>
+	{% block footer %}{% endblock footer %}
+	</footer>
+	<script type="text/javascript" src="{% static "js/jquery.js" %}"></script>
+	{% bootstrap_javascript %}
+	{% block js %}{% endblock %}
+</html>
