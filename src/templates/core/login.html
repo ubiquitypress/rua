@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% load bootstrap3 %}
+
+{% block body %}
+  	<form class="form-signin" method="POST">
+  		{% csrf_token %}
+        <h3 class="form-signin-heading">Please sign in</h3>
+        <label for="inputEmail" class="sr-only">Username</label>
+        <input type="username" id="user_name" name="user_name" class="form-control" placeholder="Username" required="" autofocus="">
+        <label for="inputPassword" class="sr-only">Password</label>
+        <input type="password" id="user_pass" name="user_pass" class="form-control" placeholder="Password" required="">
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+    </form>
+{% endblock body %}
