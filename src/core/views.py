@@ -6,7 +6,8 @@ from django.contrib import messages
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
 from django import forms
-from django.contrib.auth.forms import UserCreationForm
+
+from core.forms import UserCreationForm
 
 # Website Views
 
@@ -65,7 +66,7 @@ def register(request):
 		form = UserCreationForm(request.POST)
 		if form.is_valid():
 			new_user = form.save()
-			return HttpResponseRedirect("/books/")
+			return redirect(reverse('login'))
 	else:
 		form = UserCreationForm()
 
