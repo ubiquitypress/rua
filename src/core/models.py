@@ -6,6 +6,8 @@ from django.contrib.auth.models import User
 import uuid
 import os
 
+from autoslug import AutoSlugField
+
 fs = FileSystemStorage(location=settings.MEDIA_ROOT)
 
 SALUTATION_CHOICES = (
@@ -47,3 +49,53 @@ class Profile(models.Model):
 	email_sent = models.DateTimeField(blank=True, null=True)
 	date_confirmed = models.DateTimeField(blank=True, null=True)
 	confirmation_code = models.CharField(max_length=200, blank=True, null=True)
+
+class Author(models.Model):
+	first_name = models.CharField(max_length=100)
+	middle_name = models.CharField(max_length=100, null=True, blank=True)
+	last_name = models.CharField(max_length=100)
+	salutation = models.CharField(max_length=10, choices=SALUTATION_CHOICES, null=True, blank=True)
+	institution = models.CharField(max_length=1000)
+	department = models.CharField(max_length=300, null=True, blank=True)
+	country = models.CharField(max_length=300, choices=COUNTRY_CHOICES)
+	author_email = models.CharField(max_length=100)
+	biography = models.TextField(max_length=3000, null=True, blank=True)
+	orcid = models.CharField(max_length=40, null=True, blank=True, verbose_name="ORCiD")
+	twitter = models.CharField(max_length=300, null=True, blank=True, verbose_name="Twitter Handle")
+	linkedin = models.CharField(max_length=300, null=True, blank=True, verbose_name="Linkedin Profile")
+	facebook = models.CharField(max_length=300, null=True, blank=True, verbose_name="Facebook Profile")
+
+class Book(models.Model):
+	title = models.CharField(max_length=1000)
+	subtitle = models.CharField(max_length=1000, null=True, blank=True)
+	series = models.ForeignKey('Series', null=True, blank=True)
+	author = models.ManyToManyField('Author')
+	editor = models.ManyToManyField('Editor', null=True, blank=True)
+	description = models.TextField(max_length=5000)
+	keywords = models.TextField(max_length=1000)
+	subject = models.ManyToManyField('Subject')
+	license = models.ForeignKey('License')
+	cover = models.ImageField()
+	submission_date = models.DateTimeField()
+	publicaton_date = models.DateTimeField()
+	doi = models.CharField(max_length=25)
+	pages = models.CharField(max_length=10, null=True, blank=True)
+	slug = AutoSlugField(populate_from='title')
+	files = models.ManyToManyField('Files')
+	 
+class License(models.Model):
+	name = models.CharField(max_length=100)
+	description = models.TextField(null=True, blank=True)
+	url = models.URLField(null=True, blank=True)
+
+class Series(models.Model):
+	name = models.CharField(max_length=100)
+	editor = models.CharField(max_length=250)
+	issn = models.CharField(max_length=15)
+	description = models.TextField(null=True, blank=True)
+	url = models.URLField(null=True, blank=True)
+
+
+
+
+

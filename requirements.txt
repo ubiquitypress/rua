@@ -1,5 +1,5 @@
 Django==1.7.7
-Pillow==2.8.1
+django-autoslug==1.7.2
 django-bootstrap3==5.2.0
+Pillow==2.8.1
 slugify==0.0.1
-wsgiref==0.1.2
