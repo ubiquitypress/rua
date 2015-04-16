@@ -82,9 +82,11 @@ class Book(models.Model):
 	pages = models.CharField(max_length=10, null=True, blank=True)
 	slug = AutoSlugField(populate_from='title')
 	files = models.ManyToManyField('Files')
+	cover_letter = models.CharField(max_length=2000, null=True, blank=True)
 	 
 class License(models.Model):
-	name = models.CharField(max_length=100)
+	name = models.CharField(max_length=1000)
+	short_name = models.CharField(max_length=100)
 	description = models.TextField(null=True, blank=True)
 	url = models.URLField(null=True, blank=True)
 
@@ -95,17 +97,48 @@ class Series(models.Model):
 	description = models.TextField(null=True, blank=True)
 	url = models.URLField(null=True, blank=True)
 
+
 class Editor(models.Model):
-	pass
+	first_name = models.CharField(max_length=100)
+	middle_name = models.CharField(max_length=100, null=True, blank=True)
+	last_name = models.CharField(max_length=100)
+	salutation = models.CharField(max_length=10, choices=SALUTATION_CHOICES, null=True, blank=True)
+	institution = models.CharField(max_length=1000)
+	department = models.CharField(max_length=300, null=True, blank=True)
+	country = models.CharField(max_length=300, choices=COUNTRY_CHOICES)
+	author_email = models.CharField(max_length=100)
+	biography = models.TextField(max_length=3000, null=True, blank=True)
+	orcid = models.CharField(max_length=40, null=True, blank=True, verbose_name="ORCiD")
+	twitter = models.CharField(max_length=300, null=True, blank=True, verbose_name="Twitter Handle")
+	linkedin = models.CharField(max_length=300, null=True, blank=True, verbose_name="Linkedin Profile")
+	facebook = models.CharField(max_length=300, null=True, blank=True, verbose_name="Facebook Profile")
 
 class Files(models.Model):
-	pass
+	book_id = models.ForeignKey('Book')
+	mime_type = models.CharField(max_length=50)
+	original_filename = models.CharField(max_length=1000)
+	uuid_filename = models.CharField(max_length=100)
+	date_uploaded = models.DateTimeField(auto_now=True)
+	stage_uploaded = models.ForeignKey('Stage')
+	kind = models.CharField(max_length=100)
 
 class Subject(models.Model):
-	pass
+	name = models.CharField(max_length=250)
 
 class Keyword(models.Model):
-	pass
+	name = models.CharField(max_length=250)
+
+class Stage(models.Model):
+	book = models.ForeignKey('Book')
+	proposal = models.DateTimeField(null=True, blank=True)
+	submission = models.DateTimeField(null=True, blank=True)
+	internal_review = models.DateTimeField(null=True, blank=True)
+	external_review = models.DateTimeField(null=True, blank=True)
+	copy_editing = models.DateTimeField(null=True, blank=True)
+	indexing = models.DateTimeField(null=True, blank=True)
+	production = models.DateTimeField(null=True, blank=True)
+	publication = models.DateTimeField(null=True, blank=True)
+
 
 
 
