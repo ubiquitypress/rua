@@ -31,6 +31,7 @@ def profile_images_upload_path(instance, filename):
 
 class Profile(models.Model):
 	user = models.OneToOneField(User)
+	activation_code = models.CharField(max_length=100, null=True, blank=True)
 	salutation = models.CharField(max_length=10, choices=SALUTATION_CHOICES, null=True, blank=True)
 	middle_name = models.CharField(max_length=300, null=True, blank=True)
 	biography = models.TextField(null=True, blank=True)

@@ -27,6 +27,8 @@ TEMPLATE_DEBUG = True
 
 ALLOWED_HOSTS = []
 
+BASE_URL = 'http://localhost:8000/'
+
 
 # Application definition
 
@@ -121,3 +123,5 @@ MESSAGE_TAGS = {
 
 LOGIN_REDIRECT_URL = '/user/profile/'
 LOGIN_URL = '/login/'
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
