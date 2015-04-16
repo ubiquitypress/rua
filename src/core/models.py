@@ -97,6 +97,12 @@ class Series(models.Model):
 	description = models.TextField(null=True, blank=True)
 	url = models.URLField(null=True, blank=True)
 
+	def __unicode__(self):
+		return u'%s' % self.name
+
+	def __repr__(self):
+		return u'%s' % self.name
+
 
 class Editor(models.Model):
 	first_name = models.CharField(max_length=100)
@@ -118,7 +124,7 @@ class Files(models.Model):
 	original_filename = models.CharField(max_length=1000)
 	uuid_filename = models.CharField(max_length=100)
 	date_uploaded = models.DateTimeField(auto_now=True)
-	stage_uploaded = models.ForeignKey('Stage')
+	stage_uploaded = models.IntegerField()
 	kind = models.CharField(max_length=100)
 
 class Subject(models.Model):
