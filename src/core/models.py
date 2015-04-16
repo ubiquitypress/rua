@@ -95,6 +95,15 @@ class Series(models.Model):
 	description = models.TextField(null=True, blank=True)
 	url = models.URLField(null=True, blank=True)
 
+class Editor(models.Model):
+	pass
+
+class Files(models.Model):
+	pass
+
+class Subject(models.Model):
+	pass
+
 
 
 
