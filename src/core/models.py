@@ -72,7 +72,7 @@ class Book(models.Model):
 	author = models.ManyToManyField('Author')
 	editor = models.ManyToManyField('Editor', null=True, blank=True)
 	description = models.TextField(max_length=5000)
-	keywords = models.TextField(max_length=1000)
+	keywords = models.ManyToManyField('Keyword')
 	subject = models.ManyToManyField('Subject')
 	license = models.ForeignKey('License')
 	cover = models.ImageField()
@@ -104,6 +104,8 @@ class Files(models.Model):
 class Subject(models.Model):
 	pass
 
+class Keyword(models.Model):
+	pass
 
 
 
