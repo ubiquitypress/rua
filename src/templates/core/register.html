@@ -6,8 +6,13 @@
 {% block body %}
   <h1>Create an account</h1>
 
-  <form action="" method="post">
-      {{ form.as_p }}
-      <input type="submit" value="Create the account">
-  </form>
+  <form method="post" class="form">
+    {% csrf_token %}
+    {% bootstrap_form form %}
+    {% buttons %}
+        <button type="submit" class="btn btn-primary">
+            <i class="fa fa-user-plus"></i> Register
+        </button>
+    {% endbuttons %}
+</form>
 {% endblock %}
