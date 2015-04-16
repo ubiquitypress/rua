@@ -114,7 +114,6 @@ class Editor(models.Model):
 	facebook = models.CharField(max_length=300, null=True, blank=True, verbose_name="Facebook Profile")
 
 class Files(models.Model):
-	book_id = models.ForeignKey('Book')
 	mime_type = models.CharField(max_length=50)
 	original_filename = models.CharField(max_length=1000)
 	uuid_filename = models.CharField(max_length=100)
