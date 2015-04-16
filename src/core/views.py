@@ -5,6 +5,8 @@ from django.shortcuts import redirect, render, get_object_or_404
 from django.contrib import messages
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
+from django import forms
+from django.contrib.auth.forms import UserCreationForm
 
 # Website Views
 
@@ -33,8 +35,6 @@ def login(request):
 		user = request.POST.get('user_name')
 		pawd = request.POST.get('user_pass')
 
-		print user, pawd
-
 		user = authenticate(username=user, password=pawd)
 
 		if user is not None:
@@ -61,14 +61,21 @@ def logout(request):
 	return redirect(reverse('index'))
 
 def register(request):
-	pass
+	if request.method == 'POST':
+		form = UserCreationForm(request.POST)
+		if form.is_valid():
+			new_user = form.save()
+			return HttpResponseRedirect("/books/")
+	else:
+		form = UserCreationForm()
+
+	return render(request, "core/register.html", {
+		'form': form,
+	})
+
 
 def register_complete(request):
 	pass
 
 def reset_password(request):
-	pass
-
-@login_required
-def admintest(request):
 	pass

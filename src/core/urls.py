@@ -14,6 +14,7 @@ urlpatterns = patterns('',
     url(r'^contact/$', 'core.views.contact', name='contact'),
     url(r'^login/$', 'core.views.login', name='login'),
     url(r'^logout/$', 'core.views.logout', name='logout'),
+    url(r'^register/$', 'core.views.register', name='register'),
 )
 
 
