@@ -103,7 +103,6 @@ class Series(models.Model):
 	def __repr__(self):
 		return u'%s' % self.name
 
-
 class Editor(models.Model):
 	first_name = models.CharField(max_length=100)
 	middle_name = models.CharField(max_length=100, null=True, blank=True)

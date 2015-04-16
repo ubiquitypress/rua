@@ -1,4 +1,4 @@
 <p>Hi {{ user.first_name }},</p>
 <p>Thanks for registering with insert_press_name_here.</p>
-<p>Click this link to activate your account.</p>
+<p>Click this link to <a href="{{ base_url }}login/activate/{{ profile.activation_code }}">activate your account</a>.</p>
 <p>Regards,<br /><br />press_name_here Team</p>
