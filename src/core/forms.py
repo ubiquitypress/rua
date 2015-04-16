@@ -3,6 +3,7 @@ from django.forms import ModelForm
 from django.forms.widgets import CheckboxSelectMultiple
 from django.contrib.auth.models import User
 from django.core.mail import EmailMultiAlternatives
+from django.conf import settings
 
 from core import models
 from core import logic
@@ -43,8 +44,6 @@ class UserCreationForm(forms.ModelForm):
 		user.is_active = False
 		user.save()
 
-		print user.pk
-
 		# Add a profile for this new user and create a new activation code.
 		profile = models.Profile(user=user, activation_code=uuid.uuid4())
 		profile.save()
@@ -53,7 +52,7 @@ class UserCreationForm(forms.ModelForm):
 		subject, from_email, to = 'Registration Confirmation', "from_address@press.com", user.email
 		html_template = 'email/html_register.html'
 		text_template = 'email/text_register.html'
-		context = {'user': user, 'profile': profile}
+		context = {'user': user, 'profile': profile, 'base_url': settings.BASE_URL}
 		logic.send_email(subject=subject, context=context, from_email=from_email, to=to, html_template=html_template, text_template=text_template)
 		
 

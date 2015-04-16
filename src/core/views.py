@@ -6,8 +6,12 @@ from django.contrib import messages
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
 from django import forms
+from django.utils import timezone
 
 from core.forms import UserCreationForm
+from core import models
+
+from pprint import pprint
 
 # Website Views
 
@@ -74,9 +78,17 @@ def register(request):
 		'form': form,
 	})
 
-
-def register_complete(request):
-	pass
+def activate(request, code):
+	profile = get_object_or_404(models.Profile, activation_code=code)
+	if profile:
+		profile.user.is_active = True
+		pprint(profile.user.is_active)
+		profile.date_confirmed = timezone.now()
+		profile.activation_code = ''
+		profile.save()
+		profile.user.save()
+		messages.add_message(request, messages.INFO, 'Registration complete, you can login now.')
+		return redirect(reverse('login'))
 
 def reset_password(request):
 	pass
