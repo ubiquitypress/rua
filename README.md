@@ -1,20 +1,8 @@
-# smw
+# SMW
 Simple Monograph Workflow
 
-## why?
-There aren't that many open source systems for Monograph publishing other than the Open Monograph Press. So, why not?
-
-## what?
-An incredibly simply monograph workflow system covering:
-- submission
-- internal review
-- peer review
-- copy editing
-- production
-- publication
-
 # Context
-SMW (Simple Monograph Workflow) is an Open Source application designed to assist with the Monograph publishing life cycle. Stages include:
+SMW is an Open Source application designed to assist with the Monograph publishing life cycle. Stages include:
 
 - optional proposal
 - submission
@@ -56,4 +44,8 @@ You'll now be able to access the server from http://localhost:8000
 To apply this patch to an OJS installation running on PSQL or MSSQL you will need to recreate the tbl_draft_decisions.sql in your own syntax.
 
 # Credit
-OJS-Draft-Editorial was written by Andy Byers at [Ubiquity Press](http://ubiquitypress.com/) for the [Open Library of Humanities](https://www.openlibhums.org).
+A development team of volunteers from [Ubiquity Press](http://ubiquitypress.com/) is working on this software, though it is not supported directly by Ubiquity Press.
+
+- Andy Byers
+- Mauro Sanchez
+- Paige MacKay
