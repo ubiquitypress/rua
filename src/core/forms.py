@@ -60,4 +60,20 @@ class UserCreationForm(forms.ModelForm):
 			user.save()
 		return user
 
+class UserProfileForm(forms.ModelForm):
+
+	class Meta:
+		model = User
+		fields = ("first_name", "last_name", "email")
+
+class ProfileForm(forms.ModelForm):
+
+	class Meta:
+		model = models.Profile
+		fields = ("salutation", "middle_name", "biography", "orcid", "institution", "department", "country", "twitter", "linkedin", "impactstory", "github", "profile_image")
+
+
+
+
+
 		

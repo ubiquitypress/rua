@@ -8,8 +8,8 @@ from django.contrib.auth.decorators import login_required
 from django import forms
 from django.utils import timezone
 
-from core.forms import UserCreationForm
 from core import models
+from core import forms
 
 from pprint import pprint
 
@@ -67,12 +67,12 @@ def logout(request):
 
 def register(request):
 	if request.method == 'POST':
-		form = UserCreationForm(request.POST)
+		form = forms.UserCreationForm(request.POST)
 		if form.is_valid():
 			new_user = form.save()
 			return redirect(reverse('login'))
 	else:
-		form = UserCreationForm()
+		form = forms.UserCreationForm()
 
 	return render(request, "core/register.html", {
 		'form': form,
@@ -82,13 +82,44 @@ def activate(request, code):
 	profile = get_object_or_404(models.Profile, activation_code=code)
 	if profile:
 		profile.user.is_active = True
-		pprint(profile.user.is_active)
 		profile.date_confirmed = timezone.now()
 		profile.activation_code = ''
 		profile.save()
 		profile.user.save()
 		messages.add_message(request, messages.INFO, 'Registration complete, you can login now.')
 		return redirect(reverse('login'))
+
+def view_profile(request):
+	user_profile = models.Profile.objects.get(user=request.user)
+
+	template = 'core/user/profile.html'
+	context = {
+		'user_profile': user_profile,
+	}
+
+	return render(request, template, context)
+	
+@login_required
+def update_profile(request):
+	user_profile = models.Profile.objects.get(user=request.user)
+	user_form = forms.UserProfileForm(instance=request.user)
+	profile_form = forms.ProfileForm(instance=user_profile)
+	if request.method == 'POST':
+		user_form = forms.UserProfileForm(request.POST, instance=request.user)
+		profile_form = forms.ProfileForm(request.POST, request.FILES, instance=user_profile)
+		if profile_form.is_valid() and user_form.is_valid():
+			user = user_form.save()
+			profile = profile_form.save()
+			return redirect(reverse('view_profile'))
+
+	template = 'core/user/update_profile.html'
+	context = {
+		'profile_form' : profile_form,
+		'user_form': user_form,
+	}
+
+	return render(request, template, context)
+
 
 def reset_password(request):
 	pass

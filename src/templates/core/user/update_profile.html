@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% load bootstrap3 %}
+
+{% block title %}Update Profile{% endblock %}
+
+{% block breadcrumbs %}
+    <ol class="breadcrumb">
+	  <li><a href="/">Home</a></li>
+	  <li><a href="">User</a></li>
+	  <li class="active">Profile</li>
+	  <li class="active">Update</li>
+	</ol>
+{% endblock %}
+
+{% block body %}
+<h1>Update Profile</h1>
+<div class="col-md-5">
+  	<form method="post" class="form" enctype="multipart/form-data">
+	    {% csrf_token %}
+	    {% bootstrap_form user_form %}
+	    {% bootstrap_form profile_form %}
+	    {% buttons %}
+	        <button name="register" id="register" type="submit" class="btn btn-primary">
+	            <i class="fa fa-user"></i> Update Profile
+	        </button>
+	    {% endbuttons %}
+	</form>
+</div>
+{% endblock %}

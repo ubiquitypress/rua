@@ -13,8 +13,10 @@
 	<body>
 	{% include "nav.html" %}
 	<div class="container"> 
+		{% block breadcrumbs %}
+		{% endblock %}
 		{% for message in messages %}
-			<div class="alert alert-{{ message.tags }} alert-dismissible" role="alert">
+			<div class="alert alert-{{ message.tags }} alert-dismissible fade" role="alert">
 				<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 				{{ message }}
 			</div>
@@ -28,5 +30,9 @@
 	</footer>
 	<script type="text/javascript" src="{% static "js/jquery.js" %}"></script>
 	<script type="text/javascript" src="{% static "js/bootstrap.min.js" %}"></script>
+	<script src="{% static "js/holder.js" %}"></script>
+	<script type="text/javascript">
+		$(".alert").delay(200).addClass("in").fadeOut(2000);
+	</script>
 	{% block js %}{% endblock %}
 </html>

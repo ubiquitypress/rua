@@ -32,3 +32,42 @@
   border-top-left-radius: 0;
   border-top-right-radius: 0;
 }
+
+.btn-social {
+    color: white;
+    opacity: 0.8;
+}
+
+.btn-social:hover {
+    color: white;
+    opacity: 1;
+    text-decoration: none;
+}
+
+.btn-facebook {
+    background-color: #3b5998;
+}
+
+.btn-twitter {
+    background-color: #00aced;
+}
+
+.btn-linkedin {
+    background-color: #0e76a8;
+}
+
+.btn-google {
+    background-color: #c32f10;
+}
+
+.btn-impact {
+    background-color: #ff4000;
+}
+
+.btn-github {
+    background-color: #333333;
+}
+
+.btn-orcid {
+    background-color: #A7CF00;
+}
