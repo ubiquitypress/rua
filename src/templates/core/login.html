@@ -10,5 +10,8 @@
         <label for="inputPassword" class="sr-only">Password</label>
         <input type="password" id="user_pass" name="user_pass" class="form-control" placeholder="Password" required="">
         <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+        <br />
+        <p class="small">Forgotten your password? <a href="{% url 'unauth_reset' %}">Reset it.</a></p>
     </form>
+
 {% endblock body %}

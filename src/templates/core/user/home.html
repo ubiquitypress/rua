@@ -23,9 +23,7 @@
                     <span class="icon-cog icon-white"></span><span class="caret"></span>
                 </a>
                 <ul class="dropdown-menu">
-                	<li><a href="{% url 'view_profile' %}"><span class="icon-wrench"></span><i class="fa fa-user"></i> My Profile</a></li>
-                    <li><a href="{% url 'update_profile' %}"><span class="icon-wrench"></span><i class="fa fa-cog"></i> Update Profile</a></li>
-                    <li><a href="{% url 'reset_password' %}"><span class="icon-wrench"></span><i class="fa fa-key"></i> Reset Password</a></li>
+                	{% include "core/user/action_bar.html" %}
                 </ul>
             </div>
         </div>

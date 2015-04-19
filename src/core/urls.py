@@ -18,6 +18,9 @@ urlpatterns = patterns('',
     url(r'^register/$', 'core.views.register', name='register'),
     url(r'^login/activate/(?P<code>[-\w./]+)/$', 'core.views.activate', name='activate'),
 
+    # Unauthenticated password reset
+    url(r'^login/reset/$', 'core.views.unauth_reset', name='unauth_reset'),
+
     # User profile
     url(r'^user/$', 'core.views.user_home', name='user_home'),
     url(r'^user/profile/$', 'core.views.view_profile', name='view_profile'),

@@ -15,7 +15,22 @@
 
 {% block body %}
 <div class="col-md-12">
-	<h1>Update Profile</h1>
+	<div class="row">
+		<div class="col-md-11">
+			<h1>Update Profile</h1>
+		</div>
+		<div class="col-md-1">
+            <div class="btn-group">
+                <a class="btn dropdown-toggle btn-primary" data-toggle="dropdown" href="#">
+                    Action 
+                    <span class="icon-cog icon-white"></span><span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu">
+                	{% include "core/user/action_bar.html" %}
+                </ul>
+            </div>
+        </div>
+    </div>
 	<br />
   	<form method="post" class="form" enctype="multipart/form-data">
 	    {% csrf_token %}

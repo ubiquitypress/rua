@@ -1,4 +1,5 @@
 from django.contrib.auth import authenticate
+from django.contrib.auth.models import User
 from django.contrib.auth import logout as logout_user
 from django.contrib.auth import login as login_user
 from django.shortcuts import redirect, render, get_object_or_404
@@ -60,6 +61,7 @@ def login(request):
 
 	return render(request, template, context)
 
+@login_required
 def logout(request):
 	messages.info(request, 'You have been logged out.')
 	logout_user(request)
@@ -89,6 +91,7 @@ def activate(request, code):
 		messages.add_message(request, messages.INFO, 'Registration complete, you can login now.')
 		return redirect(reverse('login'))
 
+@login_required
 def view_profile(request):
 	user_profile = models.Profile.objects.get(user=request.user)
 
@@ -120,6 +123,7 @@ def update_profile(request):
 
 	return render(request, template, context)
 
+@login_required
 def user_home(request):
 
 	template = 'core/user/home.html'
@@ -127,9 +131,29 @@ def user_home(request):
 
 	return render(request, template, context)
 
+@login_required
 def reset_password(request):
+
+	if request.method == 'POST':
+		password_1 = request.POST.get('password_1')
+		password_2 = request.POST.get('password_2')
+
+		if password_1 == password_2:
+			if len(password_1) > 8:
+				user = User.objects.get(username=request.user.username)
+				user.set_password(password_1)
+				user.save()
+				messages.add_message(request, messages.SUCCESS, 'Password successfully changed.')
+				return redirect(reverse('user_home'))
+			else:
+				messages.add_message(request, messages.ERROR, 'Password is not long enough, must be greater than 8 characters.')
+		else:
+			messages.add_message(request, messages.ERROR, 'Your passwords do not match.')
 	
 	template = 'core/user/reset_password.html'
 	context = {}
 
 	return render(request, template, context)
+
+def unauth_reset(request):
+	pass
