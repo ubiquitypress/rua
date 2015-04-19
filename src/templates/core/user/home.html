@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% load bootstrap3 %}
+
+{% block title %}User Home{% endblock %}
+
+{% block breadcrumbs %}
+    <ol class="breadcrumb">
+	  <li><a href="/">Home</a></li>
+	  <li class="active">User</li>
+	</ol>
+{% endblock %}
+
+{% block body %}
+<div class="col-md-12">
+	<div class="row">
+		<div class="col-md-11">
+			<h1>User Home</h1>
+		</div>
+		<div class="col-md-1">
+            <div class="btn-group">
+                <a class="btn dropdown-toggle btn-primary" data-toggle="dropdown" href="#">
+                    Action 
+                    <span class="icon-cog icon-white"></span><span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu">
+                	<li><a href="{% url 'view_profile' %}"><span class="icon-wrench"></span><i class="fa fa-user"></i> My Profile</a></li>
+                    <li><a href="{% url 'update_profile' %}"><span class="icon-wrench"></span><i class="fa fa-cog"></i> Update Profile</a></li>
+                    <li><a href="{% url 'reset_password' %}"><span class="icon-wrench"></span><i class="fa fa-key"></i> Reset Password</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+	<div class="row">
+		<div class="col-md-4">
+			<h3><i class="fa fa-tasks"></i>&nbsp;Tasks</h3>
+			<div class="bs-callout bs-callout-primary" id="callout-helper-bg-specificity">
+				<label class="checkbox-inline">
+				  <input type="checkbox" id="inlineCheckbox3" value="option3"> A submission task
+				</label>
+			</div>
+			<div class="bs-callout bs-callout-success" id="callout-helper-bg-specificity">
+				<label class="checkbox-inline">
+				  <input type="checkbox" id="inlineCheckbox3" value="option3"> A review task
+				</label>
+			</div>
+			<div class="bs-callout bs-callout-warning" id="callout-helper-bg-specificity">
+				<label class="checkbox-inline">
+				  <input type="checkbox" id="inlineCheckbox3" value="option3"> A copyediting task
+				</label>
+			</div>
+			<div class="bs-callout bs-callout-default" id="callout-helper-bg-specificity">
+				<label class="checkbox-inline">
+				  <input type="checkbox" id="inlineCheckbox3" value="option3"> A production task
+				</label>
+			</div>
+		</div>
+		<div class="col-md-4">
+			<h3><i class="fa fa-tasks"></i>&nbsp;My Submissions</h3>
+			<div class="bs-callout bs-callout-primary" id="callout-helper-bg-specificity">
+				<p>Submission 1</p>
+			</div>
+			<div class="bs-callout bs-callout-primary" id="callout-helper-bg-specificity">
+				<p>Submission 2</p>
+			</div>
+			<div class="bs-callout bs-callout-primary" id="callout-helper-bg-specificity">
+				<p>Submission 3</p>
+			</div>
+			<div class="bs-callout bs-callout-primary" id="callout-helper-bg-specificity">
+				<p>Submission 4</p>
+			</div>
+		</div>
+		<div class="col-md-4">
+			<h3><i class="fa fa-tasks"></i>&nbsp;Editor</h3>
+			<div class="bs-callout bs-callout-primary" id="callout-helper-bg-specificity">
+				<p>New Submissions</p>
+			</div>
+			<div class="bs-callout bs-callout-success" id="callout-helper-bg-specificity">
+				<p>Submissions in Review</p>
+			</div>
+			<div class="bs-callout bs-callout-warning" id="callout-helper-bg-specificity">
+				<p>Submissions in Editing</p>
+			</div>
+			<div class="bs-callout bs-callout-default" id="callout-helper-bg-specificity">
+				<p>Submissions in Production</p>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}

@@ -17,11 +17,12 @@ urlpatterns = patterns('',
     url(r'^logout/$', 'core.views.logout', name='logout'),
     url(r'^register/$', 'core.views.register', name='register'),
     url(r'^login/activate/(?P<code>[-\w./]+)/$', 'core.views.activate', name='activate'),
-    url(r'^login/reset/$', 'core.views.reset_password', name='reset_password'),
 
     # User profile
+    url(r'^user/$', 'core.views.user_home', name='user_home'),
     url(r'^user/profile/$', 'core.views.view_profile', name='view_profile'),
     url(r'^user/profile/update/$', 'core.views.update_profile', name='update_profile'),
+    url(r'^user/profile/resetpassword/$', 'core.views.reset_password', name='reset_password'),
 )
 
 # Allow Django to serve static content only in debug/dev mode

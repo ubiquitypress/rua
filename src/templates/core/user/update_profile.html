@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load static from staticfiles %}
 {% load bootstrap3 %}
 
 {% block title %}Update Profile{% endblock %}
@@ -6,24 +7,86 @@
 {% block breadcrumbs %}
     <ol class="breadcrumb">
 	  <li><a href="/">Home</a></li>
-	  <li><a href="">User</a></li>
-	  <li class="active">Profile</li>
+	  <li><a href="{% url 'user_home' %}">User</a></li>
+	  <li><a href="{% url 'view_profile' %}">Profile</a></li>
 	  <li class="active">Update</li>
 	</ol>
 {% endblock %}
 
 {% block body %}
-<h1>Update Profile</h1>
-<div class="col-md-5">
+<div class="col-md-12">
+	<h1>Update Profile</h1>
+	<br />
   	<form method="post" class="form" enctype="multipart/form-data">
 	    {% csrf_token %}
-	    {% bootstrap_form user_form %}
-	    {% bootstrap_form profile_form %}
-	    {% buttons %}
-	        <button name="register" id="register" type="submit" class="btn btn-primary">
-	            <i class="fa fa-user"></i> Update Profile
-	        </button>
-	    {% endbuttons %}
+		  <div class="form-group">
+		  	<div class="row">
+		  		<div class="col-md-3">{% bootstrap_field profile_form.salutation %}</div>
+		  		<div class="col-md-3">{% bootstrap_field user_form.first_name %}</div>
+		  		<div class="col-md-3">{% bootstrap_field profile_form.middle_name %}</div>
+		  		<div class="col-md-3">{% bootstrap_field user_form.last_name %}</div>	    
+		  	</div>
+		  </div>
+		  <hr />
+		  <div class="form-group">
+		  	<div class="row">
+		  		<div class="col-md-12">{% bootstrap_field profile_form.biography %}</div>    
+		  	</div>
+		  </div>
+		  <hr />
+		  <div class="form-group">
+		  	<div class="row">
+		  		<div class="col-md-4">{% bootstrap_field profile_form.institution %}</div>
+		  		<div class="col-md-4">{% bootstrap_field profile_form.department %}</div>
+		  		<div class="col-md-4">{% bootstrap_field profile_form.country %}</div>   
+		  	</div>
+		  </div>
+		  <hr />
+		  <div class="form-group">
+		  	<div class="row">
+		  		<div class="col-md-4">{% bootstrap_field profile_form.orcid %}</div>
+		  		<div class="col-md-4">{% bootstrap_field profile_form.twitter %}</div>
+		  		<div class="col-md-4">{% bootstrap_field profile_form.facebook %}</div> 
+		  		<div class="col-md-4">{% bootstrap_field profile_form.linkedin %}</div>
+		  		<div class="col-md-4">{% bootstrap_field profile_form.impactstory %}</div>
+		  		<div class="col-md-4">{% bootstrap_field profile_form.github %}</div> 
+		  	</div>
+		  </div>
+		  <hr />
+		  <div class="form-group">
+		  	<div class="row">
+		  		<div class="col-md-6">{% bootstrap_field user_form.email %}</div>
+		  		<div class="col-md-6">
+		  			<label class="control-label" for="id_profile_image">Profile Image</label><br />
+		  			<!--
+		  			<span class="btn btn-default btn-file">
+					Browse <input class="input-large" id="id_profile_image" name="profile_image" title="" type="file">
+					</span>
+					-->
+					<div class="input-group">
+		                <span class="input-group-btn">
+		                    <span class="btn btn-primary btn-file">
+		                        Browse&hellip; <input type="file" id="id_profile_image" name="profile_image">
+		                    </span>
+		                </span>
+		                <input type="text" class="form-control" readonly>
+		            </div>
+				</div>
+		  		</div>    
+		  	</div>
+		  </div>
+			{% buttons %}
+		        <button name="register" id="register" type="submit" class="btn btn-primary" style="margin-left:15px;">
+		            <i class="fa fa-user"></i> Update Profile
+		        </button>
+		    {% endbuttons %}
+		</form>
+
 	</form>
+
 </div>
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript" src="{% static "js/fancyfile.js" %}"></script>
 {% endblock %}

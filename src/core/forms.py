@@ -70,7 +70,7 @@ class ProfileForm(forms.ModelForm):
 
 	class Meta:
 		model = models.Profile
-		fields = ("salutation", "middle_name", "biography", "orcid", "institution", "department", "country", "twitter", "linkedin", "impactstory", "github", "profile_image")
+		fields = ("salutation", "middle_name", "biography", "orcid", "institution", "department", "country", "twitter", "facebook", "linkedin", "impactstory", "github", "profile_image")
 
 
 

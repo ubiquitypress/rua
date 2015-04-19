@@ -120,6 +120,16 @@ def update_profile(request):
 
 	return render(request, template, context)
 
+def user_home(request):
+
+	template = 'core/user/home.html'
+	context = {}
+
+	return render(request, template, context)
 
 def reset_password(request):
-	pass
+	
+	template = 'core/user/reset_password.html'
+	context = {}
+
+	return render(request, template, context)

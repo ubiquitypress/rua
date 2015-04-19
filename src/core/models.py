@@ -42,6 +42,7 @@ class Profile(models.Model):
 	department = models.CharField(max_length=300, null=True, blank=True)
 	country = models.CharField(max_length=300, choices=COUNTRY_CHOICES)
 	twitter = models.CharField(max_length=300, null=True, blank=True, verbose_name="Twitter Handle")
+	facebook = models.CharField(max_length=300, null=True, blank=True, verbose_name="Facebook Handle")
 	linkedin = models.CharField(max_length=300, null=True, blank=True, verbose_name="Linkedin Profile")
 	impactstory = models.CharField(max_length=300, null=True, blank=True, verbose_name="ImpactStory ID")
 	github = models.CharField(max_length=300, null=True, blank=True, verbose_name="Github Username")

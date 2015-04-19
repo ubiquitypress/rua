@@ -11,6 +11,7 @@
 	</head>
 
 	<body>
+	<div id="wrap">
 	{% include "nav.html" %}
 	<div class="container"> 
 		{% block breadcrumbs %}
@@ -23,16 +24,24 @@
 		{% endfor %}
 		{% block body %}{% endblock body %}
 	</div>
+	</div>
 	</body>
 
-	<footer>
-	{% block footer %}{% endblock footer %}
-	</footer>
+	<footer class="footer">
+      <div class="container">
+        <p class="text-muted">Copyright &copy; Press Name Here</p>
+      </div>
+    </footer>
 	<script type="text/javascript" src="{% static "js/jquery.js" %}"></script>
 	<script type="text/javascript" src="{% static "js/bootstrap.min.js" %}"></script>
 	<script src="{% static "js/holder.js" %}"></script>
 	<script type="text/javascript">
 		$(".alert").delay(200).addClass("in").fadeOut(2000);
+	</script>
+	<script type="text/javascript">
+		$('input[id=lefile]').change(function() {
+		$('#id_profile_image').val($(this).val());
+		});
 	</script>
 	{% block js %}{% endblock %}
 </html>
