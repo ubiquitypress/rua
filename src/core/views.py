@@ -3,11 +3,13 @@ from django.contrib.auth.models import User
 from django.contrib.auth import logout as logout_user
 from django.contrib.auth import login as login_user
 from django.shortcuts import redirect, render, get_object_or_404
+from django.http import HttpResponseRedirect, Http404, HttpResponse
 from django.contrib import messages
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
 from django import forms
 from django.utils import timezone
+from django.views.decorators.csrf import csrf_exempt
 
 from core import models
 from core import forms
@@ -126,7 +128,7 @@ def update_profile(request):
 @login_required
 def user_home(request):
 
-	task_list = models.Task.objects.filter(assignee=request.user).order_by('due')
+	task_list = models.Task.objects.filter(assignee=request.user, completed__isnull=True).order_by('due')
 
 	template = 'core/user/home.html'
 	context = {
@@ -161,3 +163,16 @@ def reset_password(request):
 
 def unauth_reset(request):
 	pass
+
+
+# AJAX Handlers
+
+@csrf_exempt
+@login_required
+def task_complete(request, task_id):
+
+	task = get_object_or_404(models.Task, pk=task_id, assignee=request.user, completed__isnull=True)
+	task.completed = timezone.now()
+	task.save()
+	return HttpResponse('Thanks')
+

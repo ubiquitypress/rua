@@ -184,6 +184,7 @@ class Task(models.Model):
 	workflow = models.CharField(max_length=50, choices=task_choices())
 	assigned = models.DateField(auto_now_add=True, null=True, blank=True)
 	due = models.DateField(null=True, blank=True)
+	completed = models.DateField(null=True, blank=True)
 
 
 

@@ -32,9 +32,9 @@
 		<div class="col-md-4">
 			<h3><i class="fa fa-tasks"></i>&nbsp;Tasks</h3>
 			{% for task in task_list %}
-			<div class="bs-callout bs-callout-{{ task.workflow }}" id="callout-helper-bg-specificity">
+			<div id="task-{{ task.id }}" class="bs-callout bs-callout-{{ task.workflow }}" id="callout-helper-bg-specificity">
 				<label class="checkbox-inline">
-				  <input type="checkbox" id="{{ task.id }}" value="{{ task.id }}"> {{ task.text }} <span class="small">- {{ task.due }}</span>
+				  <input type="checkbox" id="{{ task.id }}" value="{{ task.id }}"> {{ task.text }}{% if task.due %} <span class="small">- {{ task.due }}</span>{% endif %}
 				</label>
 			</div>
 			{% endfor %}
@@ -71,4 +71,17 @@
 		</div>
 	</div>
 </div>
+
+{% endblock %}
+{% block js %}
+<script type="text/javascript">
+$(document).ready(function() {    
+  $(":checkbox").click(function(){
+        var id = $(this).attr('id');
+        var div_id = "#task-" + $(this).attr('id');
+        $.post("/user/task/" + id + "/complete/");
+    	$( div_id ).remove()
+    });    
+});
+</script>
 {% endblock %}
