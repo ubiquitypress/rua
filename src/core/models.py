@@ -31,6 +31,14 @@ def profile_images_upload_path(instance, filename):
     path = "profile_images/"
     return os.path.join(path, filename)
 
+def task_choices():
+	choices = (
+		('submission', 'Submission'),
+		('review', 'Review'),
+		('editing', 'Editing'),
+		('production', 'Production'),
+	)
+
 class Profile(models.Model):
 	user = models.OneToOneField(User)
 	activation_code = models.CharField(max_length=100, null=True, blank=True)
@@ -77,19 +85,31 @@ class Book(models.Model):
 	subject = models.ManyToManyField('Subject')
 	license = models.ForeignKey('License')
 	cover = models.ImageField()
-	submission_date = models.DateTimeField()
-	publicaton_date = models.DateTimeField()
-	doi = models.CharField(max_length=25)
+	submission_date = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+	publicaton_date = models.DateTimeField(null=True, blank=True)
+	doi = models.CharField(max_length=25, null=True, blank=True)
 	pages = models.CharField(max_length=10, null=True, blank=True)
 	slug = AutoSlugField(populate_from='title')
 	files = models.ManyToManyField('Files')
 	cover_letter = models.CharField(max_length=2000, null=True, blank=True)
+
+	def __unicode__(self):
+		return u'%s' % self.title
+
+	def __repr__(self):
+		return u'%s' % self.title
 	 
 class License(models.Model):
 	name = models.CharField(max_length=1000)
 	short_name = models.CharField(max_length=100)
 	description = models.TextField(null=True, blank=True)
 	url = models.URLField(null=True, blank=True)
+
+	def __unicode__(self):
+		return u'%s' % self.short_name
+
+	def __repr__(self):
+		return u'%s' % self.short_name
 
 class Series(models.Model):
 	name = models.CharField(max_length=100)
@@ -130,11 +150,23 @@ class Files(models.Model):
 class Subject(models.Model):
 	name = models.CharField(max_length=250)
 
+	def __unicode__(self):
+		return u'%s' % self.name
+
+	def __repr__(self):
+		return u'%s' % self.name
+
 class Keyword(models.Model):
 	name = models.CharField(max_length=250)
 
+	def __unicode__(self):
+		return u'%s' % self.name
+
+	def __repr__(self):
+		return u'%s' % self.name
+
 class Stage(models.Model):
-	book = models.ForeignKey('Book')
+	book = models.ForeignKey(Book)
 	proposal = models.DateTimeField(null=True, blank=True)
 	submission = models.DateTimeField(null=True, blank=True)
 	internal_review = models.DateTimeField(null=True, blank=True)
@@ -143,6 +175,15 @@ class Stage(models.Model):
 	indexing = models.DateTimeField(null=True, blank=True)
 	production = models.DateTimeField(null=True, blank=True)
 	publication = models.DateTimeField(null=True, blank=True)
+
+class Task(models.Model):
+	book = models.ForeignKey(Book, null=True, blank=True)
+	creator = models.ForeignKey(User, related_name='creator')
+	assignee = models.ForeignKey(User, related_name='assignee')
+	text = models.CharField(max_length=200)
+	workflow = models.CharField(max_length=50, choices=task_choices())
+	assigned = models.DateField(auto_now_add=True, null=True, blank=True)
+	due = models.DateField(null=True, blank=True)
 
 
 

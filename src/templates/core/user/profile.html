@@ -16,7 +16,7 @@
 <div class="container-fluid well span6">
 	<div class="row-fluid">
         <div class="col-md-3" >
-                <div class="bs-callout bs-callout-primary" id="callout-helper-bg-specificity">
+                <div class="bs-callout bs-callout-submission" id="callout-helper-bg-specificity">
     		      <img src="{% if user_profile.profile_image %}{{ MEDIA_URL }}{{ user_profile.profile_image }}{% else %}holder.js/150x150{% endif %}" class="img-thumbnail img-responsive" style="max-width: 150px;">
                     <h3>{{ request.user.first_name }} {{ request.user.last_name }}</h3>
                     <h6><strong>Email:</strong><br /><br />{{ request.user.email }}</h6>
@@ -26,7 +26,7 @@
         </div>
 
         <div class="col-md-8">
-            <div class="bs-callout bs-callout-primary" id="callout-helper-bg-specificity">
+            <div class="bs-callout bs-callout-submission" id="callout-helper-bg-specificity">
                 <h4>Biography</h4>
                 {{ user_profile.biography|safe }}
             </div>

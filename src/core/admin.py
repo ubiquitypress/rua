@@ -17,11 +17,17 @@ class LicenseAdmin(admin.ModelAdmin):
 	list_display = ('name', 'short_name')
 	search_fields = ('name', 'short_name')
 
+class TaskAdmin(admin.ModelAdmin):
+    list_display = ('assignee', 'creator', 'text', 'workflow')
+    list_filter = ('workflow', 'assignee')
+    search_fields = ('text',)
+
 admin_list = [
     (Author, AuthorAdmin),
     (Profile, ProfileAdmin),
     (Book, BookAdmin),
     (License, LicenseAdmin),
+    (Task, TaskAdmin),
     (Files,),
     (Stage,),
     (Subject,),

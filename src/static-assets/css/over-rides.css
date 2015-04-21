@@ -18,22 +18,22 @@
 .bs-callout+.bs-callout {
     margin-top: -5px;
 }
-.bs-callout-default {
+.bs-callout-production {
     border-left-color: #777;
 }
-.bs-callout-default h4 {
+.bs-callout-production h4 {
     color: #777;
 }
-.bs-callout-primary {
+.bs-callout-submission {
     border-left-color: #428bca;
 }
-.bs-callout-primary h4 {
+.bs-callout-submission h4 {
     color: #428bca;
 }
-.bs-callout-success {
+.bs-callout-review {
     border-left-color: #5cb85c;
 }
-.bs-callout-success h4 {
+.bs-callout-review h4 {
     color: #5cb85c;
 }
 .bs-callout-danger {
@@ -42,10 +42,10 @@
 .bs-callout-danger h4 {
     color: #d9534f;
 }
-.bs-callout-warning {
+.bs-callout-editing {
     border-left-color: #f0ad4e;
 }
-.bs-callout-warning h4 {
+.bs-callout-editing h4 {
     color: #f0ad4e;
 }
 .bs-callout-info {

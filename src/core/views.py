@@ -126,8 +126,12 @@ def update_profile(request):
 @login_required
 def user_home(request):
 
+	task_list = models.Task.objects.filter(assignee=request.user).order_by('due')
+
 	template = 'core/user/home.html'
-	context = {}
+	context = {
+		'task_list': task_list,
+	}
 
 	return render(request, template, context)
 
