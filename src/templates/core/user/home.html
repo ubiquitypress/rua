@@ -37,6 +37,10 @@
 				  <input type="checkbox" id="{{ task.id }}" value="{{ task.id }}"> {{ task.text }}{% if task.due %} <span class="small">- {{ task.due }}</span>{% endif %}
 				</label>
 			</div>
+      {% empty %}
+      <div class="bs-callout bs-callout" id="callout-helper-bg-specificity">
+				<p>No tasks</p>
+			</div>
 			{% endfor %}
 		</div>
 		<div class="col-md-4">

@@ -12,8 +12,24 @@
 {% endblock %}
 
 {% block body %}
-<h1>Profile</h1>
-<div class="container-fluid well span6">
+<div class="col-md-12">
+  <div class="row">
+    <div class="col-md-11">
+      <h1>My Profile</h1>
+    </div>
+    <div class="col-md-1">
+            <div class="btn-group">
+                <a class="btn dropdown-toggle btn-primary" data-toggle="dropdown" href="#">
+                    Action
+                    <span class="icon-cog icon-white"></span><span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu">
+                  {% include "core/user/action_bar.html" %}
+                </ul>
+            </div>
+        </div>
+  </div>
+  <div class="container-fluid well span6">
 	<div class="row-fluid">
         <div class="col-md-3" >
                 <div class="bs-callout bs-callout-submission" id="callout-helper-bg-specificity">
@@ -25,7 +41,7 @@
                 </div>
         </div>
 
-        <div class="col-md-8">
+        <div class="col-md-9">
             <div class="bs-callout bs-callout-submission" id="callout-helper-bg-specificity">
                 <h4>Biography</h4>
                 {{ user_profile.biography|safe }}
@@ -37,19 +53,8 @@
 			<button class="btn btn-social btn-impact" type="submit"><i class="fa fa-info-circle"></i>&nbsp;Impactstory</button>
 			<button class="btn btn-social btn-github" type="submit"><i class="fa fa-github"></i>&nbsp;Github</button>
         </div>
-        
-        <div class="col-md-1">
-            <div class="btn-group">
-                <a class="btn dropdown-toggle btn-primary" data-toggle="dropdown" href="#">
-                    Action 
-                    <span class="icon-cog icon-white"></span><span class="caret"></span>
-                </a>
-                <ul class="dropdown-menu">
-                    {% include "core/user/action_bar.html" %}
-                </ul>
-            </div>
-        </div>
 	</div>
+</div>
 </div>
 
 {% endblock %}
