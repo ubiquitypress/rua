@@ -10,6 +10,7 @@ from django.contrib.auth.decorators import login_required
 from django import forms
 from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
+from django.db.models import Q
 
 from core import models
 from core import forms
@@ -103,7 +104,7 @@ def view_profile(request):
 	}
 
 	return render(request, template, context)
-	
+
 @login_required
 def update_profile(request):
 	user_profile = models.Profile.objects.get(user=request.user)
@@ -133,6 +134,10 @@ def user_home(request):
 	template = 'core/user/home.html'
 	context = {
 		'task_list': task_list,
+		'new_submissions': models.Book.objects.filter(stage__current_stage='submission').count(),
+		'in_review': models.Book.objects.filter(Q(stage__current_stage='i_review') | Q(stage__current_stage='e_review')).count(),
+		'in_editing': models.Book.objects.filter(Q(stage__current_stage='copy_editing') | Q(stage__current_stage='indexing')).count(),
+		'in_production': models.Book.objects.filter(stage__current_stage='production').count()
 	}
 
 	return render(request, template, context)
@@ -155,7 +160,7 @@ def reset_password(request):
 				messages.add_message(request, messages.ERROR, 'Password is not long enough, must be greater than 8 characters.')
 		else:
 			messages.add_message(request, messages.ERROR, 'Your passwords do not match.')
-	
+
 	template = 'core/user/reset_password.html'
 	context = {}
 
@@ -175,4 +180,3 @@ def task_complete(request, task_id):
 	task.completed = timezone.now()
 	task.save()
 	return HttpResponse('Thanks')
-

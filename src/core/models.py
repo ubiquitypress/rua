@@ -27,7 +27,7 @@ def profile_images_upload_path(instance, filename):
         filename = str(uuid.uuid4()) + '.' + str(filename.split('.')[1])
     except IndexError:
         filename = str(uuid.uuid4())
-        
+
     path = "profile_images/"
     return os.path.join(path, filename)
 
@@ -84,21 +84,26 @@ class Book(models.Model):
 	keywords = models.ManyToManyField('Keyword')
 	subject = models.ManyToManyField('Subject')
 	license = models.ForeignKey('License')
-	cover = models.ImageField()
-	submission_date = models.DateTimeField(auto_now_add=True, null=True, blank=True)
-	publicaton_date = models.DateTimeField(null=True, blank=True)
+	cover = models.ImageField(null=True, blank=True)
 	doi = models.CharField(max_length=25, null=True, blank=True)
 	pages = models.CharField(max_length=10, null=True, blank=True)
 	slug = AutoSlugField(populate_from='title')
 	files = models.ManyToManyField('Files')
 	cover_letter = models.CharField(max_length=2000, null=True, blank=True)
 
+	# Dates
+	submission_date = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+	publicaton_date = models.DateTimeField(null=True, blank=True)
+
+	# Stage
+	stage = models.ForeignKey('Stage', null=True, blank=True)
+
 	def __unicode__(self):
 		return u'%s' % self.title
 
 	def __repr__(self):
 		return u'%s' % self.title
-	 
+
 class License(models.Model):
 	name = models.CharField(max_length=1000)
 	short_name = models.CharField(max_length=100)
@@ -165,8 +170,19 @@ class Keyword(models.Model):
 	def __repr__(self):
 		return u'%s' % self.name
 
+stage_choices = (
+	('proposal', 'Proposal'),
+	('submission', 'Submission'),
+	('i_review', 'Internal Reivew'),
+	('e_review', 'External Review'),
+	('copy_editing', 'Copy Editing'),
+	('indexing', 'Indexing'),
+	('production', 'Production'),
+	('published', 'Published'),
+)
+
 class Stage(models.Model):
-	book = models.ForeignKey(Book)
+	current_stage = models.CharField(max_length="20", choices=stage_choices, null=True, blank=True)
 	proposal = models.DateTimeField(null=True, blank=True)
 	submission = models.DateTimeField(null=True, blank=True)
 	internal_review = models.DateTimeField(null=True, blank=True)
@@ -185,8 +201,3 @@ class Task(models.Model):
 	assigned = models.DateField(auto_now_add=True, null=True, blank=True)
 	due = models.DateField(null=True, blank=True)
 	completed = models.DateField(null=True, blank=True)
-
-
-
-
-
