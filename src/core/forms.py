@@ -4,6 +4,7 @@ from django.forms.widgets import CheckboxSelectMultiple
 from django.contrib.auth.models import User
 from django.core.mail import EmailMultiAlternatives
 from django.conf import settings
+from functools import partial
 
 from core import models
 from core import logic
@@ -72,6 +73,13 @@ class ProfileForm(forms.ModelForm):
 		model = models.Profile
 		fields = ("salutation", "middle_name", "biography", "orcid", "institution", "department", "country", "twitter", "facebook", "linkedin", "impactstory", "github", "profile_image")
 
+class TaskForm(forms.ModelForm):
+	DateInput = partial(forms.DateInput, {'id': 'due'})
+	due = forms.DateField(widget=DateInput())
+
+	class Meta:
+		model = models.Task
+		fields = ("text","workflow", "due")
 
 
 

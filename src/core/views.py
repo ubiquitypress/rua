@@ -11,11 +11,14 @@ from django import forms
 from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Q
+from django.core import serializers
 
 from core import models
 from core import forms
 
 from pprint import pprint
+import json
+from time import strftime
 
 # Website Views
 
@@ -130,6 +133,7 @@ def update_profile(request):
 def user_home(request):
 
 	task_list = models.Task.objects.filter(assignee=request.user, completed__isnull=True).order_by('due')
+	new_task_form = forms.TaskForm()
 
 	template = 'core/user/home.html'
 	context = {
@@ -137,7 +141,8 @@ def user_home(request):
 		'new_submissions': models.Book.objects.filter(stage__current_stage='submission').count(),
 		'in_review': models.Book.objects.filter(Q(stage__current_stage='i_review') | Q(stage__current_stage='e_review')).count(),
 		'in_editing': models.Book.objects.filter(Q(stage__current_stage='copy_editing') | Q(stage__current_stage='indexing')).count(),
-		'in_production': models.Book.objects.filter(stage__current_stage='production').count()
+		'in_production': models.Book.objects.filter(stage__current_stage='production').count(),
+		'new_task_form': new_task_form,
 	}
 
 	return render(request, template, context)
@@ -180,3 +185,15 @@ def task_complete(request, task_id):
 	task.completed = timezone.now()
 	task.save()
 	return HttpResponse('Thanks')
+
+@login_required
+def task_new(request):
+
+	new_task_form = forms.TaskForm(request.POST)
+	if new_task_form.is_valid():
+		task = new_task_form.save(commit=False)
+		task.creator = request.user
+		task.assignee = request.user
+		task.save()
+		
+		return HttpResponse(json.dumps({'id': task.pk,'text': task.text,'due': task.due.strftime("%d/%m/%Y")}))
