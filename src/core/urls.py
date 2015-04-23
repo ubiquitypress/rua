@@ -9,9 +9,11 @@ urlpatterns = patterns('',
     # Core Site
     url(r'^admin/', include(admin.site.urls)),
     url(r'^submission/', include('submission.urls')),
+    url(r'^workflow/', include('workflow.urls')),
+    
     url(r'^$', 'core.views.index', name='index'),
     url(r'^contact/$', 'core.views.contact', name='contact'),
-    
+
     # Login/Register
     url(r'^login/$', 'core.views.login', name='login'),
     url(r'^logout/$', 'core.views.logout', name='logout'),
@@ -31,7 +33,7 @@ urlpatterns = patterns('',
 
 # Allow Django to serve static content only in debug/dev mode
 if settings.DEBUG:
-    urlpatterns += patterns('', 
+    urlpatterns += patterns('',
         url(r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT}),
         url(r'^404/$', TemplateView.as_view(template_name='404.html')),
         url(r'^500/$', TemplateView.as_view(template_name='500.html')),

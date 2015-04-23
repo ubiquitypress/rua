@@ -91,6 +91,9 @@ class Book(models.Model):
 	files = models.ManyToManyField('Files')
 	cover_letter = models.CharField(max_length=2000, null=True, blank=True)
 
+	# Book Owner
+	owner = models.ForeignKey(User, null=True, blank=True)
+
 	# Dates
 	submission_date = models.DateTimeField(auto_now_add=True, null=True, blank=True)
 	publicaton_date = models.DateTimeField(null=True, blank=True)
@@ -173,7 +176,7 @@ class Keyword(models.Model):
 stage_choices = (
 	('proposal', 'Proposal'),
 	('submission', 'Submission'),
-	('i_review', 'Internal Reivew'),
+	('i_review', 'Internal Review'),
 	('e_review', 'External Review'),
 	('copy_editing', 'Copy Editing'),
 	('indexing', 'Indexing'),

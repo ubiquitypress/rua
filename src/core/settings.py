@@ -43,6 +43,7 @@ INSTALLED_APPS = (
     # Django
     'core',
     'submission',
+    'workflow',
 
     # 3rd Party
     'bootstrap3',
@@ -76,7 +77,7 @@ DATABASES = {
 # Internationalization
 # https://docs.djangoproject.com/en/1.7/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'en-gb'
 
 TIME_ZONE = 'UTC'
 
@@ -125,3 +126,6 @@ LOGIN_REDIRECT_URL = '/user/profile/'
 LOGIN_URL = '/login/'
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+DATE_FORMAT = '%d %b, %Y'
+DATETIME_FORMAT = '%d %b, %Y %H:%M'

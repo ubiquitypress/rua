@@ -61,16 +61,16 @@
 		<div class="col-md-4">
 			<h3><i class="fa fa-tasks"></i>&nbsp;Editor</h3>
 			<div class="bs-callout bs-callout-submission" id="callout-helper-bg-specificity">
-				<p>{{ new_submissions }} New Submissions</p>
+				<p><a href="{% url 'new_submissions' %}">{{ new_submissions }} New Submissions</a></p>
 			</div>
 			<div class="bs-callout bs-callout-review" id="callout-helper-bg-specificity">
-				<p>{{ in_review }} Submissions in Review</p>
+				<p><a href="{% url 'in_review' %}">{{ in_review }} Submissions in Review</a></p>
 			</div>
 			<div class="bs-callout bs-callout-editing" id="callout-helper-bg-specificity">
-				<p>{{ in_editing }} Submissions in Editing</p>
+				<p><a href="{% url 'in_editing' %}">{{ in_editing }} Submissions in Editing</a></p>
 			</div>
 			<div class="bs-callout bs-callout-production" id="callout-helper-bg-specificity">
-				<p>{{ in_production }} Submissions in Production</p>
+				<p><a href="{% url 'in_production' %}">{{ in_production }} Submissions in Production</a></p>
 			</div>
 		</div>
 	</div>
