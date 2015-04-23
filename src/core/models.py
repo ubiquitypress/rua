@@ -37,7 +37,9 @@ def task_choices():
 		('review', 'Review'),
 		('editing', 'Editing'),
 		('production', 'Production'),
+		('personal', 'Personal'),
 	)
+	return choices
 
 class Profile(models.Model):
 	user = models.OneToOneField(User)
