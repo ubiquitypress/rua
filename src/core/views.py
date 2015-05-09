@@ -190,10 +190,13 @@ def task_complete(request, task_id):
 def task_new(request):
 
 	new_task_form = forms.TaskForm(request.POST)
+	pprint(request.POST)
 	if new_task_form.is_valid():
 		task = new_task_form.save(commit=False)
 		task.creator = request.user
 		task.assignee = request.user
 		task.save()
 		
-		return HttpResponse(json.dumps({'id': task.pk,'text': task.text,'due': task.due.strftime("%d/%m/%Y")}))
+		return HttpResponse(json.dumps({'id': task.pk,'text': task.text}))
+	else:
+		return HttpResponse(new_task_form.errors)

@@ -177,7 +177,7 @@ class Keyword(models.Model):
 
 stage_choices = (
 	('proposal', 'Proposal'),
-	('submission', 'Submission'),
+	('submission', 'New Submission'),
 	('i_review', 'Internal Review'),
 	('e_review', 'External Review'),
 	('copy_editing', 'Copy Editing'),

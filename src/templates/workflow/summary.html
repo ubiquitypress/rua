@@ -1,0 +1,22 @@
+<table class="table table-striped">
+	<tr>
+		<td width="30%"><strong>Title</strong></td>
+		<td width="25%"><strong>Subtitle</strong></td>
+		<td width="15%"><strong>Series</strong></td>
+		<td width="15%"><strong>License</strong></td>
+		<td width="15%"><strong>Stage</strong></td>
+	</tr>
+	<tr>
+		<td>{{ submission.title }}</td>
+		<td>{{ submission.subtitle }}</td>
+		<td>{{ submission.series }}</td>
+		<td>{{ submission.license }}</td>
+		<td>{{ submission.stage.get_current_stage_display }}</td>
+	</tr>
+	<tr>
+		<td colspan="5"><strong>Description</strong</td>
+	</tr>
+	<tr>
+		<td colspan="5">{{ submission.description|safe }}</td>
+	</tr>
+</table>

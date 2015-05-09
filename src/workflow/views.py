@@ -27,6 +27,19 @@ def new_submissions(request):
     template = 'workflow/new_submissions.html'
     context = {
         'submission_list': submission_list,
+        'active': 'new',
+    }
+
+    return render(request, template, context)
+
+def view_new_submission(request, submission_id):
+
+    submission = get_object_or_404(models.Book, pk=submission_id)
+
+    template = 'workflow/view_new_submission.html'
+    context = {
+        'submission': submission,
+        'active': 'new',
     }
 
     return render(request, template, context)
@@ -38,6 +51,7 @@ def in_review(request):
     template = 'workflow/in_review.html'
     context = {
         'submission_list': submission_list,
+        'active': 'review',
     }
 
     return render(request, template, context)
@@ -49,6 +63,7 @@ def in_editing(request):
     template = 'workflow/in_editing.html'
     context = {
         'submission_list': submission_list,
+        'active': 'editing',
     }
 
     return render(request, template, context)
@@ -61,6 +76,7 @@ def in_production(request):
     template = 'workflow/in_production.html'
     context = {
         'submission_list': submission_list,
+        'active': 'production',
     }
 
     return render(request, template, context)

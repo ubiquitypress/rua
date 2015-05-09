@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% load bootstrap3 %}
+
+{% block title %}New Submissions{% endblock %}
+
+{% block breadcrumbs %}
+    <ol class="breadcrumb">
+	  <li><a href="{% url 'user_home' %}">User Home</a></li>
+	  <li class="">Workflow</li>
+    <li><a href="{% url 'new_submissions'%}">New Submissions</a></li>
+    <li class="active">{{ submission.id }}</li>
+	</ol>
+{% endblock %}
+
+{% block body %}
+<div class="col-md-12">
+  <h3>{{ submission.title }}</h3>
+  <hr />
+  {% include "workflow/workflow_view_buttons.html" %}
+  <h4>Summary</h4>
+  {% include "workflow/summary.html" %}
+  <hr />
+  <h4>Files</h4>
+  {% include "workflow/submission_files.html" %}
+  <hr />
+  <h4>Action</h4>
+  <p>Select an action below to move this submission through the workflow. Expedite will move the submission passed review and straight into Editing. Note, the book will display that it was not reviewed. Declining will allow you to send an email to the author detailing why the submission is not suitable.</p>
+  <div class="btn-group btn-group-justified" role="group">
+    <div class="btn-group" role="group">
+      <a href="{% url 'new_submissions' %}" type="button" class="btn btn-primary{% if active == 'new' %} active{% endif %}">Internal Review</a>
+    </div>
+    <div class="btn-group" role="group">
+      <a href="{% url 'in_review' %}" type="button" class="btn btn-primary{% if active == 'review' %} active{% endif %}">External Review</a>
+    </div>
+    <div class="btn-group" role="group">
+      <a href="{% url 'in_editing' %}" type="button" class="btn btn-primary{% if active == 'editing' %} active{% endif %}">Expedite to Editing</a>
+    </div>
+    <div class="btn-group" role="group">
+      <a href="{% url 'in_production' %}" type="button" class="btn btn-primary{% if active == 'production' %} active{% endif %}">Decline</a>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

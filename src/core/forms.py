@@ -74,12 +74,11 @@ class ProfileForm(forms.ModelForm):
 		fields = ("salutation", "middle_name", "biography", "orcid", "institution", "department", "country", "twitter", "facebook", "linkedin", "impactstory", "github", "profile_image")
 
 class TaskForm(forms.ModelForm):
-	DateInput = partial(forms.DateInput, {'id': 'due'})
-	due = forms.DateField(widget=DateInput())
 
 	class Meta:
 		model = models.Task
-		fields = ("text","workflow", "due")
+		fields = ("text","workflow")
+		exclude = ("due",)
 
 
 
