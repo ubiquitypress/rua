@@ -7,14 +7,13 @@ from django.db import models, migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('core', '0016_log'),
+        ('core', '0001_squashed_0017_log_short_name'),
     ]
 
     operations = [
-        migrations.AddField(
+        migrations.AlterField(
             model_name='log',
             name='short_name',
-            field=models.CharField(default='', max_length=100),
-            preserve_default=False,
+            field=models.CharField(max_length=100),
         ),
     ]
