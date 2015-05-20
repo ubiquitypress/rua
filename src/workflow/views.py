@@ -92,7 +92,7 @@ def view_log(request, submission_id):
 
     template = 'workflow/log.html'
     context = {
-        'book': book,
+        'submission': book,
         'log_list': log_list,
     }
 
