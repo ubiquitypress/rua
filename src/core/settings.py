@@ -12,6 +12,7 @@ from django.contrib import messages
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+BOOK_DIR = os.path.join(BASE_DIR, 'files', 'books')
 
 
 # Quick-start development settings - unsuitable for production

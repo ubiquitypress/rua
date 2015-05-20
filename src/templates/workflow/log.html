@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% load static from staticfiles %}
+{% load bootstrap3 %}
+
+{% block title %}New Submissions{% endblock %}
+
+{% block breadcrumbs %}
+    <ol class="breadcrumb">
+	  <li><a href="{% url 'user_home' %}">User Home</a></li>
+	  <li class="">Workflow</li>
+    <li>{{ book.title }}</li>
+    <li class="active">Log</li>
+	</ol>
+{% endblock %}
+  
+{% block css %}
+  <link href="{% static "css/timeline.css" %}" rel="stylesheet">
+{% endblock %}
+
+{% block body %}
+<div class="col-md-12">
+  <h3>{{ book.title }} - Log</h3>
+  <hr />
+  <div class="container">
+    <ul class="timeline">
+      {% for item in log_list %}
+        <li {% if forloop.counter|divisibleby:2 %}class="timeline-inverted"{% endif %}>
+            <div class="timeline-badge">
+            </div>
+            <div class="timeline-panel">
+                <div class="timeline-heading">
+                    <h4 class="timeline-title">{{ item.get_kind_display }} {{ item.short_name }}</h4>
+                    <p><small class="text-muted"><i class="fa fa-check"></i> {{ item.date_logged }}</small></p>
+                </div>
+                <div class="timeline-body">
+                    <p>{{ item.message }}</p>
+                </div>
+            </div>
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+</div>
+
+{% endblock %}

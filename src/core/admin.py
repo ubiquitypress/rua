@@ -22,17 +22,23 @@ class TaskAdmin(admin.ModelAdmin):
     list_filter = ('workflow', 'assignee')
     search_fields = ('text',)
 
+class LogAdmin(admin.ModelAdmin):
+    list_display = ('book', 'user', 'kind', 'date_logged')
+    list_filter = ('kind', 'book')
+    search_fields = ('message',)
+
 admin_list = [
     (Author, AuthorAdmin),
     (Profile, ProfileAdmin),
     (Book, BookAdmin),
     (License, LicenseAdmin),
     (Task, TaskAdmin),
-    (Files,),
+    (File,),
     (Stage,),
     (Subject,),
     (Keyword,),
     (Series,),
+    (Log, LogAdmin),
 ]
 
 [admin.site.register(*t) for t in admin_list]

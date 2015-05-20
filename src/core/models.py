@@ -90,7 +90,7 @@ class Book(models.Model):
 	doi = models.CharField(max_length=25, null=True, blank=True)
 	pages = models.CharField(max_length=10, null=True, blank=True)
 	slug = AutoSlugField(populate_from='title')
-	files = models.ManyToManyField('Files')
+	files = models.ManyToManyField('File')
 	cover_letter = models.CharField(max_length=2000, null=True, blank=True)
 
 	# Book Owner
@@ -149,7 +149,7 @@ class Editor(models.Model):
 	linkedin = models.CharField(max_length=300, null=True, blank=True, verbose_name="Linkedin Profile")
 	facebook = models.CharField(max_length=300, null=True, blank=True, verbose_name="Facebook Profile")
 
-class Files(models.Model):
+class File(models.Model):
 	mime_type = models.CharField(max_length=50)
 	original_filename = models.CharField(max_length=1000)
 	uuid_filename = models.CharField(max_length=100)
@@ -206,3 +206,17 @@ class Task(models.Model):
 	assigned = models.DateField(auto_now_add=True, null=True, blank=True)
 	due = models.DateField(null=True, blank=True)
 	completed = models.DateField(null=True, blank=True)
+
+log_choices = (
+	('submission', 'Submission'),
+	('workflow', 'Workflow'),
+	('file', 'File'),
+)
+
+class Log(models.Model):
+	book = models.ForeignKey(Book)
+	user = models.ForeignKey(User)
+	kind = models.CharField(max_length=100, choices=log_choices)
+	short_name = models.CharField(max_length=100)
+	message = models.TextField()
+	date_logged = models.DateTimeField(auto_now_add=True, null=True, blank=True)

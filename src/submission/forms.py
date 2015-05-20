@@ -12,6 +12,7 @@ class SubmitProposal(forms.ModelForm):
 	
 	class Meta:
 		model = models.Proposal
+		fields = ('title', 'description', 'notes', 'uploaded_file')
 
 class SubmitBook(forms.ModelForm):
 	

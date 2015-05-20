@@ -42,33 +42,30 @@
 					</h3>
 				</div>
 			</div>
-			{% for task in task_list %}
-				<div id="task-{{ task.id }}" class="bs-callout bs-callout-{{ task.workflow }}" id="callout-helper-bg-specificity">
-					<label class="checkbox-inline">
-				 	 <input type="checkbox" id="{{ task.id }}" value="{{ task.id }}"> {{ task.text }}{% if task.due %} <span class="small">- {{ task.due }}</span>{% endif %}
-				</label>
-			</div>
+		{% for task in task_list %}
+			<div id="task-{{ task.id }}" class="bs-callout bs-callout-{{ task.workflow }}" id="callout-helper-bg-specificity">
+				<label class="checkbox-inline">
+			 	 <input type="checkbox" id="{{ task.id }}" value="{{ task.id }}"> {{ task.text }}{% if task.due %} <span class="small">- {{ task.due }}</span>{% endif %}
+			</label>
+		</div>
 
-      {% empty %}
-      <div id="new_task" class="bs-callout bs-callout" id="callout-helper-bg-specificity">
-				<p>No tasks</p>
-			</div>
-			{% endfor %}
+      	{% empty %}
+  		<div id="new_task" class="bs-callout bs-callout" id="callout-helper-bg-specificity">
+			<p>No tasks</p>
+		</div>
+		{% endfor %}
 		</div>
 		<div class="col-md-4">
 			<h3><i class="fa fa-tasks"></i>&nbsp;My Submissions</h3>
+			{% for submission in user_submissions %}
 			<div class="bs-callout bs-callout-submission" id="callout-helper-bg-specificity">
-				<p>Submission 1</p>
+				<p>{{ submission.title|truncatechars:70 }}</p>
 			</div>
-			<div class="bs-callout bs-callout-submission" id="callout-helper-bg-specificity">
-				<p>Submission 2</p>
-			</div>
-			<div class="bs-callout bs-callout-submission" id="callout-helper-bg-specificity">
-				<p>Submission 3</p>
-			</div>
-			<div class="bs-callout bs-callout-submission" id="callout-helper-bg-specificity">
-				<p>Submission 4</p>
-			</div>
+			{% empty %}
+			<div class="bs-callout bs-callout" id="callout-helper-bg-specificity">
+			<p>No submissions</p>
+		</div>
+			{% endfor %}
 		</div>
 		<div class="col-md-4">
 			<h3><i class="fa fa-tasks"></i>&nbsp;Editor</h3>

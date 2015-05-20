@@ -143,6 +143,7 @@ def user_home(request):
 		'in_editing': models.Book.objects.filter(Q(stage__current_stage='copy_editing') | Q(stage__current_stage='indexing')).count(),
 		'in_production': models.Book.objects.filter(stage__current_stage='production').count(),
 		'new_task_form': new_task_form,
+		'user_submissions': models.Book.objects.filter(owner=request.user)
 	}
 
 	return render(request, template, context)

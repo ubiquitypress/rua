@@ -5,13 +5,15 @@
 		<th>New File Name</th>
 		<th>Mimetype</th>
 		<th>Download</th>
+		<th>Delete</th>
 	</tr>
 {% for file in submission.files.all %}
 	<tr>
 		<td>{{ file.original_filename }}</td>
   		<td>{{ file.uuid_filename }}</td>
   		<td>{{ file.mime_type }}</td>
-  		<td><a class="btn btn-primary"><i class="fa fa-download">&nbsp;</i>Download</a></td>
+  		<td><a href="{% url 'serve_file' submission.id file.id %}" class="btn btn-primary"><i class="fa fa-download">&nbsp;</i>Download</a></td>
+  		<td><a href="" class="btn btn-primary"><i class="fa fa-trash-o">&nbsp;</i>Delete</a></td>
   	</tr>
 {% endfor %}
 </table>
