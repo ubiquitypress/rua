@@ -27,16 +27,16 @@
   <p>Select an action below to move this submission through the workflow. Expedite will move the submission passed review and straight into Editing. Note, the book will display that it was not reviewed. Declining will allow you to send an email to the author detailing why the submission is not suitable.</p>
   <div class="btn-group btn-group-justified" role="group">
     <div class="btn-group" role="group">
-      <a href="{% url 'new_submissions' %}" type="button" class="btn btn-primary{% if active == 'new' %} active{% endif %}">Internal Review</a>
+      <a href="{% url 'new_submissions' %}" type="button" class="btn btn-primary">Internal Review</a>
     </div>
     <div class="btn-group" role="group">
-      <a href="{% url 'in_review' %}" type="button" class="btn btn-primary{% if active == 'review' %} active{% endif %}">External Review</a>
+      <a href="{% url 'in_review' %}" type="button" class="btn btn-primary">External Review</a>
     </div>
     <div class="btn-group" role="group">
-      <a href="{% url 'in_editing' %}" type="button" class="btn btn-primary{% if active == 'editing' %} active{% endif %}">Expedite to Editing</a>
+      <a href="{% url 'in_editing' %}" type="button" class="btn btn-primary">Expedite to Editing</a>
     </div>
     <div class="btn-group" role="group">
-      <a href="{% url 'in_production' %}" type="button" class="btn btn-primary{% if active == 'production' %} active{% endif %}">Decline</a>
+      <a href="{% url 'in_production' %}" type="button" class="btn btn-primary">Decline</a>
     </div>
   </div>
 </div>

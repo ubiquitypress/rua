@@ -94,6 +94,7 @@ def view_log(request, submission_id):
     context = {
         'submission': book,
         'log_list': log_list,
+        'active': 'log',
     }
 
     return render(request, template, context)
