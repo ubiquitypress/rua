@@ -9,21 +9,35 @@ from django import forms
 
 from submission import forms
 
-
+@login_required
 def start_submission(request):
 
-	proposal_form = forms.SubmitProposal()
 	book_form = forms.SubmitBook()
 
-
-
 	template = "submission/start_submission.html"
-
 	context = {
-	'proposal_form': proposal_form,
-	'book_form': book_form
+		'book_form': book_form,
 	}
 
 	return render(request, template, context)
 
+@login_required
+def start_proposal(request):
 
+	proposal_form = forms.SubmitProposal()
+
+	if request.method == 'POST':
+		proposal_form = forms.SubmitProposal(request.POST, request.FILES)
+		if proposal_form.is_valid():
+			proposal = proposal_form.save(commit=False)
+			proposal.owner = request.user
+			proposal.save()
+			return redirect(reverse('view_profile'))
+
+
+	template = "submission/start_proposal.html"
+	context = {
+		'proposal_form': proposal_form,
+	}
+
+	return render(request, template, context)

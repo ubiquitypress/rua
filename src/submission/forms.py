@@ -9,13 +9,13 @@ from submission import models
 from core import logic
 
 class SubmitProposal(forms.ModelForm):
-	
+
 	class Meta:
 		model = models.Proposal
-		fields = ('title', 'description', 'notes', 'uploaded_file')
+		fields = ('title', 'subtitle', 'description', 'notes', 'uploaded_file', 'funding')
 
 class SubmitBook(forms.ModelForm):
-	
+
 	class Meta:
 		model = core_models.Book
-		fields = ('title', 'subtitle', 'description', 'subject')
+		fields = ('title', 'subtitle', 'description', 'subject', 'license', 'cover_letter', 'series')

@@ -3,11 +3,13 @@ from __future__ import unicode_literals
 
 from django.db import models, migrations
 import autoslug.fields
+from django.conf import settings
 
 
 class Migration(migrations.Migration):
 
     dependencies = [
+        migrations.swappable_dependency(settings.AUTH_USER_MODEL),
         ('core', '0001_initial'),
     ]
 
@@ -30,9 +32,6 @@ class Migration(migrations.Migration):
                 ('linkedin', models.CharField(max_length=300, null=True, verbose_name=b'Linkedin Profile', blank=True)),
                 ('facebook', models.CharField(max_length=300, null=True, verbose_name=b'Facebook Profile', blank=True)),
             ],
-            options={
-            },
-            bases=(models.Model,),
         ),
         migrations.CreateModel(
             name='Book',
@@ -41,18 +40,15 @@ class Migration(migrations.Migration):
                 ('title', models.CharField(max_length=1000)),
                 ('subtitle', models.CharField(max_length=1000, null=True, blank=True)),
                 ('description', models.TextField(max_length=5000)),
-                ('cover', models.ImageField(upload_to=b'')),
-                ('submission_date', models.DateTimeField()),
-                ('publicaton_date', models.DateTimeField()),
-                ('doi', models.CharField(max_length=25)),
+                ('cover', models.ImageField(null=True, upload_to=b'', blank=True)),
+                ('doi', models.CharField(max_length=25, null=True, blank=True)),
                 ('pages', models.CharField(max_length=10, null=True, blank=True)),
                 ('slug', autoslug.fields.AutoSlugField(editable=False)),
                 ('cover_letter', models.CharField(max_length=2000, null=True, blank=True)),
+                ('submission_date', models.DateTimeField(auto_now_add=True, null=True)),
+                ('publicaton_date', models.DateTimeField(null=True, blank=True)),
                 ('author', models.ManyToManyField(to='core.Author')),
             ],
-            options={
-            },
-            bases=(models.Model,),
         ),
         migrations.CreateModel(
             name='Editor',
@@ -72,23 +68,18 @@ class Migration(migrations.Migration):
                 ('linkedin', models.CharField(max_length=300, null=True, verbose_name=b'Linkedin Profile', blank=True)),
                 ('facebook', models.CharField(max_length=300, null=True, verbose_name=b'Facebook Profile', blank=True)),
             ],
-            options={
-            },
-            bases=(models.Model,),
         ),
         migrations.CreateModel(
-            name='Files',
+            name='File',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('mime_type', models.CharField(max_length=50)),
                 ('original_filename', models.CharField(max_length=1000)),
                 ('uuid_filename', models.CharField(max_length=100)),
                 ('date_uploaded', models.DateTimeField(auto_now=True)),
+                ('stage_uploaded', models.IntegerField()),
                 ('kind', models.CharField(max_length=100)),
             ],
-            options={
-            },
-            bases=(models.Model,),
         ),
         migrations.CreateModel(
             name='Keyword',
@@ -96,9 +87,6 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('name', models.CharField(max_length=250)),
             ],
-            options={
-            },
-            bases=(models.Model,),
         ),
         migrations.CreateModel(
             name='License',
@@ -109,9 +97,18 @@ class Migration(migrations.Migration):
                 ('description', models.TextField(null=True, blank=True)),
                 ('url', models.URLField(null=True, blank=True)),
             ],
-            options={
-            },
-            bases=(models.Model,),
+        ),
+        migrations.CreateModel(
+            name='Log',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('kind', models.CharField(max_length=100, choices=[(b'submission', b'Submission'), (b'workflow', b'Workflow'), (b'file', b'File')])),
+                ('short_name', models.CharField(max_length=100)),
+                ('message', models.TextField()),
+                ('date_logged', models.DateTimeField(auto_now_add=True, null=True)),
+                ('book', models.ForeignKey(to='core.Book')),
+                ('user', models.ForeignKey(to=settings.AUTH_USER_MODEL)),
+            ],
         ),
         migrations.CreateModel(
             name='Series',
@@ -123,14 +120,12 @@ class Migration(migrations.Migration):
                 ('description', models.TextField(null=True, blank=True)),
                 ('url', models.URLField(null=True, blank=True)),
             ],
-            options={
-            },
-            bases=(models.Model,),
         ),
         migrations.CreateModel(
             name='Stage',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('current_stage', models.CharField(blank=True, max_length=b'20', null=True, choices=[(b'proposal', b'Proposal'), (b'submission', b'New Submission'), (b'i_review', b'Internal Review'), (b'e_review', b'External Review'), (b'copy_editing', b'Copy Editing'), (b'indexing', b'Indexing'), (b'production', b'Production'), (b'published', b'Published')])),
                 ('proposal', models.DateTimeField(null=True, blank=True)),
                 ('submission', models.DateTimeField(null=True, blank=True)),
                 ('internal_review', models.DateTimeField(null=True, blank=True)),
@@ -139,11 +134,7 @@ class Migration(migrations.Migration):
                 ('indexing', models.DateTimeField(null=True, blank=True)),
                 ('production', models.DateTimeField(null=True, blank=True)),
                 ('publication', models.DateTimeField(null=True, blank=True)),
-                ('book', models.ForeignKey(to='core.Book')),
             ],
-            options={
-            },
-            bases=(models.Model,),
         ),
         migrations.CreateModel(
             name='Subject',
@@ -151,50 +142,64 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('name', models.CharField(max_length=250)),
             ],
-            options={
-            },
-            bases=(models.Model,),
+        ),
+        migrations.CreateModel(
+            name='Task',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('text', models.CharField(max_length=200)),
+                ('workflow', models.CharField(max_length=50, choices=[(b'submission', b'Submission'), (b'review', b'Review'), (b'editing', b'Editing'), (b'production', b'Production'), (b'personal', b'Personal')])),
+                ('assigned', models.DateField(auto_now_add=True, null=True)),
+                ('due', models.DateField(null=True, blank=True)),
+                ('completed', models.DateField(null=True, blank=True)),
+                ('assignee', models.ForeignKey(related_name='assignee', to=settings.AUTH_USER_MODEL)),
+                ('book', models.ForeignKey(blank=True, to='core.Book', null=True)),
+                ('creator', models.ForeignKey(related_name='creator', to=settings.AUTH_USER_MODEL)),
+            ],
         ),
         migrations.AddField(
-            model_name='files',
-            name='stage_uploaded',
-            field=models.ForeignKey(to='core.Stage'),
-            preserve_default=True,
+            model_name='profile',
+            name='facebook',
+            field=models.CharField(max_length=300, null=True, verbose_name=b'Facebook Handle', blank=True),
         ),
         migrations.AddField(
             model_name='book',
             name='editor',
             field=models.ManyToManyField(to='core.Editor', null=True, blank=True),
-            preserve_default=True,
         ),
         migrations.AddField(
             model_name='book',
             name='files',
-            field=models.ManyToManyField(to='core.Files'),
-            preserve_default=True,
+            field=models.ManyToManyField(to='core.File'),
         ),
         migrations.AddField(
             model_name='book',
             name='keywords',
             field=models.ManyToManyField(to='core.Keyword'),
-            preserve_default=True,
         ),
         migrations.AddField(
             model_name='book',
             name='license',
             field=models.ForeignKey(to='core.License'),
-            preserve_default=True,
+        ),
+        migrations.AddField(
+            model_name='book',
+            name='owner',
+            field=models.ForeignKey(blank=True, to=settings.AUTH_USER_MODEL, null=True),
         ),
         migrations.AddField(
             model_name='book',
             name='series',
             field=models.ForeignKey(blank=True, to='core.Series', null=True),
-            preserve_default=True,
+        ),
+        migrations.AddField(
+            model_name='book',
+            name='stage',
+            field=models.ForeignKey(blank=True, to='core.Stage', null=True),
         ),
         migrations.AddField(
             model_name='book',
             name='subject',
             field=models.ManyToManyField(to='core.Subject'),
-            preserve_default=True,
         ),
     ]

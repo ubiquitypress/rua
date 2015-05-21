@@ -7,13 +7,13 @@ from django.db import models, migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('core', '0001_squashed_0017_log_short_name'),
+        ('core', '0002_auto_20150521_1908'),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='log',
-            name='short_name',
-            field=models.CharField(max_length=100),
+            model_name='book',
+            name='cover_letter',
+            field=models.TextField(null=True, blank=True),
         ),
     ]

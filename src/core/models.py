@@ -91,7 +91,7 @@ class Book(models.Model):
 	pages = models.CharField(max_length=10, null=True, blank=True)
 	slug = AutoSlugField(populate_from='title')
 	files = models.ManyToManyField('File')
-	cover_letter = models.CharField(max_length=2000, null=True, blank=True)
+	cover_letter = models.TextField(null=True, blank=True)
 
 	# Book Owner
 	owner = models.ForeignKey(User, null=True, blank=True)

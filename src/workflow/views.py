@@ -23,6 +23,7 @@ from pprint import pprint
 import os
 import mimetypes
 
+@login_required
 def new_submissions(request):
 
     submission_list = models.Book.objects.filter(stage__current_stage='submission')
@@ -35,6 +36,7 @@ def new_submissions(request):
 
     return render(request, template, context)
 
+@login_required
 def view_new_submission(request, submission_id):
 
     submission = get_object_or_404(models.Book, pk=submission_id)
@@ -47,6 +49,7 @@ def view_new_submission(request, submission_id):
 
     return render(request, template, context)
 
+@login_required
 def in_review(request):
 
     submission_list = models.Book.objects.filter(Q(stage__current_stage='i_review') | Q(stage__current_stage='e_review'))
@@ -59,6 +62,7 @@ def in_review(request):
 
     return render(request, template, context)
 
+@login_required
 def in_editing(request):
 
     submission_list = models.Book.objects.filter(Q(stage__current_stage='copy_editing') | Q(stage__current_stage='indexing'))
@@ -71,7 +75,7 @@ def in_editing(request):
 
     return render(request, template, context)
 
-
+@login_required
 def in_production(request):
 
     submission_list = models.Book.objects.filter(stage__current_stage='production')
@@ -85,7 +89,7 @@ def in_production(request):
     return render(request, template, context)
 
 # Log
-
+@login_required
 def view_log(request, submission_id):
     book = get_object_or_404(models.Book, pk=submission_id)
     log_list = models.Log.objects.filter(book=book)
@@ -100,25 +104,23 @@ def view_log(request, submission_id):
     return render(request, template, context)
 
 # File Handlers - should this be in Core?
-
+@login_required
 def serve_file(request, submission_id, file_id):
     book = get_object_or_404(models.Book, pk=submission_id)
     _file = get_object_or_404(models.File, pk=file_id)
     file_path = os.path.join(settings.BOOK_DIR, submission_id, _file.uuid_filename)
-
-    log.add_log_entry(book=book, user=request.user, kind='file', message='File %s downloaded.' % _file.uuid_filename, short_name='Download')
 
     try:
         fsock = open(file_path, 'r')
         mimetype = mimetypes.guess_type(file_path)
         response = StreamingHttpResponse(fsock, content_type=mimetype)
         response['Content-Disposition'] = "attachment; filename=%s" % (_file.uuid_filename)
+        log.add_log_entry(book=book, user=request.user, kind='file', message='File %s downloaded.' % _file.uuid_filename, short_name='Download')
         return response
     except IOError:
         messages.add_message(request, messages.ERROR, 'File not found. %s/%s' % (file_path, _file.uuid_filename))
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
+@login_required
 def delete_file(request, submission_id, file_id):
     _file = get_object_or_404(models.File, pk=file_id)
-
-

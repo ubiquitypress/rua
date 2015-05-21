@@ -3,42 +3,19 @@
 {% load bootstrap3 %}
 
 {% block body %}
-	
-	<div class="col-md-12">
-	<h2 class="text-center">Select an option</h2><br>
-	<div class="col-md-8 col-md-offset-2">
-   <button style="width: 40%; margin-right: 19%" class="btn btn-lg btn-primary btn-default" href="# "id="book" data-toggle="collapse" data-target="#submenu-book" aria-expanded="false">Book Submission</button>
-   <button style="width: 40%" class="btn btn-lg btn-primary btn-default" href="#"id="proposal" data-toggle="collapse" data-target="#submenu-proposal" aria-expanded="false">Proposal submission</button>
-   </div>
-   <div class="col-md-12">
-   <hr>
-	<div class="col-md-6">
-				<ul class="nav collapse" id="submenu-book" role="menu" aria-labelledby="book">
-					<form>				
-						{% csrf_token %}
-							{% bootstrap_form book_form %}
-						    {% buttons %}
-						        <button name="book" type="submit" class="btn btn-primary">
-						            <i class="fa fa-upload"></i> Upload
-						        </button>
-						    {% endbuttons %}
-					    
-					</form>
-				</ul>
-	</div>
-	<div class="col-md-6">
-				<ul class="nav collapse" id="submenu-proposal" role="menu" aria-labelledby="proposal">
-					<form>				
-						{% csrf_token %}
-							{% bootstrap_form proposal_form %}
-						    {% buttons %}
-						        <button name="proposal" type="submit" class="btn btn-primary">
-						            <i class="fa fa-upload"></i> Upload
-						        </button>
-						    {% endbuttons %}
-					    
-					</form>
-				</ul>
+
+ <div class="col-md-12">
+		<h2>Author Agreement</h2>
+		<p>Author agreement text should go here.</p>
+		<form>
+			{% csrf_token %}
+			{% bootstrap_form book_form %}
+	    {% buttons %}
+	        <button name="book" type="submit" class="btn btn-primary">
+	            <i class="fa fa-upload"></i> Upload
+	        </button>
+	    {% endbuttons %}
+		</form>
 	</div>
 {% endblock body %}
 
