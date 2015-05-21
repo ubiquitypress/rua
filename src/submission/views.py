@@ -32,7 +32,8 @@ def start_proposal(request):
 			proposal = proposal_form.save(commit=False)
 			proposal.owner = request.user
 			proposal.save()
-			return redirect(reverse('view_profile'))
+			messages.add_message(request, messages.SUCCESS, 'Proposal %s submitted' % proposal.id)
+			return redirect(reverse('user_home'))
 
 
 	template = "submission/start_proposal.html"
