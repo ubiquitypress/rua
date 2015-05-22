@@ -6,26 +6,26 @@
 
  <div class="col-md-12">
    {% include "submission/snippets/stage_button_group.html" %}
-		<h2>Submission Stage 1</h2>
+		<h2>Submission Stage 2</h2>
     <form method="post" class="form" enctype="multipart/form-data">
 	    {% csrf_token %}
 		  <div class="form-group">
         <div class="row">
-		  		<div class="col-md-4">{% bootstrap_field book_form.book_type %}</div>
-		  		<div class="col-md-4">{% bootstrap_field book_form.series %}</div>
-          <div class="col-md-4">{% bootstrap_field book_form.license %}</div>
+		  		<div class="col-md-4">{% bootstrap_field book_form.prefix %}</div>
+		  		<div class="col-md-4">{% bootstrap_field book_form.title %}</div>
+          <div class="col-md-4">{% bootstrap_field book_form.subtitle %}</div>
 		  	</div>
       </div>
       <hr />
 		  <div class="form-group">
 		  	<div class="row">
-		  		<div class="col-md-12">{% bootstrap_field book_form.cover_letter %}</div>
+		  		<div class="col-md-12">{% bootstrap_field book_form.description %}</div>
 		  	</div>
 		  </div>
         <br /><br />
 	    {% buttons %}
 	        <button name="book" type="submit" class="btn btn-primary">
-	            <i class="fa fa-arrow-right"></i> Complete Step 1
+	            <i class="fa fa-arrow-right"></i> Complete Step 2
 	        </button>
 	    {% endbuttons %}
 		</form>

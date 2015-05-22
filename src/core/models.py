@@ -41,6 +41,12 @@ def task_choices():
 	)
 	return choices
 
+def book_type_choices():
+	return (
+		('monograph', 'Monograph'),
+		('edited_volume', 'Edited Volume'),
+	)
+
 class Profile(models.Model):
 	user = models.OneToOneField(User)
 	activation_code = models.CharField(max_length=100, null=True, blank=True)
@@ -77,21 +83,23 @@ class Author(models.Model):
 	facebook = models.CharField(max_length=300, null=True, blank=True, verbose_name="Facebook Profile")
 
 class Book(models.Model):
-	title = models.CharField(max_length=1000)
+	prefix = models.CharField(max_length=100, null=True, blank=True)
+	title = models.CharField(max_length=1000, null=True, blank=True)
 	subtitle = models.CharField(max_length=1000, null=True, blank=True)
-	series = models.ForeignKey('Series', null=True, blank=True)
-	author = models.ManyToManyField('Author')
+	series = models.ForeignKey('Series', null=True, blank=True, help_text="If you are submitting this work to an existing Series please selected it.")
+	author = models.ManyToManyField('Author', null=True, blank=True)
 	editor = models.ManyToManyField('Editor', null=True, blank=True)
-	description = models.TextField(max_length=5000)
-	keywords = models.ManyToManyField('Keyword')
-	subject = models.ManyToManyField('Subject')
-	license = models.ForeignKey('License')
+	description = models.TextField(max_length=5000, null=True, blank=True, verbose_name="Abstract")
+	keywords = models.ManyToManyField('Keyword', null=True, blank=True)
+	subject = models.ManyToManyField('Subject', null=True, blank=True)
+	license = models.ForeignKey('License', null=True, blank=True, help_text="The license you recommend for this work.")
 	cover = models.ImageField(null=True, blank=True)
 	doi = models.CharField(max_length=25, null=True, blank=True)
 	pages = models.CharField(max_length=10, null=True, blank=True)
-	slug = AutoSlugField(populate_from='title')
-	files = models.ManyToManyField('File')
-	cover_letter = models.TextField(null=True, blank=True)
+	slug = models.CharField(max_length=1000, null=True, blank=True)
+	files = models.ManyToManyField('File', null=True, blank=True)
+	cover_letter = models.TextField(null=True, blank=True, help_text="A covering letter for the Editors.")
+	book_type = models.CharField(max_length=50, null=True, blank=True, choices=book_type_choices(), help_text="A monograph is a work authored, in its entirety, by one or more authors. An edited volume has different authors for each chapter.")
 
 	# Book Owner
 	owner = models.ForeignKey(User, null=True, blank=True)
@@ -102,6 +110,7 @@ class Book(models.Model):
 
 	# Stage
 	stage = models.ForeignKey('Stage', null=True, blank=True)
+	submission_stage = models.IntegerField(null=True, blank=True)
 
 	def __unicode__(self):
 		return u'%s' % self.title
@@ -156,6 +165,10 @@ class File(models.Model):
 	date_uploaded = models.DateTimeField(auto_now=True)
 	stage_uploaded = models.IntegerField()
 	kind = models.CharField(max_length=100)
+	sequence = models.IntegerField(default=1)
+
+	class Meta:
+		ordering = ('sequence', 'kind')
 
 class Subject(models.Model):
 	name = models.CharField(max_length=250)

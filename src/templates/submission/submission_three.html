@@ -1,0 +1,124 @@
+{% extends "base.html" %}
+{% load static from staticfiles %}
+{% load bootstrap3 %}
+
+{% block body %}
+
+ <div class="col-md-12">
+   {% include "submission/snippets/stage_button_group.html" %}
+		<h2>Submission Stage 3</h2>
+    <form method="post" class="form" enctype="multipart/form-data">
+	    {% csrf_token %}
+      <div class="well">
+        <h3>Manuscript Files</h3>
+        <p>You can upload your entire manuscript, or select upload a file for each chapter. This uploader allows you to select multiple files, click the "Browse.." button then select the files you want.</p>
+        <div class="form-group">
+  		  	<div class="row">
+  		  		<div class="col-md-6">
+  			       <div class="input-group">
+                  <span class="input-group-btn">
+                      <span class="btn btn-primary btn-file">
+                          Browse&hellip; <input type="file" id="manuscript_file" name="manuscript_file" multiple>
+                      </span>
+                  </span>
+                  <input type="text" class="form-control" readonly>
+              </div>
+  				  </div>
+  	  		</div>
+  	  	</div>
+        <p>Once you have selected the files, press the upload button below to send them to the server. You will then be able to reorder them.</p>
+        <button name="manuscript_upload" type="submit" class="btn btn-primary">
+            <i class="fa fa-upload">&nbsp;</i> Upload Manuscript Files
+        </button>
+        <hr />
+        {% if manuscript_files %}
+        <h4>Current Manuscript Files</h4>
+        <p>You can reorder your submitted files by dragging and dropping them into the correct order.</p>
+        <ul class="list-group" id="man_files_sort">
+        {% for file in manuscript_files %}
+          <li id="man-{{ file.id }}" class="list-group-item"><i class="fa fa-sort">&nbsp;&nbsp;</i><i class="fa fa-file">&nbsp;&nbsp;</i>{{ file.original_filename }}<i style="float: right;" class="fa fa-trash-o"></i></li>
+        {% endfor %}
+        </ul>
+        {% endif %}
+      </div>
+      <div class="well">
+        <h3>Additional Files</h3>
+        <p>You can also upload additional files that support your submission including any illustrations or images, data sets or documents.</p>
+        <div class="form-group">
+  		  	<div class="row">
+    		  		<div class="col-md-6">
+  				       <div class="input-group">
+  	                <span class="input-group-btn">
+  	                    <span class="btn btn-primary btn-file">
+  	                        Browse&hellip; <input type="file" id="additional_file" name="additional_file" multiple>
+  	                    </span>
+  	                </span>
+  	                <input type="text" class="form-control" readonly>
+  	            </div>
+    				  </div>
+  		  		</div>
+  		  	</div>
+          <p>Once you have selected the files, press the upload button below to send them to the server. You will then be able to reorder them.</p>
+          <button name="additional_upload" type="submit" class="btn btn-primary">
+            <i class="fa fa-upload">&nbsp;</i> Upload Additional Files
+          </button>
+          <hr />
+          {% if additional_files %}
+          <h4>Current Additional Files</h4>
+          <p>You can reorder your submitted files by dragging and dropping them into the correct order.</p>
+          <ul class="list-group" id="add_files_sort">
+          {% for file in additional_files %}
+            <li id="add-{{ file.id }}" class="list-group-item"><i class="fa fa-sort">&nbsp;&nbsp;</i><i class="fa fa-file">&nbsp;&nbsp;</i>{{ file.original_filename }}<i style="float: right;" class="fa fa-trash-o"></i></li>
+          {% endfor %}
+          </ul>
+          {% endif %}
+        </div>
+        <p>When you have uploaded your files and are happy with their order, press the Complete button below to move onto the Author/Contributor section of the submission.</p>
+        <button name="next_stage" type="submit" class="btn btn-primary">
+            <i class="fa fa-arrow-right"></i> Complete Step 3
+        </button>
+		</form>
+	</div>
+{% endblock body %}
+
+{% block js %}
+<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+<script type="text/javascript" src="{% static "js/fancyfile.js" %}"></script>
+<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+<script>
+$(function() {
+  $( "#man_files_sort" ).sortable({
+    placeholder: "ui-state-highlight",
+    update: function (event, ui) {
+        var data = $(this).sortable('serialize');
+        console.log(data);
+
+        // POST to server using $.post or $.ajax
+        $.ajax({
+            data: data,
+            type: 'POST',
+            url: '/submission/book/{{ book.id }}/order/manuscript/'
+        });
+    }
+  });
+
+  $( "#man_files_sort" ).disableSelection();
+
+  $( "#add_files_sort" ).sortable({
+    placeholder: "ui-state-highlight",
+    update: function (event, ui) {
+        var data = $(this).sortable('serialize');
+        console.log(data);
+
+        // POST to server using $.post or $.ajax
+        $.ajax({
+            data: data,
+            type: 'POST',
+            url: '/submission/book/{{ book.id }}/order/additional/'
+        });
+    }
+  });
+  $( "#add_files_sort" ).disableSelection();
+});
+</script>
+{% endblock %}
