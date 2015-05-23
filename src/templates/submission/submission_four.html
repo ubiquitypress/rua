@@ -6,26 +6,40 @@
 
  <div class="col-md-12">
    {% include "submission/snippets/stage_button_group.html" %}
-		<h2>Submission Stage 2</h2>
+		<h2>Submission Stage 4</h2>
     <form method="post" class="form" enctype="multipart/form-data">
 	    {% csrf_token %}
-		  <div class="form-group">
         <div class="row">
-		  		<div class="col-md-4">{% bootstrap_field book_form.prefix %}</div>
-		  		<div class="col-md-4">{% bootstrap_field book_form.title %}</div>
-          <div class="col-md-4">{% bootstrap_field book_form.subtitle %}</div>
+          <div class="col-md-12">
+          {% if book.book_type == 'monograph' %}
+	        <button name="add_self_author" type="submit" class="btn btn-primary">
+	            <i class="fa fa-plus"></i> Add myself as an Author
+	        </button>
+          <button name="add_new_author" type="submit" class="btn btn-success">
+	            <i class="fa fa-plus"></i> Add a new Author
+	        </button>
+          {% elif book.book_type == 'edited_volume' %}
+          <button name="add_self_editor" type="submit" class="btn btn-primary">
+	            <i class="fa fa-plus"></i> Add myself as an Editor
+	        </button>
+          <button name="add_new_editor" type="submit" class="btn btn-success">
+	            <i class="fa fa-plus"></i> Add a new Editor
+	        </button>
+          {% endif %}
+		  		</div>
 		  	</div>
-      </div>
       <hr />
 		  <div class="form-group">
 		  	<div class="row">
-		  		<div class="col-md-12">{% bootstrap_field book_form.description %}</div>
+		  		<div class="col-md-12">
+            <h3>Current Authors</h3>
+          </div>
 		  	</div>
 		  </div>
         <br /><br />
 	    {% buttons %}
 	        <button name="book" type="submit" class="btn btn-primary">
-	            <i class="fa fa-arrow-right"></i> Complete Step 2
+	            <i class="fa fa-arrow-right"></i> Complete Step 4
 	        </button>
 	    {% endbuttons %}
 		</form>

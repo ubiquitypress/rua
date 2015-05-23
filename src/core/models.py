@@ -132,7 +132,7 @@ class License(models.Model):
 
 class Series(models.Model):
 	name = models.CharField(max_length=100)
-	editor = models.CharField(max_length=250)
+	editor = models.ForeignKey(User, null=True, blank=True)
 	issn = models.CharField(max_length=15)
 	description = models.TextField(null=True, blank=True)
 	url = models.URLField(null=True, blank=True)
