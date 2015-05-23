@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% load static from staticfiles %}
+{% load bootstrap3 %}
+
+{% block title %}Update Profile{% endblock %}
+
+{% block body %}
+<div class="col-md-12">
+	<div class="row">
+		<div class="col-md-10">
+			<h1>Add New Editor</h1>
+		</div>
+		<div class="col-md-2">
+            <div class="btn-group">
+                <a class="btn  btn-primary" href="{% url 'submission_four' book.id %}">
+                    <span class="fa fa-arrow-left"></span> Back to Submission
+                </a>
+            </div>
+        </div>
+    </div>
+	<br />
+    {{ author_form.errors }}
+  	<form method="post" class="form" enctype="multipart/form-data">
+	    {% csrf_token %}
+		  <div class="form-group">
+		  	<div class="row">
+		  		<div class="col-md-3">{% bootstrap_field author_form.salutation %}</div>
+		  		<div class="col-md-3">{% bootstrap_field author_form.first_name %}</div>
+		  		<div class="col-md-3">{% bootstrap_field author_form.middle_name %}</div>
+		  		<div class="col-md-3">{% bootstrap_field author_form.last_name %}</div>
+		  	</div>
+		  </div>
+		  <hr />
+		  <div class="form-group">
+		  	<div class="row">
+		  		<div class="col-md-12">{% bootstrap_field author_form.biography %}</div>
+		  	</div>
+		  </div>
+		  <hr />
+		  <div class="form-group">
+		  	<div class="row">
+		  		<div class="col-md-4">{% bootstrap_field author_form.institution %}</div>
+		  		<div class="col-md-4">{% bootstrap_field author_form.department %}</div>
+		  		<div class="col-md-4">{% bootstrap_field author_form.country %}</div>
+		  	</div>
+		  </div>
+		  <hr />
+		  <div class="form-group">
+		  	<div class="row">
+		  		<div class="col-md-3">{% bootstrap_field author_form.orcid %}</div>
+		  		<div class="col-md-3">{% bootstrap_field author_form.twitter %}</div>
+		  		<div class="col-md-3">{% bootstrap_field author_form.facebook %}</div>
+		  		<div class="col-md-3">{% bootstrap_field author_form.linkedin %}</div>
+		  	</div>
+		  </div>
+		  <hr />
+		  <div class="form-group">
+		  	<div class="row">
+		  		<div class="col-md-6">{% bootstrap_field author_form.author_email %}</div>
+		  		</div>
+		  	</div>
+		  </div>
+			{% buttons %}
+		        <button name="register" id="register" type="submit" class="btn btn-primary" style="margin-left:15px;">
+		            <i class="fa fa-user"></i> Update Profile
+		        </button>
+		    {% endbuttons %}
+		</form>
+
+	</form>
+
+</div>
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript" src="{% static "js/fancyfile.js" %}"></script>
+<script type="text/javascript">$("textarea").jqte();</script>
+{% endblock %}

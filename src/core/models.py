@@ -83,6 +83,9 @@ class Author(models.Model):
 	facebook = models.CharField(max_length=300, null=True, blank=True, verbose_name="Facebook Profile")
 	sequence = models.IntegerField(default=1, null=True, blank=True)
 
+	class Meta:
+		ordering = ('sequence',)
+
 class Book(models.Model):
 	prefix = models.CharField(max_length=100, null=True, blank=True)
 	title = models.CharField(max_length=1000, null=True, blank=True)
@@ -158,6 +161,10 @@ class Editor(models.Model):
 	twitter = models.CharField(max_length=300, null=True, blank=True, verbose_name="Twitter Handle")
 	linkedin = models.CharField(max_length=300, null=True, blank=True, verbose_name="Linkedin Profile")
 	facebook = models.CharField(max_length=300, null=True, blank=True, verbose_name="Facebook Profile")
+	sequence = models.IntegerField(default=1, null=True, blank=True)
+
+	class Meta:
+		ordering = ('sequence',)
 
 class File(models.Model):
 	mime_type = models.CharField(max_length=50)

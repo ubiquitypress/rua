@@ -38,3 +38,9 @@ class AuthorForm(forms.ModelForm):
 	class Meta:
 		model = core_models.Author
 		exclude = ()
+
+class EditorForm(forms.ModelForm):
+
+	class Meta:
+		model = core_models.Editor
+		exclude = ()

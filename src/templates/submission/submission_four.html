@@ -11,12 +11,13 @@
 	    {% csrf_token %}
         <div class="row">
           <div class="col-md-12">
+            <p>You can add authors and editors in any order, then reorder them at the bottom of the page.</p>
           {% if book.book_type == 'monograph' %}
           <a href="{% url 'author' book.id %}" class="btn btn-success">
 	            <i class="fa fa-plus"></i> Add a new Author
 	        </a>
           {% elif book.book_type == 'edited_volume' %}
-          <a class="btn btn-success">
+          <a href="{% url 'editor' book.id %}" class="btn btn-success">
 	            <i class="fa fa-plus"></i> Add a new Editor
 	        </a>
           {% endif %}
@@ -49,7 +50,7 @@
             <h3>Current Editors</h3>
             {% for author in book.editor.all %}
             <div class="well">
-              <h3 class="author_header">{{ author.first_name }} {{ author.last_name }}<span style="float:right"><button name="edit_author" class="btn btn-primary">Edit Editor</button></span></h3>
+              <h3 class="author_header">{{ author.first_name }} {{ author.last_name }}<span style="float:right"><a href="{% url 'editor_edit' book.id author.id %}" class="btn btn-primary">Edit Editor</a></span></h3>
               <hr />
               <div class="row">
                 <div class="col-md-3"><p><strong>Email:</strong><br />{{ author.author_email }}</p></div>
@@ -68,9 +69,25 @@
           </div>
 		  	</div>
 		  </div>
+      <h4>Current Order</h4>
+      {% if book.book_type == 'monograph' %}
+      <p>You can reorder your submitted authors by dragging and dropping them into the correct order.</p>
+      <ul class="list-group" id="auth_order">
+      {% for author in book.author.all %}
+        <li id="auth-{{ author.id }}" class="list-group-item"><i class="fa fa-sort">&nbsp;&nbsp;</i><i class="fa fa-user">&nbsp;&nbsp;</i>{{ author.first_name }} {{ author.last_name }}</li>
+      {% endfor %}
+      </ul>
+      {% elif book.book_type == 'edited_volume' %}
+      <p>You can reorder your submitted editors by dragging and dropping them into the correct order.</p>
+      <ul class="list-group" id="edit_order">
+      {% for author in book.editor.all %}
+        <li id="edit-{{ author.id }}" class="list-group-item"><i class="fa fa-sort">&nbsp;&nbsp;</i><i class="fa fa-user">&nbsp;&nbsp;</i>{{ author.first_name }} {{ author.last_name }}</li>
+      {% endfor %}
+      </ul>
+      {% endif %}
         <br /><br />
 	    {% buttons %}
-	        <button name="book" type="submit" class="btn btn-primary">
+	        <button name="next_stage" type="submit" class="btn btn-primary">
 	            <i class="fa fa-arrow-right"></i> Complete Step 4
 	        </button>
 	    {% endbuttons %}
@@ -79,5 +96,35 @@
 {% endblock body %}
 
 {% block js %}
-<script type="text/javascript">$("textarea").jqte();</script>
+<script>
+$( "#auth_order" ).sortable({
+  placeholder: "ui-state-highlight",
+  update: function (event, ui) {
+      var data = $(this).sortable('serialize');
+      console.log(data);
+
+      // POST to server using $.post or $.ajax
+      $.ajax({
+          data: data,
+          type: 'POST',
+          url: '/submission/book/{{ book.id }}/order/author/'
+      });
+  }
+});
+
+$( "#edit_order" ).sortable({
+  placeholder: "ui-state-highlight",
+  update: function (event, ui) {
+      var data = $(this).sortable('serialize');
+      console.log(data);
+
+      // POST to server using $.post or $.ajax
+      $.ajax({
+          data: data,
+          type: 'POST',
+          url: '/submission/book/{{ book.id }}/order/editor/'
+      });
+  }
+});
+</script>
 {% endblock %}

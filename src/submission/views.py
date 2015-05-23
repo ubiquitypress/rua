@@ -119,13 +119,11 @@ def submission_three(request, book_id):
 def submission_four(request, book_id):
 	book = get_object_or_404(core_models.Book, pk=book_id, owner=request.user)
 
-	if request.method == 'POST':
-
-		if 'add_new_author' in request.POST:
-			pass
-
-		elif 'add_new_editor' in request.POST:
-			pass
+	if request.method == 'POST' and 'next_stage' in request.POST:
+		if not book.submission_stage > 5:
+			book.submission_stage = 5
+			book.save()
+		return redirect(reverse('submission_five', kwargs={'book_id': book.id}))
 
 	template = 'submission/submission_four.html'
 	context = {
@@ -139,7 +137,7 @@ def submission_four(request, book_id):
 def submission_five(request, book_id):
 	book = get_object_or_404(core_models.Book, pk=book_id, owner=request.user)
 
-	template = 'submission/submission_three.html'
+	template = 'submission/submission_five.html'
 	context = {
 		'book': book,
 		'active': 5,
@@ -166,7 +164,6 @@ def author(request, book_id, author_id=None):
 			author_form = forms.AuthorForm(request.POST, instance=author)
 		else:
 			author_form = forms.AuthorForm(request.POST)
-			pprint(author_form)
 		if author_form.is_valid():
 			author = author_form.save(commit=False)
 			if not author.sequence:
@@ -185,6 +182,42 @@ def author(request, book_id, author_id=None):
 
 	return render(request, template, context)
 
+@login_required
+def editor(request, book_id, editor_id=None):
+	book = get_object_or_404(core_models.Book, pk=book_id, owner=request.user)
+
+	if editor_id:
+		if book.editor.filter(pk=editor_id).exists():
+			editor = get_object_or_404(core_models.Editor, pk=editor_id)
+			editor_form = forms.EditorForm(instance=editor)
+		else:
+			return HttpResponseForbidden()
+	else:
+		editor = None
+		editor_form = forms.EditorForm()
+
+	if request.method == 'POST':
+		if editor:
+			editor_form = forms.EditorForm(request.POST, instance=editor)
+		else:
+			editor_form = forms.EditorForm(request.POST)
+		if editor_form.is_valid():
+			editor = editor_form.save(commit=False)
+			if not editor.sequence:
+				editor.sequence = 1
+			editor.save()
+			if not editor_id:
+				book.editor.add(editor)
+
+			return redirect(reverse('submission_four', kwargs={'book_id': book.id}))
+
+	template = "submission/editor.html"
+	context = {
+		'author_form': editor_form,
+		'book': book,
+	}
+
+	return render(request, template, context)
 
 @login_required
 def start_proposal(request):
@@ -258,6 +291,12 @@ def file_order(request, book_id, type_to_handle):
 	elif type_to_handle == 'additional':
 		id_to_get = 'add'
 		files = core_models.File.objects.filter(book=book, kind='additional')
+	elif type_to_handle == 'author':
+		id_to_get = 'auth'
+		files = core_models.Author.objects.filter(book=book)
+	elif type_to_handle == 'editor':
+		id_to_get = 'edit'
+		files = core_models.Editor.objects.filter(book=book)
 
 	if request.POST:
 		ids = request.POST.getlist('%s[]' % id_to_get)
