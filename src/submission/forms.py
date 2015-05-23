@@ -32,3 +32,9 @@ class SubmitBook(forms.ModelForm):
 	class Meta:
 		model = core_models.Book
 		fields = ('title', 'subtitle', 'description', 'subject', 'license', 'cover_letter', 'series')
+
+class AuthorForm(forms.ModelForm):
+
+	class Meta:
+		model = core_models.Author
+		exclude = ()

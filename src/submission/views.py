@@ -8,14 +8,16 @@ from django.contrib.auth.decorators import login_required
 from django import forms
 from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseForbidden
 
 from submission import forms
 from core import models as core_models
+from submission import logic
 
 import mimetypes as mime
 from uuid import uuid4
 import os
+from pprint import pprint
 
 @login_required
 def start_submission(request, book_id=None):
@@ -35,8 +37,15 @@ def start_submission(request, book_id=None):
 		if book_form.is_valid():
 			book = book_form.save(commit=False)
 			book.owner = request.user
-			book.submission_stage = 2
+			if not book.submission_stage > 2:
+				book.submission_stage = 2
 			book.save()
+
+			if not book_id and book:
+				if book.book_type == 'manuscript':
+					logic.copy_author_to_submission(request.user, book)
+				elif book.book_type == 'edited_volume':
+					logic.copy_editor_to_submission(request.user, book)
 			return redirect(reverse('submission_two', kwargs={'book_id': book.id}))
 
 	template = "submission/start_submission.html"
@@ -57,7 +66,8 @@ def submission_two(request, book_id):
 		book_form = forms.SubmitBookStageTwo(request.POST, instance=book)
 		if book_form.is_valid():
 			book = book_form.save(commit=False)
-			book.submission_stage = 3
+			if not book.submission_stage > 3:
+				book.submission_stage = 3
 			book.save()
 			return redirect(reverse('submission_three', kwargs={'book_id': book.id}))
 
@@ -87,7 +97,8 @@ def submission_three(request, book_id):
 				handle_file(file, book, 'additional')
 
 		if 'next_stage' in request.POST:
-			book.submission_stage = 4
+			if not book.submission_stage > 4:
+				book.submission_stage = 4
 			book.save()
 			return redirect(reverse('submission_four', kwargs={'book_id': book.id}))
 
@@ -108,6 +119,14 @@ def submission_three(request, book_id):
 def submission_four(request, book_id):
 	book = get_object_or_404(core_models.Book, pk=book_id, owner=request.user)
 
+	if request.method == 'POST':
+
+		if 'add_new_author' in request.POST:
+			pass
+
+		elif 'add_new_editor' in request.POST:
+			pass
+
 	template = 'submission/submission_four.html'
 	context = {
 		'book': book,
@@ -127,6 +146,45 @@ def submission_five(request, book_id):
 	}
 
 	return render(request, template, context)
+
+@login_required
+def author(request, book_id, author_id=None):
+	book = get_object_or_404(core_models.Book, pk=book_id, owner=request.user)
+
+	if author_id:
+		if book.author.filter(pk=author_id).exists():
+			author = get_object_or_404(core_models.Author, pk=author_id)
+			author_form = forms.AuthorForm(instance=author)
+		else:
+			return HttpResponseForbidden()
+	else:
+		author = None
+		author_form = forms.AuthorForm()
+
+	if request.method == 'POST':
+		if author:
+			author_form = forms.AuthorForm(request.POST, instance=author)
+		else:
+			author_form = forms.AuthorForm(request.POST)
+			pprint(author_form)
+		if author_form.is_valid():
+			author = author_form.save(commit=False)
+			if not author.sequence:
+				author.sequence = 1
+			author.save()
+			if not author_id:
+				book.author.add(author)
+
+			return redirect(reverse('submission_four', kwargs={'book_id': book.id}))
+
+	template = "submission/author.html"
+	context = {
+		'author_form': author_form,
+		'book': book,
+	}
+
+	return render(request, template, context)
+
 
 @login_required
 def start_proposal(request):

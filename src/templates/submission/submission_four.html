@@ -12,19 +12,13 @@
         <div class="row">
           <div class="col-md-12">
           {% if book.book_type == 'monograph' %}
-	        <button name="add_self_author" type="submit" class="btn btn-primary">
-	            <i class="fa fa-plus"></i> Add myself as an Author
-	        </button>
-          <button name="add_new_author" type="submit" class="btn btn-success">
+          <a href="{% url 'author' book.id %}" class="btn btn-success">
 	            <i class="fa fa-plus"></i> Add a new Author
-	        </button>
+	        </a>
           {% elif book.book_type == 'edited_volume' %}
-          <button name="add_self_editor" type="submit" class="btn btn-primary">
-	            <i class="fa fa-plus"></i> Add myself as an Editor
-	        </button>
-          <button name="add_new_editor" type="submit" class="btn btn-success">
+          <a class="btn btn-success">
 	            <i class="fa fa-plus"></i> Add a new Editor
-	        </button>
+	        </a>
           {% endif %}
 		  		</div>
 		  	</div>
@@ -32,7 +26,45 @@
 		  <div class="form-group">
 		  	<div class="row">
 		  		<div class="col-md-12">
+            {% if book.book_type == 'monograph' %}
             <h3>Current Authors</h3>
+            {% for author in book.author.all %}
+            <div class="well">
+              <h3 class="author_header">{{ author.first_name }} {{ author.last_name }}<span style="float:right"><a href="{% url 'author_edit' book.id author.id %}" class="btn btn-primary">Edit Author</a></span></h3>
+              <hr />
+              <div class="row">
+                <div class="col-md-3"><p><strong>Email:</strong><br />{{ author.author_email }}</p></div>
+                <div class="col-md-3"><p><strong>Institution:</strong><br />{{ author.institution }}</p></div>
+                <div class="col-md-3"><p><strong>Department:</strong><br />{{ author.department }}</p></div>
+                <div class="col-md-3"><p><strong>Country:</strong><br />{{ author.country }}</p></div>
+                <div class="col-md-12"><p><strong>Biography:</strong><br />{{ author.biography|safe }}</p></div>
+                <div class="col-md-3"><p><i class="fa">iD&nbsp;</i><strong>ORCiD:</strong><br />{{ author.orcid }}</p></div>
+                <div class="col-md-3"><p><i class="fa fa-twitter">&nbsp;</i><strong>Twitter:</strong><br />{{ author.twitter }}</p></div>
+                <div class="col-md-3"><p><i class="fa fa-linkedin">&nbsp;</i><strong>Linkedin:</strong><br />{{ author.linkedin }}</p></div>
+                <div class="col-md-3"><p><i class="fa fa-facebook-official">&nbsp;</i><strong>Facebook:</strong><br />{{ author.faceboo }}</p></div>
+              </div>
+            </div>
+            {% endfor %}
+            {% elif book.book_type == 'edited_volume' %}
+            <h3>Current Editors</h3>
+            {% for author in book.editor.all %}
+            <div class="well">
+              <h3 class="author_header">{{ author.first_name }} {{ author.last_name }}<span style="float:right"><button name="edit_author" class="btn btn-primary">Edit Editor</button></span></h3>
+              <hr />
+              <div class="row">
+                <div class="col-md-3"><p><strong>Email:</strong><br />{{ author.author_email }}</p></div>
+                <div class="col-md-3"><p><strong>Institution:</strong><br />{{ author.institution }}</p></div>
+                <div class="col-md-3"><p><strong>Department:</strong><br />{{ author.department }}</p></div>
+                <div class="col-md-3"><p><strong>Country:</strong><br />{{ author.country }}</p></div>
+                <div class="col-md-12"><p><strong>Biography:</strong><br />{{ author.biography|safe }}</p></div>
+                <div class="col-md-3"><p><i class="fa">iD&nbsp;</i><strong>ORCiD:</strong><br />{{ author.orcid }}</p></div>
+                <div class="col-md-3"><p><i class="fa fa-twitter">&nbsp;</i><strong>Twitter:</strong><br />{{ author.twitter }}</p></div>
+                <div class="col-md-3"><p><i class="fa fa-linkedin">&nbsp;</i><strong>Linkedin:</strong><br />{{ author.linkedin }}</p></div>
+                <div class="col-md-3"><p><i class="fa fa-facebook-official">&nbsp;</i><strong>Facebook:</strong><br />{{ author.faceboo }}</p></div>
+              </div>
+            </div>
+            {% endfor %}
+            {% endif %}
           </div>
 		  	</div>
 		  </div>

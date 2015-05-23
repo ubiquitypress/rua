@@ -8,6 +8,8 @@ urlpatterns = patterns('',
 	url(r'^book/(?P<book_id>\d+)/stage/two/$', 'submission.views.submission_two', name='submission_two'),
 	url(r'^book/(?P<book_id>\d+)/stage/three/$', 'submission.views.submission_three', name='submission_three'),
 	url(r'^book/(?P<book_id>\d+)/stage/four/$', 'submission.views.submission_four', name='submission_four'),
+	url(r'^book/(?P<book_id>\d+)/stage/four/author/new/$', 'submission.views.author', name='author'),
+	url(r'^book/(?P<book_id>\d+)/stage/four/author/(?P<author_id>\d+)/$', 'submission.views.author', name='author_edit'),
 	url(r'^book/(?P<book_id>\d+)/stage/five/$', 'submission.views.submission_five', name='submission_five'),
 
 	# Ajax url

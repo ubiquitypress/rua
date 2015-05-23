@@ -81,6 +81,7 @@ class Author(models.Model):
 	twitter = models.CharField(max_length=300, null=True, blank=True, verbose_name="Twitter Handle")
 	linkedin = models.CharField(max_length=300, null=True, blank=True, verbose_name="Linkedin Profile")
 	facebook = models.CharField(max_length=300, null=True, blank=True, verbose_name="Facebook Profile")
+	sequence = models.IntegerField(default=1, null=True, blank=True)
 
 class Book(models.Model):
 	prefix = models.CharField(max_length=100, null=True, blank=True)
