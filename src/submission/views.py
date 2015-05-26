@@ -9,9 +9,11 @@ from django import forms
 from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse, HttpResponseForbidden
+from django.utils import timezone
 
 from submission import forms
 from core import models as core_models
+from core import log
 from submission import logic
 
 import mimetypes as mime
@@ -42,7 +44,7 @@ def start_submission(request, book_id=None):
 			book.save()
 
 			if not book_id and book:
-				if book.book_type == 'manuscript':
+				if book.book_type == 'monograph':
 					logic.copy_author_to_submission(request.user, book)
 				elif book.book_type == 'edited_volume':
 					logic.copy_editor_to_submission(request.user, book)
@@ -137,10 +139,21 @@ def submission_four(request, book_id):
 def submission_five(request, book_id):
 	book = get_object_or_404(core_models.Book, pk=book_id, owner=request.user)
 
+	if request.method == 'POST' and 'complete' in request.POST:
+		book.submission_date = timezone.now()
+		stage = core_models.Stage(current_stage='submission', submission=book.submission_date)
+		stage.save()
+		book.stage = stage
+		book.save()
+		log.add_log_entry(book, request.user, 'submission', 'Submission of %s completed' % book.title, 'Submission Completed')
+		return redirect(reverse('user_home'))
+
 	template = 'submission/submission_five.html'
 	context = {
 		'book': book,
 		'active': 5,
+		'manuscript_files': core_models.File.objects.filter(book=book, kind='manuscript'),
+		'additional_files': core_models.File.objects.filter(book=book, kind='additional'),
 	}
 
 	return render(request, template, context)

@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+
+{% load bootstrap3 %}
+
+{% block body %}
+
+ <div class="col-md-12">
+   {% include "submission/snippets/stage_button_group.html" %}
+		<h2>Submission Stage 5 - Review</h2>
+    <form method="post" class="form" enctype="multipart/form-data">
+	    {% csrf_token %}
+        <div class="row">
+          <div class="col-md-12">
+            <h3>Start</h3>
+            <div class="col-md-4"><strong>Type:</strong><br />{{ book.book_type }}</div>
+            <div class="col-md-4"><strong>Series:</strong><br />{{ book.series.name }}</div>
+            <div class="col-md-4"><strong>License:</strong><br />{{ book.license.name }}</div>
+            <div class="col-md-12"><strong>Cover Letter:</strong><br />{{ book.cover_letter|safe }}</div>
+            <h3>Metadata</h3>
+            <div class="col-md-4"><strong>Prefix:</strong><br />{{ book.prefix }}</div>
+            <div class="col-md-4"><strong>Title:</strong><br />{{ book.title }}</div>
+            <div class="col-md-4"><strong>Subtitle:</strong><br />{{ book.subtitle }}</div>
+		  		  <hr />
+            <div class="col-md-12"><strong>Abstract</strong><br />{{ book.description|safe }}</div>
+          </div>
+		  	</div>
+      <hr />
+		  <div class="form-group">
+		  	<div class="row">
+		  		<div class="col-md-12">
+            {% if book.book_type == 'monograph' %}
+            <h3>Authors</h3>
+            {% for author in book.author.all %}
+            <div class="well">
+              <h3 class="author_header">{{ author.first_name }} {{ author.last_name }}</h3>
+              <hr />
+              <div class="row">
+                <div class="col-md-3"><p><strong>Email:</strong><br />{{ author.author_email }}</p></div>
+                <div class="col-md-3"><p><strong>Institution:</strong><br />{{ author.institution }}</p></div>
+                <div class="col-md-3"><p><strong>Department:</strong><br />{{ author.department }}</p></div>
+                <div class="col-md-3"><p><strong>Country:</strong><br />{{ author.country }}</p></div>
+                <div class="col-md-12"><p><strong>Biography:</strong><br />{{ author.biography|safe }}</p></div>
+                <div class="col-md-3"><p><i class="fa">iD&nbsp;</i><strong>ORCiD:</strong><br />{{ author.orcid }}</p></div>
+                <div class="col-md-3"><p><i class="fa fa-twitter">&nbsp;</i><strong>Twitter:</strong><br />{{ author.twitter }}</p></div>
+                <div class="col-md-3"><p><i class="fa fa-linkedin">&nbsp;</i><strong>Linkedin:</strong><br />{{ author.linkedin }}</p></div>
+                <div class="col-md-3"><p><i class="fa fa-facebook-official">&nbsp;</i><strong>Facebook:</strong><br />{{ author.faceboo }}</p></div>
+              </div>
+            </div>
+            {% endfor %}
+            {% elif book.book_type == 'edited_volume' %}
+            <h3>Editors</h3>
+            {% for author in book.editor.all %}
+            <div class="well">
+              <h3 class="author_header">{{ author.first_name }} {{ author.last_name }}</h3>
+              <hr />
+              <div class="row">
+                <div class="col-md-3"><p><strong>Email:</strong><br />{{ author.author_email }}</p></div>
+                <div class="col-md-3"><p><strong>Institution:</strong><br />{{ author.institution }}</p></div>
+                <div class="col-md-3"><p><strong>Department:</strong><br />{{ author.department }}</p></div>
+                <div class="col-md-3"><p><strong>Country:</strong><br />{{ author.country }}</p></div>
+                <div class="col-md-12"><p><strong>Biography:</strong><br />{{ author.biography|safe }}</p></div>
+                <div class="col-md-3"><p><i class="fa">iD&nbsp;</i><strong>ORCiD:</strong><br />{{ author.orcid }}</p></div>
+                <div class="col-md-3"><p><i class="fa fa-twitter">&nbsp;</i><strong>Twitter:</strong><br />{{ author.twitter }}</p></div>
+                <div class="col-md-3"><p><i class="fa fa-linkedin">&nbsp;</i><strong>Linkedin:</strong><br />{{ author.linkedin }}</p></div>
+                <div class="col-md-3"><p><i class="fa fa-facebook-official">&nbsp;</i><strong>Facebook:</strong><br />{{ author.faceboo }}</p></div>
+              </div>
+            </div>
+            {% endfor %}
+            {% endif %}
+          </div>
+		  	</div>
+		  </div>
+      {% if manuscript_files %}
+      <h4>Manuscript Files</h4>
+      <ul class="list-group" id="man_files_sort">
+      {% for file in manuscript_files %}
+        <li id="man-{{ file.id }}" class="list-group-item"><i class="fa fa-file">&nbsp;&nbsp;</i>{{ file.original_filename }}<i style="float: right;" class="fa fa-trash-o"></i></li>
+      {% endfor %}
+      </ul>
+      {% endif %}
+      {% if additional_files %}
+      <h4>Additional Files</h4>
+      <ul class="list-group" id="add_files_sort">
+      {% for file in additional_files %}
+        <li id="add-{{ file.id }}" class="list-group-item"><i class="fa fa-file">&nbsp;&nbsp;</i>{{ file.original_filename }}<i style="float: right;" class="fa fa-trash-o"></i></li>
+      {% endfor %}
+      </ul>
+      {% endif %}
+        <br /><br />
+	    {% buttons %}
+	        <button name="complete" type="submit" class="btn btn-primary">
+	            <i class="fa fa-arrow-right"></i> Complete Submission
+	        </button>
+	    {% endbuttons %}
+		</form>
+	</div>
+{% endblock body %}
+
+{% block js %}
+{% endblock %}
