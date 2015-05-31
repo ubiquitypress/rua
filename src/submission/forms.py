@@ -17,11 +17,16 @@ class SubmitProposal(forms.ModelForm):
 
 class SubmitBookStageOne(forms.ModelForm):
 
+	book_type = forms.CharField(required=True, widget=forms.Select(choices=core_models.book_type_choices()))
+
 	class Meta:
 		model = core_models.Book
 		fields = ('book_type', 'cover_letter', 'series', 'license')
 
 class SubmitBookStageTwo(forms.ModelForm):
+
+	title = forms.CharField(required=True)
+	description = forms.CharField(required=True, widget=forms.Textarea)
 
 	class Meta:
 		model = core_models.Book

@@ -16,11 +16,11 @@
 	<body>
 	<div id="wrap">
 	{% include "nav.html" %}
-	<div class="container"> 
+	<div class="container">
 		{% block breadcrumbs %}
 		{% endblock %}
 		{% for message in messages %}
-			<div class="alert alert-{{ message.tags }} alert-dismissible fade" role="alert">
+			<div class="alert alert-{{ message.tags }} alert-dismissible" role="alert">
 				<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 				{{ message }}
 			</div>
@@ -40,9 +40,6 @@
 	<script type="text/javascript" src="{% static "js/jquery-te-1.4.0.min.js" %}"></script>
 	<script src="{% static "js/holder.js" %}"></script>
 	<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
-	<script type="text/javascript">
-		$(".alert").delay(200).addClass("in").fadeOut(2000);
-	</script>
 	<script type="text/javascript">
 		$('input[id=lefile]').change(function() {
 		$('#id_profile_image').val($(this).val());

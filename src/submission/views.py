@@ -99,10 +99,13 @@ def submission_three(request, book_id):
 				handle_file(file, book, 'additional')
 
 		if 'next_stage' in request.POST:
-			if not book.submission_stage > 4:
-				book.submission_stage = 4
-			book.save()
-			return redirect(reverse('submission_four', kwargs={'book_id': book.id}))
+			if manuscript_files.count() >= 1:
+				if not book.submission_stage > 4:
+					book.submission_stage = 4
+				book.save()
+				return redirect(reverse('submission_four', kwargs={'book_id': book.id}))
+			else:
+				messages.add_message(request, messages.ERROR, 'You must upload a Manuscript File.')
 
 		# Catch, after any post we always redirect to avoid someone resubmitting the same file twice.
 		return redirect(reverse('submission_three', kwargs={'book_id': book.id}))
@@ -122,10 +125,14 @@ def submission_four(request, book_id):
 	book = get_object_or_404(core_models.Book, pk=book_id, owner=request.user)
 
 	if request.method == 'POST' and 'next_stage' in request.POST:
-		if not book.submission_stage > 5:
-			book.submission_stage = 5
-			book.save()
-		return redirect(reverse('submission_five', kwargs={'book_id': book.id}))
+		if book.author.count() >= 1 or book.editor.count() >= 1:
+			if not book.submission_stage > 5:
+				book.submission_stage = 5
+				book.save()
+			return redirect(reverse('submission_five', kwargs={'book_id': book.id}))
+		else:
+			messages.add_message(request, messages.ERROR, 'You must add at least one author or editor.')
+
 
 	template = 'submission/submission_four.html'
 	context = {
