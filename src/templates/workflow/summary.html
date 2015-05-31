@@ -10,7 +10,7 @@
 		<td>{{ submission.title }}</td>
 		<td>{{ submission.subtitle }}</td>
 		<td>{{ submission.series }}</td>
-		<td>{{ submission.license }}</td>
+		<td>{{ submission.license }} {{ submission.license.version }}</td>
 		<td>{{ submission.stage.get_current_stage_display }}</td>
 	</tr>
 	<tr>
