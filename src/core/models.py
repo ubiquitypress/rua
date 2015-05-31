@@ -177,7 +177,7 @@ class File(models.Model):
 	sequence = models.IntegerField(default=1)
 
 	class Meta:
-		ordering = ('sequence', 'kind')
+		ordering = ('sequence', '-kind')
 
 class Subject(models.Model):
 	name = models.CharField(max_length=250)

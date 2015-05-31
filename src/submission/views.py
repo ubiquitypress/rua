@@ -133,7 +133,6 @@ def submission_four(request, book_id):
 		else:
 			messages.add_message(request, messages.ERROR, 'You must add at least one author or editor.')
 
-
 	template = 'submission/submission_four.html'
 	context = {
 		'book': book,

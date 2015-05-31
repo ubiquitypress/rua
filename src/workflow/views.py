@@ -122,5 +122,11 @@ def serve_file(request, submission_id, file_id):
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 @login_required
-def delete_file(request, submission_id, file_id):
+def delete_file(request, submission_id, file_id, returner):
+    book = get_object_or_404(models.Book, pk=submission_id)
     _file = get_object_or_404(models.File, pk=file_id)
+    file_id = _file.id
+    _file.delete()
+
+    if returner == 'new':
+        return redirect(reverse('view_new_submission', kwargs={'submission_id': book.id}))
