@@ -126,6 +126,7 @@ class License(models.Model):
 	name = models.CharField(max_length=1000)
 	short_name = models.CharField(max_length=100)
 	description = models.TextField(null=True, blank=True)
+	version = models.CharField(max_length=10)
 	url = models.URLField(null=True, blank=True)
 
 	def __unicode__(self):

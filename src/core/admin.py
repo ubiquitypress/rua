@@ -14,8 +14,8 @@ class BookAdmin(admin.ModelAdmin):
 	search_fields = ('title', 'doi', 'publication_date')
 
 class LicenseAdmin(admin.ModelAdmin):
-	list_display = ('name', 'short_name')
-	search_fields = ('name', 'short_name')
+	list_display = ('name', 'short_name', 'version', 'url')
+	search_fields = ('name', 'short_name' 'version')
 
 class TaskAdmin(admin.ModelAdmin):
     list_display = ('assignee', 'creator', 'text', 'workflow')
