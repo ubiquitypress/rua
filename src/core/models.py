@@ -176,8 +176,23 @@ class File(models.Model):
 	kind = models.CharField(max_length=100)
 	sequence = models.IntegerField(default=1)
 
+	def __unicode__(self):
+		return u'%s' % self.original_filename
+
+	def __repr__(self):
+		return u'%s' % self.original_filename
+
 	class Meta:
 		ordering = ('sequence', '-kind')
+
+class FileVersion(models.Model):
+	file = models.ForeignKey(File)
+	original_filename = models.CharField(max_length=1000)
+	uuid_filename = models.CharField(max_length=100)
+	date_uploaded = models.DateTimeField()
+
+	class Meta:
+		ordering = ('-date_uploaded',)
 
 class Subject(models.Model):
 	name = models.CharField(max_length=250)

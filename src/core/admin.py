@@ -34,6 +34,7 @@ admin_list = [
     (License, LicenseAdmin),
     (Task, TaskAdmin),
     (File,),
+    (FileVersion,),
     (Stage,),
     (Subject,),
     (Keyword,),
