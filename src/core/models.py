@@ -257,3 +257,35 @@ class Log(models.Model):
 	short_name = models.CharField(max_length=100)
 	message = models.TextField()
 	date_logged = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+
+setting_types = (
+	('rich_text', 'Rich Text'),
+	('text', 'Text'),
+	('char', 'Characters'),
+	('number', 'Number'),
+	('boolean', 'Boolean'),
+	('file', 'File'),
+)
+
+class SettingGroup(models.Model):
+	name = models.CharField(max_length=100)
+	enabled = models.BooleanField(default=True)
+
+	def __unicode__(self):
+		return u'%s' % self.name
+
+	def __repr__(self):
+		return u'%s' % self.name
+
+class Setting(models.Model):
+	name = models.CharField(max_length=100)
+	group = models.ForeignKey(SettingGroup)
+	types = models.CharField(max_length=20, choices=setting_types)
+	value = models.TextField(null=True, blank=True)
+
+	def __unicode__(self):
+		return u'%s' % self.name
+
+	def __repr__(self):
+		return u'%s' % self.name
+

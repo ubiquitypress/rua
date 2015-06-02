@@ -27,6 +27,9 @@ class LogAdmin(admin.ModelAdmin):
     list_filter = ('kind', 'book')
     search_fields = ('message',)
 
+class SettingAdmin(admin.ModelAdmin):
+    list_display = ('name', 'group', 'types')
+
 admin_list = [
     (Author, AuthorAdmin),
     (Profile, ProfileAdmin),
@@ -40,6 +43,8 @@ admin_list = [
     (Keyword,),
     (Series,),
     (Log, LogAdmin),
+    (Setting, SettingAdmin),
+    (SettingGroup,),
 ]
 
 [admin.site.register(*t) for t in admin_list]
