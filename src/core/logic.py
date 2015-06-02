@@ -2,6 +2,10 @@ from django.core.mail import EmailMultiAlternatives
 from django.template.loader import get_template
 from django.template import Context
 
+from core import models
+
+from pprint import pprint
+
 def send_email(subject, context, from_email, to, html_template, text_template=None):
 	plaintext = get_template(text_template)
 	htmly     = get_template(html_template)
@@ -14,3 +18,10 @@ def send_email(subject, context, from_email, to, html_template, text_template=No
 	msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
 	msg.attach_alternative(html_content, "text/html")
 	msg.send()
+
+def press_settings():
+	_dict = {}
+	for group in models.SettingGroup.objects.all():
+		_dict[group.name] = {setting.name:setting.value for setting in models.Setting.objects.filter(group=group)}
+
+	return _dict

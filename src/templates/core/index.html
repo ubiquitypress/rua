@@ -4,9 +4,8 @@
 {% block body %}
 	<div class="row">
 		<div class="col-md-5">
-			<h3>Title of Press</h3>
-			<p>This is a description block where information about this press can be entered. This text block should be replace with text pulled from a database setting at some point, though for now I don't really need it to.</p>
-			<p>This press has some specialities like publishing Alien Autopsy reports and April Fools reviews</p>
+			<h3>{{ press.general.press_name }}</h3>
+			{{ press.general.description|safe }}
 		</div>
 		<div class="col-md-7">
 			<img class="img-responsive" src="/media/img/digital_publishing.jpg" alt="home" />
