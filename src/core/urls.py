@@ -28,14 +28,16 @@ urlpatterns = patterns('',
     url(r'^user/profile/$', 'core.views.view_profile', name='view_profile'),
     url(r'^user/profile/update/$', 'core.views.update_profile', name='update_profile'),
     url(r'^user/profile/resetpassword/$', 'core.views.reset_password', name='reset_password'),
-     url(r'^user/task/new/$', 'core.views.task_new', name='task_new'),
+    url(r'^user/task/new/$', 'core.views.task_new', name='task_new'),
     url(r'^user/task/(?P<task_id>[-\w./]+)/complete/$', 'core.views.task_complete', name='task_complete'),
 )
+
+handler403 = 'core.views.permission_denied'
 
 # Allow Django to serve static content only in debug/dev mode
 if settings.DEBUG:
     urlpatterns += patterns('',
         url(r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT}),
-        url(r'^404/$', TemplateView.as_view(template_name='404.html')),
-        url(r'^500/$', TemplateView.as_view(template_name='500.html')),
+        url(r'^404/$', TemplateView.as_view(template_name='core/404.html')),
+        url(r'^500/$', TemplateView.as_view(template_name='core/500.html')),
     )

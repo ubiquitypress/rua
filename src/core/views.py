@@ -175,6 +175,12 @@ def reset_password(request):
 def unauth_reset(request):
 	pass
 
+def permission_denied(request):
+
+	template = 'core/403.html'
+	context = {}
+
+	return render(request, template, context)
 
 # AJAX Handlers
 
