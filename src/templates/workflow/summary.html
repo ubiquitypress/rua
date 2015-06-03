@@ -7,7 +7,7 @@
 		<td width="15%"><strong>Stage</strong></td>
 	</tr>
 	<tr>
-		<td>{{ submission.title }}</td>
+		<td>{% if submission.prefix %}{{ submission.prefix }} {% endif %}{{ submission.title }}</td>
 		<td>{{ submission.subtitle }}</td>
 		<td>{{ submission.series }}</td>
 		<td>{{ submission.license }} {{ submission.license.version }}</td>
