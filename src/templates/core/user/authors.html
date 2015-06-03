@@ -1,0 +1,37 @@
+{% for author in submission.author.all %}
+<table class="table table-striped">
+<tr>
+	<th width="20%">Name</th>
+	<th width="20%">Institution</th>
+	<th width="20%">Department</th>
+	<th width="20%">Country</th>
+	<th width="20%">Email</th>
+</tr>
+<tr>
+	<td>{{ author.first_name }} {% if author.middle_name %}{{ author.middle_name}} {% endif %}{{ author.last_name }}</td>
+	<td>{{ author.institution }}</td>
+	<td>{{ author.department }}</td>
+	<td>{{ author.country }}</td>
+	<td>{{ author.author_email }}</td>
+</tr>
+<tr>
+	<th colspan="5">Biography</th>
+</tr>
+<tr>
+	<td colspan="5">{{ author.biography|safe }}</td>
+</tr>
+<tr>
+	<th width="25%" colspan="2">ORCiD</th>
+	<th width="25%">Twitter</th>
+	<th width="25%">Facebook</th>
+	<th width="25%">Linkedin</th>
+</tr>
+<tr>
+	<td colspan="2">{{ author.orcid }}</td>
+	<td>{{ author.twitter }}</td>
+	<td>{{ author.facebook }}</td>
+	<td>{{ author.linkedin }}</td>
+</tr>
+</table>
+<br />
+{% endfor %}
