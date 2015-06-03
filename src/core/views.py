@@ -149,6 +149,17 @@ def user_home(request):
 	return render(request, template, context)
 
 @login_required
+def user_submission(request, submission_id):
+	book = get_object_or_404(models.Book, pk=submission_id, owner=request.user)
+
+	template = 'core/user/user_submission.html'
+	context = {
+		'submission': book,
+	}
+
+	return render(request, template, context)
+
+@login_required
 def reset_password(request):
 
 	if request.method == 'POST':

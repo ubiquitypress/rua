@@ -59,7 +59,7 @@
 			<h3><i class="fa fa-tasks"></i>&nbsp;My Submissions</h3>
 			{% for submission in user_submissions %}
 			<div class="bs-callout bs-callout-submission" id="callout-helper-bg-specificity">
-				<p>{{ submission.title|truncatechars:70 }}</p>
+				<p>{% if submission.stage %}<a href="{% url 'user_submission' submission.id %}">{% else %}<a href="/submission/book/{{ submission.id }}/stage/{{ submission.submission_stage }}/">{% endif %}{{ submission.title|truncatechars:70 }} - <span class="small">{% if submission.stage %}Completed{% else %}In progress{% endif %}</span></p></a>
 			</div>
 			{% empty %}
 			<div class="bs-callout bs-callout" id="callout-helper-bg-specificity">

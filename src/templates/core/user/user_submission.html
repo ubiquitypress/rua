@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% load bootstrap3 %}
+
+{% block title %}{% endblock %}
+
+{% block breadcrumbs %}
+    <ol class="breadcrumb">
+	  <li><a href="{% url 'user_home' %}">User Home</a></li>
+	  <li class="">Submissions</li>
+    <li class="active">{{ submission.title }}</li>
+	</ol>
+{% endblock %}
+
+{% block body %}
+<div class="col-md-12">
+  <h3>{{ submission.title }}</h3>
+  <hr />
+  <h4 id="summary">Summary</h4>
+  {% include "workflow/summary.html" %}
+  <hr />
+  <h4 id="files">Files</h4>
+  {% include "core/user/read_only_file_block.html" %}
+</div>
+
+{% endblock %}

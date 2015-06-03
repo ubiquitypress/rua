@@ -30,6 +30,8 @@ urlpatterns = patterns('',
     url(r'^user/profile/resetpassword/$', 'core.views.reset_password', name='reset_password'),
     url(r'^user/task/new/$', 'core.views.task_new', name='task_new'),
     url(r'^user/task/(?P<task_id>[-\w./]+)/complete/$', 'core.views.task_complete', name='task_complete'),
+
+    url(r'^user/submission/(?P<submission_id>\d+)/$', 'core.views.user_submission', name='user_submission'),
 )
 
 handler403 = 'core.views.permission_denied'
