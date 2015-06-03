@@ -64,6 +64,8 @@ def submission_two(request, book_id):
 	book = get_object_or_404(core_models.Book, pk=book_id, owner=request.user)
 	book_form = forms.SubmitBookStageTwo(instance=book)
 
+	logic.check_stage(book.submission_stage, 2)
+
 	if request.method == 'POST':
 		book_form = forms.SubmitBookStageTwo(request.POST, instance=book)
 		if book_form.is_valid():
@@ -87,6 +89,8 @@ def submission_three(request, book_id):
 	book = get_object_or_404(core_models.Book, pk=book_id, owner=request.user)
 	manuscript_files = core_models.File.objects.filter(book=book, kind='manuscript')
 	additional_files = core_models.File.objects.filter(book=book, kind='additional')
+
+	logic.check_stage(book.submission_stage, 3)
 
 	if request.method == 'POST':
 		if 'manuscript_upload' in request.POST:
@@ -124,6 +128,8 @@ def submission_three(request, book_id):
 def submission_four(request, book_id):
 	book = get_object_or_404(core_models.Book, pk=book_id, owner=request.user)
 
+	logic.check_stage(book.submission_stage, 4)
+
 	if request.method == 'POST' and 'next_stage' in request.POST:
 		if book.author.count() >= 1 or book.editor.count() >= 1:
 			if not book.submission_stage > 5:
@@ -144,6 +150,8 @@ def submission_four(request, book_id):
 @login_required
 def submission_five(request, book_id):
 	book = get_object_or_404(core_models.Book, pk=book_id, owner=request.user)
+
+	logic.check_stage(book.submission_stage, 5)
 
 	if request.method == 'POST' and 'complete' in request.POST:
 		book.submission_date = timezone.now()
