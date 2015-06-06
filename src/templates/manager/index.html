@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% load bootstrap3 %}
+
+{% block breadcrumbs %}
+  <ol class="breadcrumb">
+	  <li>Manager</li>
+		<li><a class="active" href="{% url 'manager_index' %}">Index</a></li>
+	</ol>
+{% endblock %}
+
+{% block body %}
+	<div class="col-md-12">
+		<h2>{{ press.general.press_name }} Manager</h2>
+		<div class="col-md-4  ">
+			<h3>Management Pages</h3>
+			<ul class="list-group">
+				<a class="list-group-item list-group-item-info" href="#">Settings</a>
+			</ul>
+		</div>
+
+		<div class="col-md-4  ">
+			<h3>Users</h3>
+			<ul class="list-group">
+				<a class="list-group-item list-group-item-info" href="{% url 'manager_groups' %}">Groups</a>
+				<a class="list-group-item list-group-item-info" href="#">Group Memberships</a>
+				<a class="list-group-item list-group-item-info" href="#">Users</a>
+			</ul>
+		</div>
+	</div>
+{% endblock body %}

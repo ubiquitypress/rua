@@ -45,6 +45,7 @@ INSTALLED_APPS = (
     'core',
     'submission',
     'workflow',
+    'manager',
 
     # 3rd Party
     'bootstrap3',

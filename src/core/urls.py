@@ -10,6 +10,7 @@ urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
     url(r'^submission/', include('submission.urls')),
     url(r'^workflow/', include('workflow.urls')),
+    url(r'^manager/', include('manager.urls')),
     
     url(r'^$', 'core.views.index', name='index'),
     url(r'^contact/$', 'core.views.contact', name='contact'),

@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% load static from staticfiles %}
+{% load bootstrap3 %}
+
+{% block breadcrumbs %}
+  <ol class="breadcrumb">
+	  <li>Manager</li>
+		<li><a class="active" href="{% url 'manager_groups' %}">Groups</a></li>
+	</ol>
+{% endblock %}
+
+{% block body %}
+	<div class="col-md-6">
+		<h2>{{ press.general.press_name }} Groups <a href="{% url 'manager_group_add' %}" class="btn btn btn-primary" style="float: right;"><i class="fa fa-plus"> Add</i></a></h2>
+    <ul class="list-group" id="group_files_sort">
+      {% for group in groups %}<li id="group-{{ group.id }}" class="list-group-item ui-sortable-handle"><i class="fa fa-sort">&nbsp;&nbsp;</i><i class="fa fa-users">&nbsp;&nbsp;</i>{{ group.name }}<span style="float: right;"><a href="{% url 'manager_group_edit' group.id %}"><i class="fa fa-edit"></i></a>&nbsp;&nbsp;<a href="{% url 'manager_group_delete' group.id %}"><i class="fa fa-trash-o"></i></a></span></li>{% endfor %}
+    </ul>
+  </div>
+{% endblock body %}
+
+{% block js %}
+<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+<script type="text/javascript" src="{% static "js/fancyfile.js" %}"></script>
+<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+<script>
+$(function() {
+  $( "#group_files_sort" ).sortable({
+    placeholder: "ui-state-highlight",
+    update: function (event, ui) {
+        var data = $(this).sortable('serialize');
+        console.log(data);
+
+        // POST to server using $.post or $.ajax
+        $.ajax({
+            data: data,
+            type: 'POST',
+            url: '{% url 'manager_groups_order' %}'
+        });
+    }
+  });
+
+  $( "#group_files_sort" ).disableSelection();
+});
+</script>
+{% endblock %}

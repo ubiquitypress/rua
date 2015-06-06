@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% load bootstrap3 %}
+
+{% block breadcrumbs %}
+  <ol class="breadcrumb">
+	  <li>Manager</li>
+    <li><a href="{% url 'manager_groups' %}">Groups</a></li>
+		{% if group %}<li><a class="active" href="{% url 'manager_group_edit' group.id %}">{{ group.name }}</a></li>{% endif %}
+	</ol>
+{% endblock %}
+
+{% block body %}
+	<div class="col-md-12">
+		<h2>{% if group %}{{ group.name }}{% else %}Add New Group{% endif %}</h2>
+		<div class="col-md-6">
+      <form method="post" class="form">
+        {% csrf_token %}
+        {% bootstrap_form form %}
+        {% buttons %}
+            <button type="submit" class="btn btn-primary">
+                Submit
+            </button>
+        {% endbuttons %}
+      </form>
+    </div>
+	</div>
+{% endblock body %}
