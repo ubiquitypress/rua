@@ -15,8 +15,8 @@ class Group(models.Model):
     sequence = models.IntegerField()
 
     class Meta:
-		ordering = ('sequence',)
-        
+		ordering = ('sequence', 'name')
+
     def __unicode__(self):
         return u'%s' % self.name
 
@@ -28,3 +28,6 @@ class GroupMembership(models.Model):
     user = models.ForeignKey(User)
     added = models.DateField(auto_now=True)
     sequence = models.IntegerField()
+
+    class Meta:
+		ordering = ('sequence', 'added')
