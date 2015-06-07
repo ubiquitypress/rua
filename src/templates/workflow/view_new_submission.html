@@ -34,7 +34,7 @@
   <p>Select an action below to move this submission through the workflow. Expedite will move the submission passed review and straight into Editing. Note, the book will display that it was not reviewed. Declining will allow you to send an email to the author detailing why the submission is not suitable.</p>
   <div class="btn-group btn-group-justified" role="group">
     <div class="btn-group" role="group">
-      <a href="" type="button" class="btn btn-primary" data-toggle="modal" data-target="#internalmodal">Internal Review</a>
+      <a href="{% url 'view_new_submission' submission.id %}#indv-reviewer" type="button" class="btn btn-primary" data-toggle="modal" data-target="#internalmodal">Internal Review</a>
     </div>
     <div class="btn-group" role="group">
       <a href="{% url 'in_review' %}" type="button" class="btn btn-primary">External Review</a>
@@ -83,13 +83,25 @@
         <hr />
         <h4>2. Committee Review</h4>
         <p class="small">You can assign a committee to review your submission. The committee will each be asked to comment and vote on a recommended decision.</p>
-        <ul>{% for committee in committees %}
-        <li>{{ committee.name }}</li>
-        {% endfor %}</ul>
+        <table class="table table-condensed" cellspacing="0" width="100%" id='comm-reviewer'>
+          <thead>
+          <tr>
+            <th>Committee Name</th>
+            <th>Number of Members</th>
+            <th></th<
+          </tr>
+          </thead>
+          {% for committee in committees %}
+          <tr>
+            <td>{{ committee.name }}</td>
+            <td>{{ committee.groupmembership_set.all.count }}</td>
+            <td>Select</td>
+          </tr>
+          {% endfor %}
+        </table>
       </div>
       <div class="modal-footer">
-
-        <button id="#new_task" class="btn btn-primary">Submit</button>
+        <button id="#int-review" class="btn btn-primary">Submit</button>
       </div>
     </div>
   </div>
@@ -106,5 +118,17 @@
         "lengthMenu": [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]]
       });
   } );
+
+  $(document).ready(function() {
+      $('#comm-reviewer').DataTable({
+        "lengthMenu": [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]]
+      });
+  } );
+
+  if (window.location.hash == "#indv-reviewer") {
+     $('#internalmodal').modal('show');
+}
 </script>
+
+
 {% endblock js %}

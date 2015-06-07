@@ -3,8 +3,8 @@
 
 {% block breadcrumbs %}
   <ol class="breadcrumb">
-	  <li>Manager</li>
-		<li><a class="active" href="{% url 'manager_index' %}">Index</a></li>
+	  <li><a class="active" href="{% url 'manager_index' %}">Manager</a></li>
+		<li>Index</li>
 	</ol>
 {% endblock %}
 
@@ -21,9 +21,10 @@
 		<div class="col-md-4  ">
 			<h3>Users</h3>
 			<ul class="list-group">
+        <a class="list-group-item list-group-item-info" href="#">Users</a>
 				<a class="list-group-item list-group-item-info" href="{% url 'manager_groups' %}">Groups</a>
-				<a class="list-group-item list-group-item-info" href="#">Users</a>
-			</ul>
+        <a class="list-group-item list-group-item-info" href="{% url 'manager_roles' %}">Roles</a>
+      </ul>
 		</div>
 	</div>
 {% endblock body %}

@@ -8,6 +8,8 @@ urlpatterns = patterns('',
 
     # New Submissions
     url(r'^$', 'manager.views.index', name='manager_index'),
+
+    # Group Management
     url(r'^groups/$', 'manager.views.groups', name='manager_groups'),
     url(r'^groups/order/$', 'manager.views.groups_order', name='manager_groups_order'),
     url(r'^groups/add/$', 'manager.views.group', name='manager_group_add'),
@@ -17,4 +19,10 @@ urlpatterns = patterns('',
     url(r'^groups/(?P<group_id>\d+)/members/user/(?P<user_id>\d+)/assign/$', 'manager.views.group_members_assign', name='group_members_assign'),
     url(r'^groups/(?P<group_id>\d+)/members/order$', 'manager.views.group_members_order', name='group_members_order'),
     url(r'^groups/(?P<group_id>\d+)/members/(?P<member_id>\d+)/delete$', 'manager.views.manager_membership_delete', name='manager_membership_delete'),
+
+    # Role Management
+    url(r'^roles/$', 'manager.views.roles', name='manager_roles'),
+    url(r'^roles/(?P<slug>[-\w.]+)/$', 'manager.views.role', name='manager_role'),
+    url(r'^roles/(?P<slug>[-\w.]+)/user/(?P<user_id>\d+)/(?P<action>[-\w.]+)/$', 'manager.views.role_action', name='manager_role_action'),
+
 )

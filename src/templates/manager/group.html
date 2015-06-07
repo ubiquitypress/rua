@@ -3,8 +3,8 @@
 
 {% block breadcrumbs %}
   <ol class="breadcrumb">
-	  <li>Manager</li>
-    <li><a href="{% url 'manager_groups' %}">Groups</a></li>
+    <li><a href="{% url 'manager_index' %}">Manager</a></li>
+    <li><a class="active" href="{% url 'manager_groups' %}">Groups</a></li>
 		{% if group %}<li><a class="active" href="{% url 'manager_group_edit' group.id %}">{{ group.name }}</a></li>{% endif %}
 	</ol>
 {% endblock %}

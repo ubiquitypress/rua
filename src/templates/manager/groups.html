@@ -4,7 +4,7 @@
 
 {% block breadcrumbs %}
   <ol class="breadcrumb">
-	  <li>Manager</li>
+    <li><a href="{% url 'manager_index' %}">Manager</a></li>
 		<li><a class="active" href="{% url 'manager_groups' %}">Groups</a></li>
 	</ol>
 {% endblock %}
