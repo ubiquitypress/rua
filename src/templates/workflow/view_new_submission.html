@@ -12,6 +12,10 @@
 	</ol>
 {% endblock %}
 
+{% block css %}
+<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/plug-ins/1.10.7/integration/bootstrap/3/dataTables.bootstrap.css">
+{% endblock css %}
+
 {% block body %}
 <div class="col-md-12">
   <h3>{{ submission.title }}</h3>
@@ -30,7 +34,7 @@
   <p>Select an action below to move this submission through the workflow. Expedite will move the submission passed review and straight into Editing. Note, the book will display that it was not reviewed. Declining will allow you to send an email to the author detailing why the submission is not suitable.</p>
   <div class="btn-group btn-group-justified" role="group">
     <div class="btn-group" role="group">
-      <a href="{% url 'new_submissions' %}" type="button" class="btn btn-primary">Internal Review</a>
+      <a href="" type="button" class="btn btn-primary" data-toggle="modal" data-target="#internalmodal">Internal Review</a>
     </div>
     <div class="btn-group" role="group">
       <a href="{% url 'in_review' %}" type="button" class="btn btn-primary">External Review</a>
@@ -44,4 +48,63 @@
   </div>
 </div>
 
+<!-- Modal -->
+<div class="modal fade" id="internalmodal" tabindex="-1" role="dialog" aria-labelledby="internalreview" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Internal Review</h4>
+      </div>
+      <div class="modal-body">
+      	{% csrf_token %}
+        <p>Select an option for internal review</p>
+        <h4>1. Individual Review</h4>
+        <p class="small">You can assign an individual reviewer. The reviewer will be asked to comment and make a recommendation.</p>
+        <hr />
+        <table class="table table-condensed" cellspacing="0" width="100%" id='indv-reviewer'>
+          <thead>
+          <tr>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Email</th>
+            <th></th<
+          </tr>
+          </thead>
+          {% for reviewer in reviewers %}
+          <tr>
+            <td>{{ reviewer.first_name }}</td>
+            <td>{{ reviewer.last_name }}</td>
+            <td>{{ reviewer.email }}</td>
+            <td>Select</td>
+          </tr>
+          {% endfor %}
+        </table>
+        <hr />
+        <h4>2. Committee Review</h4>
+        <p class="small">You can assign a committee to review your submission. The committee will each be asked to comment and vote on a recommended decision.</p>
+        <ul>{% for committee in committees %}
+        <li>{{ committee.name }}</li>
+        {% endfor %}</ul>
+      </div>
+      <div class="modal-footer">
+
+        <button id="#new_task" class="btn btn-primary">Submit</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 {% endblock %}
+
+{% block js %}
+<script type="text/javascript" language="javascript" src="//cdn.datatables.net/1.10.7/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" language="javascript" src="//cdn.datatables.net/plug-ins/1.10.7/integration/bootstrap/3/dataTables.bootstrap.js"></script>
+<script>
+  $(document).ready(function() {
+      $('#indv-reviewer').DataTable({
+        "lengthMenu": [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]]
+      });
+  } );
+</script>
+{% endblock js %}

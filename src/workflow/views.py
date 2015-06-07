@@ -18,6 +18,7 @@ from django.conf import settings
 from core import models
 from core import forms
 from core import log
+from manager import models as manager_models
 
 from pprint import pprint
 import os
@@ -42,10 +43,16 @@ def new_submissions(request):
 def view_new_submission(request, submission_id):
 
 	submission = get_object_or_404(models.Book, pk=submission_id)
+	reviewers = models.User.objects.filter(profile__roles__slug='reviewer')
+	committees = manager_models.Group.objects.filter(group_type='review_committee')
+
+	pprint(committees)
 
 	template = 'workflow/view_new_submission.html'
 	context = {
 		'submission': submission,
+		'reviewers': reviewers,
+		'committees': committees,
 		'active': 'new',
 	}
 

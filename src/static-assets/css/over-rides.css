@@ -183,3 +183,8 @@ body {
 .author_header {
   margin-bottom: 0;
 }
+
+.modal-dialog {
+  width: 950px;
+  margin: 40px auto;
+}

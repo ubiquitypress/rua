@@ -66,6 +66,7 @@ class Profile(models.Model):
 	email_sent = models.DateTimeField(blank=True, null=True)
 	date_confirmed = models.DateTimeField(blank=True, null=True)
 	confirmation_code = models.CharField(max_length=200, blank=True, null=True)
+	roles = models.ManyToManyField('Role')
 
 class Author(models.Model):
 	first_name = models.CharField(max_length=100)
