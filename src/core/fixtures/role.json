@@ -1,0 +1,58 @@
+[
+{
+    "fields": {
+        "name": "Reader",
+        "slug": "reader"
+    },
+    "model": "core.role",
+    "pk": 1
+},
+{
+    "fields": {
+        "name": "Author",
+        "slug": "author"
+    },
+    "model": "core.role",
+    "pk": 2
+},
+{
+    "fields": {
+        "name": "Copyeditor",
+        "slug": "copyeditor"
+    },
+    "model": "core.role",
+    "pk": 3
+},
+{
+    "fields": {
+        "name": "Reviewer",
+        "slug": "reviewer"
+    },
+    "model": "core.role",
+    "pk": 4
+},
+{
+    "fields": {
+        "name": "Press Editor",
+        "slug": "press-editor"
+    },
+    "model": "core.role",
+    "pk": 5
+},
+{
+    "fields": {
+        "name": "Book Editor",
+        "slug": "book-editor"
+    },
+    "model": "core.role",
+    "pk": 6
+},
+{
+    "fields": {
+        "name": "Series Editor",
+        "slug": "series-editor"
+    },
+    "model": "core.role",
+    "pk": 7
+}
+]

@@ -30,6 +30,10 @@ class LogAdmin(admin.ModelAdmin):
 class SettingAdmin(admin.ModelAdmin):
     list_display = ('name', 'group', 'types')
 
+class RoleAdmin(admin.ModelAdmin):
+    list_display = ('name',)
+    search_fields = ('name',)
+
 admin_list = [
     (Author, AuthorAdmin),
     (Profile, ProfileAdmin),
@@ -45,6 +49,7 @@ admin_list = [
     (Log, LogAdmin),
     (Setting, SettingAdmin),
     (SettingGroup,),
+    (Role, RoleAdmin,),
 ]
 
 [admin.site.register(*t) for t in admin_list]

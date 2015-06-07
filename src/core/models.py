@@ -244,6 +244,16 @@ class Task(models.Model):
 	due = models.DateField(null=True, blank=True)
 	completed = models.DateField(null=True, blank=True)
 
+class Role(models.Model):
+	name = models.CharField(max_length=100)
+	slug = models.CharField(max_length=100)
+
+	def __unicode__(self):
+		return u'%s' % self.name
+
+	def __repr__(self):
+		return u'%s' % self.name
+
 log_choices = (
 	('submission', 'Submission'),
 	('workflow', 'Workflow'),
@@ -288,4 +298,3 @@ class Setting(models.Model):
 
 	def __repr__(self):
 		return u'%s' % self.name
-
