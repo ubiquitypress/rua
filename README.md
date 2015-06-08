@@ -41,8 +41,6 @@ To start hacking run (from the src folder):
 
 You'll now be able to access the server from http://localhost:8000
 
-To apply this patch to an OJS installation running on PSQL or MSSQL you will need to recreate the tbl_draft_decisions.sql in your own syntax.
-
 # Credit
 A development team of volunteers from [Ubiquity Press](http://ubiquitypress.com/) is working on this software, though it is not supported directly by Ubiquity Press.
 
