@@ -11,6 +11,8 @@ from django import forms
 from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Q
+from django.contrib.admin.views.decorators import staff_member_required
+from django.db import IntegrityError
 
 
 from django.conf import settings
@@ -44,9 +46,66 @@ def view_new_submission(request, submission_id):
 
 	submission = get_object_or_404(models.Book, pk=submission_id)
 	reviewers = models.User.objects.filter(profile__roles__slug='reviewer')
+
 	committees = manager_models.Group.objects.filter(group_type='review_committee')
 
-	pprint(committees)
+	if request.POST:
+		review_type = 'internal'
+		files = models.File.objects.filter(pk__in=request.POST.getlist('file'))
+		reviewers = User.objects.filter(pk__in=request.POST.getlist('reviewer'))
+		committees = manager_models.Group.objects.filter(pk__in=request.POST.getlist('committee'))
+		due_date = request.POST.get('due_date')
+
+		# Handle files
+		for file in files:
+			submission.review_files.add(file)
+
+		# Handle reviewers
+		for reviewer in reviewers:
+			new_review_assignment = models.ReviewAssignment(
+				review_type=review_type,
+				user=reviewer,
+				book=submission,
+				due=due_date,
+				access_key=str(uuid4()),
+			)
+
+			try:
+				new_review_assignment.save()
+				submission.review_assignments.add(new_review_assignment)
+				log.add_log_entry(book=submission, user=request.user, kind='review', message='Reviewer %s %s assigned.' % (reviewer.first_name, reviewer.last_name), short_name='Review Assignment')
+			except IntegrityError:
+				messages.add_message(request, messages.WARNING, '%s %s is already a reviewer' % (reviewer.first_name, reviewer.last_name))
+
+		# Handle committees
+		for committee in committees:
+			members = manager_models.GroupMembership.objects.filter(group=committee)
+			for member in members:
+				new_review_assignment = models.ReviewAssignment(
+					review_type=review_type,
+					user=member.user,
+					book=submission,
+					due=due_date,
+					access_key = str(uuid4()),
+				)
+
+				try:
+					new_review_assignment.save()
+					submission.review_assignments.add(new_review_assignment)
+					log.add_log_entry(book=submission, user=request.user, kind='review', message='Reviewer %s %s assigned.' % (member.user.first_name, member.user.last_name), short_name='Review Assignment')
+				except IntegrityError:
+					messages.add_message(request, messages.WARNING, '%s %s is already a reviewer' % (member.user.first_name, member.user.last_name))
+
+
+
+		# Tidy up and save
+		submission.stage.internal_review = timezone.now()
+		submission.stage.current_stage = 'i_review'
+		submission.stage.save()
+		submission.save()
+
+		return redirect(reverse('view_review', kwargs={'submission_id': submission.id}))
+
 
 	template = 'workflow/view_new_submission.html'
 	context = {
@@ -93,6 +152,44 @@ def in_production(request):
 	context = {
 		'submission_list': submission_list,
 		'active': 'production',
+	}
+
+	return render(request, template, context)
+
+@staff_member_required
+def add_reviewer(request, submission_id, user_id, review_type):
+
+	submission = get_object_or_404(models.Book, pk=submission_id)
+	user = get_object_or_404(User, pk=user_id)
+
+	new_review_assignment = models.ReviewAssignment(
+		review_type=review_type,
+		user=user,
+	)
+
+	new_review_assignment.save()
+	submission.review_assignments.add(new_review_assignment)
+	submission.stage.internal_review = timezone.now()
+	submission.stage.current_stage = 'i_review'
+	submission.stage.save()
+	submission.save()
+
+	return redirect(reverse('in_review'))
+
+
+@staff_member_required
+def add_committee(request, submission_id, committee_id, review_type):
+	pass
+
+@staff_member_required
+def view_review(request, submission_id):
+
+	submission = get_object_or_404(models.Book, pk=submission_id)
+
+	template = 'workflow/view_review.html'
+	context = {
+		'submission': submission,
+		'active': 'review',
 	}
 
 	return render(request, template, context)

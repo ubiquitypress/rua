@@ -34,6 +34,9 @@ class RoleAdmin(admin.ModelAdmin):
     list_display = ('name',)
     search_fields = ('name',)
 
+class ReviewAssAdmin(admin.ModelAdmin):
+    list_display = ('review_type', 'user', 'assigned')
+
 admin_list = [
     (Author, AuthorAdmin),
     (Profile, ProfileAdmin),
@@ -50,6 +53,7 @@ admin_list = [
     (Setting, SettingAdmin),
     (SettingGroup,),
     (Role, RoleAdmin,),
+    (ReviewAssignment, ReviewAssAdmin),
 ]
 
 [admin.site.register(*t) for t in admin_list]

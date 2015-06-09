@@ -103,6 +103,7 @@ class Book(models.Model):
 	pages = models.CharField(max_length=10, null=True, blank=True)
 	slug = models.CharField(max_length=1000, null=True, blank=True)
 	files = models.ManyToManyField('File', null=True, blank=True)
+	review_files = models.ManyToManyField('File', null=True, blank=True, related_name='review_files')
 	cover_letter = models.TextField(null=True, blank=True, help_text="A covering letter for the Editors.")
 	book_type = models.CharField(max_length=50, null=True, blank=True, choices=book_type_choices(), help_text="A monograph is a work authored, in its entirety, by one or more authors. An edited volume has different authors for each chapter.")
 
@@ -117,11 +118,35 @@ class Book(models.Model):
 	stage = models.ForeignKey('Stage', null=True, blank=True)
 	submission_stage = models.IntegerField(null=True, blank=True)
 
+	# Review
+	review_assignments = models.ManyToManyField('ReviewAssignment', related_name='review')
+
 	def __unicode__(self):
 		return u'%s' % self.title
 
 	def __repr__(self):
 		return u'%s' % self.title
+
+def review_type_choices():
+	return (
+		('internal', 'Internal'),
+		('external', 'External'),
+	)
+
+class ReviewAssignment(models.Model):
+	book = models.ForeignKey(Book)
+	review_type = models.CharField(max_length=15, choices=review_type_choices())
+	user = models.ForeignKey(User)
+	assigned = models.DateField(auto_now=True)
+	accepted = models.DateField(blank=True, null=True)
+	due = models.DateField(blank=True, null=True)
+	completed = models.DateField(blank=True, null=True)
+	file = models.ForeignKey('File', blank=True, null=True)
+	body = models.TextField(blank=True, null=True)
+	access_key = models.CharField(max_length=200)
+
+	class Meta:
+		unique_together = ('book', 'user')
 
 class License(models.Model):
 	name = models.CharField(max_length=1000)
@@ -234,6 +259,12 @@ class Stage(models.Model):
 	indexing = models.DateTimeField(null=True, blank=True)
 	production = models.DateTimeField(null=True, blank=True)
 	publication = models.DateTimeField(null=True, blank=True)
+
+	def __unicode__(self):
+		return u'%s' % self.current_stage
+
+	def __repr__(self):
+		return u'%s' % self.current_stage
 
 class Task(models.Model):
 	book = models.ForeignKey(Book, null=True, blank=True)

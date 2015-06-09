@@ -1,0 +1,21 @@
+<h4>Reviewers</h4>
+<table class="table table-striped">
+  <tr>
+    <th>Name</th>
+    <th>Assigned</th>
+    <th>Accepted</th>
+    <th>Due</th>
+    <th>Completed</th>
+    <th></th>
+  </tr>
+{% for reviewer in submission.review_assignments.all %}
+  <tr>
+    <td>{{ reviewer.user.first_name }} {% if author.middle_name %}{{ reviewer.user.middle_name}} {% endif %}{{ reviewer.user.last_name }}</td>
+    <td>{{ reviewer.assigned }}</td>
+    <td>{% if reviewer.accepted %}{{ reviewer.accepted }}{% else %}--{% endif %}</td>
+    <td>{{ reviewer.due }}</td>
+    <td>{% if reviewer.completed %}{{ reviewer.completed }}{% else %}--{% endif %}</td>
+    <td>View Review</td>
+  </tr>
+{% endfor %}
+</table>

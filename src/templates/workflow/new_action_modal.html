@@ -1,0 +1,85 @@
+<!-- Modal -->
+<div class="modal fade" id="internalmodal" tabindex="-1" role="dialog" aria-labelledby="internalreview" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Internal Review</h4>
+      </div>
+      <form method="post">
+      <div class="modal-body">
+      	{% csrf_token %}
+        <h3>1. Select Files</h3>
+        <p class="small">You can select any number of files to present to the reviewers.</p>
+        <table class="table table-condensed table-striped">
+        	<tr>
+        		<th>Original File Name</th>
+        		<th>New File Name</th>
+        		<th>Mimetype</th>
+        		<th>File Type</th>
+        		<th>Select</th>
+        	</tr>
+        {% for file in submission.files.all %}
+        	<tr>
+        		<td>{{ file.original_filename }}</td>
+          		<td>{{ file.uuid_filename }}</td>
+          		<td>{{ file.mime_type }}</td>
+        			<td>{{file.kind }}</td>
+        			<td><input type="checkbox" name="file" value="{{ file.id }}"/></td>
+        	</tr>
+        {% endfor %}
+        </table>
+        <hr />
+        <h3>2. Select a Review Type</h3>
+        <p class="small">You can select a single or multiple individuals for internal review, or you can select a committee or any combination of both.</p>
+        <h4>2.1 Individual Review</h4>
+        <p class="small">You can assign an individual reviewer. The reviewer will be asked to comment and make a recommendation.</p>
+        <hr />
+        <table class="table table-condensed" cellspacing="0" width="100%" id='indv-reviewer'>
+          <thead>
+          <tr>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Email</th>
+            <th>Select</th>
+          </tr>
+          </thead>
+          {% for reviewer in reviewers %}
+          <tr>
+            <td>{{ reviewer.first_name }}</td>
+            <td>{{ reviewer.last_name }}</td>
+            <td>{{ reviewer.email }}</td>
+            <td><input type="checkbox" name="reviewer" value="{{ reviewer.id }}"/></td>
+          </tr>
+          {% endfor %}
+        </table>
+        <hr />
+        <h4>2.2 Committee Review</h4>
+        <p class="small">You can assign a committee to review your submission. The committee will each be asked to comment and vote on a recommended decision.</p>
+        <table class="table table-condensed" cellspacing="0" width="100%" id='comm-reviewer'>
+          <thead>
+          <tr>
+            <th>Committee Name</th>
+            <th>Number of Members</th>
+            <th>Select</th>
+          </tr>
+          </thead>
+          {% for committee in committees %}
+          <tr>
+            <td>{{ committee.name }}</td>
+            <td>{{ committee.groupmembership_set.all.count }}</td>
+            <td><input type="checkbox" name="committee" value="{{ committee.id }}"/></td>
+          </tr>
+          {% endfor %}
+        </table>
+        <h3>3. Set Due Date</h3>
+        <p class="small">Set a due date for the reviews. Reviewers will be politely reminded to submit their review before the due date.</p>
+        <input type="text" name="due_date" id="due_date" />
+      </div>
+      <div class="modal-footer">
+        <button id="#int-review" type="submit" class="btn btn-primary">Submit</button>
+      </div>
+     </form>
+    </div>
+  </div>
+</div>

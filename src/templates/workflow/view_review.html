@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% load bootstrap3 %}
+
+{% block title %}New Submissions{% endblock %}
+
+{% block breadcrumbs %}
+    <ol class="breadcrumb">
+	  <li><a href="{% url 'user_home' %}">User Home</a></li>
+	  <li class="">Workflow</li>
+    <li><a href="{% url 'new_submissions'%}">New Submissions</a></li>
+    <li class="active">{{ submission.title }}</li>
+	</ol>
+{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/plug-ins/1.10.7/integration/bootstrap/3/dataTables.bootstrap.css">
+{% endblock css %}
+
+{% block body %}
+<div class="col-md-12">
+  <h3>{{ submission.title }}</h3>
+  <hr />
+  {% include "workflow/workflow_view_buttons.html" %}
+  {% include "workflow/reviewer_block.html" %}
+  <hr />
+  {% include "workflow/reviewer_files.html" %}
+
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript" language="javascript" src="//cdn.datatables.net/1.10.7/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" language="javascript" src="//cdn.datatables.net/plug-ins/1.10.7/integration/bootstrap/3/dataTables.bootstrap.js"></script>
+<script>
+  $(document).ready(function() {
+      $('#indv-reviewer').DataTable({
+        "lengthMenu": [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]]
+      });
+  } );
+
+  $(document).ready(function() {
+      $('#comm-reviewer').DataTable({
+        "lengthMenu": [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]]
+      });
+  } );
+
+  if (window.location.hash == "#indv-reviewer") {
+     $('#internalmodal').modal('show');
+}
+</script>
+
+
+{% endblock js %}

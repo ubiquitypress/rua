@@ -1,0 +1,19 @@
+<h4>Review Files</h4>
+<table class="table table-condensed table-striped">
+  <tr>
+    <th>Original File Name</th>
+    <th>New File Name</th>
+    <th>Mimetype</th>
+    <th>File Type</th>
+    <th>Select</th>
+  </tr>
+{% for file in submission.review_files.all %}
+  <tr>
+    <td>{{ file.original_filename }}</td>
+    <td>{{ file.uuid_filename }}</td>
+    <td>{{ file.mime_type }}</td>
+    <td>{{ file.kind }}</td>
+    <td><a href="{% url 'serve_file' submission.id file.id %}" class="btn btn-primary"><i class="fa fa-download">&nbsp;</i>Download</a></td>
+  </tr>
+{% endfor %}
+</table>
