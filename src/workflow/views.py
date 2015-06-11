@@ -20,6 +20,7 @@ from django.conf import settings
 from core import models
 from core import forms
 from core import log
+from core import email
 from manager import models as manager_models
 
 from pprint import pprint
@@ -55,6 +56,7 @@ def view_new_submission(request, submission_id):
 		reviewers = User.objects.filter(pk__in=request.POST.getlist('reviewer'))
 		committees = manager_models.Group.objects.filter(pk__in=request.POST.getlist('committee'))
 		due_date = request.POST.get('due_date')
+		email_text = request.POST.get('message')
 
 		# Handle files
 		for file in files:
@@ -74,6 +76,7 @@ def view_new_submission(request, submission_id):
 				new_review_assignment.save()
 				submission.review_assignments.add(new_review_assignment)
 				log.add_log_entry(book=submission, user=request.user, kind='review', message='Reviewer %s %s assigned.' % (reviewer.first_name, reviewer.last_name), short_name='Review Assignment')
+				send_review_request(submission, new_review_assignment, email_text)
 			except IntegrityError:
 				messages.add_message(request, messages.WARNING, '%s %s is already a reviewer' % (reviewer.first_name, reviewer.last_name))
 
@@ -93,6 +96,7 @@ def view_new_submission(request, submission_id):
 					new_review_assignment.save()
 					submission.review_assignments.add(new_review_assignment)
 					log.add_log_entry(book=submission, user=request.user, kind='review', message='Reviewer %s %s assigned.' % (member.user.first_name, member.user.last_name), short_name='Review Assignment')
+					send_review_request(submission, new_review_assignment, email_text)
 				except IntegrityError:
 					messages.add_message(request, messages.WARNING, '%s %s is already a reviewer' % (member.user.first_name, member.user.last_name))
 
@@ -113,6 +117,7 @@ def view_new_submission(request, submission_id):
 		'reviewers': reviewers,
 		'committees': committees,
 		'active': 'new',
+		'email_text': models.Setting.objects.get(group__name='email', name='review_request'),
 	}
 
 	return render(request, template, context)
@@ -330,3 +335,18 @@ def handle_file_update(file, old_file, book, kind):
 	old_file.save()
 
 	return path
+
+# Email handler
+
+def send_review_request(book, review_assignment, email_text):
+	from_email = models.Setting.objects.get(group__name='email', name='from_address')
+	base_url = models.Setting.objects.get(group__name='general', name='base_url')
+
+	review_url = 'http://%s/review/%s/access_key/%s/' % (base_url.value, book.id, review_assignment.access_key)
+
+	context = {
+		'review': review_assignment,
+		'review_url': review_url,
+	}
+
+	email.send_email('[abp] Review Request', context, from_email.value, review_assignment.user.email, email_text)

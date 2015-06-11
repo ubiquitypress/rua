@@ -11,7 +11,7 @@
       	{% csrf_token %}
         <h3>1. Select Files</h3>
         <p class="small">You can select any number of files to present to the reviewers.</p>
-        <table class="table table-condensed table-striped">
+        <table class="table table-bordered small">
         	<tr>
         		<th>Original File Name</th>
         		<th>New File Name</th>
@@ -35,7 +35,7 @@
         <h4>2.1 Individual Review</h4>
         <p class="small">You can assign an individual reviewer. The reviewer will be asked to comment and make a recommendation.</p>
         <hr />
-        <table class="table table-condensed" cellspacing="0" width="100%" id='indv-reviewer'>
+        <table class="table table-bordered small" cellspacing="0" width="100%" id='indv-reviewer'>
           <thead>
           <tr>
             <th>First Name</th>
@@ -56,7 +56,7 @@
         <hr />
         <h4>2.2 Committee Review</h4>
         <p class="small">You can assign a committee to review your submission. The committee will each be asked to comment and vote on a recommended decision.</p>
-        <table class="table table-condensed" cellspacing="0" width="100%" id='comm-reviewer'>
+        <table class="table table-bordered small" cellspacing="0" width="100%" id='comm-reviewer'>
           <thead>
           <tr>
             <th>Committee Name</th>
@@ -75,6 +75,9 @@
         <h3>3. Set Due Date</h3>
         <p class="small">Set a due date for the reviews. Reviewers will be politely reminded to submit their review before the due date.</p>
         <input type="text" name="due_date" id="due_date" />
+        <h3>4. Message to Reviewers</h3>
+        <p class="small">Add a message that will go out in the email to reviewers.</p>
+        <textarea class="form-control" rows="10" id="message" name="message">{{ email_text.value }}</textarea>
       </div>
       <div class="modal-footer">
         <button id="#int-review" type="submit" class="btn btn-primary">Submit</button>
