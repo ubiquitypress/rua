@@ -34,6 +34,7 @@ BASE_URL = 'http://localhost:8000/'
 # Application definition
 
 INSTALLED_APPS = (
+    'flat',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -46,6 +47,7 @@ INSTALLED_APPS = (
     'submission',
     'workflow',
     'manager',
+    'review',
 
     # 3rd Party
     'bootstrap3',

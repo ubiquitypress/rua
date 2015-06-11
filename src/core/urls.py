@@ -11,7 +11,8 @@ urlpatterns = patterns('',
     url(r'^submission/', include('submission.urls')),
     url(r'^workflow/', include('workflow.urls')),
     url(r'^manager/', include('manager.urls')),
-    
+    url(r'^review/', include('review.urls')),
+
     url(r'^$', 'core.views.index', name='index'),
     url(r'^contact/$', 'core.views.contact', name='contact'),
 

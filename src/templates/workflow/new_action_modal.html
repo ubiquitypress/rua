@@ -78,6 +78,11 @@
         <h3>4. Message to Reviewers</h3>
         <p class="small">Add a message that will go out in the email to reviewers.</p>
         <textarea class="form-control" rows="10" id="message" name="message">{{ email_text.value }}</textarea>
+        <h3>5. Review Form</h3>
+        <p class="small">Select a review form for reviewers to complete.</p>
+        <select name="review_form" id="review_form" class="form-control">
+          {% for form in review_forms %}<option value="{{ form.ref }}" name="{{ form.ref }}">{{ form.name }}</option>{% endfor %}
+        </select>
       </div>
       <div class="modal-footer">
         <button id="#int-review" type="submit" class="btn btn-primary">Submit</button>

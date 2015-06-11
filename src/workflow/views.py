@@ -21,6 +21,7 @@ from core import models
 from core import forms
 from core import log
 from core import email
+from review import models as review_models
 from manager import models as manager_models
 
 from pprint import pprint
@@ -47,6 +48,7 @@ def view_new_submission(request, submission_id):
 
 	submission = get_object_or_404(models.Book, pk=submission_id)
 	reviewers = models.User.objects.filter(profile__roles__slug='reviewer')
+	review_forms = review_models.Form.objects.all()
 
 	committees = manager_models.Group.objects.filter(group_type='review_committee')
 
@@ -55,6 +57,7 @@ def view_new_submission(request, submission_id):
 		files = models.File.objects.filter(pk__in=request.POST.getlist('file'))
 		reviewers = User.objects.filter(pk__in=request.POST.getlist('reviewer'))
 		committees = manager_models.Group.objects.filter(pk__in=request.POST.getlist('committee'))
+		review_form = review_models.Form.objects.get(ref=request.POST.get('review_form'))
 		due_date = request.POST.get('due_date')
 		email_text = request.POST.get('message')
 
@@ -106,6 +109,7 @@ def view_new_submission(request, submission_id):
 		submission.stage.internal_review = timezone.now()
 		submission.stage.current_stage = 'i_review'
 		submission.stage.save()
+		submission.review_form = review_form
 		submission.save()
 
 		return redirect(reverse('view_review', kwargs={'submission_id': submission.id}))
@@ -118,6 +122,7 @@ def view_new_submission(request, submission_id):
 		'committees': committees,
 		'active': 'new',
 		'email_text': models.Setting.objects.get(group__name='email', name='review_request'),
+		'review_forms': review_forms,
 	}
 
 	return render(request, template, context)
@@ -342,7 +347,7 @@ def send_review_request(book, review_assignment, email_text):
 	from_email = models.Setting.objects.get(group__name='email', name='from_address')
 	base_url = models.Setting.objects.get(group__name='general', name='base_url')
 
-	review_url = 'http://%s/review/%s/access_key/%s/' % (base_url.value, book.id, review_assignment.access_key)
+	review_url = 'http://%s/review/internal/%s/access_key/%s/' % (base_url.value, book.id, review_assignment.access_key)
 
 	context = {
 		'review': review_assignment,
