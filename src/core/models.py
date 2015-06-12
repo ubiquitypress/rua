@@ -87,6 +87,12 @@ class Author(models.Model):
 	class Meta:
 		ordering = ('sequence',)
 
+	def __unicode__(self):
+		return u'%s - %s %s' % (self.pk, self.first_name, self.last_name)
+
+	def __repr__(self):
+		return u'%s - %s %s' % (self.pk, self.first_name, self.last_name)
+
 class Book(models.Model):
 	prefix = models.CharField(max_length=100, null=True, blank=True)
 	title = models.CharField(max_length=1000, null=True, blank=True)
@@ -150,6 +156,12 @@ class ReviewAssignment(models.Model):
 	class Meta:
 		unique_together = ('book', 'user')
 
+	def __unicode__(self):
+		return u'%s - %s %s' % (self.pk, self.book.title, self.user.username)
+
+	def __repr__(self):
+		return u'%s - %s %s' %  (self.pk, self.book.title, self.user.username)
+
 class License(models.Model):
 	name = models.CharField(max_length=1000)
 	short_name = models.CharField(max_length=100)
@@ -194,6 +206,12 @@ class Editor(models.Model):
 
 	class Meta:
 		ordering = ('sequence',)
+
+	def __unicode__(self):
+		return u'%s - %s %s' % (self.pk, self.first_name, self.last_name)
+
+	def __repr__(self):
+		return u'%s - %s %s' % (self.pk, self.first_name, self.last_name)
 
 class File(models.Model):
 	mime_type = models.CharField(max_length=50)
