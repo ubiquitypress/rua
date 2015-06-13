@@ -1,7 +1,11 @@
 import json
+import os
+from uuid import uuid4
+import mimetypes as mime
 
 from django.shortcuts import redirect, render, get_object_or_404
 from django.db.models import Q
+from django.conf import settings
 
 from core import models as core_models
 from review import forms
@@ -29,7 +33,7 @@ def review(request, review_type, submission_id, access_key=None):
 			for field in file_fields:
 				if field.name in request.FILES:
 					# TODO change value from string to list [value, value_type]
-					save_dict[field.name] = [logic.handle_review_file(request.FILES[field.name]), submission, review_assignment, 'review']
+					save_dict[field.name] = [handle_review_file(request.FILES[field.name], submission, review_assignment, 'review')]
 
 			for field in data_fields:
 				if field.name in request.POST:
@@ -53,7 +57,7 @@ def handle_review_file(file, book, review_assignment, kind):
 
 	original_filename = str(file._get_name())
 	filename = str(uuid4()) + '.' + str(original_filename.split('.')[1])
-	folder_structure = os.path.join(settings.BASE_DIR, 'files', 'books', str(book.id))
+	folder_structure = os.path.join(settings.BASE_DIR, 'files', 'books', 'review' str(book.id))
 
 	if not os.path.exists(folder_structure):
 		os.makedirs(folder_structure)
