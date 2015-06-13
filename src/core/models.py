@@ -126,7 +126,7 @@ class Book(models.Model):
 
 	# Review
 	review_assignments = models.ManyToManyField('ReviewAssignment', related_name='review')
-	review_form = models.ForeignKey('review.Form')
+	review_form = models.ForeignKey('review.Form', null=True, blank=True)
 
 	def __unicode__(self):
 		return u'%s' % self.title
@@ -142,7 +142,6 @@ def review_type_choices():
 
 class ReviewAssignment(models.Model):
 	book = models.ForeignKey(Book)
-	form = models.ForeignKey('review.Form')
 	review_type = models.CharField(max_length=15, choices=review_type_choices())
 	user = models.ForeignKey(User)
 	assigned = models.DateField(auto_now=True)

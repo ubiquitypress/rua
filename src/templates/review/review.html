@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% load bootstrap3 %}
+
+{% block breadcrumbs %}
+  <ol class="breadcrumb">
+    <li>Review</li>
+    <li><a class="active" href="">{{ submission.title }}</a></li>
+	</ol>
+{% endblock %}
+
+{% block body %}
+	<div class="col-md-12">
+		<h2>{{ submission.title }}</h2>
+    <h1>{{ form.name }}</h1>
+    {{ form.intro_text|safe }}
+      {% if form.errors %}
+      <div class="alert alert-info">
+          Please correct errors below. Note, you'll have to reselect any files you want uploaded.
+        </div>
+        {% endif %}
+      <form enctype="multipart/form-data" method="post">
+      {% for field in form %}
+        <div class="{% if field.field.widget.attrs.div_class %}{{ field.field.widget.attrs.div_class }}{% else %}clear{% endif %}">
+        {% if field.field.widget.attrs.is_checkbox %}
+          {% if field.errors %}<span class="red">{{ field.errors|join:", " }}</span><br />{% endif %}
+          {{ field }} {% if field.field.help_text %}<span class="small">{{ field.field.help_text|safe }}</span>{% endif %}
+        {% else %}
+             {% if field.errors %}<span class="red">{{ field.errors|join:", " }}</span>{% endif %}
+             {% bootstrap_field field %}
+          {% endif %}
+          </div>
+      {% endfor %}
+      {% csrf_token %}
+      <input class="btn btn-success" type="submit" value="Submit your review" id="poster">
+      <br/><br/>
+      </form>
+	</div>
+{% endblock body %}
