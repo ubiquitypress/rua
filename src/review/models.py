@@ -12,18 +12,10 @@ class Form(models.Model):
 		return u'%s' % self.name
 
 class FormResult(models.Model):
-	status_choices = (
-		('new', 'New'),
-		('accepted', 'Accepted'),
-		('rejected', 'Rejected'),
-		('revisions', 'Revisions Required'),
-	)
-
 	review_assignment = models.ForeignKey('core.ReviewAssignment')
 	form = models.ForeignKey(Form)
 	data = models.TextField()
 	date = models.DateField(auto_now_add=True)
-	status = models.CharField(max_length=20, default='new', choices=status_choices, null=True, blank=True)
 
 	def __unicode__(self):
 		return '%s' % (self.form.name)
