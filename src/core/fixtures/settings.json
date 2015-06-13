@@ -1,0 +1,82 @@
+[
+{
+    "fields": {
+        "value": "Andy Press",
+        "group": 1,
+        "name": "press_name",
+        "types": "char"
+    },
+    "model": "core.setting",
+    "pk": 1
+},
+{
+    "fields": {
+        "value": "<p>Footer</p>",
+        "group": 1,
+        "name": "footer",
+        "types": "rich_text"
+    },
+    "model": "core.setting",
+    "pk": 2
+},
+{
+    "fields": {
+        "value": "",
+        "group": 2,
+        "name": "submission_guidelines",
+        "types": "rich_text"
+    },
+    "model": "core.setting",
+    "pk": 3
+},
+{
+    "fields": {
+        "value": "<p>This is a description block where information about this press can be entered. This text block should be replace with text pulled from a database setting at some point, though for now I don't really need it to.</p>\r\n<p>This press has some specialities like publishing Alien Autopsy reports and April Fools reviews</p>",
+        "group": 1,
+        "name": "description",
+        "types": "rich_text"
+    },
+    "model": "core.setting",
+    "pk": 4
+},
+{
+    "fields": {
+        "value": "Dear {{ review.user.first_name }} {{ review.user.last_name }},\r\n\r\n__YOUR_MESSAGE_HERE__\r\n\r\nPlease log into the press web site to indicate whether you will undertake the review or not, as well as to access the submission and to record your review and recommendation.\r\n\r\nThe review itself is due {{ review.due }}.\r\n\r\nReview URL: {{ review_url }}\r\n\r\nThank you for considering this request.\r\n\r\n\r\nSincerely,\r\nPress Team\r\n",
+        "group": 3,
+        "name": "review_request",
+        "types": "rich_text"
+    },
+    "model": "core.setting",
+    "pk": 5
+},
+{
+    "fields": {
+        "value": "abp",
+        "group": 1,
+        "name": "accronym",
+        "types": "text"
+    },
+    "model": "core.setting",
+    "pk": 6
+},
+{
+    "fields": {
+        "value": "localhost:8000",
+        "group": 1,
+        "name": "base_url",
+        "types": "text"
+    },
+    "model": "core.setting",
+    "pk": 7
+},
+{
+    "fields": {
+        "value": "main@localhost.com",
+        "group": 3,
+        "name": "from_address",
+        "types": "text"
+    },
+    "model": "core.setting",
+    "pk": 8
+}
+]
