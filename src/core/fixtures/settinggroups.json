@@ -1,0 +1,26 @@
+[
+{
+    "fields": {
+        "enabled": true,
+        "name": "general"
+    },
+    "model": "core.settinggroup",
+    "pk": 1
+},
+{
+    "fields": {
+        "enabled": true,
+        "name": "page"
+    },
+    "model": "core.settinggroup",
+    "pk": 2
+},
+{
+    "fields": {
+        "enabled": true,
+        "name": "email"
+    },
+    "model": "core.settinggroup",
+    "pk": 3
+}
+]
