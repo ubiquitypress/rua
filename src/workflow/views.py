@@ -22,6 +22,7 @@ from core import forms
 from core import log
 from core import email
 from review import models as review_models
+from workflow import logic
 from manager import models as manager_models
 
 from pprint import pprint
@@ -167,31 +168,6 @@ def in_production(request):
 	return render(request, template, context)
 
 @staff_member_required
-def add_reviewer(request, submission_id, user_id, review_type):
-
-	submission = get_object_or_404(models.Book, pk=submission_id)
-	user = get_object_or_404(User, pk=user_id)
-
-	new_review_assignment = models.ReviewAssignment(
-		review_type=review_type,
-		user=user,
-	)
-
-	new_review_assignment.save()
-	submission.review_assignments.add(new_review_assignment)
-	submission.stage.internal_review = timezone.now()
-	submission.stage.current_stage = 'i_review'
-	submission.stage.save()
-	submission.save()
-
-	return redirect(reverse('in_review'))
-
-
-@staff_member_required
-def add_committee(request, submission_id, committee_id, review_type):
-	pass
-
-@staff_member_required
 def view_review(request, submission_id):
 
 	submission = get_object_or_404(models.Book, pk=submission_id)
@@ -199,6 +175,28 @@ def view_review(request, submission_id):
 	template = 'workflow/view_review.html'
 	context = {
 		'submission': submission,
+		'active': 'review',
+	}
+
+	return render(request, template, context)
+
+@staff_member_required
+def view_review_assignment(request, submission_id, assignment_id):
+
+	submission = get_object_or_404(models.Book, pk=submission_id)
+	review_assignment = get_object_or_404(models.ReviewAssignment, pk=assignment_id)
+	result = review_assignment.results
+	relations = review_models.FormElementsRelationship.objects.filter(form=result.form)
+	data_ordered = logic.order_data(logic.decode_json(result.data), relations)
+
+	print result
+
+	template = 'workflow/review_assignment.html'
+	context = {
+		'submission': submission,
+		'review': review_assignment,
+		'data_ordered': data_ordered,
+		'result': result,
 		'active': 'review',
 	}
 

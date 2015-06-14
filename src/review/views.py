@@ -129,7 +129,7 @@ def handle_review_file(file, book, review_assignment, kind):
 
 	original_filename = str(file._get_name())
 	filename = str(uuid4()) + '.' + str(original_filename.split('.')[1])
-	folder_structure = os.path.join(settings.BASE_DIR, 'files', 'books', str(book.id), 'review')
+	folder_structure = os.path.join(settings.BASE_DIR, 'files', 'books', str(book.id))
 
 	if not os.path.exists(folder_structure):
 		os.makedirs(folder_structure)

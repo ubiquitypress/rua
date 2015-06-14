@@ -9,8 +9,6 @@ urlpatterns = patterns('',
     # New Submissions
     url(r'^new/$', 'workflow.views.new_submissions', name='new_submissions'),
     url(r'^new/(?P<submission_id>\d+)/$', 'workflow.views.view_new_submission', name='view_new_submission'),
-    url(r'^new/(?P<submission_id>\d+)/reviewer/(?P<user_id>\d+)/type/(?P<review_type>[-\w]+)/add/$', 'workflow.views.add_reviewer', name='add_reviewer'),
-    url(r'^new/(?P<submission_id>\d+)/committee/(?P<committee_id>\d+)/type/(?P<review_type>[-\w]+)/add/$', 'workflow.views.add_reviewer', name='add_committee'),
 
     url(r'^submission/(?P<submission_id>\d+)/file/(?P<file_id>\d+)/download/$', 'workflow.views.serve_file', name='serve_file'),
     url(r'^submission/(?P<submission_id>\d+)/file/(?P<revision_id>\d+)/download_versioned_file/$', 'workflow.views.serve_versioned_file', name='serve_versioned_file'),
@@ -20,6 +18,7 @@ urlpatterns = patterns('',
 
     url(r'^review/$', 'workflow.views.in_review', name='in_review'),
     url(r'^review/(?P<submission_id>\d+)/$', 'workflow.views.view_review', name='view_review'),
+    url(r'^review/(?P<submission_id>\d+)/assignment/(?P<assignment_id>\d+)/$', 'workflow.views.view_review_assignment', name='view_review_assignment'),
 
     url(r'^editing/$', 'workflow.views.in_editing', name='in_editing'),
     url(r'^production/$', 'workflow.views.in_production', name='in_production'),

@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% load static from staticfiles %}
+{% load dict_lookup %}
+{% load bootstrap3 %}
+
+{% block title %}Review{% endblock %}
+
+{% block breadcrumbs %}
+  <ol class="breadcrumb">
+    <li><a href="{% url 'user_home' %}">User Home</a></li>
+    <li class="">Workflow</li>
+    <li><a href="{% url 'in_review'%}">In Review</a></li>
+    <li>{{ submission.title }}</li>
+    <li class="active">Review</li>
+  </ol>
+{% endblock %}
+  
+{% block css %}
+  <link href="{% static "css/timeline.css" %}" rel="stylesheet">
+{% endblock %}
+
+{% block body %}
+<div class="col-md-12">
+  <h3>{{ submission.title }} review by {{ review.user.first_name }} {{ review.user.last_name }}</h3>
+  <hr />
+  {% include "workflow/workflow_view_buttons.html" %}
+  <h4>Review Files</h4>
+  <table class="table table-condensed table-striped">
+    <tr>
+      <th>Original File Name</th>
+      <th>New File Name</th>
+      <th>Mimetype</th>
+      <th>File Type</th>
+      <th>Select</th>
+    </tr>
+  {% for file in review.files.all %}
+    <tr>
+      <td>{{ file.original_filename }}</td>
+      <td>{{ file.uuid_filename }}</td>
+      <td>{{ file.mime_type }}</td>
+      <td>{{ file.kind }}</td>
+      <td><a href="{% url 'serve_file' submission.id file.id %}" class="btn btn-primary"><i class="fa fa-download">&nbsp;</i>Download</a></td>
+    </tr>
+  {% endfor %}
+  </table>
+  <h4>Review</h4>
+  <div style="clear:both"></div>
+      {% for item in data_ordered %}
+      <div class="{% cycle 'left-float' 'right-float' %}">
+        <label>{{ item.0 }}</label>
+        <p class="small">{% lookup result.data item.0 %} </p>
+      </div>
+      <div {% cycle '' 'style="clear:both"' %}></div>
+      {% endfor %}
+</div>
+
+{% endblock %}

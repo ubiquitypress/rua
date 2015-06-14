@@ -15,7 +15,7 @@
     <td>{% if reviewer.accepted %}{{ reviewer.accepted }}{% else %}--{% endif %}</td>
     <td>{{ reviewer.due }}</td>
     <td>{% if reviewer.completed %}{{ reviewer.completed }}{% else %}--{% endif %}</td>
-    <td>View Review</td>
+    <td><a href="{% url 'view_review_assignment' submission.id reviewer.id %}">View Review</a></td>
   </tr>
 {% endfor %}
 </table>
