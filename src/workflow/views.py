@@ -347,8 +347,8 @@ def send_review_request(book, review_assignment, email_text):
 	from_email = models.Setting.objects.get(group__name='email', name='from_address')
 	base_url = models.Setting.objects.get(group__name='general', name='base_url')
 
-	review_url = 'http://%s/review/internal/%s/access_key/%s/' % (base_url.value, book.id, review_assignment.access_key)
-	decision_url = 'http://%s/review/internal/%s/assignment/%s/decision/' % (base_url.value, book.id, review_assignment.id)
+	review_url = 'http://%s/review/%s/%s/access_key/%s/' % (base_url.value, review_assignment.review_type, book.id, review_assignment.access_key)
+	decision_url = 'http://%s/review/%s/%s/assignment/%s/decision/' % (base_url.value, review_assignment.review_type, book.id, review_assignment.id)
 
 	context = {
 		'review': review_assignment,
