@@ -348,10 +348,12 @@ def send_review_request(book, review_assignment, email_text):
 	base_url = models.Setting.objects.get(group__name='general', name='base_url')
 
 	review_url = 'http://%s/review/internal/%s/access_key/%s/' % (base_url.value, book.id, review_assignment.access_key)
+	decision_url = 'http://%s/review/internal/%s/assignment/%s/decision/' % (base_url.value, book.id, review_assignment.id)
 
 	context = {
 		'review': review_assignment,
 		'review_url': review_url,
+		'decision_url': decision_url,
 	}
 
 	email.send_email('[abp] Review Request', context, from_email.value, review_assignment.user.email, email_text)
