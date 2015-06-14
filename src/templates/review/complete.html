@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% load static from staticfiles %}
+{% load bootstrap3 %}
+
+{% block breadcrumbs %}
+  <ol class="breadcrumb">
+    <li>Review</li>
+    <li><a class="active" href="">{{ submission.title }}</a></li>
+	</ol>
+{% endblock %}
+
+{% block body %}
+	<div class="col-md-12">
+		<h2>{{ submission.title }}</h2>
+    {{ form_info.completion_text }}
+	</div>
+{% endblock body %}
+
+{% block js %}
+<script type="text/javascript" src="{% static "js/fancyfile.js" %}"></script>
+{% endblock js %}

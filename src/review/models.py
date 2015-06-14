@@ -12,7 +12,6 @@ class Form(models.Model):
 		return u'%s' % self.name
 
 class FormResult(models.Model):
-	review_assignment = models.ForeignKey('core.ReviewAssignment')
 	form = models.ForeignKey(Form)
 	data = models.TextField()
 	date = models.DateField(auto_now_add=True)

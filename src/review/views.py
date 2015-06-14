@@ -6,20 +6,24 @@ import mimetypes as mime
 from django.shortcuts import redirect, render, get_object_or_404
 from django.db.models import Q
 from django.conf import settings
+from django.contrib.auth.decorators import login_required
+from django.utils import timezone
+from django.core.urlresolvers import reverse
 
 from core import models as core_models
 from review import forms
 from review import models
 from core import views as core_views
 
+@login_required
 def review(request, review_type, submission_id, access_key=None):
 
 	if access_key:
-		review_assignment = get_object_or_404(core_models.ReviewAssignment, access_key=access_key)
+		review_assignment = get_object_or_404(core_models.ReviewAssignment, access_key=access_key, completed__isnull=True)
 		submission = get_object_or_404(core_models.Book, pk=submission_id)
 	else:
 		submission = get_object_or_404(core_models.Book, pk=submission_id)
-		review_assignment = get_object_or_404(core_models.ReviewAssignment, user=request.user, book=submission)
+		review_assignment = get_object_or_404(core_models.ReviewAssignment, user=request.user, book=submission, completed__isnull=True)
 
 	form = forms.GeneratedForm(form=submission.review_form)
 
@@ -41,23 +45,50 @@ def review(request, review_type, submission_id, access_key=None):
 					save_dict[field.name] = [request.POST.get(field.name), 'text']
 
 			json_data = json.dumps(save_dict)
-			form_results = models.FormResult(form=submission.review_form, data=json_data, review_assignment=review_assignment)
+			form_results = models.FormResult(form=submission.review_form, data=json_data)
 			form_results.save()
+
+			if request.FILES.get('review_file_upload'):
+				handle_review_file(request.FILES.get('review_file_upload'), submission, review_assignment, 'review')
+
+			review_assignment.completed = timezone.now()
+			if not review_assignment.accepted:
+				review_assignment.accepted = timezone.now()
+			review_assignment.results = form_results
+			review_assignment.save()
+
+			return redirect(reverse('review_complete', kwargs={'review_type': 'internal', 'submission_id': submission.id}))
+
 
 	template = 'review/review.html'
 	context = {
 		'review_assignment': review_assignment,
 		'submission': submission,
 		'form': form,
+		'form_info': submission.review_form,
 	}
 
 	return render(request, template, context)
+
+def review_complete(request, review_type, submission_id):
+
+	submission = get_object_or_404(core_models.Book, pk=submission_id)
+	review_assignment = get_object_or_404(core_models.ReviewAssignment, user=request.user, book=submission)
+
+	template = 'review/complete.html'
+	context = {
+		'submission': submission,
+		'review_assignment': review_assignment,
+		'form_info': submission.review_form,
+	}
+
+	return render(request,template, context)
 
 def handle_review_file(file, book, review_assignment, kind):
 
 	original_filename = str(file._get_name())
 	filename = str(uuid4()) + '.' + str(original_filename.split('.')[1])
-	folder_structure = os.path.join(settings.BASE_DIR, 'files', 'books', 'review' str(book.id))
+	folder_structure = os.path.join(settings.BASE_DIR, 'files', 'books', str(book.id), 'review')
 
 	if not os.path.exists(folder_structure):
 		os.makedirs(folder_structure)
@@ -83,8 +114,6 @@ def handle_review_file(file, book, review_assignment, kind):
 		kind=kind,
 	)
 	new_file.save()
-	review_assignment.file = new_file
-	review_assignment.save()
-
+	review_assignment.files.add(new_file)
 
 	return path

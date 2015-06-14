@@ -148,9 +148,10 @@ class ReviewAssignment(models.Model):
 	accepted = models.DateField(blank=True, null=True)
 	due = models.DateField(blank=True, null=True)
 	completed = models.DateField(blank=True, null=True)
-	file = models.ForeignKey('File', blank=True, null=True)
+	files = models.ManyToManyField('File', blank=True, null=True)
 	body = models.TextField(blank=True, null=True)
 	access_key = models.CharField(max_length=200)
+	results = models.ForeignKey('review.FormResult')
 
 	class Meta:
 		unique_together = ('book', 'user')

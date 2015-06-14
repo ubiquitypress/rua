@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load static from staticfiles %}
 {% load bootstrap3 %}
 
 {% block breadcrumbs %}
@@ -11,9 +12,10 @@
 {% block body %}
 	<div class="col-md-12">
 		<h2>{{ submission.title }}</h2>
-    <h3>Review Files</h3>
     {% include "workflow/reviewer_files.html" %}
-
+    <hr />
+    <h4>1. Completed the Review Form</h4>
+      {{ form_info.intro_text|safe }}
       {% if form.errors %}
       <div class="alert alert-info">
           Please correct errors below. Note, you'll have to reselect any files you want uploaded.
@@ -32,8 +34,28 @@
           </div>
       {% endfor %}
       {% csrf_token %}
+      <hr />
+      <h4>2. Upload Review File</h4>
+      <div class="form-group">
+          <div class="row">
+            <div class="col-md-6">
+               <div class="input-group">
+                  <span class="input-group-btn">
+                      <span class="btn btn-primary btn-file">
+                          Browse&hellip; <input type="file" id="review_file_upload" name="review_file_upload" multiple>
+                      </span>
+                  </span>
+                  <input type="text" class="form-control" readonly>
+              </div>
+            </div>
+          </div>
+        </div>
       <input class="btn btn-success" type="submit" value="Submit your review" id="poster">
       <br/><br/>
       </form>
 	</div>
 {% endblock body %}
+
+{% block js %}
+<script type="text/javascript" src="{% static "js/fancyfile.js" %}"></script>
+{% endblock js %}
