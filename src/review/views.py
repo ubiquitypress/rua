@@ -76,7 +76,7 @@ def review(request, review_type, submission_id, access_key=None):
 			for field in file_fields:
 				if field.name in request.FILES:
 					# TODO change value from string to list [value, value_type]
-					save_dict[field.name] = [handle_review_file(request.FILES[field.name], submission, review_assignment, 'review')]
+					save_dict[field.name] = [handle_review_file(request.FILES[field.name], submission, review_assignment, 'reviewer')]
 
 			for field in data_fields:
 				if field.name in request.POST:
@@ -88,7 +88,7 @@ def review(request, review_type, submission_id, access_key=None):
 			form_results.save()
 
 			if request.FILES.get('review_file_upload'):
-				handle_review_file(request.FILES.get('review_file_upload'), submission, review_assignment, 'review')
+				handle_review_file(request.FILES.get('review_file_upload'), submission, review_assignment, 'reviewer')
 
 			review_assignment.completed = timezone.now()
 			if not review_assignment.accepted:

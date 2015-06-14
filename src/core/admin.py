@@ -37,13 +37,16 @@ class RoleAdmin(admin.ModelAdmin):
 class ReviewAssAdmin(admin.ModelAdmin):
     list_display = ('review_type', 'user', 'assigned')
 
+class FileAdmin(admin.ModelAdmin):
+    list_display = ('original_filename', 'uuid_filename', 'kind')
+
 admin_list = [
     (Author, AuthorAdmin),
     (Profile, ProfileAdmin),
     (Book, BookAdmin),
     (License, LicenseAdmin),
     (Task, TaskAdmin),
-    (File,),
+    (File, FileAdmin),
     (FileVersion,),
     (Stage,),
     (Subject,),

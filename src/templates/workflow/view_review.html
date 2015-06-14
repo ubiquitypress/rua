@@ -1,13 +1,13 @@
 {% extends "base.html" %}
 {% load bootstrap3 %}
 
-{% block title %}New Submissions{% endblock %}
+{% block title %}In Review{% endblock %}
 
 {% block breadcrumbs %}
     <ol class="breadcrumb">
 	  <li><a href="{% url 'user_home' %}">User Home</a></li>
 	  <li class="">Workflow</li>
-    <li><a href="{% url 'new_submissions'%}">New Submissions</a></li>
+    <li><a href="{% url 'in_review'%}">In Review</a></li>
     <li class="active">{{ submission.title }}</li>
 	</ol>
 {% endblock %}
