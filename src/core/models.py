@@ -140,6 +140,12 @@ def review_type_choices():
 		('external', 'External'),
 	)
 
+def review_recommendation():
+	return (
+		('accept', 'Accept'),
+		('reject', 'Reject'),
+	)
+
 class ReviewAssignment(models.Model):
 	book = models.ForeignKey(Book)
 	review_type = models.CharField(max_length=15, choices=review_type_choices())
@@ -151,7 +157,8 @@ class ReviewAssignment(models.Model):
 	files = models.ManyToManyField('File', blank=True, null=True)
 	body = models.TextField(blank=True, null=True)
 	access_key = models.CharField(max_length=200)
-	results = models.ForeignKey('review.FormResult')
+	results = models.ForeignKey('review.FormResult', null=True, blank=True)
+	recommendation = models.CharField(max_length=10, choices=review_recommendation(), null=True, blank=True)
 
 	class Meta:
 		unique_together = ('book', 'user')

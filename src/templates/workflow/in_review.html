@@ -23,6 +23,7 @@
         <th>Date Submitted</th>
         <th>Review Started</th>
         <th>Current Stage</th>
+        <th></th>
       </tr>
       {% for submission in submission_list %}
       <tr>
@@ -36,6 +37,7 @@
         <td>{{ submission.stage.external_review|date:"DATETIME_FORMAT" }}</td>
         {% endif %}
         <td>{{ submission.stage.get_current_stage_display }}</td>
+        <td><a href="{% url 'view_review' submission.pk %}">View</a></td>
       </tr>
       {% empty %}
       <tr>

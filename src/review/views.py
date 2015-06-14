@@ -11,9 +11,10 @@ from django.utils import timezone
 from django.core.urlresolvers import reverse
 
 from core import models as core_models
+from core import views as core_views
+from core import forms as core_forms
 from review import forms
 from review import models
-from core import views as core_views
 
 @login_required
 def review(request, review_type, submission_id, access_key=None):
@@ -26,6 +27,7 @@ def review(request, review_type, submission_id, access_key=None):
 		review_assignment = get_object_or_404(core_models.ReviewAssignment, user=request.user, book=submission, completed__isnull=True)
 
 	form = forms.GeneratedForm(form=submission.review_form)
+	recommendation_form = core_forms.RecommendationForm()
 
 	if request.POST:
 		form = forms.GeneratedForm(request.POST, request.FILES, form=submission.review_form)
@@ -54,6 +56,7 @@ def review(request, review_type, submission_id, access_key=None):
 			review_assignment.completed = timezone.now()
 			if not review_assignment.accepted:
 				review_assignment.accepted = timezone.now()
+			review_assignment.recommendation = request.POST.get('recommendation')
 			review_assignment.results = form_results
 			review_assignment.save()
 
@@ -66,6 +69,7 @@ def review(request, review_type, submission_id, access_key=None):
 		'submission': submission,
 		'form': form,
 		'form_info': submission.review_form,
+		'recommendation_form': recommendation_form,
 	}
 
 	return render(request, template, context)

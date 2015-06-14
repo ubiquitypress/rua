@@ -80,6 +80,12 @@ class TaskForm(forms.ModelForm):
 		fields = ("text","workflow")
 		exclude = ("due",)
 
+class RecommendationForm(forms.ModelForm):
+
+	class Meta:
+		model = models.ReviewAssignment
+		fields = ("recommendation",)
+
 
 
 
