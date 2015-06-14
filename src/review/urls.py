@@ -5,6 +5,12 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.views.generic import TemplateView
 
 urlpatterns = patterns('',
+
+	# Reviewer decision
+	url(r'^(?P<review_type>[-\w]+)/(?P<submission_id>\d+)/assignment/(?P<review_assignment>\d+)/decision/$', 'review.views.reviewer_decision', name='reviewer_decision_without'),
+	url(r'^(?P<review_type>[-\w]+)/(?P<submission_id>\d+)/assignment/(?P<review_assignment>\d+)/decision/(?P<decision>[-\w]+)/$', 'review.views.reviewer_decision', name='reviewer_decision_with'),
+	
+	# Review
 	url(r'^(?P<review_type>[-\w]+)/(?P<submission_id>\d+)/access_key/(?P<access_key>[-\w+]+)/$', 'review.views.review', name='review_with_access_key'),
 	url(r'^(?P<review_type>[-\w]+)/(?P<submission_id>\d+)/$', 'review.views.review', name='review_without_access_key'),
 	url(r'^(?P<review_type>[-\w]+)/(?P<submission_id>\d+)/complete/$', 'review.views.review_complete', name='review_complete'),

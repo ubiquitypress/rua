@@ -17,14 +17,51 @@ from review import forms
 from review import models
 
 @login_required
+def reviewer_decision(request, review_type, submission_id, review_assignment, decision=None):
+
+	# Check the review assignment as not been completed and is being accessed by the assigned user
+	submission = get_object_or_404(core_models.Book, pk=submission_id)
+	review_assignment = get_object_or_404(core_models.ReviewAssignment, pk=review_assignment, user=request.user, completed__isnull=True, declined__isnull=True, accepted__isnull=True)
+
+	if decision and decision == 'accept':
+		review_assignment.accepted = timezone.now()
+	elif decision and decision == 'decline':
+		review_assignment.declined = timzeone.now()
+
+	# If we didn't get a decision above, offer the user a choice.
+	if request.POST:
+		if 'accept' in request.POST:
+			review_assignment.accepted = timezone.now()
+		elif 'decline' in request.POST:
+			review_assignment.declined = timezone.now()
+
+	if request.POST or decision:
+		review_assignment.save()
+		if review_assignment.accepted:
+			return redirect(reverse('review_without_access_key', kwargs={'review_type': review_type, 'submission_id': submission.pk}))
+		elif review_assignment.declined:
+			return redirect(reverse('user_home'))
+
+	template = 'review/reviewer_decision.html'
+	context = {
+		'submission': submission,
+		'review_assignment': review_assignment,
+	}
+
+	return render(request, template, context)
+
+
+
+@login_required
 def review(request, review_type, submission_id, access_key=None):
 
+	# Check that this review is being access by the user, is not completed and has not been declined.
 	if access_key:
-		review_assignment = get_object_or_404(core_models.ReviewAssignment, access_key=access_key, completed__isnull=True)
+		review_assignment = get_object_or_404(core_models.ReviewAssignment, access_key=access_key, completed__isnull=True, declined__isnull=True)
 		submission = get_object_or_404(core_models.Book, pk=submission_id)
 	else:
 		submission = get_object_or_404(core_models.Book, pk=submission_id)
-		review_assignment = get_object_or_404(core_models.ReviewAssignment, user=request.user, book=submission, completed__isnull=True)
+		review_assignment = get_object_or_404(core_models.ReviewAssignment, user=request.user, book=submission, completed__isnull=True, declined__isnull=True)
 
 	form = forms.GeneratedForm(form=submission.review_form)
 	recommendation_form = core_forms.RecommendationForm()

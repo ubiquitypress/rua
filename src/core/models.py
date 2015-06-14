@@ -152,6 +152,7 @@ class ReviewAssignment(models.Model):
 	user = models.ForeignKey(User)
 	assigned = models.DateField(auto_now=True)
 	accepted = models.DateField(blank=True, null=True)
+	declined = models.DateField(blank=True, null=True)
 	due = models.DateField(blank=True, null=True)
 	completed = models.DateField(blank=True, null=True)
 	files = models.ManyToManyField('File', blank=True, null=True)
