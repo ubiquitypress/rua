@@ -128,6 +128,25 @@ def view_new_submission(request, submission_id):
 
 	return render(request, template, context)
 
+@staff_member_required
+def decline_submission(request, submission_id):
+
+	submission = get_object_or_404(models.Book, pk=submission_id)
+
+	if request.POST and 'decline' in request.POST:
+		submission.stage.declined = timezone.now()
+		submission.stage.current_stage = 'declined'
+		submission.stage.save()
+		messages.add_message(request, messages.SUCCESS, 'Submission declined.')
+		return redirect(reverse('user_home'))
+
+	template = 'workflow/decline_submission.html'
+	context = {
+		'submission': submission,
+	}
+
+	return render(request, template, context)
+
 @login_required
 def in_review(request):
 

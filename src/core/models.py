@@ -275,6 +275,7 @@ stage_choices = (
 	('indexing', 'Indexing'),
 	('production', 'Production'),
 	('published', 'Published'),
+	('declined', 'Declined'),
 )
 
 class Stage(models.Model):
@@ -287,6 +288,7 @@ class Stage(models.Model):
 	indexing = models.DateTimeField(null=True, blank=True)
 	production = models.DateTimeField(null=True, blank=True)
 	publication = models.DateTimeField(null=True, blank=True)
+	declined = models.DateTimeField(null=True, blank=True)
 
 	def __unicode__(self):
 		return u'%s' % self.current_stage

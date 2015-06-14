@@ -43,7 +43,7 @@
       <a href="{% url 'in_editing' %}" type="button" class="btn btn-primary {% if not submission.stage.current_stage == 'submission' %}disabled{% endif %}">Expedite to Editing</a>
     </div>
     <div class="btn-group" role="group">
-      <a href="{% url 'in_production' %}" type="button" class="btn btn-primary {% if not submission.stage.current_stage == 'submission' %}disabled{% endif %}">Decline</a>
+      <a href="{% url 'decline_submission' submission.id %}" type="button" class="btn btn-primary {% if not submission.stage.current_stage == 'submission' %}disabled{% endif %}">Decline</a>
     </div>
   </div>
 </div>
