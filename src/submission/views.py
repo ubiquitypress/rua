@@ -292,6 +292,9 @@ def handle_file(file, book, kind):
 	except IndexError:
 		file_mime = 'unknown'
 
+	if not file_mime:
+		file_mime = 'unknown'
+
 	new_file = core_models.File(
 		mime_type=file_mime,
 		original_filename=original_filename,

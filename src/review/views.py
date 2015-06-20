@@ -13,6 +13,7 @@ from django.core.urlresolvers import reverse
 from core import models as core_models
 from core import views as core_views
 from core import forms as core_forms
+from core import log
 from review import forms
 from review import models
 
@@ -96,6 +97,8 @@ def review(request, review_type, submission_id, access_key=None):
 			review_assignment.recommendation = request.POST.get('recommendation')
 			review_assignment.results = form_results
 			review_assignment.save()
+
+			log.add_log_entry(book=submission, user=request.user, kind='review', message='Reviewer %s %s completed review.' % (reviewer.first_name, reviewer.last_name), short_name='Review Assignment')
 
 			return redirect(reverse('review_complete', kwargs={'review_type': 'internal', 'submission_id': submission.id}))
 

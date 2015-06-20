@@ -23,7 +23,7 @@
         {% endif %}
       <form enctype="multipart/form-data" method="post">
       {% for field in form %}
-        <div class="{% if field.field.widget.attrs.div_class %}{{ field.field.widget.attrs.div_class }}{% else %}clear{% endif %}">
+        <div class="{% if field.field.widget.attrs.div_class %}{{ field.field.widget.attrs.div_class }}{% else %}col-md-12{% endif %}">
         {% if field.field.widget.attrs.is_checkbox %}
           {% if field.errors %}<span class="red">{{ field.errors|join:", " }}</span><br />{% endif %}
           {{ field }} {% if field.field.help_text %}<span class="small">{{ field.field.help_text|safe }}</span>{% endif %}
@@ -34,6 +34,7 @@
           </div>
       {% endfor %}
       {% csrf_token %}
+      <div class="col-md-12">
       <hr />
       <h4>2. Upload Review File</h4>
       <div class="form-group">
@@ -57,6 +58,7 @@
       <br/><br/>
 
       </form>
+      </div>
 	</div>
 {% endblock body %}
 
