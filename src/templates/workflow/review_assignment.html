@@ -8,9 +8,9 @@
 {% block breadcrumbs %}
   <ol class="breadcrumb">
     <li><a href="{% url 'user_home' %}">User Home</a></li>
-    <li class="">Workflow</li>
+    <li>Workflow</li>
     <li><a href="{% url 'in_review'%}">In Review</a></li>
-    <li>{{ submission.title }}</li>
+    <li><a href="{% url 'view_review' submission.pk %}">{{ submission.title }}</a></li>
     <li class="active">Review</li>
   </ol>
 {% endblock %}
@@ -52,6 +52,9 @@
       </div>
       <div {% cycle '' 'style="clear:both"' %}></div>
       {% endfor %}
+
+  <h4>Recommendation</h4>
+  {{ review.get_recommendation_display }}
 </div>
 
 {% endblock %}
