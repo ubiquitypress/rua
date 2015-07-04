@@ -355,6 +355,9 @@ class Setting(models.Model):
 	types = models.CharField(max_length=20, choices=setting_types)
 	value = models.TextField(null=True, blank=True)
 
+	class Meta:
+		ordering = ('group', 'name')
+
 	def __unicode__(self):
 		return u'%s' % self.name
 

@@ -1,0 +1,13 @@
+<h4 id="action">Action</h4>
+<p class="small">Once your reviews are completed, select an action.</p>
+<div class="btn-group btn-group-justified" role="group">
+    <div class="btn-group" role="group">
+      <a href="" type="button" class="btn btn-primary {% if not submission.stage.current_stage == 'i_review' %}disabled{% endif %}" data-toggle="modal" data-target="#externalmodal">External Review</a>
+    </div>
+    <div class="btn-group" role="group">
+      <a href="{% url 'in_editing' %}" type="button" class="btn btn-primary {% if not submission.stage.current_stage == 'i_review' %}disabled{% endif %}">Expedite to Editing</a>
+    </div>
+    <div class="btn-group" role="group">
+      <a href="{% url 'decline_submission' submission.id %}" type="button" class="btn btn-primary {% if not submission.stage.current_stage == 'i_review' %}disabled{% endif %}">Decline</a>
+    </div>
+</div>

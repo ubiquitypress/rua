@@ -98,7 +98,7 @@ def review(request, review_type, submission_id, access_key=None):
 			review_assignment.results = form_results
 			review_assignment.save()
 
-			log.add_log_entry(book=submission, user=request.user, kind='review', message='Reviewer %s %s completed review.' % (reviewer.first_name, reviewer.last_name), short_name='Review Assignment')
+			log.add_log_entry(book=submission, user=request.user, kind='review', message='Reviewer %s %s completed review.' % (review_assignment.user.first_name, review_assignment.user.last_name), short_name='Review Assignment')
 
 			return redirect(reverse('review_complete', kwargs={'review_type': 'internal', 'submission_id': submission.id}))
 

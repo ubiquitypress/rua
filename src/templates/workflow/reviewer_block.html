@@ -1,4 +1,3 @@
-<h4>Reviewers</h4>
 <table class="table table-striped">
   <tr>
     <th>Name</th>
@@ -9,7 +8,7 @@
     <th>Recommendation</th>
     <th></th>
   </tr>
-{% for reviewer in submission.review_assignments.all %}
+{% for reviewer in review_data %}
   <tr>
     <td>{{ reviewer.user.first_name }} {% if author.middle_name %}{{ reviewer.user.middle_name}} {% endif %}{{ reviewer.user.last_name }}</td>
     <td>{{ reviewer.assigned }}</td>

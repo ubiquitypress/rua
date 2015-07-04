@@ -190,11 +190,85 @@ def in_production(request):
 def view_review(request, submission_id):
 
 	submission = get_object_or_404(models.Book, pk=submission_id)
+	reviewers = models.User.objects.filter(profile__roles__slug='reviewer')
+	review_forms = review_models.Form.objects.all()
+	committees = manager_models.Group.objects.filter(group_type='review_committee')
+	internal_review_assignments = models.ReviewAssignment.objects.filter(book=submission, review_type='internal')
+	external_review_assignments = models.ReviewAssignment.objects.filter(book=submission, review_type='external')
+
+	if request.POST:
+		review_type = 'external'
+		files = models.File.objects.filter(pk__in=request.POST.getlist('file'))
+		reviewers = User.objects.filter(pk__in=request.POST.getlist('reviewer'))
+		committees = manager_models.Group.objects.filter(pk__in=request.POST.getlist('committee'))
+		review_form = review_models.Form.objects.get(ref=request.POST.get('review_form'))
+		due_date = request.POST.get('due_date')
+		email_text = request.POST.get('message')
+
+		# Handle files
+		for file in files:
+			submission.review_files.add(file)
+
+		# Handle reviewers
+		for reviewer in reviewers:
+			new_review_assignment = models.ReviewAssignment(
+				review_type=review_type,
+				user=reviewer,
+				book=submission,
+				due=due_date,
+				access_key=str(uuid4()),
+			)
+
+			try:
+				new_review_assignment.save()
+				submission.review_assignments.add(new_review_assignment)
+				log.add_log_entry(book=submission, user=request.user, kind='review', message='Reviewer %s %s assigned.' % (reviewer.first_name, reviewer.last_name), short_name='Review Assignment')
+				send_review_request(submission, new_review_assignment, email_text)
+			except IntegrityError:
+				messages.add_message(request, messages.WARNING, '%s %s is already a reviewer' % (reviewer.first_name, reviewer.last_name))
+
+		# Handle committees
+		for committee in committees:
+			members = manager_models.GroupMembership.objects.filter(group=committee)
+			for member in members:
+				new_review_assignment = models.ReviewAssignment(
+					review_type=review_type,
+					user=member.user,
+					book=submission,
+					due=due_date,
+					access_key = str(uuid4()),
+				)
+
+				try:
+					new_review_assignment.save()
+					submission.review_assignments.add(new_review_assignment)
+					log.add_log_entry(book=submission, user=request.user, kind='review', message='External Reviewer %s %s assigned.' % (member.user.first_name, member.user.last_name), short_name='Review Assignment')
+					send_review_request(submission, new_review_assignment, email_text)
+				except IntegrityError:
+					messages.add_message(request, messages.WARNING, '%s %s is already a reviewer' % (member.user.first_name, member.user.last_name))
+
+
+
+		# Tidy up and save
+		submission.stage.internal_review = timezone.now()
+		submission.stage.current_stage = 'i_review'
+		submission.stage.save()
+		submission.review_form = review_form
+		submission.save()
+
+		return redirect(reverse('view_review', kwargs={'submission_id': submission.id}))
+
 
 	template = 'workflow/view_review.html'
 	context = {
 		'submission': submission,
 		'active': 'review',
+		'reviewers': reviewers,
+		'committees': committees,
+		'email_text': models.Setting.objects.get(group__name='email', name='external_review_request'),
+		'review_forms': review_forms,
+		'internal_review_assignments': internal_review_assignments,
+		'external_review_assignments': external_review_assignments,
 	}
 
 	return render(request, template, context)
@@ -207,8 +281,6 @@ def view_review_assignment(request, submission_id, assignment_id):
 	result = review_assignment.results
 	relations = review_models.FormElementsRelationship.objects.filter(form=result.form)
 	data_ordered = logic.order_data(logic.decode_json(result.data), relations)
-
-	print result
 
 	template = 'workflow/review_assignment.html'
 	context = {
