@@ -6,6 +6,7 @@
     <th>Accepted</th>
     <th>Due</th>
     <th>Completed</th>
+    <th>Recommendation</th>
     <th></th>
   </tr>
 {% for reviewer in submission.review_assignments.all %}
@@ -15,6 +16,7 @@
     <td>{% if reviewer.accepted %}{{ reviewer.accepted }}{% else %}--{% endif %}</td>
     <td>{{ reviewer.due }}</td>
     <td>{% if reviewer.completed %}{{ reviewer.completed }}{% else %}--{% endif %}</td>
+    <td>{% if reviewer.completed %}{{ reviewer.get_recommendation_display }}{% else %}--{% endif %}</td>
     <td>{% if reviewer.completed %}<a href="{% url 'view_review_assignment' submission.id reviewer.id %}">View Review</a>{% endif %}</td>
   </tr>
 {% endfor %}
