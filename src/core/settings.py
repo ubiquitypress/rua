@@ -51,6 +51,7 @@ INSTALLED_APPS = (
 
     # 3rd Party
     'bootstrap3',
+    'debug_toolbar',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -75,6 +76,13 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    }
+}
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+        'LOCATION': '127.0.0.1:11211',
     }
 }
 

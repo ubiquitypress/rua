@@ -6,6 +6,7 @@ from django.http import HttpResponse
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.contrib import messages
+from django.core.cache import cache
 
 from manager import models
 from manager import forms
@@ -147,6 +148,13 @@ def role_action(request, slug, user_id, action):
 	user.save()
 
 	return redirect(reverse('manager_role', kwargs={'slug': role.slug}))
+
+@staff_member_required
+def flush_cache(request):
+	cache._cache.flush_all()
+	messages.add_message(request, messages.SUCCESS, 'Memcached has been flushed.')
+
+	return redirect(reverse('manager_index'))
 
 
 ## AJAX Handler

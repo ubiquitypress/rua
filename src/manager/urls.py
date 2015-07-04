@@ -25,4 +25,7 @@ urlpatterns = patterns('',
     url(r'^roles/(?P<slug>[-\w.]+)/$', 'manager.views.role', name='manager_role'),
     url(r'^roles/(?P<slug>[-\w.]+)/user/(?P<user_id>\d+)/(?P<action>[-\w.]+)/$', 'manager.views.role_action', name='manager_role_action'),
 
+    # Cache
+    url(r'^cache/flush/$', 'manager.views.flush_cache', name='manager_flush_cache'),
+
 )

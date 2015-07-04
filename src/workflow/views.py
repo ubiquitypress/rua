@@ -21,6 +21,7 @@ from core import models
 from core import forms
 from core import log
 from core import email
+from core.cache import cache_result
 from review import models as review_models
 from workflow import logic
 from manager import models as manager_models
@@ -193,8 +194,8 @@ def view_review(request, submission_id):
 	reviewers = models.User.objects.filter(profile__roles__slug='reviewer')
 	review_forms = review_models.Form.objects.all()
 	committees = manager_models.Group.objects.filter(group_type='review_committee')
-	internal_review_assignments = models.ReviewAssignment.objects.filter(book=submission, review_type='internal')
-	external_review_assignments = models.ReviewAssignment.objects.filter(book=submission, review_type='external')
+	internal_review_assignments = models.ReviewAssignment.objects.filter(book=submission, review_type='internal').select_related('user')
+	external_review_assignments = models.ReviewAssignment.objects.filter(book=submission, review_type='external').select_related('user')
 
 	if request.POST:
 		review_type = 'external'
