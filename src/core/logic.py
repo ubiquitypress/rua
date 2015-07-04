@@ -3,6 +3,7 @@ from django.template.loader import get_template
 from django.template import Context
 
 from core import models
+from core.cache import cache_result
 
 from pprint import pprint
 
@@ -19,6 +20,7 @@ def send_email(subject, context, from_email, to, html_template, text_template=No
 	msg.attach_alternative(html_content, "text/html")
 	msg.send()
 
+@cache_result(300)
 def press_settings():
 	_dict = {}
 	for group in models.SettingGroup.objects.all():

@@ -12,7 +12,7 @@
 {% block body %}
 	<div class="col-md-12">
 		<h2>{{ submission.title }}</h2>
-    {{ form_info.completion_text }}
+    {{ form_info.completion_text|safe }}
 	</div>
 {% endblock body %}
 
