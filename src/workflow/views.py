@@ -163,7 +163,7 @@ def in_review(request):
 @login_required
 def in_editing(request):
 
-	submission_list = models.Book.objects.filter(Q(stage__current_stage='copy_editing') | Q(stage__current_stage='indexing'))
+	submission_list = models.Book.objects.filter(stage__current_stage='editing')
 
 	template = 'workflow/in_editing.html'
 	context = {
@@ -250,8 +250,8 @@ def view_review(request, submission_id):
 
 
 		# Tidy up and save
-		submission.stage.internal_review = timezone.now()
-		submission.stage.current_stage = 'i_review'
+		submission.stage.external_review = timezone.now()
+		submission.stage.current_stage = 'e_review'
 		submission.stage.save()
 		submission.review_form = review_form
 		submission.save()
@@ -292,6 +292,15 @@ def view_review_assignment(request, submission_id, assignment_id):
 	}
 
 	return render(request, template, context)
+
+def move_to_editing(request, submission_id):
+	'Moves a submission to the editing stage'
+	submission = get_object_or_404(models.Book, pk=submission_id)
+	submission.stage.editing = timezone.now()
+	submission.stage.current_stage = 'editing'
+	submission.stage.save()
+
+	return redirect(reverse('in_editing'))
 
 # Log
 @login_required

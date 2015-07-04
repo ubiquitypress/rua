@@ -271,8 +271,7 @@ stage_choices = (
 	('submission', 'New Submission'),
 	('i_review', 'Internal Review'),
 	('e_review', 'External Review'),
-	('copy_editing', 'Copy Editing'),
-	('indexing', 'Indexing'),
+	('editing', 'Editing'),
 	('production', 'Production'),
 	('published', 'Published'),
 	('declined', 'Declined'),
@@ -284,8 +283,7 @@ class Stage(models.Model):
 	submission = models.DateTimeField(null=True, blank=True)
 	internal_review = models.DateTimeField(null=True, blank=True)
 	external_review = models.DateTimeField(null=True, blank=True)
-	copy_editing = models.DateTimeField(null=True, blank=True)
-	indexing = models.DateTimeField(null=True, blank=True)
+	editing = models.DateTimeField(null=True, blank=True)
 	production = models.DateTimeField(null=True, blank=True)
 	publication = models.DateTimeField(null=True, blank=True)
 	declined = models.DateTimeField(null=True, blank=True)

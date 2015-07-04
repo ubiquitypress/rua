@@ -20,6 +20,8 @@ urlpatterns = patterns('',
     url(r'^review/$', 'workflow.views.in_review', name='in_review'),
     url(r'^review/(?P<submission_id>\d+)/$', 'workflow.views.view_review', name='view_review'),
     url(r'^review/(?P<submission_id>\d+)/assignment/(?P<assignment_id>\d+)/$', 'workflow.views.view_review_assignment', name='view_review_assignment'),
+    url(r'^review/move/(?P<submission_id>\d+)/editing/$', 'workflow.views.move_to_editing', name='move_to_editing'),
+
 
     url(r'^editing/$', 'workflow.views.in_editing', name='in_editing'),
     url(r'^production/$', 'workflow.views.in_production', name='in_production'),
