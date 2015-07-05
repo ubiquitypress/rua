@@ -383,7 +383,6 @@ def add_chapter(request, submission_id):
 			new_chapter.save()
 			return redirect(reverse('view_production', kwargs={'submission_id': book.id}))
 
-	print chapter_form.errors
 	template = 'workflow/production/add_chapter.html'
 	context = {
 		'submission': book,
@@ -409,6 +408,34 @@ def delete_format_or_chapter(request, submission_id, format_or_chapter, id):
 		messages.add_message(request, messages.WARNING, 'Item not found.')
 
 	return redirect(reverse('view_production', kwargs={'submission_id': book.id}))
+
+@login_required
+def update_format_or_chapter(request, submission_id, format_or_chapter, id):
+	book = get_object_or_404(models.Book, pk=submission_id)
+
+	if format_or_chapter == 'chapter':
+		item = get_object_or_404(models.Chapter, pk=id)
+	elif format_or_chapter == 'format':
+		item = get_object_or_404(models.Format, pk=id)
+
+	form = forms.UpdateChapterFormat()
+
+	if request.POST:
+		form = forms.UpdateChapterFormat(request.POST, request.FILES)
+		if form.is_valid():
+			item.name = request.POST.get('name')
+			item.save()
+			handle_file_update(request.FILES.get('file'), item.file, book, item.file.kind)
+			return redirect(reverse('view_production', kwargs={'submission_id': book.id}))
+
+	template = 'workflow/production/update.html'
+	context = {
+		'submission': book,
+		'item': item,
+		'form': form,
+	}
+
+	return render(request, template, context)
 
 
 # File Handlers - should this be in Core?

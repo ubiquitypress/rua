@@ -17,3 +17,8 @@ class ChapterForm(forms.ModelForm):
 	class Meta:
 		model = core_models.Chapter
 		exclude = ('book', 'file')
+
+class UpdateChapterFormat(forms.Form):
+
+	file = forms.FileField(required=True)
+	name = forms.CharField(required=True)

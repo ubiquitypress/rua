@@ -30,6 +30,7 @@ urlpatterns = patterns('',
     url(r'^production/(?P<submission_id>\d+)/add/format/$', 'workflow.views.add_format', name='add_format'),
     url(r'^production/(?P<submission_id>\d+)/add/chapter/$', 'workflow.views.add_chapter', name='add_chapter'),
     url(r'^production/(?P<submission_id>\d+)/delete/(?P<format_or_chapter>[-\w]+)/(?P<id>\d+)/$', 'workflow.views.delete_format_or_chapter', name='delete_format_or_chapter'),
+    url(r'^production/(?P<submission_id>\d+)/update/(?P<format_or_chapter>[-\w]+)/(?P<id>\d+)/$', 'workflow.views.update_format_or_chapter', name='update_format_or_chapter'),
     url(r'^production/(?P<submission_id>\d+)/catlog/$', 'workflow.views.catalog', name='catalog'),
 
     url(r'^log/(?P<submission_id>\d+)/', 'workflow.views.view_log', name='view_log'),

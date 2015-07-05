@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load bootstrap3 %}
 
-{% block title %}In Review{% endblock %}
+{% block title %}Production{% endblock %}
 
 {% block breadcrumbs %}
     <ol class="breadcrumb">
@@ -28,6 +28,8 @@
       <th>Type</th>
       <th>Date Uploaded</th>
       <th></th>
+      <th></th>
+      <th></th>
     </tr>
     {% for format in format_list %}
     <tr>
@@ -37,6 +39,8 @@
       <td>{{ format.file.uuid_filename }}</td>
       <td>{{ format.file.mime_type }}</td>
       <td>{{ format.file.date_uploaded }}</td>
+      <td><a href="{% url 'versions_file' submission.id format.file.id %}" class="btn btn-primary"><i class="fa fa-code-fork"></i></a></td>
+      <td><a href="{% url 'update_format_or_chapter' submission.id 'format' format.id %}" class="btn btn-primary"><i class="fa fa-upload"></i></a></td>
       <td><a href="{% url 'delete_format_or_chapter' submission.id 'format' format.id %}" class="btn btn-danger"><i class="fa fa-trash"></i></a></td>
     </tr>
     {% endfor %}
@@ -54,6 +58,8 @@
       <th>Type</th>
       <th>Date Uploaded</th>
       <th></th>
+      <th></th>
+      <th></th>
     </tr>
     {% for format in chapter_list %}
     <tr>
@@ -63,6 +69,8 @@
       <td>{{ format.file.uuid_filename }}</td>
       <td>{{ format.file.mime_type }}</td>
       <td>{{ format.file.date_uploaded }}</td>
+      <td><a href="{% url 'versions_file' submission.id format.file.id %}" class="btn btn-primary"><i class="fa fa-code-fork"></i></a></td>
+      <td><a href="{% url 'update_format_or_chapter' submission.id 'chapter' format.id %}" class="btn btn-primary"><i class="fa fa-upload"></i></a></td>
       <td><a href="{% url 'delete_format_or_chapter' submission.id 'chapter' format.id %}" class="btn btn-danger"><i class="fa fa-trash"></i></a></td>
     </tr>
     {% endfor %}
