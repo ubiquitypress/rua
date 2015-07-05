@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% load bootstrap3 %}
+
+{% block title %}In Review{% endblock %}
+
+{% block breadcrumbs %}
+    <ol class="breadcrumb">
+	  <li><a href="{% url 'user_home' %}">User Home</a></li>
+	  <li class="">Workflow</li>
+    <li><a href="{% url 'in_production'%}">In Production</a></li>
+    <li class="active">{{ submission.title }}</li>
+	</ol>
+{% endblock %}
+
+{% block body %}
+<div class="col-md-12">
+  <h3>{{ submission.title }}</h3>
+  <hr />
+  {% include "workflow/workflow_view_buttons.html" %}
+
+  <h4>Publication Formats</h4>
+
+  <hr />
+  <h4>Publication Chapters</h4>
+
+  <hr />
+
+  {% include "workflow/elements/production_action.html" %}
+
+{% endblock %}
+
+{% block js %}
+{% endblock js %}

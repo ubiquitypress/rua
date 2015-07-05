@@ -24,7 +24,10 @@ urlpatterns = patterns('',
 
 
     url(r'^editing/$', 'workflow.views.in_editing', name='in_editing'),
+
     url(r'^production/$', 'workflow.views.in_production', name='in_production'),
+    url(r'^production/(?P<submission_id>\d+)/$', 'workflow.views.view_production', name='view_production'),
+    url(r'^production/(?P<submission_id>\d+)/catlog/$', 'workflow.views.catalog', name='catalog'),
 
     url(r'^log/(?P<submission_id>\d+)/', 'workflow.views.view_log', name='view_log'),
 

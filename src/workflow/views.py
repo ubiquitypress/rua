@@ -318,6 +318,30 @@ def view_log(request, submission_id):
 
 	return render(request, template, context)
 
+@login_required
+def view_production(request, submission_id):
+	book = get_object_or_404(models.Book, pk=submission_id)
+
+	template = 'workflow/production/view.html'
+	context = {
+		'active': 'production',
+		'submission': book,
+	}
+
+	return render(request, template, context)
+
+@login_required
+def catalog(request, submission_id):
+	book = get_object_or_404(models.Book, pk=submission_id)
+
+	template = 'workflow/production/catalog.html'
+	context = {
+		'active': 'production',
+		'submission': book,
+	}
+
+	return render(request, template, context)
+
 # File Handlers - should this be in Core?
 @login_required
 def serve_file(request, submission_id, file_id):
