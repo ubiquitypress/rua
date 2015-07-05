@@ -392,6 +392,25 @@ def add_chapter(request, submission_id):
 
 	return render(request, template, context)
 
+@login_required
+def delete_format_or_chapter(request, submission_id, format_or_chapter, id):
+	book = get_object_or_404(models.Book, pk=submission_id)
+
+	if format_or_chapter == 'chapter':
+		item = get_object_or_404(models.Chapter, pk=id)
+	elif format_or_chapter == 'format':
+		item = get_object_or_404(models.Format, pk=id)
+
+	if item:
+		item.file.delete()
+		item.delete()
+		messages.add_message(request, messages.SUCCESS, 'Item deleted')
+	else:
+		messages.add_message(request, messages.WARNING, 'Item not found.')
+
+	return redirect(reverse('view_production', kwargs={'submission_id': book.id}))
+
+
 # File Handlers - should this be in Core?
 @login_required
 def serve_file(request, submission_id, file_id):
