@@ -361,3 +361,14 @@ class Setting(models.Model):
 
 	def __repr__(self):
 		return u'%s' % self.name
+
+class Format(models.Model):
+	book = models.ForeignKey(Book)
+	file = models.ForeignKey(File)
+	indentifier = models.CharField(max_length=200)
+
+	def __unicode__(self):
+		return u'%s - %s' % (self.book, self.indentifier)
+
+	def __repr__(self):
+		return u'%s - %s' % (self.book, self.indentifier)
