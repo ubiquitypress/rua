@@ -19,10 +19,52 @@
   {% include "workflow/workflow_view_buttons.html" %}
 
   <h4>Publication Formats</h4>
+  <table class="table table-bordered">
+    <tr>
+      <th>Name</th>
+      <th>Identifier</th>
+      <th>Original Filename</th>
+      <th>Filename</th>
+      <th>Type</th>
+      <th>Date Uploaded</th>
+    </tr>
+    {% for format in format_list %}
+    <tr>
+      <td>{{ format.name }}</td>
+      <td>{{ format.indentifier }}</td>
+      <td>{{ format.file.original_filename }}</td>
+      <td>{{ format.file.uuid_filename }}</td>
+      <td>{{ format.file.mime_type }}</td>
+      <td>{{ format.file.date_uploaded }}</td>
+    </tr>
+    {% endfor %}
+  </table>
 
+  <a href="{% url 'add_format' submission.id %}" class="btn btn-success"><i class="fa fa-upload">&nbsp;</i>Add New Format</a>
   <hr />
   <h4>Publication Chapters</h4>
+  <table class="table table-bordered">
+    <tr>
+      <th>Name</th>
+      <th>Identifier</th>
+      <th>Original Filename</th>
+      <th>Filename</th>
+      <th>Type</th>
+      <th>Date Uploaded</th>
+    </tr>
+    {% for format in chapter_list %}
+    <tr>
+      <td>{{ format.name }}</td>
+      <td>{{ format.indentifier }}</td>
+      <td>{{ format.file.original_filename }}</td>
+      <td>{{ format.file.uuid_filename }}</td>
+      <td>{{ format.file.mime_type }}</td>
+      <td>{{ format.file.date_uploaded }}</td>
+    </tr>
+    {% endfor %}
+  </table>
 
+  <a href="{% url 'add_chapter' submission.id %}" class="btn btn-success"><i class="fa fa-upload">&nbsp;</i>Add New Chapter</a>
   <hr />
 
   {% include "workflow/elements/production_action.html" %}

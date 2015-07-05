@@ -25,6 +25,7 @@ from core.cache import cache_result
 from review import models as review_models
 from workflow import logic
 from manager import models as manager_models
+from workflow import forms
 
 from pprint import pprint
 import os
@@ -326,6 +327,8 @@ def view_production(request, submission_id):
 	context = {
 		'active': 'production',
 		'submission': book,
+		'format_list': models.Format.objects.filter(book=book).select_related('file'),
+		'chapter_list': models.Chapter.objects.filter(book=book).select_related('file')
 	}
 
 	return render(request, template, context)
@@ -338,6 +341,53 @@ def catalog(request, submission_id):
 	context = {
 		'active': 'production',
 		'submission': book,
+	}
+
+	return render(request, template, context)
+
+@login_required
+def add_format(request, submission_id):
+	book = get_object_or_404(models.Book, pk=submission_id)
+	format_form = forms.FormatForm()
+
+	if request.POST:
+		format_form = forms.FormatForm(request.POST, request.FILES)
+		if format_form.is_valid():
+			new_file = handle_file(request.FILES.get('format_file'), book, 'format')
+			new_format = format_form.save(commit=False)
+			new_format.book = book
+			new_format.file = new_file
+			new_format.save()
+			return redirect(reverse('view_production', kwargs={'submission_id': book.id}))
+
+	template = 'workflow/production/add_format.html'
+	context = {
+		'submission': book,
+		'format_form': format_form,
+	}
+
+	return render(request, template, context)
+
+@login_required
+def add_chapter(request, submission_id):
+	book = get_object_or_404(models.Book, pk=submission_id)
+	chapter_form = forms.ChapterForm()
+
+	if request.POST:
+		chapter_form = forms.ChapterForm(request.POST, request.FILES)
+		if chapter_form.is_valid():
+			new_file = handle_file(request.FILES.get('chapter_file'), book, 'chapter')
+			new_chapter = chapter_form.save(commit=False)
+			new_chapter.book = book
+			new_chapter.file = new_file
+			new_chapter.save()
+			return redirect(reverse('view_production', kwargs={'submission_id': book.id}))
+
+	print chapter_form.errors
+	template = 'workflow/production/add_chapter.html'
+	context = {
+		'submission': book,
+		'chapter_form': chapter_form,
 	}
 
 	return render(request, template, context)
@@ -463,6 +513,43 @@ def handle_file_update(file, old_file, book, kind):
 	old_file.save()
 
 	return path
+
+## File helpers
+def handle_file(file, book, kind):
+
+	original_filename = str(file._get_name())
+	filename = str(uuid4()) + '.' + str(original_filename.split('.')[1])
+	folder_structure = os.path.join(settings.BASE_DIR, 'files', 'books', str(book.id))
+
+	if not os.path.exists(folder_structure):
+		os.makedirs(folder_structure)
+
+	path = os.path.join(folder_structure, str(filename))
+	fd = open(path, 'wb')
+	for chunk in file.chunks():
+		fd.write(chunk)
+	fd.close()
+
+	file_mime = mime.guess_type(filename)
+
+	try:
+		file_mime = file_mime[0]
+	except IndexError:
+		file_mime = 'unknown'
+
+	if not file_mime:
+		file_mime = 'unknown'
+
+	new_file = models.File(
+		mime_type=file_mime,
+		original_filename=original_filename,
+		uuid_filename=filename,
+		stage_uploaded=1,
+		kind=kind,
+	)
+	new_file.save()
+
+	return new_file
 
 # Email handler
 

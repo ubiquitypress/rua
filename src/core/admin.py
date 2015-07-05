@@ -57,6 +57,8 @@ admin_list = [
     (SettingGroup,),
     (Role, RoleAdmin,),
     (ReviewAssignment, ReviewAssAdmin),
+    (Format,),
+    (Chapter,),
 ]
 
 [admin.site.register(*t) for t in admin_list]

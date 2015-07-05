@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% load static from staticfiles %}
+{% load bootstrap3 %}
+
+{% block title %}Add New Format{% endblock %}
+
+{% block breadcrumbs %}
+    <ol class="breadcrumb">
+	  <li><a href="{% url 'user_home' %}">User Home</a></li>
+	  <li class="">Workflow</li>
+    <li><a href="{% url 'in_production'%}">In Production</a></li>
+    <li>{{ submission.title }}</li>
+    <li class="active">Add Format</li>
+	</ol>
+{% endblock %}
+
+{% block body %}
+<div class="col-md-12">
+  <h3>{{ submission.title }}</h3>
+  <hr />
+  {% include "workflow/workflow_view_buttons.html" %}
+
+  <h4>Add Formats</h4>
+  <form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    {% bootstrap_form_errors format_form %}
+      <div class="form-group">
+          <div class="row">
+            <div class="col-md-6">
+            {% bootstrap_field format_form.name %}
+            {% bootstrap_field format_form.indentifier %}
+            {% bootstrap_field format_form.sequence %}
+               <div class="input-group">
+                  <span class="input-group-btn">
+                      <span class="btn btn-primary btn-file">
+                          Browse&hellip; <input class="" id="id_format_file" name="format_file" title="" type="file">
+                      </span>
+                  </span>
+                  <input type="text" class="form-control" readonly>
+              </div>
+              <div class="input-group">
+                  <br />
+                  <button class="btn btn-primary" type="submit" name="update" id="update"><i class="fa fa-cloud-upload">&nbsp;</i>Upload</button>
+              </div>
+            </div>
+          </div>
+        </div>
+  </form>
+
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript" src="{% static "js/fancyfile.js" %}"></script>
+{% endblock %}

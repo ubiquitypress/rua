@@ -365,7 +365,22 @@ class Setting(models.Model):
 class Format(models.Model):
 	book = models.ForeignKey(Book)
 	file = models.ForeignKey(File)
-	indentifier = models.CharField(max_length=200)
+	name = models.CharField(max_length=200)
+	indentifier = models.CharField(max_length=200, unique=True)
+	sequence = models.IntegerField(default=9999)
+
+	def __unicode__(self):
+		return u'%s - %s' % (self.book, self.indentifier)
+
+	def __repr__(self):
+		return u'%s - %s' % (self.book, self.indentifier)
+
+class Chapter(models.Model):
+	book = models.ForeignKey(Book)
+	file = models.ForeignKey(File)
+	name = models.CharField(max_length=200)
+	indentifier = models.CharField(max_length=200, unique=True)
+	sequence = models.IntegerField(default=9999)
 
 	def __unicode__(self):
 		return u'%s - %s' % (self.book, self.indentifier)
