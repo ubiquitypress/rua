@@ -1,13 +1,13 @@
 <h4 id="action">Action</h4>
-<p class="small">{% if not submission.stage.current_stage == 'e_review' and not submission.stage.current_stage == 'i_review' %}Options disabled, submission is no longer in this stage.{% else %}Once your reviews are completed, select an action.{% endif %}</p>
+<p class="small">{% if not submission.stage.current_stage == 'review' %}Options disabled, submission is no longer in this stage.{% else %}Once your reviews are completed, select an action.{% endif %}</p>
 <div class="btn-group btn-group-justified" role="group">
-    <div class="btn-group" role="group">
-      <a href="" type="button" class="btn btn-primary {% if not submission.stage.current_stage == 'e_review' and not submission.stage.current_stage == 'i_review' %}disabled{% endif %}" data-toggle="modal" data-target="#externalmodal">External Review</a>
+	<div class="btn-group" role="group">
+      <a href="{% url 'move_to_editing' submission.id %}" type="button" class="btn btn-primary {% if not submission.stage.current_stage == 'review' %}disabled{% endif %}">Request Revisions</a>
     </div>
     <div class="btn-group" role="group">
-      <a href="{% url 'move_to_editing' submission.id %}" type="button" class="btn btn-primary {% if not submission.stage.current_stage == 'e_review' and not submission.stage.current_stage == 'i_review' %}disabled{% endif %}">Expedite to Editing</a>
+      <a href="{% url 'move_to_editing' submission.id %}" type="button" class="btn btn-primary {% if not submission.stage.current_stage == 'review' %}disabled{% endif %}">Expedite to Editing</a>
     </div>
     <div class="btn-group" role="group">
-      <a href="{% url 'decline_submission' submission.id %}" type="button" class="btn btn-primary {% if not submission.stage.current_stage == 'e_review' and not submission.stage.current_stage == 'i_review' %}disabled{% endif %}">Decline</a>
+      <a href="{% url 'decline_submission' submission.id %}" type="button" class="btn btn-primary {% if not submission.stage.current_stage == 'review' %}disabled{% endif %}">Decline</a>
     </div>
 </div>

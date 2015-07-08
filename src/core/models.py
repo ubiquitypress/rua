@@ -109,7 +109,8 @@ class Book(models.Model):
 	pages = models.CharField(max_length=10, null=True, blank=True)
 	slug = models.CharField(max_length=1000, null=True, blank=True)
 	files = models.ManyToManyField('File', null=True, blank=True)
-	review_files = models.ManyToManyField('File', null=True, blank=True, related_name='review_files')
+	internal_review_files = models.ManyToManyField('File', null=True, blank=True, related_name='internal_review_files')
+	external_review_files = models.ManyToManyField('File', null=True, blank=True, related_name='external_review_files')
 	cover_letter = models.TextField(null=True, blank=True, help_text="A covering letter for the Editors.")
 	book_type = models.CharField(max_length=50, null=True, blank=True, choices=book_type_choices(), help_text="A monograph is a work authored, in its entirety, by one or more authors. An edited volume has different authors for each chapter.")
 
@@ -125,7 +126,7 @@ class Book(models.Model):
 	submission_stage = models.IntegerField(null=True, blank=True)
 
 	# Review
-	review_assignments = models.ManyToManyField('ReviewAssignment', related_name='review')
+	review_assignments = models.ManyToManyField('ReviewAssignment', related_name='review', null=True, blank=True)
 	review_form = models.ForeignKey('review.Form', null=True, blank=True)
 
 	def __unicode__(self):
@@ -144,6 +145,7 @@ def review_recommendation():
 	return (
 		('accept', 'Accept'),
 		('reject', 'Reject'),
+		('revisions_required', 'Revisions Required')
 	)
 
 class ReviewAssignment(models.Model):
@@ -162,7 +164,7 @@ class ReviewAssignment(models.Model):
 	recommendation = models.CharField(max_length=10, choices=review_recommendation(), null=True, blank=True)
 
 	class Meta:
-		unique_together = ('book', 'user')
+		unique_together = ('book', 'user', 'review_type')
 
 	def __unicode__(self):
 		return u'%s - %s %s' % (self.pk, self.book.title, self.user.username)

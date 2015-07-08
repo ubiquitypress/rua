@@ -12,7 +12,11 @@
 {% block body %}
 	<div class="col-md-12">
 		<h2>{{ submission.title }}</h2>
-    {% include "workflow/reviewer_files.html" %}
+    {% if review_assignment.review_type == 'internal' %}
+    {% include "workflow/review/reviewer_files.html" with file_data=submission.internal_review_files.all %}
+    {% else %}
+    {% include "workflow/review/reviewer_files.html" with file_data=submission.external_review_files.all %}
+    {% endif %}
     <hr />
     <h4>1. Completed the Review Form</h4>
       {{ form_info.intro_text|safe }}

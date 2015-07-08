@@ -58,11 +58,11 @@ def review(request, review_type, submission_id, access_key=None):
 
 	# Check that this review is being access by the user, is not completed and has not been declined.
 	if access_key:
-		review_assignment = get_object_or_404(core_models.ReviewAssignment, access_key=access_key, completed__isnull=True, declined__isnull=True)
+		review_assignment = get_object_or_404(core_models.ReviewAssignment, access_key=access_key, completed__isnull=True, declined__isnull=True, review_type=review_type)
 		submission = get_object_or_404(core_models.Book, pk=submission_id)
 	else:
 		submission = get_object_or_404(core_models.Book, pk=submission_id)
-		review_assignment = get_object_or_404(core_models.ReviewAssignment, user=request.user, book=submission, completed__isnull=True, declined__isnull=True)
+		review_assignment = get_object_or_404(core_models.ReviewAssignment, user=request.user, book=submission, completed__isnull=True, declined__isnull=True, review_type=review_type)
 
 	form = forms.GeneratedForm(form=submission.review_form)
 	recommendation_form = core_forms.RecommendationForm()
@@ -131,7 +131,7 @@ def review_complete(request, review_type, submission_id):
 def handle_review_file(file, book, review_assignment, kind):
 
 	original_filename = str(file._get_name())
-	filename = str(uuid4()) + '.' + str(original_filename.split('.')[1])
+	filename = str(uuid4()) + '.' + str(os.path.splitext(original_filename)[1])
 	folder_structure = os.path.join(settings.BASE_DIR, 'files', 'books', str(book.id))
 
 	if not os.path.exists(folder_structure):

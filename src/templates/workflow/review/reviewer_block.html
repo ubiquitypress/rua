@@ -1,4 +1,4 @@
-<table class="table table-striped">
+<table class="table table-bordered">
   <tr>
     <th>Name</th>
     <th>Assigned</th>
@@ -17,6 +17,11 @@
     <td>{% if reviewer.completed %}{{ reviewer.completed }}{% else %}--{% endif %}</td>
     <td>{% if reviewer.completed %}{{ reviewer.get_recommendation_display }}{% else %}--{% endif %}</td>
     <td>{% if reviewer.completed %}<a href="{% url 'view_review_assignment' submission.id reviewer.id %}">View Review</a>{% endif %}</td>
+  </tr>
+
+{% empty %}
+  <tr>
+    <td colspan="7">No reviewers selected</td>
   </tr>
 {% endfor %}
 </table>

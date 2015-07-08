@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% load static from staticfiles %}
+{% load dict_lookup %}
+{% load bootstrap3 %}
+
+{% block title %}Add Review Files{% endblock %}
+
+{% block breadcrumbs %}
+    <ol class="breadcrumb">
+      <li><a href="{% url 'user_home' %}">User Home</a></li>
+      <li class="">Workflow</li>
+      <li><a href="{% url 'in_review'%}">In Review</a></li>
+      <li>{{ submission.title }}</li>
+      <li class="active">Add Review Files</li>
+    </ol>
+{% endblock %}
+
+{% block body %}
+
+<h2>Select Files</h2>
+<hr />
+<form method="POST">
+    {% csrf_token %}
+    <p class="small">You can select any number of files to present to the reviewers.</p>
+    <table class="table table-bordered small">
+    	<tr>
+    		<th>Original File Name</th>
+    		<th>New File Name</th>
+    		<th>Mimetype</th>
+    		<th>File Type</th>
+    		<th>Select</th>
+    	</tr>
+    {% for file in submission.files.all %}
+    	<tr>
+    		<td>{{ file.original_filename }}</td>
+      		<td>{{ file.uuid_filename }}</td>
+      		<td>{{ file.mime_type }}</td>
+    			<td>{{file.kind }}</td>
+    			<td><input type="checkbox" name="file" value="{{ file.id }}"/></td>
+    	</tr>
+    {% endfor %}
+    {% for reviewer in submission.review_assignments.all %}
+        {% for file in reviewer.files.all %}
+        <tr>
+            <td>{{ file.original_filename }}</td>
+            <td>{{ file.uuid_filename }}</td>
+            <td>{{ file.mime_type }}</td>
+            <td>{{file.kind }}</td>
+            <td><input type="checkbox" name="file" value="{{ file.id }}"/></td>
+        </tr>
+        {% endfor %}
+    {% endfor %}
+    </table>
+
+    <button name="submit" type="submit" class="btn btn-primary">Add Files</button>
+</form>
+{% endblock body %}

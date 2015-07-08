@@ -21,43 +21,26 @@
   <h3>{{ submission.title }}</h3>
   <hr />
   {% include "workflow/elements/workflow_view_buttons.html" %}
-  <h4>Internal Reviews</h4>
+  <div class="inline-headers"><h4>Internal Review Files</h4><a href="{% url 'add_review_files' submission.id 'internal' %}" class="btn btn-sm btn-success" style="float: right;"><i class="fa fa-plus">&nbsp;</i>Add Internal Review Files</a></div>
+  
+  {% include "workflow/review/reviewer_files.html" with file_data=submission.internal_review_files.all %}
+  
+  <div class="inline-headers"><h4>Internal Reviews</h4><a href="{% url 'add_reviewers' submission.id 'internal' %}" class="btn btn-sm btn-success" style="float: right;"><i class="fa fa-plus">&nbsp;</i>Add Internal Reviewers</a></div>
+  
   {% include "workflow/review/reviewer_block.html" with review_data=internal_review_assignments %}
-  <h4>External Reviews</h4>
+  
+  <hr />
+  
+  <div class="inline-headers"><h4>External Review Files</h4><a href="{% url 'add_review_files' submission.id 'external' %}" class="btn btn-sm btn-success" style="float: right;"><i class="fa fa-plus">&nbsp;</i>Add External Review Files</a></div>
+  
+  {% include "workflow/review/reviewer_files.html" with file_data=submission.internal_review_files.all %}
+  
+  <div class="inline-headers"><h4>External Reviews</h4><a href="{% url 'add_reviewers' submission.id 'external' %}" class="btn btn-sm btn-success" style="float: right;"><i class="fa fa-plus">&nbsp;</i>Add External Reviewers</a></div>
+  
   {% include "workflow/review/reviewer_block.html" with review_data=external_review_assignments %}
+  
   <hr />
-  {% include "workflow/review/reviewer_files.html" %}
-  <hr />
+  
   {% include "workflow/review/external_review_action.html" %}
 
 {% endblock %}
-
-{% block js %}
-<script type="text/javascript" language="javascript" src="//cdn.datatables.net/1.10.7/js/jquery.dataTables.min.js"></script>
-<script type="text/javascript" language="javascript" src="//cdn.datatables.net/plug-ins/1.10.7/integration/bootstrap/3/dataTables.bootstrap.js"></script>
-<link rel="stylesheet" href="http://code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css">
-<script src="http://code.jquery.com/ui/1.11.0/jquery-ui.js"></script>
-<script>
-  $(document).ready(function() {
-      $('#indv-reviewer').DataTable({
-        "lengthMenu": [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]]
-      });
-  } );
-
-  $(document).ready(function() {
-      $('#comm-reviewer').DataTable({
-        "lengthMenu": [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]]
-      });
-  } );
-
-  if (window.location.hash == "#indv-reviewer") {
-     $('#internalmodal').modal('show');
-}
-
-$(document).ready(function() {
-      $('#due_date').datepicker({ dateFormat: 'yy-mm-dd' }).val();
-  });
-</script>
-
-
-{% endblock js %}

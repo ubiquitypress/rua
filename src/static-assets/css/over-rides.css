@@ -188,3 +188,8 @@ body {
   width: 950px;
   margin: 20px auto;
 }
+
+.inline-headers h2, .inline-headers h4 {
+  display: inline-block;
+  vertical-align: baseline;
+}

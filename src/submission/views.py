@@ -273,7 +273,7 @@ def start_proposal(request):
 def handle_file(file, book, kind):
 
 	original_filename = str(file._get_name())
-	filename = str(uuid4()) + '.' + str(original_filename.split('.')[1])
+	filename = str(uuid4()) + '.' + str(os.path.splitext(original_filename)[1])
 	folder_structure = os.path.join(settings.BASE_DIR, 'files', 'books', str(book.id))
 
 	if not os.path.exists(folder_structure):
