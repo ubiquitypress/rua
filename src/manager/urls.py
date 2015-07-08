@@ -29,6 +29,10 @@ urlpatterns = patterns('',
     url(r'^settings/$', 'manager.views.settings_index', name='settings_index'),
     url(r'^settings/group/(?P<setting_group>[-\w.]+)/setting/(?P<setting_name>[-\w.]+)/$', 'manager.views.edit_setting', name='edit_setting'),
 
+    # Submission checklist
+    url(r'^submission/checklist/$', 'manager.views.submission_checklist', name='submission_checklist'),
+    url(r'^submission/checklist/order/$', 'manager.views.checklist_order', name='checklist_order'),
+
     # Cache
     url(r'^cache/flush/$', 'manager.views.flush_cache', name='manager_flush_cache'),
 

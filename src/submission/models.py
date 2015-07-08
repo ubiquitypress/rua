@@ -11,3 +11,12 @@ class Proposal(models.Model):
 	notes = models.TextField(blank=True, null=True)
 	uploaded_file = models.FileField()
 	owner = models.ForeignKey(User)
+
+class SubmissionChecklistItem(models.Model):
+	slug = models.CharField(max_length=100)
+	text = models.CharField(max_length=500)
+	sequence = models.IntegerField(default=999)
+	required = models.BooleanField(default=True)
+
+	class Meta:
+		ordering = ('sequence', 'text')

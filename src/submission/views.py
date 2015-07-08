@@ -15,6 +15,7 @@ from submission import forms
 from core import models as core_models
 from core import log
 from submission import logic
+from submission import models as submission_models
 from core import logic as core_logic
 
 import mimetypes as mime
@@ -26,20 +27,26 @@ from pprint import pprint
 def start_submission(request, book_id=None):
 
 	ci_required = core_models.Setting.objects.get(group__name='general', name='ci_required')
+	checklist_items = submission_models.SubmissionChecklistItem.objects.all()
 
 	if book_id:
 		book = get_object_or_404(core_models.Book, pk=book_id, owner=request.user)
 		book_form = forms.SubmitBookStageOne(instance=book, ci_required=ci_required.value)
+		checklist_form = forms.SubmissionChecklist(checklist_items=checklist_items, book=book)
 	else:
 		book = None
 		book_form = forms.SubmitBookStageOne()
+		checklist_form = forms.SubmissionChecklist(checklist_items=checklist_items)
 
 	if request.method == 'POST':
 		if book:
 			book_form = forms.SubmitBookStageOne(request.POST, instance=book, ci_required=ci_required.value)
 		else:
 			book_form = forms.SubmitBookStageOne(request.POST, ci_required=ci_required.value)
-		if book_form.is_valid():
+
+		checklist_form = forms.SubmissionChecklist(request.POST, checklist_items=checklist_items)
+
+		if book_form.is_valid() and checklist_form.is_valid():
 			book = book_form.save(commit=False)
 			book.owner = request.user
 			if not book.submission_stage > 2:
@@ -56,6 +63,7 @@ def start_submission(request, book_id=None):
 	template = "submission/start_submission.html"
 	context = {
 		'book_form': book_form,
+		'checklist_form': checklist_form,
 		'book': book,
 		'active': 1,
 	}

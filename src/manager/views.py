@@ -12,6 +12,8 @@ from manager import models
 from manager import forms
 from django.conf import settings
 from core import models as core_models
+from submission import forms as submission_forms
+from submission import models as submission_models
 
 from uuid import uuid4
 import os
@@ -203,6 +205,24 @@ def edit_setting(request, setting_group, setting_name):
 
 	return render(request, template, context)
 
+def submission_checklist(request):
+
+	checkitem_form = submission_forms.CreateSubmissionChecklistItem()
+
+	if request.POST:
+		checkitem_form = submission_forms.CreateSubmissionChecklistItem(request.POST)
+		if checkitem_form.is_valid():
+			new_check_item = checkitem_form.save()
+			return redirect(reverse('submission_checklist'))
+
+	template = 'manager/submission/checklist.html'
+	context = {
+		'checkitem_form': checkitem_form,
+		'checklist_items': submission_models.SubmissionChecklistItem.objects.all()
+	}
+
+	return render(request, template, context)
+
 
 ## File handler
 
@@ -267,5 +287,25 @@ def group_members_order(request, group_id):
 
 	else:
 		response = 'Nothing to process, post required'
+
+	return HttpResponse(response)
+
+@staff_member_required
+@csrf_exempt
+def checklist_order(request):
+
+	checklist_items = submission_models.SubmissionChecklistItem.objects.all()
+
+	if request.POST:
+		ids = request.POST.getlist('%s[]' % 'check')
+		ids = [int(_id) for _id in ids]
+
+		for item in checklist_items:
+			item.sequence = ids.index(item.id)
+			item.save()
+
+		response = 'Thanks'
+	else:
+		response = 'Nothing to process, POST required.'
 
 	return HttpResponse(response)

@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% load static from staticfiles %}
+{% load bootstrap3 %}
+
+{% block breadcrumbs %}
+  <ol class="breadcrumb">
+	  <li><a class="active" href="{% url 'manager_index' %}">Manager</a></li>
+		<li>Submission</li>
+		<li>Checklist</li>
+	</ol>
+{% endblock %}
+
+{% block body %}
+	<div class="col-md-12">
+		<h2>Submission Checklist</h2>
+		<p>A list of item an author/editor must agree to before their submission can be entered into the system.</p>
+		<div class="col-md-6">
+			<h3>Add new item</h3>
+			<form method="post" class="form">
+			    {% csrf_token %}
+			    {% bootstrap_form checkitem_form %}
+			    {% buttons %}
+			        <button type="submit" class="btn btn-primary">
+			            Submit
+			        </button>
+			    {% endbuttons %}
+			</form>
+		</div>
+		<div class="col-md-6">
+			<h3>Current Checklist Items</h3><br />
+			<ul class="list-group" id="group_files_sort">
+				{% for item in checklist_items %}
+				<li id="check-{{ item.id }}" class="list-group-item ui-sortable-handle"><i class="fa fa-sort">&nbsp;&nbsp;</i>{{ item.text }} - {{ item.required }}</li>
+				{% endfor %}
+			</ul>
+		</div>
+
+	</div>
+{% endblock body %}
+
+{% block js %}
+<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+<script type="text/javascript" src="{% static "js/fancyfile.js" %}"></script>
+<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+<script>
+$(function() {
+  $( "#group_files_sort" ).sortable({
+    placeholder: "ui-state-highlight",
+    update: function (event, ui) {
+        var data = $(this).sortable('serialize');
+        console.log(data);
+
+        // POST to server using $.post or $.ajax
+        $.ajax({
+            data: data,
+            type: 'POST',
+            url: '{% url 'checklist_order' %}'
+        });
+    }
+  });
+
+  $( "#group_files_sort" ).disableSelection();
+});
+</script>
+{% endblock %}

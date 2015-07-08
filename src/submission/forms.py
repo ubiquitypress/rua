@@ -29,6 +29,20 @@ class SubmitBookStageOne(forms.ModelForm):
 		if ci_required == 'on':
 			self.fields['competing_interests'] = forms.CharField(widget=forms.Textarea, required=True)
 
+class SubmissionChecklist(forms.Form):
+
+	def __init__(self, *args, **kwargs):
+		checklist_items = kwargs.pop('checklist_items', None)
+		book = kwargs.pop('book', None)
+		super(SubmissionChecklist, self).__init__(*args, **kwargs)
+
+		if checklist_items:
+			for item in checklist_items:
+				if book:
+					self.fields[item.text] = forms.BooleanField(required=item.required, initial=True)
+				else:
+					self.fields[item.text] = forms.BooleanField(required=item.required)
+
 class SubmitBookStageTwo(forms.ModelForm):
 
 	title = forms.CharField(required=True)
@@ -54,4 +68,10 @@ class EditorForm(forms.ModelForm):
 
 	class Meta:
 		model = core_models.Editor
+		exclude = ()
+
+class CreateSubmissionChecklistItem(forms.ModelForm):
+
+	class Meta:
+		model = models.SubmissionChecklistItem
 		exclude = ()
