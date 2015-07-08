@@ -84,7 +84,7 @@ class RecommendationForm(forms.ModelForm):
 
 	class Meta:
 		model = models.ReviewAssignment
-		fields = ("recommendation",)
+		fields = ("recommendation", "competing_interests")
 
 
 
