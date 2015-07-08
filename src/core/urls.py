@@ -12,6 +12,7 @@ urlpatterns = patterns('',
     url(r'^workflow/', include('workflow.urls')),
     url(r'^manager/', include('manager.urls')),
     url(r'^review/', include('review.urls')),
+    url(r'^summernote/', include('django_summernote.urls')),
 
     url(r'^$', 'core.views.index', name='index'),
     url(r'^contact/$', 'core.views.contact', name='contact'),

@@ -112,6 +112,7 @@ class Book(models.Model):
 	internal_review_files = models.ManyToManyField('File', null=True, blank=True, related_name='internal_review_files')
 	external_review_files = models.ManyToManyField('File', null=True, blank=True, related_name='external_review_files')
 	cover_letter = models.TextField(null=True, blank=True, help_text="A covering letter for the Editors.")
+	reviewer_suggestions = models.TextField(null=True, blank=True)
 	book_type = models.CharField(max_length=50, null=True, blank=True, choices=book_type_choices(), help_text="A monograph is a work authored, in its entirety, by one or more authors. An edited volume has different authors for each chapter.")
 
 	# Book Owner

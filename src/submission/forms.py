@@ -21,7 +21,7 @@ class SubmitBookStageOne(forms.ModelForm):
 
 	class Meta:
 		model = core_models.Book
-		fields = ('book_type', 'cover_letter', 'series', 'license')
+		fields = ('book_type', 'cover_letter', 'series', 'license', 'reviewer_suggestions')
 
 class SubmitBookStageTwo(forms.ModelForm):
 

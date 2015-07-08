@@ -17,8 +17,8 @@
 
 			{% csrf_token %}
 			
-			{% if key.value_type == 'date' %}Date Format: dd/mm/yyyy<br />{% endif %}
-			{% if key.value_type == 'rich-text' %}
+			{% if setting.types == 'date' %}Date Format: dd/mm/yyyy<br />{% endif %}
+			{% if setting.types == 'rich_text' %}
 				{{ edit_form.as_p }}
 			{% else %}
 				{% bootstrap_form edit_form layout='inline' %}
