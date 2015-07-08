@@ -23,7 +23,7 @@
   {% include "workflow/elements/workflow_view_buttons.html" %}
   <div class="inline-headers"><h4>Internal Review Files</h4><a href="{% url 'add_review_files' submission.id 'internal' %}" class="btn btn-sm btn-success" style="float: right;"><i class="fa fa-plus">&nbsp;</i>Add Internal Review Files</a></div>
   
-  {% include "workflow/review/reviewer_files.html" with file_data=submission.internal_review_files.all %}
+  {% include "workflow/review/reviewer_files.html" with file_data=submission.internal_review_files.all file_type='internal' %}
   
   <div class="inline-headers"><h4>Internal Reviews</h4><a href="{% url 'add_reviewers' submission.id 'internal' %}" class="btn btn-sm btn-success" style="float: right;"><i class="fa fa-plus">&nbsp;</i>Add Internal Reviewers</a></div>
   
@@ -33,7 +33,7 @@
   
   <div class="inline-headers"><h4>External Review Files</h4><a href="{% url 'add_review_files' submission.id 'external' %}" class="btn btn-sm btn-success" style="float: right;"><i class="fa fa-plus">&nbsp;</i>Add External Review Files</a></div>
   
-  {% include "workflow/review/reviewer_files.html" with file_data=submission.internal_review_files.all %}
+  {% include "workflow/review/reviewer_files.html" with file_data=submission.external_review_files.all file_type='external' %}
   
   <div class="inline-headers"><h4>External Reviews</h4><a href="{% url 'add_reviewers' submission.id 'external' %}" class="btn btn-sm btn-success" style="float: right;"><i class="fa fa-plus">&nbsp;</i>Add External Reviewers</a></div>
   

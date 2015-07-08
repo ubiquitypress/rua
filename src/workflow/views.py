@@ -69,102 +69,6 @@ def view_new_submission(request, submission_id):
 
 	return render(request, template, context)
 
-def add_review_files(request, submission_id, review_type):
-	submission = get_object_or_404(models.Book, pk=submission_id)
-
-	print submission.review_assignments.all()
-
-	if request.POST:
-		files = models.File.objects.filter(pk__in=request.POST.getlist('file'))
-		for file in files:
-			if review_type == 'internal':
-				submission.internal_review_files.add(file)
-			else:
-				submission.external_review_files.add(file)
-
-		messages.add_message(request, messages.SUCCESS, '%s files added to Review' % files.count())
-
-		return redirect(reverse('view_review', kwargs={'submission_id': submission.id})) 
-
-	template = 'workflow/review/add_review_files.html'
-	context = {
-		'submission': submission,
-	}
-
-	return render(request, template, context)
-
-def add_reviewers(request, submission_id, review_type):
-
-	submission = get_object_or_404(models.Book, pk=submission_id)
-	reviewers = models.User.objects.filter(profile__roles__slug='reviewer')
-	review_forms = review_models.Form.objects.all()
-	committees = manager_models.Group.objects.filter(group_type='review_committee')
-
-	if request.POST:
-		reviewers = User.objects.filter(pk__in=request.POST.getlist('reviewer'))
-		committees = manager_models.Group.objects.filter(pk__in=request.POST.getlist('committee'))
-		review_form = review_models.Form.objects.get(ref=request.POST.get('review_form'))
-		due_date = request.POST.get('due_date')
-		email_text = request.POST.get('message')
-
-		# Handle reviewers
-		for reviewer in reviewers:
-			new_review_assignment = models.ReviewAssignment(
-				review_type=review_type,
-				user=reviewer,
-				book=submission,
-				due=due_date,
-				access_key=str(uuid4()),
-			)
-
-			try:
-				new_review_assignment.save()
-				submission.review_assignments.add(new_review_assignment)
-				log.add_log_entry(book=submission, user=request.user, kind='review', message='Reviewer %s %s assigned.' % (reviewer.first_name, reviewer.last_name), short_name='Review Assignment')
-				send_review_request(submission, new_review_assignment, email_text)
-			except IntegrityError:
-				messages.add_message(request, messages.WARNING, '%s %s is already a reviewer' % (reviewer.first_name, reviewer.last_name))
-
-		# Handle committees
-		for committee in committees:
-			members = manager_models.GroupMembership.objects.filter(group=committee)
-			for member in members:
-				new_review_assignment = models.ReviewAssignment(
-					review_type=review_type,
-					user=member.user,
-					book=submission,
-					due=due_date,
-					access_key = str(uuid4()),
-				)
-
-				try:
-					new_review_assignment.save()
-					submission.review_assignments.add(new_review_assignment)
-					log.add_log_entry(book=submission, user=request.user, kind='review', message='Reviewer %s %s assigned.' % (member.user.first_name, member.user.last_name), short_name='Review Assignment')
-					send_review_request(submission, new_review_assignment, email_text)
-				except IntegrityError:
-					messages.add_message(request, messages.WARNING, '%s %s is already a reviewer' % (member.user.first_name, member.user.last_name))
-
-		# Tidy up and save
-		submission.stage.internal_review = timezone.now()
-		submission.stage.current_stage = 'i_review'
-		submission.stage.save()
-		submission.review_form = review_form
-		submission.save()
-
-		return redirect(reverse('view_review', kwargs={'submission_id': submission.id}))
-
-	template = 'workflow/review/add_reviewers.html'
-	context = {
-		'reviewers': reviewers,
-		'committees': committees,
-		'active': 'new',
-		'email_text': models.Setting.objects.get(group__name='email', name='review_request'),
-		'review_forms': review_forms,
-	}
-
-	return render(request, template, context)
-
 @staff_member_required
 def decline_submission(request, submission_id):
 
@@ -241,6 +145,114 @@ def view_review(request, submission_id):
 	return render(request, template, context)
 
 @staff_member_required
+def add_review_files(request, submission_id, review_type):
+	submission = get_object_or_404(models.Book, pk=submission_id)
+
+	if request.POST:
+		files = models.File.objects.filter(pk__in=request.POST.getlist('file'))
+		for file in files:
+			if review_type == 'internal':
+				submission.internal_review_files.add(file)
+			else:
+				submission.external_review_files.add(file)
+
+		messages.add_message(request, messages.SUCCESS, '%s files added to Review' % files.count())
+
+		return redirect(reverse('view_review', kwargs={'submission_id': submission.id})) 
+
+	template = 'workflow/review/add_review_files.html'
+	context = {
+		'submission': submission,
+	}
+
+	return render(request, template, context)
+
+@staff_member_required
+def delete_review_files(request, submission_id, review_type, file_id):
+	submission = get_object_or_404(models.Book, pk=submission_id)
+	file = get_object_or_404(models.File, pk=file_id)
+
+	if review_type == 'internal':
+		submission.internal_review_files.remove(file)
+	else:
+		submission_list.external_review_files.remove(file)
+
+	return redirect(reverse('view_review', kwargs={'submission_id': submission.id}))
+
+@staff_member_required
+def add_reviewers(request, submission_id, review_type):
+
+	submission = get_object_or_404(models.Book, pk=submission_id)
+	reviewers = models.User.objects.filter(profile__roles__slug='reviewer')
+	review_forms = review_models.Form.objects.all()
+	committees = manager_models.Group.objects.filter(group_type='review_committee')
+
+	if request.POST:
+		reviewers = User.objects.filter(pk__in=request.POST.getlist('reviewer'))
+		committees = manager_models.Group.objects.filter(pk__in=request.POST.getlist('committee'))
+		review_form = review_models.Form.objects.get(ref=request.POST.get('review_form'))
+		due_date = request.POST.get('due_date')
+		email_text = request.POST.get('message')
+
+		# Handle reviewers
+		for reviewer in reviewers:
+			new_review_assignment = models.ReviewAssignment(
+				review_type=review_type,
+				user=reviewer,
+				book=submission,
+				due=due_date,
+				access_key=str(uuid4()),
+			)
+
+			try:
+				new_review_assignment.save()
+				submission.review_assignments.add(new_review_assignment)
+				log.add_log_entry(book=submission, user=request.user, kind='review', message='Reviewer %s %s assigned.' % (reviewer.first_name, reviewer.last_name), short_name='Review Assignment')
+				send_review_request(submission, new_review_assignment, email_text)
+			except IntegrityError:
+				messages.add_message(request, messages.WARNING, '%s %s is already a reviewer' % (reviewer.first_name, reviewer.last_name))
+
+		# Handle committees
+		for committee in committees:
+			members = manager_models.GroupMembership.objects.filter(group=committee)
+			for member in members:
+				new_review_assignment = models.ReviewAssignment(
+					review_type=review_type,
+					user=member.user,
+					book=submission,
+					due=due_date,
+					access_key = str(uuid4()),
+				)
+
+				try:
+					new_review_assignment.save()
+					submission.review_assignments.add(new_review_assignment)
+					log.add_log_entry(book=submission, user=request.user, kind='review', message='Reviewer %s %s assigned.' % (member.user.first_name, member.user.last_name), short_name='Review Assignment')
+					send_review_request(submission, new_review_assignment, email_text)
+				except IntegrityError:
+					messages.add_message(request, messages.WARNING, '%s %s is already a reviewer' % (member.user.first_name, member.user.last_name))
+
+		# Tidy up and save
+		submission.stage.internal_review = timezone.now()
+		submission.stage.current_stage = 'i_review'
+		submission.stage.save()
+		submission.review_form = review_form
+		submission.save()
+
+		return redirect(reverse('view_review', kwargs={'submission_id': submission.id}))
+
+	template = 'workflow/review/add_reviewers.html'
+	context = {
+		'reviewers': reviewers,
+		'committees': committees,
+		'active': 'new',
+		'email_text': models.Setting.objects.get(group__name='email', name='review_request'),
+		'review_forms': review_forms,
+	}
+
+	return render(request, template, context)
+
+@staff_member_required
 def view_review_assignment(request, submission_id, assignment_id):
 
 	submission = get_object_or_404(models.Book, pk=submission_id)
@@ -260,6 +272,7 @@ def view_review_assignment(request, submission_id, assignment_id):
 
 	return render(request, template, context)
 
+@staff_member_required
 def move_to_editing(request, submission_id):
 	'Moves a submission to the editing stage'
 	submission = get_object_or_404(models.Book, pk=submission_id)
@@ -447,6 +460,8 @@ def delete_file(request, submission_id, file_id, returner):
 
 	if returner == 'new':
 		return redirect(reverse('view_new_submission', kwargs={'submission_id': book.id}))
+	elif returner == 'review':
+		return redirect(reverse('view_review', kwargs={'submission_id': book.id}))
 
 @login_required
 def update_file(request, submission_id, file_id, returner):
@@ -488,7 +503,7 @@ def versions_file(request, submission_id, file_id):
 def handle_file_update(file, old_file, book, kind):
 
 	original_filename = str(file._get_name())
-	filename = str(uuid4()) + '.' + str(os.path.splitext(original_filename)[1])
+	filename = str(uuid4()) + str(os.path.splitext(original_filename)[1])
 	folder_structure = os.path.join(settings.BASE_DIR, 'files', 'books', str(book.id))
 
 	if not os.path.exists(folder_structure):
@@ -529,7 +544,7 @@ def handle_file_update(file, old_file, book, kind):
 def handle_file(file, book, kind):
 
 	original_filename = str(file._get_name())
-	filename = str(uuid4()) + '.' + str(os.path.splitext(original_filename)[1])
+	filename = str(uuid4()) + str(os.path.splitext(original_filename)[1])
 	folder_structure = os.path.join(settings.BASE_DIR, 'files', 'books', str(book.id))
 
 	if not os.path.exists(folder_structure):
