@@ -20,16 +20,15 @@
 <div class="col-md-12">
   <h3>{{ submission.title }}</h3>
   <hr />
-  {% include "workflow/workflow_view_buttons.html" %}
+  {% include "workflow/elements/workflow_view_buttons.html" %}
   <h4>Internal Reviews</h4>
-  {% include "workflow/reviewer_block.html" with review_data=internal_review_assignments %}
+  {% include "workflow/review/reviewer_block.html" with review_data=internal_review_assignments %}
   <h4>External Reviews</h4>
-  {% include "workflow/reviewer_block.html" with review_data=external_review_assignments %}
+  {% include "workflow/review/reviewer_block.html" with review_data=external_review_assignments %}
   <hr />
-  {% include "workflow/reviewer_files.html" %}
+  {% include "workflow/review/reviewer_files.html" %}
   <hr />
-  {% include "workflow/elements/external_review_action.html" %}
-  {% include "workflow/modals/external_review_modal.html" %}
+  {% include "workflow/review/external_review_action.html" %}
 
 {% endblock %}
 

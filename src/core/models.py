@@ -269,8 +269,7 @@ class Keyword(models.Model):
 stage_choices = (
 	('proposal', 'Proposal'),
 	('submission', 'New Submission'),
-	('i_review', 'Internal Review'),
-	('e_review', 'External Review'),
+	('review', 'Review'),
 	('editing', 'Editing'),
 	('production', 'Production'),
 	('published', 'Published'),
@@ -281,6 +280,7 @@ class Stage(models.Model):
 	current_stage = models.CharField(max_length="20", choices=stage_choices, null=True, blank=True)
 	proposal = models.DateTimeField(null=True, blank=True)
 	submission = models.DateTimeField(null=True, blank=True)
+	review = models.DateTimeField(null=True, blank=True)
 	internal_review = models.DateTimeField(null=True, blank=True)
 	external_review = models.DateTimeField(null=True, blank=True)
 	editing = models.DateTimeField(null=True, blank=True)

@@ -13,7 +13,7 @@
 
 {% block body %}
 <div class="col-md-12">
-  {% include "workflow/workflow_buttons.html" %}
+  {% include "workflow/elements/workflow_buttons.html" %}
   <h4>Review</h4>
   <table class="table table-striped">
       <tr>
@@ -31,11 +31,7 @@
         <td>{{ submission.title }}</td>
         <td>{{ submission.owner.get_full_name }}</td>
         <td>{{ submission.submission_date|date:"DATETIME_FORMAT" }}</td>
-        {% if submission.stage.current_stage == 'i_review' %}
-        <td>{{ submission.stage.internal_review|date:"DATETIME_FORMAT" }}</td>
-        {% else %}
-        <td>{{ submission.stage.external_review|date:"DATETIME_FORMAT" }}</td>
-        {% endif %}
+        <td>{{ submission.stage.review|date:"DATETIME_FORMAT" }}</td>
         <td>{{ submission.stage.get_current_stage_display }}</td>
         <td><a href="{% url 'view_review' submission.pk %}">View</a></td>
       </tr>

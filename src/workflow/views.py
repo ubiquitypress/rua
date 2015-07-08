@@ -50,9 +50,18 @@ def new_submissions(request):
 def view_new_submission(request, submission_id):
 
 	submission = get_object_or_404(models.Book, pk=submission_id)
+		
+	template = 'workflow/new/view_new_submission.html'
+	context = {
+		'submission': submission,
+		'active': 'new',
+	}
+
+	return render(request, template, context)
+
+def add_new_reviewers():
 	reviewers = models.User.objects.filter(profile__roles__slug='reviewer')
 	review_forms = review_models.Form.objects.all()
-
 	committees = manager_models.Group.objects.filter(group_type='review_committee')
 
 	if request.POST:
@@ -117,18 +126,13 @@ def view_new_submission(request, submission_id):
 
 		return redirect(reverse('view_review', kwargs={'submission_id': submission.id}))
 
-
-	template = 'workflow/view_new_submission.html'
 	context = {
-		'submission': submission,
-		'reviewers': reviewers,
-		'committees': committees,
-		'active': 'new',
-		'email_text': models.Setting.objects.get(group__name='email', name='review_request'),
-		'review_forms': review_forms,
+			'reviewers': reviewers,
+			'committees': committees,
+			'active': 'new',
+			'email_text': models.Setting.objects.get(group__name='email', name='review_request'),
+			'review_forms': review_forms,
 	}
-
-	return render(request, template, context)
 
 @staff_member_required
 def decline_submission(request, submission_id):
@@ -152,7 +156,7 @@ def decline_submission(request, submission_id):
 @login_required
 def in_review(request):
 
-	submission_list = models.Book.objects.filter(Q(stage__current_stage='i_review') | Q(stage__current_stage='e_review'))
+	submission_list = models.Book.objects.filter(stage__current_stage='review')
 
 	template = 'workflow/in_review.html'
 	context = {
@@ -261,7 +265,7 @@ def view_review(request, submission_id):
 		return redirect(reverse('view_review', kwargs={'submission_id': submission.id}))
 
 
-	template = 'workflow/view_review.html'
+	template = 'workflow/review/view_review.html'
 	context = {
 		'submission': submission,
 		'active': 'review',
