@@ -26,8 +26,8 @@ class SubmitBookStageOne(forms.ModelForm):
 	def __init__(self, *args, **kwargs):
 		ci_required = kwargs.pop('ci_required', None)
 		super(SubmitBookStageOne, self).__init__(*args, **kwargs)
-		if ci_required:
-			self.fields['competing_interests'] = forms.Textarea(required=True)
+		if ci_required == 'on':
+			self.fields['competing_interests'] = forms.CharField(widget=forms.Textarea, required=True)
 
 class SubmitBookStageTwo(forms.ModelForm):
 

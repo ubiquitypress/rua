@@ -156,7 +156,7 @@ def review_recommendation():
 	return (
 		('accept', 'Accept'),
 		('reject', 'Reject'),
-		('revisions_required', 'Revisions Required')
+		('revisions', 'Revisions Required')
 	)
 
 class ReviewRound(models.Model):

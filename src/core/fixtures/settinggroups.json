@@ -22,5 +22,13 @@
     },
     "model": "core.settinggroup",
     "pk": 3
+},
+{
+    "fields": {
+        "enabled": true,
+        "name": "look"
+    },
+    "model": "core.settinggroup",
+    "pk": 4
 }
 ]
