@@ -149,7 +149,7 @@ def review_recommendation():
 	)
 
 class ReviewAssignment(models.Model):
-	book = models.ForeignKey(Book)
+	book = models.ForeignKey(Book) #TODO: to be removed ( Book---ReviewRound---ReviewAssignment )
 	review_type = models.CharField(max_length=15, choices=review_type_choices())
 	user = models.ForeignKey(User)
 	assigned = models.DateField(auto_now=True)
@@ -171,6 +171,23 @@ class ReviewAssignment(models.Model):
 
 	def __repr__(self):
 		return u'%s - %s %s' %  (self.pk, self.book.title, self.user.username)
+
+class ReviewRound(models.Model):
+
+	book = models.ForeignKey(Book)
+	round_number = models.IntegerField()
+
+	class Meta:
+		unique_together = ('book', 'round_number')
+
+	def __unicode__(self):
+		return u'%s - %s round_number: %s' % (self.pk, self.book.title, self.round_number)
+
+	def __repr__(self):
+		return u'%s - %s round number: %s' %  (self.pk, self.book.title, self.round_number)
+
+
+	
 
 class License(models.Model):
 	name = models.CharField(max_length=1000)
