@@ -234,7 +234,6 @@ def add_reviewers(request, submission_id, review_type):
 
 		# Tidy up and save
 		submission.stage.internal_review = timezone.now()
-		submission.stage.current_stage = 'i_review'
 		submission.stage.save()
 		submission.review_form = review_form
 		submission.save()

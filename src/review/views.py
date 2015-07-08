@@ -131,7 +131,7 @@ def review_complete(request, review_type, submission_id):
 def handle_review_file(file, book, review_assignment, kind):
 
 	original_filename = str(file._get_name())
-	filename = str(uuid4()) + '.' + str(os.path.splitext(original_filename)[1])
+	filename = str(uuid4()) + str(os.path.splitext(original_filename)[1])
 	folder_structure = os.path.join(settings.BASE_DIR, 'files', 'books', str(book.id))
 
 	if not os.path.exists(folder_structure):
@@ -145,8 +145,12 @@ def handle_review_file(file, book, review_assignment, kind):
 
 	file_mime = mime.guess_type(filename)
 
+	print(file_mime)
+
 	try:
 		file_mime = file_mime[0]
+		if not file_mime:
+			file_mime = 'unknown'
 	except IndexError:
 		file_mime = 'unknown'
 

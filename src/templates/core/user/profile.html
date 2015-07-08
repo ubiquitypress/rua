@@ -46,12 +46,12 @@
                 <h4>Biography</h4>
                 {{ user_profile.biography|safe }}
             </div>
-      			<button class="btn btn-social btn-orcid" type="submit"><i class="fa">iD</i>&nbsp;ORCiD</button>
-      			<button class="btn btn-social btn-facebook" type="submit"><i class="fa fa-facebook-official"></i></i>&nbsp;Facebook</button>
-      			<button class="btn btn-social btn-twitter" type="submit"><i class="fa fa-twitter"></i>&nbsp;Twitter</button>
-      			<button class="btn btn-social btn-linkedin" type="submit"><i class="fa fa-linkedin"></i>&nbsp;LinkedIn</button>
-      			<button class="btn btn-social btn-impact" type="submit"><i class="fa fa-info-circle"></i>&nbsp;Impactstory</button>
-      			<button class="btn btn-social btn-github" type="submit"><i class="fa fa-github"></i>&nbsp;Github</button>
+      			{% if user_profile.orcid %}<a target="_blank" class="btn btn-social btn-orcid" href="http://orcid.org/{{ user_profile.orcid }}/"><i class="fa">iD</i>&nbsp;ORCiD</a>{% endif %}
+      			{% if user_profile.facebook %}<a target="_blank" class="btn btn-social btn-facebook" href="http://facebook.com/{{ user_profile.facebook}}"><i class="fa fa-facebook-official"></i>&nbsp;Facebook</a>{% endif %}
+      			{% if user_profile.twitter %}<a target="_blank" class="btn btn-social btn-twitter" href="http://twitter.com/{{ user_profile.twitter }}"><i class="fa fa-twitter"></i>&nbsp;Twitter</a>{% endif %}
+      			{% if user_profile.linkedin %}<a target="_blank" class="btn btn-social btn-linkedin" href="https://www.linkedin.com/in/{{ user_profile.linkedin }}"><i class="fa fa-linkedin"></i>&nbsp;LinkedIn</a>{% endif %}
+      			{% if user_profile.impactstory %}<a target="_blank" class="btn btn-social btn-impact" href="https://impactstory.org/{{ user_profile.impactstory }}"><i class="fa fa-info-circle"></i>&nbsp;Impact Story</a>{% endif %}
+      			{% if user_profile.github %}<a target="_blank" class="btn btn-social btn-github" href="https://github.com/{{ user_profile.github }}"><i class="fa fa-github"></i>&nbsp;Github</a>{% endif %}
         </div>
 	</div>
 </div>

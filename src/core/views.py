@@ -139,8 +139,8 @@ def user_home(request):
 	context = {
 		'task_list': task_list,
 		'new_submissions': models.Book.objects.filter(stage__current_stage='submission').count(),
-		'in_review': models.Book.objects.filter(Q(stage__current_stage='i_review') | Q(stage__current_stage='e_review')).count(),
-		'in_editing': models.Book.objects.filter(Q(stage__current_stage='copy_editing') | Q(stage__current_stage='indexing')).count(),
+		'in_review': models.Book.objects.filter(stage__current_stage='review').count(),
+		'in_editing': models.Book.objects.filter(stage__current_stage='editing').count(),
 		'in_production': models.Book.objects.filter(stage__current_stage='production').count(),
 		'new_task_form': new_task_form,
 		'user_submissions': models.Book.objects.filter(owner=request.user)
