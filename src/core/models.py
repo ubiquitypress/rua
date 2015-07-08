@@ -113,6 +113,7 @@ class Book(models.Model):
 	external_review_files = models.ManyToManyField('File', null=True, blank=True, related_name='external_review_files')
 	cover_letter = models.TextField(null=True, blank=True, help_text="A covering letter for the Editors.")
 	reviewer_suggestions = models.TextField(null=True, blank=True)
+	competing_interests = models.TextField(null=True, blank=True, help_text="If any of the authors or editors have any competing interests please add them here. EG. 'This study was paid for by corp xyz.'")
 	book_type = models.CharField(max_length=50, null=True, blank=True, choices=book_type_choices(), help_text="A monograph is a work authored, in its entirety, by one or more authors. An edited volume has different authors for each chapter.")
 
 	# Book Owner
@@ -163,6 +164,7 @@ class ReviewAssignment(models.Model):
 	access_key = models.CharField(max_length=200)
 	results = models.ForeignKey('review.FormResult', null=True, blank=True)
 	recommendation = models.CharField(max_length=10, choices=review_recommendation(), null=True, blank=True)
+	competing_interests = models.TextField(blank=True, null=True, help_text="If any of the authors or editors have any competing interests please add them here. EG. 'This study was paid for by corp xyz.'")
 
 	class Meta:
 		unique_together = ('book', 'user', 'review_type')

@@ -95,6 +95,7 @@ def review(request, review_type, submission_id, access_key=None):
 			if not review_assignment.accepted:
 				review_assignment.accepted = timezone.now()
 			review_assignment.recommendation = request.POST.get('recommendation')
+			review_assignment.competing_interests = request.POST.get('competing_interests')
 			review_assignment.results = form_results
 			review_assignment.save()
 

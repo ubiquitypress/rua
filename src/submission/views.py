@@ -15,6 +15,7 @@ from submission import forms
 from core import models as core_models
 from core import log
 from submission import logic
+from core import logic as core_logic
 
 import mimetypes as mime
 from uuid import uuid4

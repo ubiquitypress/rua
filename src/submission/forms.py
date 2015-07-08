@@ -21,7 +21,13 @@ class SubmitBookStageOne(forms.ModelForm):
 
 	class Meta:
 		model = core_models.Book
-		fields = ('book_type', 'cover_letter', 'series', 'license', 'reviewer_suggestions')
+		fields = ('book_type', 'cover_letter', 'series', 'license', 'reviewer_suggestions', 'competing_interests')
+
+	def __init__(self, *args, **kwargs):
+		ci_required = kwargs.pop('ci_required', None)
+		super(SubmitBookStageOne, self).__init__(*args, **kwargs)
+		if ci_required:
+			self.fields['competing_interests'] = forms.Textarea(required=True)
 
 class SubmitBookStageTwo(forms.ModelForm):
 

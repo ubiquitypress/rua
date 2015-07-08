@@ -42,6 +42,13 @@
       <td><a href="{% url 'serve_file' submission.id file.id %}" class="btn btn-primary"><i class="fa fa-download">&nbsp;</i>Download</a></td>
     </tr>
   {% endfor %}
+  <tr>
+    <th>Recommendation</th>
+    <th colspan="4">Competing Interests</th>
+  </tr>
+  <tr>
+   <td>{{ review.get_recommendation_display }}</td>
+   <td colspan="4">{{ review.competing_interests }}</td>
   </table>
   <h4>Review</h4>
   <div style="clear:both"></div>
@@ -52,9 +59,6 @@
       </div>
       <div {% cycle '' 'style="clear:both"' %}></div>
       {% endfor %}
-
-  <h4>Recommendation</h4>
-  {{ review.get_recommendation_display }}
 </div>
 
 {% endblock %}
