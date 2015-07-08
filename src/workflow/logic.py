@@ -1,3 +1,7 @@
+from django.db.models import Max
+
+from core import models
+
 import json
 
 def order_data(data, relations):
@@ -12,3 +16,10 @@ def decode_json(json_data):
 
 def encode_data(data):
     return json.dumps(data)
+
+def create_new_review_round(book):
+
+	latest_round = models.ReviewRound.objects.filter(book=book).aggregate(max=Max('round_number'))
+	print latest_round
+	next_round = latest_round.get('max') if latest_round.get('max') > 0 else 1
+	return models.ReviewRound.objects.create(book=book, round_number=next_round)
