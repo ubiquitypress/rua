@@ -10,7 +10,11 @@ from django.core.cache import cache
 
 from manager import models
 from manager import forms
+from django.conf import settings
 from core import models as core_models
+
+from uuid import uuid4
+import os
 
 @staff_member_required
 def index(request):
@@ -174,7 +178,6 @@ def edit_setting(request, setting_group, setting_name):
 	edit_form = forms.EditKey(key_type=setting.types, value=setting.value)
 
 	if request.POST and 'delete' in request.POST:
-		print 'hi'
 		setting.value = ''
 		setting.save()
 
@@ -183,7 +186,7 @@ def edit_setting(request, setting_group, setting_name):
 	if request.POST:
 		value = request.POST.get('value')
 		if request.FILES:
-			value = logic.save_file(request.FILES['value'], press.code)
+			value = handle_file(request, request.FILES['value'])
 
 		setting.value = value
 		setting.save()
@@ -199,6 +202,28 @@ def edit_setting(request, setting_group, setting_name):
 	}
 
 	return render(request, template, context)
+
+
+## File handler
+
+@staff_member_required
+def handle_file(request, file):
+
+	original_filename = str(file._get_name())
+	filename = str(uuid4()) + '.' + str(os.path.splitext(original_filename)[1])
+	folder_structure = os.path.join(settings.BASE_DIR, 'files', 'settings')
+
+	if not os.path.exists(folder_structure):
+		os.makedirs(folder_structure)
+
+	path = os.path.join(folder_structure, str(filename))
+	fd = open(path, 'wb')
+	for chunk in file.chunks():
+		fd.write(chunk)
+	fd.close()
+
+	return filename
+
 
 ## AJAX Handler
 
