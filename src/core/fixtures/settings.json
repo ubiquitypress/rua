@@ -1,7 +1,7 @@
 [
 {
     "fields": {
-        "value": "Andy Press",
+        "value": "The Press!",
         "group": 1,
         "name": "press_name",
         "types": "char"
@@ -21,7 +21,7 @@
 },
 {
     "fields": {
-        "value": "",
+        "value": "<p><img src=\"/media/django-summernote/2015-07-08/3ead64c0-5ac8-4c89-be03-188ce8ce3450.jpg\" style=\"width: 605px;\"><br></p>",
         "group": 2,
         "name": "submission_guidelines",
         "types": "rich_text"
@@ -31,7 +31,7 @@
 },
 {
     "fields": {
-        "value": "<p>This is a description block where information about this press can be entered. This text block should be replace with text pulled from a database setting at some point, though for now I don't really need it to.</p>\r\n<p>This press has some specialities like publishing Alien Autopsy reports and April Fools reviews</p>",
+        "value": "<p>This is a description block where information about this press can be entered. This text block should be replace with text pulled from a database setting at some point, though for now I don't really need it to.</p>\r\n<p>This press has some specialities like publishing Alien Autopsy reports and April Fools reviews</p><p>BOOYA!</p>",
         "group": 1,
         "name": "description",
         "types": "rich_text"
@@ -41,10 +41,10 @@
 },
 {
     "fields": {
-        "value": "Dear {{ review.user.first_name }} {{ review.user.last_name }},\r\n\r\n__YOUR_MESSAGE_HERE__\r\n\r\nPlease log into the press web site to indicate whether you will undertake the review or not, as well as to access the submission and to record your review and recommendation.\r\n\r\nThe review itself is due {{ review.due }}.\r\n\r\nReview URL: {{ review_url }}\r\n\r\nThank you for considering this request.\r\n\r\n\r\nSincerely,\r\nPress Team\r\n",
+        "value": "Dear {{ review.user.first_name }} {{ review.user.last_name }},\r\n\r\n__YOUR_MESSAGE_HERE__\r\n\r\nPlease log into the press web site to indicate whether you will undertake the review or not, as well as to access the submission and to record your review and recommendation.\r\n\r\nThe review itself is due {{ review.due }}.\r\n\r\nPlease notify us if you intend to undertake the review by clicking this link: {{ decision_url }}\r\n\r\nReview URL: {{ review_url }}\r\n\r\nThank you for considering this request.\r\n\r\n\r\nSincerely,\r\nPress Team\r\n",
         "group": 3,
         "name": "review_request",
-        "types": "rich_text"
+        "types": "text"
     },
     "model": "core.setting",
     "pk": 5
@@ -54,14 +54,14 @@
         "value": "abp",
         "group": 1,
         "name": "accronym",
-        "types": "text"
+        "types": "char"
     },
     "model": "core.setting",
     "pk": 6
 },
 {
     "fields": {
-        "value": "localhost:8000",
+        "value": "localhost:8181",
         "group": 1,
         "name": "base_url",
         "types": "text"
@@ -78,5 +78,45 @@
     },
     "model": "core.setting",
     "pk": 8
+},
+{
+    "fields": {
+        "value": "Dear {{ review.user.first_name }} {{ review.user.last_name }},\r\n\r\n__YOUR_MESSAGE_HERE__\r\n\r\nPlease log into the press web site to indicate whether you will undertake the review or not, as well as to access the submission and to record your review and recommendation.\r\n\r\nThe review itself is due {{ review.due }}.\r\n\r\nReview URL: {{ review_url }}\r\n\r\nThank you for considering this request.\r\n\r\n\r\nSincerely,\r\nPress Team\r\n",
+        "group": 3,
+        "name": "external_review_request",
+        "types": "text"
+    },
+    "model": "core.setting",
+    "pk": 9
+},
+{
+    "fields": {
+        "value": "8accaeed-f073-4df9-a31b-bc7d6d455b07..jpg",
+        "group": 4,
+        "name": "logo",
+        "types": "file"
+    },
+    "model": "core.setting",
+    "pk": 10
+},
+{
+    "fields": {
+        "value": "If you have any suggestions about who could review this book, please add them here. Please ensure you include a current, active, email address.",
+        "group": 1,
+        "name": "review_suggestions",
+        "types": "rich_text"
+    },
+    "model": "core.setting",
+    "pk": 11
+},
+{
+    "fields": {
+        "value": "on",
+        "group": 1,
+        "name": "ci_required",
+        "types": "boolean"
+    },
+    "model": "core.setting",
+    "pk": 12
 }
 ]
