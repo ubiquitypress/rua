@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% load bootstrap3 %}
+
+{% block breadcrumbs %}
+  <ol class="breadcrumb">
+	  <li><a href="{% url 'manager_index' %}">Manager</a></li>
+	  <li><a class="active" href="{% url 'settings_index' %}">Settings Index</a></li>
+	  <li>{{ setting.name }}</li>
+	</ol>
+{% endblock %}
+
+{% block body %}
+	<div class="col-md-12">
+		<h2>{{ setting.name }}</h2>
+
+		<form action="" method="POST" enctype="multipart/form-data">
+
+			{% csrf_token %}
+			
+			{% if key.value_type == 'date' %}Date Format: dd/mm/yyyy<br />{% endif %}
+			{% if key.value_type == 'rich-text' %}
+				{{ edit_form.as_p }}
+			{% else %}
+				{% bootstrap_form edit_form layout='inline' %}
+			{% endif %}
+
+			{% buttons %}
+			    <button type="submit" class="btn btn-primary">
+			        {% bootstrap_icon "ok" %} Submit
+			    </button>
+			    <button type="submit" class="btn btn-primary" onclick="return confirm_function()" name="delete" value="delete">
+			        {% bootstrap_icon "remove" %} Delete
+			    </button>
+		    {% endbuttons %}
+
+		</form>
+
+	</div>
+{% endblock body %}

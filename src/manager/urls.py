@@ -25,6 +25,10 @@ urlpatterns = patterns('',
     url(r'^roles/(?P<slug>[-\w.]+)/$', 'manager.views.role', name='manager_role'),
     url(r'^roles/(?P<slug>[-\w.]+)/user/(?P<user_id>\d+)/(?P<action>[-\w.]+)/$', 'manager.views.role_action', name='manager_role_action'),
 
+    # Settings Management
+    url(r'^settings/$', 'manager.views.settings_index', name='settings_index'),
+    url(r'^settings/group/(?P<setting_group>[-\w.]+)/setting/(?P<setting_name>[-\w.]+)/$', 'manager.views.edit_setting', name='edit_setting'),
+
     # Cache
     url(r'^cache/flush/$', 'manager.views.flush_cache', name='manager_flush_cache'),
 

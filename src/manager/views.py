@@ -134,7 +134,7 @@ def role(request, slug):
 
 	return render(request, template, context)
 
-
+@staff_member_required
 def role_action(request, slug, user_id, action):
 
 	user = get_object_or_404(User, pk=user_id)
@@ -156,6 +156,49 @@ def flush_cache(request):
 
 	return redirect(reverse('manager_index'))
 
+@staff_member_required
+def settings_index(request):
+	
+	template = 'manager/settings/index.html'
+	context = {
+		'settings': [{group.name: core_models.Setting.objects.filter(group=group).order_by('name')} for group in core_models.SettingGroup.objects.all().order_by('name')],
+	}
+
+	return render(request, template, context)
+
+@staff_member_required
+def edit_setting(request, setting_group, setting_name):
+	group = get_object_or_404(core_models.SettingGroup, name=setting_group)
+	setting = get_object_or_404(core_models.Setting, group=group, name=setting_name)
+
+	edit_form = forms.EditKey(key_type=setting.types, value=setting.value)
+
+	if request.POST and 'delete' in request.POST:
+		print 'hi'
+		setting.value = ''
+		setting.save()
+
+		return redirect(reverse('settings_index'))
+
+	if request.POST:
+		value = request.POST.get('value')
+		if request.FILES:
+			value = logic.save_file(request.FILES['value'], press.code)
+
+		setting.value = value
+		setting.save()
+
+		return redirect(reverse('settings_index'))
+
+
+	template = 'manager/settings/edit_setting.html'
+	context = {
+		'setting': setting,
+		'group': group,
+		'edit_form': edit_form,
+	}
+
+	return render(request, template, context)
 
 ## AJAX Handler
 

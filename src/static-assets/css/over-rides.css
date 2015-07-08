@@ -193,3 +193,7 @@ body {
   display: inline-block;
   vertical-align: baseline;
 }
+
+iframe {
+  border: 0px !important;
+}
