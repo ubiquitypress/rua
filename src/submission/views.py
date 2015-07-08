@@ -25,18 +25,20 @@ from pprint import pprint
 @login_required
 def start_submission(request, book_id=None):
 
+	ci_required = core_models.Setting.objects.get(group__name='general', name='ci_required')
+
 	if book_id:
 		book = get_object_or_404(core_models.Book, pk=book_id, owner=request.user)
-		book_form = forms.SubmitBookStageOne(instance=book)
+		book_form = forms.SubmitBookStageOne(instance=book, ci_required=ci_required.value)
 	else:
 		book = None
 		book_form = forms.SubmitBookStageOne()
 
 	if request.method == 'POST':
 		if book:
-			book_form = forms.SubmitBookStageOne(request.POST, instance=book)
+			book_form = forms.SubmitBookStageOne(request.POST, instance=book, ci_required=ci_required.value)
 		else:
-			book_form = forms.SubmitBookStageOne(request.POST)
+			book_form = forms.SubmitBookStageOne(request.POST, ci_required=ci_required.value)
 		if book_form.is_valid():
 			book = book_form.save(commit=False)
 			book.owner = request.user

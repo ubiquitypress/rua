@@ -56,6 +56,8 @@ def reviewer_decision(request, review_type, submission_id, review_assignment, de
 @login_required
 def review(request, review_type, submission_id, access_key=None):
 
+	ci_required = core_models.Setting.objects.get(group__name='general', name='ci_required')
+
 	# Check that this review is being access by the user, is not completed and has not been declined.
 	if access_key:
 		review_assignment = get_object_or_404(core_models.ReviewAssignment, access_key=access_key, completed__isnull=True, declined__isnull=True, review_type=review_type)
@@ -65,11 +67,12 @@ def review(request, review_type, submission_id, access_key=None):
 		review_assignment = get_object_or_404(core_models.ReviewAssignment, user=request.user, book=submission, completed__isnull=True, declined__isnull=True, review_type=review_type)
 
 	form = forms.GeneratedForm(form=submission.review_form)
-	recommendation_form = core_forms.RecommendationForm()
+	recommendation_form = core_forms.RecommendationForm(ci_required=ci_required.value)
 
 	if request.POST:
 		form = forms.GeneratedForm(request.POST, request.FILES, form=submission.review_form)
-		if form.is_valid():
+		recommendation_form = core_forms.RecommendationForm(request.POST, ci_required=ci_required.value)
+		if form.is_valid() and recommendation_form.is_valid():
 			save_dict = {}
 			file_fields = models.FormElement.objects.filter(form=submission.review_form, field_type='upload')
 			data_fields = models.FormElement.objects.filter(~Q(field_type='upload'), form=submission.review_form)

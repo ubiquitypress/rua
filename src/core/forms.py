@@ -86,6 +86,13 @@ class RecommendationForm(forms.ModelForm):
 		model = models.ReviewAssignment
 		fields = ("recommendation", "competing_interests")
 
+	def __init__(self, *args, **kwargs):
+		ci_required = kwargs.pop('ci_required', None)
+		super(RecommendationForm, self).__init__(*args, **kwargs)
+		print ci_required
+		if ci_required == 'on':
+			self.fields['competing_interests'] = forms.CharField(widget=forms.Textarea, required=True)
+
 
 
 
