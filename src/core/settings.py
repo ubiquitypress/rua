@@ -52,6 +52,7 @@ INSTALLED_APPS = (
     # 3rd Party
     'bootstrap3',
     'debug_toolbar',
+    'django_summernote',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -143,3 +144,25 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 DATE_FORMAT = '%d %b, %Y'
 DATETIME_FORMAT = '%d %b, %Y %H:%M'
+
+SUMMERNOTE_CONFIG = {
+    # Using SummernoteWidget - iframe mode
+    'iframe': False,  # or set False to use SummernoteInplaceWidget - no iframe mode
+
+    # Using Summernote Air-mode
+    'airMode': True,
+
+    # Use native HTML tags (`<b>`, `<i>`, ...) instead of style attributes
+    # (Firefox, Chrome only)
+    'styleWithTags': True,
+
+    # Set text direction : 'left to right' is default.
+    'direction': 'ltr',
+
+    # Change editor size
+    'width': '100%',
+    'height': '480',
+
+    # Need authentication while uploading attachments.
+    'attachment_require_authentication': True,
+}

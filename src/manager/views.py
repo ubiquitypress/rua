@@ -10,7 +10,11 @@ from django.core.cache import cache
 
 from manager import models
 from manager import forms
+from django.conf import settings
 from core import models as core_models
+
+from uuid import uuid4
+import os
 
 @staff_member_required
 def index(request):
@@ -134,7 +138,7 @@ def role(request, slug):
 
 	return render(request, template, context)
 
-
+@staff_member_required
 def role_action(request, slug, user_id, action):
 
 	user = get_object_or_404(User, pk=user_id)
@@ -155,6 +159,70 @@ def flush_cache(request):
 	messages.add_message(request, messages.SUCCESS, 'Memcached has been flushed.')
 
 	return redirect(reverse('manager_index'))
+
+@staff_member_required
+def settings_index(request):
+	
+	template = 'manager/settings/index.html'
+	context = {
+		'settings': [{group.name: core_models.Setting.objects.filter(group=group).order_by('name')} for group in core_models.SettingGroup.objects.all().order_by('name')],
+	}
+
+	return render(request, template, context)
+
+@staff_member_required
+def edit_setting(request, setting_group, setting_name):
+	group = get_object_or_404(core_models.SettingGroup, name=setting_group)
+	setting = get_object_or_404(core_models.Setting, group=group, name=setting_name)
+
+	edit_form = forms.EditKey(key_type=setting.types, value=setting.value)
+
+	if request.POST and 'delete' in request.POST:
+		setting.value = ''
+		setting.save()
+
+		return redirect(reverse('settings_index'))
+
+	if request.POST:
+		value = request.POST.get('value')
+		if request.FILES:
+			value = handle_file(request, request.FILES['value'])
+
+		setting.value = value
+		setting.save()
+
+		return redirect(reverse('settings_index'))
+
+
+	template = 'manager/settings/edit_setting.html'
+	context = {
+		'setting': setting,
+		'group': group,
+		'edit_form': edit_form,
+	}
+
+	return render(request, template, context)
+
+
+## File handler
+
+@staff_member_required
+def handle_file(request, file):
+
+	original_filename = str(file._get_name())
+	filename = str(uuid4()) + '.' + str(os.path.splitext(original_filename)[1])
+	folder_structure = os.path.join(settings.BASE_DIR, 'files', 'settings')
+
+	if not os.path.exists(folder_structure):
+		os.makedirs(folder_structure)
+
+	path = os.path.join(folder_structure, str(filename))
+	fd = open(path, 'wb')
+	for chunk in file.chunks():
+		fd.write(chunk)
+	fd.close()
+
+	return filename
 
 
 ## AJAX Handler

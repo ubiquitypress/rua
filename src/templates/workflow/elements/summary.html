@@ -14,6 +14,20 @@
 		<td>{{ submission.stage.get_current_stage_display }}</td>
 	</tr>
 	<tr>
+		<td width="30%"><strong>Type</strong></td>
+		<td width="25%"><strong>Slug</strong></td>
+		<td width="15%"><strong>DOI</strong></td>
+		<td></td>
+		<td></td>
+	</tr>
+	<tr>
+		<td>{{ submission.get_book_type_display }}</td>
+		<td>{{ submission.slug }}</td>
+		<td>{{ submission.doi }}</td>
+		<td></td>
+		<td></td>
+	</tr>
+	<tr>
 		<td colspan="5"><strong>Description</strong</td>
 	</tr>
 	<tr>
@@ -24,5 +38,11 @@
 	</tr>
 	<tr>
 		<td colspan="5">{{ submission.cover_letter|safe }}</td>
+	</tr>
+	<tr>
+		<td colspan="5"><strong>Reviewer Suggestions</strong</td>
+	</tr>
+	<tr>
+		<td colspan="5">{{ submission.reviewer_suggestions|safe }}</td>
 	</tr>
 </table>
