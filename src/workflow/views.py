@@ -52,6 +52,7 @@ def view_new_submission(request, submission_id):
 	submission = get_object_or_404(models.Book, pk=submission_id)
 
 	if request.POST and 'review' in request.POST:
+		logic.create_new_review_round(submission)
 		submission.stage.review = timezone.now()
 		submission.stage.current_stage = 'review'
 		submission.stage.save()

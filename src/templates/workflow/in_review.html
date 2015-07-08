@@ -22,6 +22,7 @@
         <th>Author</th>
         <th>Date Submitted</th>
         <th>Review Started</th>
+        <th>Review Round</th>
         <th>Current Stage</th>
         <th></th>
       </tr>
@@ -32,6 +33,7 @@
         <td>{{ submission.owner.get_full_name }}</td>
         <td>{{ submission.submission_date|date:"DATETIME_FORMAT" }}</td>
         <td>{{ submission.stage.review|date:"DATETIME_FORMAT" }}</td>
+        <td>{{ submission.get_latest_review_round }}</td>
         <td>{{ submission.stage.get_current_stage_display }}</td>
         <td><a href="{% url 'view_review' submission.pk %}">View</a></td>
       </tr>

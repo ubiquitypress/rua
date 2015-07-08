@@ -137,6 +137,15 @@ class Book(models.Model):
 	def __repr__(self):
 		return u'%s' % self.title
 
+	
+	def get_latest_review_round(self):
+		try:
+			return self.reviewround_set.all().order_by('-round_number')[0].round_number
+		except IndexError:
+			return 0
+
+
+
 def review_type_choices():
 	return (
 		('internal', 'Internal'),
@@ -150,8 +159,23 @@ def review_recommendation():
 		('revisions', 'Revisions Required')
 	)
 
-class ReviewAssignment(models.Model):
+class ReviewRound(models.Model):
+
 	book = models.ForeignKey(Book)
+	round_number = models.IntegerField()
+
+	class Meta:
+		unique_together = ('book', 'round_number')
+
+	def __unicode__(self):
+		return u'%s - %s round_number: %s' % (self.pk, self.book.title, self.round_number)
+
+	def __repr__(self):
+		return u'%s - %s round number: %s' %  (self.pk, self.book.title, self.round_number)
+
+class ReviewAssignment(models.Model):
+	book = models.ForeignKey(Book) #TODO: Remove this as it is already linked to the book through the review round
+	review_round = models.ForeignKey(ReviewRound, blank=True, null=True)
 	review_type = models.CharField(max_length=15, choices=review_type_choices())
 	user = models.ForeignKey(User)
 	assigned = models.DateField(auto_now=True)
@@ -174,6 +198,8 @@ class ReviewAssignment(models.Model):
 
 	def __repr__(self):
 		return u'%s - %s %s' %  (self.pk, self.book.title, self.user.username)
+
+
 
 class License(models.Model):
 	name = models.CharField(max_length=1000)

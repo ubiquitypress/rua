@@ -40,6 +40,9 @@ class ReviewAssAdmin(admin.ModelAdmin):
 class FileAdmin(admin.ModelAdmin):
     list_display = ('original_filename', 'uuid_filename', 'kind')
 
+class ReviewRoundAdmin(admin.ModelAdmin):
+    list_display = ('book', 'round_number')
+
 admin_list = [
     (Author, AuthorAdmin),
     (Profile, ProfileAdmin),
@@ -59,6 +62,7 @@ admin_list = [
     (ReviewAssignment, ReviewAssAdmin),
     (Format,),
     (Chapter,),
+    (ReviewRound, ReviewRoundAdmin),
 ]
 
 [admin.site.register(*t) for t in admin_list]
