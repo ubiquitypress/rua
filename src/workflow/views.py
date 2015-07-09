@@ -134,8 +134,9 @@ def in_production(request):
 def view_review(request, submission_id):
 
 	submission = get_object_or_404(models.Book, pk=submission_id)
-	internal_review_assignments = models.ReviewAssignment.objects.filter(book=submission, review_type='internal').select_related('user')
-	external_review_assignments = models.ReviewAssignment.objects.filter(book=submission, review_type='external').select_related('user')
+	review_rounds = models.ReviewRound.objects.filter(book=submission).order_by('-round_number')
+	internal_review_assignments = models.ReviewAssignment.objects.filter(book=submission, review_type='internal').select_related('user', 'review_round')
+	external_review_assignments = models.ReviewAssignment.objects.filter(book=submission, review_type='external').select_related('user', 'review_round')
 
 	template = 'workflow/review/view_review.html'
 	context = {
@@ -143,6 +144,7 @@ def view_review(request, submission_id):
 		'active': 'review',
 		'internal_review_assignments': internal_review_assignments,
 		'external_review_assignments': external_review_assignments,
+		'review_rounds': review_rounds,
 	}
 
 	return render(request, template, context)
@@ -183,12 +185,13 @@ def delete_review_files(request, submission_id, review_type, file_id):
 	return redirect(reverse('view_review', kwargs={'submission_id': submission.id}))
 
 @staff_member_required
-def add_reviewers(request, submission_id, review_type):
+def add_reviewers(request, submission_id, review_type, round_number):
 
 	submission = get_object_or_404(models.Book, pk=submission_id)
 	reviewers = models.User.objects.filter(profile__roles__slug='reviewer')
 	review_forms = review_models.Form.objects.all()
 	committees = manager_models.Group.objects.filter(group_type='review_committee')
+	review_round = get_object_or_404(models.ReviewRound, book=submission, round_number=round_number)
 
 	if request.POST:
 		reviewers = User.objects.filter(pk__in=request.POST.getlist('reviewer'))
@@ -205,15 +208,16 @@ def add_reviewers(request, submission_id, review_type):
 				book=submission,
 				due=due_date,
 				access_key=str(uuid4()),
+				review_round=review_round,
 			)
 
-			try:
-				new_review_assignment.save()
-				submission.review_assignments.add(new_review_assignment)
-				log.add_log_entry(book=submission, user=request.user, kind='review', message='Reviewer %s %s assigned.' % (reviewer.first_name, reviewer.last_name), short_name='Review Assignment')
-				send_review_request(submission, new_review_assignment, email_text)
-			except IntegrityError:
-				messages.add_message(request, messages.WARNING, '%s %s is already a reviewer' % (reviewer.first_name, reviewer.last_name))
+			#try:
+			new_review_assignment.save()
+			submission.review_assignments.add(new_review_assignment)
+			log.add_log_entry(book=submission, user=request.user, kind='review', message='Reviewer %s %s assigned. Round %d' % (reviewer.first_name, reviewer.last_name, review_round.round_number), short_name='Review Assignment')
+			send_review_request(submission, new_review_assignment, email_text)
+			#except IntegrityError:
+				#messages.add_message(request, messages.WARNING, '%s %s is already a reviewer' % (reviewer.first_name, reviewer.last_name))
 
 		# Handle committees
 		for committee in committees:
@@ -225,12 +229,13 @@ def add_reviewers(request, submission_id, review_type):
 					book=submission,
 					due=due_date,
 					access_key = str(uuid4()),
+					review_round=review_round,
 				)
 
 				try:
 					new_review_assignment.save()
 					submission.review_assignments.add(new_review_assignment)
-					log.add_log_entry(book=submission, user=request.user, kind='review', message='Reviewer %s %s assigned.' % (member.user.first_name, member.user.last_name), short_name='Review Assignment')
+					log.add_log_entry(book=submission, user=request.user, kind='review', message='Reviewer %s %s assigned. Round %d' % (member.user.first_name, member.user.last_name, review_round.round_number), short_name='Review Assignment')
 					send_review_request(submission, new_review_assignment, email_text)
 				except IntegrityError:
 					messages.add_message(request, messages.WARNING, '%s %s is already a reviewer' % (member.user.first_name, member.user.last_name))
@@ -273,6 +278,14 @@ def view_review_assignment(request, submission_id, assignment_id):
 	}
 
 	return render(request, template, context)
+
+@staff_member_required
+def add_review_round(request, submission_id):
+	'creates a new review round'
+	submission = get_object_or_404(models.Book, pk=submission_id)
+	logic.create_new_review_round(submission)
+	messages.add_message(request, messages.SUCCESS, 'New review round started')
+	return redirect(reverse('view_review', kwargs={'submission_id':submission_id}))
 
 @staff_member_required
 def move_to_editing(request, submission_id):

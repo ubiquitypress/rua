@@ -2,6 +2,9 @@
 <p class="small">{% if not submission.stage.current_stage == 'review' %}Options disabled, submission is no longer in this stage.{% else %}Once your reviews are completed, select an action.{% endif %}</p>
 <div class="btn-group btn-group-justified" role="group">
 	<div class="btn-group" role="group">
+      <a href="{% url 'add_review_round' submission.id %}" type="button" class="btn btn-primary">Start New Round</a>
+    </div>
+	<div class="btn-group" role="group">
       <a href="{% url 'move_to_editing' submission.id %}" type="button" class="btn btn-primary {% if not submission.stage.current_stage == 'review' %}disabled{% endif %}">Request Revisions</a>
     </div>
     <div class="btn-group" role="group">

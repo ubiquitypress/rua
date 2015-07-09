@@ -30,10 +30,11 @@ urlpatterns = patterns('',
     # Review
     url(r'^review/$', 'workflow.views.in_review', name='in_review'),
     url(r'^review/(?P<submission_id>\d+)/$', 'workflow.views.view_review', name='view_review'),
+    url(r'^review/(?P<submission_id>\d+)/new_round/$', 'workflow.views.add_review_round', name='add_review_round'),
     url(r'^review/(?P<submission_id>\d+)/assignment/(?P<assignment_id>\d+)/$', 'workflow.views.view_review_assignment', name='view_review_assignment'),
     url(r'^review/(?P<submission_id>\d+)/files/(?P<review_type>[-\w]+)/add/$', 'workflow.views.add_review_files', name='add_review_files'),
     url(r'^review/(?P<submission_id>\d+)/files/(?P<file_id>\d+)/(?P<review_type>[-\w]+)/delete/$', 'workflow.views.delete_review_files', name='delete_review_files'),
-    url(r'^review/(?P<submission_id>\d+)/reviewers/(?P<review_type>[-\w]+)/add/$', 'workflow.views.add_reviewers', name='add_reviewers'),
+    url(r'^review/(?P<submission_id>\d+)/reviewers/(?P<review_type>[-\w]+)/add/(?P<round_number>\d+)/$', 'workflow.views.add_reviewers', name='add_reviewers'),
     url(r'^review/move/(?P<submission_id>\d+)/editing/$', 'workflow.views.move_to_editing', name='move_to_editing'),
 
     # Editing

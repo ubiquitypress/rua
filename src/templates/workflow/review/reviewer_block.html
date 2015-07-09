@@ -9,6 +9,7 @@
     <th></th>
   </tr>
 {% for reviewer in review_data %}
+  {% if reviewer.review_round == round %}
   <tr>
     <td>{{ reviewer.user.first_name }} {% if author.middle_name %}{{ reviewer.user.middle_name}} {% endif %}{{ reviewer.user.last_name }}</td>
     <td>{{ reviewer.assigned }}</td>
@@ -18,6 +19,7 @@
     <td>{% if reviewer.completed %}{{ reviewer.get_recommendation_display }}{% else %}--{% endif %}</td>
     <td>{% if reviewer.completed %}<a href="{% url 'view_review_assignment' submission.id reviewer.id %}">View Review</a>{% endif %}</td>
   </tr>
+  {% endif %}
 
 {% empty %}
   <tr>
