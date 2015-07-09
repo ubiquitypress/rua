@@ -180,7 +180,7 @@ def delete_review_files(request, submission_id, review_type, file_id):
 	if review_type == 'internal':
 		submission.internal_review_files.remove(file)
 	else:
-		submission_list.external_review_files.remove(file)
+		submission.external_review_files.remove(file)
 
 	return redirect(reverse('view_review', kwargs={'submission_id': submission.id}))
 
