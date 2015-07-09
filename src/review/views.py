@@ -154,7 +154,7 @@ def create_review_form(submission):
 	p = document.add_paragraph('You should complete this form and then use the review page to upload it.')
 	relations = models.FormElementsRelationship.objects.filter(form=submission.review_form)
 	for relation in relations:
-		print relation.element.field_type
+
 		if relation.element.field_type in ['text', 'textarea', 'date', 'email']:
 			document.add_heading(relation.element.name, level=1)
 			document.add_paragraph(relation.help_text).italic = True
@@ -174,14 +174,9 @@ def create_review_form(submission):
 				hdr_cells[i].text = choice[0]
 			table.style = 'TableGrid'
 
-
-
 	document.add_page_break()
-
-	path = os.path.join(settings.BOOK_DIR, str(submission.id), 'forms', '%s.docx' % str(uuid4()))
-
+	path = os.path.join(settings.BASE_DIR, 'files', 'temp', '%s.docx' % str(uuid4()))
 	document.save(path)
-
 	return path
 
 @login_required
