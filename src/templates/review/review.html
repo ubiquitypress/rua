@@ -2,6 +2,8 @@
 {% load static from staticfiles %}
 {% load bootstrap3 %}
 
+{% block title %}Reviewing #{{ submission.id }}{% endblock %}
+
 {% block breadcrumbs %}
   <ol class="breadcrumb">
     <li>Review</li>
@@ -19,6 +21,7 @@
     {% endif %}
     <hr />
     <h4>1. Completed the Review Form</h4>
+    <p>Alternatively you may <a href="?download=docx">download</a> the review form, complete it offline, and upload it.</p>
       {{ form_info.intro_text|safe }}
       {% if form.errors %}
       <div class="alert alert-info">

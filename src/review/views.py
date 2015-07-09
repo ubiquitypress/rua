@@ -2,6 +2,9 @@ import json
 import os
 from uuid import uuid4
 import mimetypes as mime
+from docx import Document
+from docx.shared import Inches
+from pprint import pprint
 
 from django.shortcuts import redirect, render, get_object_or_404
 from django.db.models import Q
@@ -69,6 +72,12 @@ def review(request, review_type, submission_id, access_key=None):
 	form = forms.GeneratedForm(form=submission.review_form)
 	recommendation_form = core_forms.RecommendationForm(ci_required=ci_required.value)
 
+	print request.GET.get('download')
+
+	if not request.POST and request.GET.get('download') == 'docx':
+		serve_review_form(submission)
+		print 'hi'
+
 	if request.POST:
 		form = forms.GeneratedForm(request.POST, request.FILES, form=submission.review_form)
 		recommendation_form = core_forms.RecommendationForm(request.POST, ci_required=ci_required.value)
@@ -131,6 +140,44 @@ def review_complete(request, review_type, submission_id):
 	}
 
 	return render(request,template, context)
+
+def render_choices(choices):
+	c_split = choices.split('|')
+	return [(choice.capitalize(), choice) for choice in c_split]
+
+def serve_review_form(submission):
+	document = Document()
+	document.add_heading(submission.title, 0)
+	p = document.add_paragraph('You should complete this form and then use the review page to upload it.')
+	relations = models.FormElementsRelationship.objects.filter(form=submission.review_form)
+	for relation in relations:
+		print relation.element.field_type
+		if relation.element.field_type in ['text', 'textarea', 'date', 'email']:
+			document.add_heading(relation.element.name, level=1)
+			document.add_paragraph(relation.help_text).italic = True
+
+		if relation.element.field_type in ['select', 'check']:
+			document.add_heading(relation.element.name, level=1)
+			if relation.element.field_type == 'select':
+				choices = render_choices(relation.element.choices)
+			else:
+				choices = ['Y', 'N']
+
+			p = document.add_paragraph(relation.help_text)
+			p.add_run(' Mark your choice however you like, as long as it is clear.').italic = True
+			table = document.add_table(rows=2, cols=len(choices))
+			hdr_cells = table.rows[0].cells
+			for i, choice in enumerate(choices):
+				hdr_cells[i].text = choice[0]
+			table.style = 'TableGrid'
+
+
+
+	document.add_page_break()
+
+	document.save(os.path.join(settings.BOOK_DIR, str(submission.id), 'forms', '%s.docx' % str(uuid4())))
+
+
 
 def handle_review_file(file, book, review_assignment, kind):
 
