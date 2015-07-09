@@ -441,7 +441,7 @@ def view_proposal(request, proposal_id):
 
 @staff_member_required
 def start_proposal_review(request, proposal_id):
-	proposal = get_object_or_404(submission_models.Proposal, pk=proposal_id)
+	proposal = get_object_or_404(submission_models.Proposal, pk=proposal_id, date_review_started__isnull=True)
 	reviewers = models.User.objects.filter(profile__roles__slug='reviewer')
 	committees = manager_models.Group.objects.filter(group_type='review_committee')
 	start_form = submission_forms.ProposalStart()
@@ -451,21 +451,23 @@ def start_proposal_review(request, proposal_id):
 		if start_form.is_valid():
 			proposal = start_form.save(commit=False)
 			proposal.date_review_started = timezone.now()
+			due_date = request.POST.get('due_date')
+			email_text = models.Setting.objects.get(group__name='email', name='proposal_review_request').value
+			reviewers = User.objects.filter(pk__in=request.POST.getlist('reviewer'))
+			committees = manager_models.Group.objects.filter(pk__in=request.POST.getlist('committee'))
 
 			# Handle reviewers
 			for reviewer in reviewers:
 				new_review_assignment = submission_models.ProposalReview(
 					user=reviewer,
-					proposal=submission,
+					proposal=proposal,
 					due=due_date,
-					access_key=str(uuid4()),
 				)
 
 				try:
 					new_review_assignment.save()
 					proposal.review_assignments.add(new_review_assignment)
-					log.add_log_entry(book=submission, user=request.user, kind='review', message='Reviewer %s %s assigned.' % (reviewer.first_name, reviewer.last_name), short_name='Review Assignment')
-					send_review_request(submission, new_review_assignment, email_text)
+					send_proposal_review_request(proposal, new_review_assignment, email_text)
 				except IntegrityError:
 					messages.add_message(request, messages.WARNING, '%s %s is already a reviewer' % (reviewer.first_name, reviewer.last_name))
 
@@ -473,29 +475,25 @@ def start_proposal_review(request, proposal_id):
 			for committee in committees:
 				members = manager_models.GroupMembership.objects.filter(group=committee)
 				for member in members:
-					new_review_assignment = models.ReviewAssignment(
-						review_type=review_type,
-						user=member.user,
-						book=submission,
+					new_review_assignment = submission_models.ProposalReview(
+						user=reviewer,
+						proposal=proposal,
 						due=due_date,
-						access_key = str(uuid4()),
 					)
 
 					try:
 						new_review_assignment.save()
-						submission.review_assignments.add(new_review_assignment)
-						log.add_log_entry(book=submission, user=request.user, kind='review', message='Reviewer %s %s assigned.' % (member.user.first_name, member.user.last_name), short_name='Review Assignment')
-						send_review_request(submission, new_review_assignment, email_text)
+						proposal.review_assignments.add(new_review_assignment)
+						send_proposal_review_request(proposal, new_review_assignment, email_text)
 					except IntegrityError:
 						messages.add_message(request, messages.WARNING, '%s %s is already a reviewer' % (member.user.first_name, member.user.last_name))
 
 			# Tidy up and save
-			submission.stage.internal_review = timezone.now()
-			submission.stage.save()
-			submission.review_form = review_form
-			submission.save()
+			
+			proposal.date_review_started = timezone.now()
+			proposal.save()
 
-			return redirect(reverse('view_review', kwargs={'submission_id': submission.id}))
+			return redirect(reverse('view_proposal', kwargs={'proposal_id': proposal.id}))
 
 	template = 'workflow/proposals/start_proposal_review.html'
 	context = {
@@ -507,7 +505,86 @@ def start_proposal_review(request, proposal_id):
 
 	return render(request, template, context)
 
+@staff_member_required
+def view_proposal_review(request, submission_id, assignment_id):
 
+	submission = get_object_or_404(submission_models.Proposal, pk=submission_id)
+	review_assignment = get_object_or_404(submission_models.ProposalReview, pk=assignment_id)
+	result = review_assignment.results
+	relations = review_models.FormElementsRelationship.objects.filter(form=result.form)
+	data_ordered = logic.order_data(logic.decode_json(result.data), relations)
+
+	template = 'workflow/review/review_assignment.html'
+	context = {
+		'submission': submission,
+		'review': review_assignment,
+		'data_ordered': data_ordered,
+		'result': result,
+		'active': 'proposal_review',
+	}
+
+	return render(request, template, context)
+
+@staff_member_required
+def add_proposal_reviewers(request, proposal_id):
+
+	proposal = get_object_or_404(submission_models.Proposal, pk=proposal_id)
+	reviewers = models.User.objects.filter(profile__roles__slug='reviewer')
+	committees = manager_models.Group.objects.filter(group_type='review_committee')
+
+	if request.POST:
+		due_date = request.POST.get('due_date')
+		email_text = models.Setting.objects.get(group__name='email', name='proposal_review_request').value
+		reviewers = User.objects.filter(pk__in=request.POST.getlist('reviewer'))
+		committees = manager_models.Group.objects.filter(pk__in=request.POST.getlist('committee'))
+
+		# Handle reviewers
+		for reviewer in reviewers:
+			new_review_assignment = submission_models.ProposalReview(
+				user=reviewer,
+				proposal=proposal,
+				due=due_date,
+			)
+
+			try:
+				new_review_assignment.save()
+				proposal.review_assignments.add(new_review_assignment)
+				send_proposal_review_request(proposal, new_review_assignment, email_text)
+			except IntegrityError:
+				messages.add_message(request, messages.WARNING, '%s %s is already a reviewer' % (reviewer.first_name, reviewer.last_name))
+
+		# Handle committees
+		for committee in committees:
+			members = manager_models.GroupMembership.objects.filter(group=committee)
+			for member in members:
+				new_review_assignment = submission_models.ProposalReview(
+					user=reviewer,
+					proposal=proposal,
+					due=due_date,
+				)
+
+				try:
+					new_review_assignment.save()
+					proposal.review_assignments.add(new_review_assignment)
+					send_proposal_review_request(proposal, new_review_assignment, email_text)
+				except IntegrityError:
+					messages.add_message(request, messages.WARNING, '%s %s is already a reviewer' % (member.user.first_name, member.user.last_name))
+
+		# Tidy up and save
+		
+		proposal.date_review_started = timezone.now()
+		proposal.save()
+
+		return redirect(reverse('view_proposal', kwargs={'proposal_id': proposal.id}))
+
+	template = 'workflow/proposals/add_reviewers.html'
+	context = {
+		'proposal': proposal,
+		'reviewers': reviewers,
+		'committees': committees,
+	}
+
+	return render(request, template, context)
 
 # File Handlers - should this be in Core?
 @login_required
@@ -671,6 +748,18 @@ def handle_file(file, book, kind):
 	return new_file
 
 # Email handler
+def send_proposal_review_request(proposal, review_assignment, email_text):
+	from_email = models.Setting.objects.get(group__name='email', name='from_address')
+	base_url = models.Setting.objects.get(group__name='general', name='base_url')
+
+	review_url = 'http://%s/review/%s/%s/' % (base_url.value, 'proposal', proposal.id)
+
+	context = {
+		'review': review_assignment,
+		'review_url': review_url,
+	}
+
+	email.send_email('[abp] Proposal Review Request', context, from_email.value, review_assignment.user.email, email_text)
 
 def send_review_request(book, review_assignment, email_text):
 	from_email = models.Setting.objects.get(group__name='email', name='from_address')

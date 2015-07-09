@@ -66,7 +66,6 @@
   <h4>Set Due Date</h4>
   <p class="small">Set a due date for the reviews. Reviewers will be politely reminded to submit their review before the due date.</p>
   <input type="text" name="due_date" id="due_date" required="required" /><br/><br />
-  {% bootstrap_form start_form %}
   <button class="btn btn-success" type="submit">Submit</button>
   </form>
 </div>
@@ -94,8 +93,7 @@
       });
   } );
   {% endif %}
-
-$(document).ready(function() {
+  $(document).ready(function() {
       $('#due_date').datepicker({ dateFormat: 'yy-mm-dd' }).val();
   });
 </script>

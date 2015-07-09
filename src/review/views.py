@@ -22,6 +22,7 @@ from core import forms as core_forms
 from core import log
 from review import forms
 from review import models
+from submission import models as submission_models
 
 @login_required
 def reviewer_decision(request, review_type, submission_id, review_assignment, decision=None):
@@ -68,14 +69,15 @@ def review(request, review_type, submission_id, access_key=None):
 	if access_key:
 		review_assignment = get_object_or_404(core_models.ReviewAssignment, access_key=access_key, completed__isnull=True, declined__isnull=True, review_type=review_type)
 		submission = get_object_or_404(core_models.Book, pk=submission_id)
+	elif review_type == 'proposal':
+		submission = get_object_or_404(submission_models.Proposal, pk=submission_id)
+		review_assignment = get_object_or_404(submission_models.ProposalReview, user=request.user, proposal=submission, completed__isnull=True, declined__isnull=True)
 	else:
 		submission = get_object_or_404(core_models.Book, pk=submission_id)
 		review_assignment = get_object_or_404(core_models.ReviewAssignment, user=request.user, book=submission, completed__isnull=True, declined__isnull=True, review_type=review_type)
 
 	form = forms.GeneratedForm(form=submission.review_form)
 	recommendation_form = core_forms.RecommendationForm(ci_required=ci_required.value)
-
-	print request.GET.get('download')
 
 	if not request.POST and request.GET.get('download') == 'docx':
 		path = create_review_form(submission)
@@ -114,9 +116,10 @@ def review(request, review_type, submission_id, access_key=None):
 			review_assignment.results = form_results
 			review_assignment.save()
 
-			log.add_log_entry(book=submission, user=request.user, kind='review', message='Reviewer %s %s completed review.' % (review_assignment.user.first_name, review_assignment.user.last_name), short_name='Review Assignment')
+			if not review_type == 'proposal':
+				log.add_log_entry(book=submission, user=request.user, kind='review', message='Reviewer %s %s completed review.' % (review_assignment.user.first_name, review_assignment.user.last_name), short_name='Review Assignment')
 
-			return redirect(reverse('review_complete', kwargs={'review_type': 'internal', 'submission_id': submission.id}))
+			return redirect(reverse('review_complete', kwargs={'review_type': review_type, 'submission_id': submission.id}))
 
 
 	template = 'review/review.html'
@@ -132,8 +135,12 @@ def review(request, review_type, submission_id, access_key=None):
 
 def review_complete(request, review_type, submission_id):
 
-	submission = get_object_or_404(core_models.Book, pk=submission_id)
-	review_assignment = get_object_or_404(core_models.ReviewAssignment, user=request.user, book=submission, review_type=review_type)
+	if review_type == 'proposal':
+		submission = get_object_or_404(submission_models.Proposal, pk=submission_id)
+		review_assignment = get_object_or_404(submission_models.ProposalReview, user=request.user, proposal=submission)
+	else:
+		submission = get_object_or_404(core_models.Book, pk=submission_id)
+		review_assignment = get_object_or_404(core_models.ReviewAssignment, user=request.user, book=submission, review_type=review_type)
 
 	template = 'review/complete.html'
 	context = {

@@ -8,7 +8,8 @@
     <ol class="breadcrumb">
 	  <li><a href="{% url 'user_home' %}">User Home</a></li>
 	  <li class="">Workflow</li>
-    <li class="active">Proposals</li>
+    <li class="active"><a href="{% url 'proposals' %}">Proposals</a></li>
+    <li class="active"><a href="{% url 'view_proposal' proposal.id %}">{{ proposal.title }}</a></li>
 	</ol>
 {% endblock %}
 
@@ -65,7 +66,7 @@
 
   {% if not proposal.date_review_started %}<a href="{% url 'start_proposal_review' proposal.id %}" class="btn btn-sm btn-success"><i class="fa fa-plus">&nbsp;</i>Start Review Process</a>{% else %}
 
-  <div class="inline-headers"><h4>Review</h4><a href="" class="btn btn-sm btn-success" style="float: right;"><i class="fa fa-plus">&nbsp;</i>Add Reviewers</a></div>
+  <div class="inline-headers"><h4>Review</h4><a href="{% url 'add_proposal_reviewers' proposal.id %}" class="btn btn-sm btn-success" style="float: right;"><i class="fa fa-plus">&nbsp;</i>Add Reviewers</a></div>
 
   {% include "workflow/proposals/proposal_review_block.html" with review_data=proposal.review_assignments.all %}
   {% endif %}

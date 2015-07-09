@@ -50,7 +50,7 @@ class ProposalReview(models.Model):
 		unique_together = ('proposal', 'user')
 
 	def __unicode__(self):
-		return u'%s - %s %s' % (self.pk, self.book.title, self.user.username)
+		return u'%s - %s %s' % (self.pk, self.proposal.title, self.user.username)
 
 	def __repr__(self):
-		return u'%s - %s %s' %  (self.pk, self.book.title, self.user.username)
+		return u'%s - %s %s' %  (self.pk, self.proposal.title, self.user.username)

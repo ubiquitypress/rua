@@ -10,6 +10,8 @@ urlpatterns = patterns('',
     url(r'^proposals/$', 'workflow.views.proposal', name='proposals'),
     url(r'^proposals/(?P<proposal_id>\d+)/$', 'workflow.views.view_proposal', name='view_proposal'),
     url(r'^proposals/(?P<proposal_id>\d+)/review/start/$', 'workflow.views.start_proposal_review', name='start_proposal_review'),
+    url(r'^proposals/(?P<proposal_id>\d+)/review/add/$', 'workflow.views.add_proposal_reviewers', name='add_proposal_reviewers'),
+    url(r'^proposals/(?P<submission_id>\d+)/assignment/(?P<assignment_id>\d+)/$', 'workflow.views.view_proposal_review', name='view_proposal_review'),
 
     # New Submissions
     url(r'^new/$', 'workflow.views.new_submissions', name='new_submissions'),
