@@ -133,7 +133,7 @@ def review(request, review_type, submission_id, access_key=None):
 def review_complete(request, review_type, submission_id):
 
 	submission = get_object_or_404(core_models.Book, pk=submission_id)
-	review_assignment = get_object_or_404(core_models.ReviewAssignment, user=request.user, book=submission)
+	review_assignment = get_object_or_404(core_models.ReviewAssignment, user=request.user, book=submission, review_type=review_type)
 
 	template = 'review/complete.html'
 	context = {
@@ -175,18 +175,14 @@ def create_review_form(submission):
 			table.style = 'TableGrid'
 
 
-
 	document.add_page_break()
-
-	path = os.path.join(settings.BOOK_DIR, str(submission.id), 'forms', '%s.docx' % str(uuid4()))
-
+	path = os.path.join(settings.BASE_DIR, 'files', 'forms', '%s.docx' % str(uuid4()))
 	document.save(path)
 
 	return path
 
 @login_required
 def serve_file(request, file_path):
-	print file_path
 	try:
 		fsock = open(file_path, 'r')
 		mimetype = mimetypes.guess_type(file_path)

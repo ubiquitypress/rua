@@ -14,6 +14,12 @@ class SubmitProposal(forms.ModelForm):
 		model = models.Proposal
 		fields = ('title', 'subtitle', 'description', 'notes', 'uploaded_file', 'funding')
 
+class ProposalStart(forms.ModelForm):
+
+	class Meta:
+		model = models.Proposal
+		fields = ('review_form',)
+
 
 class SubmitBookStageOne(forms.ModelForm):
 
