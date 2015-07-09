@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% load static from staticfiles %}
+{% load bootstrap3 %}
+
+{% block title %}Book Proposals{% endblock %}
+
+{% block breadcrumbs %}
+    <ol class="breadcrumb">
+	  <li><a href="{% url 'user_home' %}">User Home</a></li>
+	  <li class="">Workflow</li>
+    <li class="active">Proposals</li>
+	</ol>
+{% endblock %}
+
+{% block body %}
+<div class="col-md-12">
+  <h3>Book Proposals</h3>
+  <hr />
+  <table class="table table-bordered">
+  <tr>
+    <thead>
+    <th>Title</th>
+    <th>Subtitle</th>
+    <th>Author</th>
+    <th>Date Submitted</th>
+    </thead>
+  </tr>
+  <tr>
+    <td>{{ proposal.title }}</td>
+    <td>{{ proposal.subtitle }}</td>
+    <td>{{ proposal.owner.first_name }} {{ proposal.owner.last_name }}</td>
+    <td>{{ proposal.date_submitted }}</td>
+  </tr>
+  <thead>
+  <tr>
+    <th colspan="4">Supporting File</th>
+  </tr>
+  </thead>
+  <tr>
+    <td colspan="4">
+     {{ proposal.uploaded_file }}
+    </td>
+  </tr>
+  <thead>
+  <tr>
+    <th colspan="2" width="50%">Funding</th>
+    <th colspan="2">Notes</th>
+  </tr>
+  </thead>
+  <tr>
+    <td colspan="2">{{ proposal.funding }}</td>
+    <td colspan="2">{{ proposal.notes }}</td>
+  </tr>
+  <thead>
+  <tr>
+    <th colspan="4">Description</th>
+  </tr>
+  </thead>
+  <tr>
+    <td colspan="4">{{ proposal.description }}</td>
+    </tr>
+  </table>
+
+  <hr />
+
+  {% if not proposal.date_review_started %}<a href="{% url 'start_proposal_review' proposal.id %}" class="btn btn-sm btn-success"><i class="fa fa-plus">&nbsp;</i>Start Review Process</a>{% else %}
+
+  <div class="inline-headers"><h4>Review</h4><a href="" class="btn btn-sm btn-success" style="float: right;"><i class="fa fa-plus">&nbsp;</i>Add Reviewers</a></div>
+
+  {% include "workflow/proposals/proposal_review_block.html" with review_data=proposal.review_assignments.all %}
+  {% endif %}
+</div>
+{% endblock %}
