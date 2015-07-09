@@ -5,6 +5,7 @@ import mimetypes as mime
 from docx import Document
 from docx.shared import Inches
 from pprint import pprint
+import mimetypes
 
 from django.shortcuts import redirect, render, get_object_or_404
 from django.db.models import Q
@@ -12,6 +13,8 @@ from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 from django.core.urlresolvers import reverse
+from django.contrib import messages
+from django.http import Http404, HttpResponse, StreamingHttpResponse, HttpResponseRedirect
 
 from core import models as core_models
 from core import views as core_views
@@ -75,8 +78,8 @@ def review(request, review_type, submission_id, access_key=None):
 	print request.GET.get('download')
 
 	if not request.POST and request.GET.get('download') == 'docx':
-		serve_review_form(submission)
-		print 'hi'
+		path = create_review_form(submission)
+		return serve_file(request, path)
 
 	if request.POST:
 		form = forms.GeneratedForm(request.POST, request.FILES, form=submission.review_form)
@@ -145,7 +148,7 @@ def render_choices(choices):
 	c_split = choices.split('|')
 	return [(choice.capitalize(), choice) for choice in c_split]
 
-def serve_review_form(submission):
+def create_review_form(submission):
 	document = Document()
 	document.add_heading(submission.title, 0)
 	p = document.add_paragraph('You should complete this form and then use the review page to upload it.')
@@ -175,9 +178,25 @@ def serve_review_form(submission):
 
 	document.add_page_break()
 
-	document.save(os.path.join(settings.BOOK_DIR, str(submission.id), 'forms', '%s.docx' % str(uuid4())))
+	path = os.path.join(settings.BOOK_DIR, str(submission.id), 'forms', '%s.docx' % str(uuid4()))
 
+	document.save(path)
 
+	return path
+
+@login_required
+def serve_file(request, file_path):
+	print file_path
+	try:
+		fsock = open(file_path, 'r')
+		mimetype = mimetypes.guess_type(file_path)
+		response = StreamingHttpResponse(fsock, content_type=mimetype)
+		response['Content-Disposition'] = "attachment; filename=review_form.docx"
+		pprint(response)
+		return response
+	except IOError:
+		messages.add_message(request, messages.ERROR, 'File not found.')
+		return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 def handle_review_file(file, book, review_assignment, kind):
 
