@@ -134,7 +134,7 @@ def in_production(request):
 def view_review(request, submission_id):
 
 	submission = get_object_or_404(models.Book, pk=submission_id)
-	review_rounds = models.ReviewRound.objects.filter(book=submission)
+	review_rounds = models.ReviewRound.objects.filter(book=submission).order_by('-round_number')
 	internal_review_assignments = models.ReviewAssignment.objects.filter(book=submission, review_type='internal').select_related('user', 'review_round')
 	external_review_assignments = models.ReviewAssignment.objects.filter(book=submission, review_type='external').select_related('user', 'review_round')
 
