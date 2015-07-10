@@ -42,7 +42,9 @@ To start hacking run (from the src folder):
 You'll now be able to access the server from http://localhost:8000
 
 # Credit
-A development team of volunteers from [Ubiquity Press](http://ubiquitypress.com/) is working on this software, though it is not supported directly by Ubiquity Press.
+Originally started by a team of volunteer developers, this project is now supported by [Ubiquity Press](http://ubiquitypress.com/).
+
+Core developers:
 
 - Andy Byers
 - Mauro Sanchez
