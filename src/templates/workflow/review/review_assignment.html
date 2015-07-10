@@ -7,11 +7,18 @@
 
 {% block breadcrumbs %}
   <ol class="breadcrumb">
+    {% if not active == 'proposal_review' %}
     <li><a href="{% url 'user_home' %}">User Home</a></li>
     <li>Workflow</li>
     <li><a href="{% url 'in_review'%}">In Review</a></li>
     <li><a href="{% url 'view_review' submission.pk %}">{{ submission.title }}</a></li>
     <li class="active">Review</li>
+    {% else %}
+    <li><a href="{% url 'user_home' %}">User Home</a></li>
+    <li class="">Workflow</li>
+    <li class="active"><a href="{% url 'proposals' %}">Proposals</a></li>
+    <li class="active"><a href="{% url 'view_proposal' submission.id %}">{{ submission.title }}</a></li>
+    {% endif %}
   </ol>
 {% endblock %}
   
@@ -23,7 +30,9 @@
 <div class="col-md-12">
   <h3>{{ submission.title }} review by {{ review.user.first_name }} {{ review.user.last_name }}</h3>
   <hr />
+  {% if not active == 'proposal_review' %}
   {% include "workflow/elements/workflow_view_buttons.html" %}
+  {% endif %}
   <h4>Review Files</h4>
   <table class="table table-condensed table-striped">
     <tr>
@@ -40,6 +49,10 @@
       <td>{{ file.mime_type }}</td>
       <td>{{ file.kind }}</td>
       <td><a href="{% url 'serve_file' submission.id file.id %}" class="btn btn-primary"><i class="fa fa-download">&nbsp;</i>Download</a></td>
+    </tr>
+  {% empty %}
+    <tr>
+      <td colspan="5">No files</td>
     </tr>
   {% endfor %}
   <tr>

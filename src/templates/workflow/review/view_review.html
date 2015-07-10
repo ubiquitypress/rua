@@ -21,26 +21,49 @@
   <h3>{{ submission.title }}</h3>
   <hr />
   {% include "workflow/elements/workflow_view_buttons.html" %}
-  <div class="inline-headers"><h4>Internal Review Files</h4><a href="{% url 'add_review_files' submission.id 'internal' %}" class="btn btn-sm btn-success" style="float: right;"><i class="fa fa-plus">&nbsp;</i>Add Internal Review Files</a></div>
-  
-  {% include "workflow/review/reviewer_files.html" with file_data=submission.internal_review_files.all file_type='internal' %}
-  
-  <div class="inline-headers"><h4>Internal Reviews</h4><a href="{% url 'add_reviewers' submission.id 'internal' %}" class="btn btn-sm btn-success" style="float: right;"><i class="fa fa-plus">&nbsp;</i>Add Internal Reviewers</a></div>
-  
-  {% include "workflow/review/reviewer_block.html" with review_data=internal_review_assignments %}
-  
-  <hr />
-  
-  <div class="inline-headers"><h4>External Review Files</h4><a href="{% url 'add_review_files' submission.id 'external' %}" class="btn btn-sm btn-success" style="float: right;"><i class="fa fa-plus">&nbsp;</i>Add External Review Files</a></div>
-  
-  {% include "workflow/review/reviewer_files.html" with file_data=submission.external_review_files.all file_type='external' %}
-  
-  <div class="inline-headers"><h4>External Reviews</h4><a href="{% url 'add_reviewers' submission.id 'external' %}" class="btn btn-sm btn-success" style="float: right;"><i class="fa fa-plus">&nbsp;</i>Add External Reviewers</a></div>
-  
-  {% include "workflow/review/reviewer_block.html" with review_data=external_review_assignments %}
-  
-  <hr />
-  
-  {% include "workflow/review/external_review_action.html" %}
+  <div id="rounds">
+  <ul>
+  {% for round in review_rounds %}
+    <li><a href="#round-{{ round.round_number }}">Round {{ round.round_number }}</a></li>
+      {% endfor %}
+  </ul>
+  {% for round in review_rounds%}
+  <div id="round-{{ round.round_number }}">
+    <div class="inline-headers"><h4>Internal Review Files</h4><a href="{% url 'add_review_files' submission.id 'internal' %}" class="btn btn-sm btn-success" style="float: right;"{% if round.round_number != submission.get_latest_review_round %}disabled{% endif %}><i class="fa fa-plus">&nbsp;</i>Add Internal Review Files</a></div>
+    
+    {% include "workflow/review/reviewer_files.html" with file_data=submission.internal_review_files.all file_type='internal' %}
+    
+    <div class="inline-headers"><h4>Internal Reviews</h4><a href="{% url 'add_reviewers' submission.id 'internal' round.round_number %}" class="btn btn-sm btn-success" style="float: right;"{% if round.round_number != submission.get_latest_review_round %}disabled{% endif %}><i class="fa fa-plus">&nbsp;</i>Add Internal Reviewers</a></div>
+    
+    {% include "workflow/review/reviewer_block.html" with review_data=internal_review_assignments %}
+    
+    <hr />
+    
+    <div class="inline-headers"><h4>External Review Files</h4><a href="{% url 'add_review_files' submission.id 'external' %}" class="btn btn-sm btn-success" style="float: right;"{% if round.round_number != submission.get_latest_review_round %}disabled{% endif %}><i class="fa fa-plus">&nbsp;</i>Add External Review Files</a></div>
+    
+    {% include "workflow/review/reviewer_files.html" with file_data=submission.external_review_files.all file_type='external' %}
+    
+    <div class="inline-headers"><h4>External Reviews</h4><a href="{% url 'add_reviewers' submission.id 'external' round.round_number %}" class="btn btn-sm btn-success" style="float: right;"{% if round.round_number != submission.get_latest_review_round %}disabled{% endif %}><i class="fa fa-plus">&nbsp;</i>Add External Reviewers</a></div>
+    
+    {% include "workflow/review/reviewer_block.html" with review_data=external_review_assignments %}
+  </div>
+  {% endfor %}
+  </div>
+</div>
 
+<div class="col-md-12">
+  {% include "workflow/review/external_review_action.html" %}
+</div>
+
+{% endblock %}
+
+{% block js %}
+  {{ block.super }}
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css">
+    <script src="http://code.jquery.com/ui/1.11.0/jquery-ui.js"></script>
+    <script>
+    $(function() {
+        $( "#rounds" ).tabs();
+      });
+    </script>
 {% endblock %}
