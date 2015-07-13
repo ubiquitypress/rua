@@ -49,8 +49,8 @@
   </tr>
   </thead>
   <tr>
-    <td colspan="2">{{ proposal.funding }}</td>
-    <td colspan="2">{{ proposal.notes }}</td>
+    <td colspan="2">{{ proposal.funding|safe }}</td>
+    <td colspan="2">{{ proposal.notes|safe }}</td>
   </tr>
   <thead>
   <tr>
@@ -58,7 +58,7 @@
   </tr>
   </thead>
   <tr>
-    <td colspan="4">{{ proposal.description }}</td>
+    <td colspan="4">{{ proposal.description|safe }}</td>
     </tr>
   </table>
 
