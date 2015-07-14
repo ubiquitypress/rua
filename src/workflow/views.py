@@ -63,7 +63,7 @@ def view_new_submission(request, submission_id):
 
 		return redirect(reverse('view_review', kwargs={'submission_id': submission.id}))
 
-		
+
 	template = 'workflow/new/view_new_submission.html'
 	context = {
 		'submission': submission,
@@ -163,7 +163,7 @@ def add_review_files(request, submission_id, review_type):
 
 		messages.add_message(request, messages.SUCCESS, '%s files added to Review' % files.count())
 
-		return redirect(reverse('view_review', kwargs={'submission_id': submission.id})) 
+		return redirect(reverse('view_review', kwargs={'submission_id': submission.id}))
 
 	template = 'workflow/review/add_review_files.html'
 	context = {
@@ -502,7 +502,7 @@ def start_proposal_review(request, proposal_id):
 						messages.add_message(request, messages.WARNING, '%s %s is already a reviewer' % (member.user.first_name, member.user.last_name))
 
 			# Tidy up and save
-			
+
 			proposal.date_review_started = timezone.now()
 			proposal.save()
 
@@ -517,6 +517,18 @@ def start_proposal_review(request, proposal_id):
 	}
 
 	return render(request, template, context)
+
+@staff_member_required
+def accept_proposal(request, proposal_id):
+	pass
+
+@staff_member_required
+def decline_proposal(request, proposal_id):
+	pass
+
+@staff_member_required
+def request_proposal_revisions(request, proposal_id):
+	pass
 
 @staff_member_required
 def view_proposal_review(request, submission_id, assignment_id):
@@ -584,7 +596,7 @@ def add_proposal_reviewers(request, proposal_id):
 					messages.add_message(request, messages.WARNING, '%s %s is already a reviewer' % (member.user.first_name, member.user.last_name))
 
 		# Tidy up and save
-		
+
 		proposal.date_review_started = timezone.now()
 		proposal.save()
 

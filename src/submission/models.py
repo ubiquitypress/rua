@@ -1,6 +1,14 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+def proposal_status():
+	return (
+		('submission', 'Submission'),
+		('revisions_required', 'Revisions Required'),
+		('accepted', 'Accepted'),
+		('declined', 'Declined'),
+	)
+
 # Create your models here.
 class Proposal(models.Model):
 
@@ -15,6 +23,9 @@ class Proposal(models.Model):
 	date_review_started = models.DateTimeField(blank=True, null=True)
 	review_assignments = models.ManyToManyField('ProposalReview', related_name='review', null=True, blank=True)
 	review_form = models.ForeignKey('review.Form', null=True, blank=True)
+
+	status = models.CharField(max_length=20, choices=proposal_status())
+
 
 class SubmissionChecklistItem(models.Model):
 
