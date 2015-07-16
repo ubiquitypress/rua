@@ -193,6 +193,8 @@ def edit_setting(request, setting_group, setting_name):
 		setting.value = value
 		setting.save()
 
+		cache._cache.flush_all()
+
 		return redirect(reverse('settings_index'))
 
 
