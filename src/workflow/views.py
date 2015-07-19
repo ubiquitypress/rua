@@ -432,7 +432,7 @@ def update_format_or_chapter(request, submission_id, format_or_chapter, id):
 
 @staff_member_required
 def proposal(request):
-	proposal_list = submission_models.Proposal.objects.all()
+	proposal_list = submission_models.Proposal.objects.exclude(status='declined').exclude(status='accepted')
 
 	template = 'workflow/proposals/proposal.html'
 	context = {
@@ -523,10 +523,6 @@ def accept_proposal(request, proposal_id):
 	pass
 
 @staff_member_required
-def decline_proposal(request, proposal_id):
-	pass
-
-@staff_member_required
 def request_proposal_revisions(request, proposal_id):
 	pass
 
@@ -610,6 +606,28 @@ def add_proposal_reviewers(request, proposal_id):
 	}
 
 	return render(request, template, context)
+
+@staff_member_required
+def decline_proposal(request, proposal_id):
+
+	proposal = get_object_or_404(submission_models.Proposal, pk=proposal_id)
+	email_text = models.Setting.objects.get(group__name='email', name='proposal_decline').value
+
+	if request.POST:
+		proposal.status = 'declined'
+		proposal.save()
+		email_text = request.POST.get('decline-email')
+		logic.send_proposal_declone(proposal, email_text)
+		return redirect(reverse('proposals'))
+
+	template = 'workflow/proposals/decline_proposal.html'
+	context = {
+		'proposal': proposal,
+		'email_text': email_text,
+	}
+
+	return render(request, template, context)
+
 
 # File Handlers - should this be in Core?
 @login_required
