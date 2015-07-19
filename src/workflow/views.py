@@ -615,6 +615,9 @@ def decline_proposal(request, proposal_id):
 
 	if request.POST:
 		proposal.status = 'declined'
+		for review in proposal.review_assignments.all():
+			review.completed = timezone.now()
+			review.save()
 		proposal.save()
 		email_text = request.POST.get('decline-email')
 		logic.send_proposal_declone(proposal, email_text)
