@@ -15,6 +15,7 @@ from django.core import serializers
 
 from core import models
 from core import forms
+from submission import models as submission_models
 
 from pprint import pprint
 import json
@@ -138,6 +139,7 @@ def user_home(request):
 	template = 'core/user/home.html'
 	context = {
 		'task_list': task_list,
+		'proposals': submission_models.Proposal.objects.filter(status='submission').count(),
 		'new_submissions': models.Book.objects.filter(stage__current_stage='submission').count(),
 		'in_review': models.Book.objects.filter(stage__current_stage='review').count(),
 		'in_editing': models.Book.objects.filter(stage__current_stage='editing').count(),
