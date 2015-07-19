@@ -532,8 +532,12 @@ def view_proposal_review(request, submission_id, assignment_id):
 	submission = get_object_or_404(submission_models.Proposal, pk=submission_id)
 	review_assignment = get_object_or_404(submission_models.ProposalReview, pk=assignment_id)
 	result = review_assignment.results
-	relations = review_models.FormElementsRelationship.objects.filter(form=result.form)
-	data_ordered = logic.order_data(logic.decode_json(result.data), relations)
+	if result:
+		relations = review_models.FormElementsRelationship.objects.filter(form=result.form)
+		data_ordered = logic.order_data(logic.decode_json(result.data), relations)
+	else:
+		relations = None
+		data_ordered = None
 
 	template = 'workflow/review/review_assignment.html'
 	context = {
