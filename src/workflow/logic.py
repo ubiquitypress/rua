@@ -1,7 +1,9 @@
 from django.db.models import Max
+from django.utils import timezone
 
 from core import models
 from core import email
+from submission import logic as submission_logic
 
 import json
 
@@ -23,7 +25,28 @@ def create_new_review_round(book):
 	next_round = latest_round.get('max')+1 if latest_round.get('max') > 0 else 1
 	return models.ReviewRound.objects.create(book=book, round_number=next_round)
 
-def send_proposal_declone(proposal, email_text):
+def close_active_reviews(proposal):
+    for review in proposal.review_assignments.all():
+        review.completed = timezone.now()
+        review.save()
+
+def create_submission_from_proposal(proposal, proposal_type):
+    book = models.Book(title=proposal.title, subtitle=proposal.subtitle, description=proposal.description,
+        owner=proposal.owner, book_type=proposal_type, submission_stage=1)
+
+    if book.book_type == 'monograph':
+        submission_logic.copy_author_to_submission(proposal.owner, book)
+    elif book.book_type == 'edited_volume':
+        submission_logic.copy_editor_to_submission(proposal.owner, book)
+
+    book.save()
+
+    return book
+
+
+# Email Handlers - TODO: move to email.py?
+
+def send_proposal_decline(proposal, email_text):
     from_email = models.Setting.objects.get(group__name='email', name='from_address')
 
     context = {
@@ -32,5 +55,14 @@ def send_proposal_declone(proposal, email_text):
 
     email.send_email('[abp] Proposal Declined', context, from_email.value, proposal.owner.email, email_text)
 
+def send_proposal_accept(proposal, email_text, submission):
+    from_email = models.Setting.objects.get(group__name='email', name='from_address')
 
-    
+    context = {
+        'base_url': models.Setting.objects.get(group__name='general', name='base_url').value,
+        'proposal': proposal,
+        'submission': submission,
+    }
+
+    email.send_email('[abp] Proposal Accepted', context, from_email.value, proposal.owner.email, email_text)
+

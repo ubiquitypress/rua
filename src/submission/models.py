@@ -9,7 +9,6 @@ def proposal_status():
 		('declined', 'Declined'),
 	)
 
-# Create your models here.
 class Proposal(models.Model):
 
 	title = models.CharField(max_length=255)

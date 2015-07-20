@@ -519,10 +519,6 @@ def start_proposal_review(request, proposal_id):
 	return render(request, template, context)
 
 @staff_member_required
-def accept_proposal(request, proposal_id):
-	pass
-
-@staff_member_required
 def request_proposal_revisions(request, proposal_id):
 	pass
 
@@ -619,15 +615,35 @@ def decline_proposal(request, proposal_id):
 
 	if request.POST:
 		proposal.status = 'declined'
-		for review in proposal.review_assignments.all():
-			review.completed = timezone.now()
-			review.save()
+		logic.close_active_reviews(proposal)
 		proposal.save()
-		email_text = request.POST.get('decline-email')
-		logic.send_proposal_declone(proposal, email_text)
+		logic.send_proposal_decline(proposal, email_text=request.POST.get('decline-email'))
 		return redirect(reverse('proposals'))
 
 	template = 'workflow/proposals/decline_proposal.html'
+	context = {
+		'proposal': proposal,
+		'email_text': email_text,
+	}
+
+	return render(request, template, context)
+
+
+@staff_member_required
+def accept_proposal(request, proposal_id):
+	'Marks a proposal as accepted, creates a submission and emails the user'
+	proposal = get_object_or_404(submission_models.Proposal, pk=proposal_id)
+	email_text = models.Setting.objects.get(group__name='email', name='proposal_accept').value
+
+	if request.POST:
+		proposal.status = 'accepted'
+		logic.close_active_reviews(proposal)
+		submission = logic.create_submission_from_proposal(proposal, proposal_type=request.POST.get('proposal-type'))
+		logic.send_proposal_accept(proposal, email_text=request.POST.get('accept-email'), submission=submission)
+		proposal.save()
+		return redirect(reverse('proposals'))
+
+	template = 'workflow/proposals/accept_proposal.html'
 	context = {
 		'proposal': proposal,
 		'email_text': email_text,

@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% load static from staticfiles %}
+{% load bootstrap3 %}
+
+{% block title %}Book Proposals{% endblock %}
+
+{% block breadcrumbs %}
+    <ol class="breadcrumb">
+	  <li><a href="{% url 'user_home' %}">User Home</a></li>
+	  <li class="">Workflow</li>
+    <li class="active"><a href="{% url 'proposals' %}">Proposals</a></li>
+	</ol>
+{% endblock %}
+
+{% block body %}
+<div class="col-md-12">
+  <h3>Accept {{ proposal.title }}</h3>
+  <hr />
+  <p>You are accepting this proposal. You can add some notes to the email below detailing why. When you press submit this email will be sent to the proposer.</p>
+  <form method="POST">
+    {% csrf_token %}
+    <div class="form-group">
+      <label for="comment">Email Proposal Owner:</label>
+      <textarea name="accept-email" class="form-control" rows="15" id="comment">{{ email_text }}</textarea>
+    </div>
+    <button class="btn btn-success" type="submit">Send and Record Decision</button>
+  </form>
+</div>
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">$("textarea").jqte();</script>
+{% endblock %}
