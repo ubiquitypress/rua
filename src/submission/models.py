@@ -5,6 +5,7 @@ def proposal_status():
 	return (
 		('submission', 'Submission'),
 		('revisions_required', 'Revisions Required'),
+		('revisions_submitted', 'Revisions Submitted'),
 		('accepted', 'Accepted'),
 		('declined', 'Declined'),
 	)

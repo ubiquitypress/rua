@@ -289,7 +289,7 @@ def proposal_revisions(request, proposal_id):
 		proposal_form = forms.SubmitProposal(request.POST, request.FILES, instance=proposal)
 		if proposal_form.is_valid():
 			proposal = proposal_form.save(commit=False)
-			proposal.status = 'submission'
+			proposal.status = 'revisions_submitted'
 			proposal.save()
 			messages.add_message(request, messages.SUCCESS, 'Revisions for Proposal %s submitted' % proposal.id)
 			return redirect(reverse('user_home'))
