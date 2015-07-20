@@ -489,7 +489,7 @@ def start_proposal_review(request, proposal_id):
 				members = manager_models.GroupMembership.objects.filter(group=committee)
 				for member in members:
 					new_review_assignment = submission_models.ProposalReview(
-						user=reviewer,
+						user=member.user,
 						proposal=proposal,
 						due=due_date,
 					)
@@ -517,10 +517,6 @@ def start_proposal_review(request, proposal_id):
 	}
 
 	return render(request, template, context)
-
-@staff_member_required
-def request_proposal_revisions(request, proposal_id):
-	pass
 
 @staff_member_required
 def view_proposal_review(request, submission_id, assignment_id):
@@ -650,6 +646,28 @@ def accept_proposal(request, proposal_id):
 	}
 
 	return render(request, template, context)
+
+@staff_member_required
+def request_proposal_revisions(request, proposal_id):
+
+	proposal = get_object_or_404(submission_models.Proposal, pk=proposal_id)
+	email_text = models.Setting.objects.get(group__name='email', name='proposal_request_revisions').value
+
+	if request.POST:
+		proposal.status = 'revisions_required'
+		logic.close_active_reviews(proposal)
+		logic.send_proposal_revisions(proposal, email_text=request.POST.get('revisions-email'))
+		proposal.save()
+		return redirect(reverse('proposals'))
+
+	template = 'workflow/proposals/revisions_proposal.html'
+	context = {
+		'proposal': proposal,
+		'email_text': email_text,
+	}
+
+	return render(request, template, context)
+
 
 
 # File Handlers - should this be in Core?

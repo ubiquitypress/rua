@@ -34,6 +34,8 @@ def create_submission_from_proposal(proposal, proposal_type):
     book = models.Book(title=proposal.title, subtitle=proposal.subtitle, description=proposal.description,
         owner=proposal.owner, book_type=proposal_type, submission_stage=1)
 
+    book.save()
+
     if book.book_type == 'monograph':
         submission_logic.copy_author_to_submission(proposal.owner, book)
     elif book.book_type == 'edited_volume':
@@ -65,4 +67,14 @@ def send_proposal_accept(proposal, email_text, submission):
     }
 
     email.send_email('[abp] Proposal Accepted', context, from_email.value, proposal.owner.email, email_text)
+
+def send_proposal_revisions(proposal, email_text):
+    from_email = models.Setting.objects.get(group__name='email', name='from_address')
+
+    context = {
+        'base_url': models.Setting.objects.get(group__name='general', name='base_url').value,
+        'proposal': proposal,
+    }
+
+    email.send_email('[abp] Proposal Revisions Required', context, from_email.value, proposal.owner.email, email_text)
 
