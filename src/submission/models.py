@@ -16,14 +16,14 @@ class Proposal(models.Model):
 	funding = models.TextField(max_length=500, blank=True, null=True)
 	description = models.TextField(blank=True, null=True)
 	notes = models.TextField(blank=True, null=True)
-	uploaded_file = models.FileField()
+	uploaded_file = models.FileField(blank=True, null=True)
 	owner = models.ForeignKey(User)
 	date_submitted = models.DateTimeField(auto_now_add=True)
 	date_review_started = models.DateTimeField(blank=True, null=True)
 	review_assignments = models.ManyToManyField('ProposalReview', related_name='review', null=True, blank=True)
 	review_form = models.ForeignKey('review.Form', null=True, blank=True)
 
-	status = models.CharField(max_length=20, choices=proposal_status())
+	status = models.CharField(max_length=20, choices=proposal_status(), default='submission')
 
 
 class SubmissionChecklistItem(models.Model):
