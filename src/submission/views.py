@@ -279,6 +279,28 @@ def start_proposal(request):
 
 	return render(request, template, context)
 
+@login_required
+def proposal_revisions(request, proposal_id):
+
+	proposal = get_object_or_404(submission_models.Proposal, pk=proposal_id, owner=request.user, status='revisions_required')
+	proposal_form = forms.SubmitProposal(instance=proposal)
+
+	if request.POST:
+		proposal_form = forms.SubmitProposal(request.POST, request.FILES, instance=proposal)
+		if proposal_form.is_valid():
+			proposal = proposal_form.save(commit=False)
+			proposal.status = 'submission'
+			proposal.save()
+			messages.add_message(request, messages.SUCCESS, 'Revisions for Proposal %s submitted' % proposal.id)
+			return redirect(reverse('user_home'))
+
+	template = "submission/start_proposal.html"
+	context = {
+		'proposal_form': proposal_form,
+	}
+
+	return render(request, template, context)
+
 
 ## File helpers
 def handle_file(file, book, kind):

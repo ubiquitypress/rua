@@ -18,4 +18,5 @@ urlpatterns = patterns('',
 	url(r'^book/(?P<book_id>\d+)/order/(?P<type_to_handle>[-\w./]+)/$', 'submission.views.file_order', name='file_order'),
 
 	url(r'^proposal/$', 'submission.views.start_proposal', name='proposal_start'),
+	url(r'^proposal/(?P<proposal_id>\d+)/revisions/$', 'submission.views.proposal_revisions', name='proposal_revisions'),
 )

@@ -15,6 +15,7 @@ urlpatterns = patterns('',
     url(r'^proposals/(?P<proposal_id>\d+)/accept/$', 'workflow.views.accept_proposal', name='accept_proposal'),
     url(r'^proposals/(?P<proposal_id>\d+)/revisions/$', 'workflow.views.request_proposal_revisions', name='request_proposal_revisions'),
     url(r'^proposals/(?P<proposal_id>\d+)/decline/$', 'workflow.views.decline_proposal', name='decline_proposal'),
+    
     # New Submissions
     url(r'^new/$', 'workflow.views.new_submissions', name='new_submissions'),
     url(r'^new/(?P<submission_id>\d+)/$', 'workflow.views.view_new_submission', name='view_new_submission'),
