@@ -1,8 +1,8 @@
-# SMW
-Simple Monograph Workflow
+# RUA
+Rua - the Simple Monograph Workflow
 
 # Context
-SMW is an Open Source application designed to assist with the Monograph publishing life cycle. Stages include:
+Rua is an Open Source application designed to assist with the Monograph publishing life cycle. Stages include:
 
 - optional proposal
 - submission
