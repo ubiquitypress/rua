@@ -29,7 +29,7 @@
         </div>
     </div>
 	<div class="row">
-		<div class="col-md-4">
+		<div class="col-md-4" id="task-list">
 			<div class="row">
 				<div class="col-md-8">
 					<h3><i class="fa fa-tasks"></i>&nbsp;Tasks</h3>
@@ -43,7 +43,7 @@
 				</div>
 			</div>
 		{% for task in task_list %}
-			<div id="task-{{ task.id }}" class="bs-callout bs-callout-{{ task.workflow }}" id="callout-helper-bg-specificity">
+		<div id="task-{{ task.id }}" class="bs-callout bs-callout-{{ task.workflow }}" id="callout-helper-bg-specificity">
 				<label class="checkbox-inline">
 			 	 <input type="checkbox" id="{{ task.id }}" value="{{ task.id }}"> {{ task.text }}{% if task.due %} <span class="small">- {{ task.due }}</span>{% endif %}
 			</label>
@@ -114,14 +114,12 @@
 {% endblock %}
 {% block js %}
 <script type="text/javascript">
-$(document).ready(function() {
-  $(":checkbox").click(function(){
+  $(document).on("click", ":checkbox", function(){
         var id = $(this).attr('id');
         var div_id = "#task-" + $(this).attr('id');
         $.post("/user/task/" + id + "/complete/");
     	$( div_id ).remove()
     });
-});
 </script>
 
 <script type="text/javascript">
@@ -132,8 +130,10 @@ $(document).ready(function() {
             url: frm.attr('action'),
             data: frm.serialize(),
             success: function (data) {
-                $("#SOME-DIV").html(data);
-                console.log(data)
+            	data = $.parseJSON(data);
+                $( "#task-list" ).append( '<div id="task-' + data.id + '" class="bs-callout" id="callout-helper-bg-specificity"><label class="checkbox-inline"><input type="checkbox" id="'+ data.id + '" value="' + data.id + '"> ' + data.text + '</label></div>' );
+                $('#id_text').val("");
+                $('#myModal').modal('hide')
             },
             error: function(data) {
                 $("#MESSAGE-DIV").html("Something went wrong!");
