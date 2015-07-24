@@ -1,0 +1,30 @@
+.DocumentList
+{
+    overflow-x:scroll;
+    overflow-y:hidden;
+    height:82%;
+    width:100%;
+    padding: 0 15px;
+}
+
+.DocumentItem
+{
+    padding:0;
+    height:100%;
+    width: 400px;
+    overflow-y:scroll;
+    overflow-x:scroll;
+}
+
+.list-inline {
+  white-space:nowrap;
+}
+
+.list-inline>li {
+	display: inline-table;
+}
+
+.well-sm {
+	overflow-Y: auto;
+	max-height:100%;
+}

@@ -195,6 +195,22 @@ def permission_denied(request):
 
 	return render(request, template, context)
 
+
+# Dashboard
+@login_required
+def dashboard(request):
+
+	template = 'core/dashboard/dashboard.html'
+	context = {
+		'proposals': submission_models.Proposal.objects.filter(status='submission'),
+		'new_submissions': models.Book.objects.filter(stage__current_stage='submission'),
+		'in_review': models.Book.objects.filter(stage__current_stage='review'),
+		'in_editing': models.Book.objects.filter(stage__current_stage='editing'),
+		'in_production': models.Book.objects.filter(stage__current_stage='production'),
+	}
+
+	return render(request, template, context)
+
 # AJAX Handlers
 
 @csrf_exempt

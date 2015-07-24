@@ -35,6 +35,9 @@ urlpatterns = patterns('',
     url(r'^user/task/(?P<task_id>[-\w./]+)/complete/$', 'core.views.task_complete', name='task_complete'),
 
     url(r'^user/submission/(?P<submission_id>\d+)/$', 'core.views.user_submission', name='user_submission'),
+
+    # Dashboard
+    url(r'dashboard/$', 'core.views.dashboard', name='dashboard'),
 )
 
 handler403 = 'core.views.permission_denied'
