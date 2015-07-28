@@ -202,7 +202,7 @@ def dashboard(request):
 
 	template = 'core/dashboard/dashboard.html'
 	context = {
-		'proposals': submission_models.Proposal.objects.filter(status='submission'),
+		'proposals': submission_models.Proposal.objects.exclude(status='declined').exclude(status='accepted'),
 		'new_submissions': models.Book.objects.filter(stage__current_stage='submission'),
 		'in_review': models.Book.objects.filter(stage__current_stage='review'),
 		'in_editing': models.Book.objects.filter(stage__current_stage='editing'),
@@ -232,7 +232,7 @@ def task_new(request):
 		task.creator = request.user
 		task.assignee = request.user
 		task.save()
-		
+
 		return HttpResponse(json.dumps({'id': task.pk,'text': task.text}))
 	else:
 		return HttpResponse(new_task_form.errors)

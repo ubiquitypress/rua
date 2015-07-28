@@ -24,40 +24,40 @@
             	<h4>Proposals</h4>
             	{% for proposal in proposals %}
             	<div class="panel panel-default">
-				  <div class="panel-heading clearfix">
-				    <h3 class="panel-title pull-left">{{ proposal.title }}</h3>
-				      <a class="btn btn-default pull-right" href="#">
-				        <i class="fa fa-eye"></i>
-				        View
-				      </a>
-				  </div>
-				  <div class="panel-body">
-				    <p class="small">Submitted: {{ proposal.date_submitted }}</p>
-				  </div>
-				  <div class="panel-footer">
-				    <div class="btn-group btn-group-justified">
-				      <div class="btn-group">
-				        <button class="btn btn-default">
-				          <i class="fa fa-file-o"></i>
-				          Files
-				        </button>
-				      </div>
-				      <div class="btn-group">
-				        <button class="btn btn-default">
-				          <i class="fa fa-users"></i>
-				          Authors
-				        </button>
-				      </div>
-				      <div class="btn-group">
-				        <button class="btn btn-default">
-				          <i class="fa fa-tasks"></i>
-				          Log
-				        </button>
-				      </div>
-				    </div>
-				  </div>
-				</div>
-				{% endfor %}
+    				  <div class="panel-heading clearfix">
+    				    <h3 class="panel-title pull-left">{{ proposal.title }}</h3>
+    				      <a class="btn btn-default pull-right" href="{% url 'view_proposal' proposal.id %}">
+    				        <i class="fa fa-eye"></i>
+    				        View
+    				      </a>
+    				  </div>
+    				  <div class="panel-body">
+    				    <p class="small">Submitted: {{ proposal.date_submitted }}</p>
+    				  </div>
+    				  <div class="panel-footer">
+    				    <div class="btn-group btn-group-justified">
+    				      <div class="btn-group">
+    				        <button class="btn btn-default">
+    				          <i class="fa fa-file-o"></i>
+    				          Files
+    				        </button>
+    				      </div>
+    				      <div class="btn-group">
+    				        <button class="btn btn-default">
+    				          <i class="fa fa-users"></i>
+    				          Authors
+    				        </button>
+    				      </div>
+    				      <div class="btn-group">
+    				        <button class="btn btn-default">
+    				          <i class="fa fa-tasks"></i>
+    				          Log
+    				        </button>
+    				      </div>
+    				    </div>
+    				  </div>
+    				</div>
+				    {% endfor %}
             </div>
         </li>
         <li class="DocumentItem">
@@ -67,7 +67,7 @@
             	<div class="panel panel-default">
 				  <div class="panel-heading clearfix">
 				    <h3 class="panel-title pull-left">{{ submission.title }}</h3>
-				      <a class="btn btn-default pull-right" href="#">
+				      <a class="btn btn-default pull-right" href="{% url 'view_new_submission' submission.id %}">
 				        <i class="fa fa-eye"></i>
 				        View
 				      </a>
@@ -108,7 +108,7 @@
             	<div class="panel panel-default">
 				  <div class="panel-heading clearfix">
 				    <h3 class="panel-title pull-left">{{ submission.title }}</h3>
-				      <a class="btn btn-default pull-right" href="#">
+				      <a class="btn btn-default pull-right" href="{% url 'view_review' submission.pk %}">
 				        <i class="fa fa-eye"></i>
 				        View
 				      </a>
@@ -145,11 +145,83 @@
         <li class="DocumentItem">
         	<div class="well well-sm">
             	<h4>Editing</h4>
+            	{% for submission in in_editing %}
+            	<div class="panel panel-default">
+				  <div class="panel-heading clearfix">
+				    <h3 class="panel-title pull-left">{{ submission.title }}</h3>
+				      <a class="btn btn-default pull-right" href="{% url 'view_review' submission.pk %}">
+				        <i class="fa fa-eye"></i>
+				        View
+				      </a>
+				  </div>
+				  <div class="panel-body">
+				    <p class="small">Submitted: {{ submission.submission_date }}</p>
+				  </div>
+				  <div class="panel-footer">
+				    <div class="btn-group btn-group-justified">
+				      <div class="btn-group">
+				        <button class="btn btn-default">
+				          <i class="fa fa-file-o"></i>
+				          Files
+				        </button>
+				      </div>
+				      <div class="btn-group">
+				        <button class="btn btn-default">
+				          <i class="fa fa-users"></i>
+				          Authors
+				        </button>
+				      </div>
+				      <div class="btn-group">
+				        <button class="btn btn-default">
+				          <i class="fa fa-tasks"></i>
+				          Log
+				        </button>
+				      </div>
+				    </div>
+				  </div>
+				</div>
+				{% endfor %}
             </div>
         </li>
         <li class="DocumentItem">
         	<div class="well well-sm">
             	<h4>Production</h4>
+            	{% for submission in in_production %}
+            	<div class="panel panel-default">
+				  <div class="panel-heading clearfix">
+				    <h3 class="panel-title pull-left">{{ submission.title }}</h3>
+				      <a class="btn btn-default pull-right" href="{% url 'view_production' submission.pk %}">
+				        <i class="fa fa-eye"></i>
+				        View
+				      </a>
+				  </div>
+				  <div class="panel-body">
+				    <p class="small">Submitted: {{ submission.submission_date }}</p>
+				  </div>
+				  <div class="panel-footer">
+				    <div class="btn-group btn-group-justified">
+				      <div class="btn-group">
+				        <button class="btn btn-default">
+				          <i class="fa fa-file-o"></i>
+				          Files
+				        </button>
+				      </div>
+				      <div class="btn-group">
+				        <button class="btn btn-default">
+				          <i class="fa fa-users"></i>
+				          Authors
+				        </button>
+				      </div>
+				      <div class="btn-group">
+				        <button class="btn btn-default">
+				          <i class="fa fa-tasks"></i>
+				          Log
+				        </button>
+				      </div>
+				    </div>
+				  </div>
+				</div>
+				{% endfor %}
             </div>
         </li>
         <li class="DocumentItem">
