@@ -27,3 +27,6 @@ def press_settings():
 		_dict[group.name] = {setting.name:setting.value for setting in models.Setting.objects.filter(group=group)}
 
 	return _dict
+
+def task_count(request):
+	return models.Task.objects.filter(assignee=request.user).count()

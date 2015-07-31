@@ -125,6 +125,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.request",
 
     "core.context_processors.press",
+    "core.context_processors.task_count",
 )
 
 # Media

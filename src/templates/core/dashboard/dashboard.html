@@ -35,30 +35,15 @@
     				    <p class="small">Submitted: {{ proposal.date_submitted }}</p>
     				  </div>
     				  <div class="panel-footer">
-    				    <div class="btn-group btn-group-justified">
-    				      <div class="btn-group">
-    				        <button class="btn btn-default">
-    				          <i class="fa fa-file-o"></i>
-    				          Files
-    				        </button>
-    				      </div>
-    				      <div class="btn-group">
-    				        <button class="btn btn-default">
-    				          <i class="fa fa-users"></i>
-    				          Authors
-    				        </button>
-    				      </div>
-    				      <div class="btn-group">
-    				        <button class="btn btn-default">
-    				          <i class="fa fa-tasks"></i>
-    				          Log
-    				        </button>
-    				      </div>
-    				    </div>
+				        <button class="btn btn-primary btn-block" data-toggle="modal" data-target="#pro-{{ proposal.id }}">
+				          <i class="fa fa-tasks"></i>
+				          &nbsp;Quick Look
+				        </button>
     				  </div>
-    				</div>
-				    {% endfor %}
             </div>
+            {% include "core/dashboard/dashboard_proposal_modal.html" with proposal=proposal %}
+				    {% endfor %}
+          </div>
         </li>
         <li class="DocumentItem">
         	<div class="well well-sm">
@@ -75,29 +60,14 @@
 				  <div class="panel-body">
 				    <p class="small">Submitted: {{ submission.submission_date }}</p>
 				  </div>
-				  <div class="panel-footer">
-				    <div class="btn-group btn-group-justified">
-				      <div class="btn-group">
-				        <button class="btn btn-default">
-				          <i class="fa fa-file-o"></i>
-				          Files
-				        </button>
-				      </div>
-				      <div class="btn-group">
-				        <button class="btn btn-default">
-				          <i class="fa fa-users"></i>
-				          Authors
-				        </button>
-				      </div>
-				      <div class="btn-group">
-				        <button class="btn btn-default">
-				          <i class="fa fa-tasks"></i>
-				          Log
-				        </button>
-				      </div>
-				    </div>
-				  </div>
+          <div class="panel-footer">
+            <button class="btn btn-primary btn-block">
+              <i class="fa fa-tasks"></i>
+              &nbsp;Quick Look
+            </button>
+          </div>
 				</div>
+        {% include "core/dashboard/dashboard_modal.html" with submission=submission %}
 				{% endfor %}
             </div>
         </li>
@@ -116,28 +86,12 @@
 				  <div class="panel-body">
 				    <p class="small">Submitted: {{ submission.submission_date }}</p>
 				  </div>
-				  <div class="panel-footer">
-				    <div class="btn-group btn-group-justified">
-				      <div class="btn-group">
-				        <button class="btn btn-default">
-				          <i class="fa fa-file-o"></i>
-				          Files
-				        </button>
-				      </div>
-				      <div class="btn-group">
-				        <button class="btn btn-default">
-				          <i class="fa fa-users"></i>
-				          Authors
-				        </button>
-				      </div>
-				      <div class="btn-group">
-				        <button class="btn btn-default">
-				          <i class="fa fa-tasks"></i>
-				          Log
-				        </button>
-				      </div>
-				    </div>
-				  </div>
+          <div class="panel-footer">
+            <button class="btn btn-primary btn-block">
+              <i class="fa fa-tasks"></i>
+              &nbsp;Quick Look
+            </button>
+          </div>
 				</div>
 				{% endfor %}
             </div>
@@ -157,28 +111,12 @@
 				  <div class="panel-body">
 				    <p class="small">Submitted: {{ submission.submission_date }}</p>
 				  </div>
-				  <div class="panel-footer">
-				    <div class="btn-group btn-group-justified">
-				      <div class="btn-group">
-				        <button class="btn btn-default">
-				          <i class="fa fa-file-o"></i>
-				          Files
-				        </button>
-				      </div>
-				      <div class="btn-group">
-				        <button class="btn btn-default">
-				          <i class="fa fa-users"></i>
-				          Authors
-				        </button>
-				      </div>
-				      <div class="btn-group">
-				        <button class="btn btn-default">
-				          <i class="fa fa-tasks"></i>
-				          Log
-				        </button>
-				      </div>
-				    </div>
-				  </div>
+          <div class="panel-footer">
+            <button class="btn btn-primary btn-block">
+              <i class="fa fa-tasks"></i>
+              &nbsp;Quick Look
+            </button>
+          </div>
 				</div>
 				{% endfor %}
             </div>
@@ -198,28 +136,12 @@
 				  <div class="panel-body">
 				    <p class="small">Submitted: {{ submission.submission_date }}</p>
 				  </div>
-				  <div class="panel-footer">
-				    <div class="btn-group btn-group-justified">
-				      <div class="btn-group">
-				        <button class="btn btn-default">
-				          <i class="fa fa-file-o"></i>
-				          Files
-				        </button>
-				      </div>
-				      <div class="btn-group">
-				        <button class="btn btn-default">
-				          <i class="fa fa-users"></i>
-				          Authors
-				        </button>
-				      </div>
-				      <div class="btn-group">
-				        <button class="btn btn-default">
-				          <i class="fa fa-tasks"></i>
-				          Log
-				        </button>
-				      </div>
-				    </div>
-				  </div>
+          <div class="panel-footer">
+            <button class="btn btn-primary btn-block">
+              <i class="fa fa-tasks"></i>
+              &nbsp;Quick Look
+            </button>
+          </div>
 				</div>
 				{% endfor %}
             </div>
