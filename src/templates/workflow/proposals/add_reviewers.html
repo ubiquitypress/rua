@@ -65,7 +65,7 @@
   </table>
   <h4>Set Due Date</h4>
   <p class="small">Set a due date for the reviews. Reviewers will be politely reminded to submit their review before the due date.</p>
-  <input type="text" name="due_date" id="due_date" required="required" /><br/><br />
+  <input type="text" name="due_date" id="due_date" required="required" class="form-control" /><br/><br />
   <button class="btn btn-success" type="submit">Submit</button>
   </form>
 </div>
@@ -77,7 +77,7 @@
 <script type="text/javascript" language="javascript" src="//cdn.datatables.net/plug-ins/1.10.7/integration/bootstrap/3/dataTables.bootstrap.js"></script>
 <link rel="stylesheet" href="http://code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css">
 <script src="http://code.jquery.com/ui/1.11.0/jquery-ui.js"></script>
-<script>  
+<script>
   {% if reviewers %}
   $(document).ready(function() {
       $('#indv-reviewer').DataTable({

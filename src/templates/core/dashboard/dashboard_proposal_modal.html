@@ -50,7 +50,8 @@
                 <td colspan="4">{{ proposal.description|safe }}</td>
                 </tr>
               </table>
-            </div>
+              {% include "workflow/proposals/proposal_review_block.html" with review_data=proposal.review_assignments.all %}
+            </div><!-- End modal body -->
             <div class="modal-footer">
               <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
               <button type="button" class="btn btn-primary">Save changes</button>
