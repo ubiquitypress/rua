@@ -11,7 +11,7 @@
 	    {% csrf_token %}
         <h3>Current Additional Files</h3>
         <p>You can supply additional info about your files to help the editors and reviewers. Your label will be displayed for the editors to see.</p>
-        {% for file in additional_files %}
+        {% for file in files %}
         <h5>{{ file.original_filename }}</h5>
           <div class="form-group">
             <label class="sr-only" for="label_">Label</label>
