@@ -137,7 +137,7 @@ class Book(models.Model):
 	def __repr__(self):
 		return u'%s' % self.title
 
-	
+
 	def get_latest_review_round(self):
 		try:
 			return self.reviewround_set.all().order_by('-round_number')[0].round_number
@@ -256,6 +256,8 @@ class File(models.Model):
 	mime_type = models.CharField(max_length=50)
 	original_filename = models.CharField(max_length=1000)
 	uuid_filename = models.CharField(max_length=100)
+	label = models.CharField(max_length=200, null=True, blank=True)
+	description = models.CharField(max_length=1000, null=True, blank=True)
 	date_uploaded = models.DateTimeField(auto_now=True)
 	stage_uploaded = models.IntegerField()
 	kind = models.CharField(max_length=100)

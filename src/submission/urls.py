@@ -13,6 +13,7 @@ urlpatterns = patterns('',
 	url(r'^book/(?P<book_id>\d+)/stage/4/editor/new/$', 'submission.views.editor', name='editor'),
 	url(r'^book/(?P<book_id>\d+)/stage/4/editor/(?P<editor_id>\d+)/$', 'submission.views.editor', name='editor_edit'),
 	url(r'^book/(?P<book_id>\d+)/stage/5/$', 'submission.views.submission_five', name='submission_five'),
+	url(r'^book/(?P<book_id>\d+)/stage/3/additional_files/$', 'submission.views.submission_additional_files', name='submission_additional_files'),
 
 	# Ajax url
 	url(r'^book/(?P<book_id>\d+)/order/(?P<type_to_handle>[-\w./]+)/$', 'submission.views.file_order', name='file_order'),

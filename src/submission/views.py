@@ -109,9 +109,9 @@ def submission_three(request, book_id):
 				handle_file(file, book, 'manuscript')
 
 		if 'additional_upload' in request.POST:
-			print request.FILES.getlist('additional_file')
 			for file in request.FILES.getlist('additional_file'):
 				handle_file(file, book, 'additional')
+			return redirect(reverse('submission_additional_files', kwargs={'book_id': book.id}))
 
 		if 'next_stage' in request.POST:
 			if manuscript_files.count() >= 1:
@@ -130,6 +130,26 @@ def submission_three(request, book_id):
 		'book': book,
 		'active': 3,
 		'manuscript_files': manuscript_files,
+		'additional_files': additional_files,
+	}
+
+	return render(request, template, context)
+
+@login_required
+def submission_additional_files(request, book_id):
+	book = get_object_or_404(core_models.Book, pk=book_id, owner=request.user)
+	additional_files = core_models.File.objects.filter(book=book, kind='additional')
+
+	if request.POST:
+		pprint(request.POST)
+		for _file in additional_files:
+			_file.label = request.POST.get('label_%s' % _file.id)
+			_file.save()
+		return redirect(reverse('submission_three', kwargs={'book_id': book.id}))
+
+	template = 'submission/submission_additional_files.html'
+	context = {
+		'book': book,
 		'additional_files': additional_files,
 	}
 

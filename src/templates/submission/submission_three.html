@@ -65,7 +65,7 @@
           <hr />
           {% if additional_files %}
           <h4>Current Additional Files</h4>
-          <p>You can reorder your submitted files by dragging and dropping them into the correct order.</p>
+          <p>You can reorder your submitted files by dragging and dropping them into the correct order. You can <a href="{% url 'submission_additional_files' book.id %}">supply additonal information</a> about your files.</p>
           <ul class="list-group" id="add_files_sort">
           {% for file in additional_files %}
             <li id="add-{{ file.id }}" class="list-group-item"><i class="fa fa-sort">&nbsp;&nbsp;</i><i class="fa fa-file">&nbsp;&nbsp;</i>{{ file.original_filename }}<i style="float: right;" class="fa fa-trash-o"></i></li>

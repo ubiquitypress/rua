@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% load static from staticfiles %}
+{% load bootstrap3 %}
+
+{% block body %}
+
+ <div class="col-md-12">
+   {% include "submission/snippets/stage_button_group.html" %}
+		<h2>Submission Stage 3 - Additional Files Info</h2>
+    <form method="post" class="form" enctype="multipart/form-data">
+	    {% csrf_token %}
+        <h3>Current Additional Files</h3>
+        <p>You can supply additional info about your files to help the editors and reviewers. Your label will be displayed for the editors to see.</p>
+        {% for file in additional_files %}
+        <h5>{{ file.original_filename }}</h5>
+          <div class="form-group">
+            <label class="sr-only" for="label_">Label</label>
+            <input type="text" class="form-control" name="label_{{ file.id }}" placeholder="Label" {% if file.label %}value="{{ file.label }}"{% endif %}>
+          </div>
+        <hr />
+        {% endfor %}
+      <button name="next_stage" type="submit" class="btn btn-primary">
+          <i class="fa fa-arrow-right"></i> Submit Info
+      </button>
+		</form>
+	</div>
+{% endblock body %}
+
+{% block js %}
+<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+<script type="text/javascript" src="{% static "js/fancyfile.js" %}"></script>
+<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+<script>
+$(function() {
+  $( "#add_files_sort" ).sortable({
+    placeholder: "ui-state-highlight",
+    update: function (event, ui) {
+        var data = $(this).sortable('serialize');
+        console.log(data);
+
+        // POST to server using $.post or $.ajax
+        $.ajax({
+            data: data,
+            type: 'POST',
+            url: '/submission/book/{{ book.id }}/order/additional/'
+        });
+    }
+  });
+  $( "#add_files_sort" ).disableSelection();
+});
+</script>
+{% endblock %}
