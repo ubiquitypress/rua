@@ -24,8 +24,23 @@
   <h4 id="summary">Summary</h4>
   {% include "workflow/elements/summary.html" %}
   <hr />
-  <h4 id="files">Files</h4>
-  {% include "workflow/submission_files.html" %}
+  <div>
+
+    <!-- Nav tabs -->
+    <ul id="summary_tabs" class="nav nav-tabs" role="tablist">
+      <li role="presentation" class="active"><a href="#submission_files" aria-controls="home" role="tab" data-toggle="tab">Submission Files</a></li>
+      <li role="presentation"><a href="#misc_files" aria-controls="profile" role="tab" data-toggle="tab">Misc Files</a></li>
+      <li role="presentation"><a href="#contracts" aria-controls="messages" role="tab" data-toggle="tab">Contract</a></li>
+    </ul>
+
+    <!-- Tab panes -->
+    <div class="tab-content">
+      <div role="tabpanel" class="tab-pane active" id="submission_files">{% include "workflow/submission_files.html" %}</div>
+      <div role="tabpanel" class="tab-pane" id="misc_files">...</div>
+      <div role="tabpanel" class="tab-pane" id="contracts">{% include "workflow/contract.html" %}</div>
+    </div>
+
+  </div>
   <hr />
   {% if submission.book_type == 'monograph' %}
   <h4 id="files">Authors</h4>
@@ -45,26 +60,20 @@
 <script type="text/javascript" language="javascript" src="//cdn.datatables.net/plug-ins/1.10.7/integration/bootstrap/3/dataTables.bootstrap.js"></script>
 <link rel="stylesheet" href="http://code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css">
 <script src="http://code.jquery.com/ui/1.11.0/jquery-ui.js"></script>
+
 <script>
-  $(document).ready(function() {
-      $('#indv-reviewer').DataTable({
-        "lengthMenu": [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]]
-      });
-  } );
-
-  $(document).ready(function() {
-      $('#comm-reviewer').DataTable({
-        "lengthMenu": [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]]
-      });
-  } );
-
-  if (window.location.hash == "#indv-reviewer") {
-     $('#internalmodal').modal('show');
-}
-
-$(document).ready(function() {
-      $('#due_date').datepicker({ dateFormat: 'yy-mm-dd' }).val();
-  });
+$(function() {
+    // for bootstrap 3 use 'shown.bs.tab', for bootstrap 2 use 'shown' in the next line
+    $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+        // save the latest tab; use cookies if you like 'em better:
+        localStorage.setItem('lastTab', $(this).attr('href'));
+    });
+    // go to the latest tab, if it exists:
+    var lastTab = localStorage.getItem('lastTab');
+    if (lastTab) {
+        $('[href="' + lastTab + '"]').tab('show');
+    }
+});
 </script>
 
 

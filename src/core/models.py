@@ -108,9 +108,6 @@ class Book(models.Model):
 	doi = models.CharField(max_length=25, null=True, blank=True)
 	pages = models.CharField(max_length=10, null=True, blank=True)
 	slug = models.CharField(max_length=1000, null=True, blank=True)
-	files = models.ManyToManyField('File', null=True, blank=True)
-	internal_review_files = models.ManyToManyField('File', null=True, blank=True, related_name='internal_review_files')
-	external_review_files = models.ManyToManyField('File', null=True, blank=True, related_name='external_review_files')
 	cover_letter = models.TextField(null=True, blank=True, help_text="A covering letter for the Editors.")
 	reviewer_suggestions = models.TextField(null=True, blank=True)
 	competing_interests = models.TextField(null=True, blank=True, help_text="If any of the authors or editors have any competing interests please add them here. EG. 'This study was paid for by corp xyz.'")
@@ -131,6 +128,15 @@ class Book(models.Model):
 	review_assignments = models.ManyToManyField('ReviewAssignment', related_name='review', null=True, blank=True)
 	review_form = models.ForeignKey('review.Form', null=True, blank=True)
 
+	# Files
+	files = models.ManyToManyField('File', null=True, blank=True)
+	internal_review_files = models.ManyToManyField('File', null=True, blank=True, related_name='internal_review_files')
+	external_review_files = models.ManyToManyField('File', null=True, blank=True, related_name='external_review_files')
+	misc_files = models.ManyToManyField('File', null=True, blank=True, related_name='misc_files')
+
+	# Contract
+	contract = models.ForeignKey('Contract', null=True, blank=True)
+
 	def __unicode__(self):
 		return u'%s' % self.title
 
@@ -144,7 +150,18 @@ class Book(models.Model):
 		except IndexError:
 			return 0
 
+class Contract(models.Model):
+	title = models.CharField(max_length=1000)
+	notes = models.TextField(blank=True, null=True)
+	file = models.ForeignKey('File')
+	editor_signed_off = models.DateField(blank=True, null=True)
+	author_signed_off = models.DateField(blank=True, null=True)
 
+	def __unicode__(self):
+		return u'%s' % self.title
+
+	def __repr__(self):
+		return u'%s' % self.title
 
 def review_type_choices():
 	return (

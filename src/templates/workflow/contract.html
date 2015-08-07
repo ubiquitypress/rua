@@ -1,0 +1,21 @@
+{% if submission.contract %}
+<table class="table table-striped">
+	<tr>
+		<th width="10%">Title</th>
+		<th>Notes</th>
+		<th>File</th>
+		<th>Editor Sign Off</th>
+		<th>Author Sign Off</th>
+	</tr>
+	<tr>
+		<td>{{ submission.contract.title }}</td>
+		<td>{{ submission.contract.notes }}</td>
+		<td>{{ submission.file.original_filename }}</td>
+		<td>{{ submission.contract.editor_signed_off }}</td>
+    <td>{{ submission.contract.author_signed_off }}</td>
+	</tr>
+</table>
+{% else %}
+<br/>
+<p>This book doesn't have a contract. You can add one.</p>
+{% endif %}
