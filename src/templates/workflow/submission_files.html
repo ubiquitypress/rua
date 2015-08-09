@@ -1,8 +1,7 @@
 
 <table class="table table-striped">
 	<tr>
-		<th width="10%">Original File Name</th>
-		<th>New File Name</th>
+		<th>Label</th>
 		<th>Mimetype</th>
 		<th>File Type</th>
 		<th>Download</th>
@@ -12,8 +11,7 @@
 	</tr>
 {% for file in submission.files.all %}
 	<tr>
-		<td>{{ file.original_filename }}</td>
-  		<td>{{ file.uuid_filename }}</td>
+			<td>{{ file.label }}</td>
   		<td>{{ file.mime_type }}</td>
 			<td>{{file.kind }}</td>
 			<td><a href="{% url 'serve_file' submission.id file.id %}" class="btn btn-primary"><i class="fa fa-download">&nbsp;</i>Download</a></td>

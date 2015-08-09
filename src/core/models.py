@@ -68,6 +68,12 @@ class Profile(models.Model):
 	confirmation_code = models.CharField(max_length=200, blank=True, null=True)
 	roles = models.ManyToManyField('Role')
 
+	def full_name(self):
+		if self.middle_name:
+			return "%s %s %s" % (self.user.first_name, self.middle_name, self.user.last_name)
+		else:
+			return "%s %s" % (self.user.first_name, self.user.last_name)
+
 class Author(models.Model):
 	first_name = models.CharField(max_length=100)
 	middle_name = models.CharField(max_length=100, null=True, blank=True)

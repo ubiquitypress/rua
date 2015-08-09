@@ -29,6 +29,7 @@
     <div class="tab-content">
     {% for round in review_rounds%}
       <div role="tabpanel" class="tab-pane {% if forloop.first %}active{% endif %}" id="{{ round.round_number }}">
+        <br />
         <div class="inline-headers"><h4>Internal Review Files</h4><a href="{% url 'add_review_files' submission.id 'internal' %}" class="btn btn-sm btn-success" style="float: right;"{% if round.round_number != submission.get_latest_review_round %}disabled{% endif %}><i class="fa fa-plus">&nbsp;</i>Add Internal Review Files</a></div>
 
         {% include "workflow/review/reviewer_files.html" with file_data=submission.internal_review_files.all file_type='internal' %}
@@ -56,3 +57,20 @@
 </div>
 
 {% endblock %}
+
+{% block js %}
+<script>
+$(function() {
+    // for bootstrap 3 use 'shown.bs.tab', for bootstrap 2 use 'shown' in the next line
+    $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+        // save the latest tab; use cookies if you like 'em better:
+        localStorage.setItem('review_tab', $(this).attr('href'));
+    });
+    // go to the latest tab, if it exists:
+    var lastTab = localStorage.getItem('review_tab');
+    if (lastTab) {
+        $('[href="' + lastTab + '"]').tab('show');
+    }
+});
+</script>
+{% endblock js %}
