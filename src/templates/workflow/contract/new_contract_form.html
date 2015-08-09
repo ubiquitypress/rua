@@ -1,0 +1,47 @@
+  {% load bootstrap3 %}
+  <h2>Upload Contract</h2>
+  <p>If no author sign off date is set, the author will be emailed asking them to compelet the sign off process.</p>
+   <form method="post" class="form" enctype="multipart/form-data">
+     {% csrf_token %}
+     <div class="form-group">
+       <div class="col-md-4">
+         {% bootstrap_field new_contract_form.title %}
+      </div>
+      <div class="col-md-4">
+        {% bootstrap_field new_contract_form.editor_signed_off %}
+     </div>
+     <div class="col-md-4">
+       {% bootstrap_field new_contract_form.author_signed_off %}
+    </div>
+    <div class="col-md-12">
+      {% bootstrap_field new_contract_form.notes %}
+   </div>
+    <div class="col-md-12">
+     <div class="row">
+       <div class="col-md-6">
+        <label class="control-label" for="id_title">Contract File</label>
+          <div class="input-group">
+             <span class="input-group-btn">
+                 <span class="btn btn-primary btn-file">
+                     Browse&hellip; <input type="file" id="contract_file" name="contract_file">
+                 </span>
+             </span>
+             <input type="text" class="form-control" readonly>
+         </div>
+       </div>
+     </div>
+   </div>
+   <hr />
+   <div class="col-md-6">
+     <br />
+     <button name="next_stage" type="submit" class="btn btn-primary">
+         <i class="fa fa-file-o"></i> Upload Contract
+     </button>
+     {% if action == 'edit' %}
+     <a href="{% url 'contract_manager' submission.id %}" class="btn btn-danger">Cancel</a>
+     {% else %}
+     <a href="{% url 'view_new_submission' submission.id %}" class="btn btn-danger">Cancel</a>
+     {% endif %}
+   </div>
+   </div>
+   </form>

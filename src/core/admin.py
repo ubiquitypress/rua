@@ -64,6 +64,7 @@ admin_list = [
 	(Format,),
 	(Chapter,),
 	(ReviewRound, ReviewRoundAdmin),
+	(Contract,),
 ]
 
 [admin.site.register(*t) for t in admin_list]

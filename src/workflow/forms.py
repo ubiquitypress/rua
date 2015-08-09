@@ -22,3 +22,9 @@ class UpdateChapterFormat(forms.Form):
 
 	file = forms.FileField(required=True)
 	name = forms.CharField(required=True)
+
+class UploadContract(forms.ModelForm):
+
+	class Meta:
+		model = core_models.Contract
+		exclude = ('author_file',)

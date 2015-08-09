@@ -143,7 +143,6 @@ class Book(models.Model):
 	def __repr__(self):
 		return u'%s' % self.title
 
-
 	def get_latest_review_round(self):
 		try:
 			return self.reviewround_set.all().order_by('-round_number')[0].round_number
@@ -153,7 +152,8 @@ class Book(models.Model):
 class Contract(models.Model):
 	title = models.CharField(max_length=1000)
 	notes = models.TextField(blank=True, null=True)
-	file = models.ForeignKey('File')
+	editor_file = models.ForeignKey('File', related_name='editor_file', blank=True, null=True)
+	author_file = models.ForeignKey('File', related_name='author_file', blank=True, null=True)
 	editor_signed_off = models.DateField(blank=True, null=True)
 	author_signed_off = models.DateField(blank=True, null=True)
 

@@ -78,3 +78,13 @@ def send_proposal_revisions(proposal, email_text):
 
     email.send_email('[abp] Proposal Revisions Required', context, from_email.value, proposal.owner.email, email_text)
 
+
+def send_author_sign_off(submission, email_text):
+    from_email = models.Setting.objects.get(group__name='email', name='from_address')
+
+    context = {
+        'base_url': models.Setting.objects.get(group__name='general', name='base_url').value,
+        'submission': submission,
+    }
+
+    email.send_email('Book Contract Uploaded', context, from_email.value, submission.owner.email, email_text)

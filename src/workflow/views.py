@@ -13,8 +13,6 @@ from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Q
 from django.contrib.admin.views.decorators import staff_member_required
 from django.db import IntegrityError
-
-
 from django.conf import settings
 
 from core import models
@@ -668,7 +666,53 @@ def request_proposal_revisions(request, proposal_id):
 
 	return render(request, template, context)
 
+# Contracts
 
+@staff_member_required
+def contract_manager(request, submission_id, contract_id=None):
+	submission = get_object_or_404(models.Book, pk=submission_id)
+	action = 'normal'
+	if contract_id:
+		new_contract_form = forms.UploadContract(instance=submission.contract)
+		action = 'edit'
+	else:
+		new_contract_form = forms.UploadContract()
+
+	if request.POST:
+		if contract_id:
+			new_contract_form = forms.UploadContract(request.POST, request.FILE, instance=submission.contract)
+		else:
+			new_contract_form = forms.UploadContract(request.POST, request.FILES)
+		if new_contract_form.is_valid():
+			new_contract = new_contract_form.save(commit=False)
+
+			author_file = request.FILES.get('contract_file')
+			new_file = handle_file(author_file, submission, 'contract')
+
+			new_contract.editor_file = new_file
+			new_contract.save()
+			submission.contract = new_contract
+			submission.save()
+
+			if not new_contract.author_signed_off:
+				email_text = models.Setting.objects.get(group__name='email', name='contract_author_sign_off').value
+				logic.send_author_sign_off(submission, email_text)
+
+			if contract_id:
+				_kwargs = {'submission_id': submission.id, 'contract_id': contract_id}
+			else:
+				_kwargs = {'submission_id': submission.id}
+
+			return redirect(reverse('contract_maanger', kwargs=_kwargs))
+
+	template = 'workflow/contract/contract_manager.html'
+	context = {
+		'submission': submission,
+		'new_contract_form': new_contract_form,
+		'action': action,
+	}
+
+	return render(request, template, context)
 
 # File Handlers - should this be in Core?
 @login_required

@@ -1,0 +1,25 @@
+{% if submission.contract %}
+<table class="table table-striped">
+	<tr>
+		<th width="10%">Title</th>
+		<th>Notes</th>
+		<th>File</th>
+		<th>Editor Sign Off</th>
+		<th>Author Sign Off</th>
+		<th></th>
+		<th></th>
+	</tr>
+	<tr>
+		<td>{{ submission.contract.title }}</td>
+		<td>{{ submission.contract.notes }}</td>
+		<td>{{ submission.contract.editor_file.original_filename }}</td>
+		<td>{{ submission.contract.editor_signed_off }}</td>
+    <td>{{ submission.contract.author_signed_off }}</td>
+		<td><a href="{% url 'contract_manager' submission.id %}" class="btn btn-primary"><i class="fa fa-eye">&nbsp;</i>View</a></td>
+		<td><a href="{% url 'contract_manager_edit' submission.id submission.contract.id %}" class="btn btn-primary"><i class="fa fa-edit">&nbsp;</i>Edit</a></td>
+	</tr>
+</table>
+{% else %}
+<br/>
+<p>&nbsp;<i class="fa fa-file-o">&nbsp;</i>This book doesn't have a contract. You can <a href="{% url 'contract_manager' submission.id %}">add one</a>.</p>
+{% endif %}
