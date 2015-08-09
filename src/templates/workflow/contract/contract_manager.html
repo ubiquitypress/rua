@@ -41,8 +41,8 @@
       <th>Author File</th>
     </tr>
     <tr>
-      <td>{{ submission.contract.editor_file.original_filename }}</td>
-      <td>{% if submission.contract.author_file %}{{ submission.contract.author_file.original_filename }}{% else %}No file uploaded{% endif %}</td>
+      <td><a href="{% url 'serve_file' submission.id submission.contract.editor_file.id %}" class="btn btn-primary"><i class="fa fa-download">&nbsp;</i>Download</a></td>
+      <td>{% if submission.contract.author_file %}<a href="{% url 'serve_file' submission.id submission.contract.author_file.id %}" class="btn btn-primary"><i class="fa fa-download">&nbsp;</i>Download</a>{% else %}No file uploaded{% endif %}</td>
     </tr>
   </table>
   {% else %}

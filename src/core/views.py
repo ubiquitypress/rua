@@ -12,14 +12,20 @@ from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Q
 from django.core import serializers
+from django.conf import settings
 
 from core import models
 from core import forms
+from workflow import forms as workflow_forms
 from submission import models as submission_models
 
 from pprint import pprint
 import json
 from time import strftime
+from uuid import uuid4
+import os
+import mimetypes
+import mimetypes as mime
 
 # Website Views
 
@@ -162,6 +168,32 @@ def user_submission(request, submission_id):
 	return render(request, template, context)
 
 @login_required
+def author_contract_signoff(request, submission_id, contract_id):
+	contract = get_object_or_404(models.Contract, pk=contract_id)
+	submission = get_object_or_404(models.Book, pk=submission_id, owner=request.user, contract=contract)
+
+	if request.POST:
+		author_signoff_form = workflow_forms.AuthorContractSignoff(request.POST, request.FILES)
+		if author_signoff_form.is_valid():
+			author_file = request.FILES.get('author_file')
+			new_file = handle_file(author_file, submission, 'contract')
+			contract.author_file = new_file
+			contract.author_signed_off = timezone.now()
+			contract.save()
+			return redirect(reverse('user_submission', kwargs={'submission_id': submission_id}))
+	else:
+		author_signoff_form = workflow_forms.AuthorContractSignoff()
+
+	template = 'core/user/author_contract_signoff.html'
+	context = {
+		'submission': 'submission',
+		'contract': 'contract',
+		'author_signoff_form': 'author_signoff_form',
+	}
+
+	return render(request, template, context)
+
+@login_required
 def reset_password(request):
 
 	if request.method == 'POST':
@@ -236,3 +268,40 @@ def task_new(request):
 		return HttpResponse(json.dumps({'id': task.pk,'text': task.text}))
 	else:
 		return HttpResponse(new_task_form.errors)
+
+## File helpers
+def handle_file(file, book, kind):
+
+	original_filename = str(file._get_name())
+	filename = str(uuid4()) + str(os.path.splitext(original_filename)[1])
+	folder_structure = os.path.join(settings.BASE_DIR, 'files', 'books', str(book.id))
+
+	if not os.path.exists(folder_structure):
+		os.makedirs(folder_structure)
+
+	path = os.path.join(folder_structure, str(filename))
+	fd = open(path, 'wb')
+	for chunk in file.chunks():
+		fd.write(chunk)
+	fd.close()
+
+	file_mime = mime.guess_type(filename)
+
+	try:
+		file_mime = file_mime[0]
+	except IndexError:
+		file_mime = 'unknown'
+
+	if not file_mime:
+		file_mime = 'unknown'
+
+	new_file = models.File(
+		mime_type=file_mime,
+		original_filename=original_filename,
+		uuid_filename=filename,
+		stage_uploaded=1,
+		kind=kind,
+	)
+	new_file.save()
+
+	return new_file

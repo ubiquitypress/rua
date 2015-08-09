@@ -29,4 +29,8 @@ def press_settings():
 	return _dict
 
 def task_count(request):
-	return models.Task.objects.filter(assignee=request.user).count()
+	# TODO: change this to be handled based on whether the user is logged in or not.
+	try:
+		return models.Task.objects.filter(assignee=request.user, completed__isnull=True).count()
+	except TypeError:
+		return 0

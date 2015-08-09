@@ -703,7 +703,7 @@ def contract_manager(request, submission_id, contract_id=None):
 			else:
 				_kwargs = {'submission_id': submission.id}
 
-			return redirect(reverse('contract_maanger', kwargs=_kwargs))
+			return redirect(reverse('contract_manager', kwargs=_kwargs))
 
 	template = 'workflow/contract/contract_manager.html'
 	context = {

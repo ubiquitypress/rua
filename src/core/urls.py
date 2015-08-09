@@ -35,7 +35,7 @@ urlpatterns = patterns('',
     url(r'^user/task/(?P<task_id>[-\w./]+)/complete/$', 'core.views.task_complete', name='task_complete'),
 
     url(r'^user/submission/(?P<submission_id>\d+)/$', 'core.views.user_submission', name='user_submission'),
-
+    url(r'^user/submission/(?P<submission_id>\d+)/contract/(?P<contract_id>\d+)/signoff/$', 'core.views.author_contract_signoff', name='author_contract_signoff'),
     # Dashboard
     url(r'dashboard/$', 'core.views.dashboard', name='dashboard'),
 )
