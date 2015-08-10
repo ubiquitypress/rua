@@ -59,7 +59,7 @@
 				      </a>
 				  </div>
 				  <div class="panel-body">
-            <p class="small">Author: {{ submission.owner.profile.full_name }}</p>
+            <p class="small">{% if submission.book_type == 'monograph' %}Author{% else %}Editor{% endif %}: {{ submission.owner.profile.full_name }}</p>
 				    <p class="small">Submitted: {{ submission.submission_date }}</p>
 				  </div>
           <div class="panel-footer">
