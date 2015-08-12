@@ -23,4 +23,6 @@
     <td colspan="7">This submission has no misc files.&nbsp;<a href="{% url 'upload_misc_file' submission.id %}" class="btn btn-sm btn-primary"><i class="fa fa-upload">&nbsp;</i>Upload File</a></td>
   </tr>
 {% endfor %}
+
 </table>
+<a href="{% url 'upload_misc_file' submission.id %}" class="btn btn-sm btn-primary"><i class="fa fa-upload">&nbsp;</i>Upload File</a>
