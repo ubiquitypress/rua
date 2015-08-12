@@ -34,6 +34,9 @@ urlpatterns = patterns('',
     # Decline
     url(r'^submission/(?P<submission_id>\d+)/decline/$', 'workflow.views.decline_submission', name='decline_submission'),
 
+    # Misc files
+    url(r'^misc_files/(?P<submission_id>\d+)/upload/$', 'workflow.views.upload_misc_file', name='upload_misc_file'),
+
     # Review
     url(r'^review/$', 'workflow.views.in_review', name='in_review'),
     url(r'^review/(?P<submission_id>\d+)/$', 'workflow.views.view_review', name='view_review'),

@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% load static from staticfiles %}
+{% load bootstrap3 %}
+
+{% block title %}New Submissions{% endblock %}
+
+{% block breadcrumbs %}
+		<ol class="breadcrumb">
+		<li><a href="{% url 'user_home' %}">User Home</a></li>
+		<li class="">Workflow</li>
+		<li>{{ submission.title }}</li>
+		<li>Misc Files</li>
+		<li>{{ file.id }}</li>
+		<li class="active">Upload</li>
+	</ol>
+{% endblock %}
+
+{% block css %}
+	<link href="{% static "css/timeline.css" %}" rel="stylesheet">
+{% endblock %}
+
+{% block body %}
+<div class="col-md-12">
+	<h3>{{ submission.title }} File {{ file.id }} - Versions</h3>
+	<hr />
+	{% include "workflow/elements/workflow_view_buttons.html" %}
+		<form method="post" enctype="multipart/form-data">
+			{% csrf_token %}
+			<div class="well">
+				<p>You can upload a misc file below. These files can be anything related to the submission that aren't used for typesetting or contracts etc.</p>
+        {% bootstrap_form file_form %}
+        <div class="form-group">
+					<div class="row">
+						<div class="col-md-6">
+              <label class="control-label" for="id_label">File</label>
+							 <div class="input-group">
+									<span class="input-group-btn">
+											<span class="btn btn-primary btn-file">
+													Browse&hellip; <input type="file" id="misc_file" name="misc_file">
+											</span>
+									</span>
+									<input type="text" class="form-control" readonly>
+							</div>
+							<div class="input-group">
+									<br />
+									<button class="btn btn-primary" type="submit" name="update" id="update"><i class="fa fa-cloud-upload">&nbsp;</i>Upload</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</form
+</div>
+
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript" src="{% static "js/fancyfile.js" %}"></script>
+{% endblock %}

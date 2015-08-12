@@ -11,12 +11,12 @@
 	</tr>
 	<tr>
 		<td>{{ submission.contract.title }}</td>
-		<td><a href="{% url 'serve_file' submission.id submission.contract.editor_file.id %}" class="btn btn-primary"><i class="fa fa-download">&nbsp;</i>Download</a></td>
-		{% if submission.contract.author_file %}<td><a href="{% url 'serve_file' submission.id submission.contract.author_file.id %}" class="btn btn-primary"><i class="fa fa-download">&nbsp;</i>Download</a></td>{% endif %}
+		<td><a href="{% url 'serve_file' submission.id submission.contract.editor_file.id %}" class="btn btn-sm btn-primary"><i class="fa fa-download">&nbsp;</i>Download</a></td>
+		{% if submission.contract.author_file %}<td><a href="{% url 'serve_file' submission.id submission.contract.author_file.id %}" class="btn btn-sm btn-primary"><i class="fa fa-download">&nbsp;</i>Download</a></td>{% endif %}
 		<td>{{ submission.contract.editor_signed_off }}</td>
     <td>{{ submission.contract.author_signed_off }}</td>
-		<td><a href="{% url 'contract_manager' submission.id %}" class="btn btn-primary"><i class="fa fa-eye">&nbsp;</i>View</a></td>
-		<td><a href="{% url 'contract_manager_edit' submission.id submission.contract.id %}" class="btn btn-primary"><i class="fa fa-edit">&nbsp;</i>Edit</a></td>
+		<td><a href="{% url 'contract_manager' submission.id %}" class="btn btn-sm btn-primary"><i class="fa fa-eye">&nbsp;</i>View</a></td>
+		<td><a href="{% url 'contract_manager_edit' submission.id submission.contract.id %}" class="btn btn-sm btn-primary"><i class="fa fa-edit">&nbsp;</i>Edit</a></td>
 	</tr>
 </table>
 {% else %}

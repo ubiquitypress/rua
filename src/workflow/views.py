@@ -714,6 +714,27 @@ def contract_manager(request, submission_id, contract_id=None):
 
 	return render(request, template, context)
 
+@staff_member_required
+def upload_misc_file(request, submission_id):
+
+	submission = get_object_or_404(models.Book, pk=submission_id)
+	if request.POST:
+		file_form = forms.UploadMiscFile(request.POST)
+		if file_form.is_valid():
+			new_file = handle_file(request.FILES.get('misc_file'), submission, file_form.cleaned_data.get('file_type'), file_form.cleaned_data.get('label'))
+			submission.misc_files.add(new_file)
+			return redirect(reverse('view_new_submission', kwargs={'submission_id': submission.id}))
+	else:
+		file_form = forms.UploadMiscFile()
+
+	template = 'workflow/misc_files/upload.html'
+	context = {
+		'submission': submission,
+		'file_form': file_form,
+	}
+
+	return render(request, template, context)
+
 # File Handlers - should this be in Core?
 @login_required
 def serve_file(request, submission_id, file_id):
@@ -839,7 +860,7 @@ def handle_file_update(file, old_file, book, kind):
 	return path
 
 ## File helpers
-def handle_file(file, book, kind):
+def handle_file(file, book, kind, label=None):
 
 	original_filename = str(file._get_name())
 	filename = str(uuid4()) + str(os.path.splitext(original_filename)[1])
@@ -870,6 +891,7 @@ def handle_file(file, book, kind):
 		uuid_filename=filename,
 		stage_uploaded=1,
 		kind=kind,
+		label=label,
 	)
 	new_file.save()
 
