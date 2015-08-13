@@ -106,7 +106,12 @@ def activate(request, code):
 
 @login_required
 def view_profile(request):
-	user_profile = models.Profile.objects.get(user=request.user)
+	try:
+		user_profile = models.Profile.objects.get(user=request.user)
+	except:
+		user_profile = models.Profile(user=request.user)
+		user_profile.save()
+
 
 	template = 'core/user/profile.html'
 	context = {

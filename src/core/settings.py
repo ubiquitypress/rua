@@ -14,6 +14,7 @@ import os
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 BOOK_DIR = os.path.join(BASE_DIR, 'files', 'books')
 
+SITE_ID = 1
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.7/howto/deployment/checklist/
@@ -35,6 +36,7 @@ BASE_URL = 'http://localhost:8000/'
 
 INSTALLED_APPS = (
     'flat',
+    'django.contrib.sites',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -53,6 +55,15 @@ INSTALLED_APPS = (
     'bootstrap3',
     'debug_toolbar',
     'django_summernote',
+
+     'allauth',
+     'allauth.account',
+     'allauth.socialaccount',
+     # allauth providers
+     'allauth.socialaccount.providers.github',
+     'allauth.socialaccount.providers.google',
+     'allauth.socialaccount.providers.orcid',
+     'allauth.socialaccount.providers.twitter',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -109,24 +120,33 @@ STATICFILES_DIRS = (
 )
 STATIC_URL = '/static/'
 
-# Templates
-TEMPLATE_DIRS = (
-    os.path.join(BASE_DIR, 'templates'),
-)
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [
+            os.path.join(BASE_DIR, 'templates'),
+        ],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                # Already defined Django-related contexts here
+                "django.contrib.auth.context_processors.auth",
+                "django.core.context_processors.debug",
+                "django.core.context_processors.i18n",
+                "django.core.context_processors.media",
+                "django.core.context_processors.static",
+                "django.core.context_processors.tz",
+                "django.contrib.messages.context_processors.messages",
+                "django.core.context_processors.request",
 
-TEMPLATE_CONTEXT_PROCESSORS = (
-    "django.contrib.auth.context_processors.auth",
-    "django.core.context_processors.debug",
-    "django.core.context_processors.i18n",
-    "django.core.context_processors.media",
-    "django.core.context_processors.static",
-    "django.core.context_processors.tz",
-    "django.contrib.messages.context_processors.messages",
-    "django.core.context_processors.request",
-
-    "core.context_processors.press",
-    "core.context_processors.task_count",
-)
+                "core.context_processors.press",
+                "core.context_processors.task_count",
+                # `allauth` needs this from django
+                'django.template.context_processors.request',
+            ],
+        },
+    },
+]
 
 # Media
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
@@ -167,3 +187,11 @@ SUMMERNOTE_CONFIG = {
     # Need authentication while uploading attachments.
     'attachment_require_authentication': True,
 }
+
+AUTHENTICATION_BACKENDS = (
+    # Needed to login by username in Django admin, regardless of `allauth`
+    'django.contrib.auth.backends.ModelBackend',
+
+    # `allauth` specific authentication methods, such as login by e-mail
+    'allauth.account.auth_backends.AuthenticationBackend',
+)
