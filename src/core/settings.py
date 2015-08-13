@@ -50,11 +50,13 @@ INSTALLED_APPS = (
     'workflow',
     'manager',
     'review',
+    'api',
 
     # 3rd Party
     'bootstrap3',
     'debug_toolbar',
     'django_summernote',
+    'rest_framework',
 
      'allauth',
      'allauth.account',

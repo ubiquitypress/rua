@@ -99,6 +99,12 @@ class Author(models.Model):
 	def __repr__(self):
 		return u'%s - %s %s' % (self.pk, self.first_name, self.last_name)
 
+	def full_name(self):
+		if self.middle_name:
+			return "%s %s %s" % (self.user.first_name, self.middle_name, self.user.last_name)
+		else:
+			return "%s %s" % (self.user.first_name, self.user.last_name)
+
 class Book(models.Model):
 	prefix = models.CharField(max_length=100, null=True, blank=True)
 	title = models.CharField(max_length=1000, null=True, blank=True)
@@ -154,6 +160,23 @@ class Book(models.Model):
 			return self.reviewround_set.all().order_by('-round_number')[0].round_number
 		except IndexError:
 			return 0
+
+	def authors_or_editors(self):
+		authors_or_editors = []
+		if self.book_type == 'monograph':
+			for author in self.author.all():
+				if author.middle_name:
+					authors_or_editors.append("%s %s %s" % (author.first_name, author.middle_name, author.last_name))
+				else:
+					authors_or_editors.append("%s %s" % (author.first_name, author.last_name))
+		elif self.book_type == 'edited_volume':
+			for editor in self.editor.all():
+				if editor.middle_name:
+					authors_or_editors.append("%s %s %s" % (editor.first_name, editor.middle_name, editor.last_name))
+				else:
+					authors_or_editors.append("%s %s" % (editor.first_name, editor.last_name))
+
+		return authors_or_editors
 
 class Contract(models.Model):
 	title = models.CharField(max_length=1000)
@@ -274,6 +297,12 @@ class Editor(models.Model):
 
 	def __repr__(self):
 		return u'%s - %s %s' % (self.pk, self.first_name, self.last_name)
+
+	def full_name(self):
+		if self.middle_name:
+			return "%s %s %s" % (self.user.first_name, self.middle_name, self.user.last_name)
+		else:
+			return "%s %s" % (self.user.first_name, self.user.last_name)
 
 class File(models.Model):
 	mime_type = models.CharField(max_length=50)

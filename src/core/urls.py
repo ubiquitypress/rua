@@ -12,8 +12,13 @@ urlpatterns = patterns('',
     url(r'^workflow/', include('workflow.urls')),
     url(r'^manager/', include('manager.urls')),
     url(r'^review/', include('review.urls')),
+    url(r'^api/', include('api.urls')),
+
+
+    # 3rd Party Apps
     url(r'^summernote/', include('django_summernote.urls')),
     url(r'^accounts/', include('allauth.urls')),
+    url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 
     url(r'^$', 'core.views.index', name='index'),
     url(r'^contact/$', 'core.views.contact', name='contact'),
