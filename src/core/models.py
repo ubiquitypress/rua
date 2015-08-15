@@ -178,6 +178,9 @@ class Book(models.Model):
 
 		return authors_or_editors
 
+	def formats(self):
+		return self.format_set.all()
+
 class Contract(models.Model):
 	title = models.CharField(max_length=1000)
 	notes = models.TextField(blank=True, null=True)
@@ -451,30 +454,30 @@ class Format(models.Model):
 	book = models.ForeignKey(Book)
 	file = models.ForeignKey(File)
 	name = models.CharField(max_length=200)
-	indentifier = models.CharField(max_length=200, unique=True)
+	identifier = models.CharField(max_length=200, unique=True)
 	sequence = models.IntegerField(default=9999)
 
 	class Meta:
 		ordering = ('sequence', 'name')
 
 	def __unicode__(self):
-		return u'%s - %s' % (self.book, self.indentifier)
+		return u'%s - %s' % (self.book, self.identifier)
 
 	def __repr__(self):
-		return u'%s - %s' % (self.book, self.indentifier)
+		return u'%s - %s' % (self.book, self.identifier)
 
 class Chapter(models.Model):
 	book = models.ForeignKey(Book)
 	file = models.ForeignKey(File)
 	name = models.CharField(max_length=200)
-	indentifier = models.CharField(max_length=200, unique=True)
+	identifier = models.CharField(max_length=200, unique=True)
 	sequence = models.IntegerField(default=9999)
 
 	class Meta:
 		ordering = ('sequence', 'name')
 
 	def __unicode__(self):
-		return u'%s - %s' % (self.book, self.indentifier)
+		return u'%s - %s' % (self.book, self.identifier)
 
 	def __repr__(self):
-		return u'%s - %s' % (self.book, self.indentifier)
+		return u'%s - %s' % (self.book, self.identifier)

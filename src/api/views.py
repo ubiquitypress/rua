@@ -9,6 +9,7 @@ from django.conf.urls import url, include
 from django.contrib.auth.models import User
 from rest_framework import routers, serializers, viewsets
 from rest_framework import permissions
+from rest_framework.permissions import IsAuthenticated
 
 from api import serializers
 
@@ -42,7 +43,20 @@ def index(request):
 
 class BookViewSet(viewsets.ModelViewSet):
     """
-    API endpoint that allows users to be viewed or edited.
+    API endpoint that allows books to be viewed or edited.
     """
     queryset = models.Book.objects.all().order_by('-submission_date')
     serializer_class = serializers.BookSerializer
+
+
+class AuthorViewSet(viewsets.ModelViewSet):
+
+    queryset = models.Author.objects.all()
+    serializer_class = serializers.AuthorSerializer
+
+class JuraBookViewSet(viewsets.ModelViewSet):
+
+    permission_classes = (IsAuthenticated,)
+
+    queryset = models.Book.objects.all().order_by('-submission_date')
+    serializer_class = serializers.JuraBookSerializer
