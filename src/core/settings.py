@@ -51,7 +51,7 @@ INSTALLED_APPS = (
 
     # 3rd Party
     'bootstrap3',
-    'debug_toolbar',
+    #'debug_toolbar',
     'django_summernote',
 )
 
@@ -125,7 +125,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.request",
 
     "core.context_processors.press",
-    "core.context_processors.task_count",
+    #"core.context_processors.task_count",
 )
 
 # Media

@@ -10,18 +10,22 @@ from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse, HttpResponseForbidden
 from django.utils import timezone
+from django.db.models import Q
 
 from submission import forms
 from core import models as core_models
 from core import log
+from core import logic as core_logic
 from submission import logic
 from submission import models as submission_models
-from core import logic as core_logic
+from manager import forms as manager_forms
+
 
 import mimetypes as mime
 from uuid import uuid4
 import os
 from pprint import pprint
+import json
 
 @login_required
 def start_submission(request, book_id=None):
@@ -284,13 +288,28 @@ def editor(request, book_id, editor_id=None):
 @login_required
 def start_proposal(request):
 
-	proposal_form = forms.SubmitProposal()
+	proposal_form_id = core_models.Setting.objects.get(name='proposal_form').value
+	proposal_form = manager_forms.GeneratedForm(form=core_models.ProposalForm.objects.get(pk=proposal_form_id))
 
 	if request.method == 'POST':
-		proposal_form = forms.SubmitProposal(request.POST, request.FILES)
+		proposal_form = manager_forms.GeneratedForm(request.POST,form=core_models.ProposalForm.objects.get(pk=proposal_form_id))
 		if proposal_form.is_valid():
-			proposal = proposal_form.save(commit=False)
-			proposal.owner = request.user
+			save_dict = {}
+			file_fields = core_models.ProposalFormElement.objects.filter(proposalform=core_models.ProposalForm.objects.get(pk=proposal_form_id), field_type='upload')
+			data_fields = core_models.ProposalFormElement.objects.filter(~Q(field_type='upload'), proposalform=core_models.ProposalForm.objects.get(pk=proposal_form_id))
+
+			for field in file_fields:
+				if field.name in request.FILES:
+					# TODO change value from string to list [value, value_type]
+					save_dict[field.name] = [handle_proposal_file(request.FILES[field.name], submission, review_assignment, 'reviewer')]
+
+			for field in data_fields:
+				if field.name in request.POST:
+					# TODO change value from string to list [value, value_type]
+					save_dict[field.name] = [request.POST.get(field.name), 'text']
+
+			json_data = json.dumps(save_dict)
+			proposal = submission_models.Proposal(form=core_models.ProposalForm.objects.get(pk=proposal_form_id), data=json_data, owner=request.user)
 			proposal.save()
 			messages.add_message(request, messages.SUCCESS, 'Proposal %s submitted' % proposal.id)
 			return redirect(reverse('user_home'))

@@ -398,7 +398,7 @@ class SettingGroup(models.Model):
 		return u'%s' % self.name
 
 class Setting(models.Model):
-	name = models.CharField(max_length=100)
+	name = models.CharField(max_length=100, unique=True)
 	group = models.ForeignKey(SettingGroup)
 	types = models.CharField(max_length=20, choices=setting_types)
 	value = models.TextField(null=True, blank=True)
@@ -443,3 +443,54 @@ class Chapter(models.Model):
 
 	def __repr__(self):
 		return u'%s - %s' % (self.book, self.indentifier)
+
+class ProposalForm(models.Model):
+	name = models.CharField(max_length=100)
+	ref = models.CharField(max_length=20, help_text='for proposals: press_code-proposal eg. sup-proposal')
+	intro_text = models.TextField(max_length=1000, help_text='Accepts HTML. Para elements should be wrapped in paragraph tags or they will not have fonts.')
+	completion_text = models.TextField(max_length=1000, help_text='Accepts HTML. Para elements should be wrapped in paragraph tags or they will not have fonts.')
+	fields = models.ManyToManyField('ProposalFormElement', through='ProposalFormElementsRelationship')
+
+	def __unicode__(self):
+		return u'%s' % self.name
+	def __repr__(self):
+		return u'%s' % self.name
+
+
+class ProposalFormElement(models.Model):
+	field_choices = (
+		('text', 'Text Field'),
+		('textarea', 'Text Area'),
+		('check', 'Check Box'),
+		('select', 'Select'),
+		('email', 'Email'),
+		('upload', 'Upload'),
+		('date', 'Date'),
+	)
+
+	name = models.CharField(max_length=100)
+	choices = models.CharField(max_length=500, null=True, blank=True, help_text='Seperate choices with the bar | character.')
+	field_type = models.CharField(max_length=100, choices=field_choices)
+	required = models.BooleanField()
+
+	def __unicode__(self):
+		return '%s' % (self.name)
+
+	def __repr__(self):
+		return '<FormElement %s>' % (self.name)
+
+class ProposalFormElementsRelationship(models.Model):
+	form = models.ForeignKey(ProposalForm)
+	element = models.ForeignKey(ProposalFormElement)
+	order = models.IntegerField()
+	element_class = models.CharField(max_length=20, null=True, blank=True)
+	help_text = models.TextField(max_length=1000, null=True, blank=True)
+
+	def __unicode__(self):
+		return '%s: %s' % (self.form.name, self.element.name)
+
+	def __repr__(self):
+		return '<FormElementsRelation %s: %s' % (self.form.name, self.element.name)
+
+	class Meta:
+		ordering = ('order',)

@@ -12,45 +12,22 @@
    <p>Please complete the form below. Your proposal will then be scruitinised by our committe and if approved, you will be invited to complete a full submission.</p>
     <form method="post" class="form" enctype="multipart/form-data">
 	    {% csrf_token %}
-		  <div class="form-group">
-        <div class="row">
-		  		<div class="col-md-6">{% bootstrap_field proposal_form.title %}</div>
-		  		<div class="col-md-6">{% bootstrap_field proposal_form.subtitle %}</div>
-		  	</div>
-      </div>
-      <hr />
-		  <div class="form-group">
-		  	<div class="row">
-		  		<div class="col-md-12">{% bootstrap_field proposal_form.description %}</div>
-		  	</div>
-		  </div>
-		  <hr />
-      <div class="form-group">
-        <div class="row">
-		  		<div class="col-md-6">{% bootstrap_field proposal_form.funding %}</div>
-		  		<div class="col-md-6">{% bootstrap_field proposal_form.notes %}</div>
-		  	</div>
-      </div>
-      <hr />
-      <div class="col-md-12">
-        <label class="control-label" for="id_uploaded_file">Supporting File</label><br />
-             <div class="input-group">
-                <span class="input-group-btn">
-                    <span class="btn btn-primary btn-file">
-                        Browse&hellip; <input type="file" id="id_uploaded_file" name="uploaded_file">
-                    </span>
-                </span>
-                <input type="text" class="form-control" readonly>
-            </div>
-         </div>
-      <div class="col-md-12">
-        <br /><br />
+        {% for field in proposal_form %}
+            <div class="{% if field.field.widget.attrs.div_class %}{{ field.field.widget.attrs.div_class }}{% else %}col-md-12{% endif %}">
+            {% if field.field.widget.attrs.is_checkbox %}
+              {% if field.errors %}<span class="red">{{ field.errors|join:", " }}</span><br />{% endif %}
+              {{ field }} {% if field.field.help_text %}<span class="small">{{ field.field.help_text|safe }}</span>{% endif %}
+            {% else %}
+                 {% if field.errors %}<span class="red">{{ field.errors|join:", " }}</span>{% endif %}
+                 {% bootstrap_field field %}
+              {% endif %}
+              </div>
+          {% endfor %}
 	    {% buttons %}
 	        <button name="book" type="submit" class="btn btn-primary">
 	            <i class="fa fa-upload"></i> Submit
 	        </button>
 	    {% endbuttons %}
-    </div>
 		</form>
 	</div>
 {% endblock body %}
