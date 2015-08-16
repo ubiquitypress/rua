@@ -79,6 +79,7 @@ admin_list = [
 	(ProposalForm, ProposalFormAdmin),
     (ProposalFormElement, ProposalFormElementAdmin),
     #(ProposalFormResult, ProposalFormResultAdmin),
+	(Contract,),
 ]
 
 [admin.site.register(*t) for t in admin_list]

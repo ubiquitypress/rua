@@ -1,15 +1,15 @@
 
 <table class="table table-striped">
 	<tr>
+		<th>Label</th>
 		<th>Original File Name</th>
-		<th>New File Name</th>
 		<th>Mimetype</th>
 		<th>File Type</th>
 	</tr>
 {% for file in submission.files.all %}
 	<tr>
-		<td>{{ file.original_filename }}</td>
-  		<td>{{ file.uuid_filename }}</td>
+		  <td>{{ file.label }}</td>
+  		<td>{{ file.original_filename }}</td>
   		<td>{{ file.mime_type }}</td>
 		<td>{{ file.kind }}</td>
   	</tr>

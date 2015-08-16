@@ -19,7 +19,19 @@
   {% include "workflow/elements/summary.html" %}
   <hr />
   <h4 id="files">Files</h4>
-  {% include "core/user/read_only_file_block.html" %}
+  <!-- Nav tabs -->
+  <ul id="summary_tabs" class="nav nav-tabs" role="tablist">
+    <li role="presentation" class="active"><a href="#submission_files" aria-controls="home" role="tab" data-toggle="tab">Submission Files</a></li>
+    <li role="presentation"><a href="#misc_files" aria-controls="profile" role="tab" data-toggle="tab">Misc Files</a></li>
+    <li role="presentation"><a href="#contracts" aria-controls="messages" role="tab" data-toggle="tab">Contract</a></li>
+  </ul>
+
+  <!-- Tab panes -->
+  <div class="tab-content">
+    <div role="tabpanel" class="tab-pane active" id="submission_files">{% include "core/user/read_only_file_block.html" %}</div>
+    <div role="tabpanel" class="tab-pane" id="misc_files">...</div>
+    <div role="tabpanel" class="tab-pane" id="contracts">{% include "core/user/contract.html" %}</div>
+  </div>
   <hr />
   <h4 id="files">Authors</h4>
   {% include "core/user/authors.html" %}

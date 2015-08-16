@@ -1,4 +1,3 @@
-
 <table class="table table-striped">
 	<tr>
 		<th>Label</th>
@@ -9,15 +8,21 @@
 		<th>Versions</th>
 		<th>Delete</th>
 	</tr>
-{% for file in submission.files.all %}
+{% for file in submission.misc_files.all %}
 	<tr>
 			<td>{{ file.label }}</td>
   		<td>{{ file.mime_type }}</td>
-			<td>{{file.kind }}</td>
+			<td>{{file.kind|capfirst }}</td>
 			<td><a href="{% url 'serve_file' submission.id file.id %}" class="btn btn-sm btn-primary"><i class="fa fa-download">&nbsp;</i>Download</a></td>
 			<td><a href="{% url 'update_file' submission.id file.id active %}" class="btn btn-sm btn-primary"><i class="fa fa-cloud-upload">&nbsp;</i>Update</a></td>
   		<td><a href="{% url 'versions_file' submission.id file.id %}" class="btn btn-sm btn-primary"><i class="fa fa-files-o">&nbsp;</i>Versions</a></td>
   		<td><a href="{% url 'delete_file' submission.id file.id active %}" class="btn btn-sm btn-primary"><i class="fa fa-trash-o">&nbsp;</i>Delete</a></td>
   	</tr>
+{% empty %}
+  <tr>
+    <td colspan="7">This submission has no misc files.&nbsp;<a href="{% url 'upload_misc_file' submission.id %}" class="btn btn-sm btn-primary"><i class="fa fa-upload">&nbsp;</i>Upload File</a></td>
+  </tr>
 {% endfor %}
+
 </table>
+<a href="{% url 'upload_misc_file' submission.id %}" class="btn btn-sm btn-primary"><i class="fa fa-upload">&nbsp;</i>Upload File</a>

@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% load static from staticfiles %}
+{% load bootstrap3 %}
+
+{% block title %}Contract Manager{% endblock %}
+
+{% block breadcrumbs %}
+    <ol class="breadcrumb">
+	  <li><a href="{% url 'user_home' %}">User Home</a></li>
+	  <li class="">Workflow</li>
+    <li><a href="">Contract</a></li>
+    <li class="active">{{ submission.title }}</li>
+	</ol>
+{% endblock %}
+{% block body %}
+	<div class="col-md-12">
+  {% if submission.contract and action == 'normal' %}
+  <h4>Contract Info - <a href="{% url 'contract_manager_edit' submission.id submission.contract.id %}"><i class="fa fa-edit">&nbsp;</i></a></h4>
+  <table class="table table-striped">
+  	<tr>
+  		<th width="40%">Title</th>
+  		<th>Editor Sign Off</th>
+  		<th>Author Sign Off</th>
+  	</tr>
+  	<tr>
+  		<td>{{ submission.contract.title }}</td>
+  		<td>{{ submission.contract.editor_signed_off }}</td>
+      <td>{{ submission.contract.author_signed_off }}</td>
+  	</tr>
+    <tr>
+      <th colspan="4">Notes</th>
+    </tr>
+    <tr>
+      <td colspan="4">{% if submission.contract.notes %}{{ submission.contract.notes }}{% else %}No notes entered{% endif %}</td>
+    </tr>
+  </table>
+  <h4>Contract Files</h4>
+  <table class="table table-striped">
+    <tr>
+      <th>Editor File</th>
+      <th>Author File</th>
+    </tr>
+    <tr>
+      <td><a href="{% url 'serve_file' submission.id submission.contract.editor_file.id %}" class="btn btn-primary"><i class="fa fa-download">&nbsp;</i>Download</a></td>
+      <td>{% if submission.contract.author_file %}<a href="{% url 'serve_file' submission.id submission.contract.author_file.id %}" class="btn btn-primary"><i class="fa fa-download">&nbsp;</i>Download</a>{% else %}No file uploaded{% endif %}</td>
+    </tr>
+  </table>
+  {% else %}
+  {% include "workflow/contract/new_contract_form.html" %}
+  {% endif %}
+{% endblock body %}
+
+{% block js %}
+{{ block.super }}
+<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+<script type="text/javascript" src="{% static "js/fancyfile.js" %}"></script>
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css">
+<script src="http://code.jquery.com/ui/1.11.0/jquery-ui.js"></script>
+ <script>
+  $(document).ready(function() {
+        $('#id_editor_signed_off').datepicker({ dateFormat: 'yy-mm-dd' }).val();
+        $('#id_author_signed_off').datepicker({ dateFormat: 'yy-mm-dd' }).val();
+    });
+  </script>
+{% endblock js %}

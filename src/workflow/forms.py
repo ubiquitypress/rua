@@ -22,3 +22,20 @@ class UpdateChapterFormat(forms.Form):
 
 	file = forms.FileField(required=True)
 	name = forms.CharField(required=True)
+
+class UploadContract(forms.ModelForm):
+
+	class Meta:
+		model = core_models.Contract
+		exclude = ('author_file',)
+
+class AuthorContractSignoff(forms.ModelForm):
+
+	class Meta:
+		model = core_models.Contract
+		fields = ('author_file',)
+
+class UploadMiscFile(forms.Form):
+
+	label = forms.CharField(required=True)
+	file_type = forms.ChoiceField(required=True, choices=(('marketing', 'Marketing'), ('agreements', 'Agreements'), ('other', 'Other')))

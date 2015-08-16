@@ -12,6 +12,13 @@
         <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
         <br />
         <p class="small">Forgotten your password? <a href="{% url 'unauth_reset' %}">Reset it.</a></p>
+        <br />
+        <p class="small">OR, if you've connected your ORCiD to your account you can login with it.</p>
+        <div class="login-with-links">
+	        <a href="/accounts/orcid/login/" class="orcid-login">
+	          Log in With ORCiD
+	        </a>
+	      </div>
     </form>
 
 {% endblock body %}

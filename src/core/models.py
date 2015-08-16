@@ -68,6 +68,12 @@ class Profile(models.Model):
 	confirmation_code = models.CharField(max_length=200, blank=True, null=True)
 	roles = models.ManyToManyField('Role')
 
+	def full_name(self):
+		if self.middle_name:
+			return "%s %s %s" % (self.user.first_name, self.middle_name, self.user.last_name)
+		else:
+			return "%s %s" % (self.user.first_name, self.user.last_name)
+
 class Author(models.Model):
 	first_name = models.CharField(max_length=100)
 	middle_name = models.CharField(max_length=100, null=True, blank=True)
@@ -92,6 +98,12 @@ class Author(models.Model):
 
 	def __repr__(self):
 		return u'%s - %s %s' % (self.pk, self.first_name, self.last_name)
+
+	def full_name(self):
+		if self.middle_name:
+			return "%s %s %s" % (self.user.first_name, self.middle_name, self.user.last_name)
+		else:
+			return "%s %s" % (self.user.first_name, self.user.last_name)
 
 class Book(models.Model):
 	prefix = models.CharField(max_length=100, null=True, blank=True)
@@ -143,17 +155,37 @@ class Book(models.Model):
 	def __repr__(self):
 		return u'%s' % self.title
 
-
 	def get_latest_review_round(self):
 		try:
 			return self.reviewround_set.all().order_by('-round_number')[0].round_number
 		except IndexError:
 			return 0
 
+	def authors_or_editors(self):
+		authors_or_editors = []
+		if self.book_type == 'monograph':
+			for author in self.author.all():
+				if author.middle_name:
+					authors_or_editors.append("%s %s %s" % (author.first_name, author.middle_name, author.last_name))
+				else:
+					authors_or_editors.append("%s %s" % (author.first_name, author.last_name))
+		elif self.book_type == 'edited_volume':
+			for editor in self.editor.all():
+				if editor.middle_name:
+					authors_or_editors.append("%s %s %s" % (editor.first_name, editor.middle_name, editor.last_name))
+				else:
+					authors_or_editors.append("%s %s" % (editor.first_name, editor.last_name))
+
+		return authors_or_editors
+
+	def formats(self):
+		return self.format_set.all()
+
 class Contract(models.Model):
 	title = models.CharField(max_length=1000)
 	notes = models.TextField(blank=True, null=True)
-	file = models.ForeignKey('File')
+	editor_file = models.ForeignKey('File', related_name='editor_file', blank=True, null=True)
+	author_file = models.ForeignKey('File', related_name='author_file', blank=True, null=True)
 	editor_signed_off = models.DateField(blank=True, null=True)
 	author_signed_off = models.DateField(blank=True, null=True)
 
@@ -268,6 +300,12 @@ class Editor(models.Model):
 
 	def __repr__(self):
 		return u'%s - %s %s' % (self.pk, self.first_name, self.last_name)
+
+	def full_name(self):
+		if self.middle_name:
+			return "%s %s %s" % (self.user.first_name, self.middle_name, self.user.last_name)
+		else:
+			return "%s %s" % (self.user.first_name, self.user.last_name)
 
 class File(models.Model):
 	mime_type = models.CharField(max_length=50)
@@ -416,30 +454,30 @@ class Format(models.Model):
 	book = models.ForeignKey(Book)
 	file = models.ForeignKey(File)
 	name = models.CharField(max_length=200)
-	indentifier = models.CharField(max_length=200, unique=True)
+	identifier = models.CharField(max_length=200, unique=True)
 	sequence = models.IntegerField(default=9999)
 
 	class Meta:
 		ordering = ('sequence', 'name')
 
 	def __unicode__(self):
-		return u'%s - %s' % (self.book, self.indentifier)
+		return u'%s - %s' % (self.book, self.identifier)
 
 	def __repr__(self):
-		return u'%s - %s' % (self.book, self.indentifier)
+		return u'%s - %s' % (self.book, self.identifier)
 
 class Chapter(models.Model):
 	book = models.ForeignKey(Book)
 	file = models.ForeignKey(File)
 	name = models.CharField(max_length=200)
-	indentifier = models.CharField(max_length=200, unique=True)
+	identifier = models.CharField(max_length=200, unique=True)
 	sequence = models.IntegerField(default=9999)
 
 	class Meta:
 		ordering = ('sequence', 'name')
 
 	def __unicode__(self):
-		return u'%s - %s' % (self.book, self.indentifier)
+		return u'%s - %s' % (self.book, self.identifier)
 
 	def __repr__(self):
 		return u'%s - %s' % (self.book, self.indentifier)
@@ -494,3 +532,4 @@ class ProposalFormElementsRelationship(models.Model):
 
 	class Meta:
 		ordering = ('order',)
+

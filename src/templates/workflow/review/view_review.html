@@ -21,32 +21,33 @@
   <h3>{{ submission.title }}</h3>
   <hr />
   {% include "workflow/elements/workflow_view_buttons.html" %}
-  <div id="rounds">
-  <ul>
-  {% for round in review_rounds %}
-    <li><a href="#round-{{ round.round_number }}">Round {{ round.round_number }}</a></li>
-      {% endfor %}
+  <ul id="summary_tabs" class="nav nav-tabs" role="tablist">
+    {% for round in review_rounds %}
+    <li role="presentation" {% if forloop.first %}class="active"{% endif %}><a href="#{{ round.round_number }}" aria-controls="home" role="tab" data-toggle="tab">Round {{ round.round_number}}</a></li>
+    {% endfor %}
   </ul>
-  {% for round in review_rounds%}
-  <div id="round-{{ round.round_number }}">
-    <div class="inline-headers"><h4>Internal Review Files</h4><a href="{% url 'add_review_files' submission.id 'internal' %}" class="btn btn-sm btn-success" style="float: right;"{% if round.round_number != submission.get_latest_review_round %}disabled{% endif %}><i class="fa fa-plus">&nbsp;</i>Add Internal Review Files</a></div>
-    
-    {% include "workflow/review/reviewer_files.html" with file_data=submission.internal_review_files.all file_type='internal' %}
-    
-    <div class="inline-headers"><h4>Internal Reviews</h4><a href="{% url 'add_reviewers' submission.id 'internal' round.round_number %}" class="btn btn-sm btn-success" style="float: right;"{% if round.round_number != submission.get_latest_review_round %}disabled{% endif %}><i class="fa fa-plus">&nbsp;</i>Add Internal Reviewers</a></div>
-    
-    {% include "workflow/review/reviewer_block.html" with review_data=internal_review_assignments %}
-    
-    <hr />
-    
-    <div class="inline-headers"><h4>External Review Files</h4><a href="{% url 'add_review_files' submission.id 'external' %}" class="btn btn-sm btn-success" style="float: right;"{% if round.round_number != submission.get_latest_review_round %}disabled{% endif %}><i class="fa fa-plus">&nbsp;</i>Add External Review Files</a></div>
-    
-    {% include "workflow/review/reviewer_files.html" with file_data=submission.external_review_files.all file_type='external' %}
-    
-    <div class="inline-headers"><h4>External Reviews</h4><a href="{% url 'add_reviewers' submission.id 'external' round.round_number %}" class="btn btn-sm btn-success" style="float: right;"{% if round.round_number != submission.get_latest_review_round %}disabled{% endif %}><i class="fa fa-plus">&nbsp;</i>Add External Reviewers</a></div>
-    
-    {% include "workflow/review/reviewer_block.html" with review_data=external_review_assignments %}
-  </div>
+    <div class="tab-content">
+    {% for round in review_rounds%}
+      <div role="tabpanel" class="tab-pane {% if forloop.first %}active{% endif %}" id="{{ round.round_number }}">
+        <br />
+        <div class="inline-headers"><h4>Internal Review Files</h4><a href="{% url 'add_review_files' submission.id 'internal' %}" class="btn btn-sm btn-success" style="float: right;"{% if round.round_number != submission.get_latest_review_round %}disabled{% endif %}><i class="fa fa-plus">&nbsp;</i>Add Internal Review Files</a></div>
+
+        {% include "workflow/review/reviewer_files.html" with file_data=submission.internal_review_files.all file_type='internal' %}
+
+        <div class="inline-headers"><h4>Internal Reviews</h4><a href="{% url 'add_reviewers' submission.id 'internal' round.round_number %}" class="btn btn-sm btn-success" style="float: right;"{% if round.round_number != submission.get_latest_review_round %}disabled{% endif %}><i class="fa fa-plus">&nbsp;</i>Add Internal Reviewers</a></div>
+
+        {% include "workflow/review/reviewer_block.html" with review_data=internal_review_assignments %}
+
+        <hr />
+
+        <div class="inline-headers"><h4>External Review Files</h4><a href="{% url 'add_review_files' submission.id 'external' %}" class="btn btn-sm btn-success" style="float: right;"{% if round.round_number != submission.get_latest_review_round %}disabled{% endif %}><i class="fa fa-plus">&nbsp;</i>Add External Review Files</a></div>
+
+        {% include "workflow/review/reviewer_files.html" with file_data=submission.external_review_files.all file_type='external' %}
+
+        <div class="inline-headers"><h4>External Reviews</h4><a href="{% url 'add_reviewers' submission.id 'external' round.round_number %}" class="btn btn-sm btn-success" style="float: right;"{% if round.round_number != submission.get_latest_review_round %}disabled{% endif %}><i class="fa fa-plus">&nbsp;</i>Add External Reviewers</a></div>
+
+        {% include "workflow/review/reviewer_block.html" with review_data=external_review_assignments %}
+      </div>
   {% endfor %}
   </div>
 </div>
@@ -58,12 +59,18 @@
 {% endblock %}
 
 {% block js %}
-  {{ block.super }}
-    <link rel="stylesheet" href="http://code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css">
-    <script src="http://code.jquery.com/ui/1.11.0/jquery-ui.js"></script>
-    <script>
-    $(function() {
-        $( "#rounds" ).tabs();
-      });
-    </script>
-{% endblock %}
+<script>
+$(function() {
+    // for bootstrap 3 use 'shown.bs.tab', for bootstrap 2 use 'shown' in the next line
+    $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+        // save the latest tab; use cookies if you like 'em better:
+        localStorage.setItem('review_tab', $(this).attr('href'));
+    });
+    // go to the latest tab, if it exists:
+    var lastTab = localStorage.getItem('review_tab');
+    if (lastTab) {
+        $('[href="' + lastTab + '"]').tab('show');
+    }
+});
+</script>
+{% endblock js %}

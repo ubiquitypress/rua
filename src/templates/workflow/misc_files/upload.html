@@ -9,9 +9,9 @@
 		<li><a href="{% url 'user_home' %}">User Home</a></li>
 		<li class="">Workflow</li>
 		<li>{{ submission.title }}</li>
-		<li>Files</li>
+		<li>Misc Files</li>
 		<li>{{ file.id }}</li>
-		<li class="active">Update</li>
+		<li class="active">Upload</li>
 	</ol>
 {% endblock %}
 
@@ -24,25 +24,19 @@
 	<h3>{{ submission.title }} File {{ file.id }} - Versions</h3>
 	<hr />
 	{% include "workflow/elements/workflow_view_buttons.html" %}
-		<table class="table table-striped">
-			<tr>
-				<th>Label</th><th>Original Filename</th><th>System Filename</th><th>Uploaded</th><th>Download</th>
-			</tr>
-			<tr>
-				<td>Label</td><td>{{ file.original_filename }}</td><td>{{ file.uuid_filename }}</td><td>{{ file.date_uploaded }}</td><td><a href="{% url 'serve_file' submission.id file.id %}" class="btn btn-primary"><i class="fa fa-download">&nbsp;</i>Download</a></td>
-			</tr>
-		</table>
 		<form method="post" enctype="multipart/form-data">
 			{% csrf_token %}
 			<div class="well">
-				<p>You can upload a new version of this file below. The old version will be stored unless explicitly deleted.</p>
-				<div class="form-group">
+				<p>You can upload a misc file below. These files can be anything related to the submission that aren't used for typesetting or contracts etc.</p>
+        {% bootstrap_form file_form %}
+        <div class="form-group">
 					<div class="row">
 						<div class="col-md-6">
+              <label class="control-label" for="id_label">File</label>
 							 <div class="input-group">
 									<span class="input-group-btn">
 											<span class="btn btn-primary btn-file">
-													Browse&hellip; <input type="file" id="update_file" name="update_file">
+													Browse&hellip; <input type="file" id="misc_file" name="misc_file">
 											</span>
 									</span>
 									<input type="text" class="form-control" readonly>

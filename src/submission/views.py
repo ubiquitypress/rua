@@ -11,6 +11,8 @@ from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse, HttpResponseForbidden
 from django.utils import timezone
 from django.db.models import Q
+from django.template.defaultfilters import slugify
+
 
 from submission import forms
 from core import models as core_models
@@ -194,6 +196,7 @@ def submission_five(request, book_id):
 
 	if request.method == 'POST' and 'complete' in request.POST:
 		book.submission_date = timezone.now()
+		book.slug = slugify(book.title)
 		stage = core_models.Stage(current_stage='submission', submission=book.submission_date)
 		stage.save()
 		book.stage = stage
