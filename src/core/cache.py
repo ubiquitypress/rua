@@ -1,10 +1,3 @@
-# Based on http://djangosnippets.org/snippets/564/
-# Modified to stagger cache durations
-# Modified to prevent cache stampeding (on cache miss, inserts a placeholder while regenerating a hit)
-# Modified to allow correct storage of None results without triggering cache expiry
-# Modified to incorporate object updated attributes to help expire keys
-
-
 from django.core.cache import cache
 from django.db.models import Model
 from hashlib import sha1

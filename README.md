@@ -16,7 +16,7 @@ Rua is an Open Source application designed to assist with the Monograph publishi
 SMW is written in Python using the Django Web Application framework and follows a MTV (that is, “model”, “template”, and “view.”) style. The template system is simple, easy to modify and uses Twitter Bootstrap 3.
 
 # Development
-If you want to hack on SMW, getting it set up is easy. You'll need a *nix machine (you can set it up on Windows if you're super hard core). We recommend you use [VirtualEnvironment](https://virtualenv.pypa.io/en/latest/) with [VirtualEnvWrapper](https://virtualenvwrapper.readthedocs.org/en/latest/). Once these are installed, clone the repo with:
+If you want to hack on SMW, getting it set up is easy. You'll need a unix machine (you can set it up on Windows if you're super hard core). We recommend you use [VirtualEnvironment](https://virtualenv.pypa.io/en/latest/) with [VirtualEnvWrapper](https://virtualenvwrapper.readthedocs.org/en/latest/). Once these are installed, clone the repo with:
 
 	$ git clone https://github.com/ajrbyers/smw.git
 
@@ -34,6 +34,15 @@ Sync and migrate the SQLite DB (from the src folder):
 
 	$ python manage.py syncdb
 	$ python manage.py migrate
+
+We have a few required database settings so you need to import some data:
+
+	$ python manage.py loaddata core/fixtures/settinggroup.json
+	$ python manage.py loaddata core/fixtures/settings.json
+	$ python manage.py loaddata core/fixtures/cc-licenses.json
+	$ python manage.py loaddata core/fixtures/role.json
+
+In the future this will all be hanlded by an install command.
 
 To start hacking run (from the src folder):
 

@@ -239,6 +239,11 @@ class ReviewAssignment(models.Model):
 	recommendation = models.CharField(max_length=10, choices=review_recommendation(), null=True, blank=True)
 	competing_interests = models.TextField(blank=True, null=True, help_text="If any of the authors or editors have any competing interests please add them here. EG. 'This study was paid for by corp xyz.'")
 
+	# Used to ensure that an email is not sent more than once.
+	unaccepted_reminder = models.BooleanField(default=False)
+	accepted_reminder = models.BooleanField(default=False)
+	overdue_reminder = models.BooleanField(default=False)
+
 	class Meta:
 		unique_together = ('book', 'user', 'review_type', 'review_round')
 
