@@ -12,14 +12,11 @@ def proposal_status():
 
 class Proposal(models.Model):
 
-	title = models.CharField(max_length=255)
-	subtitle = models.CharField(max_length=255,blank=True, null=True)
-	funding = models.TextField(max_length=500, blank=True, null=True)
-	description = models.TextField(blank=True, null=True)
-	notes = models.TextField(blank=True, null=True)
-	uploaded_file = models.FileField(blank=True, null=True)
+
 	owner = models.ForeignKey(User)
 	date_submitted = models.DateTimeField(auto_now_add=True)
+	form = models.ForeignKey('core.ProposalForm')
+	data = models.TextField()
 	date_review_started = models.DateTimeField(blank=True, null=True)
 	review_assignments = models.ManyToManyField('ProposalReview', related_name='review', null=True, blank=True)
 	review_form = models.ForeignKey('review.Form', null=True, blank=True)

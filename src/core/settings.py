@@ -55,7 +55,7 @@ INSTALLED_APPS = (
 
     # 3rd Party
     'bootstrap3',
-    'debug_toolbar',
+    #'debug_toolbar',
     'django_summernote',
     'rest_framework',
 
@@ -123,6 +123,7 @@ STATICFILES_DIRS = (
 )
 STATIC_URL = '/static/'
 
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -150,6 +151,7 @@ TEMPLATES = [
         },
     },
 ]
+
 
 # Media
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

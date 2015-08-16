@@ -225,6 +225,31 @@ def submission_checklist(request):
 
 	return render(request, template, context)
 
+@staff_member_required
+def proposal_forms(request):
+	
+	selected_form_id = core_models.Setting.objects.get(name='proposal_form').value
+	selected_form = forms.GeneratedForm(form=core_models.ProposalForm.objects.get(pk=selected_form_id))
+	
+	choices_form = forms.ProposalForm()
+
+	if request.POST:
+		choices_form = forms.ProposalForm(request.POST)
+		if choices_form.is_valid:
+			setting = core_models.Setting.objects.get(name='proposal_form')
+			setting.value = int(request.POST.get('selection'))
+			setting.save()
+			messages.add_message(request, messages.INFO, 'Proposal succesfully changed')
+
+	template = 'manager/submission/proposal_forms.html'
+
+	context = {
+		'choices_form': choices_form,
+		'selected_form' : selected_form,
+	}
+
+	return render(request, template, context)
+
 
 ## File handler
 

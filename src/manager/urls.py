@@ -31,6 +31,7 @@ urlpatterns = patterns('',
 
     # Submission checklist
     url(r'^submission/checklist/$', 'manager.views.submission_checklist', name='submission_checklist'),
+    url(r'^submission/proposal_forms/$', 'manager.views.proposal_forms', name='proposal_forms'),
     url(r'^submission/checklist/order/$', 'manager.views.checklist_order', name='checklist_order'),
 
     # Cache

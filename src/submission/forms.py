@@ -8,11 +8,6 @@ from core import models as core_models
 from submission import models
 from core import logic
 
-class SubmitProposal(forms.ModelForm):
-
-	class Meta:
-		model = models.Proposal
-		fields = ('title', 'subtitle', 'description', 'notes', 'uploaded_file', 'funding')
 
 class ProposalStart(forms.ModelForm):
 

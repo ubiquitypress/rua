@@ -6,4 +6,7 @@ def press(request):
 	return {'press': logic.press_settings()}
 
 def task_count(request):
-	return {'task_count': logic.task_count(request)}
+	try:
+		return {'task_count': logic.task_count(request)}
+	except:
+		return 0
