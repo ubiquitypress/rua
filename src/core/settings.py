@@ -55,13 +55,14 @@ INSTALLED_APPS = (
 
     # 3rd Party
     'bootstrap3',
-    #'debug_toolbar',
+    'debug_toolbar',
     'django_summernote',
     'rest_framework',
 
      'allauth',
      'allauth.account',
      'allauth.socialaccount',
+     
      # allauth providers
      'allauth.socialaccount.providers.github',
      'allauth.socialaccount.providers.google',
