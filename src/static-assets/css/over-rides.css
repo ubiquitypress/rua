@@ -217,3 +217,7 @@ iframe {
     color: #ffffff !important;
     border-radius: 0.375rem;
 }
+
+.tab-p {
+    margin: 10 10 0 10;
+}

@@ -16,7 +16,24 @@
   <h3>{{ submission.title }}</h3>
   <hr />
   <h4 id="summary">Summary</h4>
-  {% include "workflow/elements/summary.html" %}
+  <ul id="main_summary_tabs" class="nav nav-tabs" role="tablist">
+    <li role="presentation" class="active"><a href="#main_summary" aria-controls="home" role="tab" data-toggle="tab">Summary</a></li>
+    <li role="presentation"><a href="#description" aria-controls="profile" role="tab" data-toggle="tab">Description</a></li>
+    <li role="presentation"><a href="#cover_letter" aria-controls="messages" role="tab" data-toggle="tab">Cover Letter</a></li>
+    <li role="presentation"><a href="#reviewer_sugestions" aria-controls="messages" role="tab" data-toggle="tab">Reviewer Suggestions</a></li>
+    <li role="presentation"><a href="#competing_interests" aria-controls="messages" role="tab" data-toggle="tab">Competing Interests</a></li>
+  </ul>
+
+  <!-- Tab panes -->
+  <div class="tab-content">
+    <div role="tabpanel" class="tab-pane active" id="main_summary">{% include "workflow/elements/summary.html" %}</div>
+    <div role="tabpanel" class="tab-pane" id="description"><p class="tab-p">{{ submission.description|safe }}</p></div>
+    <div role="tabpanel" class="tab-pane" id="cover_letter"><p class="tab-p">{{ submission.cover_letter|safe }}</p></div>
+    <div role="tabpanel" class="tab-pane" id="reviewer_sugestions"><p class="tab-p">{{ submission.reviewer_suggestions|safe }}</p></div>
+    <div role="tabpanel" class="tab-pane" id="competing_interests"><p class="tab-p">{{ submission.competing_interests|safe }}</p></div>
+  </div>
+  <hr />
+  <div>
   <hr />
   <h4 id="files">Files</h4>
   <!-- Nav tabs -->
