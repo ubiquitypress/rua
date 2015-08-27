@@ -532,7 +532,7 @@ class ProposalFormElementsRelationship(models.Model):
 	form = models.ForeignKey(ProposalForm)
 	element = models.ForeignKey(ProposalFormElement)
 	order = models.IntegerField()
-	width = models.CharField(max_length=20, null=True, blank=True, choices = bs_class_choices, help_text='Vertical Space taken by the element when rendering the form')
+	width = models.CharField(max_length=20, choices = bs_class_choices, help_text='Vertical Space taken by the element when rendering the form')
 	help_text = models.TextField(max_length=1000, null=True, blank=True)
 
 	def __unicode__(self):
