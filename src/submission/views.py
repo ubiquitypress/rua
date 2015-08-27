@@ -314,10 +314,8 @@ def start_proposal(request):
 					save_dict[field.name] = [request.POST.get(field.name), 'text']
 
 			defaults = {field.name: field.value() for field in default_fields}
-			pprint (defaults)
 			json_data = json.dumps(save_dict)
-			pprint (json_data)
-			proposal = submission_models.Proposal(form=core_models.ProposalForm.objects.get(pk=proposal_form_id), data=json_data, owner=request.user, **default_fields)
+			proposal = submission_models.Proposal(form=core_models.ProposalForm.objects.get(pk=proposal_form_id), data=json_data, owner=request.user, **defaults)
 			proposal.save()
 			messages.add_message(request, messages.SUCCESS, 'Proposal %s submitted' % proposal.id)
 			return redirect(reverse('user_home'))
