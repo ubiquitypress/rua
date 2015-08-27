@@ -33,6 +33,7 @@ import os
 import mimetypes
 import mimetypes as mime
 from uuid import uuid4
+import json
 
 @login_required
 def new_submissions(request):
@@ -445,10 +446,14 @@ def proposal(request):
 @staff_member_required
 def view_proposal(request, proposal_id):
 	proposal = get_object_or_404(submission_models.Proposal, pk=proposal_id)
+	relationships = models.ProposalFormElementsRelationship.objects.filter(form=proposal.form)
+	data = json.loads(proposal.data)
 
 	template = 'workflow/proposals/view_proposal.html'
 	context = {
 		'proposal': proposal,
+		'relationships':relationships,
+		'data':data,
 	}
 
 	return render(request, template, context)
