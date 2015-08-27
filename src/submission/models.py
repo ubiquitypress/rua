@@ -14,6 +14,9 @@ class Proposal(models.Model):
 
 
 	owner = models.ForeignKey(User)
+	title = models.CharField(max_length=255)
+	subtitle = models.CharField(max_length=255)
+	author = models.CharField(max_length=255)
 	date_submitted = models.DateTimeField(auto_now_add=True)
 	form = models.ForeignKey('core.ProposalForm')
 	data = models.TextField()

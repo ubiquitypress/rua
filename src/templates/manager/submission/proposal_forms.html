@@ -16,7 +16,8 @@
 		<form method="POST">
 		{% csrf_token %}
 		{% bootstrap_form choices_form %}
-		<button class="btn btn-primary">Submit</button>
+		<button class="btn btn-success">Submit</button>
+		<a href="/admin/core/proposalform/add/" class="btn btn-primary"><i class="fa fa-plus"></i> Add new</a>
 		</form>
 	</div>
 	<div class="col-md-12">
@@ -25,6 +26,9 @@
 		<div class="well" style="overflow: auto">
 
 		      {% for field in selected_form %}
+		      	<div class="col-md-12">
+		      	{% bootstrap_form default_fields %}
+		      	</div>
 		        <div class="{% if field.field.widget.attrs.div_class %}{{ field.field.widget.attrs.div_class }}{% else %}col-md-12{% endif %}">
 		        {% if field.field.widget.attrs.is_checkbox %}
 		          {% if field.errors %}<span class="red">{{ field.errors|join:", " }}</span><br />{% endif %}

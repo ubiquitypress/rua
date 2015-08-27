@@ -6,6 +6,8 @@ from django_summernote.widgets import SummernoteWidget, SummernoteInplaceWidget
 from manager import models
 from core import models as core_models
 
+from pprint import pprint
+
 class GroupForm(forms.ModelForm):
 
     class Meta:
@@ -44,6 +46,12 @@ class ProposalForm(forms.Form):
 
 	proposal_forms =[(proposal_form.pk, proposal_form) for proposal_form in core_models.ProposalForm.objects.all()]
 	selection = forms.ChoiceField(widget=forms.Select, choices=proposal_forms)
+
+class DefaultFields(forms.Form):
+
+	title = forms.TextInput()
+	author = forms.TextInput()
+	subtitle = forms.TextInput()
 
 def render_choices(choices):
 	c_split = choices.split('|')
