@@ -7,6 +7,7 @@ from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.contrib import messages
 from django.core.cache import cache
+from django.core.exceptions import ObjectDoesNotExist
 
 from manager import models
 from manager import forms
@@ -227,11 +228,15 @@ def submission_checklist(request):
 
 @staff_member_required
 def proposal_forms(request):
-	
-	selected_form_id = core_models.Setting.objects.get(name='proposal_form').value
-	selected_form = forms.GeneratedForm(form=core_models.ProposalForm.objects.get(pk=selected_form_id))
+	try:
+		selected_form_id = core_models.Setting.objects.get(name='proposal_form').value
+		selected_form = forms.GeneratedForm(form=core_models.ProposalForm.objects.get(pk=selected_form_id))
+	except (ObjectDoesNotExist, ValueError):
+		selected_form_id = None
+		selected_form = None
 	
 	choices_form = forms.ProposalForm()
+	default_fields = forms.DefaultForm()
 
 	if request.POST:
 		choices_form = forms.ProposalForm(request.POST)
@@ -246,6 +251,7 @@ def proposal_forms(request):
 	context = {
 		'choices_form': choices_form,
 		'selected_form' : selected_form,
+		'default_fields': default_fields,
 	}
 
 	return render(request, template, context)

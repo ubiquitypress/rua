@@ -523,10 +523,16 @@ class ProposalFormElement(models.Model):
 		return '<FormElement %s>' % (self.name)
 
 class ProposalFormElementsRelationship(models.Model):
+	bs_class_choices = (
+		('col-md-4','third'),
+		('col-md-6', 'half'),
+		('col-md-12', 'full'),
+	)
+
 	form = models.ForeignKey(ProposalForm)
 	element = models.ForeignKey(ProposalFormElement)
 	order = models.IntegerField()
-	element_class = models.CharField(max_length=20, null=True, blank=True)
+	width = models.CharField(max_length=20, null=True, blank=True, choices = bs_class_choices, help_text='Vertical Space taken by the element when rendering the form')
 	help_text = models.TextField(max_length=1000, null=True, blank=True)
 
 	def __unicode__(self):

@@ -293,10 +293,12 @@ def start_proposal(request):
 
 	proposal_form_id = core_models.Setting.objects.get(name='proposal_form').value
 	proposal_form = manager_forms.GeneratedForm(form=core_models.ProposalForm.objects.get(pk=proposal_form_id))
+	default_fields = manager_forms.DefaultForm()
 
 	if request.method == 'POST':
 		proposal_form = manager_forms.GeneratedForm(request.POST,form=core_models.ProposalForm.objects.get(pk=proposal_form_id))
-		if proposal_form.is_valid():
+		default_fields = manager_forms.DefaultForm(request.POST)
+		if proposal_form.is_valid() and default_fields.is_valid():
 			save_dict = {}
 			file_fields = core_models.ProposalFormElement.objects.filter(proposalform=core_models.ProposalForm.objects.get(pk=proposal_form_id), field_type='upload')
 			data_fields = core_models.ProposalFormElement.objects.filter(~Q(field_type='upload'), proposalform=core_models.ProposalForm.objects.get(pk=proposal_form_id))
@@ -311,8 +313,9 @@ def start_proposal(request):
 					# TODO change value from string to list [value, value_type]
 					save_dict[field.name] = [request.POST.get(field.name), 'text']
 
+			defaults = {field.name: field.value() for field in default_fields}
 			json_data = json.dumps(save_dict)
-			proposal = submission_models.Proposal(form=core_models.ProposalForm.objects.get(pk=proposal_form_id), data=json_data, owner=request.user)
+			proposal = submission_models.Proposal(form=core_models.ProposalForm.objects.get(pk=proposal_form_id), data=json_data, owner=request.user, **defaults)
 			proposal.save()
 			messages.add_message(request, messages.SUCCESS, 'Proposal %s submitted' % proposal.id)
 			return redirect(reverse('user_home'))
@@ -321,6 +324,7 @@ def start_proposal(request):
 	template = "submission/start_proposal.html"
 	context = {
 		'proposal_form': proposal_form,
+		'default_fields': default_fields
 	}
 
 	return render(request, template, context)
