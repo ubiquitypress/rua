@@ -5,7 +5,7 @@
       <a href="{% url 'add_review_round' submission.id %}" type="button" class="btn btn-primary">Start New Round</a>
     </div>
 	<div class="btn-group" role="group">
-      <a href="{% url 'move_to_editing' submission.id %}" type="button" class="btn btn-primary {% if not submission.stage.current_stage == 'review' %}disabled{% endif %}">Request Revisions</a>
+      <a href="{% url 'request_revisions' submission.id 'review' %}" type="button" class="btn btn-primary {% if not submission.stage.current_stage == 'review' %}disabled{% endif %}">Request Revisions</a>
     </div>
     <div class="btn-group" role="group">
       <a href="{% url 'move_to_editing' submission.id %}" type="button" class="btn btn-primary {% if not submission.stage.current_stage == 'review' %}disabled{% endif %}">Accept, Move to Editing</a>

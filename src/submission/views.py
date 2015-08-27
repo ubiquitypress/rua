@@ -112,12 +112,12 @@ def submission_three(request, book_id):
 	if request.method == 'POST':
 		if 'manuscript_upload' in request.POST:
 			for file in request.FILES.getlist('manuscript_file'):
-				handle_file(file, book, 'manuscript')
+				handle_file(file, book, 'manuscript', request.user)
 			return redirect(reverse('submission_additional_files', kwargs={'book_id': book.id, 'file_type': 'manuscript_files'}))
 
 		if 'additional_upload' in request.POST:
 			for file in request.FILES.getlist('additional_file'):
-				handle_file(file, book, 'additional')
+				handle_file(file, book, 'additional', request.user)
 			return redirect(reverse('submission_additional_files', kwargs={'book_id': book.id, 'file_type': 'additional_files'}))
 
 		if 'next_stage' in request.POST:
@@ -349,7 +349,7 @@ def proposal_revisions(request, proposal_id):
 
 
 ## File helpers
-def handle_file(file, book, kind):
+def handle_file(file, book, kind, user):
 
 	original_filename = str(file._get_name())
 	filename = str(uuid4()) + '.' + str(os.path.splitext(original_filename)[1])
@@ -380,6 +380,7 @@ def handle_file(file, book, kind):
 		uuid_filename=filename,
 		stage_uploaded=1,
 		kind=kind,
+		owner=user,
 	)
 	new_file.save()
 	book.files.add(new_file)

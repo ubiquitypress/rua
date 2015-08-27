@@ -52,6 +52,7 @@ INSTALLED_APPS = (
     'review',
     'api',
     'cron',
+    'revisions',
 
     # 3rd Party
     'bootstrap3',

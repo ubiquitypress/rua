@@ -253,8 +253,6 @@ class ReviewAssignment(models.Model):
 	def __repr__(self):
 		return u'%s - %s %s' %  (self.pk, self.book.title, self.user.username)
 
-
-
 class License(models.Model):
 	name = models.CharField(max_length=1000)
 	short_name = models.CharField(max_length=100)
@@ -322,6 +320,7 @@ class File(models.Model):
 	stage_uploaded = models.IntegerField()
 	kind = models.CharField(max_length=100)
 	sequence = models.IntegerField(default=1)
+	owner = models.ForeignKey(User)
 
 	def __unicode__(self):
 		return u'%s' % self.original_filename
@@ -337,6 +336,7 @@ class FileVersion(models.Model):
 	original_filename = models.CharField(max_length=1000)
 	uuid_filename = models.CharField(max_length=100)
 	date_uploaded = models.DateTimeField()
+	owner = models.ForeignKey(User)
 
 	class Meta:
 		ordering = ('-date_uploaded',)
