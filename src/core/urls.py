@@ -12,6 +12,7 @@ urlpatterns = patterns('',
     url(r'^workflow/', include('workflow.urls')),
     url(r'^manager/', include('manager.urls')),
     url(r'^review/', include('review.urls')),
+    url(r'^revisions/', include('revisions.urls')),
     url(r'^api/', include('api.urls')),
 
 

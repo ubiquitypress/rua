@@ -7,6 +7,9 @@
         <button type="submit" class="btn btn-primary {% if not submission.stage.current_stage == 'submission' %}disabled{% endif %}" name="review" id="review">Review</a>
       </div>
       <div class="btn-group" role="group">
+        <a href="{% url 'request_revisions' submission.id 'submission' %}" class="btn btn-primary {% if not submission.stage.current_stage == 'submission' %}disabled{% endif %}" name="revisions" id="review">Request Revisions</a>
+      </div>
+      <div class="btn-group" role="group">
         <a href="{% url 'move_to_editing' submission.id %}" type="button" class="btn btn-primary {% if not submission.stage.current_stage == 'submission' %}disabled{% endif %}">Expedite to Editing</a>
       </div>
       <div class="btn-group" role="group">

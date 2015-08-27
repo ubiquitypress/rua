@@ -26,10 +26,10 @@
 	{% include "workflow/elements/workflow_view_buttons.html" %}
 		<table class="table table-striped">
 			<tr>
-				<th>Label</th><th>Original Filename</th><th>System Filename</th><th>Uploaded</th><th>Download</th>
+				<th>Label</th><th>Original Filename</th><th>System Filename</th><th>Owner</th><th>Uploaded</th><th>Download</th>
 			</tr>
 			<tr>
-				<td>Label</td><td>{{ file.original_filename }}</td><td>{{ file.uuid_filename }}</td><td>{{ file.date_uploaded }}</td><td><a href="{% url 'serve_file' submission.id file.id %}" class="btn btn-primary"><i class="fa fa-download">&nbsp;</i>Download</a></td>
+				<td>{{ file.label }}</td><td>{{ file.original_filename }}</td><td>{{ file.uuid_filename }}</td><td>{{ file.owner.profile.full_name }}</td><td>{{ file.date_uploaded }}</td><td><a href="{% url 'serve_file' submission.id file.id %}" class="btn btn-primary"><i class="fa fa-download">&nbsp;</i>Download</a></td>
 			</tr>
 		</table>
 		<form method="post" enctype="multipart/form-data">

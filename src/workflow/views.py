@@ -20,6 +20,7 @@ from core import forms
 from core import log
 from core import email
 from core.cache import cache_result
+from revisions import models as revisions_models
 from review import models as review_models
 from workflow import logic
 from manager import models as manager_models
@@ -66,6 +67,7 @@ def view_new_submission(request, submission_id):
 	context = {
 		'submission': submission,
 		'active': 'new',
+		'revision_requests': revisions_models.Revision.objects.filter(book=submission, revision_type='submission')
 	}
 
 	return render(request, template, context)
@@ -143,6 +145,7 @@ def view_review(request, submission_id):
 		'internal_review_assignments': internal_review_assignments,
 		'external_review_assignments': external_review_assignments,
 		'review_rounds': review_rounds,
+		'revision_requests': revisions_models.Revision.objects.filter(book=submission, revision_type='review')
 	}
 
 	return render(request, template, context)
@@ -344,7 +347,7 @@ def add_format(request, submission_id):
 	if request.POST:
 		format_form = forms.FormatForm(request.POST, request.FILES)
 		if format_form.is_valid():
-			new_file = handle_file(request.FILES.get('format_file'), book, 'format')
+			new_file = handle_file(request.FILES.get('format_file'), book, 'format', request.user)
 			new_format = format_form.save(commit=False)
 			new_format.book = book
 			new_format.file = new_file
@@ -367,7 +370,7 @@ def add_chapter(request, submission_id):
 	if request.POST:
 		chapter_form = forms.ChapterForm(request.POST, request.FILES)
 		if chapter_form.is_valid():
-			new_file = handle_file(request.FILES.get('chapter_file'), book, 'chapter')
+			new_file = handle_file(request.FILES.get('chapter_file'), book, 'chapter', request.user)
 			new_chapter = chapter_form.save(commit=False)
 			new_chapter.book = book
 			new_chapter.file = new_file
@@ -416,7 +419,7 @@ def update_format_or_chapter(request, submission_id, format_or_chapter, id):
 		if form.is_valid():
 			item.name = request.POST.get('name')
 			item.save()
-			handle_file_update(request.FILES.get('file'), item.file, book, item.file.kind)
+			handle_file_update(request.FILES.get('file'), item.file, book, item.file.kind, request.user)
 			return redirect(reverse('view_production', kwargs={'submission_id': book.id}))
 
 	template = 'workflow/production/update.html'
@@ -687,7 +690,7 @@ def contract_manager(request, submission_id, contract_id=None):
 			new_contract = new_contract_form.save(commit=False)
 
 			author_file = request.FILES.get('contract_file')
-			new_file = handle_file(author_file, submission, 'contract')
+			new_file = handle_file(author_file, submission, 'contract', request.user)
 
 			new_contract.editor_file = new_file
 			new_contract.save()
@@ -721,7 +724,7 @@ def upload_misc_file(request, submission_id):
 	if request.POST:
 		file_form = forms.UploadMiscFile(request.POST)
 		if file_form.is_valid():
-			new_file = handle_file(request.FILES.get('misc_file'), submission, file_form.cleaned_data.get('file_type'), file_form.cleaned_data.get('label'))
+			new_file = handle_file(request.FILES.get('misc_file'), submission, file_form.cleaned_data.get('file_type'), request.user, file_form.cleaned_data.get('label'))
 			submission.misc_files.add(new_file)
 			return redirect(reverse('view_new_submission', kwargs={'submission_id': submission.id}))
 	else:
@@ -789,7 +792,7 @@ def update_file(request, submission_id, file_id, returner):
 
 	if request.POST:
 		for file in request.FILES.getlist('update_file'):
-			handle_file_update(file, _file, book, _file.kind)
+			handle_file_update(file, _file, book, _file.kind, request.user)
 			messages.add_message(request, messages.INFO, 'File updated.')
 
 		if returner == 'new':
@@ -819,7 +822,7 @@ def versions_file(request, submission_id, file_id):
 	return render(request, template, context)
 
 ## File helpers
-def handle_file_update(file, old_file, book, kind):
+def handle_file_update(file, old_file, book, kind, owner):
 
 	original_filename = str(file._get_name())
 	filename = str(uuid4()) + str(os.path.splitext(original_filename)[1])
@@ -846,7 +849,8 @@ def handle_file_update(file, old_file, book, kind):
 		file=old_file,
 		original_filename=old_file.original_filename,
 		uuid_filename=old_file.uuid_filename,
-		date_uploaded=old_file.date_uploaded
+		date_uploaded=old_file.date_uploaded,
+		owner=old_file.owner,
 	)
 
 	new_version.save()
@@ -855,12 +859,13 @@ def handle_file_update(file, old_file, book, kind):
 	old_file.original_filename=original_filename
 	old_file.uuid_filename=filename
 	old_file.date_uploaded=timezone.now
+	old_file.owner=owner
 	old_file.save()
 
 	return path
 
 ## File helpers
-def handle_file(file, book, kind, label=None):
+def handle_file(file, book, kind, owner, label=None):
 
 	original_filename = str(file._get_name())
 	filename = str(uuid4()) + str(os.path.splitext(original_filename)[1])
@@ -892,6 +897,7 @@ def handle_file(file, book, kind, label=None):
 		stage_uploaded=1,
 		kind=kind,
 		label=label,
+		owner=owner
 	)
 	new_file.save()
 

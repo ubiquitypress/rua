@@ -65,6 +65,23 @@
   {% include "core/user/editors.html" %}
   {% endif %}
   <hr />
+  {% if revision_requests %}
+  <h4>Revisions Requests</h4>
+  <table class="table table-bordered">
+    <tr>
+      <th>Requested</th>
+      <th>Due</th>
+      <th>Completed</th>
+    </tr>
+    {% for revision in revision_requests %}
+    <tr>
+      <td>{{ revision.requested }}</td>
+      <td>{{ revision.due }}</td>
+      <td>{% if revision.completed %}{{ revision.completed }}{% else %}--{% endif %}</td>
+    </tr>
+    {% endfor %}
+  </table>
+  {% endif %}
   {% include "workflow/new/new_submission_actions.html" %}
 </div>
 

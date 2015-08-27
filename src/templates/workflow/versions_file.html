@@ -32,7 +32,7 @@
             <div class="timeline-panel">
                 <div class="timeline-heading">
                     <h4 class="timeline-title">{{ file.uuid_filename }}&nbsp;<a href="{% url 'serve_versioned_file' submission.id file.id %}" style="float:right;" class="btn btn-primary"><i class="fa fa-download"></i></a></h4>
-                    <p><small class="text-muted"><i class="fa fa-file-o">&nbsp;</i>File Version<p>Original Filename: {{ file.original_filename }}<br />Uploaded: {{ file.date_uploaded }}</p></small></p>
+                    <p><small class="text-muted"><i class="fa fa-file-o">&nbsp;</i>File Version<p>Original Filename: {{ file.original_filename }}<br />Uploaded: {{ file.date_uploaded }}<br />Owner: {{ file.owner.profile.full_name }}</p></small></p>
                 </div>
                 <div class="timeline-body">
                     <p>{{ item.message }}</p>
