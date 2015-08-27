@@ -236,7 +236,7 @@ def proposal_forms(request):
 		selected_form = None
 	
 	choices_form = forms.ProposalForm()
-	default_fields = forms.DefaultFields()
+	default_fields = forms.DefaultForm()
 
 	if request.POST:
 		choices_form = forms.ProposalForm(request.POST)

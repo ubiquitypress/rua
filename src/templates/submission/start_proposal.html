@@ -12,6 +12,9 @@
    <p>Please complete the form below. Your proposal will then be scruitinised by our committe and if approved, you will be invited to complete a full submission.</p>
     <form method="post" class="form" enctype="multipart/form-data">
 	    {% csrf_token %}
+      <div class="col-md-12">
+        {% bootstrap_form default_fields %}
+      </div>
         {% for field in proposal_form %}
             <div class="{% if field.field.widget.attrs.div_class %}{{ field.field.widget.attrs.div_class }}{% else %}col-md-12{% endif %}">
             {% if field.field.widget.attrs.is_checkbox %}
