@@ -17,3 +17,5 @@ class Revision(models.Model):
 	requested = models.DateField(auto_now_add=True)
 	due = models.DateField(blank=True, null=True, help_text='Set the date the revisions are due. The author will be reminded once before the due date and once after.')
 	completed = models.DateField(blank=True, null=True)
+
+	overdue_reminder = models.BooleanField(default=False)
