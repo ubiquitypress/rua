@@ -78,6 +78,10 @@ def revision(request, revision_id):
 
 	return render(request, template, context)
 
+@staff_member_required
+def editor_view_revisions(request, revision_id):
+	pass
+
 @login_required
 def update_file(request, revision_id, file_id):
 	revision = get_object_or_404(models.Revision, pk=revision_id, book__owner=request.user)
