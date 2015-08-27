@@ -8,5 +8,6 @@ urlpatterns = patterns('',
 	# Review
 	url(r'^request/submission/(?P<submission_id>\d+)/returner/(?P<returner>[-\w]+)/$', 'revisions.views.request_revisions', name='request_revisions'),
 	url(r'^(?P<revision_id>\d+)/$', 'revisions.views.revision', name='revision'),
+	url(r'^editor/view/(?P<revision_id>\d+)/$', 'revisions.views.editor_view_revisions', name='editor_view_revisions'),
 	url(r'^(?P<revision_id>\d+)/file/(?P<file_id>\d+)/update/$', 'revisions.views.update_file', name='revision_update_file'),
 )
