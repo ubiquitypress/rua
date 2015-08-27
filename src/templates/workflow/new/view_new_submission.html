@@ -79,7 +79,7 @@
       <td>{{ revision.requested }}</td>
       <td>{{ revision.due }}</td>
       <td>{% if revision.completed %}{{ revision.completed }}{% else %}--{% endif %}</td>
-      <td>{% if revision.completed %}{% url 'editor_view_revisions' revision.id %}{% else %}--{% endif %}</td>
+      <td>{% if revision.completed %}<a href="{% url 'editor_view_revisions' revision.id %}">View</a>{% else %}--{% endif %}</td>
     </tr>
     {% endfor %}
   </table>

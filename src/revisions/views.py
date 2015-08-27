@@ -80,7 +80,14 @@ def revision(request, revision_id):
 
 @staff_member_required
 def editor_view_revisions(request, revision_id):
-	pass
+	revision = get_object_or_404(models.Revision, pk=revision_id, completed__isnull=False)
+
+	template = 'revisions/editor_view_revisions.html'
+	context = {
+		'revision': revision,
+	}
+
+	return render(request, template, context)
 
 @login_required
 def update_file(request, revision_id, file_id):
