@@ -82,6 +82,7 @@ admin_list = [
 	(Contract,),
 	(PrintSales,),
 	(Identifier,),
+	(Language,),
 ]
 
 [admin.site.register(*t) for t in admin_list]

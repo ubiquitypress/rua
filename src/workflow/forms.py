@@ -54,7 +54,12 @@ class EditMetadata(forms.ModelForm):
 			'pages',
 			'slug',
 			'review_type',
+			'languages',
 		)
+
+		widgets = {
+            'languages': forms.CheckboxSelectMultiple(),
+        }
 
 class IdentifierForm(forms.ModelForm):
 
