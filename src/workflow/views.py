@@ -333,6 +333,9 @@ def view_production(request, submission_id):
 def catalog(request, submission_id):
 	book = get_object_or_404(models.Book, pk=submission_id)
 
+	internal_review_assignments = models.ReviewAssignment.objects.filter(book=book, review_type='internal', completed__isnull=False).select_related('user', 'review_round')
+	external_review_assignments = models.ReviewAssignment.objects.filter(book=book, review_type='external', completed__isnull=False).select_related('user', 'review_round')
+
 	metadata_form = forms.EditMetadata(instance=book)
 	cover_form = forms.CoverForm(instance=book)
 
@@ -357,6 +360,8 @@ def catalog(request, submission_id):
 		'submission': book,
 		'metadata_form': metadata_form,
 		'cover_form': cover_form,
+		'internal_review_assignments': internal_review_assignments,
+		'external_review_assignments': external_review_assignments,
 	}
 
 	return render(request, template, context)

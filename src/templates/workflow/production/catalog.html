@@ -27,6 +27,7 @@
     <li role="presentation"><a href="#identifiers" aria-controls="home" role="tab" data-toggle="tab">Identifiers</a></li>
     <li role="presentation"><a href="#contributors" aria-controls="home" role="tab" data-toggle="tab">Contributors</a></li>
     <li role="presentation"><a href="#cover" aria-controls="home" role="tab" data-toggle="tab">Cover Image</a></li>
+     <li role="presentation"><a href="#peer-review" aria-controls="home" role="tab" data-toggle="tab">Peer Review</a></li>
   </ul>
 
   <!-- Tab panes -->
@@ -133,6 +134,19 @@
         <img src="holder.js/350x500" class="img-responsive" />
         {% endif %}
       </div>
+    </div>
+    <div role="tabpanel" class="tab-pane" id="peer-review">
+      <br />
+      <h4>Summary</h4>
+      <p>NB. This page only shows completed reviews.</p>
+      <ul>
+        {% if internal_review_assignments.count > 1 %}<li>This Book was internally reviewed.</li>{% else %}<li>No internal reivew undertaken.</li>{% endif %}
+        {% if external_review_assignments.count > 1 %}<li>This Book was externally reviewed.</li>{% else %}<li>No external review undertaken.</li>{% endif %}
+      </ul>
+      <h4>Internal</h4>
+      {% include "workflow/production/reviewer_block.html" with review_data=internal_review_assignments %}
+      <h4>External</h4>
+      {% include "workflow/production/reviewer_block.html" with review_data=external_review_assignments %}
     </div>
   </div>
 
