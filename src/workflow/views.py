@@ -16,7 +16,6 @@ from django.db import IntegrityError
 from django.conf import settings
 
 from core import models
-from core import forms
 from core import log
 from core import email
 from core.cache import cache_result
@@ -35,7 +34,7 @@ import mimetypes as mime
 from uuid import uuid4
 import json
 
-@login_required
+@staff_member_required
 def new_submissions(request):
 
 	submission_list = models.Book.objects.filter(stage__current_stage='submission')
@@ -48,7 +47,7 @@ def new_submissions(request):
 
 	return render(request, template, context)
 
-@login_required
+@staff_member_required
 def view_new_submission(request, submission_id):
 
 	submission = get_object_or_404(models.Book, pk=submission_id)
@@ -92,7 +91,7 @@ def decline_submission(request, submission_id):
 
 	return render(request, template, context)
 
-@login_required
+@staff_member_required
 def in_review(request):
 
 	submission_list = models.Book.objects.filter(stage__current_stage='review')
@@ -105,7 +104,7 @@ def in_review(request):
 
 	return render(request, template, context)
 
-@login_required
+@staff_member_required
 def in_editing(request):
 
 	submission_list = models.Book.objects.filter(stage__current_stage='editing')
@@ -118,7 +117,7 @@ def in_editing(request):
 
 	return render(request, template, context)
 
-@login_required
+@staff_member_required
 def in_production(request):
 
 	submission_list = models.Book.objects.filter(stage__current_stage='production')
@@ -300,7 +299,7 @@ def move_to_editing(request, submission_id):
 	return redirect(reverse('in_editing'))
 
 # Log
-@login_required
+@staff_member_required
 def view_log(request, submission_id):
 	book = get_object_or_404(models.Book, pk=submission_id)
 	log_list = models.Log.objects.filter(book=book)
@@ -314,7 +313,9 @@ def view_log(request, submission_id):
 
 	return render(request, template, context)
 
-@login_required
+## PRODUCTION ##
+
+@staff_member_required
 def view_production(request, submission_id):
 	book = get_object_or_404(models.Book, pk=submission_id)
 
@@ -328,19 +329,142 @@ def view_production(request, submission_id):
 
 	return render(request, template, context)
 
-@login_required
+@staff_member_required
 def catalog(request, submission_id):
 	book = get_object_or_404(models.Book, pk=submission_id)
+
+	metadata_form = forms.EditMetadata(instance=book)
+	cover_form = forms.CoverForm(instance=book)
+
+	if request.POST:
+		if request.GET.get('metadata', None):
+			metadata_form = forms.EditMetadata(request.POST, instance=book)
+
+			if metadata_form.is_valid():
+				metadata_form.save()
+
+		if request.GET.get('cover', None):
+			cover_form = forms.CoverForm(request.POST, request.FILES, instance=book)
+
+			if cover_form.is_valid():
+				cover_form.save()
+
+		return redirect(reverse('catalog', kwargs={'submission_id': submission_id}))
 
 	template = 'workflow/production/catalog.html'
 	context = {
 		'active': 'production',
 		'submission': book,
+		'metadata_form': metadata_form,
+		'cover_form': cover_form,
 	}
 
 	return render(request, template, context)
 
-@login_required
+@staff_member_required
+def identifiers(request, submission_id, identifier_id=None):
+	book = get_object_or_404(models.Book, pk=submission_id)
+
+	if identifier_id:
+		identifier = get_object_or_404(models.Identifier, pk=identifier_id)
+
+		if request.GET.get('delete', None) == 'true':
+			identifier.delete()
+			return redirect(reverse('identifiers', kwargs={'submission_id': submission_id}))
+
+		form = forms.IdentifierForm(instance=identifier)
+	else:
+		identifier = None
+		form = forms.IdentifierForm()
+
+	if request.POST:
+		if identifier_id:
+			form = forms.IdentifierForm(request.POST, instance=identifier)
+		else:
+			form = forms.IdentifierForm(request.POST)
+
+		if form.is_valid():
+			new_identifier = form.save(commit=False)
+			new_identifier.book = book
+			new_identifier.save()
+
+			return redirect(reverse('identifiers', kwargs={'submission_id': submission_id}))
+
+	template = 'workflow/production/identifiers.html'
+	context = {
+		'submission': book,
+		'identifier': identifier,
+		'form': form,
+	}
+
+	return render(request, template, context)
+
+@staff_member_required
+def update_contributor(request, submission_id, contributor_type, contributor_id=None):
+	book = get_object_or_404(models.Book, pk=submission_id)
+
+	if contributor_id:
+		if contributor_type == 'author':
+			contributor = get_object_or_404(models.Author, pk=contributor_id)
+			form = submission_forms.AuthorForm(instance=contributor)
+		elif contributor_type == 'editor':
+			contributor = get_object_or_404(models.Editor, pk=contributor_id)
+			form = submission_forms.EditorForm(instance=contributor)
+	else:
+		contributor = None
+		if contributor_type == 'author':
+			form = submission_forms.AuthorForm()
+		elif contributor_type == 'editor':
+			form = submission_forms.EditorForm()
+
+
+	if request.POST:
+		if contributor:
+			if contributor_type == 'author':
+				form = submission_forms.AuthorForm(request.POST, instance=contributor)
+			elif contributor_type == 'editor':
+				form = submission_forms.EditorForm(request.POST, instance=contributor)
+		else:
+			if contributor_type == 'author':
+				form = submission_forms.AuthorForm(request.POST)
+			elif contributor_type == 'editor':
+				form = submission_forms.EditorForm(request.POST)
+
+		if form.is_valid():
+			saved_contributor = form.save()
+
+			if not contributor:
+				if contributor_type == 'author':
+					book.author.add(saved_contributor)
+				elif contributor_type == 'editor':
+					book.editor.add(saved_contributor)
+
+		return redirect(reverse('catalog', kwargs={'submission_id': submission_id}))
+
+	template = 'workflow/production/update_contributor.html'
+	context = {
+		'submission': book,
+		'form': form,
+		'contributor': contributor,
+	}
+
+	return render(request, template, context)
+
+@staff_member_required
+def delete_contributor(request, submission_id, contributor_type, contributor_id):
+	book = get_object_or_404(models.Book, pk=submission_id)
+
+	if contributor_id:
+		if contributor_type == 'author':
+			contributor = get_object_or_404(models.Author, pk=contributor_id)
+		elif contributor_type == 'editor':
+			contributor = get_object_or_404(models.Editor, pk=contributor_id)
+
+		contributor.delete()
+
+		return redirect(reverse('catalog', kwargs={'submission_id': submission_id}))
+
+@staff_member_required
 def add_format(request, submission_id):
 	book = get_object_or_404(models.Book, pk=submission_id)
 	format_form = forms.FormatForm()
@@ -363,7 +487,7 @@ def add_format(request, submission_id):
 
 	return render(request, template, context)
 
-@login_required
+@staff_member_required
 def add_chapter(request, submission_id):
 	book = get_object_or_404(models.Book, pk=submission_id)
 	chapter_form = forms.ChapterForm()
@@ -386,7 +510,7 @@ def add_chapter(request, submission_id):
 
 	return render(request, template, context)
 
-@login_required
+@staff_member_required
 def delete_format_or_chapter(request, submission_id, format_or_chapter, id):
 	book = get_object_or_404(models.Book, pk=submission_id)
 
@@ -404,7 +528,7 @@ def delete_format_or_chapter(request, submission_id, format_or_chapter, id):
 
 	return redirect(reverse('view_production', kwargs={'submission_id': book.id}))
 
-@login_required
+@staff_member_required
 def update_format_or_chapter(request, submission_id, format_or_chapter, id):
 	book = get_object_or_404(models.Book, pk=submission_id)
 
@@ -431,6 +555,10 @@ def update_format_or_chapter(request, submission_id, format_or_chapter, id):
 	}
 
 	return render(request, template, context)
+
+## END PRODUCTION ##
+
+## PROPOSALS ##
 
 @staff_member_required
 def proposal(request):
@@ -674,7 +802,9 @@ def request_proposal_revisions(request, proposal_id):
 
 	return render(request, template, context)
 
-# Contracts
+## END PROPOSAL ##
+
+## CONTRACTS ##
 
 @staff_member_required
 def contract_manager(request, submission_id, contract_id=None):
@@ -742,6 +872,8 @@ def upload_misc_file(request, submission_id):
 	}
 
 	return render(request, template, context)
+
+## END CONTRACTS ##
 
 # File Handlers - should this be in Core?
 @login_required

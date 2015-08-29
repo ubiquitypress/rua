@@ -2,7 +2,7 @@
 <p class="small"></p>
 <div class="btn-group btn-group-justified" role="group">
 	<div class="btn-group" role="group">
-      <a href="" type="button" class="btn btn-primary" data-toggle="modal" data-target="#externalmodal">Update Catalog</a>
+      <a href="{% url 'catalog' submission.id %}" class="btn btn-primary">Update Catalog</a>
     </div>
     <div class="btn-group" role="group">
       <a href="" type="button" class="btn btn-success{% if not submission.date_published or not submission.doi %} disabled{% endif %}" data-toggle="modal" data-target="#externalmodal">Publish</a>

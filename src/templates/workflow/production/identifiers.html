@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% load static from staticfiles %}
+{% load bootstrap3 %}
+
+{% block title %}Add New Format{% endblock %}
+
+{% block breadcrumbs %}
+   <ol class="breadcrumb">
+    <li><a href="{% url 'user_home' %}">User Home</a></li>
+    <li class="">Workflow</li>
+    <li><a href="{% url 'in_production'%}">In Production</a></li>
+    <li>{{ submission.title }}</li>
+    <li><a href="{% url 'catalog' submission.id %}">Catalog</a></li>
+    <li class="active">Identifiers</li>
+  </ol>
+{% endblock %}
+
+{% block body %}
+<div class="col-md-12">
+  <h3>{{ submission.title }}</h3>
+  <hr />
+  {% include "workflow/elements/workflow_view_buttons.html" %}
+
+  <h4>Add Identifiers</h4>
+  <form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    {% bootstrap_form_errors form layout='inline' %}
+      <div class="form-group">
+          <div class="row">
+            <div class="col-md-6">
+            {% bootstrap_field form.identifier %}
+            {% bootstrap_field form.value %}
+            {% bootstrap_field form.displayed %}
+            <div class="input-group">
+                <br />
+                <button class="btn btn-primary" type="submit" name="update" id="update"><i class="fa fa-plus">&nbsp;</i>Add Identifier</button>
+            </div>
+            </div>
+            <div class="col-md-6">
+              <br />
+              <table class="table table-bordered">
+                <tr>
+                  <th>Identifier</th>
+                  <th>Value</th>
+                  <th>Displayed?</th>
+                  <th>Action</th>
+                </tr>
+                {% for ident in submission.identifier_set.all %}
+                <tr>
+                  <td>{{ ident.get_identifier_display }}</td>
+                  <td>{{ ident.value }}</td>
+                  <td>{% if ident.displayed %}<i style="color:green;" class="fa fa-check-circle"></i>{% else %}<i style="color:red;" class="fa fa-times-circle"></i>{% endif %}</td>
+                  <td>
+                    <a href="{% url 'identifiers_with_id' submission.id ident.id %}"><i class="fa fa-edit">&nbsp;&nbsp;&nbsp;</i></a>
+                    <a href="{% url 'identifiers_with_id' submission.id ident.id %}?delete=true"><i class="fa fa-trash">&nbsp;&nbsp;</i></a>
+                  </td>
+                {% empty %}
+                <tr>
+                  <td colspan="3">Use the form to add a new identifier.</td>
+                </tr>
+                {% endfor %}
+              </table>
+            </div>
+          </div>
+        </div>
+  </form>
+
+{% endblock %}
+

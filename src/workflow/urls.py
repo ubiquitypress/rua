@@ -57,7 +57,14 @@ urlpatterns = patterns('',
     url(r'^production/(?P<submission_id>\d+)/add/chapter/$', 'workflow.views.add_chapter', name='add_chapter'),
     url(r'^production/(?P<submission_id>\d+)/delete/(?P<format_or_chapter>[-\w]+)/(?P<id>\d+)/$', 'workflow.views.delete_format_or_chapter', name='delete_format_or_chapter'),
     url(r'^production/(?P<submission_id>\d+)/update/(?P<format_or_chapter>[-\w]+)/(?P<id>\d+)/$', 'workflow.views.update_format_or_chapter', name='update_format_or_chapter'),
-    url(r'^production/(?P<submission_id>\d+)/catlog/$', 'workflow.views.catalog', name='catalog'),
+    url(r'^production/(?P<submission_id>\d+)/catalog/$', 'workflow.views.catalog', name='catalog'),
+
+    url(r'^production/(?P<submission_id>\d+)/catalog/identifiers/$', 'workflow.views.identifiers', name='identifiers'),
+    url(r'^production/(?P<submission_id>\d+)/catalog/identifiers/(?P<identifier_id>\d+)/$', 'workflow.views.identifiers', name='identifiers_with_id'),
+
+    url(r'^production/(?P<submission_id>\d+)/catalog/contributor/(?P<contributor_type>[-\w]+)/(?P<contributor_id>\d+)/$', 'workflow.views.update_contributor', name='update_contributor'),
+    url(r'^production/(?P<submission_id>\d+)/catalog/contributor/(?P<contributor_type>[-\w]+)/$', 'workflow.views.update_contributor', name='add_contributor'),
+    url(r'^production/(?P<submission_id>\d+)/catalog/contributor/(?P<contributor_type>[-\w]+)/(?P<contributor_id>\d+)/delete/$', 'workflow.views.delete_contributor', name='delete_contributor'),
 
     url(r'^log/(?P<submission_id>\d+)/', 'workflow.views.view_log', name='view_log'),
 

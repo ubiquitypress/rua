@@ -1,0 +1,159 @@
+{% extends "base.html" %}
+{% load bootstrap3 %}
+
+{% block title %}Production{% endblock %}
+
+{% block breadcrumbs %}
+  <ol class="breadcrumb">
+	  <li><a href="{% url 'user_home' %}">User Home</a></li>
+	  <li class="">Workflow</li>
+    <li><a href="{% url 'in_production'%}">In Production</a></li>
+    <li>{{ submission.title }}</li>
+    <li class="active">Catalog</li>
+	</ol>
+{% endblock %}
+
+{% block body %}
+<div class="col-md-12">
+  <h3>{{ submission.title }}</h3>
+  <hr />
+  {% include "workflow/elements/workflow_view_buttons.html" %}
+
+  <h4>{{ submission.title }} Catalog</h4>
+
+
+  <ul id="main_summary_tabs" class="nav nav-tabs" role="tablist">
+    <li role="presentation" class="active"><a href="#metadata" aria-controls="home" role="tab" data-toggle="tab">Metadata</a></li>
+    <li role="presentation"><a href="#identifiers" aria-controls="home" role="tab" data-toggle="tab">Identifiers</a></li>
+    <li role="presentation"><a href="#contributors" aria-controls="home" role="tab" data-toggle="tab">Contributors</a></li>
+    <li role="presentation"><a href="#cover" aria-controls="home" role="tab" data-toggle="tab">Cover Image</a></li>
+    <li role="presentation"><a href="#sales" aria-controls="home" role="tab" data-toggle="tab">Sales</a></li>
+  </ul>
+
+  <!-- Tab panes -->
+  <div class="tab-content">
+    <div role="tabpanel" class="tab-pane active" id="metadata">
+      <form method="POST" action="?metadata=true">
+        {% csrf_token %}
+        <br />
+        <div class="form-group">
+          {% bootstrap_form_errors metadata_form layout='inline' %}
+          <div class="row">
+            <div class="col-md-4">
+              {% bootstrap_field metadata_form.prefix %}
+            </div>
+            <div class="col-md-4">
+              {% bootstrap_field metadata_form.title %}
+            </div>
+            <div class="col-md-4">
+              {% bootstrap_field metadata_form.subtitle %}
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-4">
+              {% bootstrap_field metadata_form.series %}
+            </div>
+            <div class="col-md-4">
+              {% bootstrap_field metadata_form.license %}
+            </div>
+            <div class="col-md-4">
+              {% bootstrap_field metadata_form.pages %}
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-4">
+              {% bootstrap_field metadata_form.slug %}
+            </div>
+            <div class="col-md-4">
+              {% bootstrap_field metadata_form.review_type %}
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-12">
+              {% bootstrap_field metadata_form.description %}
+            </div>
+          </div>
+
+        </div>
+
+        <button class="btn btn-success" type="submt">Update Metadata</button>
+      </form>
+    </div>
+    <div role="tabpanel" class="tab-pane" id="identifiers">
+      <br />
+      <a href="{% url 'identifiers' submission.id %}" class="btn btn-small btn-primary pull-right">Add/Manage Identifers</a>
+      <br /><br />
+      <table class="table table-bordered">
+        <tr>
+          <th>Identifier</th>
+          <th>Value</th>
+          <th>Displayed?</th>
+        </tr>
+        {% for ident in submission.identifier_set.all %}
+        <tr>
+          <td>{{ ident.get_identifier_display }}</td>
+          <td>{{ ident.value }}</td>
+          <td>{{ ident.displayed }}</td>
+        {% empty %}
+        <tr>
+          <td colspan="3"><a href="" class="btn btn-small btn-primary"><i class="fa fa-plus">&nbsp;</i>Add an Identifier</a></td>
+        </tr>
+        {% endfor %}
+      </table>
+    </div>
+    <div role="tabpanel" class="tab-pane" id="contributors">
+      <br />
+      {% if submission.book_type == 'monograph' %}
+      <h4 id="files">Authors</h4>
+      {% include "workflow/elements/authors.html" %}
+      {% else %}
+      <h4 id="files">Editors</h4>
+      {% include "workflow/elements/editors.html" %}
+      {% endif %}
+    </div>
+    <div role="tabpanel" class="tab-pane" id="cover">
+      <br />
+      <div class="col-md-6">
+        <form method="POST" action="?cover=true" enctype="multipart/form-data">
+          {% csrf_token %}
+          {% bootstrap_field cover_form.cover %}
+          <button class="btn btn-success" type="submt">Submit</button>
+        </form>
+      </div>
+      <div class="col-md-6">
+        <label>Current Cover</label>
+        {% if submission.cover %}
+        <img src="{{ MEDIA_URL }}{{ submission.cover }}" class="img-responsive" />
+        {% else %}
+        <img src="holder.js/350x500" class="img-responsive" />
+        {% endif %}
+      </div>
+    </div>
+    <div role="tabpanel" class="tab-pane" id="sales">
+      <p>Nothing to see here.</p>
+    </div>
+  </div>
+
+  <hr />
+
+{% endblock %}
+
+{% block js %}
+<script>
+$(function() {
+    // for bootstrap 3 use 'shown.bs.tab', for bootstrap 2 use 'shown' in the next line
+    $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+        // save the latest tab; use cookies if you like 'em better:
+        localStorage.setItem('catalog_tab', $(this).attr('href'));
+    });
+    // go to the latest tab, if it exists:
+    var lastTab = localStorage.getItem('catalog_tab');
+    if (lastTab) {
+        $('[href="' + lastTab + '"]').tab('show');
+    }
+});
+</script>
+{% endblock js %}

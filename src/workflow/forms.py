@@ -39,3 +39,31 @@ class UploadMiscFile(forms.Form):
 
 	label = forms.CharField(required=True)
 	file_type = forms.ChoiceField(required=True, choices=(('marketing', 'Marketing'), ('agreements', 'Agreements'), ('other', 'Other')))
+
+class EditMetadata(forms.ModelForm):
+
+	class Meta:
+		model = core_models.Book
+		fields = (
+			'prefix',
+			'title',
+			'subtitle',
+			'series',
+			'description',
+			'license',
+			'pages',
+			'slug',
+			'review_type',
+		)
+
+class IdentifierForm(forms.ModelForm):
+
+	class Meta:
+		model = core_models.Identifier
+		fields = ('identifier', 'value', 'displayed')
+
+class CoverForm(forms.ModelForm):
+
+	class Meta:
+		model = core_models.Book
+		fields = ('cover',)

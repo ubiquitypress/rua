@@ -31,6 +31,15 @@ def profile_images_upload_path(instance, filename):
     path = "profile_images/"
     return os.path.join(path, filename)
 
+def cover_images_upload_path(instance, filename):
+    try:
+        filename = str(uuid.uuid4()) + '.' + str(filename.split('.')[1])
+    except IndexError:
+        filename = str(uuid.uuid4())
+
+    path = "cover_images/"
+    return os.path.join(path, filename)
+
 def task_choices():
 	choices = (
 		('submission', 'Submission'),
@@ -45,6 +54,13 @@ def book_type_choices():
 	return (
 		('monograph', 'Monograph'),
 		('edited_volume', 'Edited Volume'),
+	)
+
+def review_type_choices():
+	return (
+		('closed', 'Closed'),
+		('open-with', 'Open with Reviewer Info'),
+		('open-without', 'Open without Reviewer Info'),
 	)
 
 class Profile(models.Model):
@@ -116,14 +132,14 @@ class Book(models.Model):
 	keywords = models.ManyToManyField('Keyword', null=True, blank=True)
 	subject = models.ManyToManyField('Subject', null=True, blank=True)
 	license = models.ForeignKey('License', null=True, blank=True, help_text="The license you recommend for this work.")
-	cover = models.ImageField(null=True, blank=True)
-	doi = models.CharField(max_length=25, null=True, blank=True)
+	cover = models.ImageField(upload_to=cover_images_upload_path, null=True, blank=True)
 	pages = models.CharField(max_length=10, null=True, blank=True)
 	slug = models.CharField(max_length=1000, null=True, blank=True)
 	cover_letter = models.TextField(null=True, blank=True, help_text="A covering letter for the Editors.")
 	reviewer_suggestions = models.TextField(null=True, blank=True)
 	competing_interests = models.TextField(null=True, blank=True, help_text="If any of the authors or editors have any competing interests please add them here. EG. 'This study was paid for by corp xyz.'")
 	book_type = models.CharField(max_length=50, null=True, blank=True, choices=book_type_choices(), help_text="A monograph is a work authored, in its entirety, by one or more authors. An edited volume has different authors for each chapter.")
+	review_type = models.CharField(max_length=50, choices=review_type_choices(), default='closed')
 
 	# Book Owner
 	owner = models.ForeignKey(User, null=True, blank=True)
@@ -180,6 +196,25 @@ class Book(models.Model):
 
 	def formats(self):
 		return self.format_set.all()
+
+def identifier_choices():
+	return (
+		('doi', 'DOI'),
+		('isbn-10', 'ISBN 10'),
+		('isbn-13', 'ISBN 13'),
+		('urn', 'URN'),
+	)
+
+class Identifier(models.Model):
+	book = models.ForeignKey(Book)
+	identifier = models.CharField(max_length=20, choices=identifier_choices())
+	value = models.CharField(max_length=300)
+	displayed = models.BooleanField(default=True)
+
+class PrintSales(models.Model):
+	book = models.ForeignKey(Book)
+	url = models.URLField()
+	name = models.CharField(max_length=200)
 
 class Contract(models.Model):
 	title = models.CharField(max_length=1000)
