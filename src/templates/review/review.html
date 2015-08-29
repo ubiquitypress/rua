@@ -14,6 +14,7 @@
 {% block body %}
 	<div class="col-md-12">
 		<h2>{{ submission.title }}</h2>
+    <p>The author has requested that this review be {{ submission.get_review_type_display }}.
     {% if review_assignment.review_type == 'internal' %}
     {% include "workflow/review/reviewer_files.html" with file_data=submission.internal_review_files.all %}
     {% else %}

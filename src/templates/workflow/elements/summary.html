@@ -16,14 +16,14 @@
 	<tr>
 		<td width="30%"><strong>Type</strong></td>
 		<td width="25%"><strong>Slug</strong></td>
-		<td width="15%"><strong>DOI</strong></td>
+		<td width="15%"><strong>Review Type</strong></td>
 		<td></td>
 		<td></td>
 	</tr>
 	<tr>
 		<td>{{ submission.get_book_type_display }}</td>
 		<td>{{ submission.slug }}</td>
-		<td>{{ submission.doi }}</td>
+		<td>{{ submission.get_review_type_display }}</td>
 		<td></td>
 		<td></td>
 	</tr>

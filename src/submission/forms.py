@@ -22,7 +22,7 @@ class SubmitBookStageOne(forms.ModelForm):
 
 	class Meta:
 		model = core_models.Book
-		fields = ('book_type', 'cover_letter', 'series', 'license', 'reviewer_suggestions', 'competing_interests')
+		fields = ('book_type', 'cover_letter', 'series', 'license', 'review_type', 'reviewer_suggestions', 'competing_interests')
 
 	def __init__(self, *args, **kwargs):
 		ci_required = kwargs.pop('ci_required', None)

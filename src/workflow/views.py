@@ -1062,6 +1062,7 @@ def send_review_request(book, review_assignment, email_text):
 	decision_url = 'http://%s/review/%s/%s/assignment/%s/decision/' % (base_url.value, review_assignment.review_type, book.id, review_assignment.id)
 
 	context = {
+		'book': book,
 		'review': review_assignment,
 		'review_url': review_url,
 		'decision_url': decision_url,
