@@ -149,7 +149,7 @@ class Book(models.Model):
 	competing_interests = models.TextField(null=True, blank=True, help_text="If any of the authors or editors have any competing interests please add them here. EG. 'This study was paid for by corp xyz.'")
 	book_type = models.CharField(max_length=50, null=True, blank=True, choices=book_type_choices(), help_text="A monograph is a work authored, in its entirety, by one or more authors. An edited volume has different authors for each chapter.")
 	review_type = models.CharField(max_length=50, choices=review_type_choices(), default='closed')
-	languages = models.ManyToManyField('Language', null=True)
+	languages = models.ManyToManyField('Language', null=True, blank=True)
 
 	# Book Owner
 	owner = models.ForeignKey(User, null=True, blank=True)

@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load bootstrap3 %}
+{% load static from staticfiles %}
 
 {% block title %}Production{% endblock %}
 
@@ -37,7 +38,12 @@
         {% csrf_token %}
         <br />
         <div class="form-group">
-          {% bootstrap_form_errors metadata_form layout='inline' %}
+          <div class="row">
+            <div class="col-md-12">
+              {{ metadata_form.errors }}
+              {% bootstrap_form_errors metadata_form layout='inline' %}
+            </div>
+          </div>
           <div class="row">
             <div class="col-md-4">
               {% bootstrap_field metadata_form.prefix %}
@@ -71,6 +77,15 @@
             </div>
             <div class="col-md-4" style="max-height: 200px; overflow-x: scroll;">
               {% bootstrap_field metadata_form.languages %}
+            </div>
+          </div>
+          
+          <div class="row">
+            <div class="col-md-12">
+              <div class="aside">Hit space or enter to add a new keyword.</div>
+              <ul id="tags">
+                {% for keyword in submission.keywords.all %}<li>{{ keyword }}</li>{% endfor %}
+              </ul>
             </div>
           </div>
 
@@ -154,6 +169,11 @@
 
 {% endblock %}
 
+{% block css %}
+<link rel="stylesheet" type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/flick/jquery-ui.css">
+<link type='text/css' href="{% static "css/jquery.tagit.css" %}" rel="stylesheet">
+{% endblock %}
+
 {% block js %}
 <script>
 $(function() {
@@ -165,5 +185,12 @@ $(function() {
         $('[href="' + lastTab + '"]').tab('show');
     }
 });
+</script>
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.12/jquery-ui.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="{% static "js/tag-it.min.js" %}"></script>
+<script type="text/javascript">
+  $(document).ready(function() {
+      $("#tags").tagit();
+  });
 </script>
 {% endblock js %}

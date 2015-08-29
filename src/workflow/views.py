@@ -341,18 +341,27 @@ def catalog(request, submission_id):
 
 	if request.POST:
 		if request.GET.get('metadata', None):
+			print 'whatho be'
 			metadata_form = forms.EditMetadata(request.POST, instance=book)
 
 			if metadata_form.is_valid():
 				metadata_form.save()
+
+				for keyword in book.keywords.all():
+					book.keywords.remove(keyword)
+
+				for keyword in request.POST.getlist('tags'):
+					new_keyword, c = models.Keyword.objects.get_or_create(name=keyword)
+					book.keywords.add(new_keyword)
+				book.save()
+				return redirect(reverse('catalog', kwargs={'submission_id': submission_id}))
 
 		if request.GET.get('cover', None):
 			cover_form = forms.CoverForm(request.POST, request.FILES, instance=book)
 
 			if cover_form.is_valid():
 				cover_form.save()
-
-		return redirect(reverse('catalog', kwargs={'submission_id': submission_id}))
+				return redirect(reverse('catalog', kwargs={'submission_id': submission_id}))
 
 	template = 'workflow/production/catalog.html'
 	context = {
