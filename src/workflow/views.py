@@ -319,6 +319,11 @@ def view_log(request, submission_id):
 def view_production(request, submission_id):
 	book = get_object_or_404(models.Book, pk=submission_id)
 
+	if request.POST and request.GET.get('start', None):
+		if request.GET.get('start') == 'typesetting':
+			book.stage.typesetting = timezone.now()
+			book.stage.save()
+
 	template = 'workflow/production/view.html'
 	context = {
 		'active': 'production',
@@ -341,7 +346,6 @@ def catalog(request, submission_id):
 
 	if request.POST:
 		if request.GET.get('metadata', None):
-			print 'whatho be'
 			metadata_form = forms.EditMetadata(request.POST, instance=book)
 
 			if metadata_form.is_valid():

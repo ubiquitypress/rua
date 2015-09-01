@@ -53,6 +53,7 @@ INSTALLED_APPS = (
     'api',
     'cron',
     'revisions',
+    'copyedit',
 
     # 3rd Party
     'bootstrap3',
@@ -201,4 +202,9 @@ AUTHENTICATION_BACKENDS = (
 
     # `allauth` specific authentication methods, such as login by e-mail
     'allauth.account.auth_backends.AuthenticationBackend',
+)
+
+# 1.8 appears confused about where null and blank are required for many to many fields, so we're hiding these warning from the console
+SILENCED_SYSTEM_CHECKS = (
+    'fields.W340',
 )

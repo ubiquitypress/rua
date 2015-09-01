@@ -1,0 +1,22 @@
+{% if not submission.stage.typesetting %}
+<p>Stage has not been initialised.</p>
+<form method="POST" action="?start=typesetting">
+	{% csrf_token %}
+	<button class="btn btn-primary" type="submit">Start Typesetting</button>
+</form>
+{% else %}
+<table class="table table-bordered">
+	<tr>
+		<th>Typesetter</th>
+		<th>Requested</th>
+		<th>Accepted</th>
+		<th>Declined</th>
+		<th>Due</th>
+		<th>Completed</th>
+		<th>View</th>
+	</tr>
+	<tr>
+		<td colspan="7">No typesetters have been assigned</td>
+	</tr>
+</table>
+{% endif %}

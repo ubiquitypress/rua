@@ -34,3 +34,13 @@ def task_count(request):
 		return models.Task.objects.filter(assignee=request.user, completed__isnull=True).count()
 	except TypeError:
 		return 0
+
+def author_tasks(user):
+	base_url = models.Setting.objects.get(group__name='general', name='base_url').value
+	task_list = []
+	copyedit_tasks = models.CopyeditAssignment.objects.filter(book__owner=user, author_invited__isnull=False, author_completed__isnull=True)
+
+	for copyedit in copyedit_tasks:
+		task_list.append({'task': 'Copyedit Review', 'title': copyedit.book.title, 'url': 'http://%s/copyedit/book/%s/edit/%s/author/' % (base_url, copyedit.book.id, copyedit.id)})
+
+	return task_list

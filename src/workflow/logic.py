@@ -3,6 +3,7 @@ from django.utils import timezone
 
 from core import models
 from core import email
+from core import log
 from submission import logic as submission_logic
 
 import json
@@ -44,6 +45,25 @@ def create_submission_from_proposal(proposal, proposal_type):
     book.save()
 
     return book
+
+def handle_copyeditor_assignment(book, copyedit, files, due_date, email_text, requestor):
+    
+    new_copyeditor = models.CopyeditAssignment(
+        book = book,
+        copyeditor = copyedit,
+        requestor = requestor,
+        due = due_date,
+    )
+
+    new_copyeditor.save()
+
+    for _file in files:
+        new_copyeditor.files.add(_file)
+
+    new_copyeditor.save()
+
+    log.add_log_entry(book=book, user=requestor, kind='copyedit', message='Copyeditor %s %s assigned. Due %s' % (copyedit.first_name, copyedit.last_name, due_date), short_name='Copyedit Assignment')
+    send_copyedit_assignment(book, new_copyeditor, email_text)
 
 
 # Email Handlers - TODO: move to email.py?
@@ -88,3 +108,25 @@ def send_author_sign_off(submission, email_text):
     }
 
     email.send_email('Book Contract Uploaded', context, from_email.value, submission.owner.email, email_text)
+
+def send_copyedit_assignment(submission, copyedit, email_text):
+    from_email = models.Setting.objects.get(group__name='email', name='from_address')
+
+    context = {
+        'base_url': models.Setting.objects.get(group__name='general', name='base_url').value,
+        'submission': submission,
+        'copyedit': copyedit,
+    }
+
+    email.send_email('Copyedit Assignment', context, from_email.value, copyedit.copyeditor.email, email_text)
+
+def send_author_invite(submission, copyedit, email_text):
+    from_email = models.Setting.objects.get(group__name='email', name='from_address')
+
+    context = {
+        'base_url': models.Setting.objects.get(group__name='general', name='base_url').value,
+        'submission': submission,
+        'copyedit': copyedit,
+    }
+
+    email.send_email('Copyediting Completed', context, from_email.value, submission.owner.email, email_text)

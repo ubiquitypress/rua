@@ -23,6 +23,7 @@
         <th>Date Submitted</th>
         <th>Editing Started</th>
         <th>Current Stage</th>
+        <th></th>
       </tr>
       {% for submission in submission_list %}
       <tr>
@@ -32,6 +33,7 @@
         <td>{{ submission.submission_date|date:"DATETIME_FORMAT" }}</td>
         <td>{{ submission.stage.editing|date:"DATETIME_FORMAT" }}</td>
         <td>{{ submission.stage.current_stage|capfirst }}</td>
+        <td><a href="{% url 'view_editing' submission.pk %}">View</a></td>
       </tr>
       {% empty %}
       <tr>

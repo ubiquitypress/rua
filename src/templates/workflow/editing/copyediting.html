@@ -1,0 +1,36 @@
+<br />
+{% if not submission.stage.copyediting %}
+<p>Stage has not been initialised.</p>
+<form method="POST" action="?start=copyediting">
+	{% csrf_token %}
+	<button class="btn btn-primary" type="submit">Start Copyediting</button>
+</form>
+{% else %}
+<a href="{% url 'assign_copyeditor' submission.id %}" class="btn btn-primary pull-right">Assign Copyeditor</a><br /><br />
+<table class="table table-bordered">
+	<tr>
+		<th>Copyeditor</th>
+		<th>Requested</th>
+		<th>Accepted</th>
+		<th>Declined</th>
+		<th>Due</th>
+		<th>Completed</th>
+		<th>View</th>
+	</tr>
+	{% for assignment in submission.copyeditassignment_set.all %}
+	<tr>
+		<td>{{ assignment.copyeditor.profile.full_name }}</td>
+		<td>{{ assignment.requested }}</td>
+		<td>{% if assignment.accepted %}{{ assignment.accepted }}{% else %}--{% endif %}</td>
+		<td>{% if assignment.declined %}{{ assignment.declined }}{% else %}--{% endif %}</td>
+		<td>{{ assignment.due }}</td>
+		<td>{% if assignment.completed %}{{ assignment.completed }}{% else %}--{% endif %}</td>
+		<td><a href="{% url 'view_copyedit' submission.id assignment.id %}">View</a></td>
+	</tr>
+	{% empty %}
+	<tr>
+		<td colspan="7">No copyeditors have been assigned.</td>
+	</tr>
+	{% endfor %}
+</table>
+{% endif %}

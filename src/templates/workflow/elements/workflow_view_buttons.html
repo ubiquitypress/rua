@@ -6,7 +6,7 @@
     <a href="{% url 'view_review' submission.id %}" type="button" class="btn btn-primary{% if active == 'review' %} active{% endif %}">Review</a>
   </div>
   <div class="btn-group" role="group">
-    <a href="{% url 'in_editing' %}" type="button" class="btn btn-primary{% if active == 'editing' %} active{% endif %}">Editing</a>
+    <a href="{% url 'view_editing' submission.id %}" type="button" class="btn btn-primary{% if active == 'editing' %} active{% endif %}">Editing</a>
   </div>
   <div class="btn-group" role="group">
     <a href="{% url 'view_production' submission.id %}" type="button" class="btn btn-primary{% if active == 'production' %} active{% endif %}">Production</a>

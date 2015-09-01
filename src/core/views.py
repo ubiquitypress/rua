@@ -16,6 +16,7 @@ from django.conf import settings
 
 from core import models
 from core import forms
+from core import logic
 from workflow import forms as workflow_forms
 from submission import models as submission_models
 
@@ -155,8 +156,10 @@ def user_home(request):
 		'in_review': models.Book.objects.filter(stage__current_stage='review').count(),
 		'in_editing': models.Book.objects.filter(stage__current_stage='editing').count(),
 		'in_production': models.Book.objects.filter(stage__current_stage='production').count(),
+		'copyedits': models.CopyeditAssignment.objects.filter(copyeditor=request.user, completed__isnull=True),
 		'new_task_form': new_task_form,
-		'user_submissions': models.Book.objects.filter(owner=request.user)
+		'user_submissions': models.Book.objects.filter(owner=request.user),
+		'author_copyedit_tasks': logic.author_tasks(request.user)
 	}
 
 	return render(request, template, context)

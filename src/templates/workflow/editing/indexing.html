@@ -1,0 +1,24 @@
+<br />
+{% if not submission.stage.indexing %}
+<p>Stage has not been initialised.</p>
+<form method="POST" action="?start=indexing">
+	{% csrf_token %}
+	<button class="btn btn-primary" type="submit">Start Indexing</button>
+</form>
+{% else %}
+<a href="{% url 'assign_indexer' submission.id %}" class="btn btn-primary pull-right">Assign Indexer</a><br /><br />
+<table class="table table-bordered">
+	<tr>
+		<th>Indexer</th>
+		<th>Requested</th>
+		<th>Accepted</th>
+		<th>Declined</th>
+		<th>Due</th>
+		<th>Completed</th>
+		<th>View</th>
+	</tr>
+	<tr>
+		<td colspan="7">No indexers have been assigned</td>
+	</tr>
+</table>
+{% endif %}

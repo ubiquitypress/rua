@@ -298,6 +298,66 @@ class ReviewAssignment(models.Model):
 	def __repr__(self):
 		return u'%s - %s %s' %  (self.pk, self.book.title, self.user.username)
 
+class CopyeditAssignment(models.Model):
+	book = models.ForeignKey(Book)
+	copyeditor = models.ForeignKey(User, related_name='copyeditor')
+	requestor = models.ForeignKey(User, related_name='copyedit_requestor')
+	requested = models.DateField(auto_now_add=True)
+	accepted = models.DateField(blank=True, null=True)
+	declined = models.DateField(blank=True, null=True)
+	due = models.DateField(blank=True, null=True)
+	completed = models.DateField(blank=True, null=True)
+	editor_review = models.DateField(blank=True, null=True)
+	author_invited = models.DateField(blank=True, null=True)
+	author_completed = models.DateField(blank=True, null=True)
+	note = models.TextField(blank=True, null=True)
+	note_to_author = models.TextField(blank=True, null=True)
+	note_from_author = models.TextField(blank=True, null=True)
+
+	files = models.ManyToManyField('File', blank=True, null=True, related_name='cp_assigned_files')
+	copyedit_files = models.ManyToManyField('File', blank=True, null=True, related_name='copyedit_files')
+	author_files = models.ManyToManyField('File', blank=True, null=True, related_name='author_copyedit_files')
+
+	def __unicode__(self):
+		return u'%s - %s %s' % (self.pk, self.book.title, self.copyeditor.username)
+
+	def __repr__(self):
+		return u'%s - %s %s' %  (self.pk, self.book.title, self.copyeditor.username)
+
+class IndexAssignment(models.Model):
+	book = models.ForeignKey(Book)
+	indexer = models.ForeignKey(User, related_name='indexer')
+	requestor = models.ForeignKey(User, related_name='index_requestor')
+	requested = models.DateField(auto_now_add=True)
+	accepted = models.DateField(blank=True, null=True)
+	declined = models.DateField(blank=True, null=True)
+	due = models.DateField(blank=True, null=True)
+	completed = models.DateField(blank=True, null=True)
+	files = models.ManyToManyField('File', blank=True, null=True)
+
+	def __unicode__(self):
+		return u'%s - %s %s' % (self.pk, self.book.title, self.indexer.username)
+
+	def __repr__(self):
+		return u'%s - %s %s' %  (self.pk, self.book.title, self.indexer.username)
+
+class TypesetAssignment(models.Model):
+	book = models.ForeignKey(Book)
+	typesetter = models.ForeignKey(User, related_name='typesetter')
+	requestor = models.ForeignKey(User, related_name='typeset_requestor')
+	requested = models.DateField(auto_now_add=True)
+	accepted = models.DateField(blank=True, null=True)
+	declined = models.DateField(blank=True, null=True)
+	due = models.DateField(blank=True, null=True)
+	completed = models.DateField(blank=True, null=True)
+	files = models.ManyToManyField('File', blank=True, null=True)
+
+	def __unicode__(self):
+		return u'%s - %s %s' % (self.pk, self.book.title, self.typesetter.username)
+
+	def __repr__(self):
+		return u'%s - %s %s' %  (self.pk, self.book.title, self.typesetter.username)
+
 class License(models.Model):
 	name = models.CharField(max_length=1000)
 	short_name = models.CharField(max_length=100)
@@ -426,6 +486,11 @@ class Stage(models.Model):
 	publication = models.DateTimeField(null=True, blank=True)
 	declined = models.DateTimeField(null=True, blank=True)
 
+	# Optional stages
+	copyediting = models.DateTimeField(null=True, blank=True)
+	indexing = models.DateTimeField(null=True, blank=True)
+	typesetting = models.DateTimeField(null=True, blank=True)
+
 	def __unicode__(self):
 		return u'%s' % self.current_stage
 
@@ -456,6 +521,10 @@ log_choices = (
 	('submission', 'Submission'),
 	('workflow', 'Workflow'),
 	('file', 'File'),
+	('copyedit', 'Copyedit'),
+	('review', 'Review'),
+	('index', 'Index'),
+	('typeset', 'Typeset'),
 )
 
 class Log(models.Model):

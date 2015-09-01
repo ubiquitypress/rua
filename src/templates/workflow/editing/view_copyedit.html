@@ -1,0 +1,138 @@
+{% extends "base.html" %}
+{% load bootstrap3 %}
+{% load static from staticfiles %}
+
+{% block title %}Editing{% endblock %}
+
+{% block breadcrumbs %}
+  <ol class="breadcrumb">
+	  <li><a href="{% url 'user_home' %}">User Home</a></li>
+	  <li class="">Workflow</li>
+    <li><a href="{% url 'in_editing'%}">In Editing</a></li>
+    <li>{{ submission.title }}</li>
+	</ol>
+{% endblock %}
+
+{% block body %}
+<h4>Assignment</h4>
+<table class="table table-bordered">
+	<tr>
+		<th>Copyeditor</th>
+		<th>Requested</th>
+		<th>Accepted</th>
+		<th>Declined</th>
+		<th>Due</th>
+		<th>Completed</th>
+	</tr>
+	<tr>
+		<td>{{ copyedit.copyeditor.profile.full_name }}</td>
+		<td>{{ copyedit.requested }}</td>
+		<td>{% if copyedit.accepted %}{{ copyedit.accepted }}{% else %}--{% endif %}</td>
+		<td>{% if copyedit.declined %}{{ copyedit.declined }}{% else %}--{% endif %}</td>
+		<td>{{ copyedit.due }}</td>
+		<td>{% if copyedit.completed %}{{ copyedit.completed }}{% else %}--{% endif %}</td>
+	</tr>
+</table>
+<hr />
+<h4>Assigned Files</h4>
+<table class="table table-bordered">
+    <tr>
+      <th>Label</th>
+      <th>Original File Name</th>
+      <th>New File Name</th>
+      <th>Mimetype</th>
+      <th>File Type</th>
+    </tr>
+  {% for file in copyedit.files.all %}
+    <tr>
+      <td>{{ file.label }}</td>
+      <td>{{ file.original_filename }}</td>
+      <td>{{ file.uuid_filename }}</td>
+      <td>{{ file.mime_type }}</td>
+      <td>{{ file.kind }}</td>
+    </tr>
+  {% endfor %}
+</table>
+<hr />
+<h4>Copyeditor Files</h4>
+<table class="table table-bordered">
+    <tr>
+      <th>Label</th>
+      <th>Original File Name</th>
+      <th>New File Name</th>
+      <th>Mimetype</th>
+      <th>File Type</th>
+    </tr>
+  {% for file in copyedit.copyedit_files.all %}
+    <tr>
+      <td>{{ file.label }}</td>
+      <td>{{ file.original_filename }}</td>
+      <td>{{ file.uuid_filename }}</td>
+      <td>{{ file.mime_type }}</td>
+      <td>{{ file.kind }}</td>
+    </tr>
+  {% endfor %}
+</table>
+
+{% if copyedit.completed and not copyedit.editor_review %}
+<form method="POST">
+  {% csrf_token %}
+  <button class="btn btn-success" name="invite_author">Invite Author to Review Copyedits</button>
+</form>
+{% elif copyedit.completed and copyedit.editor_review and not copyedit.author_invited %}
+<h4>Invite Author to Review</h4>
+<form method="POST">
+  {% csrf_token %}
+  {% bootstrap_form author_form %}
+  <div class="form-group">
+    <label class="control-label" for="id_note_to_author">Email to Author</label>
+    <textarea class="form-control" cols="40" id="email_text" name="email_text" rows="10" title="">{{ email_text }}</textarea>
+  </div>
+  <button class="btn btn-success" name="send_invite_author" id="send_invite_author" type="submit">Send Request</button>
+</form>
+{% elif copyedit.completed and copyedit.editor_review and copyedit.author_invited %}
+<hr />
+<h4>Author Revision</h4>
+<table class="table table-bordered">
+  <tr>
+    <th>Editor Review</th>
+    <th>Author Invited</th>
+    <th>Author Completed</th>
+    <th>Note to Author</th>
+  </tr>
+  <tr>
+    <td>{{ copyedit.editor_review }}</td>
+    <td>{{ copyedit.author_invited }}</td>
+    <td>{{ copyedit.author_completed }}</td>
+    <td>{{ copyedit.note_to_author }}</td>
+  </tr>
+  <tr>
+    <th colspan="2">Note to Author</th>
+    <th colspan="2">Note from Author</th>
+  </tr>
+  <tr>
+    <td colspan="2">{{ copyedit.note_to_author }}</td>
+    <td colspan="2">{{ copyedit.note_from_author }}</td>
+  </tr>
+</table>
+<h4>Author Files</h4>
+<table class="table table-bordered">
+    <tr>
+      <th>Label</th>
+      <th>Original File Name</th>
+      <th>New File Name</th>
+      <th>Mimetype</th>
+      <th>File Type</th>
+    </tr>
+  {% for file in copyedit.author_files.all %}
+    <tr>
+      <td>{{ file.label }}</td>
+      <td>{{ file.original_filename }}</td>
+      <td>{{ file.uuid_filename }}</td>
+      <td>{{ file.mime_type }}</td>
+      <td>{{ file.kind }}</td>
+    </tr>
+  {% endfor %}
+</table>
+{% endif %}
+{% endblock %}

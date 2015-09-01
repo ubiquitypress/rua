@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+{% load bootstrap3 %}
+
+{% block title %}Assign Copyeditor{% endblock %}
+
+{% block breadcrumbs %}
+  <ol class="breadcrumb">
+    <li><a href="{% url 'user_home' %}">User Home</a></li>
+    <li class="">Workflow</li>
+    <li><a href="{% url 'in_editing'%}">In Editing</a></li>
+    <li>{{ submission.title }}</li>
+    <li>Assign Copyeditor</li>
+  </ol>
+{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/plug-ins/1.10.7/integration/bootstrap/3/dataTables.bootstrap.css">
+{% endblock css %}
+
+{% block body %}
+<form method="post">
+<div class="modal-body">
+	{% csrf_token %}
+  <h3>1. Select a Copyeditor(s)</h3>
+  <p class="small">You can assign more than one copyeditor, or, after completing this one, start another to assign different files.</p>
+  <table class="table table-bordered small" cellspacing="0" width="100%" id='indv-reviewer'>
+    <thead>
+    <tr>
+      <th>First Name</th>
+      <th>Last Name</th>
+      <th>Email</th>
+      <th>Select</th>
+    </tr>
+    </thead>
+    {% for copyeditor in copyeditors %}
+    <tr>
+      <td>{{ copyeditor.first_name }}</td>
+      <td>{{ copyeditor.last_name }}</td>
+      <td>{{ copyeditor.email }}</td>
+      <td><input type="checkbox" name="copyeditor" value="{{ copyeditor.id }}"/></td>
+    </tr>
+    {% endfor %}
+  </table>
+  <hr />
+  <h3>2. Select Files for Copyeditor(s)</h3>
+  <p class="small">You can select and existing file.</p>
+  <table class="table table-bordered small">
+      <tr>
+        <th>Label</th>
+        <th>Original File Name</th>
+        <th>New File Name</th>
+        <th>Mimetype</th>
+        <th>File Type</th>
+        <th>Select</th>
+      </tr>
+    {% for file in submission.files.all %}
+      <tr>
+        <td>{{ file.label }}</td>
+        <td>{{ file.original_filename }}</td>
+        <td>{{ file.uuid_filename }}</td>
+        <td>{{ file.mime_type }}</td>
+        <td>{{file.kind }}</td>
+        <td><input type="checkbox" name="file" value="{{ file.id }}"/></td>
+      </tr>
+    {% endfor %}
+    {% for reviewer in submission.review_assignments.all %}
+    {% for file in reviewer.files.all %}
+    <tr>
+        <td>{{ file.label }}</td>
+        <td>{{ file.original_filename }}</td>
+        <td>{{ file.uuid_filename }}</td>
+        <td>{{ file.mime_type }}</td>
+        <td>{{file.kind }}</td>
+        <td><input type="checkbox" name="file" value="{{ file.id }}"/></td>
+    </tr>
+    {% endfor %}
+    {% endfor %}
+  </table>
+  <p class="small">Or you can upload a new file(s) and use it.</p>
+
+
+  <hr />
+  <h3>3. Set Due Date</h3>
+  <p class="small">Set a due date for the edits.</p>
+  <input class="form-control" type="text" name="due_date" id="due_date" required="required" />
+  <hr />
+  <h3>4. Message to Copyeditor(s)</h3>
+  <p class="small">Add a message that will go out in the email to copyeditor(s).</p>
+  <textarea class="form-control" rows="10" id="message" name="message">{{ email_text.value }}</textarea>
+</div>
+<div class="modal-footer">
+  <button id="#ext-review" type="submit" class="btn btn-primary">Submit</button>
+</div>
+</form>
+{% endblock body %}
+
+{% block js %}
+{{ block.super }}
+<script type="text/javascript" language="javascript" src="//cdn.datatables.net/1.10.7/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" language="javascript" src="//cdn.datatables.net/plug-ins/1.10.7/integration/bootstrap/3/dataTables.bootstrap.js"></script>
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css">
+<script src="http://code.jquery.com/ui/1.11.0/jquery-ui.js"></script>
+<script>  
+  {% if reviewers %}
+  $(document).ready(function() {
+      $('#indv-reviewer').DataTable({
+        "lengthMenu": [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]]
+      });
+  } );
+  {% endif %}
+
+  {% if committees %}
+  $(document).ready(function() {
+      $('#comm-reviewer').DataTable({
+        "lengthMenu": [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]]
+      });
+  } );
+  {% endif %}
+
+$(document).ready(function() {
+      $('#due_date').datepicker({ dateFormat: 'yy-mm-dd' }).val();
+  });
+</script>
+
+
+{% endblock js %}
