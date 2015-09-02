@@ -52,6 +52,7 @@ INSTALLED_APPS = (
     'cron',
     'revisions',
     'copyedit',
+    'indexing',
 
     # 3rd Party
     'bootstrap3',
