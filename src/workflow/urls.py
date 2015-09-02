@@ -72,6 +72,9 @@ urlpatterns = patterns('',
     url(r'^production/(?P<submission_id>\d+)/catalog/contributor/(?P<contributor_type>[-\w]+)/$', 'workflow.views.update_contributor', name='add_contributor'),
     url(r'^production/(?P<submission_id>\d+)/catalog/contributor/(?P<contributor_type>[-\w]+)/(?P<contributor_id>\d+)/delete/$', 'workflow.views.delete_contributor', name='delete_contributor'),
 
+    url(r'^production/(?P<submission_id>\d+)/assign/typesetter/$', 'workflow.production_views.assign_typesetter', name='assign_typesetter'),\
+    url(r'^production/(?P<submission_id>\d+)/view/typesetter/(?P<typeset_id>\d+)$', 'workflow.production_views.view_typesetter', name='view_typesetter'),
+
     url(r'^log/(?P<submission_id>\d+)/', 'workflow.views.view_log', name='view_log'),
 
 )

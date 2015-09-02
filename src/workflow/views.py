@@ -318,6 +318,7 @@ def view_log(request, submission_id):
 @staff_member_required
 def view_production(request, submission_id):
 	book = get_object_or_404(models.Book, pk=submission_id)
+	typeset_assignments = models.TypesetAssignment.objects.filter(book=book)
 
 	if request.POST and request.GET.get('start', None):
 		if request.GET.get('start') == 'typesetting':
@@ -329,7 +330,8 @@ def view_production(request, submission_id):
 		'active': 'production',
 		'submission': book,
 		'format_list': models.Format.objects.filter(book=book).select_related('file'),
-		'chapter_list': models.Chapter.objects.filter(book=book).select_related('file')
+		'chapter_list': models.Chapter.objects.filter(book=book).select_related('file'),
+		'typeset_assignments': typeset_assignments,
 	}
 
 	return render(request, template, context)

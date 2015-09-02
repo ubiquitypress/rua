@@ -55,6 +55,7 @@ class EditMetadata(forms.ModelForm):
 			'slug',
 			'review_type',
 			'languages',
+			'publication_date'
 		)
 
 		widgets = {

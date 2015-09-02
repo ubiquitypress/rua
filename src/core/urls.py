@@ -15,6 +15,7 @@ urlpatterns = patterns('',
     url(r'^revisions/', include('revisions.urls')),
     url(r'^copyedit/', include('copyedit.urls')),
     url(r'^indexing/', include('indexing.urls')),
+    url(r'^typeset/', include('typeset.urls')),
     url(r'^api/', include('api.urls')),
 
     # 3rd Party Apps

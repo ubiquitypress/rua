@@ -155,8 +155,8 @@ class Book(models.Model):
 	owner = models.ForeignKey(User, null=True, blank=True)
 
 	# Dates
-	submission_date = models.DateTimeField(auto_now_add=True, null=True, blank=True)
-	publicaton_date = models.DateTimeField(null=True, blank=True)
+	submission_date = models.DateField(auto_now_add=True, null=True, blank=True)
+	publication_date = models.DateField(null=True, blank=True)
 
 	# Stage
 	stage = models.ForeignKey('Stage', null=True, blank=True)
@@ -336,7 +336,7 @@ class IndexAssignment(models.Model):
 	note_from_indexer = models.TextField(blank=True, null=True)
 
 	files = models.ManyToManyField('File', blank=True, null=True)
-	index_files = models.ManyToManyField('File', blank=True, null=True, related_name='index_files')
+	
 
 	def __unicode__(self):
 		return u'%s - %s %s' % (self.pk, self.book.title, self.indexer.username)
@@ -353,7 +353,17 @@ class TypesetAssignment(models.Model):
 	declined = models.DateField(blank=True, null=True)
 	due = models.DateField(blank=True, null=True)
 	completed = models.DateField(blank=True, null=True)
+	editor_review = models.DateField(blank=True, null=True)
+	author_invited = models.DateField(blank=True, null=True)
+	author_completed = models.DateField(blank=True, null=True)
+	note = models.TextField(blank=True, null=True)
+	note_to_author = models.TextField(blank=True, null=True)
+	note_from_author = models.TextField(blank=True, null=True)
+
 	files = models.ManyToManyField('File', blank=True, null=True)
+	index_files = models.ManyToManyField('File', blank=True, null=True, related_name='index_files')
+	typeset_files = models.ManyToManyField('File', blank=True, null=True, related_name='typeset_files')
+	author_files = models.ManyToManyField('File', blank=True, null=True, related_name='author_typeset_files')
 
 	def __unicode__(self):
 		return u'%s - %s %s' % (self.pk, self.book.title, self.typesetter.username)

@@ -84,6 +84,7 @@ admin_list = [
 	(Identifier,),
 	(Language,),
 	(CopyeditAssignment,),
+	(TypesetAssignment,),
 ]
 
 [admin.site.register(*t) for t in admin_list]

@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% load static from staticfiles %}
+{% load bootstrap3 %}
+
+{% block body %}
+
+ <div class="col-md-12">
+		<h2>Typeset Files</h2>
+    <form method="post" class="form" enctype="multipart/form-data">
+	    {% csrf_token %}
+        <p>Your label will be displayed for the editors to see.</p>
+        {% for file in typeset.typeset_files.all %}
+        <h5>{{ file.original_filename }}</h5>
+          <div class="form-group">
+            <label class="sr-only" for="label_">Label</label>
+            <input type="text" class="form-control" name="label_{{ file.id }}" placeholder="Label" {% if file.label %}value="{{ file.label }}"{% endif %}>
+          </div>
+        <hr />
+        {% endfor %}
+      <button name="next_stage" type="submit" class="btn btn-primary">
+          <i class="fa fa-arrow-right"></i> Submit Info
+      </button>
+		</form>
+	</div>
+{% endblock body %}
+
+{% block js %}
+
+{% endblock %}

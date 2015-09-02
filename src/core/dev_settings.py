@@ -53,6 +53,7 @@ INSTALLED_APPS = (
     'revisions',
     'copyedit',
     'indexing',
+    'typeset',
 
     # 3rd Party
     'bootstrap3',

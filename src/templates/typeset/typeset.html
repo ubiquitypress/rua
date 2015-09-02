@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% load static from staticfiles %}
+{% load bootstrap3 %}
+
+{% block title %}Copyediting #{{ submission.id }}{% endblock %}
+
+{% block breadcrumbs %}
+  <ol class="breadcrumb">
+    <li>Copyedit</li>
+    <li><a class="active" href="">{{ submission.title }}</a></li>
+	</ol>
+{% endblock %}
+
+{% block body %}
+	<div class="col-md-12">
+    {% if press.general.copyedit_instructions %}
+    <h4>Typesetting Instructions</h4>
+    {{ press.general.typeset_instructions|safe }}
+    {% endif %}
+    <h4>Files</h4>
+    <table class="table table-bordered">
+        <tr>
+          <th>Label</th>
+          <th>Original File Name</th>
+          <th>New File Name</th>
+          <th>Mimetype</th>
+          <th>File Type</th>
+          <th>Download</th>
+        </tr>
+      {% for file in typeset.files.all %}
+        <tr>
+          <td>{{ file.label }}</td>
+          <td>{{ file.original_filename }}</td>
+          <td>{{ file.uuid_filename }}</td>
+          <td>{{ file.mime_type }}</td>
+          <td>{{ file.kind }}</td>
+          <td><a href="{% url 'serve_file' submission.id file.id %}" class="btn btn-primary">&nbsp;<i class="fa fa-download">&nbsp;</i></a>
+        </tr>
+      {% endfor %}
+    </table>
+    <h4>Complete Typeset</h4>
+    <p>Complete the form below and upload your files. You will be able to give each file a label. The upload box is capable of uploading more than one file at a time.</p>
+    <form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    {% bootstrap_form form %}
+    <div class="row">
+        <div class="col-md-6">
+          <label for="copyedit_file_upload">Upload Files</label>
+           <div class="input-group">
+              <span class="input-group-btn">
+                  <span class="btn btn-primary btn-file">
+                      Browse&hellip; <input type="file" id="typeset_file_upload" name="typeset_file_upload" multiple>
+                  </span>
+              </span>
+              <input type="text" class="form-control" readonly>
+          </div>
+        </div>
+      </div>
+      <br />
+      <button type="submit" name="submit" class="btn btn-success">Complete Typesetting</button>
+    </form>
+    </div>
+	</div>
+{% endblock body %}
+
+{% block js %}
+<script type="text/javascript" src="{% static "js/fancyfile.js" %}"></script>
+{% endblock js %}

@@ -75,14 +75,17 @@
             <div class="col-md-4">
               {% bootstrap_field metadata_form.review_type %}
             </div>
-            <div class="col-md-4" style="max-height: 200px; overflow-x: scroll;">
-              {% bootstrap_field metadata_form.languages %}
+            <div class="col-md-4">
+              {% bootstrap_field metadata_form.publication_date %}
             </div>
           </div>
-          
+
           <div class="row">
-            <div class="col-md-12">
-              <div class="aside">Hit space or enter to add a new keyword.</div>
+            <div class="col-md-6" style="max-height: 200px; overflow-x: scroll;">
+              {% bootstrap_field metadata_form.languages %}
+            </div>
+            <div class="col-md-6">
+              <div class="aside"><strong>Keywords</strong> Hit space or enter to add a new keyword.</div>
               <ul id="tags">
                 {% for keyword in submission.keywords.all %}<li>{{ keyword }}</li>{% endfor %}
               </ul>
@@ -186,11 +189,17 @@ $(function() {
     }
 });
 </script>
-<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.12/jquery-ui.min.js" type="text/javascript" charset="utf-8"></script>
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css">
+<script src="http://code.jquery.com/ui/1.11.0/jquery-ui.js"></script>
 <script src="{% static "js/tag-it.min.js" %}"></script>
 <script type="text/javascript">
   $(document).ready(function() {
       $("#tags").tagit();
+  });
+</script>
+<script type="text/javascript">
+  $(document).ready(function() {
+      $('#id_publication_date').datepicker({ dateFormat: 'yy-mm-dd' }).val();
   });
 </script>
 {% endblock js %}

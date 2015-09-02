@@ -1,0 +1,34 @@
+{% if not submission.stage.typesetting %}
+<p>Stage has not been initialised.</p>
+<form method="POST" action="?start=typesetting">
+	{% csrf_token %}
+	<button class="btn btn-primary" type="submit">Start Typesetting</button>
+</form>
+{% else %}
+<table class="table table-bordered">
+	<tr>
+		<th>Typesetter</th>
+		<th>Requested</th>
+		<th>Accepted</th>
+		<th>Declined</th>
+		<th>Due</th>
+		<th>Completed</th>
+		<th>View</th>
+	</tr>
+	{% for typeset in typeset_assignments %}
+	<tr>
+		<td>{{ typeset.typesetter.profile.full_name }}</td>
+		<td>{{ typeset.requested }}</td>
+		<td>{% if typeset.accepted %}{{ typeset.accepted }}{% else %}--{% endif %}</td>
+		<td>{% if typeset.declined %}{{ typeset.declined }}{% else %}--{% endif %}</td>
+		<td>{{ typeset.due }}</td>
+		<td>{% if typeset.completed %}{{ typeset.completed }}{% else %}--{% endif %}</td>
+		<td><a href="{% url 'view_typesetter' submission.id typeset.id %}">View</a></td>
+	</tr>
+	{% empty %}
+	<tr>
+		<td colspan="7">No typesetters have been assigned</td>
+	</tr>
+	{% endfor %}
+</table>
+{% endif %}
