@@ -278,5 +278,25 @@
     },
     "model": "core.setting",
     "pk": 28
+},
+{
+    "fields": {
+        "value": "Dear {% if index.indexer.profile.salutation %}{{ndex.indexer.profile.salutation}}{% else %}{{ndex.indexer.first_name}}{% endif %} {{ndex.indexer.last_name}},\r\n\r\nThis is a request that you undertake copyediting on {{submission.title}}. Please login to the BMS, you will be directed to undertake your copyedit from the user dashboard.\r\n\r\nYour username is: {{ndex.indexer.username}}\r\n\r\nCopyedits are requested to be completed by: {{index.due}}.\r\n\r\nRegards",
+        "group": 3,
+        "name": "index_request",
+        "types": "rich_text"
+    },
+    "model": "core.setting",
+    "pk": 29
+},
+{
+    "fields": {
+        "value": "<p>Please do some great indexing. Lots of love, Andy.</p>",
+        "group": 1,
+        "name": "index_instructions",
+        "types": "rich_text"
+    },
+    "model": "core.setting",
+    "pk": 30
 }
 ]
