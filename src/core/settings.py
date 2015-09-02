@@ -25,8 +25,6 @@ SECRET_KEY = '_%@8*2$*1*i&um4+#a6w(%xqa_19=tfmhu9u-l*7t(a$g(2)wg'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-TEMPLATE_DEBUG = True
-
 ALLOWED_HOSTS = []
 
 BASE_URL = 'http://localhost:8000/'
@@ -148,8 +146,6 @@ TEMPLATES = [
 
                 "core.context_processors.press",
                 "core.context_processors.task_count",
-                # `allauth` needs this from django
-                'django.template.context_processors.request',
             ],
         },
     },

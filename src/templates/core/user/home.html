@@ -111,6 +111,18 @@
 			</div>
 			{% endfor %}
 		</div>
+		<div class="col-md-4">
+			<h3><i class="fa fa-tasks"></i>&nbsp;Indexing</h3>
+			{% for index in indexes %}
+			<div class="bs-callout bs-callout-submission" id="callout-helper-bg-specificity">
+				<p><a href="{% url 'index' index.book.id index.id %}">Index for {{ index.book.title }} due on {{ index.due }}</a></p>
+			</div>
+			{% empty %}
+			<div class="bs-callout" id="callout-helper-bg-specificity">
+				<p>No indexing requests.</p>
+			</div>
+			{% endfor %}
+		</div>
 	</div>
 </div>
 

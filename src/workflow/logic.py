@@ -65,6 +65,23 @@ def handle_copyeditor_assignment(book, copyedit, files, due_date, email_text, re
     log.add_log_entry(book=book, user=requestor, kind='copyedit', message='Copyeditor %s %s assigned. Due %s' % (copyedit.first_name, copyedit.last_name, due_date), short_name='Copyedit Assignment')
     send_copyedit_assignment(book, new_copyeditor, email_text)
 
+def handle_indexer_assignment(book, index, files, due_date, email_text, requestor):
+
+    new_indexer = models.IndexAssignment(
+        book=book,
+        indexer=index,
+        requestor=requestor,
+        due=due_date,
+    )
+
+    new_indexer.save()
+
+    for _file in files:
+        new_indexer.files.add(_file)
+
+    new_indexer.save()
+
+    log.add_log_entry(book=book, user=requestor, kind='index', message='Indexer %s %s assigned. Due %s' % (index.first_name, index.last_name, due_date), short_name='Indexing Assignment')
 
 # Email Handlers - TODO: move to email.py?
 

@@ -333,7 +333,10 @@ class IndexAssignment(models.Model):
 	declined = models.DateField(blank=True, null=True)
 	due = models.DateField(blank=True, null=True)
 	completed = models.DateField(blank=True, null=True)
+	note_from_indexer = models.TextField(blank=True, null=True)
+
 	files = models.ManyToManyField('File', blank=True, null=True)
+	index_files = models.ManyToManyField('File', blank=True, null=True, related_name='index_files')
 
 	def __unicode__(self):
 		return u'%s - %s %s' % (self.pk, self.book.title, self.indexer.username)

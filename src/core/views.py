@@ -159,7 +159,8 @@ def user_home(request):
 		'copyedits': models.CopyeditAssignment.objects.filter(copyeditor=request.user, completed__isnull=True),
 		'new_task_form': new_task_form,
 		'user_submissions': models.Book.objects.filter(owner=request.user),
-		'author_copyedit_tasks': logic.author_tasks(request.user)
+		'author_copyedit_tasks': logic.author_tasks(request.user),
+		'indexes': models.IndexAssignment.objects.filter(indexer=request.user, completed__isnull=True),
 	}
 
 	return render(request, template, context)

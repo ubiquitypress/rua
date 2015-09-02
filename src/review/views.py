@@ -232,6 +232,7 @@ def handle_review_file(file, book, review_assignment, kind):
 		uuid_filename=filename,
 		stage_uploaded=1,
 		kind=kind,
+		owner=review_assignment.user,
 	)
 	new_file.save()
 	review_assignment.files.add(new_file)

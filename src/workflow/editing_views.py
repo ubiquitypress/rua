@@ -99,4 +99,39 @@ def view_copyedit(request, submission_id, copyedit_id):
 
 @staff_member_required
 def assign_indexer(request, submission_id):
-	pass
+	book = get_object_or_404(models.Book, pk=submission_id)
+	indexers = models.User.objects.filter(profile__roles__slug='indexer')
+
+	if request.POST:
+		indexer_list = User.objects.filter(pk__in=request.POST.getlist('indexer'))
+		file_list = models.File.objects.filter(pk__in=request.POST.getlist('file'))
+		due_date = request.POST.get('due_date')
+		email_text = request.POST.get('message')
+
+		for indexer in indexer_list:
+			logic.handle_indexer_assignment(book, indexer, file_list, due_date, email_text, requestor=request.user)
+
+		return redirect(reverse('view_editing', kwargs={'submission_id': submission_id}))
+
+	template = 'workflow/editing/assign_indexer.html'
+	context = {
+		'submission': book,
+		'indexers': indexers,
+		'email_text': models.Setting.objects.get(group__name='email', name='index_request'),
+	}
+
+	return render(request, template, context)
+
+@staff_member_required
+def view_index(request, submission_id, index_id):
+	book = get_object_or_404(models.Book, pk=submission_id)
+	index = get_object_or_404(models.IndexAssignment, pk=index_id)
+
+	template = 'workflow/editing/view_index.html'
+	context = {
+		'submission': book,
+		'index': index,
+	}
+
+	return render(request, template, context)
+

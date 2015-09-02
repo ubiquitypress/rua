@@ -17,7 +17,7 @@
 <h4>Assignment</h4>
 <table class="table table-bordered">
 	<tr>
-		<th>Copyeditor</th>
+		<th>Indexer</th>
 		<th>Requested</th>
 		<th>Accepted</th>
 		<th>Declined</th>
@@ -25,12 +25,12 @@
 		<th>Completed</th>
 	</tr>
 	<tr>
-		<td>{{ copyedit.copyeditor.profile.full_name }}</td>
-		<td>{{ copyedit.requested }}</td>
-		<td>{% if copyedit.accepted %}{{ copyedit.accepted }}{% else %}--{% endif %}</td>
-		<td>{% if copyedit.declined %}{{ copyedit.declined }}{% else %}--{% endif %}</td>
-		<td>{{ copyedit.due }}</td>
-		<td>{% if copyedit.completed %}{{ copyedit.completed }}{% else %}--{% endif %}</td>
+		<td>{{ index.indexer.profile.full_name }}</td>
+		<td>{{ index.requested }}</td>
+		<td>{% if index.accepted %}{{ index.accepted }}{% else %}--{% endif %}</td>
+		<td>{% if index.declined %}{{ index.declined }}{% else %}--{% endif %}</td>
+		<td>{{ index.due }}</td>
+		<td>{% if index.completed %}{{ index.completed }}{% else %}--{% endif %}</td>
 	</tr>
 </table>
 <hr />
@@ -44,7 +44,7 @@
       <th>File Type</th>
       <th>Download</th>
     </tr>
-  {% for file in copyedit.files.all %}
+  {% for file in index.files.all %}
     <tr>
       <td>{{ file.label }}</td>
       <td>{{ file.original_filename }}</td>
@@ -56,7 +56,7 @@
   {% endfor %}
 </table>
 <hr />
-<h4>Copyeditor Files</h4>
+<h4>Indexer Files</h4>
 <table class="table table-bordered">
     <tr>
       <th>Label</th>
@@ -64,9 +64,9 @@
       <th>New File Name</th>
       <th>Mimetype</th>
       <th>File Type</th>
-      <th>Download</th>
+      <th>Download</th<
     </tr>
-  {% for file in copyedit.copyedit_files.all %}
+  {% for file in index.index_files.all %}
     <tr>
       <td>{{ file.label }}</td>
       <td>{{ file.original_filename }}</td>
@@ -75,6 +75,10 @@
       <td>{{ file.kind }}</td>
       <td><a href="{% url 'serve_file' submission.id file.id %}" class="btn btn-primary">&nbsp;<i class="fa fa-download">&nbsp;</i></a>
     </tr>
+  {% empty %}
+  <tr>
+    <td colspan="5">No files uploaded yet.</td>
+  </tr>
   {% endfor %}
 </table>
 
@@ -127,7 +131,6 @@
       <th>New File Name</th>
       <th>Mimetype</th>
       <th>File Type</th>
-      <th>Download</th>
     </tr>
   {% for file in copyedit.author_files.all %}
     <tr>
@@ -136,7 +139,6 @@
       <td>{{ file.uuid_filename }}</td>
       <td>{{ file.mime_type }}</td>
       <td>{{ file.kind }}</td>
-      <td><a href="{% url 'serve_file' submission.id file.id %}" class="btn btn-primary">&nbsp;<i class="fa fa-download">&nbsp;</i></a>
     </tr>
   {% endfor %}
 </table>

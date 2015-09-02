@@ -17,8 +17,20 @@
 		<th>Completed</th>
 		<th>View</th>
 	</tr>
+	{% for assignment in submission.indexassignment_set.all %}
+	<tr>
+		<td>{{ assignment.indexer.profile.full_name }}</td>
+		<td>{{ assignment.requested }}</td>
+		<td>{% if assignment.accepted %}{{ assignment.accepted }}{% else %}--{% endif %}</td>
+		<td>{% if assignment.declined %}{{ assignment.declined }}{% else %}--{% endif %}</td>
+		<td>{{ assignment.due }}</td>
+		<td>{% if assignment.completed %}{{ assignment.completed }}{% else %}--{% endif %}</td>
+		<td><a href="{% url 'view_index' submission.id assignment.id %}">View</a></td>
+	</tr>
+	{% empty %}
 	<tr>
 		<td colspan="7">No indexers have been assigned</td>
 	</tr>
+	{% endfor %}
 </table>
 {% endif %}
