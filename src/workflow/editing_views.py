@@ -26,6 +26,11 @@ def view_editing(request, submission_id):
 			book.stage.copyediting = timezone.now()
 		elif action == 'indexing':
 			book.stage.indexing = timezone.now()
+		elif action == 'production':
+			book.stage.production = timezone.now()
+			book.stage.current_stage = 'production'
+			book.stage.save()
+			return redirect(reverse('view_production', kwargs={'submission_id': submission_id}))
 
 		book.stage.save()
 		return redirect(reverse('view_editing', kwargs={'submission_id': submission_id}))

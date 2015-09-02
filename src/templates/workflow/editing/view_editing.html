@@ -38,6 +38,10 @@
   </div>
 
   <hr />
+  <form method="POST" action="?start=production">
+    {% csrf_token %}
+    <button class="btn btn-success" name="move_to_production" id="move_to_production" type="submit">Move to Production</button>
+  </form>
 </div>
 
 {% endblock %}
