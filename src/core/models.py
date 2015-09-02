@@ -628,7 +628,7 @@ class ProposalFormElement(models.Model):
 		('date', 'Date'),
 	)
 
-	name = models.CharField(max_length=100)
+	name = models.CharField(max_length=1000)
 	choices = models.CharField(max_length=500, null=True, blank=True, help_text='Seperate choices with the bar | character.')
 	field_type = models.CharField(max_length=100, choices=field_choices)
 	required = models.BooleanField()
