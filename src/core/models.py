@@ -336,6 +336,7 @@ class IndexAssignment(models.Model):
 	note_from_indexer = models.TextField(blank=True, null=True)
 
 	files = models.ManyToManyField('File', blank=True, null=True)
+	index_files = models.ManyToManyField('File', blank=True, null=True, related_name='index_files')
 	
 
 	def __unicode__(self):
@@ -361,7 +362,6 @@ class TypesetAssignment(models.Model):
 	note_from_author = models.TextField(blank=True, null=True)
 
 	files = models.ManyToManyField('File', blank=True, null=True)
-	index_files = models.ManyToManyField('File', blank=True, null=True, related_name='index_files')
 	typeset_files = models.ManyToManyField('File', blank=True, null=True, related_name='typeset_files')
 	author_files = models.ManyToManyField('File', blank=True, null=True, related_name='author_typeset_files')
 
