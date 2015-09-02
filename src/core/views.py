@@ -49,7 +49,10 @@ def contact(request):
 def login(request):
 	if request.user.is_authenticated():
 		messages.info(request, 'You are already logged in.')
-		return redirect(reverse('monitor_dashboard'))
+		if request.GET.get('next'):
+			return redirect(request.GET.get('next'))
+		else:
+			return redirect(reverse('user_home'))
 
 	if request.POST:
 		user = request.POST.get('user_name')
@@ -64,7 +67,7 @@ def login(request):
 				if request.GET.get('next'):
 					return redirect(request.GET.get('next'))
 				else:
-					return redirect(reverse('index'))
+					return redirect(reverse('user_home'))
 			else:
 				messages.add_message(request, messages.ERROR, 'User account is not active.')
 		else:
