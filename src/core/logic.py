@@ -39,8 +39,12 @@ def author_tasks(user):
 	base_url = models.Setting.objects.get(group__name='general', name='base_url').value
 	task_list = []
 	copyedit_tasks = models.CopyeditAssignment.objects.filter(book__owner=user, author_invited__isnull=False, author_completed__isnull=True)
+	typeset_tasks = models.TypesetAssignment.objects.filter(book__owner=user, author_invited__isnull=False, author_completed__isnull=True)
 
 	for copyedit in copyedit_tasks:
 		task_list.append({'task': 'Copyedit Review', 'title': copyedit.book.title, 'url': 'http://%s/copyedit/book/%s/edit/%s/author/' % (base_url, copyedit.book.id, copyedit.id)})
+
+	for typeset in typeset_tasks:
+		task_list.append({'task': 'Typsetting Review', 'title': typeset.book.title, 'url': 'http://%s/typeset/book/%s/typeset/%s/author/' % (base_url, typeset.book.id, typeset.id)})
 
 	return task_list

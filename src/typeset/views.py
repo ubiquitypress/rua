@@ -79,27 +79,27 @@ def typeset_files(request, submission_id, typeset_id):
 @login_required
 def typeset_author(request, submission_id, typeset_id):
 	book = get_object_or_404(models.Book, pk=submission_id)
-	copyedit = get_object_or_404(models.CopyeditAssignment, pk=copyedit_id, book__owner=request.user, book=book, author_invited__isnull=False, author_completed__isnull=True)
+	typeset = get_object_or_404(models.TypesetAssignment, pk=typeset_id, typesetter=request.user, book=book)
 
-	form = forms.CopyeditAuthor(instance=copyedit)
+	form = forms.TypesetAuthor(instance=typeset)
 
 	if request.POST:
-		form = forms.CopyeditAuthor(request.POST, instance=copyedit)
+		form = forms.TypesetAuthor(request.POST, instance=typeset)
 		if form.is_valid():
 			form.save()
-			for _file in request.FILES.getlist('copyedit_file_upload'):
-				new_file = handle_copyedit_file(_file, book, copyedit, 'copyedit')
-				copyedit.author_files.add(new_file)
-				copyedit.author_completed = timezone.now()
-				copyedit.save()
+			for _file in request.FILES.getlist('typeset_file_upload'):
+				new_file = handle_typeset_file(_file, book, typeset, 'typeset')
+				typeset.author_files.add(new_file)
+				typeset.author_completed = timezone.now()
+				typeset.save()
 				messages.add_message(request, messages.SUCCESS, 'Copyedit task complete. Thanks.')
-				new_task = task.create_new_task(book, copyedit.book.owner, copyedit.requestor, "Author Copyediting completed for %s" % book.title, workflow='editing')
+				new_task = task.create_new_task(book, typeset.book.owner, typeset.requestor, "Author Typesetting completed for %s" % book.title, workflow='production')
 				return redirect(reverse('user_home'))
 
-	template = 'copyedit/copyedit_author.html'
+	template = 'typeset/typeset_author.html'
 	context = {
 		'submission': book,
-		'copyedit': copyedit,
+		'typeset': typeset,
 		'form': form,
 	}
 

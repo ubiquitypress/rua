@@ -6,7 +6,7 @@
 
 {% block breadcrumbs %}
   <ol class="breadcrumb">
-    <li>Copyedit</li>
+    <li>Typeset</li>
     <li><a class="active" href="">{{ submission.title }}</a></li>
 	</ol>
 {% endblock %}
@@ -15,10 +15,10 @@
 	<div class="col-md-12">
     {% if press.general.copyedit_instructions %}
     <h4>Copyediting Instructions</h4>
-    {{ press.general.copyedit_author_instructions|safe }}
+    {{ press.general.typeset_author_instructions|safe }}
     {% endif %}
     <h4>Note from Editor</h4>
-    <p>{{ copyedit.note_to_author }}</p>
+    <p>{{ typeset.note_to_author }}</p>
     <h4>Files</h4>
     <table class="table table-bordered">
         <tr>
@@ -29,7 +29,7 @@
           <th>File Type</th>
           <th>Download</th>
         </tr>
-      {% for file in copyedit.copyedit_files.all %}
+      {% for file in typeset.typeset_files.all %}
         <tr>
           <td>{{ file.label }}</td>
           <td>{{ file.original_filename }}</td>
@@ -40,8 +40,8 @@
         </tr>
       {% endfor %}
     </table>
-    <h4>Complete Copyediting</h4>
-    <p>Complete the form below and upload your files. If you're happy with the copyedit, you can skip uploading files. You will be able to give each file a label. The upload box is capable of uploading more than one file at a time.</p>
+    <h4>Complete Typesetting</h4>
+    <p>Complete the form below and upload your files. If you're happy with the typesetting, you can skip uploading files. You will be able to give each file a label. The upload box is capable of uploading more than one file at a time.</p>
     <form method="POST" enctype="multipart/form-data">
     {% csrf_token %}
     {% bootstrap_form form %}
@@ -51,7 +51,7 @@
            <div class="input-group">
               <span class="input-group-btn">
                   <span class="btn btn-primary btn-file">
-                      Browse&hellip; <input type="file" id="copyedit_file_upload" name="copyedit_file_upload" multiple>
+                      Browse&hellip; <input type="file" id="typeset_file_upload" name="typeset_file_upload" multiple>
                   </span>
               </span>
               <input type="text" class="form-control" readonly>
@@ -59,7 +59,7 @@
         </div>
       </div>
       <br />
-      <button type="submit" name="submit" class="btn btn-success">Complete Copyedit</button>
+      <button type="submit" name="submit" class="btn btn-success">Complete Typesetting</button>
     </form>
     </div>
 	</div>

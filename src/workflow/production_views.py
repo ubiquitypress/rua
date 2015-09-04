@@ -44,8 +44,11 @@ def assign_typesetter(request, submission_id):
 def view_typesetter(request, submission_id, typeset_id):
 	book = get_object_or_404(models.Book, pk=submission_id)
 	typeset = get_object_or_404(models.TypesetAssignment, pk=typeset_id)
-	author_form = forms.TypesetAuthorInvite(instance=typeset)
 	email_text = models.Setting.objects.get(group__name='email', name='author_typeset_request').value
+
+	author_form = forms.TypesetAuthorInvite(instance=typeset)
+	if typeset.editor_second_review:
+		author_form = forms.TypesetTypesetterInvite(instance=typeset)
 
 	if request.POST and 'invite_author' in request.POST:
 		if not typeset.completed:
@@ -54,6 +57,11 @@ def view_typesetter(request, submission_id, typeset_id):
 		else:
 			typeset.editor_review = timezone.now()
 			typeset.save()
+
+	elif request.POST and 'invite_typesetter' in request.POST:
+		typeset.editor_second_review = timezone.now()
+		typeset.save()
+		return redirect(reverse('view_typesetter', kwargs={'submission_id': submission_id, 'typeset_id': typeset_id}))
 
 	elif request.POST and 'send_invite_author' in request.POST:
 		author_form = forms.TypesetAuthorInvite(request.POST, instance=typeset)

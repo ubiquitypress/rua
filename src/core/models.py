@@ -357,13 +357,20 @@ class TypesetAssignment(models.Model):
 	editor_review = models.DateField(blank=True, null=True)
 	author_invited = models.DateField(blank=True, null=True)
 	author_completed = models.DateField(blank=True, null=True)
+	editor_second_review = models.DateField(blank=True, null=True)
+	typsetter_invited = models.DateField(blank=True, null=True)
+	typsetter_completed = models.DateField(blank=True, null=True)
+
 	note = models.TextField(blank=True, null=True)
 	note_to_author = models.TextField(blank=True, null=True)
 	note_from_author = models.TextField(blank=True, null=True)
+	note_to_typesetter = models.TextField(blank=True, null=True)
+	note_from_typesetter = models.TextField(blank=True, null=True)
 
 	files = models.ManyToManyField('File', blank=True, null=True)
 	typeset_files = models.ManyToManyField('File', blank=True, null=True, related_name='typeset_files')
 	author_files = models.ManyToManyField('File', blank=True, null=True, related_name='author_typeset_files')
+	typesetter_files = models.ManyToManyField('File', blank=True, null=True, related_name='typsetter_files')
 
 	def __unicode__(self):
 		return u'%s - %s %s' % (self.pk, self.book.title, self.typesetter.username)

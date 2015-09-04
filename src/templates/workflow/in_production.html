@@ -23,6 +23,7 @@
         <th>Date Submitted</th>
         <th>Production Started</th>
         <th>Current Stage</th>
+        <th>View</th>
       </tr>
       {% for submission in submission_list %}
       <tr>
@@ -32,6 +33,7 @@
         <td>{{ submission.submission_date|date:"DATETIME_FORMAT" }}</td>
         <td>{{ submission.stage.production|date:"DATETIME_FORMAT" }}</td>
         <td>{{ submission.stage.current_stage|capfirst }}</td>
+        <td><a href="{% url 'view_production' submission.id %}">View</a></td>
       </tr>
       {% empty %}
       <tr>
