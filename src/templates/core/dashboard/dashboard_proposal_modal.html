@@ -21,34 +21,6 @@
                 <td>{{ proposal.owner.first_name }} {{ proposal.owner.last_name }}</td>
                 <td>{{ proposal.date_submitted }}</td>
               </tr>
-              <thead>
-              <tr>
-                <th colspan="4">Supporting File</th>
-              </tr>
-              </thead>
-              <tr>
-                <td colspan="4">
-                 {{ proposal.uploaded_file }}
-                </td>
-              </tr>
-              <thead>
-              <tr>
-                <th colspan="2" width="50%">Funding</th>
-                <th colspan="2">Notes</th>
-              </tr>
-              </thead>
-              <tr>
-                <td colspan="2">{{ proposal.funding|safe }}</td>
-                <td colspan="2">{{ proposal.notes|safe }}</td>
-              </tr>
-              <thead>
-              <tr>
-                <th colspan="4">Description</th>
-              </tr>
-              </thead>
-              <tr>
-                <td colspan="4">{{ proposal.description|safe }}</td>
-                </tr>
               </table>
               <h4>Reviews</h4>
               {% include "workflow/proposals/proposal_review_block.html" with review_data=proposal.review_assignments.all %}

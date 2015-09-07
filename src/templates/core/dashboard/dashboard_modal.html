@@ -3,14 +3,84 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title">{{ submission.title }}</h4>
+        <h4 class="modal-title">{% if submission.prefix %}{{ submission.prefix }} {% endif %}{{ submission.title }}{% if submission.subtitle %} {{ submission.subtitle }}{% endif %}</h4>
       </div>
-      <div class="modal-body">
-        <p>Hello</p>
+      <div class="row modal-body">
+        <div class="col-md-9">
+          <h4 id="summary">Summary</h4>
+          <ul id="main_summary_tabs" class="nav nav-tabs" role="tablist">
+            <li role="presentation" class="active"><a href="#main_summary-{{ submission.id }}" aria-controls="home" role="tab" data-toggle="tab">Summary</a></li>
+            <li role="presentation"><a href="#description-{{ submission.id }}" aria-controls="profile" role="tab" data-toggle="tab">Description</a></li>
+            <li role="presentation"><a href="#cover_letter-{{ submission.id }}" aria-controls="messages" role="tab" data-toggle="tab">Cover Letter</a></li>
+            <li role="presentation"><a href="#reviewer_sugestions-{{ submission.id }}" aria-controls="messages" role="tab-{{ submission.id }}" data-toggle="tab">Reviewer Suggestions</a></li>
+            <li role="presentation"><a href="#competing_interests-{{ submission.id }}" aria-controls="messages" role="tab" data-toggle="tab">Competing Interests</a></li>
+          </ul>
+
+          <!-- Tab panes -->
+          <div class="tab-content">
+            <div role="tabpanel" class="tab-pane active" id="main_summary-{{ submission.id }}">{% include "workflow/elements/summary.html" %}</div>
+            <div role="tabpanel" class="tab-pane" id="description-{{ submission.id }}"><p class="tab-p">{{ submission.description|safe }}</p></div>
+            <div role="tabpanel" class="tab-pane" id="cover_letter-{{ submission.id }}"><p class="tab-p">{{ submission.cover_letter|safe }}</p></div>
+            <div role="tabpanel" class="tab-pane" id="reviewer_sugestions-{{ submission.id }}"><p class="tab-p">{{ submission.reviewer_suggestions|safe }}</p></div>
+            <div role="tabpanel" class="tab-pane" id="competing_interests-{{ submission.id }}"><p class="tab-p">{{ submission.competing_interests|safe }}</p></div>
+          </div>
+
+          {% include "core/dashboard/dashboard_files.html" with submission=submission %}
+        </div>
+        <div class="col-md-3">
+          <div>
+          <h4>Submission Progress</h4>
+          <table class="table table-condensed small table-bordered">
+            <thead>
+              <tr>
+                <th>Stage</th>
+                <th>Date</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Submission</td>
+                <td>{{ submission.stage.submission|date:"Y-m-d" }}</td>
+              </tr>
+              <tr>
+                <td>Review</td>
+                <td>{{ submission.stage.review|date:"Y-m-d" }}</td>
+              </tr>
+              <tr>
+                <td>Internal Review</td>
+                <td>{{ submission.stage.internal_review|date:"Y-m-d" }}</td>
+              </tr>
+              <tr>
+                <td>External Review</td>
+                <td>{{ submission.stage.external_review|date:"Y-m-d" }}</td>
+              </tr>
+              <tr>
+                <td>Editing</td>
+                <td>{{ submission.stage.editing|date:"Y-m-d" }}</td>
+              </tr>
+              <tr>
+                <td>Copyediting</td>
+                <td>{{ submission.stage.copyediting|date:"Y-m-d" }}</td>
+              </tr>
+              <tr>
+                <td>Indexing</td>
+                <td>{{ submission.stage.indexing|date:"Y-m-d" }}</td>
+              </tr>
+              <tr>
+                <td>Production</td>
+                <td>{{ submission.stage.production|date:"Y-m-d" }}</td>
+              </tr>
+              <tr>
+                <td>Typesetting</td>
+                <td>{{ submission.stage.typesetting|date:"Y-m-d" }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        </div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
       </div>
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->

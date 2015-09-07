@@ -21,29 +21,29 @@
     <ul class="list-inline">
         <li class="DocumentItem">
         	<div class="well well-sm">
-            	<h4>Proposals</h4>
-            	{% for proposal in proposals %}
-            	<div class="panel panel-default">
-    				  <div class="panel-heading clearfix">
-    				    <h3 class="panel-title pull-left">{{ proposal.title }}</h3>
-    				      <a class="btn btn-default pull-right" href="{% url 'view_proposal' proposal.id %}">
-    				        <i class="fa fa-eye"></i>
-    				        View
-    				      </a>
-    				  </div>
-    				  <div class="panel-body">
+            <h4>Proposals</h4>
+            {% for proposal in proposals %}
+            <div class="panel panel-default">
+            <div class="panel-heading clearfix">
+            <h3 class="panel-title pull-left">{{ proposal.title }}</h3>
+              <a class="btn btn-default pull-right" href="{% url 'view_proposal' proposal.id %}">
+                <i class="fa fa-eye"></i>
+                View
+              </a>
+            </div>
+			  <div class="panel-body">
                 <p class="small">Author: {{ proposal.owner.profile.full_name }}</p>
-    				    <p class="small">Submitted: {{ proposal.date_submitted }}</p>
-    				  </div>
-    				  <div class="panel-footer">
-				        <button class="btn btn-primary btn-block" data-toggle="modal" data-target="#pro-{{ proposal.id }}">
-				          <i class="fa fa-tasks"></i>
-				          &nbsp;Quick Look
-				        </button>
-    				  </div>
+			    <p class="small">Submitted: {{ proposal.date_submitted }}</p>
+			  </div>
+			  <div class="panel-footer">
+		        <button class="btn btn-primary btn-block" data-toggle="modal" data-target="#pro-{{ proposal.id }}">
+		          <i class="fa fa-tasks"></i>
+		          &nbsp;Quick Look
+		        </button>
+			  </div>
             </div>
             {% include "core/dashboard/dashboard_proposal_modal.html" with proposal=proposal %}
-				    {% endfor %}
+			{% endfor %}
           </div>
         </li>
         <li class="DocumentItem">
@@ -59,17 +59,17 @@
 				      </a>
 				  </div>
 				  <div class="panel-body">
-            <p class="small">{% if submission.book_type == 'monograph' %}Author{% else %}Editor{% endif %}: {{ submission.owner.profile.full_name }}</p>
+                    <p class="small">{% if submission.book_type == 'monograph' %}Author{% else %}Editor{% endif %}: {{ submission.owner.profile.full_name }}</p>
 				    <p class="small">Submitted: {{ submission.submission_date }}</p>
 				  </div>
-          <div class="panel-footer">
-            <button class="btn btn-primary btn-block">
-              <i class="fa fa-tasks"></i>
-              &nbsp;Quick Look
-            </button>
-          </div>
+                  <div class="panel-footer">
+                    <button class="btn btn-primary btn-block" data-toggle="modal" data-target="#sub-{{ submission.id }}">
+                      <i class="fa fa-tasks"></i>
+                      &nbsp;Quick Look
+                    </button>
+                  </div>
 				</div>
-        {% include "core/dashboard/dashboard_modal.html" with submission=submission %}
+                {% include "core/dashboard/dashboard_modal.html" with submission=submission %}
 				{% endfor %}
             </div>
         </li>
@@ -86,16 +86,17 @@
 				      </a>
 				  </div>
 				  <div class="panel-body">
-            <p class="small">Author: {{ submission.owner.profile.full_name }}</p>
+                    <p class="small">Author: {{ submission.owner.profile.full_name }}</p>
 				    <p class="small">Submitted: {{ submission.submission_date }}</p>
 				  </div>
           <div class="panel-footer">
-            <button class="btn btn-primary btn-block">
+            <button class="btn btn-primary btn-block" data-toggle="modal" data-target="#sub-{{ submission.id }}">
               <i class="fa fa-tasks"></i>
               &nbsp;Quick Look
             </button>
           </div>
 				</div>
+                {% include "core/dashboard/dashboard_modal.html" with submission=submission %}
 				{% endfor %}
             </div>
         </li>
@@ -106,7 +107,7 @@
             	<div class="panel panel-default">
 				  <div class="panel-heading clearfix">
 				    <h3 class="panel-title pull-left">{{ submission.title }}</h3>
-				      <a class="btn btn-default pull-right" href="{% url 'view_review' submission.pk %}">
+				      <a class="btn btn-default pull-right" href="{% url 'view_editing' submission.pk %}">
 				        <i class="fa fa-eye"></i>
 				        View
 				      </a>
@@ -116,12 +117,13 @@
 				    <p class="small">Submitted: {{ submission.submission_date }}</p>
 				  </div>
           <div class="panel-footer">
-            <button class="btn btn-primary btn-block">
+            <button class="btn btn-primary btn-block" data-toggle="modal" data-target="#sub-{{ submission.id }}">
               <i class="fa fa-tasks"></i>
               &nbsp;Quick Look
             </button>
           </div>
 				</div>
+                {% include "core/dashboard/dashboard_modal.html" with submission=submission %}
 				{% endfor %}
             </div>
         </li>
@@ -142,12 +144,13 @@
 				    <p class="small">Submitted: {{ submission.submission_date }}</p>
 				  </div>
           <div class="panel-footer">
-            <button class="btn btn-primary btn-block">
+            <button class="btn btn-primary btn-block" data-toggle="modal" data-target="#sub-{{ submission.id }}">
               <i class="fa fa-tasks"></i>
               &nbsp;Quick Look
             </button>
           </div>
 				</div>
+                {% include "core/dashboard/dashboard_modal.html" with submission=submission %}
 				{% endfor %}
             </div>
         </li>
