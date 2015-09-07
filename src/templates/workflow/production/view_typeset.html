@@ -57,7 +57,7 @@
     {% endfor %}
   </table>
 
-  <ul id="editing_tabs" class="nav nav-tabs" role="tablist">
+  <ul id="typesetting_tabs" class="nav nav-tabs" role="tablist">
     <li role="presentation" class="active"><a href="#initial" aria-controls="home" role="tab" data-toggle="tab">Initial Typesetting</a></li>
     <li role="presentation"><a href="#author" aria-controls="home" role="tab" data-toggle="tab">Author Revisions</a></li>
     <li role="presentation"><a href="#final" aria-controls="home" role="tab" data-toggle="tab">Final Typesetting</a></li>
@@ -96,6 +96,7 @@
       {% if typeset.completed and not typeset.editor_review %}
       <form method="POST">
         {% csrf_token %}
+        <br />
         <button class="btn btn-success" name="invite_author">Invite Author to Review Typesetting</button>
       </form>
       {% elif typeset.completed and typeset.editor_review and not typeset.author_invited %}
@@ -157,10 +158,10 @@
       {% if typeset.author_completed and not typeset.editor_second_review %}
       <form method="POST">
         {% csrf_token %}
+        <br />
         <button class="btn btn-success" name="invite_typesetter">Invite Typesetter to Complete Typesetting</button>
       </form>
       {% elif typeset.author_completed and typeset.editor_second_review and not typeset.typesetter_invited %}
-      <p>odifpsf</p>
       {{ typeset.typesetter_invited }}
 
       <h4>Invite Typesetter to Review</h4>
@@ -220,3 +221,17 @@
     </div>
   </div>
 {% endblock %}
+
+{% block js %}
+<script>
+$(function() {
+    $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+        localStorage.setItem('typesetting_tabs', $(this).attr('href'));
+    });
+    var lastTab = localStorage.getItem('typesetting_tabs');
+    if (lastTab) {
+        $('[href="' + lastTab + '"]').tab('show');
+    }
+});
+</script>
+{% endblock js %}

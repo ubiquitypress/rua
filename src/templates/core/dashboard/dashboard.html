@@ -17,7 +17,7 @@
 {% endblock %}
 
 {% block body %}
-	<div class="DocumentList">
+	<div class="DocumentList dragscroll">
     <ul class="list-inline">
         <li class="DocumentItem">
         	<div class="well well-sm">
@@ -162,4 +162,5 @@
 
 {% block js %}
 <script type="text/javascript" src="{% static "js/bootcards.min.js" %}"></script>
+<script type="text/javascript" src="{% static "js/dragscroll.js" %}"></script>
 {% endblock js %}
