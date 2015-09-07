@@ -10,9 +10,9 @@ from pprint import pprint
 
 class GroupForm(forms.ModelForm):
 
-    class Meta:
-        model = models.Group
-        exclude = ()
+	class Meta:
+		model = models.Group
+		exclude = ()
 
 class EditKey(forms.Form):
 
@@ -44,8 +44,11 @@ class EditKey(forms.Form):
 
 class ProposalForm(forms.Form):
 
-	proposal_forms =[(proposal_form.pk, proposal_form) for proposal_form in core_models.ProposalForm.objects.all()]
-	selection = forms.ChoiceField(widget=forms.Select, choices=proposal_forms)
+	def __init__(self, *args, **kwargs):
+		super(ProposalForm, self).__init__(*args, **kwargs)
+		self.fields['selection'].choices = [(proposal_form.pk, proposal_form) for proposal_form in core_models.ProposalForm.objects.all()]
+
+	selection = forms.ChoiceField(widget=forms.Select)
 
 class DefaultForm(forms.Form):
 

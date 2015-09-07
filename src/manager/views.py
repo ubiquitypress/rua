@@ -245,6 +245,7 @@ def proposal_forms(request):
 			setting.value = int(request.POST.get('selection'))
 			setting.save()
 			messages.add_message(request, messages.INFO, 'Proposal succesfully changed')
+			return redirect(reverse('proposal_forms'))
 
 	template = 'manager/submission/proposal_forms.html'
 
