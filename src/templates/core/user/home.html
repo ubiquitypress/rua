@@ -124,6 +124,24 @@
 			{% endfor %}
 		</div>
 	</div>
+	<div class="row">
+		<div class="col-md-4">
+			<h3><i class="fa fa-tasks"></i>&nbsp;Typesetter</h3>
+			{% for typeset in typesetting %}
+			<div class="bs-callout bs-callout-submission" id="callout-helper-bg-specificity">
+				{% if not typeset.typesetter_invited %}
+				<p><a href="{% url 'typeset' typeset.book.id typeset.id %}">Typesetting for {{ typeset.book.title }} due on {{ typeset.due }}</a></p>
+				{% else %}
+				<p><a href="{% url 'typeset_typesetter' typeset.book.id typeset.id %}">Final Typesetting for {{ typeset.book.title }}</a></p>
+				{% endif %}
+			</div>
+			{% empty %}
+			<div class="bs-callout" id="callout-helper-bg-specificity">
+				<p>No typesetting requests.</p>
+			</div>
+			{% endfor %}
+		</div>
+	</div>
 </div>
 
 

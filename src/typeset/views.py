@@ -79,7 +79,7 @@ def typeset_files(request, submission_id, typeset_id):
 @login_required
 def typeset_author(request, submission_id, typeset_id):
 	book = get_object_or_404(models.Book, pk=submission_id)
-	typeset = get_object_or_404(models.TypesetAssignment, pk=typeset_id, typesetter=request.user, book=book)
+	typeset = get_object_or_404(models.TypesetAssignment, pk=typeset_id, book__owner=request.user, book=book)
 
 	form = forms.TypesetAuthor(instance=typeset)
 
@@ -92,7 +92,7 @@ def typeset_author(request, submission_id, typeset_id):
 				typeset.author_files.add(new_file)
 				typeset.author_completed = timezone.now()
 				typeset.save()
-				messages.add_message(request, messages.SUCCESS, 'Copyedit task complete. Thanks.')
+				messages.add_message(request, messages.SUCCESS, 'Typesetting task complete. Thanks.')
 				new_task = task.create_new_task(book, typeset.book.owner, typeset.requestor, "Author Typesetting completed for %s" % book.title, workflow='production')
 				return redirect(reverse('user_home'))
 
@@ -118,6 +118,36 @@ def typeset_complete(request, submission_id, typeset_id):
 	context = {
 		'submission': book,
 		'typeset': typeset,
+	}
+
+	return render(request, template, context)
+
+
+@login_required
+def typeset_typesetter(request, submission_id, typeset_id):
+	book = get_object_or_404(models.Book, pk=submission_id)
+	typeset = get_object_or_404(models.TypesetAssignment, pk=typeset_id, typesetter=request.user, book=book, typsetter_completed__isnull=True)
+
+	form = forms.TypesetTypesetter(instance=typeset)
+
+	if request.POST:
+		form = forms.TypesetTypesetter(request.POST, instance=typeset)
+		if form.is_valid():
+			form.save()
+			for _file in request.FILES.getlist('typeset_file_upload'):
+				new_file = handle_typeset_file(_file, book, typeset, 'typeset')
+				typeset.typesetter_files.add(new_file)
+				typeset.typsetter_completed = timezone.now()
+				typeset.save()
+				messages.add_message(request, messages.SUCCESS, 'Typesetting task complete. Thanks.')
+				new_task = task.create_new_task(book, typeset.book.owner, typeset.requestor, "Typesetting completed for %s" % book.title, workflow='production')
+				return redirect(reverse('user_home'))
+
+	template = 'typeset/typeset_author.html'
+	context = {
+		'submission': book,
+		'typeset': typeset,
+		'form': form,
 	}
 
 	return render(request, template, context)

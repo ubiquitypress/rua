@@ -147,7 +147,10 @@
   {% csrf_token %}
   <button class="btn btn-success" name="invite_typesetter">Invite Typesetter to Complete Typesetting</button>
 </form>
-{% elif typeset.author_completed and typeset.author_completed and not typeset.typesetter_invited %}
+{% elif typeset.author_completed and typeset.editor_second_review and not typeset.typesetter_invited %}
+<p>odifpsf</p>
+{{ typeset.typesetter_invited }}
+
 <h4>Invite Typesetter to Review</h4>
 <form method="POST">
   {% csrf_token %}
@@ -156,32 +159,33 @@
     <label class="control-label" for="id_note_to_author">Email to Typesetter</label>
     <textarea class="form-control" cols="40" id="email_text" name="email_text" rows="10" title="">{{ email_text }}</textarea>
   </div>
-  <button class="btn btn-success" name="send_invite_author" id="send_invite_author" type="submit">Send Request</button>
+  <button class="btn btn-success" name="send_invite_typesetter" id="send_invite_typesetter" type="submit">Send Request</button>
 </form>
-{% elif typeset.completed and typeset.editor_review and typeset.author_invited %}
+
+{% elif typeset.author_completed and typeset.editor_second_review and typeset.typesetter_invited %}
 <hr />
-<h4>Author Revision</h4>
+<h4>Typesetter Final Revision</h4>
 <table class="table table-bordered">
   <tr>
-    <th>Editor Review</th>
-    <th>Author Invited</th>
+    <th>Editor Second Review</th>
+    <th>Typesetter Invited</th>
     <th>Author Completed</th>
   </tr>
   <tr>
-    <td>{{ typeset.editor_review }}</td>
-    <td>{{ typeset.author_invited }}</td>
-    <td>{{ typeset.author_completed }}</td>
+    <td>{{ typeset.editor_second_review }}</td>
+    <td>{{ typeset.typesetter_invited }}</td>
+    <td>{{ typeset.typesetter_completeted }}</td>
   </tr>
   <tr>
-    <th colspan="2">Note to Author</th>
-    <th colspan="2">Note from Author</th>
+    <th colspan="2">Note to Typesetter</th>
+    <th colspan="2">Note from Typesetter</th>
   </tr>
   <tr>
-    <td colspan="2">{{ typeset.note_to_author }}</td>
-    <td colspan="2">{{ typeset.note_from_author }}</td>
+    <td colspan="2">{{ typeset.note_to_typesetter }}</td>
+    <td colspan="2">{{ typeset.note_from_typesetter }}</td>
   </tr>
 </table>
-<h4>Author Files</h4>
+<h4>Typesetter Final Files</h4>
 <table class="table table-bordered">
     <tr>
       <th>Label</th>
@@ -190,7 +194,7 @@
       <th>Mimetype</th>
       <th>File Type</th>
     </tr>
-  {% for file in typeset.author_files.all %}
+  {% for file in typeset.typesetter_files.all %}
     <tr>
       <td>{{ file.label }}</td>
       <td>{{ file.original_filename }}</td>
@@ -201,8 +205,4 @@
   {% endfor %}
 </table>
 {% endif %}
-
-
-
-
 {% endblock %}

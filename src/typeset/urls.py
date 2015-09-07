@@ -6,4 +6,5 @@ urlpatterns = patterns('',
 	url(r'^book/(?P<submission_id>\d+)/typeset/(?P<typeset_id>\d+)/files/$', 'typeset.views.typeset_files', name='typeset_files'),
 	url(r'^book/(?P<submission_id>\d+)/typeset/(?P<typeset_id>\d+)/complete/$', 'typeset.views.typeset_complete', name='typeset_complete'),
 	url(r'^book/(?P<submission_id>\d+)/typeset/(?P<typeset_id>\d+)/author/$', 'typeset.views.typeset_author', name='typeset_author'),
+	url(r'^book/(?P<submission_id>\d+)/typeset/(?P<typeset_id>\d+)/typesetter/$', 'typeset.views.typeset_typesetter', name='typeset_typesetter'),
 )

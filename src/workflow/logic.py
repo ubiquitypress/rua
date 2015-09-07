@@ -165,3 +165,14 @@ def send_author_invite(submission, copyedit, email_text):
     }
 
     email.send_email('Copyediting Completed', context, from_email.value, submission.owner.email, email_text)
+
+def send_invite_typesetter(book, typeset, email_text):
+    from_email = models.Setting.objects.get(group__name='email', name='from_address')
+
+    context = {
+        'base_url': models.Setting.objects.get(group__name='general', name='base_url').value,
+        'submission': typeset.book,
+        'typeset': typeset,
+    }
+
+    email.send_email('Typesetting Revisions', context, from_email.value, typeset.typesetter.email, email_text)

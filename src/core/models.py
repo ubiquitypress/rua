@@ -358,7 +358,7 @@ class TypesetAssignment(models.Model):
 	author_invited = models.DateField(blank=True, null=True)
 	author_completed = models.DateField(blank=True, null=True)
 	editor_second_review = models.DateField(blank=True, null=True)
-	typsetter_invited = models.DateField(blank=True, null=True)
+	typesetter_invited = models.DateField(blank=True, null=True)
 	typsetter_completed = models.DateField(blank=True, null=True)
 
 	note = models.TextField(blank=True, null=True)

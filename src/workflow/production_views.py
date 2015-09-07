@@ -49,6 +49,7 @@ def view_typesetter(request, submission_id, typeset_id):
 	author_form = forms.TypesetAuthorInvite(instance=typeset)
 	if typeset.editor_second_review:
 		author_form = forms.TypesetTypesetterInvite(instance=typeset)
+		email_text = models.Setting.objects.get(group__name='email', name='typesetter_typeset_request').value
 
 	if request.POST and 'invite_author' in request.POST:
 		if not typeset.completed:
@@ -63,13 +64,24 @@ def view_typesetter(request, submission_id, typeset_id):
 		typeset.save()
 		return redirect(reverse('view_typesetter', kwargs={'submission_id': submission_id, 'typeset_id': typeset_id}))
 
+	elif request.POST and 'send_invite_typesetter' in request.POST:
+		author_form = forms.TypesetTypesetterInvite(request.POST, instance=typeset)
+		if author_form.is_valid():
+			author_form.save()
+			typeset.typesetter_invited = timezone.now()
+			typeset.save()
+			email_text = request.POST.get('email_text')
+			logic.send_invite_typesetter(book, typeset, email_text)
+		return redirect(reverse('view_typesetter', kwargs={'submission_id': submission_id, 'typeset_id': typeset_id}))
+
 	elif request.POST and 'send_invite_author' in request.POST:
 		author_form = forms.TypesetAuthorInvite(request.POST, instance=typeset)
-		author_form.save()
-		typeset.author_invited = timezone.now()
-		typeset.save()
-		email_text = request.POST.get('email_text')
-		logic.send_author_invite(book, typeset, email_text)
+		if author_form.is_valid():
+			author_form.save()
+			typeset.author_invited = timezone.now()
+			typeset.save()
+			email_text = request.POST.get('email_text')
+			logic.send_author_invite(book, typeset, email_text)
 		return redirect(reverse('view_typesetter', kwargs={'submission_id': submission_id, 'typeset_id': typeset_id}))
 
 	template = 'workflow/production/view_typeset.html'

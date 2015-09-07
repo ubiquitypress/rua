@@ -26,3 +26,10 @@ class TypesetTypesetterInvite(forms.ModelForm):
 	class Meta:
 		model = models.TypesetAssignment
 		fields = ('note_to_typesetter',)
+
+
+class TypesetTypesetter(forms.ModelForm):
+
+	class Meta:
+		model = models.TypesetAssignment
+		fields = ('note_from_typesetter',)
