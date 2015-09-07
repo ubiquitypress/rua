@@ -99,6 +99,8 @@ def handle_typeset_assignment(book, typesetter, files, due_date, email_text, req
 
     new_typesetter.save()
 
+    send_invite_typesetter(book, new_typesetter, email_text)
+
     log.add_log_entry(book=book, user=requestor, kind='typeser', message='Typesetter %s %s assigned. Due %s' % (typesetter.first_name, typesetter.last_name, due_date), short_name='Typeset Assignment')
 
 # Email Handlers - TODO: move to email.py?
@@ -175,4 +177,4 @@ def send_invite_typesetter(book, typeset, email_text):
         'typeset': typeset,
     }
 
-    email.send_email('Typesetting Revisions', context, from_email.value, typeset.typesetter.email, email_text)
+    email.send_email('Typesetting', context, from_email.value, typeset.typesetter.email, email_text)

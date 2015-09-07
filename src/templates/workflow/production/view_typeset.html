@@ -14,195 +14,209 @@
 {% endblock %}
 
 {% block body %}
-<h4>Assignment</h4>
-<table class="table table-bordered">
-  <tr>
-    <th>Typsetter</th>
-    <th>Requested</th>
-    <th>Accepted</th>
-    <th>Declined</th>
-    <th>Due</th>
-    <th>Completed</th>
-  </tr>
-  <tr>
-    <td>{{ typeset.typesetter.profile.full_name }}</td>
-    <td>{{ typeset.requested }}</td>
-    <td>{% if typeset.accepted %}{{ typeset.accepted }}{% else %}--{% endif %}</td>
-    <td>{% if typeset.declined %}{{ typeset.declined }}{% else %}--{% endif %}</td>
-    <td>{{ typeset.due }}</td>
-    <td>{% if typeset.completed %}{{ typeset.completed }}{% else %}--{% endif %}</td>
-  </tr>
-</table>
-<hr />
-<h4>Assigned Files</h4>
-<table class="table table-bordered">
-    <tr>
-      <th>Label</th>
-      <th>Original File Name</th>
-      <th>New File Name</th>
-      <th>Mimetype</th>
-      <th>File Type</th>
-      <th>Download</th>
-    </tr>
-  {% for file in typeset.files.all %}
-    <tr>
-      <td>{{ file.label }}</td>
-      <td>{{ file.original_filename }}</td>
-      <td>{{ file.uuid_filename }}</td>
-      <td>{{ file.mime_type }}</td>
-      <td>{{ file.kind }}</td>
-      <td><a href="{% url 'serve_file' submission.id file.id %}" class="btn btn-primary">&nbsp;<i class="fa fa-download">&nbsp;</i></a>
-    </tr>
-  {% endfor %}
-</table>
-<hr />
-<h4>Typsetter Files</h4>
-<table class="table table-bordered">
-    <tr>
-      <th>Label</th>
-      <th>Original File Name</th>
-      <th>New File Name</th>
-      <th>Mimetype</th>
-      <th>File Type</th>
-      <th>Download</th>
-    </tr>
-  {% for file in typeset.typeset_files.all %}
-    <tr>
-      <td>{{ file.label }}</td>
-      <td>{{ file.original_filename }}</td>
-      <td>{{ file.uuid_filename }}</td>
-      <td>{{ file.mime_type }}</td>
-      <td>{{ file.kind }}</td>
-      <td><a href="{% url 'serve_file' submission.id file.id %}" class="btn btn-primary">&nbsp;<i class="fa fa-download">&nbsp;</i></a></td>
-    </tr>
-  {% empty %}
-  <tr>
-    <td colspan="5">No files uploaded yet.</td>
-  </tr>
-  {% endfor %}
-</table>
 
-{% if typeset.completed and not typeset.editor_review %}
-<form method="POST">
-  {% csrf_token %}
-  <button class="btn btn-success" name="invite_author">Invite Author to Review Typesetting</button>
-</form>
-{% elif typeset.completed and typeset.editor_review and not typeset.author_invited %}
-<h4>Invite Author to Review</h4>
-<form method="POST">
-  {% csrf_token %}
-  {% bootstrap_form author_form %}
-  <div class="form-group">
-    <label class="control-label" for="id_note_to_author">Email to Author</label>
-    <textarea class="form-control" cols="40" id="email_text" name="email_text" rows="10" title="">{{ email_text }}</textarea>
-  </div>
-  <button class="btn btn-success" name="send_invite_author" id="send_invite_author" type="submit">Send Request</button>
-</form>
-{% elif typeset.completed and typeset.editor_review and typeset.author_invited %}
-<hr />
-<h4>Author Revision</h4>
-<table class="table table-bordered">
-  <tr>
-    <th>Editor Review</th>
-    <th>Author Invited</th>
-    <th>Author Completed</th>
-  </tr>
-  <tr>
-    <td>{{ typeset.editor_review }}</td>
-    <td>{{ typeset.author_invited }}</td>
-    <td>{{ typeset.author_completed }}</td>
-  </tr>
-  <tr>
-    <th colspan="2">Note to Author</th>
-    <th colspan="2">Note from Author</th>
-  </tr>
-  <tr>
-    <td colspan="2">{{ typeset.note_to_author }}</td>
-    <td colspan="2">{{ typeset.note_from_author }}</td>
-  </tr>
-</table>
-<h4>Author Files</h4>
-<table class="table table-bordered">
+  <h4>Assignment</h4>
+  <table class="table table-bordered">
     <tr>
-      <th>Label</th>
-      <th>Original File Name</th>
-      <th>New File Name</th>
-      <th>Mimetype</th>
-      <th>File Type</th>
+      <th>Typsetter</th>
+      <th>Requested</th>
+      <th>Accepted</th>
+      <th>Declined</th>
+      <th>Due</th>
+      <th>Completed</th>
     </tr>
-  {% for file in typeset.author_files.all %}
     <tr>
-      <td>{{ file.label }}</td>
-      <td>{{ file.original_filename }}</td>
-      <td>{{ file.uuid_filename }}</td>
-      <td>{{ file.mime_type }}</td>
-      <td>{{ file.kind }}</td>
+      <td>{{ typeset.typesetter.profile.full_name }}</td>
+      <td>{{ typeset.requested }}</td>
+      <td>{% if typeset.accepted %}{{ typeset.accepted }}{% else %}--{% endif %}</td>
+      <td>{% if typeset.declined %}{{ typeset.declined }}{% else %}--{% endif %}</td>
+      <td>{{ typeset.due }}</td>
+      <td>{% if typeset.completed %}{{ typeset.completed }}{% else %}--{% endif %}</td>
     </tr>
-  {% endfor %}
-</table>
+  </table>
+  <hr />
+  <h4>Assigned Files</h4>
+  <table class="table table-bordered">
+      <tr>
+        <th>Label</th>
+        <th>Original File Name</th>
+        <th>New File Name</th>
+        <th>Mimetype</th>
+        <th>File Type</th>
+        <th>Download</th>
+      </tr>
+    {% for file in typeset.files.all %}
+      <tr>
+        <td>{{ file.label }}</td>
+        <td>{{ file.original_filename }}</td>
+        <td>{{ file.uuid_filename }}</td>
+        <td>{{ file.mime_type }}</td>
+        <td>{{ file.kind }}</td>
+        <td><a href="{% url 'serve_file' submission.id file.id %}" class="btn btn-primary">&nbsp;<i class="fa fa-download">&nbsp;</i></a>
+      </tr>
+    {% endfor %}
+  </table>
+
+  <ul id="editing_tabs" class="nav nav-tabs" role="tablist">
+    <li role="presentation" class="active"><a href="#initial" aria-controls="home" role="tab" data-toggle="tab">Initial Typesetting</a></li>
+    <li role="presentation"><a href="#author" aria-controls="home" role="tab" data-toggle="tab">Author Revisions</a></li>
+    <li role="presentation"><a href="#final" aria-controls="home" role="tab" data-toggle="tab">Final Typesetting</a></li>
+  </ul>
+
+  <!-- Tab panes -->
+  <div class="tab-content">
+    <div role="tabpanel" class="tab-pane active" id="initial">
+      <h4>Typsetter Files</h4>
+      <table class="table table-bordered">
+          <tr>
+            <th>Label</th>
+            <th>Original File Name</th>
+            <th>New File Name</th>
+            <th>Mimetype</th>
+            <th>File Type</th>
+            <th>Download</th>
+          </tr>
+        {% for file in typeset.typeset_files.all %}
+          <tr>
+            <td>{{ file.label }}</td>
+            <td>{{ file.original_filename }}</td>
+            <td>{{ file.uuid_filename }}</td>
+            <td>{{ file.mime_type }}</td>
+            <td>{{ file.kind }}</td>
+            <td><a href="{% url 'serve_file' submission.id file.id %}" class="btn btn-primary">&nbsp;<i class="fa fa-download">&nbsp;</i></a></td>
+          </tr>
+        {% empty %}
+        <tr>
+          <td colspan="5">No files uploaded yet.</td>
+        </tr>
+        {% endfor %}
+      </table>
+    </div>
+    <div role="tabpanel" class="tab-pane" id="author">
+      {% if typeset.completed and not typeset.editor_review %}
+      <form method="POST">
+        {% csrf_token %}
+        <button class="btn btn-success" name="invite_author">Invite Author to Review Typesetting</button>
+      </form>
+      {% elif typeset.completed and typeset.editor_review and not typeset.author_invited %}
+      <h4>Invite Author to Review</h4>
+      <form method="POST">
+        {% csrf_token %}
+        {% bootstrap_form author_form %}
+        <div class="form-group">
+          <label class="control-label" for="id_note_to_author">Email to Author</label>
+          <textarea class="form-control" cols="40" id="email_text" name="email_text" rows="10" title="">{{ email_text }}</textarea>
+        </div>
+        <button class="btn btn-success" name="send_invite_author" id="send_invite_author" type="submit">Send Request</button>
+      </form>
+      {% elif typeset.completed and typeset.editor_review and typeset.author_invited %}
+      <hr />
+      <h4>Author Revision</h4>
+      <table class="table table-bordered">
+        <tr>
+          <th>Editor Review</th>
+          <th>Author Invited</th>
+          <th>Author Completed</th>
+        </tr>
+        <tr>
+          <td>{{ typeset.editor_review }}</td>
+          <td>{{ typeset.author_invited }}</td>
+          <td>{{ typeset.author_completed }}</td>
+        </tr>
+        <tr>
+          <th colspan="2">Note to Author</th>
+          <th colspan="2">Note from Author</th>
+        </tr>
+        <tr>
+          <td colspan="2">{{ typeset.note_to_author }}</td>
+          <td colspan="2">{{ typeset.note_from_author }}</td>
+        </tr>
+      </table>
+      <h4>Author Files</h4>
+      <table class="table table-bordered">
+          <tr>
+            <th>Label</th>
+            <th>Original File Name</th>
+            <th>New File Name</th>
+            <th>Mimetype</th>
+            <th>File Type</th>
+          </tr>
+        {% for file in typeset.author_files.all %}
+          <tr>
+            <td>{{ file.label }}</td>
+            <td>{{ file.original_filename }}</td>
+            <td>{{ file.uuid_filename }}</td>
+            <td>{{ file.mime_type }}</td>
+            <td>{{ file.kind }}</td>
+          </tr>
+        {% endfor %}
+      </table>
+      {% endif %}
+    </div>
+    <div role="tabpanel" class="tab-pane" id="final">
+      {% if typeset.author_completed and not typeset.editor_second_review %}
+      <form method="POST">
+        {% csrf_token %}
+        <button class="btn btn-success" name="invite_typesetter">Invite Typesetter to Complete Typesetting</button>
+      </form>
+      {% elif typeset.author_completed and typeset.editor_second_review and not typeset.typesetter_invited %}
+      <p>odifpsf</p>
+      {{ typeset.typesetter_invited }}
+
+      <h4>Invite Typesetter to Review</h4>
+      <form method="POST">
+        {% csrf_token %}
+        {% bootstrap_form author_form %}
+        <div class="form-group">
+          <label class="control-label" for="id_note_to_author">Email to Typesetter</label>
+          <textarea class="form-control" cols="40" id="email_text" name="email_text" rows="10" title="">{{ email_text }}</textarea>
+        </div>
+        <button class="btn btn-success" name="send_invite_typesetter" id="send_invite_typesetter" type="submit">Send Request</button>
+      </form>
+
+      {% elif typeset.author_completed and typeset.editor_second_review and typeset.typesetter_invited %}
+      <hr />
+      <h4>Typesetter Final Revision</h4>
+      <table class="table table-bordered">
+        <tr>
+          <th>Editor Second Review</th>
+          <th>Typesetter Invited</th>
+          <th>Author Completed</th>
+        </tr>
+        <tr>
+          <td>{{ typeset.editor_second_review }}</td>
+          <td>{{ typeset.typesetter_invited }}</td>
+          <td>{{ typeset.typesetter_completeted }}</td>
+        </tr>
+        <tr>
+          <th colspan="2">Note to Typesetter</th>
+          <th colspan="2">Note from Typesetter</th>
+        </tr>
+        <tr>
+          <td colspan="2">{{ typeset.note_to_typesetter }}</td>
+          <td colspan="2">{{ typeset.note_from_typesetter }}</td>
+        </tr>
+      </table>
+      <h4>Typesetter Final Files</h4>
+      <table class="table table-bordered">
+          <tr>
+            <th>Label</th>
+            <th>Original File Name</th>
+            <th>New File Name</th>
+            <th>Mimetype</th>
+            <th>File Type</th>
+          </tr>
+        {% for file in typeset.typesetter_files.all %}
+          <tr>
+            <td>{{ file.label }}</td>
+            <td>{{ file.original_filename }}</td>
+            <td>{{ file.uuid_filename }}</td>
+            <td>{{ file.mime_type }}</td>
+            <td>{{ file.kind }}</td>
+          </tr>
+        {% endfor %}
+      </table>
 {% endif %}
-
-{% if typeset.author_completed and not typeset.editor_second_review %}
-<form method="POST">
-  {% csrf_token %}
-  <button class="btn btn-success" name="invite_typesetter">Invite Typesetter to Complete Typesetting</button>
-</form>
-{% elif typeset.author_completed and typeset.editor_second_review and not typeset.typesetter_invited %}
-<p>odifpsf</p>
-{{ typeset.typesetter_invited }}
-
-<h4>Invite Typesetter to Review</h4>
-<form method="POST">
-  {% csrf_token %}
-  {% bootstrap_form author_form %}
-  <div class="form-group">
-    <label class="control-label" for="id_note_to_author">Email to Typesetter</label>
-    <textarea class="form-control" cols="40" id="email_text" name="email_text" rows="10" title="">{{ email_text }}</textarea>
+    </div>
   </div>
-  <button class="btn btn-success" name="send_invite_typesetter" id="send_invite_typesetter" type="submit">Send Request</button>
-</form>
-
-{% elif typeset.author_completed and typeset.editor_second_review and typeset.typesetter_invited %}
-<hr />
-<h4>Typesetter Final Revision</h4>
-<table class="table table-bordered">
-  <tr>
-    <th>Editor Second Review</th>
-    <th>Typesetter Invited</th>
-    <th>Author Completed</th>
-  </tr>
-  <tr>
-    <td>{{ typeset.editor_second_review }}</td>
-    <td>{{ typeset.typesetter_invited }}</td>
-    <td>{{ typeset.typesetter_completeted }}</td>
-  </tr>
-  <tr>
-    <th colspan="2">Note to Typesetter</th>
-    <th colspan="2">Note from Typesetter</th>
-  </tr>
-  <tr>
-    <td colspan="2">{{ typeset.note_to_typesetter }}</td>
-    <td colspan="2">{{ typeset.note_from_typesetter }}</td>
-  </tr>
-</table>
-<h4>Typesetter Final Files</h4>
-<table class="table table-bordered">
-    <tr>
-      <th>Label</th>
-      <th>Original File Name</th>
-      <th>New File Name</th>
-      <th>Mimetype</th>
-      <th>File Type</th>
-    </tr>
-  {% for file in typeset.typesetter_files.all %}
-    <tr>
-      <td>{{ file.label }}</td>
-      <td>{{ file.original_filename }}</td>
-      <td>{{ file.uuid_filename }}</td>
-      <td>{{ file.mime_type }}</td>
-      <td>{{ file.kind }}</td>
-    </tr>
-  {% endfor %}
-</table>
-{% endif %}
 {% endblock %}
