@@ -95,9 +95,9 @@ class Profile(models.Model):
 
 	def full_name(self):
 		if self.middle_name:
-			return "%s %s %s" % (self.user.first_name, self.middle_name, self.user.last_name)
+			return u"%s %s %s" % (self.user.first_name, self.middle_name, self.user.last_name)
 		else:
-			return "%s %s" % (self.user.first_name, self.user.last_name)
+			return u"%s %s" % (self.user.first_name, self.user.last_name)
 
 class Author(models.Model):
 	first_name = models.CharField(max_length=100)
@@ -545,6 +545,9 @@ log_choices = (
 	('review', 'Review'),
 	('index', 'Index'),
 	('typeset', 'Typeset'),
+	('revisions', 'Revisions'),
+	('editing', 'Editing'),
+	('production', 'Production'),
 )
 
 class Log(models.Model):
@@ -554,6 +557,17 @@ class Log(models.Model):
 	short_name = models.CharField(max_length=100)
 	message = models.TextField()
 	date_logged = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+
+class EmailLog(models.Model):
+	book = models.ForeignKey(Book)
+	to = models.EmailField(max_length=1000)
+	from_address = models.EmailField(max_length=1000)
+	subject = models.CharField(max_length=1000)
+	content = models.TextField()
+	sent = models.DateTimeField(auto_now_add=True)
+
+	def __unicode__(self):
+		return u"%s-%s: %s" % (self.from_address, self.to, self.subject)
 
 setting_types = (
 	('rich_text', 'Rich Text'),

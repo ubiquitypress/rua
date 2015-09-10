@@ -7,6 +7,7 @@ from django.core.urlresolvers import reverse
 
 from core import models
 from core import task
+from core import log
 from copyedit import forms
 
 import mimetypes as mime
@@ -63,6 +64,7 @@ def copyedit_files(request, submission_id, copyedit_id):
 			_file.label = request.POST.get('label_%s' % _file.id)
 			_file.save()
 		copyedit.completed = timezone.now()
+		log.add_log_entry(book=book, user=request.user, kind='editing', message='Copyeditor %s %s completed.' % (copyedit.copyeditor.first_name, copyedit.copyeditor.last_name), short_name='Copyeditor Complete')
 		copyedit.save()
 		new_task = task.create_new_task(book, copyedit.copyeditor, copyedit.requestor, "Copyediting completed for %s" % book.title, workflow='editing')
 		return redirect(reverse('copyedit_complete', kwargs={'submission_id': submission_id, 'copyedit_id': copyedit_id}))
@@ -91,6 +93,7 @@ def copyedit_author(request, submission_id, copyedit_id):
 				copyedit.author_files.add(new_file)
 				copyedit.author_completed = timezone.now()
 				copyedit.save()
+				log.add_log_entry(book=book, user=request.user, kind='editing', message='Copyedit Author review compeleted by %s %s.' % (request.user.first_name, request.user.last_name), short_name='Copyedit Author Review Complete')
 				messages.add_message(request, messages.SUCCESS, 'Copyedit task complete. Thanks.')
 				new_task = task.create_new_task(book, copyedit.book.owner, copyedit.requestor, "Author Copyediting completed for %s" % book.title, workflow='editing')
 				return redirect(reverse('user_home'))

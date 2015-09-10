@@ -2,7 +2,7 @@
 {% load static from staticfiles %}
 {% load bootstrap3 %}
 
-{% block title %}New Submissions{% endblock %}
+{% block title %}{{ submission.title }} - Log{% endblock %}
 
 {% block breadcrumbs %}
     <ol class="breadcrumb">
@@ -22,25 +22,66 @@
   <h3>{{ submission.title }} - Log</h3>
   <hr />
   {% include "workflow/elements/workflow_view_buttons.html" %}
-  <div class="container">
-    <ul class="timeline">
-      {% for item in log_list %}
-        <li {% if forloop.counter|divisibleby:2 %}class="timeline-inverted"{% endif %}>
-            <div class="timeline-badge">
-            </div>
-            <div class="timeline-panel">
-                <div class="timeline-heading">
-                    <h4 class="timeline-title">{{ item.get_kind_display }} {{ item.short_name }}</h4>
-                    <p><small class="text-muted"><i class="fa fa-check"></i> {{ item.date_logged }}</small></p>
-                </div>
-                <div class="timeline-body">
-                    <p>{{ item.message }}</p>
-                </div>
-            </div>
-        </li>
-        {% endfor %}
-    </ul>
-</div>
+  <ul id="log_tabs" class="nav nav-tabs" role="tablist">
+    <li role="presentation" class="active"><a href="#action_log" aria-controls="home" role="tab" data-toggle="tab">Log</a></li>
+    <li role="presentation"><a href="#email_log" aria-controls="home" role="tab" data-toggle="tab">Email Log</a></li>
+  </ul>
+
+  <!-- Tab panes -->
+  <div class="tab-content">
+    <div role="tabpanel" class="tab-pane active" id="action_log">
+      <ul class="timeline">
+        {% for item in log_list %}
+          <li {% if forloop.counter|divisibleby:2 %}class="timeline-inverted"{% endif %}>
+              <div class="timeline-badge">
+              </div>
+              <div class="timeline-panel">
+                  <div class="timeline-heading">
+                      <h4 class="timeline-title">{{ item.get_kind_display }}: {{ item.short_name }}</h4>
+                      <p><small class="text-muted"><i class="fa fa-check"></i> {{ item.date_logged }}</small></p>
+                  </div>
+                  <div class="timeline-body">
+                      <p>{{ item.message }}</p>
+                  </div>
+              </div>
+          </li>
+          {% endfor %}
+      </ul>
+    </div>
+    <div role="tabpanel" class="tab-pane" id="email_log">
+      <ul class="timeline">
+        {% for item in email_list %}
+          <li {% if forloop.counter|divisibleby:2 %}class="timeline-inverted"{% endif %}>
+              <div class="timeline-badge">
+              </div>
+              <div class="timeline-panel">
+                  <div class="timeline-heading">
+                      <h4 class="timeline-title"><i class="fa fa-envelope">&nbsp;</i>{{ item.subject }}</h4>
+                      <p><small class="text-muted">Sent: {{ item.sent }} to {{ item.to }}</small></p>
+                  </div>
+                  <div class="timeline-body">
+                      <p><small>{{ item.content|safe }}</small></p>
+                  </div>
+              </div>
+          </li>
+          {% endfor %}
+      </ul>
+    </div>
+  </div>
 </div>
 
 {% endblock %}
+
+{% block js %}
+<script>
+$(function() {
+    $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+        localStorage.setItem('log_tabs', $(this).attr('href'));
+    });
+    var lastTab = localStorage.getItem('log_tabs');
+    if (lastTab) {
+        $('[href="' + lastTab + '"]').tab('show');
+    }
+});
+</script>
+{% endblock js %}

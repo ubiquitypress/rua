@@ -9,6 +9,7 @@ from revisions import models
 from workflow.views import handle_file_update
 from revisions import forms
 from core import models as core_models
+from core import log
 from revisions import logic
 
 import os
@@ -36,6 +37,7 @@ def request_revisions(request, submission_id, returner):
 
 			email_text = request.POST.get('id_email_text')
 			logic.send_requests_revisions(book, new_revision_request, email_text)
+			log.add_log_entry(book, request.user, 'revisions', '%s %s requested revisions for %s' % (request.user.first_name, request.user.last_name, book.title), 'Revisions Requested')
 
 			if returner == 'submission':
 				return redirect(reverse('view_new_submission', kwargs={'submission_id': submission_id}))

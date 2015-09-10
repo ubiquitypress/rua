@@ -57,6 +57,8 @@ def start_submission(request, book_id=None):
 			book.owner = request.user
 			if not book.submission_stage > 2:
 				book.submission_stage = 2
+				book.save()
+				log.add_log_entry(book, request.user, 'submission', 'Submission Started', 'Submission Started')
 			book.save()
 
 			if not book_id and book:

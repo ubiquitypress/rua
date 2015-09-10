@@ -58,6 +58,9 @@ def view_new_submission(request, submission_id):
 		submission.stage.current_stage = 'review'
 		submission.stage.save()
 
+		if submission.stage.current_stage == 'review':
+			log.add_log_entry(book=submission, user=request.user, kind='review', message='Submission moved to Review', short_name='Submission in Review')
+
 		messages.add_message(request, messages.SUCCESS, 'Submission has been moved to the review stage.')
 
 		return redirect(reverse('view_review', kwargs={'submission_id': submission.id}))
@@ -242,8 +245,16 @@ def add_reviewers(request, submission_id, review_type, round_number):
 					messages.add_message(request, messages.WARNING, '%s %s is already a reviewer' % (member.user.first_name, member.user.last_name))
 
 		# Tidy up and save
-		submission.stage.internal_review = timezone.now()
-		submission.stage.save()
+		if review_type == 'internal' and not submission.stage.internal_review:
+			submission.stage.internal_review = timezone.now()
+			submission.stage.save()
+			log.add_log_entry(book=submission, user=request.user, kind='review', message='Internal Review Started', short_name='Submission entered Internal Review')
+
+		elif review_type == 'external' and not submission.stage.external_review:
+			submission.stage.external_review = timezone.now()
+			submission.stage.save()
+			log.add_log_entry(book=submission, user=request.user, kind='review', message='External Review Started', short_name='Submission entered External Review')
+
 		submission.review_form = review_form
 		submission.save()
 
@@ -292,22 +303,26 @@ def add_review_round(request, submission_id):
 def move_to_editing(request, submission_id):
 	'Moves a submission to the editing stage'
 	submission = get_object_or_404(models.Book, pk=submission_id)
+	if not submission.stage.editing:
+		log.add_log_entry(book=submission, user=request.user, kind='editing', message='Submission moved to Editing.', short_name='Submission in Editing')
 	submission.stage.editing = timezone.now()
 	submission.stage.current_stage = 'editing'
 	submission.stage.save()
 
-	return redirect(reverse('in_editing'))
+	return redirect(reverse('view_editing', kwargs={'submission_id': submission_id}))
 
 # Log
 @staff_member_required
 def view_log(request, submission_id):
 	book = get_object_or_404(models.Book, pk=submission_id)
-	log_list = models.Log.objects.filter(book=book)
+	log_list = models.Log.objects.filter(book=book).order_by('-date_logged')
+	email_list = models.EmailLog.objects.filter(book=book).order_by('-sent')
 
 	template = 'workflow/log.html'
 	context = {
 		'submission': book,
 		'log_list': log_list,
+		'email_list': email_list,
 		'active': 'log',
 	}
 
@@ -497,6 +512,7 @@ def add_format(request, submission_id):
 			new_format.book = book
 			new_format.file = new_file
 			new_format.save()
+			log.add_log_entry(book=book, user=request.user, kind='production', message='%s %s loaded a new format, %s' % (request.user.first_name, request.user.last_name, new_format.identifier), short_name='New Format Loaded')
 			return redirect(reverse('view_production', kwargs={'submission_id': book.id}))
 
 	template = 'workflow/production/add_format.html'
@@ -520,6 +536,7 @@ def add_chapter(request, submission_id):
 			new_chapter.book = book
 			new_chapter.file = new_file
 			new_chapter.save()
+			log.add_log_entry(book=book, user=request.user, kind='production', message='%s %s loaded a new chapter, %s' % (request.user.first_name, request.user.last_name, new_chapter.identifier), short_name='New Chapter Loaded')
 			return redirect(reverse('view_production', kwargs={'submission_id': book.id}))
 
 	template = 'workflow/production/add_chapter.html'
@@ -1072,7 +1089,7 @@ def send_proposal_review_request(proposal, review_assignment, email_text):
 		'review_url': review_url,
 	}
 
-	email.send_email('[abp] Proposal Review Request', context, from_email.value, review_assignment.user.email, email_text)
+	email.send_email('Proposal Review Request', context, from_email.value, review_assignment.user.email, email_text)
 
 def send_review_request(book, review_assignment, email_text):
 	from_email = models.Setting.objects.get(group__name='email', name='from_address')
@@ -1088,4 +1105,4 @@ def send_review_request(book, review_assignment, email_text):
 		'decision_url': decision_url,
 	}
 
-	email.send_email('[abp] Review Request', context, from_email.value, review_assignment.user.email, email_text)
+	email.send_email('Review Request', context, from_email.value, review_assignment.user.email, email_text, book=book)

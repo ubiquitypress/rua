@@ -84,5 +84,5 @@ def send_reminder_email(book, subject, review, email_text):
         'review': review,
     }
 
-    email.send_email(subject, context, from_email.value, review.user.email, email_text)
+    email.send_email(subject, context, from_email.value, review.user.email, email_text, book=book)
 	

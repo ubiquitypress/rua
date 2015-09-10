@@ -24,11 +24,14 @@ def view_editing(request, submission_id):
 
 		if action == 'copyediting':
 			book.stage.copyediting = timezone.now()
+			log.add_log_entry(book=book, user=request.user, kind='editing', message='Copyediting has commenced.', short_name='Copyediting Started')
 		elif action == 'indexing':
 			book.stage.indexing = timezone.now()
+			log.add_log_entry(book=book, user=request.user, kind='editing', message='Indexing has commenced.', short_name='Indexing Started')
 		elif action == 'production':
 			book.stage.production = timezone.now()
 			book.stage.current_stage = 'production'
+			log.add_log_entry(book=book, user=request.user, kind='production', message='Submission moved to Production', short_name='Submission in Production')
 			book.stage.save()
 			return redirect(reverse('view_production', kwargs={'submission_id': submission_id}))
 
@@ -56,6 +59,7 @@ def assign_copyeditor(request, submission_id):
 
 		for copyeditor in copyeditor_list:
 			logic.handle_copyeditor_assignment(book, copyeditor, file_list, due_date, email_text, requestor=request.user)
+			log.add_log_entry(book=book, user=request.user, kind='editing', message='Copyeditor %s %s assigend to %s' % (copyeditor.first_name, copyeditor.last_name, book.title), short_name='Copyeditor Assigned')
 
 		return redirect(reverse('view_editing', kwargs={'submission_id': submission_id}))
 
@@ -81,6 +85,7 @@ def view_copyedit(request, submission_id, copyedit_id):
 			return redirect(reverse('view_copyedit', kwargs={'submission_id': submission_id, 'copyedit_id': copyedit_id}))
 		else:
 			copyedit.editor_review = timezone.now()
+			log.add_log_entry(book=book, user=request.user, kind='editing', message='Copyedit Review Completed by %s %s' % (request.user.first_name, request.user.last_name), short_name='Editor Copyedit Review Complete')
 			copyedit.save()
 
 	elif request.POST and 'send_invite_author' in request.POST:
@@ -115,6 +120,7 @@ def assign_indexer(request, submission_id):
 
 		for indexer in indexer_list:
 			logic.handle_indexer_assignment(book, indexer, file_list, due_date, email_text, requestor=request.user)
+			log.add_log_entry(book=book, user=request.user, kind='editing', message='Indexer %s %s assigend to %s' % (indexer.first_name, indexer.last_name, book.title), short_name='Indexer Assigned')
 
 		return redirect(reverse('view_editing', kwargs={'submission_id': submission_id}))
 

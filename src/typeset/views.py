@@ -7,6 +7,7 @@ from django.core.urlresolvers import reverse
 
 from core import models
 from core import task
+from core import log
 from typeset import forms
 
 import mimetypes as mime
@@ -64,6 +65,7 @@ def typeset_files(request, submission_id, typeset_id):
 			_file.label = request.POST.get('label_%s' % _file.id)
 			_file.save()
 		typeset.completed = timezone.now()
+		log.add_log_entry(book=book, user=request.user, kind='production', message='Typesetter %s %s completed.' % (typeset.typesetter.first_name, typeset.typesetter.last_name), short_name='Typesetter Completed')
 		typeset.save()
 		new_task = task.create_new_task(book, typeset.typesetter, typeset.requestor, "Typsetting completed for %s" % book.title, workflow='production')
 		return redirect(reverse('typeset_complete', kwargs={'submission_id': submission_id, 'typeset_id': typeset_id}))
@@ -92,6 +94,7 @@ def typeset_author(request, submission_id, typeset_id):
 				typeset.author_files.add(new_file)
 				typeset.author_completed = timezone.now()
 				typeset.save()
+				log.add_log_entry(book=book, user=request.user, kind='production', message='Author Typesetting review %s %s completed.' % (request.user.first_name, request.user.last_name), short_name='Author Typesetting Review Completed')
 				messages.add_message(request, messages.SUCCESS, 'Typesetting task complete. Thanks.')
 				new_task = task.create_new_task(book, typeset.book.owner, typeset.requestor, "Author Typesetting completed for %s" % book.title, workflow='production')
 				return redirect(reverse('user_home'))
@@ -139,6 +142,7 @@ def typeset_typesetter(request, submission_id, typeset_id):
 				typeset.typesetter_files.add(new_file)
 				typeset.typsetter_completed = timezone.now()
 				typeset.save()
+				log.add_log_entry(book=book, user=request.user, kind='production', message='Final Typesetting %s %s completed.' % (request.user.first_name, request.user.last_name), short_name='Final Typesetting Completed')
 				messages.add_message(request, messages.SUCCESS, 'Typesetting task complete. Thanks.')
 				new_task = task.create_new_task(book, typeset.book.owner, typeset.requestor, "Typesetting completed for %s" % book.title, workflow='production')
 				return redirect(reverse('user_home'))

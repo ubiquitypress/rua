@@ -7,6 +7,7 @@ from django.core.urlresolvers import reverse
 
 from core import models
 from core import task
+from core import log
 from indexing import forms
 
 import mimetypes as mime
@@ -63,6 +64,7 @@ def index_files(request, submission_id, index_id):
 			_file.label = request.POST.get('label_%s' % _file.id)
 			_file.save()
 		index.completed = timezone.now()
+		log.add_log_entry(book=book, user=request.user, kind='editing', message='Indexer %s %s completed.' % (index.indexer.first_name, index.indexer.last_name), short_name='Indexer Complete')
 		index.save()
 		new_task = task.create_new_task(book, index.indexer, index.requestor, "Indexing completed for %s" % book.title, workflow='editing')
 		return redirect(reverse('index_complete', kwargs={'submission_id': submission_id, 'index_id': index_id}))

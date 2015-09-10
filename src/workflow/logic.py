@@ -144,7 +144,7 @@ def send_author_sign_off(submission, email_text):
         'submission': submission,
     }
 
-    email.send_email('Book Contract Uploaded', context, from_email.value, submission.owner.email, email_text)
+    email.send_email('Book Contract Uploaded', context, from_email.value, submission.owner.email, email_text, book=submission)
 
 def send_copyedit_assignment(submission, copyedit, email_text):
     from_email = models.Setting.objects.get(group__name='email', name='from_address')
@@ -155,7 +155,7 @@ def send_copyedit_assignment(submission, copyedit, email_text):
         'copyedit': copyedit,
     }
 
-    email.send_email('Copyedit Assignment', context, from_email.value, copyedit.copyeditor.email, email_text)
+    email.send_email('Copyedit Assignment', context, from_email.value, copyedit.copyeditor.email, email_text, book=submission)
 
 def send_author_invite(submission, copyedit, email_text):
     from_email = models.Setting.objects.get(group__name='email', name='from_address')
@@ -166,7 +166,7 @@ def send_author_invite(submission, copyedit, email_text):
         'copyedit': copyedit,
     }
 
-    email.send_email('Copyediting Completed', context, from_email.value, submission.owner.email, email_text)
+    email.send_email('Copyediting Completed', context, from_email.value, submission.owner.email, email_text, book=submission)
 
 def send_invite_typesetter(book, typeset, email_text):
     from_email = models.Setting.objects.get(group__name='email', name='from_address')
@@ -177,4 +177,4 @@ def send_invite_typesetter(book, typeset, email_text):
         'typeset': typeset,
     }
 
-    email.send_email('Typesetting', context, from_email.value, typeset.typesetter.email, email_text)
+    email.send_email('Typesetting', context, from_email.value, typeset.typesetter.email, email_text, book=book)
