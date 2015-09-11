@@ -72,11 +72,11 @@ class GeneratedForm(forms.Form):
 			if relation.element.field_type == 'text':
 				self.fields[relation.element.name] = forms.CharField(widget=forms.TextInput(attrs={'div_class':relation.width}), required=relation.element.required)
 			elif relation.element.field_type == 'textarea':
-				self.fields[relation.element.name] = forms.CharField(widget=forms.Textarea, required=relation.element.required)
+				self.fields[relation.element.name] = forms.CharField(widget=forms.Textarea(attrs={'div_class':relation.width}), required=relation.element.required)
 			elif relation.element.field_type == 'date':
 				self.fields[relation.element.name] = forms.CharField(widget=forms.DateInput(attrs={'class':'datepicker', 'div_class':relation.element_class}), required=relation.element.required)
 			elif relation.element.field_type == 'upload':
-				self.fields[relation.element.name] = forms.FileField(required=relation.element.required)
+				self.fields[relation.element.name] = forms.FileField(widget=forms.FileInput(attrs={'div_class':relation.width}), required=relation.element.required)
 			elif relation.element.field_type == 'select':
 				if relation.element.name == 'Series':
 					choices = series_list
@@ -86,7 +86,7 @@ class GeneratedForm(forms.Form):
 			elif relation.element.field_type == 'email':
 				self.fields[relation.element.name] = forms.EmailField(widget=forms.TextInput(attrs={'div_class':relation.width}), required=relation.element.required)
 			elif relation.element.field_type == 'check':
-				self.fields[relation.element.name] = forms.BooleanField(widget=forms.CheckboxInput(attrs={'is_checkbox':True}), required=relation.element.required)
+				self.fields[relation.element.name] = forms.BooleanField(widget=forms.CheckboxInput(attrs={'is_checkbox':True, 'div_class':relation.width}), required=relation.element.required)
 			self.fields[relation.element.name].help_text = relation.help_text
 
 
