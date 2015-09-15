@@ -28,20 +28,9 @@
             </div>
         </div>
     </div>
-	<div class="row">
+    <div class="row">
 		<div class="col-md-4" id="task-list">
-			<div class="row">
-				<div class="col-md-8">
-					<h3><i class="fa fa-tasks"></i>&nbsp;Tasks</h3>
-				</div>
-				<div class="col-md-4">
-					<h3>
-						<button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#myModal">
-						<i class="fa fa-plus"></i> New Task
-						</button>
-					</h3>
-				</div>
-			</div>
+		<h3><i class="fa fa-tasks"></i>&nbsp;Tasks</h3>
 		{% for task in task_list %}
 		<div id="task-{{ task.id }}" class="bs-callout bs-callout-{{ task.workflow }}" id="callout-helper-bg-specificity">
 				<label class="checkbox-inline">
@@ -54,6 +43,9 @@
 			<p>No tasks</p>
 		</div>
 		{% endfor %}
+		<button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#myModal">
+			<i class="fa fa-plus"></i> New Task
+		</button>
 		</div>
 		<div class="col-md-4">
 			<h3><i class="fa fa-tasks"></i>&nbsp;My Submissions</h3>
@@ -67,6 +59,7 @@
 		</div>
 			{% endfor %}
 		</div>
+		{% if 'book-editor' in roles %}
 		<div class="col-md-4">
 			<h3><i class="fa fa-tasks"></i>&nbsp;Editor</h3>
 			<div class="bs-callout bs-callout-submission" id="callout-helper-bg-specificity">
@@ -85,8 +78,8 @@
 				<p><a href="{% url 'in_production' %}">{{ in_production }} Submissions in Production</a></p>
 			</div>
 		</div>
-	</div>
-	<div class="row">
+		{% endif %}
+		{% if 'copyeditor' in roles %}
 		<div class="col-md-4">
 			<h3><i class="fa fa-tasks"></i>&nbsp;Copyeditor</h3>
 			{% for copyedit in copyedits %}
@@ -99,6 +92,7 @@
 			</div>
 			{% endfor %}
 		</div>
+		{% endif %}
 		<div class="col-md-4">
 			<h3><i class="fa fa-tasks"></i>&nbsp;Author Tasks</h3>
 			{% for task in author_copyedit_tasks %}
@@ -111,6 +105,7 @@
 			</div>
 			{% endfor %}
 		</div>
+		{% if 'indexer' in roles %}
 		<div class="col-md-4">
 			<h3><i class="fa fa-tasks"></i>&nbsp;Indexing</h3>
 			{% for index in indexes %}
@@ -123,8 +118,8 @@
 			</div>
 			{% endfor %}
 		</div>
-	</div>
-	<div class="row">
+		{% endif %}
+		{% if 'typesetter' in roles %}
 		<div class="col-md-4">
 			<h3><i class="fa fa-tasks"></i>&nbsp;Typesetter</h3>
 			{% for typeset in typesetting %}
@@ -141,6 +136,7 @@
 			</div>
 			{% endfor %}
 		</div>
+		{% endif %}
 	</div>
 </div>
 

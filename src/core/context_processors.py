@@ -13,6 +13,6 @@ def task_count(request):
 	except:
 		return 0
 
-def user_groups(request):
-	return {'groups': [group.name for group in request.user.groups_set.all()]}
+def roles(request):
+	return {'roles': [role.slug for role in request.user.profile.roles.all()]}
 
