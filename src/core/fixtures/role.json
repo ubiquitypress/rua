@@ -54,5 +54,21 @@
     },
     "model": "core.role",
     "pk": 7
+},
+{
+    "fields": {
+        "name": "Indexer",
+        "slug": "indexer"
+    },
+    "model": "core.role",
+    "pk": 8
+},
+{
+    "fields": {
+        "name": "Typesetter",
+        "slug": "typesetter"
+    },
+    "model": "core.role",
+    "pk": 9
 }
 ]

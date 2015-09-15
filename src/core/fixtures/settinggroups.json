@@ -30,5 +30,13 @@
     },
     "model": "core.settinggroup",
     "pk": 4
+},
+{
+    "fields": {
+        "enabled": true,
+        "name": "cron"
+    },
+    "model": "core.settinggroup",
+    "pk": 5
 }
 ]
