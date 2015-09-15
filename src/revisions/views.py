@@ -99,7 +99,7 @@ def update_file(request, revision_id, file_id):
 
 	if request.POST:
 		for file in request.FILES.getlist('update_file'):
-			handle_file_update(file, _file, book, _file.kind)
+			handle_file_update(file, _file, book, _file.kind, request.user)
 			messages.add_message(request, messages.INFO, 'File updated.')
 
 		return redirect(reverse('revision', kwargs={'revision_id': revision.id}))
