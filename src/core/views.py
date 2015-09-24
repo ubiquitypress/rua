@@ -176,6 +176,7 @@ def user_submission(request, submission_id):
 	template = 'core/user/user_submission.html'
 	context = {
 		'submission': book,
+		'active': 'user_submission',
 	}
 
 	return render(request, template, context)
