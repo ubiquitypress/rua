@@ -81,9 +81,8 @@ def revision(request, revision_id):
 
 	return render(request, template, context)
 
-@is_book_editor
 def editor_view_revisions(request, revision_id):
-	revision = get_object_or_404(models.Revision, pk=revision_id, completed__isnull=False)
+	revision = get_object_or_404(models.Revision, pk=revision_id, completed__isnull=False, book__press_editors__in=[request.user])
 
 	template = 'revisions/editor_view_revisions.html'
 	context = {
