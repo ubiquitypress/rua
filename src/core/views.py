@@ -313,6 +313,7 @@ def handle_file(file, book, kind):
 		uuid_filename=filename,
 		stage_uploaded=1,
 		kind=kind,
+		owner=book.owner,
 	)
 	new_file.save()
 

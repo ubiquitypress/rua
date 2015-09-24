@@ -8,13 +8,14 @@ from django.core.urlresolvers import reverse
 from core import models
 from core import task
 from core import log
+from core.decorators import is_indexer
 from indexing import forms
 
 import mimetypes as mime
 from uuid import uuid4
 import os
 
-@login_required
+@is_indexer
 def index(request, submission_id, index_id):
 	book = get_object_or_404(models.Book, pk=submission_id)
 	index = get_object_or_404(models.IndexAssignment, pk=index_id, indexer=request.user, book=book)
@@ -50,7 +51,7 @@ def index(request, submission_id, index_id):
 
 	return render(request, template, context)
 
-@login_required
+@is_indexer
 def index_files(request, submission_id, index_id):
 	book = get_object_or_404(models.Book, pk=submission_id)
 	index = get_object_or_404(models.IndexAssignment, pk=index_id, indexer=request.user, book=book)
@@ -77,7 +78,7 @@ def index_files(request, submission_id, index_id):
 
 	return render(request, template, context)
 
-@login_required
+@is_indexer
 def index_complete(request, submission_id, index_id):
 	book = get_object_or_404(models.Book, pk=submission_id)
 	index = get_object_or_404(models.IndexAssignment, pk=index_id, indexer=request.user, book=book)

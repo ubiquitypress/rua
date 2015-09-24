@@ -19,12 +19,13 @@ from django.http import Http404, HttpResponse, StreamingHttpResponse, HttpRespon
 from core import models as core_models
 from core import views as core_views
 from core import forms as core_forms
+from core.decorators import is_reviewer
 from core import log
 from review import forms
 from review import models
 from submission import models as submission_models
 
-@login_required
+@is_reviewer
 def reviewer_decision(request, review_type, submission_id, review_assignment, decision=None):
 
 	# Check the review assignment as not been completed and is being accessed by the assigned user
@@ -60,7 +61,7 @@ def reviewer_decision(request, review_type, submission_id, review_assignment, de
 
 
 
-@login_required
+@is_reviewer
 def review(request, review_type, submission_id, access_key=None):
 
 	ci_required = core_models.Setting.objects.get(group__name='general', name='ci_required')
@@ -133,6 +134,7 @@ def review(request, review_type, submission_id, access_key=None):
 
 	return render(request, template, context)
 
+@is_reviewer
 def review_complete(request, review_type, submission_id):
 
 	if review_type == 'proposal':
@@ -187,7 +189,7 @@ def create_review_form(submission):
 	document.save(path)
 	return path
 
-@login_required
+@is_reviewer
 def serve_file(request, file_path):
 	try:
 		fsock = open(file_path, 'r')

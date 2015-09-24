@@ -9,13 +9,14 @@ from django.contrib.auth.models import User
 from core import models
 from core import log
 from core import email
+from core.decorators import is_editor, is_book_editor, is_book_editor_or_author
 from core.cache import cache_result
 from copyedit import forms
 from workflow import logic
 
 from pprint import pprint
 
-@staff_member_required
+@is_book_editor
 def view_editing(request, submission_id):
 	book = get_object_or_404(models.Book, pk=submission_id)
 
@@ -46,7 +47,7 @@ def view_editing(request, submission_id):
 
 	return render(request, template, context)
 
-@staff_member_required
+@is_book_editor
 def assign_copyeditor(request, submission_id):
 	book = get_object_or_404(models.Book, pk=submission_id)
 	copyeditors = models.User.objects.filter(profile__roles__slug='copyeditor')
@@ -72,7 +73,7 @@ def assign_copyeditor(request, submission_id):
 
 	return render(request, template, context)
 
-@staff_member_required
+@is_book_editor
 def view_copyedit(request, submission_id, copyedit_id):
 	book = get_object_or_404(models.Book, pk=submission_id)
 	copyedit = get_object_or_404(models.CopyeditAssignment, pk=copyedit_id)
@@ -107,7 +108,7 @@ def view_copyedit(request, submission_id, copyedit_id):
 
 	return render(request, template, context)
 
-@staff_member_required
+@is_book_editor
 def assign_indexer(request, submission_id):
 	book = get_object_or_404(models.Book, pk=submission_id)
 	indexers = models.User.objects.filter(profile__roles__slug='indexer')
@@ -133,7 +134,7 @@ def assign_indexer(request, submission_id):
 
 	return render(request, template, context)
 
-@staff_member_required
+@is_book_editor
 def view_index(request, submission_id, index_id):
 	book = get_object_or_404(models.Book, pk=submission_id)
 	index = get_object_or_404(models.IndexAssignment, pk=index_id)

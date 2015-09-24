@@ -10,6 +10,7 @@ from workflow.views import handle_file_update
 from revisions import forms
 from core import models as core_models
 from core import log
+from core.decorators import is_book_editor, is_book_editor_or_author, is_reviewer
 from revisions import logic
 
 import os
@@ -17,7 +18,7 @@ import mimetypes
 import mimetypes as mime
 from uuid import uuid4
 
-@staff_member_required
+@is_book_editor
 def request_revisions(request, submission_id, returner):
 	book = get_object_or_404(core_models.Book, pk=submission_id)
 	email_text = core_models.Setting.objects.get(group__name='email', name='request_revisions').value
@@ -80,7 +81,7 @@ def revision(request, revision_id):
 
 	return render(request, template, context)
 
-@staff_member_required
+@is_book_editor
 def editor_view_revisions(request, revision_id):
 	revision = get_object_or_404(models.Revision, pk=revision_id, completed__isnull=False)
 
@@ -91,7 +92,7 @@ def editor_view_revisions(request, revision_id):
 
 	return render(request, template, context)
 
-@login_required
+@is_book_editor_or_author
 def update_file(request, revision_id, file_id):
 	revision = get_object_or_404(models.Revision, pk=revision_id, book__owner=request.user)
 	book = revision.book

@@ -9,13 +9,14 @@ from django.contrib.auth.models import User
 from core import models
 from core import log
 from core import email
+from core.decorators import is_book_editor
 from core.cache import cache_result
 from typeset import forms
 from workflow import logic
 
 from pprint import pprint
 
-@staff_member_required
+@is_book_editor
 def assign_typesetter(request, submission_id):
 	book = get_object_or_404(models.Book, pk=submission_id)
 	typesetters = models.User.objects.filter(profile__roles__slug='typesetter')
@@ -40,7 +41,7 @@ def assign_typesetter(request, submission_id):
 
 	return render(request, template, context)
 
-@staff_member_required
+@is_book_editor
 def view_typesetter(request, submission_id, typeset_id):
 	book = get_object_or_404(models.Book, pk=submission_id)
 	typeset = get_object_or_404(models.TypesetAssignment, pk=typeset_id)

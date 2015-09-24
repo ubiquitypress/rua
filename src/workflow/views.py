@@ -18,6 +18,7 @@ from django.conf import settings
 from core import models
 from core import log
 from core import email
+from core.decorators import is_editor, is_book_editor, is_book_editor_or_author
 from core.cache import cache_result
 from revisions import models as revisions_models
 from review import models as review_models
@@ -34,7 +35,7 @@ import mimetypes as mime
 from uuid import uuid4
 import json
 
-@staff_member_required
+@is_editor
 def new_submissions(request):
 
 	submission_list = models.Book.objects.filter(stage__current_stage='submission')
@@ -47,7 +48,7 @@ def new_submissions(request):
 
 	return render(request, template, context)
 
-@staff_member_required
+@is_book_editor
 def view_new_submission(request, submission_id):
 
 	submission = get_object_or_404(models.Book, pk=submission_id)
@@ -75,7 +76,7 @@ def view_new_submission(request, submission_id):
 
 	return render(request, template, context)
 
-@staff_member_required
+@is_book_editor
 def decline_submission(request, submission_id):
 
 	submission = get_object_or_404(models.Book, pk=submission_id)
@@ -94,7 +95,7 @@ def decline_submission(request, submission_id):
 
 	return render(request, template, context)
 
-@staff_member_required
+@is_editor
 def in_review(request):
 
 	submission_list = models.Book.objects.filter(stage__current_stage='review')
@@ -107,7 +108,7 @@ def in_review(request):
 
 	return render(request, template, context)
 
-@staff_member_required
+@is_editor
 def in_editing(request):
 
 	submission_list = models.Book.objects.filter(stage__current_stage='editing')
@@ -120,7 +121,7 @@ def in_editing(request):
 
 	return render(request, template, context)
 
-@staff_member_required
+@is_editor
 def in_production(request):
 
 	submission_list = models.Book.objects.filter(stage__current_stage='production')
@@ -133,7 +134,7 @@ def in_production(request):
 
 	return render(request, template, context)
 
-@staff_member_required
+@is_book_editor
 def view_review(request, submission_id):
 
 	submission = get_object_or_404(models.Book, pk=submission_id)
@@ -153,7 +154,7 @@ def view_review(request, submission_id):
 
 	return render(request, template, context)
 
-@staff_member_required
+@is_book_editor
 def add_review_files(request, submission_id, review_type):
 	submission = get_object_or_404(models.Book, pk=submission_id)
 
@@ -176,7 +177,7 @@ def add_review_files(request, submission_id, review_type):
 
 	return render(request, template, context)
 
-@staff_member_required
+@is_book_editor
 def delete_review_files(request, submission_id, review_type, file_id):
 	submission = get_object_or_404(models.Book, pk=submission_id)
 	file = get_object_or_404(models.File, pk=file_id)
@@ -188,7 +189,7 @@ def delete_review_files(request, submission_id, review_type, file_id):
 
 	return redirect(reverse('view_review', kwargs={'submission_id': submission.id}))
 
-@staff_member_required
+@is_book_editor
 def add_reviewers(request, submission_id, review_type, round_number):
 
 	submission = get_object_or_404(models.Book, pk=submission_id)
@@ -271,7 +272,7 @@ def add_reviewers(request, submission_id, review_type, round_number):
 
 	return render(request, template, context)
 
-@staff_member_required
+@is_book_editor
 def view_review_assignment(request, submission_id, assignment_id):
 
 	submission = get_object_or_404(models.Book, pk=submission_id)
@@ -291,7 +292,7 @@ def view_review_assignment(request, submission_id, assignment_id):
 
 	return render(request, template, context)
 
-@staff_member_required
+@is_book_editor
 def add_review_round(request, submission_id):
 	'creates a new review round'
 	submission = get_object_or_404(models.Book, pk=submission_id)
@@ -299,7 +300,7 @@ def add_review_round(request, submission_id):
 	messages.add_message(request, messages.SUCCESS, 'New review round started')
 	return redirect(reverse('view_review', kwargs={'submission_id':submission_id}))
 
-@staff_member_required
+@is_book_editor
 def move_to_editing(request, submission_id):
 	'Moves a submission to the editing stage'
 	submission = get_object_or_404(models.Book, pk=submission_id)
@@ -312,7 +313,7 @@ def move_to_editing(request, submission_id):
 	return redirect(reverse('view_editing', kwargs={'submission_id': submission_id}))
 
 # Log
-@staff_member_required
+@is_book_editor
 def view_log(request, submission_id):
 	book = get_object_or_404(models.Book, pk=submission_id)
 	log_list = models.Log.objects.filter(book=book).order_by('-date_logged')
@@ -330,7 +331,7 @@ def view_log(request, submission_id):
 
 ## PRODUCTION ##
 
-@staff_member_required
+@is_book_editor
 def view_production(request, submission_id):
 	book = get_object_or_404(models.Book, pk=submission_id)
 	typeset_assignments = models.TypesetAssignment.objects.filter(book=book)
@@ -351,7 +352,7 @@ def view_production(request, submission_id):
 
 	return render(request, template, context)
 
-@staff_member_required
+@is_book_editor
 def catalog(request, submission_id):
 	book = get_object_or_404(models.Book, pk=submission_id)
 
@@ -396,7 +397,7 @@ def catalog(request, submission_id):
 
 	return render(request, template, context)
 
-@staff_member_required
+@is_book_editor
 def identifiers(request, submission_id, identifier_id=None):
 	book = get_object_or_404(models.Book, pk=submission_id)
 
@@ -434,7 +435,7 @@ def identifiers(request, submission_id, identifier_id=None):
 
 	return render(request, template, context)
 
-@staff_member_required
+@is_book_editor
 def update_contributor(request, submission_id, contributor_type, contributor_id=None):
 	book = get_object_or_404(models.Book, pk=submission_id)
 
@@ -485,7 +486,7 @@ def update_contributor(request, submission_id, contributor_type, contributor_id=
 
 	return render(request, template, context)
 
-@staff_member_required
+@is_book_editor
 def delete_contributor(request, submission_id, contributor_type, contributor_id):
 	book = get_object_or_404(models.Book, pk=submission_id)
 
@@ -499,7 +500,7 @@ def delete_contributor(request, submission_id, contributor_type, contributor_id)
 
 		return redirect(reverse('catalog', kwargs={'submission_id': submission_id}))
 
-@staff_member_required
+@is_book_editor
 def add_format(request, submission_id):
 	book = get_object_or_404(models.Book, pk=submission_id)
 	format_form = forms.FormatForm()
@@ -523,7 +524,7 @@ def add_format(request, submission_id):
 
 	return render(request, template, context)
 
-@staff_member_required
+@is_book_editor
 def add_chapter(request, submission_id):
 	book = get_object_or_404(models.Book, pk=submission_id)
 	chapter_form = forms.ChapterForm()
@@ -547,7 +548,7 @@ def add_chapter(request, submission_id):
 
 	return render(request, template, context)
 
-@staff_member_required
+@is_book_editor
 def delete_format_or_chapter(request, submission_id, format_or_chapter, id):
 	book = get_object_or_404(models.Book, pk=submission_id)
 
@@ -565,7 +566,7 @@ def delete_format_or_chapter(request, submission_id, format_or_chapter, id):
 
 	return redirect(reverse('view_production', kwargs={'submission_id': book.id}))
 
-@staff_member_required
+@is_book_editor
 def update_format_or_chapter(request, submission_id, format_or_chapter, id):
 	book = get_object_or_404(models.Book, pk=submission_id)
 
@@ -597,7 +598,7 @@ def update_format_or_chapter(request, submission_id, format_or_chapter, id):
 
 ## PROPOSALS ##
 
-@staff_member_required
+@is_editor
 def proposal(request):
 	proposal_list = submission_models.Proposal.objects.exclude(status='declined').exclude(status='accepted')
 
@@ -608,7 +609,7 @@ def proposal(request):
 
 	return render(request, template, context)
 
-@staff_member_required
+@is_editor
 def view_proposal(request, proposal_id):
 	proposal = get_object_or_404(submission_models.Proposal, pk=proposal_id)
 	relationships = models.ProposalFormElementsRelationship.objects.filter(form=proposal.form)
@@ -623,7 +624,7 @@ def view_proposal(request, proposal_id):
 
 	return render(request, template, context)
 
-@staff_member_required
+@is_editor
 def start_proposal_review(request, proposal_id):
 	proposal = get_object_or_404(submission_models.Proposal, pk=proposal_id, date_review_started__isnull=True)
 	reviewers = models.User.objects.filter(profile__roles__slug='reviewer')
@@ -689,7 +690,7 @@ def start_proposal_review(request, proposal_id):
 
 	return render(request, template, context)
 
-@staff_member_required
+@is_editor
 def view_proposal_review(request, submission_id, assignment_id):
 
 	submission = get_object_or_404(submission_models.Proposal, pk=submission_id)
@@ -713,7 +714,7 @@ def view_proposal_review(request, submission_id, assignment_id):
 
 	return render(request, template, context)
 
-@staff_member_required
+@is_editor
 def add_proposal_reviewers(request, proposal_id):
 
 	proposal = get_object_or_404(submission_models.Proposal, pk=proposal_id)
@@ -774,7 +775,7 @@ def add_proposal_reviewers(request, proposal_id):
 
 	return render(request, template, context)
 
-@staff_member_required
+@is_editor
 def decline_proposal(request, proposal_id):
 
 	proposal = get_object_or_404(submission_models.Proposal, pk=proposal_id)
@@ -796,7 +797,7 @@ def decline_proposal(request, proposal_id):
 	return render(request, template, context)
 
 
-@staff_member_required
+@is_editor
 def accept_proposal(request, proposal_id):
 	'Marks a proposal as accepted, creates a submission and emails the user'
 	proposal = get_object_or_404(submission_models.Proposal, pk=proposal_id)
@@ -818,7 +819,7 @@ def accept_proposal(request, proposal_id):
 
 	return render(request, template, context)
 
-@staff_member_required
+@is_editor
 def request_proposal_revisions(request, proposal_id):
 
 	proposal = get_object_or_404(submission_models.Proposal, pk=proposal_id)
@@ -843,7 +844,7 @@ def request_proposal_revisions(request, proposal_id):
 
 ## CONTRACTS ##
 
-@staff_member_required
+@is_book_editor
 def contract_manager(request, submission_id, contract_id=None):
 	submission = get_object_or_404(models.Book, pk=submission_id)
 	action = 'normal'
@@ -889,7 +890,7 @@ def contract_manager(request, submission_id, contract_id=None):
 
 	return render(request, template, context)
 
-@staff_member_required
+@is_book_editor
 def upload_misc_file(request, submission_id):
 
 	submission = get_object_or_404(models.Book, pk=submission_id)
@@ -913,7 +914,7 @@ def upload_misc_file(request, submission_id):
 ## END CONTRACTS ##
 
 # File Handlers - should this be in Core?
-@login_required
+@is_book_editor_or_author
 def serve_file(request, submission_id, file_id):
 	book = get_object_or_404(models.Book, pk=submission_id)
 	_file = get_object_or_404(models.File, pk=file_id)
@@ -930,7 +931,7 @@ def serve_file(request, submission_id, file_id):
 		messages.add_message(request, messages.ERROR, 'File not found. %s/%s' % (file_path, _file.uuid_filename))
 		return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
-@login_required
+@is_book_editor_or_author
 def serve_versioned_file(request, submission_id, revision_id):
 	book = get_object_or_404(models.Book, pk=submission_id)
 	versions_file = get_object_or_404(models.FileVersion, pk=revision_id)
@@ -947,7 +948,7 @@ def serve_versioned_file(request, submission_id, revision_id):
 		messages.add_message(request, messages.ERROR, 'File not found. %s/%s' % (file_path, versions_file.uuid_filename))
 		return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
-@login_required
+@is_book_editor_or_author
 def delete_file(request, submission_id, file_id, returner):
 	book = get_object_or_404(models.Book, pk=submission_id)
 	_file = get_object_or_404(models.File, pk=file_id)
@@ -959,7 +960,7 @@ def delete_file(request, submission_id, file_id, returner):
 	elif returner == 'review':
 		return redirect(reverse('view_review', kwargs={'submission_id': book.id}))
 
-@login_required
+@is_book_editor_or_author
 def update_file(request, submission_id, file_id, returner):
 	book = get_object_or_404(models.Book, pk=submission_id)
 	_file = get_object_or_404(models.File, pk=file_id)
@@ -980,7 +981,7 @@ def update_file(request, submission_id, file_id, returner):
 
 	return render(request, template, context)
 
-@login_required
+@is_book_editor_or_author
 def versions_file(request, submission_id, file_id):
 	book = get_object_or_404(models.Book, pk=submission_id)
 	_file = get_object_or_404(models.File, pk=file_id)

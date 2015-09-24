@@ -8,13 +8,14 @@ from django.core.urlresolvers import reverse
 from core import models
 from core import task
 from core import log
+from core.decorators import is_copyeditor
 from copyedit import forms
 
 import mimetypes as mime
 from uuid import uuid4
 import os
 
-@login_required
+@is_copyeditor
 def copyedit(request, submission_id, copyedit_id):
 	book = get_object_or_404(models.Book, pk=submission_id)
 	copyedit = get_object_or_404(models.CopyeditAssignment, pk=copyedit_id, copyeditor=request.user, book=book)
@@ -50,7 +51,7 @@ def copyedit(request, submission_id, copyedit_id):
 
 	return render(request, template, context)
 
-@login_required
+@is_copyeditor
 def copyedit_files(request, submission_id, copyedit_id):
 	book = get_object_or_404(models.Book, pk=submission_id)
 	copyedit = get_object_or_404(models.CopyeditAssignment, pk=copyedit_id, copyeditor=request.user, book=book)
@@ -77,7 +78,7 @@ def copyedit_files(request, submission_id, copyedit_id):
 
 	return render(request, template, context)
 
-@login_required
+@is_copyeditor
 def copyedit_author(request, submission_id, copyedit_id):
 	book = get_object_or_404(models.Book, pk=submission_id)
 	copyedit = get_object_or_404(models.CopyeditAssignment, pk=copyedit_id, book__owner=request.user, book=book, author_invited__isnull=False, author_completed__isnull=True)
@@ -107,7 +108,7 @@ def copyedit_author(request, submission_id, copyedit_id):
 
 	return render(request, template, context)
 
-@login_required
+@is_copyeditor
 def copyedit_complete(request, submission_id, copyedit_id):
 	book = get_object_or_404(models.Book, pk=submission_id)
 	copyedit = get_object_or_404(models.CopyeditAssignment, pk=copyedit_id, copyeditor=request.user, book=book)

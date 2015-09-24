@@ -14,5 +14,8 @@ def task_count(request):
 		return 0
 
 def roles(request):
-	return {'roles': [role.slug for role in request.user.profile.roles.all()]}
+	if not request.user.is_anonymous():
+		return {'roles': [role.slug for role in request.user.profile.roles.all()]}
+	else:
+		return {'roles': ''}
 

@@ -397,6 +397,7 @@ def handle_file(file, book, kind, user):
 
 # AJAX handler
 @csrf_exempt
+@login_required
 def file_order(request, book_id, type_to_handle):
 
 	book = get_object_or_404(core_models.Book, pk=book_id, owner=request.user)
