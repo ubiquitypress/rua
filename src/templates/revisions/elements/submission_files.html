@@ -14,7 +14,7 @@
 			<td>{{ file.kind }}</td>
 			<td>{{ file.date_uploaded }}</td>
 			<td><a href="{% url 'serve_file' revision.book.id file.id %}" class="btn btn-sm btn-primary"><i class="fa fa-download">&nbsp;</i>Download</a></td>
-			<td><a href="{% url 'revision_update_file' revision.book.id file.id %}" class="btn btn-sm btn-primary"><i class="fa fa-cloud-upload">&nbsp;</i>Update</a></td>
+			<td><a href="{% url 'revision_update_file' revision.id file.id %}" class="btn btn-sm btn-primary"><i class="fa fa-cloud-upload">&nbsp;</i>Update</a></td>
   	</tr>
 {% endfor %}
 </table>
