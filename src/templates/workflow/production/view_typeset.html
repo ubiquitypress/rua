@@ -52,7 +52,7 @@
         <td>{{ file.uuid_filename }}</td>
         <td>{{ file.mime_type }}</td>
         <td>{{ file.kind }}</td>
-        <td><a href="{% url 'serve_file' submission.id file.id %}" class="btn btn-primary">&nbsp;<i class="fa fa-download">&nbsp;</i></a>
+        <td><a href="{% url 'serve_file' submission.id file.id %}" class="btn btn-primary">&nbsp;<i class="fa fa-download">&nbsp;</i></a></td>
       </tr>
     {% endfor %}
   </table>
@@ -141,6 +141,7 @@
             <th>New File Name</th>
             <th>Mimetype</th>
             <th>File Type</th>
+            <th>Downdload</th>
           </tr>
         {% for file in typeset.author_files.all %}
           <tr>
@@ -149,6 +150,7 @@
             <td>{{ file.uuid_filename }}</td>
             <td>{{ file.mime_type }}</td>
             <td>{{ file.kind }}</td>
+            <td><a href="{% url 'serve_file' submission.id file.id %}" class="btn btn-primary">&nbsp;<i class="fa fa-download">&nbsp;</i></a></td>
           </tr>
         {% endfor %}
       </table>
@@ -206,6 +208,7 @@
             <th>New File Name</th>
             <th>Mimetype</th>
             <th>File Type</th>
+            <th>Download</th>
           </tr>
         {% for file in typeset.typesetter_files.all %}
           <tr>
@@ -214,6 +217,7 @@
             <td>{{ file.uuid_filename }}</td>
             <td>{{ file.mime_type }}</td>
             <td>{{ file.kind }}</td>
+            <td><a href="{% url 'serve_file' submission.id file.id %}" class="btn btn-primary">&nbsp;<i class="fa fa-download">&nbsp;</i></a></td>
           </tr>
         {% endfor %}
       </table>
