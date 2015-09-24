@@ -1,0 +1,18 @@
+<table class="table table-striped">
+	<tr>
+		<th>Label</th>
+		<th>Mimetype</th>
+		<th>File Type</th>
+		<th>Date Uploaded</th>
+		<th>Download</th>
+	</tr>
+{% for file in revision.book.files.all %}
+	<tr>
+			<td>{{ file.label }}</td>
+  			<td>{{ file.mime_type }}</td>
+			<td>{{ file.kind }}</td>
+			<td>{{ file.date_uploaded }}</td>
+			<td><a href="{% url 'serve_file' revision.book.id file.id %}" class="btn btn-sm btn-primary"><i class="fa fa-download">&nbsp;</i>Download</a></td>
+  	</tr>
+{% endfor %}
+</table>
