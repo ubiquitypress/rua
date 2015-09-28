@@ -348,5 +348,25 @@
     },
     "model": "core.setting",
     "pk": 35
+},
+{
+    "fields": {
+        "value": "Dear {{ submission.owner.first_name }} {{ submission.owner.last_name }},\r\n\r\nYour submission has been received. An Editor will be in touch soon with the next steps.\r\n\r\nRegards,",
+        "group": 3,
+        "name": "author_submission_ack",
+        "types": "text"
+    },
+    "model": "core.setting",
+    "pk": 36
+},
+{
+    "fields": {
+        "value": "A new submission has been uploaded to.\r\n\r\nView the submission: http://{{base_url}}/workflow/new/{{submission.id}}\r\n\r\nRegards,",
+        "group": 3,
+        "name": "editor_submission_ack",
+        "types": "text"
+    },
+    "model": "core.setting",
+    "pk": 37
 }
 ]
