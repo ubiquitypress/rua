@@ -15,6 +15,47 @@
 <div class="col-md-12">
   <h3>{{ submission.title }}</h3>
   <hr />
+  <h4 id="progress">Submission Progress</h4>
+  <p>Submission is currently in the <strong>{{ submission.stage.current_stage }}</strong> stage. Below is a summary of your submissions progress.</p>
+  <table class="table table-bordered">
+    <tr>
+      <th>Stage</th>
+      <th>Date</th>
+      <th>Stage</th>
+      <th>Date</th>
+    </tr>
+    <tr>
+      <td>Submission</td>
+      <td>{{ submission.stage.submission|date:"Y-m-d" }}</td>
+      <td>Copyediting</td>
+      <td>{{ submission.stage.copyediting|date:"Y-m-d" }}</td>
+    </tr>
+    <tr>
+      <td>Review</td>
+      <td>{{ submission.stage.review|date:"Y-m-d" }}</td>
+      <td>Indexing</td>
+      <td>{{ submission.stage.indexing|date:"Y-m-d" }}</td>
+    </tr>
+    <tr>
+      <td>Internal Review</td>
+      <td>{{ submission.stage.internal_review|date:"Y-m-d" }}</td>
+      <td>Production</td>
+      <td>{{ submission.stage.production|date:"Y-m-d" }}</td>
+    </tr>
+    <tr>
+      <td>External Review</td>
+      <td>{{ submission.stage.external_review|date:"Y-m-d" }}</td>
+       <td>Typesetting</td>
+      <td>{{ submission.stage.typesetting|date:"Y-m-d" }}</td>
+    </tr>
+    <tr>
+      <td>Editing</td>
+      <td>{{ submission.stage.editing|date:"Y-m-d" }}</td>
+      <td>Published</td>
+      <td>{{ submission.stage.published|date:"Y-m-d" }}</td>
+    </tr>
+  </table>
+  <hr />
   <h4 id="summary">Summary</h4>
   <ul id="main_summary_tabs" class="nav nav-tabs" role="tablist">
     <li role="presentation" class="active"><a href="#main_summary" aria-controls="home" role="tab" data-toggle="tab">Summary</a></li>
