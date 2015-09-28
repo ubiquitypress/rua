@@ -7,10 +7,7 @@ from core import log
 
 from pprint import pprint
 
-def send_email(subject, context, from_email, to, html_template, book=None, sender=None):
-
-	if sender:
-		context['sender'] = sender
+def send_email(subject, context, from_email, to, html_template, book=None):
 
 	htmly = Template(html_template)
 	con = Context(context)

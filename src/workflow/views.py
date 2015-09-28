@@ -785,7 +785,7 @@ def decline_proposal(request, proposal_id):
 		proposal.status = 'declined'
 		logic.close_active_reviews(proposal)
 		proposal.save()
-		logic.send_proposal_decline(proposal, email_text=request.POST.get('decline-email'))
+		logic.send_proposal_decline(proposal, email_text=request.POST.get('decline-email'), sender=request.user)
 		return redirect(reverse('proposals'))
 
 	template = 'workflow/proposals/decline_proposal.html'
@@ -807,7 +807,7 @@ def accept_proposal(request, proposal_id):
 		proposal.status = 'accepted'
 		logic.close_active_reviews(proposal)
 		submission = logic.create_submission_from_proposal(proposal, proposal_type=request.POST.get('proposal-type'))
-		logic.send_proposal_accept(proposal, email_text=request.POST.get('accept-email'), submission=submission)
+		logic.send_proposal_accept(proposal, email_text=request.POST.get('accept-email'), sender=request.user)
 		proposal.save()
 		return redirect(reverse('proposals'))
 
@@ -828,7 +828,7 @@ def request_proposal_revisions(request, proposal_id):
 	if request.POST:
 		proposal.status = 'revisions_required'
 		logic.close_active_reviews(proposal)
-		logic.send_proposal_revisions(proposal, email_text=request.POST.get('revisions-email'))
+		logic.send_proposal_revisions(proposal, email_text=request.POST.get('revisions-email'), sender=request.user)
 		proposal.save()
 		return redirect(reverse('proposals'))
 
@@ -872,7 +872,7 @@ def contract_manager(request, submission_id, contract_id=None):
 
 			if not new_contract.author_signed_off:
 				email_text = models.Setting.objects.get(group__name='email', name='contract_author_sign_off').value
-				logic.send_author_sign_off(submission, email_text)
+				logic.send_author_sign_off(submission, email_text, sender=request.user)
 
 			if contract_id:
 				_kwargs = {'submission_id': submission.id, 'contract_id': contract_id}

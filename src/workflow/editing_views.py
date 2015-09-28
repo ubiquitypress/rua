@@ -95,7 +95,7 @@ def view_copyedit(request, submission_id, copyedit_id):
 		copyedit.author_invited = timezone.now()
 		copyedit.save()
 		email_text = request.POST.get('email_text')
-		logic.send_author_invite(book, copyedit, email_text)
+		logic.send_author_invite(book, copyedit, email_text, request.user)
 		return redirect(reverse('view_copyedit', kwargs={'submission_id': submission_id, 'copyedit_id': copyedit_id}))
 
 	template = 'workflow/editing/view_copyedit.html'
