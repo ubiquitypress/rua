@@ -1,4 +1,5 @@
 from core import models as core_models
+from core import email
 from django.core.exceptions import PermissionDenied
 
 def copy_author_to_submission(user, book):
@@ -48,3 +49,18 @@ def check_stage(book_stage, check):
         pass
     else:
         raise PermissionDenied()
+
+def send_acknowldgement_email(book, press_editors):
+    from_email = core_models.Setting.objects.get(group__name='email', name='from_address').value
+    author_text = core_models.Setting.objects.get(group__name='email', name='author_submission_ack').value
+    editor_text = core_models.Setting.objects.get(group__name='email', name='editor_submission_ack').value
+
+    context = {
+        'base_url': core_models.Setting.objects.get(group__name='general', name='base_url').value,
+        'submission': book,
+    }
+
+    email.send_email('Submission Acknowledgement', context, from_email, book.owner.email, author_text, book=book)
+
+    for editor in press_editors:
+        email.send_email('New Submission', context, from_email, editor.email, editor_text, book=book) 
