@@ -91,6 +91,8 @@ class Profile(models.Model):
 	email_sent = models.DateTimeField(blank=True, null=True)
 	date_confirmed = models.DateTimeField(blank=True, null=True)
 	confirmation_code = models.CharField(max_length=200, blank=True, null=True)
+	signature = models.TextField(null=True, blank=True)
+
 	roles = models.ManyToManyField('Role')
 
 	def full_name(self):

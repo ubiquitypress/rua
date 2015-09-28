@@ -70,6 +70,13 @@
 		  <hr />
 		  <div class="form-group">
 		  	<div class="row">
+		  		<div class="col-md-12">{% bootstrap_field profile_form.signature %}</div>
+		  		<p class="small">This signature will be appended to the end of outgoing emails.</p>
+		  	</div>
+		  </div>
+		  <hr />
+		  <div class="form-group">
+		  	<div class="row">
 		  		<div class="col-md-6">{% bootstrap_field user_form.email %}</div>
 		  		<div class="col-md-6">
 		  			<label class="control-label" for="id_profile_image">Profile Image</label><br />
