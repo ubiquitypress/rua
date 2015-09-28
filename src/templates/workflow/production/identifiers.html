@@ -33,7 +33,7 @@
             {% bootstrap_field form.displayed %}
             <div class="input-group">
                 <br />
-                <button class="btn btn-primary" type="submit" name="update" id="update"><i class="fa fa-plus">&nbsp;</i>Add Identifier</button>
+                <button class="btn btn-primary" type="submit" name="update" id="update"><i class="fa fa-plus">&nbsp;</i>Add Identifier</button>&nbsp;<a href="{% url 'catalog' submission.id %}" class="btn btn-danger">Cancel</a>
             </div>
             </div>
             <div class="col-md-6">
