@@ -32,7 +32,7 @@ def close_active_reviews(proposal):
         review.save()
 
 def create_submission_from_proposal(proposal, proposal_type):
-    book = models.Book(title=proposal.title, subtitle=proposal.subtitle, description=proposal.description,
+    book = models.Book(title=proposal.title, subtitle=proposal.subtitle,
         owner=proposal.owner, book_type=proposal_type, submission_stage=1)
 
     book.save()
