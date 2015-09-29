@@ -73,3 +73,9 @@ class CoverForm(forms.ModelForm):
 	class Meta:
 		model = core_models.Book
 		fields = ('cover',)
+
+class RetailerForm(forms.ModelForm):
+
+	class Meta:
+		model = core_models.Retailer
+		fields = ('name', 'link', 'price', 'enabled')

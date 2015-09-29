@@ -224,10 +224,19 @@ class Identifier(models.Model):
 	value = models.CharField(max_length=300)
 	displayed = models.BooleanField(default=True)
 
-class PrintSales(models.Model):
+def physical_book_types():
+	return (
+		('paperback', 'Paperback'),
+		('hardback', 'Hardback'),
+		('other', 'Other'),
+	)
+
+class Retailer(models.Model):
 	book = models.ForeignKey(Book)
-	url = models.URLField()
-	name = models.CharField(max_length=200)
+	name = models.CharField(max_length=300, help_text="Name of retailer, eg. Amazon or Book Depository")
+	link = models.URLField(max_length=2000, help_text="FQDN of the book on the retailer website eg. http://www.amazon.co.uk/mybook/")
+	price = models.DecimalField(max_digits=6, decimal_places=2, help_text="Decimal value eg. 22.99 or 9.99")
+	enabled = models.BooleanField(default=True)
 
 class Contract(models.Model):
 	title = models.CharField(max_length=1000)

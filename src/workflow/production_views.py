@@ -13,6 +13,7 @@ from core.decorators import is_book_editor
 from core.cache import cache_result
 from typeset import forms
 from workflow import logic
+from workflow import forms as workflow_forms
 
 from pprint import pprint
 
@@ -94,3 +95,46 @@ def view_typesetter(request, submission_id, typeset_id):
 	}
 
 	return render(request, template, context)
+
+
+@is_book_editor
+def retailers(request, submission_id, retailer_id=None):
+	book = get_object_or_404(models.Book, pk=submission_id)
+	retailers = models.Retailer.objects.filter(book=book)
+	form = workflow_forms.RetailerForm()
+
+	if retailer_id:
+		retailer = get_object_or_404(models.Retailer, pk=retailer_id)
+		form = workflow_forms.RetailerForm(instance=retailer)
+
+	if request.GET.get('delete', None):
+		retailer.delete()
+		return redirect(reverse('retailers', kwargs={'submission_id': submission_id}))
+
+	if request.POST:
+		if retailer_id:
+			form = workflow_forms.RetailerForm(request.POST, instance=retailer)
+			message = 'Retailer updated.'
+		else:
+			form = workflow_forms.RetailerForm(request.POST)
+			message = 'New retailer added.'
+
+		if form.is_valid():
+			new_retailer = form.save(commit=False)
+			new_retailer.book = book
+			new_retailer.save()
+
+			messages.add_message(request, messages.INFO, message)
+			
+			return redirect(reverse('retailers', kwargs={'submission_id': submission_id}))
+
+	template = 'workflow/production/retailers.html'
+	context = {
+		'submission': book,
+		'retailers': retailers,
+		'form': form,
+		'retailer_id': retailer_id,
+	}
+
+	return render(request, template, context)
+

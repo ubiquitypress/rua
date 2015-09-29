@@ -2,7 +2,7 @@
 {% load static from staticfiles %}
 {% load bootstrap3 %}
 
-{% block title %}Add New Identifier{% endblock %}
+{% block title %}Add New Retailer{% endblock %}
 
 {% block breadcrumbs %}
    <ol class="breadcrumb">
@@ -28,31 +28,34 @@
       <div class="form-group">
           <div class="row">
             <div class="col-md-6">
-            {% bootstrap_field form.identifier %}
-            {% bootstrap_field form.value %}
-            {% bootstrap_field form.displayed %}
+            {% bootstrap_field form.name %}
+            {% bootstrap_field form.link %}
+            {% bootstrap_field form.price %}
+            {% bootstrap_field form.enabled %}
             <div class="input-group">
                 <br />
-                <button class="btn btn-primary" type="submit" name="update" id="update"><i class="fa fa-plus">&nbsp;</i>Add Identifier</button>&nbsp;<a href="{% url 'catalog' submission.id %}" class="btn btn-danger">Cancel</a>
+                <button class="btn btn-primary" type="submit" name="update" id="update"><i class="fa fa-plus">&nbsp;</i>{% if retailer_id %}Edit{% else %}Add{% endif %} Retailer</button>&nbsp;<a href="{% url 'catalog' submission.id %}" class="btn btn-danger">Cancel</a>
             </div>
             </div>
             <div class="col-md-6">
               <br />
               <table class="table table-bordered">
                 <tr>
-                  <th>Identifier</th>
-                  <th>Value</th>
-                  <th>Displayed?</th>
+                  <th>Name</th>
+                  <th>Link</th>
+                  <th>Price</th>
+                  <th>Enabled</th>
                   <th>Action</th>
                 </tr>
-                {% for ident in submission.identifier_set.all %}
-                <tr>
-                  <td>{{ ident.get_identifier_display }}</td>
-                  <td>{{ ident.value }}</td>
-                  <td>{% if ident.displayed %}<i style="color:green;" class="fa fa-check-circle"></i>{% else %}<i style="color:red;" class="fa fa-times-circle"></i>{% endif %}</td>
+                {% for retailer in submission.retailer_set.all %}
+                <tr class="small">
+                  <td>{{ retailer.name }}</td>
+                  <td>{{ retailer.link }}</td>
+                  <td>{{ retailer.price }}</td>
+                  <td>{% if retailer.enabled %}<i style="color:green;" class="fa fa-check-circle"></i>{% else %}<i style="color:red;" class="fa fa-times-circle"></i>{% endif %}</td>
                   <td>
-                    <a href="{% url 'identifiers_with_id' submission.id ident.id %}"><i class="fa fa-edit">&nbsp;&nbsp;&nbsp;</i></a>
-                    <a href="{% url 'identifiers_with_id' submission.id ident.id %}?delete=true"><i class="fa fa-trash">&nbsp;&nbsp;</i></a>
+                    <a href="{% url 'retailer_with_id' submission.id retailer.id %}"><i class="fa fa-edit">&nbsp;&nbsp;&nbsp;</i></a>
+                    <a href="{% url 'retailer_with_id' submission.id retailer.id %}?delete=true"><i class="fa fa-trash">&nbsp;&nbsp;</i></a>
                   </td>
                 {% empty %}
                 <tr>

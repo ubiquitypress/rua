@@ -80,7 +80,7 @@ admin_list = [
     (ProposalFormElement, ProposalFormElementAdmin),
     #(ProposalFormResult, ProposalFormResultAdmin),
 	(Contract,),
-	(PrintSales,),
+	(Retailer,),
 	(Identifier,),
 	(Language,),
 	(CopyeditAssignment,),

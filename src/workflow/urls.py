@@ -68,6 +68,9 @@ urlpatterns = patterns('',
     url(r'^production/(?P<submission_id>\d+)/catalog/identifiers/$', 'workflow.views.identifiers', name='identifiers'),
     url(r'^production/(?P<submission_id>\d+)/catalog/identifiers/(?P<identifier_id>\d+)/$', 'workflow.views.identifiers', name='identifiers_with_id'),
 
+    url(r'^production/(?P<submission_id>\d+)/catalog/retailers/$', 'workflow.production_views.retailers', name='retailers'),
+    url(r'^production/(?P<submission_id>\d+)/catalog/retailers/(?P<retailer_id>\d+)/$', 'workflow.production_views.retailers', name='retailer_with_id'),
+
     url(r'^production/(?P<submission_id>\d+)/catalog/contributor/(?P<contributor_type>[-\w]+)/(?P<contributor_id>\d+)/$', 'workflow.views.update_contributor', name='update_contributor'),
     url(r'^production/(?P<submission_id>\d+)/catalog/contributor/(?P<contributor_type>[-\w]+)/$', 'workflow.views.update_contributor', name='add_contributor'),
     url(r'^production/(?P<submission_id>\d+)/catalog/contributor/(?P<contributor_type>[-\w]+)/(?P<contributor_id>\d+)/delete/$', 'workflow.views.delete_contributor', name='delete_contributor'),
