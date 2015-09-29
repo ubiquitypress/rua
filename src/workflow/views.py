@@ -807,7 +807,7 @@ def accept_proposal(request, proposal_id):
 		proposal.status = 'accepted'
 		logic.close_active_reviews(proposal)
 		submission = logic.create_submission_from_proposal(proposal, proposal_type=request.POST.get('proposal-type'))
-		logic.send_proposal_accept(proposal, email_text=request.POST.get('accept-email'), sender=request.user)
+		logic.send_proposal_accept(proposal, email_text=request.POST.get('accept-email'), submission, sender=request.user)
 		proposal.save()
 		return redirect(reverse('proposals'))
 
