@@ -221,3 +221,11 @@ iframe {
 .tab-p {
     margin: 10 10 0 10;
 }
+
+#dashboard-grid .col-md-4:nth-child(4) {
+    clear: left;
+}
+
+#dashboard-grid .col-md-4:nth-child(7) {
+    clear: left;
+}

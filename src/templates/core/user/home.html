@@ -28,25 +28,39 @@
             </div>
         </div>
     </div>
-    <div class="row">
+    <div class="row" id="dashboard-grid">
 		<div class="col-md-4" id="task-list">
-		<h3><i class="fa fa-tasks"></i>&nbsp;Tasks</h3>
-		{% for task in task_list %}
-		<div id="task-{{ task.id }}" class="bs-callout bs-callout-{{ task.workflow }}" id="callout-helper-bg-specificity">
-				<label class="checkbox-inline">
-			 	 <input type="checkbox" id="{{ task.id }}" value="{{ task.id }}"> {{ task.text }}{% if task.due %} <span class="small">- {{ task.due }}</span>{% endif %}
-			</label>
+			<h3><i class="fa fa-tasks"></i>&nbsp;Tasks</h3>
+			{% for task in task_list %}
+			<div id="task-{{ task.id }}" class="bs-callout bs-callout-{{ task.workflow }}" id="callout-helper-bg-specificity">
+					<label class="checkbox-inline">
+				 	 <input type="checkbox" id="{{ task.id }}" value="{{ task.id }}"> {{ task.text }}{% if task.due %} <span class="small">- {{ task.due }}</span>{% endif %}
+				</label>
+			</div>
+
+	      	{% empty %}
+	  		<div id="new_task" class="bs-callout bs-callout" id="callout-helper-bg-specificity">
+				<p>No tasks</p>
+			</div>
+			{% endfor %}
+			<button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#myModal">
+				<i class="fa fa-plus"></i> New Task
+			</button>
 		</div>
 
-      	{% empty %}
-  		<div id="new_task" class="bs-callout bs-callout" id="callout-helper-bg-specificity">
-			<p>No tasks</p>
+		<div class="col-md-4">
+			<h3><i class="fa fa-tasks"></i>&nbsp;My Proposals</h3>
+			{% for proposal in user_proposals %}
+			<div class="bs-callout bs-callout-submission" id="callout-helper-bg-specificity">
+				<p>{{ proposal.title|truncatechars:70 }}</p>
+			</div>
+			{% empty %}
+			<div class="bs-callout bs-callout" id="callout-helper-bg-specificity">
+			<p>No proposals</p>
+			</div>
+			{% endfor %}
 		</div>
-		{% endfor %}
-		<button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#myModal">
-			<i class="fa fa-plus"></i> New Task
-		</button>
-		</div>
+
 		<div class="col-md-4">
 			<h3><i class="fa fa-tasks"></i>&nbsp;My Submissions</h3>
 			{% for submission in user_submissions %}
