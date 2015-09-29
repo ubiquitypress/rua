@@ -41,7 +41,7 @@
 },
 {
     "fields": {
-        "value": "Dear {{ review.user.first_name }} {{ review.user.last_name }},\r\n\r\n__YOUR_MESSAGE_HERE__\r\n\r\nPlease log into the press web site to indicate whether you will undertake the review or not, as well as to access the submission and to record your review and recommendation.\r\n\r\nThe review itself is due {{ review.due }}.\r\n\r\nThe Author has requested that this review be {{book.get_review_type_display}}.\r\n\r\nPlease notify us if you intend to undertake the review by clicking this link: {{ decision_url }}\r\n\r\nReview URL: {{ review_url }}\r\n\r\nThank you for considering this request.\r\n\r\n\r\nSincerely,\r\nPress Team\r\n",
+        "value": "Dear {{ review.user.first_name }} {{ review.user.last_name }},\r\n\r\n__YOUR_MESSAGE_HERE__\r\n\r\nPlease log into the press web site to indicate whether you will undertake the review or not, as well as to access the submission and to record your review and recommendation.\r\n\r\nThe review itself is due {{ review.due }}.\r\n\r\nThe Author has requested that this review be {{book.get_review_type_display}}.\r\n\r\nPlease notify us if you intend to undertake the review by clicking this link: {{ decision_url }}\r\n\r\nThank you for considering this request.\r\n\r\nSincerely,\r\nPress Team\r\n",
         "group": 3,
         "name": "review_request",
         "types": "text"
@@ -301,7 +301,7 @@
 },
 {
     "fields": {
-        "value": "Dear {% if typeset.typesetter.profile.salutation %}{{typeset.typesetter.profile.salutation}}{% else %}{{typeset.typesetter.first_name}}{% endif %} {{typeset.typesetter.last_name}},\r\n\r\nThis is a request that you undertake copyediting on {{submission.title}}. Please login to the BMS, you will be directed to undertake your copyedit from the user dashboard.\r\n\r\nYour username is: {{typeset.typesetter.username}}\r\n\r\nCopyedits are requested to be completed by: {{typeset.due}}.\r\n\r\nRegards",
+        "value": "<p>Dear {% if typeset.typesetter.profile.salutation %}{{typeset.typesetter.profile.salutation}}{% else %}{{typeset.typesetter.first_name}}{% endif %} {{typeset.typesetter.last_name}},\r\n</p><p>\r\nThis is a request that you undertake copyediting on {{submission.title}}. </p><p>Please login to the BMS, you will be directed to undertake your copyedit from the user dashboard.\r\n\r\nYour username is: {{typeset.typesetter.username}}\r\n\r\nCopyedits are requested to be completed by: {{typeset.due}}.\r\n</p><p>\r\nRegards,</p><p>{% if sender %}{{ sender.profile.signature|safe }}{% endif %}<br></p>",
         "group": 3,
         "name": "typeset_request",
         "types": "rich_text"
@@ -321,7 +321,7 @@
 },
 {
     "fields": {
-        "value": "Dear {{ submission.owner.first_name }} {{ submission.owner.last_name }},\r\n\r\nThe typesetter has completed their work. You can login and review the typeset files now.\r\n\r\nRegards,",
+        "value": "Dear {{ submission.owner.first_name }} {{ submission.owner.last_name }},<br><br>The typesetter has completed their work. You can login and review the typeset files now.<br><br>Regards,<br><br>{% if sender %}{{ sender.profile.signature }}{% endif %}",
         "group": 3,
         "name": "author_typeset_request",
         "types": "rich_text"
@@ -351,7 +351,7 @@
 },
 {
     "fields": {
-        "value": "Dear {{ submission.owner.first_name }} {{ submission.owner.last_name }},\r\n\r\nYour submission has been received. An Editor will be in touch soon with the next steps.\r\n\r\nRegards,",
+        "value": "Dear {{ submission.owner.first_name }} {{ submission.owner.last_name }},\r\n\r\nYour submission has been received. An Editor will be in touch soon with the next steps.\r\n\r\nRegards,\r\n\r\n{% if sender %}{{ sender.profile.signature }}{% endif %}",
         "group": 3,
         "name": "author_submission_ack",
         "types": "text"
@@ -361,12 +361,22 @@
 },
 {
     "fields": {
-        "value": "A new submission has been uploaded to.\r\n\r\nView the submission: http://{{base_url}}/workflow/new/{{submission.id}}\r\n\r\nRegards,",
+        "value": "A new submission has been uploaded to.\r\n\r\nView the submission: http://{{base_url}}/workflow/new/{{submission.id}}\r\n\r\nRegards,\r\n\r\nRUA Bot",
         "group": 3,
         "name": "editor_submission_ack",
         "types": "text"
     },
     "model": "core.setting",
     "pk": 37
+},
+{
+    "fields": {
+        "value": "Dear someone,\r\n\r\nSomething something,\r\n\r\nRegards,\r\n\r\n{{ sender.profile.signature }}",
+        "group": 3,
+        "name": "proposal_request_revisison",
+        "types": "rich_text"
+    },
+    "model": "core.setting",
+    "pk": 38
 }
 ]

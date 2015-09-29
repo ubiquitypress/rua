@@ -12,9 +12,12 @@
 
 {% block body %}
 	<div class="col-md-12">
+		<h3>Review Request</h3>
+		<p>You've been asked to undertake a review on behalf of the Press and Author. The review is due on <strong>{{ review_assignment.due }}</strong>. You can accept and decline.</p>
+		<h3>About this Book</h3>
+		{% include "workflow/elements/summary.html" %}
 		<form method="POST">
 			{% csrf_token %}
-			<p>You've been asked to undertake a review on behalf of the Press and Author. The review is due on <strong>{{ review_assignment.due }}</strong>. You can accept and decline.</p>
 			<button class="btn btn-success" type="submit" name="accept" id="accept">Agree to Review</button>
 			<button class="btn btn-danger" type="submit" name="decline" id="decline">Decline to Review</button>
 		</form>
