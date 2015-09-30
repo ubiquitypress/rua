@@ -63,7 +63,7 @@ def handle_review_assignment(book, reviewer, review_type, due_date, review_round
     return new_review_assignment
 
 
-def handle_copyeditor_assignment(book, copyedit, files, due_date, email_text, requestor):
+def handle_copyeditor_assignment(book, copyedit, files, due_date, email_text, requestor, attachment=None):
     
     new_copyeditor = models.CopyeditAssignment(
         book = book,
@@ -80,9 +80,9 @@ def handle_copyeditor_assignment(book, copyedit, files, due_date, email_text, re
     new_copyeditor.save()
 
     log.add_log_entry(book=book, user=requestor, kind='copyedit', message='Copyeditor %s %s assigned. Due %s' % (copyedit.first_name, copyedit.last_name, due_date), short_name='Copyedit Assignment')
-    send_copyedit_assignment(book, new_copyeditor, email_text, requestor)
+    send_copyedit_assignment(book, new_copyeditor, email_text, requestor, attachment=attachment)
 
-def handle_indexer_assignment(book, index, files, due_date, email_text, requestor):
+def handle_indexer_assignment(book, index, files, due_date, email_text, requestor, attachment):
 
     new_indexer = models.IndexAssignment(
         book=book,
@@ -98,11 +98,11 @@ def handle_indexer_assignment(book, index, files, due_date, email_text, requesto
 
     new_indexer.save()
 
-    send_invite_indexer(book, new_indexer, email_text, requestor)
+    send_invite_indexer(book, new_indexer, email_text, requestor, attachment)
 
     log.add_log_entry(book=book, user=requestor, kind='index', message='Indexer %s %s assigned. Due %s' % (index.first_name, index.last_name, due_date), short_name='Indexing Assignment')
 
-def handle_typeset_assignment(book, typesetter, files, due_date, email_text, requestor):
+def handle_typeset_assignment(book, typesetter, files, due_date, email_text, requestor, attachment):
 
     new_typesetter = models.TypesetAssignment(
         book=book,
@@ -118,7 +118,7 @@ def handle_typeset_assignment(book, typesetter, files, due_date, email_text, req
 
     new_typesetter.save()
 
-    send_invite_typesetter(book, new_typesetter, email_text, requestor)
+    send_invite_typesetter(book, new_typesetter, email_text, requestor, attachment)
 
     log.add_log_entry(book=book, user=requestor, kind='typeser', message='Typesetter %s %s assigned. Due %s' % (typesetter.first_name, typesetter.last_name, due_date), short_name='Typeset Assignment')
 
@@ -183,7 +183,7 @@ def send_author_sign_off(submission, email_text, sender):
 
     email.send_email('Book Contract Uploaded', context, from_email.value, submission.owner.email, email_text, book=submission)
 
-def send_copyedit_assignment(submission, copyedit, email_text, sender):
+def send_copyedit_assignment(submission, copyedit, email_text, sender, attachment):
     from_email = models.Setting.objects.get(group__name='email', name='from_address')
 
     context = {
@@ -193,9 +193,9 @@ def send_copyedit_assignment(submission, copyedit, email_text, sender):
         'sender': sender,
     }
 
-    email.send_email('Copyedit Assignment', context, from_email.value, copyedit.copyeditor.email, email_text, book=submission)
+    email.send_email('Copyedit Assignment', context, from_email.value, copyedit.copyeditor.email, email_text, book=submission, attachment=attachment)
 
-def send_author_invite(submission, copyedit, email_text, sender):
+def send_author_invite(submission, copyedit, email_text, sender, attachment):
     from_email = models.Setting.objects.get(group__name='email', name='from_address')
 
     context = {
@@ -205,9 +205,9 @@ def send_author_invite(submission, copyedit, email_text, sender):
         'sender': sender,
     }
 
-    email.send_email('Copyediting Completed', context, from_email.value, submission.owner.email, email_text, book=submission)
+    email.send_email('Copyediting Completed', context, from_email.value, submission.owner.email, email_text, book=submission, attachment=attachment)
 
-def send_invite_indexer(book, index, email_text, sender):
+def send_invite_indexer(book, index, email_text, sender, attachment):
     from_email = models.Setting.objects.get(group__name='email', name='from_address')
 
     context = {
@@ -217,9 +217,11 @@ def send_invite_indexer(book, index, email_text, sender):
         'sender': sender,
     }
 
-    email.send_email('Indexing Request', context, from_email.value, index.indexer.email, email_text, book=book)
+    email.send_email('Indexing Request', context, from_email.value, index.indexer.email, email_text, book=book, attachment=attachment)
 
-def send_invite_typesetter(book, typeset, email_text, sender):
+def send_invite_typesetter(book, typeset, email_text, sender, attachment):
+
+    print attachment
     from_email = models.Setting.objects.get(group__name='email', name='from_address')
 
     context = {
@@ -229,4 +231,4 @@ def send_invite_typesetter(book, typeset, email_text, sender):
         'sender': sender,
     }
 
-    email.send_email('Typesetting', context, from_email.value, typeset.typesetter.email, email_text, book=book)
+    email.send_email('Typesetting', context, from_email.value, typeset.typesetter.email, email_text, book=book, attachment=attachment)

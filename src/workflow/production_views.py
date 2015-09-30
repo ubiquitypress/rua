@@ -14,7 +14,7 @@ from core.cache import cache_result
 from typeset import forms
 from workflow import logic
 from workflow import forms
-from workflow.views import handle_file, handle_file_update
+from workflow.views import handle_file, handle_file_update, handle_attachment
 from typeset import forms as typeset_forms
 
 from pprint import pprint
@@ -297,8 +297,10 @@ def assign_typesetter(request, submission_id):
 		due_date = request.POST.get('due_date')
 		email_text = request.POST.get('message')
 
+		attachment = handle_attachment(request, book)
+
 		for typesetter in typesetter_list:
-			logic.handle_typeset_assignment(book, typesetter, file_list, due_date, email_text, requestor=request.user)
+			logic.handle_typeset_assignment(book, typesetter, file_list, due_date, email_text, requestor=request.user, attachment=attachment)
 
 		return redirect(reverse('view_production', kwargs={'submission_id': submission_id}))
 

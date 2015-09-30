@@ -11,6 +11,7 @@ from core import log
 from core import email
 from core.decorators import is_editor, is_book_editor, is_book_editor_or_author
 from core.cache import cache_result
+from workflow.views import handle_file, handle_attachment
 from copyedit import forms
 from workflow import logic
 
@@ -58,8 +59,10 @@ def assign_copyeditor(request, submission_id):
 		due_date = request.POST.get('due_date')
 		email_text = request.POST.get('message')
 
+		attachment = handle_attachment(request, book)
+
 		for copyeditor in copyeditor_list:
-			logic.handle_copyeditor_assignment(book, copyeditor, file_list, due_date, email_text, requestor=request.user)
+			logic.handle_copyeditor_assignment(book, copyeditor, file_list, due_date, email_text, requestor=request.user, attachment=attachment)
 			log.add_log_entry(book=book, user=request.user, kind='editing', message='Copyeditor %s %s assigend to %s' % (copyeditor.first_name, copyeditor.last_name, book.title), short_name='Copyeditor Assigned')
 
 		return redirect(reverse('view_editing', kwargs={'submission_id': submission_id}))
@@ -90,12 +93,15 @@ def view_copyedit(request, submission_id, copyedit_id):
 			copyedit.save()
 
 	elif request.POST and 'send_invite_author' in request.POST:
+
+		attachment = handle_attachment(request, book)
+
 		author_form = forms.CopyeditAuthorInvite(request.POST, instance=copyedit)
 		author_form.save()
 		copyedit.author_invited = timezone.now()
 		copyedit.save()
 		email_text = request.POST.get('email_text')
-		logic.send_author_invite(book, copyedit, email_text, request.user)
+		logic.send_author_invite(book, copyedit, email_text, request.user, attachment)
 		return redirect(reverse('view_copyedit', kwargs={'submission_id': submission_id, 'copyedit_id': copyedit_id}))
 
 	template = 'workflow/editing/view_copyedit.html'
@@ -119,8 +125,10 @@ def assign_indexer(request, submission_id):
 		due_date = request.POST.get('due_date')
 		email_text = request.POST.get('message')
 
+		attachment = handle_attachment(request, book)
+
 		for indexer in indexer_list:
-			logic.handle_indexer_assignment(book, indexer, file_list, due_date, email_text, requestor=request.user)
+			logic.handle_indexer_assignment(book, indexer, file_list, due_date, email_text, requestor=request.user, attachment=attachment)
 			log.add_log_entry(book=book, user=request.user, kind='editing', message='Indexer %s %s assigend to %s' % (indexer.first_name, indexer.last_name, book.title), short_name='Indexer Assigned')
 
 		return redirect(reverse('view_editing', kwargs={'submission_id': submission_id}))

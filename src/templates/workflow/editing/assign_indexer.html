@@ -1,7 +1,8 @@
 {% extends "base.html" %}
+{% load static from staticfiles %}
 {% load bootstrap3 %}
 
-{% block title %}Assign Copyeditor{% endblock %}
+{% block title %}Assign Indexer{% endblock %}
 
 {% block breadcrumbs %}
   <ol class="breadcrumb">
@@ -9,16 +10,12 @@
     <li class="">Workflow</li>
     <li><a href="{% url 'in_editing'%}">In Editing</a></li>
     <li>{{ submission.title }}</li>
-    <li>Assign Copyeditor</li>
+    <li>Assign Indexer</li>
   </ol>
 {% endblock %}
 
-{% block css %}
-<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/plug-ins/1.10.7/integration/bootstrap/3/dataTables.bootstrap.css">
-{% endblock css %}
-
 {% block body %}
-<form method="post">
+<form method="post" enctype="multipart/form-data">
 <div class="modal-body">
 	{% csrf_token %}
   <h3>1. Select a Indexer(s)</h3>
@@ -98,7 +95,18 @@
   <h3>4. Message to Indexer(s)</h3>
   <p class="small">Add a message that will go out in the email to Indexer(s).</p>
   <textarea class="form-control" rows="10" id="message" name="message">{{ email_text.value }}</textarea>
-</div>
+  <br />
+  <label class="control-label" for="id_label">Attachment</label>
+  <p class="small">Please add any additonal files here.</p>
+  <div class="input-group">
+      <span class="input-group-btn">
+        <span class="btn btn-primary btn-file">
+          Browse&hellip; <input type="file" id="attachment_file" name="attachment_file">
+        </span>
+      </span>
+      <input type="text" class="form-control" readonly>
+    </div>
+  </div>
 <div class="modal-footer">
   <button id="#ext-review" type="submit" class="btn btn-primary">Submit</button>
 </div>
@@ -107,31 +115,10 @@
 
 {% block js %}
 {{ block.super }}
-<script type="text/javascript" language="javascript" src="//cdn.datatables.net/1.10.7/js/jquery.dataTables.min.js"></script>
-<script type="text/javascript" language="javascript" src="//cdn.datatables.net/plug-ins/1.10.7/integration/bootstrap/3/dataTables.bootstrap.js"></script>
-<link rel="stylesheet" href="http://code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css">
-<script src="http://code.jquery.com/ui/1.11.0/jquery-ui.js"></script>
-<script>  
-  {% if reviewers %}
-  $(document).ready(function() {
-      $('#indv-reviewer').DataTable({
-        "lengthMenu": [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]]
-      });
-  } );
-  {% endif %}
-
-  {% if committees %}
-  $(document).ready(function() {
-      $('#comm-reviewer').DataTable({
-        "lengthMenu": [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]]
-      });
-  } );
-  {% endif %}
-
+<script type="text/javascript" src="{% static "js/fancyfile.js" %}"></script>
+<script type="text/javascript">
 $(document).ready(function() {
       $('#due_date').datepicker({ dateFormat: 'yy-mm-dd' }).val();
   });
 </script>
-
-
 {% endblock js %}
