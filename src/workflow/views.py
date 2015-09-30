@@ -35,6 +35,18 @@ import mimetypes as mime
 from uuid import uuid4
 import json
 
+@is_book_editor
+def dashboard(request):
+
+	book_list = models.Book.objects.filter(publication_date__isnull=True)
+
+	template = 'workflow/dashboard.html'
+	context = {
+		'book_list': book_list,
+	}
+
+	return render(request, template, context)
+
 @is_editor
 def new_submissions(request):
 

@@ -49,7 +49,8 @@ urlpatterns = patterns('',
     url(r'^user/submission/(?P<submission_id>\d+)/contract/(?P<contract_id>\d+)/signoff/$', 'core.views.author_contract_signoff', name='author_contract_signoff'),
     
     # Dashboard
-    url(r'dashboard/$', 'core.views.dashboard', name='dashboard'),
+    url(r'dashboard/$', 'workflow.views.dashboard', name='dashboard'),
+    url(r'overview/$', 'core.views.overview', name='overview'),
 )
 
 handler403 = 'core.views.permission_denied'

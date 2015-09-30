@@ -265,7 +265,7 @@ def handle_file(request, file):
 
 	original_filename = str(file._get_name())
 	filename = str(uuid4()) + '.' + str(os.path.splitext(original_filename)[1])
-	folder_structure = os.path.join(settings.BASE_DIR, 'files', 'settings')
+	folder_structure = os.path.join(settings.BASE_DIR, 'media', 'settings')
 
 	if not os.path.exists(folder_structure):
 		os.makedirs(folder_structure)

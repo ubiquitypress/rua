@@ -210,6 +210,14 @@ class Book(models.Model):
 	def formats(self):
 		return self.format_set.all()
 
+	def full_title(self):
+		if self.prefix and self.subtitle:
+			return '%s %s %s' % (self.prefix, self.title, self.subtitle)
+		elif self.prefix and not self.subtilte:
+			return '%s %s' % (self.prefix, self.title)
+		elif self.subtitle and not self.prefix:
+			return '%s %s' % (self.title, self.subtitle)
+
 def identifier_choices():
 	return (
 		('doi', 'DOI'),

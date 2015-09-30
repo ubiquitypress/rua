@@ -1,3 +1,73 @@
+.navbar-inverse {
+    background-color: #363636 !important;
+    border-color: #363636 !important;
+}
+
+.navbar-inverse .navbar-nav>li>a {
+    color: #FFFFFF;
+    border-right: 1px double #5b5b5b;
+}
+.navbar .container { height: 5em; }
+
+nav > div > div.navbar-collapse.collapse > ul > li > a {
+    height: 5em;
+    padding-top: 25;
+}
+
+html, body {
+  height: 100%;
+}
+
+.container {
+  width: 1290px;
+  overflow: hidden !important;
+}
+
+.dash-container {
+  padding: 10px;
+}
+
+.dash-left {
+  padding: 0;
+  height: 92%;
+  border-right: 1px double #c7c7c7;
+  border-left: 1px double #c7c7c7;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+
+.dash-right {
+  padding: 0;
+  height: 90%;
+  border-left: 1px double #c7c7c7;
+  border-right: 1px double #c7c7c7;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+
+.dash-center {
+  padding: 0;
+}
+
+.project {
+  background-color: #F1F4F4;
+  min-height: 100px;
+  border-top: 1px double #c7c7c7;
+}
+
+.project h5 {
+  margin: 0;
+  padding: 10 0 10 10;
+}
+
+.project-header {
+  background-color: #B5B5B5;
+}
+
+.circle {
+    background: #D6897D;
+}
+
 .bs-callout {
     padding: 20px;
     margin: 20px 0;

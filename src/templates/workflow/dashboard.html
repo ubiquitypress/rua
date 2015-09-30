@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% load bootstrap3 %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block css %}
+    <style type="text/css">
+    .navbar {
+        margin-bottom: 0px !important;
+    }
+    </style>
+{% endblock %}
+
+{% block body %}
+
+<div class="row-fluid">
+
+    <div class="col-md-4 dash-left">
+        <div class="dash-container project-header">
+            <h4>ALL PROJECTS<a href="{% url 'overview' %}" class="btn btn-primary btn-xs pull-right">overview</a></h4> 
+            <form method="POST">
+              <div>
+                <div class="input-group">
+                  <input type="text" class="form-control" id="search" placeholder="Search for a project...">
+                  <div class="input-group-addon"><i class="fa fa-search"></i></div>
+                </div>
+                <br />
+                <div class="row">
+                <div class="col-md-6 pull-right form-group">
+                    <select class="form-control">
+                        <option>Alpha A-Z</option>
+                        <option>Last Updated</option>
+                        <option>Date Submitted</option>
+                        <option>Urgency</option>
+                    </select>
+                </div>
+                <div class="col-md-3 pull-right">
+                    <p><strong>Order By</strong></p>
+                </div>
+                </div>
+                <div class="row">
+                <div class="col-md-6 pull-right form-group">
+                    <select class="form-control">
+                        <option>New Submission</option>
+                        <option>Review</option>
+                        <option>Editing</option>
+                        <option>Production</option>
+                    </select>
+                </div>
+                <div class="col-md-3 pull-right">
+                    <p><strong>Filter By</strong></p>
+                </div>
+                </div>
+
+              </div>
+            </form>
+            </div>
+
+            {% for book in book_list %}
+            <div class="project">
+                <h5>Project {{ book.id }}: {{ book.full_title }}</h5>
+            </div>
+            {% empty %}
+            <div class="project">
+                <h5>No Projects initiated.</h5>
+            </div>
+            {% endfor %}
+    </div>
+
+    <div class="col-md-4 dash-center">
+        <div class="dash-container">
+            <h4>NOTIFICATIONS</h4>
+        </div>
+    </div>
+
+    <div class="col-md-4 dash-right">
+        <div class="dash-container">
+            <h4>RECENT ACTIVITY</h4>
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}

@@ -245,7 +245,7 @@ def permission_denied(request):
 
 # Dashboard
 @login_required
-def dashboard(request):
+def overview(request):
 
 	template = 'core/dashboard/dashboard.html'
 	context = {
