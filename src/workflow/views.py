@@ -43,6 +43,7 @@ def dashboard(request):
 	template = 'workflow/dashboard.html'
 	context = {
 		'book_list': book_list,
+		'recent_activity': models.Log.objects.all().order_by('-date_logged')[:15]
 	}
 
 	return render(request, template, context)

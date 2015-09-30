@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load static from staticfiles %}
 {% load bootstrap3 %}
 
 {% block title %}Dashboard{% endblock %}
@@ -8,12 +9,26 @@
     .navbar {
         margin-bottom: 0px !important;
     }
+
+    .timeline > li > .timeline-badge{
+        left: 92% !important;
+    }
+
+    .timeline > li > .timeline-panel {
+        width: 80% !important;
+        float: none;
+    }
+
+    .timeline:before {
+        left: 92% !important;
+    }
     </style>
+    <link href="{% static "css/timeline.css" %}" rel="stylesheet">
 {% endblock %}
 
 {% block body %}
 
-<div class="row-fluid">
+<div class="row">
 
     <div class="col-md-4 dash-left">
         <div class="dash-container project-header">
@@ -76,6 +91,23 @@
     <div class="col-md-4 dash-right">
         <div class="dash-container">
             <h4>RECENT ACTIVITY</h4>
+            <ul class="timeline">
+            {% for item in recent_activity %}
+              <li>
+                  <div class="timeline-badge">
+                  </div>
+                  <div class="timeline-panel">
+                      <div class="timeline-heading">
+                          <h4 class="timeline-title">{{ item.get_kind_display }}: {{ item.short_name }}</h4>
+                          <p><small class="text-muted"><i class="fa fa-check"></i> {{ item.date_logged }}</small></p>
+                      </div>
+                      <div class="timeline-body">
+                          <p>{{ item.message }}</p>
+                      </div>
+                  </div>
+              </li>
+              {% endfor %}
+          </ul>
         </div>
     </div>
 
