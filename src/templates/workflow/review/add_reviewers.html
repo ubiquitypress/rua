@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load static from staticfiles %}
 {% load bootstrap3 %}
 
 {% block title %}In Review{% endblock %}
@@ -17,7 +18,7 @@
 {% endblock css %}
 
 {% block body %}
-<form method="post">
+<form method="post"  enctype="multipart/form-data">
 <div class="modal-body">
 	{% csrf_token %}
   <h3>1. Select a Review Type</h3>
@@ -62,16 +63,30 @@
     </tr>
     {% empty %}
     <tr>
-      <td colspan="3">No committess established. <a href="{% url 'manager_group_add' %}">Add one.</a></td>
+      <td colspan="3">No committees established. <a href="{% url 'manager_group_add' %}">Add one.</a></td>
     </tr>
     {% endfor %}
   </table>
+  <hr />
   <h3>2. Set Due Date</h3>
   <p class="small">Set a due date for the reviews. Reviewers will be politely reminded to submit their review before the due date.</p>
-  <input type="text" name="due_date" id="due_date" required="required" />
+  <input type="text" name="due_date" id="due_date" required="required" class="form-control" />
+  <hr />
   <h3>3. Message to Reviewers</h3>
   <p class="small">Add a message that will go out in the email to reviewers.</p>
   <textarea class="form-control" rows="10" id="message" name="message">{{ email_text.value }}</textarea>
+  <br />
+  <label class="control-label" for="id_label">Attachment</label>
+  <p class="small">Please add any additonal files here.</p>
+  <div class="input-group">
+    <span class="input-group-btn">
+      <span class="btn btn-primary btn-file">
+        Browse&hellip; <input type="file" id="attachment" name="attachment">
+      </span>
+    </span>
+    <input type="text" class="form-control" readonly>
+  </div>
+  <hr />
   <h3>4. Review Form</h3>
   <p class="small">Select a review form for reviewers to complete.</p>
   <select name="review_form" id="review_form" class="form-control">
@@ -88,6 +103,7 @@
 {{ block.super }}
 <script type="text/javascript" language="javascript" src="//cdn.datatables.net/1.10.7/js/jquery.dataTables.min.js"></script>
 <script type="text/javascript" language="javascript" src="//cdn.datatables.net/plug-ins/1.10.7/integration/bootstrap/3/dataTables.bootstrap.js"></script>
+<script type="text/javascript" src="{% static "js/fancyfile.js" %}"></script>
 <link rel="stylesheet" href="http://code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css">
 <script src="http://code.jquery.com/ui/1.11.0/jquery-ui.js"></script>
 <script>  

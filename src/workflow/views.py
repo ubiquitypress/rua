@@ -205,45 +205,20 @@ def add_reviewers(request, submission_id, review_type, round_number):
 		due_date = request.POST.get('due_date')
 		email_text = request.POST.get('message')
 
+		if request.FILES.get('attachment'):
+			attachment = handle_file(request.FILES.get('attachment'), submission, 'misc', request.user)
+		else:
+			attachment = None
+
 		# Handle reviewers
 		for reviewer in reviewers:
-			new_review_assignment = models.ReviewAssignment(
-				review_type=review_type,
-				user=reviewer,
-				book=submission,
-				due=due_date,
-				access_key=str(uuid4()),
-				review_round=review_round,
-			)
-
-			#try:
-			new_review_assignment.save()
-			submission.review_assignments.add(new_review_assignment)
-			log.add_log_entry(book=submission, user=request.user, kind='review', message='Reviewer %s %s assigned. Round %d' % (reviewer.first_name, reviewer.last_name, review_round.round_number), short_name='Review Assignment')
-			send_review_request(submission, new_review_assignment, email_text)
-			#except IntegrityError:
-				#messages.add_message(request, messages.WARNING, '%s %s is already a reviewer' % (reviewer.first_name, reviewer.last_name))
+			logic.handle_review_assignment(submission, reviewer, review_type, due_date, review_round, request.user, email_text, attachment)
 
 		# Handle committees
 		for committee in committees:
 			members = manager_models.GroupMembership.objects.filter(group=committee)
 			for member in members:
-				new_review_assignment = models.ReviewAssignment(
-					review_type=review_type,
-					user=member.user,
-					book=submission,
-					due=due_date,
-					access_key = str(uuid4()),
-					review_round=review_round,
-				)
-
-				try:
-					new_review_assignment.save()
-					submission.review_assignments.add(new_review_assignment)
-					log.add_log_entry(book=submission, user=request.user, kind='review', message='Reviewer %s %s assigned. Round %d' % (member.user.first_name, member.user.last_name, review_round.round_number), short_name='Review Assignment')
-					send_review_request(submission, new_review_assignment, email_text)
-				except IntegrityError:
-					messages.add_message(request, messages.WARNING, '%s %s is already a reviewer' % (member.user.first_name, member.user.last_name))
+				logic.handle_review_assignment(submission, member.user, review_type, due_date, review_round, request.user, email_text, attachment)
 
 		# Tidy up and save
 		if review_type == 'internal' and not submission.stage.internal_review:
@@ -807,7 +782,8 @@ def accept_proposal(request, proposal_id):
 		proposal.status = 'accepted'
 		logic.close_active_reviews(proposal)
 		submission = logic.create_submission_from_proposal(proposal, proposal_type=request.POST.get('proposal-type'))
-		logic.send_proposal_accept(proposal, email_text=request.POST.get('accept-email'), submission=submission, sender=request.user)
+		attachment = handle_attachment(request, submission)
+		logic.send_proposal_accept(proposal, email_text=request.POST.get('accept-email'), submission=submission, sender=request.user, attachment=attachment)
 		proposal.save()
 		return redirect(reverse('proposals'))
 
@@ -823,7 +799,7 @@ def accept_proposal(request, proposal_id):
 def request_proposal_revisions(request, proposal_id):
 
 	proposal = get_object_or_404(submission_models.Proposal, pk=proposal_id)
-	email_text = models.Setting.objects.get(group__name='email', name='proposal_request_revisions').value
+	email_text = models.Setting.objects.get(group__name='email', name='proposal_request_revisisons').value
 
 	if request.POST:
 		proposal.status = 'revisions_required'
@@ -1078,7 +1054,14 @@ def handle_file(file, book, kind, owner, label=None):
 
 	return new_file
 
-# Email handler
+def handle_attachment(request, submission):
+	if request.FILES.get('attachment_file'):
+		attachment_file = request.FILES.get('attachment_file')
+		return handle_file(attachment_file, submission, 'misc', request.user)
+	else:
+		return None
+
+# Email handler - should be moved to logic!
 def send_proposal_review_request(proposal, review_assignment, email_text):
 	from_email = models.Setting.objects.get(group__name='email', name='from_address')
 	base_url = models.Setting.objects.get(group__name='general', name='base_url')
@@ -1091,19 +1074,3 @@ def send_proposal_review_request(proposal, review_assignment, email_text):
 	}
 
 	email.send_email('Proposal Review Request', context, from_email.value, review_assignment.user.email, email_text)
-
-def send_review_request(book, review_assignment, email_text):
-	from_email = models.Setting.objects.get(group__name='email', name='from_address')
-	base_url = models.Setting.objects.get(group__name='general', name='base_url')
-
-	review_url = 'http://%s/review/%s/%s/access_key/%s/' % (base_url.value, review_assignment.review_type, book.id, review_assignment.access_key)
-	decision_url = 'http://%s/review/%s/%s/assignment/%s/decision/' % (base_url.value, review_assignment.review_type, book.id, review_assignment.id)
-
-	context = {
-		'book': book,
-		'review': review_assignment,
-		'review_url': review_url,
-		'decision_url': decision_url,
-	}
-
-	email.send_email('Review Request', context, from_email.value, review_assignment.user.email, email_text, book=book)

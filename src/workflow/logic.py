@@ -46,6 +46,23 @@ def create_submission_from_proposal(proposal, proposal_type):
 
     return book
 
+def handle_review_assignment(book, reviewer, review_type, due_date, review_round, user, email_text, attachment=None):
+    new_review_assignment = models.ReviewAssignment(
+        review_type=review_type,
+        user=reviewer,
+        book=book,
+        due=due_date,
+        review_round=review_round,
+    )
+
+    new_review_assignment.save()
+    book.review_assignments.add(new_review_assignment)
+    log.add_log_entry(book=book, user=user, kind='review', message='Reviewer %s %s assigned. Round %d' % (reviewer.first_name, reviewer.last_name, review_round.round_number), short_name='Review Assignment')
+    send_review_request(book, new_review_assignment, email_text, attachment)
+
+    return new_review_assignment
+
+
 def handle_copyeditor_assignment(book, copyedit, files, due_date, email_text, requestor):
     
     new_copyeditor = models.CopyeditAssignment(
@@ -107,6 +124,20 @@ def handle_typeset_assignment(book, typesetter, files, due_date, email_text, req
 
 # Email Handlers - TODO: move to email.py?
 
+def send_review_request(book, review_assignment, email_text, attachment=None):
+    from_email = models.Setting.objects.get(group__name='email', name='from_address')
+    base_url = models.Setting.objects.get(group__name='general', name='base_url')
+
+    decision_url = 'http://%s/review/%s/%s/assignment/%s/decision/' % (base_url.value, review_assignment.review_type, book.id, review_assignment.id)
+
+    context = {
+        'book': book,
+        'review': review_assignment,
+        'decision_url': decision_url,
+    }
+
+    email.send_email('Review Request', context, from_email.value, review_assignment.user.email, email_text, book=book, attachment=attachment)
+
 def send_proposal_decline(proposal, email_text, sender):
     from_email = models.Setting.objects.get(group__name='email', name='from_address')
 
@@ -117,7 +148,7 @@ def send_proposal_decline(proposal, email_text, sender):
 
     email.send_email('[abp] Proposal Declined', context, from_email.value, proposal.owner.email, email_text)
 
-def send_proposal_accept(proposal, email_text, submission, sender):
+def send_proposal_accept(proposal, email_text, submission, sender, attachment=None):
     from_email = models.Setting.objects.get(group__name='email', name='from_address')
 
     context = {
@@ -127,7 +158,7 @@ def send_proposal_accept(proposal, email_text, submission, sender):
         'sender': sender,
     }
 
-    email.send_email('[abp] Proposal Accepted', context, from_email.value, proposal.owner.email, email_text)
+    email.send_email('[abp] Proposal Accepted', context, from_email.value, proposal.owner.email, email_text, book=submission, attachment=attachment)
 
 def send_proposal_revisions(proposal, email_text, sender):
     from_email = models.Setting.objects.get(group__name='email', name='from_address')
