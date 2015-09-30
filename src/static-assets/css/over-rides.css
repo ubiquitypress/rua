@@ -38,7 +38,7 @@ html, body {
 
 .dash-right {
   padding: 0;
-  height: 90%;
+  height: 92%;
   border-left: 1px double #c7c7c7;
   border-right: 1px double #c7c7c7;
   overflow-y: scroll;
@@ -47,6 +47,9 @@ html, body {
 
 .dash-center {
   padding: 0;
+  height: 92%;
+  overflow-y: scroll;
+  overflow-x: hidden;
 }
 
 .project {
