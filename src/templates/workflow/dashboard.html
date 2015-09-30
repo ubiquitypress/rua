@@ -30,7 +30,7 @@
 
 <div class="row">
 
-    <div class="col-md-4 dash-left">
+    <div class="col-md-3 dash-left">
         <div class="dash-container project-header">
             <h4>ALL PROJECTS<a href="{% url 'overview' %}" class="btn btn-primary btn-xs pull-right">overview</a></h4> 
             <form method="POST">
@@ -41,7 +41,7 @@
                 </div>
                 <br />
                 <div class="row">
-                <div class="col-md-6 pull-right form-group">
+                <div class="col-md-8 pull-right form-group">
                     <select class="form-control">
                         <option>Alpha A-Z</option>
                         <option>Last Updated</option>
@@ -49,12 +49,12 @@
                         <option>Urgency</option>
                     </select>
                 </div>
-                <div class="col-md-3 pull-right">
+                <div class="col-md-4 pull-right">
                     <p><strong>Order By</strong></p>
                 </div>
                 </div>
                 <div class="row">
-                <div class="col-md-6 pull-right form-group">
+                <div class="col-md-8 pull-right form-group">
                     <select class="form-control">
                         <option>New Submission</option>
                         <option>Review</option>
@@ -62,7 +62,7 @@
                         <option>Production</option>
                     </select>
                 </div>
-                <div class="col-md-3 pull-right">
+                <div class="col-md-4 pull-right">
                     <p><strong>Filter By</strong></p>
                 </div>
                 </div>
@@ -74,6 +74,9 @@
             {% for book in book_list %}
             <div class="project">
                 <h5>Project {{ book.id }}: {{ book.full_title }}</h5>
+                <p>{{ book.owner.profile.full_name }}</p>
+                <p class="pull-right small {{ book.stage.current_stage }}">{{ book.stage.get_current_stage_display }}</p>
+                <p><em>Submitted {{ book.submission_date }}</em></p>
             </div>
             {% empty %}
             <div class="project">
@@ -82,9 +85,23 @@
             {% endfor %}
     </div>
 
-    <div class="col-md-4 dash-center">
+    <div class="col-md-5 dash-center">
         <div class="dash-container">
-            <h4>NOTIFICATIONS</h4>
+            <h4>NOTIFICATIONS <span class="badge">{{ task_count }}</span></h4>
+
+            {% for note in notifications %}
+            <div class="notification">
+                <h5>{{ note.text }}</h5>
+                <p><em>Project {{ note.book.id }}: {{ note.book.full_title }}</em></p>
+                <span class="pull-right" style="padding-right: 10px;">
+                <br />
+                    <a class="btn btn-xs btn-primary read">Mark as Read</a>
+                    <a class="btn btn-xs btn-primary view">View</a>
+                </span>
+                <p><em>Posted {{ note.assigned }}</em></p>
+            </div>
+            {% endfor %}
+
         </div>
     </div>
 

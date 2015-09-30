@@ -58,9 +58,17 @@ html, body {
   border-top: 1px double #c7c7c7;
 }
 
-.project h5 {
+.project:hover {
+  background-color: rgb(201, 215, 213);
+}
+
+.project h5, p {
   margin: 0;
   padding: 10 0 10 10;
+}
+
+.project .pull-right {
+  padding-right: 10px;
 }
 
 .project-header {
@@ -69,6 +77,63 @@ html, body {
 
 .circle {
     background: #D6897D;
+}
+
+.submission {
+  background-color: rgb(233, 181, 69);
+  width: 130px;
+  text-align: right;
+  color: white;
+  padding: 0;
+  text-transform: uppercase;
+}
+
+.review {
+  background-color: rgb(233, 181, 69);
+  width: 130px;
+  text-align: right;
+  color: white;
+  padding: 0;
+  text-transform: uppercase;
+}
+
+.editing {
+  background-color: rgb(170, 196, 61);
+  width: 130px;
+  text-align: right;
+  color: white;
+  padding: 0;
+  text-transform: uppercase;
+}
+
+.production {
+  background-color: rgb(123, 195, 61);
+  width: 130px;
+  text-align: right;
+  color: white;
+  padding: 0;
+  text-transform: uppercase;
+}
+
+.notification {
+  min-height: 130px;
+  border: 1px double #E4E4E4;
+  margin-bottom: 10px;
+}
+
+.notification h5, p {
+  margin: 0;
+  padding: 10 0 10 10;
+}
+
+.view {
+  background-color: rgb(196, 183, 140);
+  border-color: rgb(196, 183, 140);
+}
+
+.read {
+  background-color: rgb(69, 86, 104);
+  border-color: rgb(69, 86, 104);
 }
 
 .bs-callout {

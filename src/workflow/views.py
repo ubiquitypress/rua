@@ -43,7 +43,8 @@ def dashboard(request):
 	template = 'workflow/dashboard.html'
 	context = {
 		'book_list': book_list,
-		'recent_activity': models.Log.objects.all().order_by('-date_logged')[:15]
+		'recent_activity': models.Log.objects.all().order_by('-date_logged')[:15],
+		'notifications': models.Task.objects.filter(assignee=request.user, completed__isnull=True).order_by('due')
 	}
 
 	return render(request, template, context)
