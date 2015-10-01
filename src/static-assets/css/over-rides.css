@@ -18,9 +18,10 @@ html, body {
   height: 100%;
 }
 
-.container {
-  width: 1290px;
-  overflow: hidden !important;
+@media (min-width: 1290px) {
+    .container {
+        max-width: 1290px;
+    }
 }
 
 .dash-container {

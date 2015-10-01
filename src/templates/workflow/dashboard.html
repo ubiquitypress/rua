@@ -73,7 +73,7 @@
 
             {% for book in book_list %}
             <div class="project">
-                <h5>Project {{ book.id }}: {{ book.full_title }}</h5>
+                <h5>Book {{ book.id }}: {{ book.full_title }}</h5>
                 <p>{{ book.owner.profile.full_name }}</p>
                 <p class="pull-right small {{ book.stage.current_stage }}">{{ book.stage.get_current_stage_display }}</p>
                 <p><em>Submitted {{ book.submission_date }}</em></p>
@@ -92,7 +92,7 @@
             {% for note in notifications %}
             <div class="notification">
                 <h5>{{ note.text }}</h5>
-                <p><em>Project {{ note.book.id }}: {{ note.book.full_title }}</em></p>
+                <p><em>Book {{ note.book.id }}: {{ note.book.full_title }}</em></p>
                 <span class="pull-right" style="padding-right: 10px;">
                 <br />
                     <a class="btn btn-xs btn-primary read">Mark as Read</a>

@@ -12,7 +12,8 @@ from django.http import HttpResponse, HttpResponseForbidden
 from django.utils import timezone
 from django.db.models import Q
 from django.template.defaultfilters import slugify
-
+from django.views.decorators.http import require_POST
+from jfu.http import upload_receive, UploadResponse, JFUResponse
 
 from submission import forms
 from core import models as core_models
@@ -83,7 +84,7 @@ def submission_two(request, book_id):
 	book = get_object_or_404(core_models.Book, pk=book_id, owner=request.user)
 	book_form = forms.SubmitBookStageTwo(instance=book)
 
-	logic.check_stage(book.submission_stage, 2)
+	logic.check_stage(book, 2)
 
 	if request.method == 'POST':
 		book_form = forms.SubmitBookStageTwo(request.POST, instance=book)
@@ -109,25 +110,15 @@ def submission_three(request, book_id):
 	manuscript_files = core_models.File.objects.filter(book=book, kind='manuscript')
 	additional_files = core_models.File.objects.filter(book=book, kind='additional')
 
-	logic.check_stage(book.submission_stage, 3)
+	logic.check_stage(book, 3)
 
 	if request.method == 'POST':
-		if 'manuscript_upload' in request.POST:
-			for file in request.FILES.getlist('manuscript_file'):
-				handle_file(file, book, 'manuscript', request.user)
-			return redirect(reverse('submission_additional_files', kwargs={'book_id': book.id, 'file_type': 'manuscript_files'}))
-
-		if 'additional_upload' in request.POST:
-			for file in request.FILES.getlist('additional_file'):
-				handle_file(file, book, 'additional', request.user)
-			return redirect(reverse('submission_additional_files', kwargs={'book_id': book.id, 'file_type': 'additional_files'}))
-
 		if 'next_stage' in request.POST:
 			if manuscript_files.count() >= 1:
 				if not book.submission_stage > 4:
 					book.submission_stage = 4
 				book.save()
-				return redirect(reverse('submission_four', kwargs={'book_id': book.id}))
+				return redirect(reverse('submission_three_additional', kwargs={'book_id': book.id}))
 			else:
 				messages.add_message(request, messages.ERROR, 'You must upload a Manuscript File.')
 
@@ -139,6 +130,31 @@ def submission_three(request, book_id):
 		'book': book,
 		'active': 3,
 		'manuscript_files': manuscript_files,
+		'additional_files': additional_files,
+	}
+
+	return render(request, template, context)
+
+@login_required
+def submission_three_additional(request, book_id):
+	book = get_object_or_404(core_models.Book, pk=book_id, owner=request.user)
+	additional_files = core_models.File.objects.filter(book=book, kind='additional')
+
+	print book.title
+	pprint(additional_files)
+
+	logic.check_stage(book, 4)
+
+	if request.method == 'POST':
+		if not book.submission_stage > 5:
+			book.submission_stage = 5
+		book.save()
+		return redirect(reverse('submission_four', kwargs={'book_id': book.id}))
+
+	template = 'submission/submission_three_additional.html'
+	context = {
+		'book': book,
+		'active': 4,
 		'additional_files': additional_files,
 	}
 
@@ -167,16 +183,44 @@ def submission_additional_files(request, book_id, file_type):
 
 	return render(request, template, context)
 
+@csrf_exempt
+def upload(request, book_id, type_to_handle):
+
+	book = get_object_or_404(core_models.Book, pk=book_id, owner=request.user)
+	file = upload_receive( request )
+	new_file = handle_file(file, book, type_to_handle, request.user)
+
+	file_dict = {
+		'name' : new_file.uuid_filename,
+		'size' : file.size,
+		'deleteUrl': reverse('jfu_delete', kwargs = { 'book_id': book_id, 'file_pk': new_file.pk }),
+		'deleteType': 'POST',
+	}
+
+	return UploadResponse( request, file_dict )
+
+@csrf_exempt
+def upload_delete(request, book_id, file_pk):
+	success = True
+	try:
+		instance = core_models.File.objects.get(pk=file_pk)
+		os.unlink('%s/%s/%s' % (settings.BOOK_DIR, book_id, instance.uuid_filename))
+		instance.delete()
+	except core_models.File.DoesNotExist:
+		success = False
+
+	return JFUResponse( request, success )
+
 @login_required
 def submission_four(request, book_id):
 	book = get_object_or_404(core_models.Book, pk=book_id, owner=request.user)
 
-	logic.check_stage(book.submission_stage, 4)
+	logic.check_stage(book, 5)
 
 	if request.method == 'POST' and 'next_stage' in request.POST:
 		if book.author.count() >= 1 or book.editor.count() >= 1:
-			if not book.submission_stage > 5:
-				book.submission_stage = 5
+			if not book.submission_stage > 6:
+				book.submission_stage = 6
 				book.save()
 			return redirect(reverse('submission_five', kwargs={'book_id': book.id}))
 		else:
@@ -185,7 +229,7 @@ def submission_four(request, book_id):
 	template = 'submission/submission_four.html'
 	context = {
 		'book': book,
-		'active': 4,
+		'active': 5,
 	}
 
 	return render(request, template, context)
@@ -194,7 +238,7 @@ def submission_four(request, book_id):
 def submission_five(request, book_id):
 	book = get_object_or_404(core_models.Book, pk=book_id, owner=request.user)
 
-	logic.check_stage(book.submission_stage, 5)
+	logic.check_stage(book, 6)
 
 	if request.method == 'POST' and 'complete' in request.POST:
 		book.submission_date = timezone.now()
@@ -213,7 +257,7 @@ def submission_five(request, book_id):
 	template = 'submission/submission_five.html'
 	context = {
 		'book': book,
-		'active': 5,
+		'active': 6,
 		'manuscript_files': core_models.File.objects.filter(book=book, kind='manuscript'),
 		'additional_files': core_models.File.objects.filter(book=book, kind='additional'),
 	}
@@ -396,8 +440,10 @@ def handle_file(file, book, kind, user):
 	book.files.add(new_file)
 	book.save()
 
+	print kind
 
-	return path
+
+	return new_file
 
 # AJAX handler
 @csrf_exempt

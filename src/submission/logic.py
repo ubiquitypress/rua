@@ -44,9 +44,15 @@ def copy_editor_to_submission(user, book):
     book.editor.add(editor)
     return editor
 
-def check_stage(book_stage, check):
-    if book_stage >= check:
+def check_stage(book, check):
+
+    print book.submission_stage
+    print check
+
+    if book.submission_stage >= check:
         pass
+    elif book.submission_date:
+        raise PermissionDenied()
     else:
         raise PermissionDenied()
 
