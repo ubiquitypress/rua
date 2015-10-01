@@ -16,7 +16,7 @@
                 <ul class="nav navbar-nav navbar-right">
                   {% if user.is_authenticated %}
                   <li><a href="{% url 'overview' %}">Overview</a></li>
-                  <li><a href="{% url 'dashboard' %}">Dashboard</a></li>
+                  <li><a href="{% url 'dashboard' %}">Dashboard <span class="badge circle">{{ task_count }}</span></a></li>
                   {% if request.user.is_staff %}
                   <li><a href="{% url 'manager_index' %}">Manager</a></li>
                   <li><a href="/admin/">Admin</a></li>
