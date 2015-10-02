@@ -55,6 +55,7 @@ INSTALLED_APPS = (
     'indexing',
     'typeset',
     'author',
+    'onetasker',
 
     # 3rd Party
     'bootstrap3',
