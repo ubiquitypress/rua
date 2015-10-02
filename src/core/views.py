@@ -184,32 +184,6 @@ def user_submission(request, submission_id):
 	return render(request, template, context)
 
 @login_required
-def author_contract_signoff(request, submission_id, contract_id):
-	contract = get_object_or_404(models.Contract, pk=contract_id)
-	submission = get_object_or_404(models.Book, pk=submission_id, owner=request.user, contract=contract)
-
-	if request.POST:
-		author_signoff_form = workflow_forms.AuthorContractSignoff(request.POST, request.FILES)
-		if author_signoff_form.is_valid():
-			author_file = request.FILES.get('author_file')
-			new_file = handle_file(author_file, submission, 'contract')
-			contract.author_file = new_file
-			contract.author_signed_off = timezone.now()
-			contract.save()
-			return redirect(reverse('user_submission', kwargs={'submission_id': submission_id}))
-	else:
-		author_signoff_form = workflow_forms.AuthorContractSignoff()
-
-	template = 'core/user/author_contract_signoff.html'
-	context = {
-		'submission': 'submission',
-		'contract': 'contract',
-		'author_signoff_form': 'author_signoff_form',
-	}
-
-	return render(request, template, context)
-
-@login_required
 def reset_password(request):
 
 	if request.method == 'POST':

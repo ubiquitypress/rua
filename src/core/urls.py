@@ -47,7 +47,6 @@ urlpatterns = patterns('',
 
     # User submission
     url(r'^user/submission/(?P<submission_id>\d+)/$', 'core.views.user_submission', name='user_submission'),
-    url(r'^user/submission/(?P<submission_id>\d+)/contract/(?P<contract_id>\d+)/signoff/$', 'core.views.author_contract_signoff', name='author_contract_signoff'),
     
     # Editor Views
     url(r'editor/dashboard/$', 'workflow.views.dashboard', name='dashboard'),
