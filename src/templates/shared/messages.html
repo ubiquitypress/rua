@@ -1,8 +1,11 @@
-<div class="input-group">
-  <input type="text" class="form-control" id="search" name="search" placeholder="Add a message...">
-  <div class="input-group-addon"><i class="fa fa-envelope"></i></div>
-</div>
+<form method="POST" id="message_form" action="{% url 'new_message' submission.id %}">
+	<div class="input-group">
+	  <input type="text" class="form-control" id="id_message" name="message" placeholder="Add a message...">
+	  <div class="input-group-addon"><i class="fa fa-envelope"></i></div>
+	</div>
+</form>
 <br />
+<div id="message-list">
 {% for message in submission.message_set.all %}
 <div class="message {% if forloop.counter|divisibleby:2 %}even{% else %}odd{% endif %}">
 	<div class="row message-container">
@@ -14,3 +17,4 @@
 {% empty %}
 	<p>This book has no messages.</p>
 {% endfor %}
+</div>

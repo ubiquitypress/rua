@@ -258,6 +258,31 @@ def task_new(request):
 	else:
 		return HttpResponse(new_task_form.errors)
 
+@csrf_exempt
+@login_required
+def new_message(request, book_id):
+
+	pprint(request.POST)
+	new_message_form = forms.MessageForm(request.POST)
+	if new_message_form.is_valid():
+		new_message = new_message_form.save(commit=False)
+		new_message.sender = request.user
+		new_message.book = get_object_or_404(models.Book, pk=book_id)
+		new_message.save()
+
+		response_dict = {
+			'status_code': 200, 
+			'message_id': new_message.pk,
+			'sender': '%s %s' % (new_message.sender.first_name, new_message.sender.last_name),
+			'message': new_message.message,
+			'date_sent': str(new_message.date_sent),
+		}
+
+		return HttpResponse(json.dumps(response_dict))
+	else:
+		return HttpResponse(json.dumps(new_message_form.errors))
+
+
 ## File helpers
 def handle_file(file, book, kind):
 

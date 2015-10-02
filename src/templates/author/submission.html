@@ -78,11 +78,7 @@
 
 {% endblock %}
 
-{% block js %}
-<script type="text/javascript">
-$(function () {
-  $('[data-toggle="tooltip"]').tooltip()
-})
-</script>
-{% endblock js %}
 
+{% block js %}
+<script type="text/javascript" src="{% static "js/messages.js" %}"></script>
+{% endblock js %}
