@@ -262,7 +262,6 @@ def task_new(request):
 @login_required
 def new_message(request, book_id):
 
-	pprint(request.POST)
 	new_message_form = forms.MessageForm(request.POST)
 	if new_message_form.is_valid():
 		new_message = new_message_form.save(commit=False)

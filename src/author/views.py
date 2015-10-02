@@ -44,7 +44,7 @@ def status(request, submission_id):
 		'active': 'user_submission',
 		'author_include': 'author/status.html',
 		'submission_files': 'shared/messages.html',
-		'timeline': logic.build_time_line(book)
+		'timeline': logic.build_time_line(book),
 	}
 
 	return render(request, template, context)
