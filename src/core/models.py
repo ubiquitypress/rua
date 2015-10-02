@@ -7,6 +7,7 @@ import uuid
 import os
 
 from autoslug import AutoSlugField
+from datetime import datetime, timedelta, date
 
 fs = FileSystemStorage(location=settings.MEDIA_ROOT)
 
@@ -552,8 +553,16 @@ class Task(models.Model):
 	text = models.CharField(max_length=200)
 	workflow = models.CharField(max_length=50, choices=task_choices())
 	assigned = models.DateField(auto_now_add=True, null=True, blank=True)
+	accepted = models.DateTimeField(blank=True, null=True)
+	rejected = models.DateTimeField(blank=True, null=True)
 	due = models.DateField(null=True, blank=True)
 	completed = models.DateField(null=True, blank=True)
+
+	def status_color(self):
+		now = date.today()
+		difference = self.due - now
+		return difference
+
 
 class Role(models.Model):
 	name = models.CharField(max_length=100)

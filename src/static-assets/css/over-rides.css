@@ -215,11 +215,31 @@ body > div.container > div > div.col-md-4.dash-right > div > ul > li > div > div
   min-height: 130px;
   border: 1px double #E4E4E4;
   margin-bottom: 10px;
+  background-color: white;
 }
 
 .notification h5, p {
   margin: 0;
   padding: 10 0 10 10;
+}
+.notification>.status{
+  bottom: 0px;
+  margin-top: 30px;
+  width: 100%;
+  padding-left: 15px;
+  position: relative; 
+}
+.notification >.accepted {
+  background-color:#A7CF00;
+  color:white;
+}
+.notification >.new {
+  background-color:grey;
+  color:white;
+}
+
+.notification >.assigned {
+  color:grey;
 }
 
 .author {
