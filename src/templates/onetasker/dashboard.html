@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% load static from staticfiles %}
+{% load bootstrap3 %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block css %}
+    <style type="text/css">
+    .navbar {
+        margin-bottom: 0px !important;
+    }
+
+    .timeline > li > .timeline-badge{
+        left: 92% !important;
+    }
+
+    .timeline > li > .timeline-panel {
+        width: 80% !important;
+        float: none;
+    }
+
+    .timeline:before {
+        left: 92% !important;
+    }
+    </style>
+    <link href="{% static "css/timeline.css" %}" rel="stylesheet">
+{% endblock %}
+
+{% block body %}
+
+<div class="row">
+
+    <div class="col-md-4 dash-left" style="background-color: rgb(230,230,230);">
+        <div class="dash-container">
+            <h4>COMPLETED TASKS <span class="badge circle">{{ completed_count }}</span></h4>
+            {% for task in completed_tasks %}
+            <div class="notification">
+                <h5><b>{{task.text}}</b></h5>
+                <span class="pull-right" style="padding-right: 10px;">
+                <br />
+                    <a href="" class="btn btn-sm btn-primary view">View Project</a>
+                    <a href="" class="btn btn-sm btn-primary read">View Task</a>
+                </span>
+                <p class="assigned"><i>{% if task.accepted %}Accepted on {{ task.accepted|date:"d M Y"}}<br>{% endif %}{% if task.completed %}Completed on {{task.completed|date:"d M Y"}}{% endif %}</i></p>
+            </div>
+            {% endfor %}
+
+        </div>
+    </div>
+
+
+
+    <div class="col-md-6 dash-center">
+        <div class="dash-container">
+            <h4>TO DO <span class="badge circle">{{active_count}}</span></h4>
+
+            {% for task in active_tasks %}
+            <div class="notification">
+                <h5><b>{{task.text}}</b></h5>
+                <p><b>Task due: <span class="author-due">{{ task.due }} ({{task.due|timeuntil}} left)</span></b></p>
+                <span class="pull-right" style="padding-right: 10px;">
+                <br />
+                    <a href="" class="btn btn-sm btn-primary view">View Project</a>
+                    <a href="" class="btn btn-sm btn-primary read">View Task</a>
+                </span>
+                <p class="assigned"><i>{{task.assigned}}</i></p>
+                <div class="status  {% if task.accepted%}accepted {% else %}new {%endif%}">
+                    {% if task.accepted %} This task has been accepted on {{ task.accepted }}
+                    {% else %} You can either accept or reject this task{% endif %}
+                </div>
+            </div>
+            {% endfor %}
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -18,6 +18,7 @@ urlpatterns = patterns('',
     url(r'^typeset/', include('typeset.urls')),
     url(r'^api/', include('api.urls')),
     url(r'^author/', include('author.urls')),
+    url(r'^tasks/', include('onetasker.urls')),
 
     # 3rd Party Apps
     url(r'^summernote/', include('django_summernote.urls')),
