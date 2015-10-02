@@ -17,6 +17,7 @@ urlpatterns = patterns('',
     url(r'^indexing/', include('indexing.urls')),
     url(r'^typeset/', include('typeset.urls')),
     url(r'^api/', include('api.urls')),
+    url(r'^author/', include('author.urls')),
 
     # 3rd Party Apps
     url(r'^summernote/', include('django_summernote.urls')),
@@ -48,7 +49,7 @@ urlpatterns = patterns('',
     url(r'^user/submission/(?P<submission_id>\d+)/$', 'core.views.user_submission', name='user_submission'),
     url(r'^user/submission/(?P<submission_id>\d+)/contract/(?P<contract_id>\d+)/signoff/$', 'core.views.author_contract_signoff', name='author_contract_signoff'),
     
-    # Dashboard
+    # Editor Views
     url(r'editor/dashboard/$', 'workflow.views.dashboard', name='dashboard'),
     url(r'overview/$', 'core.views.overview', name='overview'),
 )

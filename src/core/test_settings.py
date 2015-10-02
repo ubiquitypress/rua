@@ -54,6 +54,7 @@ INSTALLED_APPS = (
     'copyedit',
     'indexing',
     'typeset',
+    'author',
 
     # 3rd Party
     'bootstrap3',

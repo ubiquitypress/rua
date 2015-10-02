@@ -1,0 +1,27 @@
+{% if submission.stage.submission and not submission.stage.review %}
+	<i class="fa fa-check-circle-o">&nbsp;&nbsp;</i>Submission made {{ submission.stage.submission|date:"Y-m-d" }}<br />
+{% elif submission.stage.review %}
+	<i class="fa fa-check-circle-o">&nbsp;&nbsp;</i>Submission sent for review {{ submission.stage.review|date:"Y-m-d" }}<br />
+{% endif %}
+
+{% if submission.stage.review and not submission.stage.editing %}
+	<i class="fa fa-check-circle-o">&nbsp;&nbsp;</i>Review started on {{ submission.stage.review }}<br />
+{% elif submission.stage.editing %}
+	<i class="fa fa-check-circle-o">&nbsp;&nbsp;</i>Review Completed on {{ submission.stage.editing|date:"Y-m-d" }}<br />
+{% endif %}
+
+{% if submission.stage.editing and not submission.stage.production %}
+	<i class="fa fa-check-circle-o">&nbsp;&nbsp;</i>Editing started on {{ submission.stage.editing|date:"Y-m-d" }}<br />
+{% elif submission.stage.production %}
+	<i class="fa fa-check-circle-o">&nbsp;&nbsp;</i>Editing Completed on {{ submission.stage.production|date:"Y-m-d" }}<br />
+{% endif %}
+
+{% if submission.stage.production and not submission.stage.publication %}
+	<i class="fa fa-check-circle-o">&nbsp;&nbsp;</i>Production started on {{ submission.stage.production|date:"Y-m-d" }}<br />
+{% elif submission.stage.production %}
+	<i class="fa fa-check-circle-o">&nbsp;&nbsp;</i>Production Completed on {{ submission.stage.publication|date:"Y-m-d" }}<br />
+{% endif %}
+
+{% if submission.stage.declined %}
+	<i class="fa fa-check-circle-o">&nbsp;&nbsp;</i>Submission Declined on {{ submission.stage.declined|date:"Y-m-d" }}<br />
+{% endif %}

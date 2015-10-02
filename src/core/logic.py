@@ -6,8 +6,6 @@ from core import models
 from core.cache import cache_result
 from revisions import models as revisions_models
 
-from pprint import pprint
-
 def send_email(subject, context, from_email, to, html_template, text_template=None):
 	plaintext = get_template(text_template)
 	htmly     = get_template(html_template)

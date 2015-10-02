@@ -128,9 +128,9 @@ class Author(models.Model):
 
 	def full_name(self):
 		if self.middle_name:
-			return "%s %s %s" % (self.user.first_name, self.middle_name, self.user.last_name)
+			return "%s %s %s" % (self.first_name, self.middle_name, self.last_name)
 		else:
-			return "%s %s" % (self.user.first_name, self.user.last_name)
+			return "%s %s" % (self.first_name, self.last_name)
 
 class Book(models.Model):
 	prefix = models.CharField(max_length=100, null=True, blank=True)
@@ -217,6 +217,8 @@ class Book(models.Model):
 			return '%s %s' % (self.prefix, self.title)
 		elif self.subtitle and not self.prefix:
 			return '%s %s' % (self.title, self.subtitle)
+		else:
+			return self.title
 
 def identifier_choices():
 	return (
