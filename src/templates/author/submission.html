@@ -43,9 +43,11 @@
                 <strong>Review Type: </strong>{{ submission.get_review_type_display }}<br />
             </h5>
         </div>
+        <a href="{% url 'status' submission.pk %}">
         <div class="dash-menu">
             <h5>Current Status <i class="fa fa-chevron-right pull-right"></i></h5>
         </div>
+        </a>
         <a href="{% url 'author_submission' submission.pk %}">
         <div class="dash-menu">
             <h5>Submission Details <i class="fa fa-chevron-right pull-right"></i></h5>
@@ -76,11 +78,7 @@
 
 {% endblock %}
 
-{% block js %}
-<script type="text/javascript">
-$(function () {
-  $('[data-toggle="tooltip"]').tooltip()
-})
-</script>
-{% endblock js %}
 
+{% block js %}
+<script type="text/javascript" src="{% static "js/messages.js" %}"></script>
+{% endblock js %}

@@ -102,6 +102,12 @@ class Profile(models.Model):
 		else:
 			return u"%s %s" % (self.user.first_name, self.user.last_name)
 
+	def initials(self):
+		if self.middle_name:
+			return u"%s%s%s" % (self.user.first_name[:1], self.middle_name[:1], self.user.last_name[:1])
+		else:
+			return u"%s%s" % (self.user.first_name[:1], self.user.last_name[:1])
+
 class Author(models.Model):
 	first_name = models.CharField(max_length=100)
 	middle_name = models.CharField(max_length=100, null=True, blank=True)
@@ -722,4 +728,16 @@ class ProposalFormElementsRelationship(models.Model):
 
 	class Meta:
 		ordering = ('order',)
+
+class Message(models.Model):
+	book = models.ForeignKey(Book)
+	sender = models.ForeignKey(User)
+	date_sent = models.DateTimeField(auto_now_add=True)
+	message = models.TextField()
+
+	def __unicode__(self):
+		return u'%s' % self.message
+
+	class Meta:
+		ordering = ('-date_sent',) 
 
