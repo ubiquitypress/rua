@@ -30,3 +30,17 @@ def author_submission(request, submission_id):
 	}
 
 	return render(request, template, context)
+
+@login_required
+def status(request, submission_id):
+	book = get_object_or_404(models.Book, pk=submission_id, owner=request.user)
+
+	template = 'author/submission.html'
+	context = {
+		'submission': book,
+		'active': 'user_submission',
+		'author_include': 'author/status.html',
+		'submission_files': 'shared/messages.html'
+	}
+
+	return render(request, template, context)

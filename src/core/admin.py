@@ -86,6 +86,7 @@ admin_list = [
 	(CopyeditAssignment,),
 	(TypesetAssignment,),
 	(EmailLog,),
+	(Message,),
 ]
 
 [admin.site.register(*t) for t in admin_list]

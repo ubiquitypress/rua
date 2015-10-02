@@ -24,6 +24,31 @@ html, body {
     }
 }
 
+.message {
+  min-height: 100px;
+}
+
+.message-container {
+  padding: 10px;
+}
+
+.message-user {
+  background-color: rgb(174, 175, 179);
+  margin-left: px;
+}
+
+.message-date {
+  text-align: right;
+}
+
+.odd {
+  background-color: rgb(225, 225, 225);
+}
+
+.even {
+  background-color: #FFFFFF;
+}
+
 .dash-container {
   padding: 10px;
 }

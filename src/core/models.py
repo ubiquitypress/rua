@@ -714,3 +714,15 @@ class ProposalFormElementsRelationship(models.Model):
 	class Meta:
 		ordering = ('order',)
 
+class Message(models.Model):
+	book = models.ForeignKey(Book)
+	sender = models.ForeignKey(User)
+	date_sent = models.DateTimeField(auto_now_add=True)
+	message = models.TextField()
+
+	def __unicode__(self):
+		return u'%s' % self.message
+
+	class Meta:
+		ordering = ('-date_sent',) 
+
