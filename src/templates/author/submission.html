@@ -36,12 +36,24 @@
         <div class="dash-container">
             <h4>{% if submission.prefix %}{{ submission.prefix }} {% endif %}{{ submission.title }}</h4> 
             <h5 class="author-note">{% if submission.subtitle %}{{ submission.subtitle }}{% endif %}</h5>
-            <h5>
-                <strong>Series: </strong>{{ submission.series }}<br />
-                <strong>Type: </strong>{{ submission.get_book_type_display }}<br />
-                <strong>License: </strong>{{ submission.license.name }}<br />
-                <strong>Review Type: </strong>{{ submission.get_review_type_display }}<br />
-            </h5>
+            <table class="table table-bordered table-condensed small">
+                <tr>
+                    <th>Series</th>
+                    <td>{{ submission.series }}</td>
+                </tr>
+                <tr>
+                    <th>Type</th>
+                    <td>{{ submission.get_book_type_display }}</td>
+                </tr>
+                <tr>
+                    <th>License</th>
+                    <td>{{ submission.license.short_name }}</td>
+                </tr>
+                <tr>
+                    <th>Review Type</th>
+                    <td>{{ submission.get_review_type_display }}</td>
+                </tr>
+            </table>
         </div>
         <a href="{% url 'status' submission.pk %}">
         <div class="dash-menu">
