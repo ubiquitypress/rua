@@ -26,7 +26,7 @@
 </ul>
 
 <h3>Old Versions</h3>
-{% for file in file.version_set.all %}
+{% for file in file.fileversion_set.all %}
 <ul class="manuscript-upload-states">
 	<li>
 		<div class="row">
@@ -45,7 +45,7 @@
 			  <h5>{{ file.original_filename }}</h5>
 			</div>
 			<div class="col-md-4">
-			  <a href="{% url 'serve_file' submission.id file.id %}" class="btn btn-sm btn-primary read pull-right" style="margin-top: 20px;margin-right:10px;"><i class="fa fa-download"></i></a>
+			  <a href="{% url 'serve_versioned_file' submission.id file.id %}" class="btn btn-sm btn-primary read pull-right" style="margin-top: 20px;margin-right:10px;"><i class="fa fa-download"></i></a>
 			</div>
 		</div>
 	</li>

@@ -10,7 +10,7 @@ def author_tasks(user):
 	typeset_tasks = models.TypesetAssignment.objects.filter(book__owner=user, author_invited__isnull=False, author_completed__isnull=True)
 
 	for revision in revision_tasks:
-		task_list.append({'type': 'revisions', 'book': revision.book, 'task': 'Revisions Requested', 'date': revision.due, 'title': revision.book.title, 'url': 'http://%s/revisions/%s' % (base_url, revision.id)})
+		task_list.append({'type': 'revisions', 'book': revision.book, 'task': 'Revisions', 'date': revision.due, 'title': revision.book.title, 'url': 'http://%s/author/submission/%s/revisions/%s/' % (base_url, revision.book.id, revision.id)})
 
 	for copyedit in copyedit_tasks:
 		task_list.append({'type': 'copyedit', 'book': copyedit.book, 'task': 'Copyedit Review', 'date': copyedit.author_invited, 'title': copyedit.book.title, 'url': 'http://%s/copyedit/book/%s/edit/%s/author/' % (base_url, copyedit.book.id, copyedit.id)})
