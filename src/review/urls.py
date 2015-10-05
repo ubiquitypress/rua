@@ -5,6 +5,8 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.views.generic import TemplateView
 
 urlpatterns = patterns('',
+	
+	url(r'dashboard/$', 'review.views.reviewer_dashboard', name='reviewer_dashboard'),
 
 	# Reviewer decision
 	url(r'^(?P<review_type>[-\w]+)/(?P<submission_id>\d+)/assignment/(?P<review_assignment>\d+)/decision/$', 'review.views.reviewer_decision', name='reviewer_decision_without'),

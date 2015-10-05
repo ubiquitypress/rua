@@ -21,9 +21,21 @@ from core import views as core_views
 from core import forms as core_forms
 from core.decorators import is_reviewer
 from core import log
+from core import models as core_models
 from review import forms
 from review import models
 from submission import models as submission_models
+
+@is_reviewer
+def reviewer_dashboard(request):
+
+	template = 'review/dashboard.html'
+	context = {	
+	'pending_tasks': core_models.ReviewAssignment.objects.filter(user=request.user,completed__isnull=True),
+	'completed_tasks': core_models.ReviewAssignment.objects.filter(user=request.user,completed__isnull=False),
+	}
+
+	return render(request, template, context)
 
 @is_reviewer
 def reviewer_decision(request, review_type, submission_id, review_assignment, decision=None):
