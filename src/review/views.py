@@ -31,7 +31,7 @@ def reviewer_dashboard(request):
 
 	template = 'review/dashboard.html'
 	context = {	
-	'pending_tasks': core_models.ReviewAssignment.objects.filter(user=request.user,completed__isnull=True),
+	'pending_tasks': core_models.ReviewAssignment.objects.filter(user=request.user,completed__isnull=True,declined__isnull=True),
 	'completed_tasks': core_models.ReviewAssignment.objects.filter(user=request.user,completed__isnull=False),
 	}
 
