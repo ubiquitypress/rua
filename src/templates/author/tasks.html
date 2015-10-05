@@ -1,0 +1,13 @@
+<h4>MY TASKS</h4>
+
+{% for task in tasks %}
+<div class="notification">
+    <h5>{{ task.task }}</h5>
+    <p><em>Book {{ task.book.id }}: {{ task.book.full_title }}</em></p>
+    <span class="pull-right" style="padding-right: 10px;">
+    <br />
+        <a href="{{ task.url }}" class="btn btn-xs btn-primary read">View Task</a>
+    </span>
+    <p><em>Posted {{ task.date }}</em></p>
+</div>
+{% endfor %}

@@ -56,7 +56,7 @@ def request_revisions(request, submission_id, returner):
 
 
 @login_required
-def revision(request, revision_id):
+def revision(request, revision_id, submission_id=None):
 	revision = get_object_or_404(models.Revision, pk=revision_id, book__owner=request.user, completed__isnull=True)
 
 	form = forms.AuthorRevisionForm(instance=revision)

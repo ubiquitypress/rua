@@ -15,11 +15,11 @@
 			</div>
 			<div class="col-md-6">
 			  <h5>{{ file.label }}</h5>
-			  <h5>{{ file.kind|capfirst }}</h5>
 			  <h5>{{ file.original_filename }}</h5>
 			</div>
 			<div class="col-md-4">
 			  <a href="{% url 'serve_file' submission.id file.id %}" class="btn btn-sm btn-primary read pull-right" style="margin-top: 20px;margin-right:10px;"><i class="fa fa-download"></i></a>
+			  <a href="{% url 'revise_file' submission.id revision.id file.id %}" class="btn btn-sm btn-primary read pull-right" style="margin-top: 20px;margin-right:10px;"><i class="fa fa-upload"></i></a>
 			</div>
 		</div>
 	</li>
@@ -44,14 +44,15 @@
 			</div>
 			<div class="col-md-6">
 			  <h5>{{ file.label }}</h5>
-			  <h5>{{ file.kind|capfirst }}</h5>
 			  <h5>{{ file.original_filename }}</h5>
 			</div>
 			<div class="col-md-4">
 			  <a href="{% url 'serve_file' submission.id file.id %}" class="btn btn-sm btn-primary read pull-right" style="margin-top: 20px;margin-right:10px;"><i class="fa fa-download"></i></a>
+			  <a href="{% url 'revise_file' submission.id revision.id file.id %}" class="btn btn-sm btn-primary read pull-right" style="margin-top: 20px;margin-right:10px;"><i class="fa fa-upload"></i></a>
 			</div>
 		</div>
 	</li>
 	{% endif %}
 	{% endfor %}
 </ul>
+
