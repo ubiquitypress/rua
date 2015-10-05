@@ -32,7 +32,7 @@
 
     <div class="col-md-4 dash-left">
         <div class="dash-container" style="background-color: rgb(230,230,230);">
-            <h4>COMPLETED TASKS </h4>
+            <h4 style="color:rgb(106,106,106)">{{completed_count}} COMPLETED{% ifequal completed_count 1%} TASK {% else %} TASKS {% endifequal %} </h4>
             {% for task in completed_tasks %}
                 <div class="notification reviewer">
                     <div class="row">
@@ -44,7 +44,7 @@
                     <div class="activity">
                         {% include "core/dashboard/activity.html" %}
                     </div>
-  <a href="" class="btn btn-primary task pull-right" style="margin-right:35px; margin-bottom:20px;">&nbsp;&nbsp;View Task&nbsp;&nbsp;</a></br>
+  <a href="" class="btn btn-task pull-right" style="margin-right:35px; margin-bottom:20px;">&nbsp;&nbsp;View Task&nbsp;&nbsp;</a></br>
                     </br> 
                 </div>
                 {% endfor %}
@@ -54,7 +54,7 @@
 
     <div class="col-md-6 dash-center">
         <div class="dash-container">
-            <h4>TO DO</h4>
+            <h4>TO DO <sup><span class="badge" style="background-color:rgb(207,94,129);">{{pending_count}}</span></sup></h4> 
             <hr />
               {% for task in pending_tasks %}
                 <div class="notification reviewer">
@@ -63,13 +63,17 @@
                     
                     <div class="band" style="margin-left:10px;margin-right:10px">
                         <p class="small">  Review requested for <span style="color:rgb(101,117,132)"> {{task.book.title}}</span> </p>
-                          <h5> Task Due <b style="color:rgb(101,117,132)">{{ task.due }}</b></h5>
+                         {% if task.accepted %}
+                          <h5> <b>Task Due</b> <b style="color:rgb(187,123,73)">{{ task.due }}</b></h5>
+                           {% else %}
+                          <h5> Task Due <span style="color:rgb(101,117,132)">{{ task.due }}</span></h5>
+                           {% endif %}
                     </div>
                     <div class="activity">
                         {% include "core/dashboard/activity.html" %}
                     </div>
 
-                    <a href="" class="btn btn-primary task pull-right" style="margin-right:20px;">&nbsp;&nbsp;View Task&nbsp;&nbsp;</a> &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:grey">{{task.assigned}}</span></br>
+                    <a href="" class="btn btn-task pull-right" style="margin-right:20px;">&nbsp;&nbsp;View Task&nbsp;&nbsp;</a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:grey">{{task.assigned}}</span></br>
                     </br>
 </div>
                     {% if task.accepted %}

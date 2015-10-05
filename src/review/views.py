@@ -29,10 +29,14 @@ from submission import models as submission_models
 @is_reviewer
 def reviewer_dashboard(request):
 
+	pending_tasks = core_models.ReviewAssignment.objects.filter(user=request.user,completed__isnull=True,declined__isnull=True)
+	completed_tasks = core_models.ReviewAssignment.objects.filter(user=request.user,completed__isnull=False)
 	template = 'review/dashboard.html'
 	context = {	
-	'pending_tasks': core_models.ReviewAssignment.objects.filter(user=request.user,completed__isnull=True,declined__isnull=True),
-	'completed_tasks': core_models.ReviewAssignment.objects.filter(user=request.user,completed__isnull=False),
+	'pending_tasks': pending_tasks,
+	'pending_count': len(pending_tasks),
+	'completed_tasks': completed_tasks,
+	'completed_count':len(completed_tasks),
 	}
 
 	return render(request, template, context)
