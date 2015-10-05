@@ -15,6 +15,7 @@
               <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav navbar-right">
                   {% if user.is_authenticated %}
+                  <li><a href="{% url 'reviewer_dashboard' %}">Reviewer Dashboard</a></li>
                   <li><a href="{% url 'author_dashboard' %}">Author Dashboard</a></li>
                   {% if request.user.is_staff %}
                   <li><a href="{% url 'dashboard' %}">Editor Dashboard <span class="badge circle">{{ task_count }}</span></a></li>

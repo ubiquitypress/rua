@@ -378,5 +378,15 @@
     },
     "model": "core.setting",
     "pk": 38
+},
+{
+    "fields": {
+        "value": "",
+        "group": 1,
+        "name": "brand_header",
+        "types": "file"
+    },
+    "model": "core.setting",
+    "pk": 39
 }
 ]
