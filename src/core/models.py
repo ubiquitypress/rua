@@ -308,7 +308,7 @@ class ReviewAssignment(models.Model):
 	completed = models.DateField(blank=True, null=True)
 	files = models.ManyToManyField('File', blank=True, null=True)
 	body = models.TextField(blank=True, null=True)
-	access_key = models.CharField(max_length=200)
+	access_key = models.CharField(max_length=200,null=True,blank=True)
 	results = models.ForeignKey('review.FormResult', null=True, blank=True)
 	recommendation = models.CharField(max_length=10, choices=review_recommendation(), null=True, blank=True)
 	competing_interests = models.TextField(blank=True, null=True, help_text="If any of the authors or editors have any competing interests please add them here. EG. 'This study was paid for by corp xyz.'")

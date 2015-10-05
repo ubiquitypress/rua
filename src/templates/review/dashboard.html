@@ -43,7 +43,13 @@
                     <div class="activity">
                         {% include "core/dashboard/activity.html" %}
                     </div>
-  <a href="/review/{{task.review_type}}/{{task.id}}/" class="btn btn-task pull-right" style="margin-right:35px; margin-bottom:20px;">&nbsp;&nbsp;&nbsp;View Task&nbsp;&nbsp;&nbsp;</a></br>
+                    {% if task.access_key %}
+  <a href="/review/{{task.review_type}}/{{task.book.pk}}/access_key/{{task.access_key}}/" class="btn btn-task pull-right" style="margin-right:20px; margin-bottom:20px;">&nbsp;&nbsp;&nbsp;View Task&nbsp;&nbsp;&nbsp;</a>
+{% else %}
+ <a href="/review/{{task.review_type}}/{{task.book.pk}}/" class="btn btn-task pull-right" style="margin-right:20px; margin-bottom:20px;">&nbsp;&nbsp;&nbsp;View Task&nbsp;&nbsp;&nbsp;</a>
+
+{% endif%}
+  </br>
                     </br> 
                 </div>
                 {% endfor %}
@@ -72,7 +78,12 @@
                         {% include "core/dashboard/activity.html" %}
                     </div>
 
-                    <a href="/review/{{task.review_type}}/{{task.id}}/" class="btn btn-task pull-right" style="margin-right:20px;">&nbsp;&nbsp;&nbsp;View Task&nbsp;&nbsp;&nbsp;</a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:grey">{{task.assigned}}</span></br>
+                           {% if task.access_key %}
+                              <a href="/review/{{task.review_type}}/{{task.book.pk}}/access_key/{{task.access_key}}" class="btn btn-task pull-right" style="margin-right:20px; margin-bottom:20px;">&nbsp;&nbsp;&nbsp;View Task&nbsp;&nbsp;&nbsp;</a>
+                            {% else %}
+                             <a href="/review/{{task.review_type}}/{{task.book.pk}}/" class="btn btn-task pull-right" style="margin-right:20px; margin-bottom:20px;">&nbsp;&nbsp;&nbsp;View Task&nbsp;&nbsp;&nbsp;</a>
+
+                            {% endif %} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:grey">{{task.assigned}}</span></br>
                     </br>
 </div>
                     {% if task.accepted %}
