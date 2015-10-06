@@ -139,7 +139,7 @@ def review(request, review_type, submission_id, access_key=None):
 				print editor
 				notification = core_models.Task(book=submission,assignee=editor,creator=request.user,text=message,workflow='review')
 				notification.save()
-				log.add_log_entry(book=submission, user=request.user, kind='review', message=message, short_name='Assignment declined')
+			log.add_log_entry(book=submission, user=request.user, kind='review', message=message, short_name='Assignment declined')
 
 
 
@@ -180,7 +180,13 @@ def review(request, review_type, submission_id, access_key=None):
 			review_assignment.save()
 
 			if not review_type == 'proposal':
+				press_editors = review_assignment.book.press_editors.all()
 				log.add_log_entry(book=submission, user=request.user, kind='review', message='Reviewer %s %s completed review for %s.' % (review_assignment.user.first_name, review_assignment.user.last_name, submission.title), short_name='Assignment Completed')
+				message = "Reviewer "+review_assignment.user.first_name+" "+review_assignment.user.last_name+" completed review for "+submission.title+"."
+				for editor in press_editors:
+					notification = core_models.Task(book=submission,assignee=editor,creator=request.user,text=message,workflow='review')
+					notification.save()
+		
 
 			return redirect(reverse('review_complete', kwargs={'review_type': review_type, 'submission_id': submission.id}))
 
