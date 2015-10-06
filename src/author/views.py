@@ -53,16 +53,38 @@ def status(request, submission_id):
 	return render(request, template, context)
 
 @login_required
-def review(request, submission_id, review_id=None):
+def review(request, submission_id):
 	book = get_object_or_404(models.Book, pk=submission_id, owner=request.user)
 
-	if review_id:
-		review = get_object_or_404(models.ReviewAssignemnt, pk=submission, book=book)
+	review_rounds = models.ReviewRound.objects.filter(book=book).order_by('-round_number')
+	
+	template = 'author/submission.html'
+	context = {
+		'submission': book,
+		'author_include': 'author/review_revision.html',
+		'review_rounds': review_rounds,
+		'revision_requests': revision_models.Revision.objects.filter(book=book, revision_type='review')
+	}
+
+	return render(request, template, context)
+
+@login_required
+def view_review_round(request, submission_id, round_id):
+	book = get_object_or_404(models.Book, pk=submission_id, owner=request.user)
+	review_round = get_object_or_404(models.ReviewRound, book=book, round_number=round_id)
+	reviews = models.ReviewAssignment.objects.filter(book=book, review_round__book=book, review_round__round_number=round_id)
+
+	review_rounds = models.ReviewRound.objects.filter(book=book).order_by('-round_number')
 
 	template = 'author/submission.html'
 	context = {
 		'submission': book,
-		'author_include': '',
+		'author_include': 'author/review_revision.html',
+		'submission_files': 'author/view_review_round.html',
+		'review_round': review_round,
+		'review_rounds': review_rounds,
+		'round_id': round_id,
+		'revision_requests': revision_models.Revision.objects.filter(book=book, revision_type='review')
 	}
 
 	return render(request, template, context)
@@ -76,6 +98,31 @@ def tasks(request, submission_id):
 		'submission': book,
 		'tasks': logic.submission_tasks(book, request.user),
 		'author_include': 'author/tasks.html',
+	}
+
+	return render(request, template, context)
+
+@login_required
+
+def view_revisions(request, submission_id, revision_id):
+	book = get_object_or_404(models.Book, pk=submission_id, owner=request.user)
+	revision = get_object_or_404(revision_models.Revision, pk=revision_id, completed__isnull=False, book=book)
+
+	review_rounds = models.ReviewRound.objects.filter(book=book).order_by('-round_number')
+	internal_review_assignments = models.ReviewAssignment.objects.filter(book=book, review_type='internal').select_related('user', 'review_round')
+	external_review_assignments = models.ReviewAssignment.objects.filter(book=book, review_type='external').select_related('user', 'review_round')
+
+	template = 'author/submission.html'
+	context = {
+		'revision': revision,
+		'submission': book,
+		'author_include': 'author/review_revision.html',
+		'submission_files': 'author/view_revision.html',
+		'update': False,
+		'internal_review_assignments': internal_review_assignments,
+		'external_review_assignments': external_review_assignments,
+		'review_rounds': review_rounds,
+		'revision_requests': revision_models.Revision.objects.filter(book=book, revision_type='review')
 	}
 
 	return render(request, template, context)
