@@ -11,6 +11,29 @@
 			<br />
 			<small>{{ assignment.state.date }}</small>
 		</td>
+		<td>
+			{% if assignment.state.state == 'complete' %}<a href="" class="btn btn-xs btn-success">View</a>{% else %}<strong>Due on</strong><br /><em><small>{{ assignment.due }}</small></em>{% endif %}
+		</td>
+	</tr>
+	{% endfor %}
+</table>
+
+<h2>Indexing</h2>
+<table class="table table-condensed table-bordered">
+	<tr>
+		<th>Indexer</th><th>Status</th><th></th>
+	</tr>
+	{% for assignment in submission.indexassignment_set.all %}
+	<tr>
+		<td>{{ assignment.indexer.profile.full_name }}</td>
+		<td>
+			{{ assignment.state.friendly }}
+			<br />
+			<small>{{ assignment.state.date }}</small>
+		</td>
+		<td>
+			{% if assignment.state.state == 'completed' %}<a href="" class="btn btn-xs btn-success">View</a>{% else %}<strong>Due on</strong><br /><em><small>{{ assignment.due }}</small></em>{% endif %}
+		</td>
 	</tr>
 	{% endfor %}
 </table>
