@@ -16,6 +16,7 @@ from django.core.urlresolvers import reverse
 from django.contrib import messages
 from django.http import Http404, HttpResponse, StreamingHttpResponse, HttpResponseRedirect
 
+from workflow import logic
 from core import models as core_models
 from core import views as core_views
 from core import forms as core_forms
@@ -216,12 +217,19 @@ def review_complete(request, review_type, submission_id,access_key=None):
 	else:
 		submission = get_object_or_404(core_models.Book, pk=submission_id)
 		review_assignment = get_object_or_404(core_models.ReviewAssignment, user=request.user, book=submission, review_type=review_type)
+	
+	result = review_assignment.results
+	relations = models.FormElementsRelationship.objects.filter(form=result.form)
+	data_ordered = logic.order_data(logic.decode_json(result.data), relations)
+	
 
 	template = 'review/complete.html'
 	context = {
 		'submission': submission,
 		'review_assignment': review_assignment,
 		'form_info': submission.review_form,
+		'data_ordered': data_ordered,
+		'result': result,
 	}
 
 	return render(request,template, context)

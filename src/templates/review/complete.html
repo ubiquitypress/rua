@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% load static from staticfiles %}
 {% load bootstrap3 %}
+{% load dict_lookup %}
 
 {% block body %}
 <div class="row">
@@ -75,12 +76,27 @@
         {% if review_assignment.accepted %}
       
        <h3>  <i class="fa fa-check-circle-o"></i> You completed this review on {{review_assignment.completed}}</h3>
-  
+  <h5 style="color:rgb(106,106,106)"><em> Details of your review are below </em></h5>
+</br>
+
+
+  <div style="clear:both"></div>
+      {% for item in data_ordered %}
+      <div class="{% cycle 'left-float' 'right-float' %}">
+        
+        <h4> <b>{{ item.0 }}:</b></h4>
+        <h5> {% lookup result.data item.0 %} </h5>
+      </div>
+      <div {% cycle '' 'style="clear:both"' %}></div>
+      {% endfor %}
 </br>
       <h5><b>Supporting Files:</b></h5>
 <ul class="manuscript-upload-states">
-  {% for file in submission.files.all %}
-  {% if file.kind == 'supporting' %}
+
+{% if review_assignment.review_type == 'internal' %}
+  {% for file in submission.internal_review_files.all %}
+  {{file.kind}}
+  {% if file.kind == 'reviewer' %}
   <li style="background-color:rgb(230,230,230)">
     <div class="row">
       <div class="col-md-2" style="margin-left:15px">
@@ -98,12 +114,46 @@
         <h5>{{ file.original_filename }}</h5>
       </div>
       <div class="col-md-4">
-        <a href="{% url 'serve_file' submission.id file.id %}" class="btn btn-sm btn-task read pull-right" style="margin-top: 20px;margin-right:10px;border-radius:8px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-cloud-download"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
+        <a href="{% url 'serve_file' submission.id file.id %}" class="btn btn-sm btn-task read pull-right" style="margin-top: 20px;margin-right:10px;border-radius:8px"><i class="fa fa-cloud-download">&nbsp; Download</i></a>
+      </div>
+      </div>
+    </div>
+  </li>
+  {% endif %}
+    {% empty %}
+     <li style="background-color:rgb(230,230,230)">
+      <h5>&nbsp;&nbsp;&nbsp;No files</h5>
+   </li>
+  {% endfor %} 
+
+{% else %}
+  {% for file in review_assignment.files.all %}
+
+  {% if file.kind == 'reviewer' %}
+  <li style="background-color:rgb(230,230,230)">
+    <div class="row">
+      <div class="col-md-2" style="margin-left:15px">
+        <h1> 
+        {% if file.mime_type == 'image/jpeg' or file.mime_type == 'image/png' %}
+          <i class="fa fa-file-image-o"></i>
+        {% else %}
+          <i class="fa fa-file-text-o"></i>
+        {% endif %}
+        </h1>
+      </div>
+      <div class="col-md-4">
+        <h5><b>{{ file.label }}</b></h5>
+        <h5><b>{{ file.kind|capfirst }}</b></h5>
+        <h5>{{ file.original_filename }}</h5>
+      </div>
+      <div class="col-md-4">
+        <a href="{% url 'serve_file' submission.id file.id %}" class="btn btn-sm btn-task read pull-right" style="margin-top: 20px;margin-right:10px;border-radius:8px"><i class="fa fa-cloud-download">&nbsp; Download</i></a>
       </div>
     </div>
   </li>
   {% endif %}
   {% endfor %}
+{% endif %}
 </ul>
         <hr />
         <h5> Your Recommendation:</h5>
@@ -116,7 +166,7 @@
         {% ifequal review_assignment.recommendation 'revisions' %}
         <p style="font-size:22px;color:#E9C730;margin-left:-10px;"> <b> Revisions Required</b></p>
         {% endifequal %}
-  
+  <hr />
         <h5>Competing interests: {{review_assignment.competing_interests}}</h5>
       <br/><br/>
 
