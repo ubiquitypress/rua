@@ -1,0 +1,20 @@
+<h3>ROUND {{ review_round.round_number }} INTERNAL REVIEW</h3>
+<div class="inline-headers"><h4>Internal Review Files</h4><a href="{% url 'add_review_files' submission.id 'internal' %}" class="btn btn-sm btn-success" style="float: right;"{% if review_round.round_number != submission.get_latest_review_round %}disabled{% endif %}><i class="fa fa-plus">&nbsp;</i>Add Files</a></div>
+
+{% include "shared/review_files.html" with file_data=submission.internal_review_files.all file_type='internal' %}
+
+<div class="inline-headers"><h4>Internal Reviews</h4><a href="{% url 'add_reviewers' submission.id 'internal' review_round.round_number %}" class="btn btn-sm btn-success" style="float: right;"{% if review_round.round_number != submission.get_latest_review_round %}disabled{% endif %}><i class="fa fa-plus">&nbsp;</i>Add Reviewers</a></div>
+
+{% include "workflow/review/reviewer_block.html" with review_data=internal_review_assignments %}
+
+<hr />
+
+<h3>ROUND {{ review_round.round_number }} EXTERNAL REVIEW</h3>
+
+<div class="inline-headers"><h4>External Review Files</h4><a href="{% url 'add_review_files' submission.id 'external' %}" class="btn btn-sm btn-success" style="float: right;"{% if review_round.round_number != submission.get_latest_review_round %}disabled{% endif %}><i class="fa fa-plus">&nbsp;</i>Add Files</a></div>
+
+{% include "shared/review_files.html" with file_data=submission.external_review_files.all file_type='external' %}
+
+<div class="inline-headers"><h4>External Reviews</h4><a href="{% url 'add_reviewers' submission.id 'external' review_round.round_number %}" class="btn btn-sm btn-success" style="float: right;"{% if review_round.round_number != submission.get_latest_review_round %}disabled{% endif %}><i class="fa fa-plus">&nbsp;</i>Add Reviewers</a></div>
+
+{% include "workflow/review/reviewer_block.html" with review_data=external_review_assignments %}
