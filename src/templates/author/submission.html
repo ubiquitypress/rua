@@ -72,23 +72,15 @@
         </div>
         </a>
         {% if submission.stage.review %}
+        <a href="{% url 'review' submission.pk %}">
         <div class="dash-menu">
             <h5>Review <i class="fa fa-chevron-right pull-right"></i></h5>
         </div>
+        </a>
         {% endif %}
         {% if submission.stage.editing %}
         <div class="dash-menu">
             <h5>Editing <i class="fa fa-chevron-right pull-right"></i></h5>
-        </div>
-        {% endif %}
-        {% if submission.stage.copyediting %}
-        <div class="dash-menu">
-            <h5>Copyediting <i class="fa fa-chevron-right pull-right"></i></h5>
-        </div>
-        {% endif %}
-        {% if submission.stage.indexing %}
-        <div class="dash-menu">
-            <h5>Indexing <i class="fa fa-chevron-right pull-right"></i></h5>
         </div>
         {% endif %}
         {% if submission.stage.production %}

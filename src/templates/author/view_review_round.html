@@ -1,0 +1,88 @@
+<h3>ROUND {{ review_round.round_number }} INTERNAL REVIEW</h3>
+<div class="inline-headers"><h4>Internal Review Files</h4></div>
+
+{% include "shared/review_files.html" with file_data=submission.internal_review_files.all file_type='internal' %}
+
+<div class="inline-headers"><h4>Internal Reviews</h4></div>
+
+<ul class="manuscript-upload-states">
+  {% for review in internal_review_assignments %}
+  <li>
+    <div class="row">
+      <div class="col-md-7">
+        <p>
+        <strong>{% if book.review_type == 'open-with' %}{{ review.user.profile.full_name }}{% else %}This review is anonymous.{% endif %}</strong>
+        </p>
+        <span class="{% if review.recommendation %}recommendation{% else %}no-recommendation{% endif %}">
+        {% if review.recommendation %}Recommend to {{ review.get_recommendation_display }}{% else %}Awaiting recommendation{% endif %}
+        </span>
+        <p>
+        	{% if review.completed %}
+        	<strong>Completed on: </strong>{{ review.completed }}
+        	{% elif review.accepted %}
+        	<strong>Accepted on: </strong>{{ review.accepted }}
+        	{% else %}
+        	<strong>Assigned on: </strong>{{ review.assigned }}
+        	{% endif %}
+        </p>
+      </div>
+      <div class="col-md-4">
+        {% if not review.completed %}<h5>Due: {{ review.due }}</h5>{% else %}<a href="{% url 'view_review_assignment' submission.id review_round.round_number review.id %}" style="margin-top: 20px;margin-right:10px;" class="btn btn-xs btn-success">View Review</a>{% endif %}
+      </div>
+    </div>
+  </li>
+  {% empty %}
+  <li>
+  <p>
+	<strong>No internal review assignments.</strong>
+  </p>
+  </li>
+  {% endfor %}
+</ul>
+
+<hr />
+
+<h3>ROUND {{ review_round.round_number }} EXTERNAL REVIEW</h3>
+
+<div class="inline-headers"><h4>External Review Files</h4></div>
+
+{% include "shared/review_files.html" with file_data=submission.external_review_files.all file_type='external' %}
+
+<div class="inline-headers"><h4>External Reviews</h4></div>
+
+<ul class="manuscript-upload-states">
+  {% for review in external_review_assignments %}
+  <li>
+    <div class="row">
+      <div class="col-md-7">
+        <p>
+        <strong>{% if book.review_type == 'open-with' %}{{ review.user.profile.full_name }}{% else %}This review is anonymous.{% endif %}</strong>
+        </p>
+        <span class="{% if review.recommendation %}recommendation{% else %}no-recommendation{% endif %}">
+        {% if review.recommendation %}Recommend to {{ review.get_recommendation_display }}{% else %}Awaiting recommendation{% endif %}
+        </span>
+        <p>
+        	{% if review.completed %}
+        	<strong>Completed on: </strong>{{ review.completed }}
+        	{% elif review.accepted %}
+        	<strong>Accepted on: </strong>{{ review.accepted }}
+        	{% else %}
+        	<strong>Assigned on: </strong>{{ review.assigned }}
+        	{% endif %}
+        </p>
+      </div>
+      <div class="col-md-4">
+        {% if not review.completed %}<h5>Due: {{ review.due }}</h5>{% else %}<a href="{% url 'view_review_assignment' submission.id review_round.round_number review.id %}" style="margin-top: 20px;margin-right:10px;" class="btn btn-xs btn-success">View Review</a>{% endif %}
+      </div>
+    </div>
+  </li>
+  {% empty %}
+  <li>
+  <p>
+	<strong>No external review assignments.</strong>
+  </p>
+  </li>
+  {% endfor %}
+
+</ul>
+

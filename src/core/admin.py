@@ -36,7 +36,8 @@ class RoleAdmin(admin.ModelAdmin):
 	search_fields = ('name',)
 
 class ReviewAssAdmin(admin.ModelAdmin):
-	list_display = ('review_type', 'user', 'assigned')
+	list_display = ('review_type', 'user', 'assigned','book','user')
+	search_fields = ('user','book',)
 
 class FileAdmin(admin.ModelAdmin):
 	list_display = ('original_filename', 'uuid_filename', 'kind')

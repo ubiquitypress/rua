@@ -12,6 +12,11 @@ def task_count(request):
 		return {'task_count': logic.task_count(request)}
 	except:
 		return 0
+def review_assignment_count(request):
+	try:
+		return {'review_assignment_count': logic.review_assignment_count(request)}
+	except:
+		return 0
 
 def roles(request):
 	try:

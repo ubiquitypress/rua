@@ -35,8 +35,7 @@
             <h4 style="color:rgb(106,106,106)">{{completed_count}} COMPLETED{% ifequal completed_count 1%} TASK {% else %} TASKS {% endifequal %} </h4>
             {% for task in completed_tasks %}
                 <div class="notification reviewer">
-                    <div class="row">
-    
+                   
                     <div class="band" style="margin-left:10px;margin-right:10px">
                         <p class="small"> <span style="color:rgb(101,117,132)"> {{task.book.title}}</span> </p>
                           <h5> Accepted on <b>{{ task.accepted }}</b> </br> Completed on <b>{{ task.completed }}</b></h5>
@@ -44,12 +43,18 @@
                     <div class="activity">
                         {% include "core/dashboard/activity.html" %}
                     </div>
-  <a href="" class="btn btn-task pull-right" style="margin-right:35px; margin-bottom:20px;">&nbsp;&nbsp;View Task&nbsp;&nbsp;</a></br>
+                    {% if task.access_key %}
+  <a href="/review/{{task.review_type}}/{{task.book.pk}}/access_key/{{task.access_key}}/" class="btn btn-task pull-right" style="margin-right:20px; margin-bottom:20px;">&nbsp;&nbsp;&nbsp;View Task&nbsp;&nbsp;&nbsp;</a>
+{% else %}
+ <a href="/review/{{task.review_type}}/{{task.book.pk}}/" class="btn btn-task pull-right" style="margin-right:20px; margin-bottom:20px;">&nbsp;&nbsp;&nbsp;View Task&nbsp;&nbsp;&nbsp;</a>
+
+{% endif%}
+  </br>
                     </br> 
                 </div>
                 {% endfor %}
               </div>
-        </div>
+     
     </div>
 
     <div class="col-md-6 dash-center">
@@ -73,7 +78,12 @@
                         {% include "core/dashboard/activity.html" %}
                     </div>
 
-                    <a href="" class="btn btn-task pull-right" style="margin-right:20px;">&nbsp;&nbsp;View Task&nbsp;&nbsp;</a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:grey">{{task.assigned}}</span></br>
+                           {% if task.access_key %}
+                              <a href="/review/{{task.review_type}}/{{task.book.pk}}/access_key/{{task.access_key}}" class="btn btn-task pull-right" style="margin-right:20px; margin-bottom:20px;">&nbsp;&nbsp;&nbsp;View Task&nbsp;&nbsp;&nbsp;</a>
+                            {% else %}
+                             <a href="/review/{{task.review_type}}/{{task.book.pk}}/" class="btn btn-task pull-right" style="margin-right:20px; margin-bottom:20px;">&nbsp;&nbsp;&nbsp;View Task&nbsp;&nbsp;&nbsp;</a>
+
+                            {% endif %} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:grey">{{task.assigned}}</span></br>
                     </br>
 </div>
                     {% if task.accepted %}
