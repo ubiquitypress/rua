@@ -15,6 +15,10 @@
 			{% if assignment.state.state == 'complete' %}<a href="" class="btn btn-xs btn-success">View</a>{% else %}<strong>Due on</strong><br /><em><small>{{ assignment.due }}</small></em>{% endif %}
 		</td>
 	</tr>
+	{% empty %}
+	<tr>
+		<td colspan="3">No assignments</td>
+	</tr>
 	{% endfor %}
 </table>
 
@@ -34,6 +38,10 @@
 		<td>
 			{% if assignment.state.state == 'completed' %}<a href="" class="btn btn-xs btn-success">View</a>{% else %}<strong>Due on</strong><br /><em><small>{{ assignment.due }}</small></em>{% endif %}
 		</td>
+	</tr>
+	{% empty %}
+	<tr>
+		<td colspan="3">No assignments</td>
 	</tr>
 	{% endfor %}
 </table>
