@@ -2,13 +2,6 @@
 {% load static from staticfiles %}
 {% load bootstrap3 %}
 
-{% block breadcrumbs %}
-  <ol class="breadcrumb">
-    <li>Review</li>
-    <li><a class="active" href="">{{ submission.title }}</a></li>
-	</ol>
-{% endblock %}
-
 {% block body %}
 <div class="row">
 <div class="col-md-12 book-heading" style="margin-top:-20px">
@@ -80,18 +73,18 @@
        <div class="col-md-4 dash-right-2">
        <div class="dash-container" >
         {% if review_assignment.accepted %}
-       </br>
+      
        <h3>  <i class="fa fa-check-circle-o"></i> You completed this review on {{review_assignment.completed}}</h3>
   
 </br>
-      <h4>Supporting Files</h4>
- <ul class="manuscript-upload-states">
+      <h5><b>Supporting Files:</b></h5>
+<ul class="manuscript-upload-states">
   {% for file in submission.files.all %}
   {% if file.kind == 'supporting' %}
-  <li>
+  <li style="background-color:rgb(230,230,230)">
     <div class="row">
-      <div class="col-md-2">
-        <h1>
+      <div class="col-md-2" style="margin-left:15px">
+        <h1> 
         {% if file.mime_type == 'image/jpeg' or file.mime_type == 'image/png' %}
           <i class="fa fa-file-image-o"></i>
         {% else %}
@@ -99,13 +92,13 @@
         {% endif %}
         </h1>
       </div>
-      <div class="col-md-6">
-        <h5>{{ file.label }}</h5>
-        <h5>{{ file.kind|capfirst }}</h5>
+      <div class="col-md-4">
+        <h5><b>{{ file.label }}</b></h5>
+        <h5><b>{{ file.kind|capfirst }}</b></h5>
         <h5>{{ file.original_filename }}</h5>
       </div>
       <div class="col-md-4">
-        <a href="{% url 'serve_file' submission.id file.id %}" class="btn btn-sm btn-primary read pull-right" style="margin-top: 20px;margin-right:10px;"><i class="fa fa-download"></i></a>
+        <a href="{% url 'serve_file' submission.id file.id %}" class="btn btn-sm btn-task read pull-right" style="margin-top: 20px;margin-right:10px;border-radius:8px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-cloud-download"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
       </div>
     </div>
   </li>
@@ -113,10 +106,18 @@
   {% endfor %}
 </ul>
         <hr />
-        <h4> Your recommendation</h4>
-        {{review_assignment.recommendation}}
-        <h4>Competing interests</h4>
-         {{review_assignment.competing_interests}}
+        <h5> Your Recommendation:</h5>
+        {% ifequal review_assignment.recommendation 'reject' %}
+        <p style="font-size:22px;color:#C6001E;margin-left:-10px;"> <b> {{review_assignment.recommendation|title}} Submission </b></p>
+        {% endifequal %}
+         {% ifequal review_assignment.recommendation 'accept' %}
+        <p style="font-size:22px;color:#74C91F;margin-left:-10px;"> <b> {{review_assignment.recommendation|title}} Submission </b></p>
+        {% endifequal %}
+        {% ifequal review_assignment.recommendation 'revisions' %}
+        <p style="font-size:22px;color:#E9C730;margin-left:-10px;"> <b> Revisions Required</b></p>
+        {% endifequal %}
+  
+        <h5>Competing interests: {{review_assignment.competing_interests}}</h5>
       <br/><br/>
 
       </form>

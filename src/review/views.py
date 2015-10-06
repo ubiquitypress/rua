@@ -106,13 +106,12 @@ def review(request, review_type, submission_id, access_key=None):
 			editors_mail=editors_mail+editor.email
 		 	if i<len(press_editors):
 		 		editors_mail=editors_mail+','
-		 	print editor
 		 	i=i+1
 
 	print editors_mail
 	form = forms.GeneratedForm(form=submission.review_form)
 	recommendation_form = core_forms.RecommendationForm(ci_required=ci_required.value)
-
+	print form
 	if not request.POST and request.GET.get('download') == 'docx':
 		path = create_review_form(submission)
 		return serve_file(request, path)
