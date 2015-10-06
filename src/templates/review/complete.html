@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% load static from staticfiles %}
 {% load bootstrap3 %}
+{% load dict_lookup %}
 
 {% block body %}
 <div class="row">
@@ -75,7 +76,19 @@
         {% if review_assignment.accepted %}
       
        <h3>  <i class="fa fa-check-circle-o"></i> You completed this review on {{review_assignment.completed}}</h3>
-  
+  <h5 style="color:rgb(106,106,106)"><em> Details of your review are below </em></h5>
+</br>
+
+
+  <div style="clear:both"></div>
+      {% for item in data_ordered %}
+      <div class="{% cycle 'left-float' 'right-float' %}">
+        
+        <h4> <b>{{ item.0 }}:</b></h4>
+        <h5> {% lookup result.data item.0 %} </h5>
+      </div>
+      <div {% cycle '' 'style="clear:both"' %}></div>
+      {% endfor %}
 </br>
       <h5><b>Supporting Files:</b></h5>
 <ul class="manuscript-upload-states">
@@ -107,6 +120,10 @@
     </div>
   </li>
   {% endif %}
+    {% empty %}
+     <li style="background-color:rgb(230,230,230)">
+      <h5>&nbsp;&nbsp;&nbsp;No files</h5>
+   </li>
   {% endfor %} 
 
 {% else %}
