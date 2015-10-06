@@ -96,7 +96,18 @@ def review(request, review_type, submission_id, access_key=None):
 		review_assignment = get_object_or_404(core_models.ReviewAssignment, user=request.user, book=submission, declined__isnull=True, review_type=review_type, access_key="")
 		if review_assignment.completed:
 			pass
+	editors_mail=''
+	if review_assignment:
+		press_editors= review_assignment.book.press_editors.all()
+		i=0
+		for editor in press_editors:
+			editors_mail=editors_mail+editor.email
+		 	if i<len(press_editors):
+		 		editors_mail=editors_mail+','
+		 	print editor
+		 	i=i+1
 
+	print editors_mail
 	form = forms.GeneratedForm(form=submission.review_form)
 	recommendation_form = core_forms.RecommendationForm(ci_required=ci_required.value)
 
@@ -160,6 +171,8 @@ def review(request, review_type, submission_id, access_key=None):
 		'form': form,
 		'form_info': submission.review_form,
 		'recommendation_form': recommendation_form,
+		'editors':editors_mail,
+
 	}
 
 	return render(request, template, context)

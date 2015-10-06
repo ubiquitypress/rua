@@ -82,7 +82,11 @@
             <div class="dash-container" style="margin-top:-25px;color:rgb(150,150,150)">
             <h5>If you would like to contact the editor about this </br> project, please click the button below</h5>
             </br>
-             <a class="btn btn-lg btn-task" type="submit"  style="width:120px; font-size: 14px;border-radius:8px" >Contact Editor</a>
+            {% ifequal editors '' %}
+             <a class="btn btn-lg btn-task" disabled type="submit"  style="width:120px; font-size: 14px;border-radius:8px" >Contact Editor</a>
+            {% else %}
+             <a href='mailto:{{editors}}' class="btn btn-lg btn-task" type="submit"  style="width:120px; font-size: 14px;border-radius:8px" >Contact Editor</a>
+           {% endifequal %}
             </div>
    <!-- {% if review_assignment.review_type == 'internal' %}
     {% include "workflow/review/reviewer_files.html" with file_data=submission.internal_review_files.all %}
