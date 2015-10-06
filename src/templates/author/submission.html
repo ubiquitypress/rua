@@ -55,6 +55,12 @@
                 </tr>
             </table>
         </div>
+        <a href="{% url 'tasks' submission.pk %}">
+        <div class="dash-menu">
+            <h5>My Tasks <i class="fa fa-chevron-right pull-right"></i></h5>
+        </div>
+        </a>
+
         <a href="{% url 'status' submission.pk %}">
         <div class="dash-menu">
             <h5>Current Status <i class="fa fa-chevron-right pull-right"></i></h5>
@@ -65,25 +71,45 @@
             <h5>Submission Details <i class="fa fa-chevron-right pull-right"></i></h5>
         </div>
         </a>
+        {% if submission.stage.review %}
         <div class="dash-menu">
-            <h5>Reviews <i class="fa fa-chevron-right pull-right"></i></h5>
+            <h5>Review <i class="fa fa-chevron-right pull-right"></i></h5>
         </div>
+        {% endif %}
+        {% if submission.stage.editing %}
         <div class="dash-menu">
             <h5>Editing <i class="fa fa-chevron-right pull-right"></i></h5>
         </div>
+        {% endif %}
+        {% if submission.stage.copyediting %}
         <div class="dash-menu">
             <h5>Copyediting <i class="fa fa-chevron-right pull-right"></i></h5>
         </div>
+        {% endif %}
+        {% if submission.stage.indexing %}
+        <div class="dash-menu">
+            <h5>Indexing <i class="fa fa-chevron-right pull-right"></i></h5>
+        </div>
+        {% endif %}
+        {% if submission.stage.production %}
+        <div class="dash-menu">
+            <h5>Production <i class="fa fa-chevron-right pull-right"></i></h5>
+        </div>
+        {% endif %}
     </div>
 
     <div class="col-md-5 dash-center">
         <div class="dash-container">
+        {% if author_include %}
             {% include author_include %}
+        {% endif %}
         </div>
     </div>
     <div class="col-md-4 dash-right">
         <div class="dash-container">
+        {% if submission_files %}
             {% include submission_files %}
+        {% endif %}
         </div>
     </div>
 </div>
@@ -93,4 +119,5 @@
 
 {% block js %}
 <script type="text/javascript" src="{% static "js/messages.js" %}"></script>
+<script type="text/javascript" src="{% static "js/fancyfile.js" %}"></script>
 {% endblock js %}

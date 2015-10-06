@@ -136,6 +136,10 @@ html, body {
   padding-left: 0px;
 }
 
+.upload-modal {
+  top: 15%;
+}
+
 .image-upload-states li, .manuscript-upload-states li, .files-list li, .image-files-list li {
     list-style: none;
     white-space: nowrap;
