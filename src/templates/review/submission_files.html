@@ -26,9 +26,14 @@
 		</div>
 	</li>
 	{% endif %}
+	  {% empty %}
+     <li style="background-color:rgb(230,230,230)">
+      <h5>&nbsp;&nbsp;&nbsp;No files</h5>
+   </li>
 	{% endfor %}
 </ul>
 
+{% if additional_files %}
 <h5><b>Additional Files:</b></h5>
 <ul class="manuscript-upload-states">
 	{% for file in submission.files.all %}
@@ -55,9 +60,13 @@
 		</div>
 	</li>
 	{% endif %}
+	  {% empty %}
+     <li style="background-color:rgb(230,230,230)">
+      <h5>&nbsp;&nbsp;&nbsp;No files</h5>
+   </li>
 	{% endfor %}
 </ul>
-
+{% endif %}
 {% if submission.misc_files.all %}
 <h5><b>Misc Files:</b></h5>
 <ul class="manuscript-upload-states">
@@ -83,7 +92,12 @@
 			</div>
 		</div>
 	</li>
+	  {% empty %}
+     <li style="background-color:rgb(230,230,230)">
+      <h5>&nbsp;&nbsp;&nbsp;No files</h5>
+   </li>
 	{% endfor %}
+
 </ul>
 {% endif %}
 

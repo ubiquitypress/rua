@@ -108,8 +108,11 @@ def review(request, review_type, submission_id, access_key=None):
 		 	if i<len(press_editors):
 		 		editors_mail=editors_mail+','
 		 	i=i+1
-
-	print editors_mail
+	additional_files=False
+	files =  submission.files.all()
+	for submission_file in files:
+		if submission_file.kind == 'additional' :
+			additional_files = True
 	form = forms.GeneratedForm(form=submission.review_form)
 	recommendation_form = core_forms.RecommendationForm(ci_required=ci_required.value)
 	print form
@@ -200,6 +203,7 @@ def review(request, review_type, submission_id, access_key=None):
 		'form_info': submission.review_form,
 		'recommendation_form': recommendation_form,
 		'editors':editors_mail,
+		'additional_files':additional_files,
 
 	}
 
@@ -221,7 +225,11 @@ def review_complete(request, review_type, submission_id,access_key=None):
 	result = review_assignment.results
 	relations = models.FormElementsRelationship.objects.filter(form=result.form)
 	data_ordered = logic.order_data(logic.decode_json(result.data), relations)
-	
+	additional_files=False
+	files =  submission.files.all()
+	for submission_file in files:
+		if submission_file.kind == 'additional' :
+			additional_files = True
 
 	template = 'review/complete.html'
 	context = {
@@ -230,6 +238,7 @@ def review_complete(request, review_type, submission_id,access_key=None):
 		'form_info': submission.review_form,
 		'data_ordered': data_ordered,
 		'result': result,
+		'additional_files':additional_files,
 	}
 
 	return render(request,template, context)
