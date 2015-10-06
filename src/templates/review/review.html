@@ -44,28 +44,52 @@
 
         <h4>INSTRUNCTIONS FOR TASK</h4>
         </br>
-        </br>
+        <p style="margin-left:-10px;margin-top:-30px">{{ review_assignment.body }}</p>
+     
          <h5> Task Due <span style="color:rgb(101,117,132)">{{ review_assignment.due }}</span></h5>
 
         {% include "review/submission_files.html" %}
    
         </div>
+        {% if review_assignment.accepted %}
               <div class="col-md-12" style="background-color:rgb(159,197,88);color:white;">                 
   
                      <h6>You accepted on {{review_assignment.accepted}}</h6>
 
                     </div>
-        </br>
+          {% else %}
+              <div class="col-md-12" style="background-color:rgb(156,156,156);color:white;font-size:10px ">                 
+  
+                     <h5>You can accept or reject this task</h5>
+
+                    </div>
+</br>
+</br>
+          <div class="dash-container" >
+          <form method="post">
+          {% csrf_token %}
+             <input class="btn btn-lg btn-decline" type="submit" value="I Decline" style="width:120px; font-size: 14px;" id="task_offer">
+             <input class="btn btn-lg btn-accept" type="submit" value="I Accept" id="task_offer" style="width:120px; font-size: 14px;" >
+             </form>
+            </div> 
+          {% endif %}
+        
+            <div class="dash-container" style="margin-top:-25px;color:rgb(150,150,150)">
+            <h5>If you would like to contact the editor about this </br> project, please click the button below</h5>
             </br>
-    {% if review_assignment.review_type == 'internal' %}
+             <a class="btn btn-lg btn-task" type="submit"  style="width:120px; font-size: 14px;border-radius:8px" >Contact Editor</a>
+            </div>
+   <!-- {% if review_assignment.review_type == 'internal' %}
     {% include "workflow/review/reviewer_files.html" with file_data=submission.internal_review_files.all %}
     {% else %}
     {% include "workflow/review/reviewer_files.html" with file_data=submission.external_review_files.all %}
-    {% endif %}
+    {% endif %}-->
 </div>
 </div>
+
        <div class="col-md-4 dash-right">
        <div class="dash-container" >
+        {% if review_assignment.accepted %}
        </br>
        <h4>1. Completed the Review Form</h4>
     <p>Alternatively you may <a href="?download=docx">download</a> the review form, complete it offline, and upload it.</p>
@@ -113,7 +137,7 @@
       <br/><br/>
 
       </form>
- 
+ {% endif %}
 	</div>
   </div>
 {% endblock body %}

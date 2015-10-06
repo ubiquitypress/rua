@@ -21,7 +21,7 @@
 			  <h5>{{ file.original_filename }}</h5>
 			</div>
 			<div class="col-md-4">
-			  <a href="{% url 'serve_file' submission.id file.id %}" class="btn btn-sm btn-primary read pull-right" style="margin-top: 20px;margin-right:10px;"><i class="fa fa-download"> Download</i></a>
+			  <a href="{% url 'serve_file' submission.id file.id %}" class="btn btn-sm btn-task read pull-right" style="margin-top: 20px;margin-right:10px;border-radius:8px"><i class="fa fa-cloud-download">&nbsp; Download</i></a>
 			</div>
 		</div>
 	</li>
@@ -33,36 +33,7 @@
 <ul class="manuscript-upload-states">
 	{% for file in submission.files.all %}
 	{% if file.kind == 'additional' %}
-	<li>
-		<div class="row">
-			<div class="col-md-2">
-			  <h1>
-			  {% if file.mime_type == 'image/jpeg' or file.mime_type == 'image/png' %}
-			  	<i class="fa fa-file-image-o"></i>
-			  {% else %}
-			  	<i class="fa fa-file-text-o"></i>
-			  {% endif %}
-			  </h1>
-			</div>
-			<div class="col-md-6">
-			  <h5>{{ file.label }}</h5>
-			  <h5>{{ file.kind|capfirst }}</h5>
-			  <h5>{{ file.original_filename }}</h5>
-			</div>
-			<div class="col-md-4">
-			  <a href="{% url 'serve_file' submission.id file.id %}" class="btn btn-sm btn-primary read pull-right" style="margin-top: 20px;margin-right:10px;"><i class="fa fa-download"></i></a>
-			</div>
-		</div>
-	</li>
-	{% endif %}
-	{% endfor %}
-</ul>
-
-{% if submission.misc_files.all %}
-<h5>Misc Files:</h5>
-<ul class="manuscript-upload-states">
-	{% for file in submission.misc_files.all %}
-	<li>
+	<li style="background-color:rgb(230,230,230)">
 		<div class="row">
 			<div class="col-md-2" style="margin-left:15px">
 			  <h1>
@@ -73,13 +44,42 @@
 			  {% endif %}
 			  </h1>
 			</div>
-			<div class="col-md-6">
+			<div class="col-md-4">
 			  <h5>{{ file.label }}</h5>
 			  <h5>{{ file.kind|capfirst }}</h5>
 			  <h5>{{ file.original_filename }}</h5>
 			</div>
 			<div class="col-md-4">
-			  <a href="{% url 'serve_file' submission.id file.id %}" class="btn btn-sm btn-primary read pull-right" style="margin-top: 20px;margin-right:10px;"><i class="fa fa-download"></i></a>
+			  <a href="{% url 'serve_file' submission.id file.id %}" class="btn btn-sm btn-task read pull-right" style="margin-top: 20px;margin-right:10px;border-radius:8px"><i class="fa fa-cloud-download">&nbsp; Download</i></a>
+			</div>
+		</div>
+	</li>
+	{% endif %}
+	{% endfor %}
+</ul>
+
+{% if submission.misc_files.all %}
+<h5><b>Misc Files:</b></h5>
+<ul class="manuscript-upload-states">
+	{% for file in submission.misc_files.all %}
+	<li style="background-color:rgb(230,230,230)">
+		<div class="row">
+			<div class="col-md-2" style="margin-left:15px">
+			  <h1>
+			  {% if file.mime_type == 'image/jpeg' or file.mime_type == 'image/png' %}
+			  	<i class="fa fa-file-image-o"></i>
+			  {% else %}
+			  	<i class="fa fa-file-text-o"></i>
+			  {% endif %}
+			  </h1>
+			</div>
+			<div class="col-md-4">
+			  <h5>{{ file.label }}</h5>
+			  <h5>{{ file.kind|capfirst }}</h5>
+			  <h5>{{ file.original_filename }}</h5>
+			</div>
+			<div class="col-md-4">
+			  <a href="{% url 'serve_file' submission.id file.id %}" class="btn btn-sm btn-task read pull-right" style="margin-top: 20px;margin-right:10px;border-radius:8px"><i class="fa fa-cloud-download"> &nbsp;Download</i></a>
 			</div>
 		</div>
 	</li>
@@ -87,7 +87,7 @@
 </ul>
 {% endif %}
 
-<h5>Contract:</h5>
+<!--<h5>Contract:</h5>
 {% if submission.contract %}
 	<strong>Title: </strong>{{ submission.contract.title }}
 	<table class="table table-bordered table-condensed small">
@@ -109,5 +109,5 @@
 	</table>
 {% else %}
 <p>&nbsp;<i class="fa fa-file-o">&nbsp;</i>This book doesn't have a contract yet.</p>
-{% endif %}
+{% endif %} -->
 
