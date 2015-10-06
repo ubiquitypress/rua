@@ -87,7 +87,8 @@ def review(request, review_type, submission_id, access_key=None):
 		review_assignment = get_object_or_404(core_models.ReviewAssignment, access_key=access_key, declined__isnull=True, review_type=review_type)
 		submission = get_object_or_404(core_models.Book, pk=submission_id)
 		if review_assignment.completed:
-			pass
+			return redirect(reverse('review_complete_with_access_key', kwargs={'review_type': review_type, 'submission_id': submission.pk,'access_key':access_key}))
+	
 	elif review_type == 'proposal':
 		submission = get_object_or_404(submission_models.Proposal, pk=submission_id)
 		review_assignment = get_object_or_404(submission_models.ProposalReview, user=request.user, proposal=submission, completed__isnull=True, declined__isnull=True)
@@ -95,7 +96,8 @@ def review(request, review_type, submission_id, access_key=None):
 		submission = get_object_or_404(core_models.Book, pk=submission_id)
 		review_assignment = get_object_or_404(core_models.ReviewAssignment, user=request.user, book=submission, declined__isnull=True, review_type=review_type, access_key="")
 		if review_assignment.completed:
-			pass
+			return redirect(reverse('review_complete', kwargs={'review_type': review_type, 'submission_id': submission.pk}))
+	
 	editors_mail=''
 	if review_assignment:
 		press_editors= review_assignment.book.press_editors.all()
@@ -178,9 +180,12 @@ def review(request, review_type, submission_id, access_key=None):
 	return render(request, template, context)
 
 @is_reviewer
-def review_complete(request, review_type, submission_id):
+def review_complete(request, review_type, submission_id,access_key=None):
 
-	if review_type == 'proposal':
+	if access_key:
+		review_assignment = get_object_or_404(core_models.ReviewAssignment, access_key=access_key, declined__isnull=True, review_type=review_type)
+		submission = get_object_or_404(core_models.Book, pk=submission_id)
+	elif review_type == 'proposal':
 		submission = get_object_or_404(submission_models.Proposal, pk=submission_id)
 		review_assignment = get_object_or_404(submission_models.ProposalReview, user=request.user, proposal=submission)
 	else:
