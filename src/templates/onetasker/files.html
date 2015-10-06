@@ -1,0 +1,113 @@
+
+
+<h5><b>Manuscript Files:</b></h5>
+<ul class="manuscript-upload-states">
+	{% for file in assignment.files.all %}
+	{% if file.kind == 'manuscript' %}
+	<li style="background-color:rgb(230,230,230)">
+		<div class="row">
+			<div class="col-md-2" style="margin-left:15px">
+			  <h1> 
+			  {% if file.mime_type == 'image/jpeg' or file.mime_type == 'image/png' %}
+			  	<i class="fa fa-file-image-o"></i>
+			  {% else %}
+			  	<i class="fa fa-file-text-o"></i>
+			  {% endif %}
+			  </h1>
+			</div>
+			<div class="col-md-4">
+			  <h5><b>{{ file.label }}</b></h5>
+			  <h5><b>{{ file.kind|capfirst }}</b></h5>
+			  <h5>{{ file.original_filename }}</h5>
+			</div>
+			<div class="col-md-4">
+			  <a href="{% url 'serve_file' submission.id file.id %}" class="btn btn-sm btn-task read pull-right" style="margin-top: 20px;margin-right:10px;border-radius:8px"><i class="fa fa-cloud-download">&nbsp; Download</i></a>
+			</div>
+		</div>
+	</li>
+	{% endif %}
+	{% endfor %}
+</ul>
+
+<h5><b>Additional Files:</b></h5>
+<ul class="manuscript-upload-states">
+	{% for file in submission.files.all %}
+	{% if file.kind == 'additional' %}
+	<li style="background-color:rgb(230,230,230)">
+		<div class="row">
+			<div class="col-md-2" style="margin-left:15px">
+			  <h1>
+			  {% if file.mime_type == 'image/jpeg' or file.mime_type == 'image/png' %}
+			  	<i class="fa fa-file-image-o"></i>
+			  {% else %}
+			  	<i class="fa fa-file-text-o"></i>
+			  {% endif %}
+			  </h1>
+			</div>
+			<div class="col-md-4">
+			  <h5>{{ file.label }}</h5>
+			  <h5>{{ file.kind|capfirst }}</h5>
+			  <h5>{{ file.original_filename }}</h5>
+			</div>
+			<div class="col-md-4">
+			  <a href="{% url 'serve_file' submission.id file.id %}" class="btn btn-sm btn-task read pull-right" style="margin-top: 20px;margin-right:10px;border-radius:8px"><i class="fa fa-cloud-download">&nbsp; Download</i></a>
+			</div>
+		</div>
+	</li>
+	{% endif %}
+	{% endfor %}
+</ul>
+
+{% if submission.misc_files.all %}
+<h5><b>Misc Files:</b></h5>
+<ul class="manuscript-upload-states">
+	{% for file in submission.misc_files.all %}
+	<li style="background-color:rgb(230,230,230)">
+		<div class="row">
+			<div class="col-md-2" style="margin-left:15px">
+			  <h1>
+			  {% if file.mime_type == 'image/jpeg' or file.mime_type == 'image/png' %}
+			  	<i class="fa fa-file-image-o"></i>
+			  {% else %}
+			  	<i class="fa fa-file-text-o"></i>
+			  {% endif %}
+			  </h1>
+			</div>
+			<div class="col-md-4">
+			  <h5>{{ file.label }}</h5>
+			  <h5>{{ file.kind|capfirst }}</h5>
+			  <h5>{{ file.original_filename }}</h5>
+			</div>
+			<div class="col-md-4">
+			  <a href="{% url 'serve_file' submission.id file.id %}" class="btn btn-sm btn-task read pull-right" style="margin-top: 20px;margin-right:10px;border-radius:8px"><i class="fa fa-cloud-download"> &nbsp;Download</i></a>
+			</div>
+		</div>
+	</li>
+	{% endfor %}
+</ul>
+{% endif %}
+
+<!--<h5>Contract:</h5>
+{% if submission.contract %}
+	<strong>Title: </strong>{{ submission.contract.title }}
+	<table class="table table-bordered table-condensed small">
+	<tr>
+		<td></td>
+		<th>Signoff</th>
+		<th>File</th>
+	</tr>
+  	<tr>
+  		<th>Editor</th>
+  		<td>{{ submission.contract.editor_signed_off }}</td>
+  		<td><a href="{% url 'serve_file' submission.id submission.contract.editor_file.id %}" class="btn btn-xs btn-primary"><i class="fa fa-download">&nbsp;</i>Download</a></td>
+	</tr>
+	<tr>
+		<th>Author</th>
+  		<td>{% if not submission.contract.author_signed_off %}<a href="{% url 'author_contract_signoff' submission.id submission.contract.id %}" class="btn btn-xs btn-primary"><i class="fa fa-check">&nbsp;</i>Sign Off</a>{% else %}{{ submission.contract.author_signed_off }}{% endif %}</td>
+  		<td>{% if submission.contract.author_file %}<a href="{% url 'serve_file' submission.id submission.contract.author_file.id %}" class="btn btn-xs btn-primary"><i class="fa fa-download">&nbsp;</i>Download</a>{% else %}No File{% endif %}</td>
+	</tr>
+	</table>
+{% else %}
+<p>&nbsp;<i class="fa fa-file-o">&nbsp;</i>This book doesn't have a contract yet.</p>
+{% endif %} -->
+

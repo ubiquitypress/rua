@@ -51,52 +51,25 @@
                 </tr>
             </table>
         </div>
-        <a href="{% url 'tasks' submission.pk %}">
-        <div class="dash-menu">
-            <h5>My Tasks <i class="fa fa-chevron-right pull-right"></i></h5>
+        <div class="band {{ submission.stage.current_stage }}">
+                        {{ submission.stage.get_current_stage_display }}
         </div>
-        </a>
-
-        <a href="{% url 'status' submission.pk %}">
         <div class="dash-menu">
-            <h5>Current Status <i class="fa fa-chevron-right pull-right"></i></h5>
+            <h5>My Task <i class="fa fa-chevron-right pull-right"></i></h5>
         </div>
-        </a>
-        <a href="{% url 'author_submission' submission.pk %}">
-        <div class="dash-menu">
-            <h5>Submission Details <i class="fa fa-chevron-right pull-right"></i></h5>
-        </div>
-        </a>
-        {% if submission.stage.review %}
-        <a href="{% url 'review' submission.pk %}">
-        <div class="dash-menu">
-            <h5>Review <i class="fa fa-chevron-right pull-right"></i></h5>
-        </div>
-        </a>
-        {% endif %}
-        {% if submission.stage.editing %}
-        <div class="dash-menu">
-            <h5>Editing <i class="fa fa-chevron-right pull-right"></i></h5>
-        </div>
-        {% endif %}
-        {% if submission.stage.production %}
-        <div class="dash-menu">
-            <h5>Production <i class="fa fa-chevron-right pull-right"></i></h5>
-        </div>
-        {% endif %}
     </div>
 
     <div class="col-md-5 dash-center">
         <div class="dash-container">
-        {% if author_include %}
-            {% include author_include %}
+        {% if center_block %}
+            {% include center_block %}
         {% endif %}
         </div>
     </div>
     <div class="col-md-4 dash-right">
         <div class="dash-container">
-        {% if submission_files %}
-            {% include submission_files %}
+        {% if right_block %}
+            {% include right_block %}
         {% endif %}
         </div>
     </div>

@@ -1,0 +1,139 @@
+ <div class="dash-container">
+
+        <h4>INSTRUNCTIONS FOR TASK</h4>
+        </br>
+        <p style="margin-left:-10px;margin-top:-30px">{{ review_assignment.body }}</p>
+     
+         <h5> Task Due <span style="color:rgb(101,117,132)">{{ review_assignment.due }}</span></h5>
+
+          <h5><b>Manuscript Files:</b></h5>
+            <ul class="manuscript-upload-states">
+              {% for file in assignment.files.all %}
+              {% if file.kind == 'manuscript' %}
+              <li style="background-color:rgb(230,230,230)">
+                <div class="row">
+                  <div class="col-md-2" style="margin-left:15px">
+                    <h1> 
+                    {% if file.mime_type == 'image/jpeg' or file.mime_type == 'image/png' %}
+                      <i class="fa fa-file-image-o"></i>
+                    {% else %}
+                      <i class="fa fa-file-text-o"></i>
+                    {% endif %}
+                    </h1>
+                  </div>
+                  <div class="col-md-4">
+                    <h5><b>{{ file.label }}</b></h5>
+                    <h5><b>{{ file.kind|capfirst }}</b></h5>
+                    <h5>{{ file.original_filename }}</h5>
+                  </div>
+                  <div class="col-md-4">
+                    <a href="{% url 'serve_file' submission.id file.id %}" class="btn btn-sm btn-task read pull-right" style="margin-top: 20px;margin-right:10px;border-radius:8px"><i class="fa fa-cloud-download">&nbsp; Download</i></a>
+                  </div>
+                </div>
+              </li>
+              {% endif %}
+              {% endfor %}
+            </ul>
+
+            <h5><b>Additional Files:</b></h5>
+            <ul class="manuscript-upload-states">
+              {% for file in submission.files.all %}
+              {% if file.kind == 'additional' %}
+              <li style="background-color:rgb(230,230,230)">
+                <div class="row">
+                  <div class="col-md-2" style="margin-left:15px">
+                    <h1>
+                    {% if file.mime_type == 'image/jpeg' or file.mime_type == 'image/png' %}
+                      <i class="fa fa-file-image-o"></i>
+                    {% else %}
+                      <i class="fa fa-file-text-o"></i>
+                    {% endif %}
+                    </h1>
+                  </div>
+                  <div class="col-md-4">
+                    <h5>{{ file.label }}</h5>
+                    <h5>{{ file.kind|capfirst }}</h5>
+                    <h5>{{ file.original_filename }}</h5>
+                  </div>
+                  <div class="col-md-4">
+                    <a href="{% url 'serve_file' submission.id file.id %}" class="btn btn-sm btn-task read pull-right" style="margin-top: 20px;margin-right:10px;border-radius:8px"><i class="fa fa-cloud-download">&nbsp; Download</i></a>
+                  </div>
+                </div>
+              </li>
+              {% endif %}
+              {% endfor %}
+            </ul>
+
+            {% if submission.misc_files.all %}
+            <h5><b>Misc Files:</b></h5>
+            <ul class="manuscript-upload-states">
+              {% for file in submission.misc_files.all %}
+              <li style="background-color:rgb(230,230,230)">
+                <div class="row">
+                  <div class="col-md-2" style="margin-left:15px">
+                    <h1>
+                    {% if file.mime_type == 'image/jpeg' or file.mime_type == 'image/png' %}
+                      <i class="fa fa-file-image-o"></i>
+                    {% else %}
+                      <i class="fa fa-file-text-o"></i>
+                    {% endif %}
+                    </h1>
+                  </div>
+                  <div class="col-md-4">
+                    <h5>{{ file.label }}</h5>
+                    <h5>{{ file.kind|capfirst }}</h5>
+                    <h5>{{ file.original_filename }}</h5>
+                  </div>
+                  <div class="col-md-4">
+                    <a href="{% url 'serve_file' submission.id file.id %}" class="btn btn-sm btn-task read pull-right" style="margin-top: 20px;margin-right:10px;border-radius:8px"><i class="fa fa-cloud-download"> &nbsp;Download</i></a>
+                  </div>
+                </div>
+              </li>
+              {% endfor %}
+            </ul>
+            {% endif %}
+        </div>
+        {% if review_assignment.accepted %}
+              <div class="col-md-12" style="background-color:rgb(159,197,88);color:white;">                 
+  
+                     <h6>You accepted on {{review_assignment.accepted}}</h6>
+
+                    </div>
+                     </br>
+                      </br>
+                       </br>
+         {% elif review_assignment.denied %}
+         <div class="col-md-12" style="background-color:rgb(159,197,88);color:white;">                 
+  
+                     <h6>You denied on {{review_assignment.accepted}}</h6>
+
+                    </div>
+                     </br>
+                      </br>
+                       </br>
+         {% else %}
+              <div class="col-md-12" style="background-color:rgb(156,156,156);color:white;font-size:10px ">                 
+  
+                     <h5>You can accept or reject this task</h5>
+
+                    </div>
+</br>
+</br>
+          <div class="dash-container" >
+          <form method="post">
+          {% csrf_token %}
+             <button class="btn btn-decline" name="task_offer" value="decline" id="task_offer">Decline</button>
+             <button class="btn btn-accept" name="task_offer" value="accept" id="task_offer">Accept</button>
+             </form>
+            </div> 
+          {% endif %}
+        
+            <div class="dash-container" style="margin-top:-25px;color:rgb(150,150,150)">
+            <h5>If you would like to contact the editor about this </br> project, please click the button below</h5>
+            </br>
+            {% ifequal editors '' %}
+             <a class="btn btn-lg btn-task" disabled type="submit"  style="width:120px; font-size: 14px;border-radius:8px" >Contact Editor</a>
+            {% else %}
+             <a href='mailto:{{editors}}' class="btn btn-lg btn-task" type="submit"  style="width:120px; font-size: 14px;border-radius:8px" >Contact Editor</a>
+           {% endifequal %}
+            </div>

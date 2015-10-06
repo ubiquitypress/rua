@@ -35,7 +35,7 @@
             <h4>COMPLETED TASKS <span class="badge circle">{{ completed_count }}</span></h4>
             {% for task in completed_tasks %}
             <div class="notification">
-                <h5><b>{{task.text}}</b></h5>
+                <h5><b>{{task.assignment.book.title}}</b></h5>
                 <span class="pull-right" style="padding-right: 10px;">
                 <br />
                     <a href="" class="btn btn-sm btn-primary view">View Project</a>
@@ -56,16 +56,18 @@
 
             {% for task in active_tasks %}
             <div class="notification">
-                <h5><b>{{task.text}}</b></h5>
-                <p><b>Task due: <span class="author-due">{{ task.due }} ({{task.due|timeuntil}} left)</span></b></p>
+                <h5><b>{{task.type}} - {{task.assignment.book.title}}</b></h5>
+                <p><b>Task due: <span class="author-due">{{ task.due }} ({{task.assignment.due|timeuntil}} left)</span></b></p>
+
                 <span class="pull-right" style="padding-right: 10px;">
                 <br />
                     <a href="" class="btn btn-sm btn-primary view">View Project</a>
-                    <a href="" class="btn btn-sm btn-primary read">View Task</a>
+                    <a href="/tasks/{{task.type}}/{{task.assignment.pk}}" class="btn btn-sm btn-primary read">View Task</a>
                 </span>
+                <br>
                 <p class="assigned"><i>{{task.assigned}}</i></p>
-                <div class="status  {% if task.accepted%}accepted {% else %}new {%endif%}">
-                    {% if task.accepted %} This task has been accepted on {{ task.accepted }}
+                <div class="status  {% if task.assignment.accepted %}accepted {% else %}new {%endif%}">
+                    {% if task.assignment.accepted %} This task has been accepted on {{ task.assignment.accepted }}
                     {% else %} You can either accept or reject this task{% endif %}
                 </div>
             </div>
