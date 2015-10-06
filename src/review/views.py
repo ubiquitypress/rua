@@ -79,11 +79,7 @@ def reviewer_decision(request, review_type, submission_id, review_assignment, de
 
 @is_reviewer
 def review(request, review_type, submission_id, access_key=None):
-	print 'review'
 
-	print access_key
-	print review_type
-	print submission_id
 	ci_required = core_models.Setting.objects.get(group__name='general', name='ci_required')
 
 	# Check that this review is being access by the user, is not completed and has not been declined.
@@ -107,8 +103,18 @@ def review(request, review_type, submission_id, access_key=None):
 	if not request.POST and request.GET.get('download') == 'docx':
 		path = create_review_form(submission)
 		return serve_file(request, path)
+	if request.POST and 'task_offer' in request.POST:
+		response = request.POST['task_offer']
+		if response == 'I Accept':
+			review_assignment.accepted=timezone.now()
+			review_assignment.save(update_fields=['accepted'])
+		elif response == 'I Decline':
+			review_assignment.declined=timezone.now()
+			review_assignment.save(update_fields=['declined'])
+			return redirect(reverse('reviewer_dashboard'))
 
-	if request.POST:
+
+	elif request.POST:
 		form = forms.GeneratedForm(request.POST, request.FILES, form=submission.review_form)
 		recommendation_form = core_forms.RecommendationForm(request.POST, ci_required=ci_required.value)
 		if form.is_valid() and recommendation_form.is_valid():
