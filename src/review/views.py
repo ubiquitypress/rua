@@ -115,7 +115,7 @@ def review(request, review_type, submission_id, access_key=None):
 			additional_files = True
 	form = forms.GeneratedForm(form=submission.review_form)
 	recommendation_form = core_forms.RecommendationForm(ci_required=ci_required.value)
-	print form
+	
 	if not request.POST and request.GET.get('download') == 'docx':
 		path = create_review_form(submission)
 		return serve_file(request, path)
@@ -125,10 +125,12 @@ def review(request, review_type, submission_id, access_key=None):
 		if response == 'I Accept':
 			review_assignment.accepted=timezone.now()
 			review_assignment.save(update_fields=['accepted'])
-			message = "Review Assignment request for '"+submission.title+"' has been accepted by "+request.user.first_name+' '+request.user.last_name		
+			
+			message = "Review Assignment request for '%s' has been accepted by %s %s."  % (submission.title,review_assignment.user.first_name, review_assignment.user.last_name)
+			
 			log.add_log_entry(book=submission, user=request.user, kind='review', message=message, short_name='Assignment accepted')
 			for editor in press_editors:
-				print editor
+				
 				notification = core_models.Task(book=submission,assignee=editor,creator=request.user,text=message,workflow='review')
 				notification.save()
 
@@ -136,11 +138,10 @@ def review(request, review_type, submission_id, access_key=None):
 			review_assignment.declined=timezone.now()
 			review_assignment.save(update_fields=['declined'])
 
+			message = "Review Assignment request for '%s' has been declined by %s %s."  % (submission.title,review_assignment.user.first_name, review_assignment.user.last_name)
 			
-			message = "Review Assignment request for '"+submission.title+"' has been declined by "+request.user.first_name+' '+request.user.last_name
-			print message
 			for editor in press_editors:
-				print editor
+				
 				notification = core_models.Task(book=submission,assignee=editor,creator=request.user,text=message,workflow='review')
 				notification.save()
 			log.add_log_entry(book=submission, user=request.user, kind='review', message=message, short_name='Assignment declined')
@@ -186,7 +187,9 @@ def review(request, review_type, submission_id, access_key=None):
 			if not review_type == 'proposal':
 				press_editors = review_assignment.book.press_editors.all()
 				log.add_log_entry(book=submission, user=request.user, kind='review', message='Reviewer %s %s completed review for %s.' % (review_assignment.user.first_name, review_assignment.user.last_name, submission.title), short_name='Assignment Completed')
-				message = "Reviewer "+review_assignment.user.first_name+" "+review_assignment.user.last_name+" completed review for "+submission.title+"."
+				
+				message = "Reviewer %s %s has completed a review for '%s'."  % (submission.title,review_assignment.user.first_name, review_assignment.user.last_name)
+				
 				for editor in press_editors:
 					notification = core_models.Task(book=submission,assignee=editor,creator=request.user,text=message,workflow='review')
 					notification.save()
@@ -286,7 +289,7 @@ def serve_file(request, file_path):
 		mimetype = mimetypes.guess_type(file_path)
 		response = StreamingHttpResponse(fsock, content_type=mimetype)
 		response['Content-Disposition'] = "attachment; filename=review_form.docx"
-		pprint(response)
+		
 		return response
 	except IOError:
 		messages.add_message(request, messages.ERROR, 'File not found.')
@@ -309,7 +312,7 @@ def handle_review_file(file, book, review_assignment, kind):
 
 	file_mime = mime.guess_type(filename)
 
-	print(file_mime)
+	
 
 	try:
 		file_mime = file_mime[0]
