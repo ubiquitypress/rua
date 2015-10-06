@@ -13,7 +13,7 @@ def author_tasks(user):
 		task_list.append({'type': 'revisions', 'book': revision.book, 'task': 'Revisions', 'date': revision.due, 'title': revision.book.title, 'url': 'http://%s/author/submission/%s/revisions/%s/' % (base_url, revision.book.id, revision.id)})
 
 	for copyedit in copyedit_tasks:
-		task_list.append({'type': 'copyedit', 'book': copyedit.book, 'task': 'Copyedit Review', 'date': copyedit.author_invited, 'title': copyedit.book.title, 'url': 'http://%s/copyedit/book/%s/edit/%s/author/' % (base_url, copyedit.book.id, copyedit.id)})
+		task_list.append({'type': 'copyedit', 'book': copyedit.book, 'task': 'Copyedit Review', 'date': copyedit.author_invited, 'title': copyedit.book.title, 'url': 'http://%s/author/submission/%s/copyedit/%s/' % (base_url, copyedit.book.id, copyedit.id)})
 
 	for typeset in typeset_tasks:
 		task_list.append({'type': 'typeset', 'book': typeset.book, 'task': 'Typsetting Review', 'date': typeset.author_invited, 'title': typeset.book.title, 'url': 'http://%s/typeset/book/%s/typeset/%s/author/' % (base_url, typeset.book.id, typeset.id)})
@@ -32,7 +32,7 @@ def submission_tasks(book, user):
 		task_list.append({'type': 'revisions', 'book': revision.book, 'task': 'Revisions Requested', 'date': revision.due, 'title': revision.book.title, 'url': 'http://%s/author/submission/%s/revisions/%s/' % (base_url, book.id, revision.id)})
 
 	for copyedit in copyedit_tasks:
-		task_list.append({'type': 'copyedit', 'book': copyedit.book, 'task': 'Copyedit Review', 'date': copyedit.author_invited, 'title': copyedit.book.title, 'url': 'http://%s/copyedit/book/%s/edit/%s/author/' % (base_url, copyedit.book.id, copyedit.id)})
+		task_list.append({'type': 'copyedit', 'book': copyedit.book, 'task': 'Copyedit Review', 'date': copyedit.author_invited, 'title': copyedit.book.title, 'url': 'http://%s/author/submission/%s/copyedit/%s/' % (base_url, copyedit.book.id, copyedit.id)})
 
 	for typeset in typeset_tasks:
 		task_list.append({'type': 'typeset', 'book': typeset.book, 'task': 'Typsetting Review', 'date': typeset.author_invited, 'title': typeset.book.title, 'url': 'http://%s/typeset/book/%s/typeset/%s/author/' % (base_url, typeset.book.id, typeset.id)})

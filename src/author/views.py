@@ -4,7 +4,7 @@ from django.utils import timezone
 from django.core.urlresolvers import reverse
 from django.contrib import messages
 
-from core import models
+from core import models, log, task
 from author import forms
 from author import logic
 from workflow.logic import order_data, decode_json
@@ -12,6 +12,8 @@ from submission import models as submission_models
 from revisions import models as revision_models, forms as revision_forms
 from review import models as review_models
 from workflow.views import handle_file_update
+from copyedit import forms as copyedit_forms
+from copyedit.views import handle_copyedit_file
 
 @login_required
 def author_dashboard(request):
@@ -97,7 +99,7 @@ def view_review_round(request, submission_id, round_id):
 
 def view_review_assignment(request, submission_id, round_id, review_id):
 
-	submission = get_object_or_404(models.Book, pk=submission_id)
+	submission = get_object_or_404(models.Book, pk=submission_id, owner=request.user)
 	review_assignment = get_object_or_404(models.ReviewAssignment, pk=review_id)
 	review_rounds = models.ReviewRound.objects.filter(book=submission).order_by('-round_number')
 	result = review_assignment.results
@@ -202,6 +204,48 @@ def revise_file(request, submission_id, revision_id, file_id):
 		'file': _file,
 		'author_include': 'author/revision.html',
 		'submission_files': 'author/revise_file.html',
+		'form': form,
+	}
+
+	return render(request, template, context)
+
+@login_required
+def editing(request, submission_id):
+	book = get_object_or_404(models.Book, pk=submission_id, owner=request.user)
+
+	template = 'author/submission.html'
+	context = {
+		'submission': book,
+		'author_include': 'author/editing.html',
+	}
+
+	return render(request, template, context)
+
+@login_required
+def copyedit_review(request, submission_id, copyedit_id):
+	book = get_object_or_404(models.Book, pk=submission_id, owner=request.user)
+	copyedit = get_object_or_404(models.CopyeditAssignment, pk=copyedit_id, book__owner=request.user, book=book, author_invited__isnull=False, author_completed__isnull=True)
+
+	form = copyedit_forms.CopyeditAuthor(instance=copyedit)
+
+	if request.POST:
+		form = copyedit_forms.CopyeditAuthor(request.POST, instance=copyedit)
+		if form.is_valid():
+			form.save()
+			for _file in request.FILES.getlist('copyedit_file_upload'):
+				new_file = handle_copyedit_file(_file, book, copyedit, 'copyedit')
+				copyedit.author_files.add(new_file)
+				copyedit.author_completed = timezone.now()
+				copyedit.save()
+				log.add_log_entry(book=book, user=request.user, kind='editing', message='Copyedit Author review compeleted by %s %s.' % (request.user.first_name, request.user.last_name), short_name='Copyedit Author Review Complete')
+				messages.add_message(request, messages.SUCCESS, 'Copyedit task complete. Thanks.')
+				new_task = task.create_new_task(book, copyedit.book.owner, copyedit.requestor, "Author Copyediting completed for %s" % book.title, workflow='editing')
+				return redirect(reverse('author_submission', kwargs={'submission_id': submission_id}))
+
+	template = 'copyedit/copyedit_author.html'
+	context = {
+		'submission': book,
+		'copyedit': copyedit,
 		'form': form,
 	}
 

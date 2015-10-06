@@ -1,0 +1,16 @@
+<h2>Copyediting</h2>
+<table class="table table-condensed table-bordered">
+	<tr>
+		<th>Copyeditor</th><th>Status</th><th></th>
+	</tr>
+	{% for assignment in submission.copyeditassignment_set.all %}
+	<tr>
+		<td>{{ assignment.copyeditor.profile.full_name }}</td>
+		<td>
+			{{ assignment.state.friendly }}
+			<br />
+			<small>{{ assignment.state.date }}</small>
+		</td>
+	</tr>
+	{% endfor %}
+</table>

@@ -21,8 +21,9 @@ def copyedit(request, submission_id, copyedit_id):
 	copyedit = get_object_or_404(models.CopyeditAssignment, pk=copyedit_id, copyeditor=request.user, book=book)
 
 	# if the copyedit is complete, show the completed page.
-	if copyedit.completed:
-		return redirect(reverse('copyedit_complete', kwargs={'submission_id': submission_id, 'copyedit_id': copyedit_id}))
+	print copyedit.completed
+	#if copyedit.completed:
+	#	return redirect(reverse('copyedit_complete', kwargs={'submission_id': submission_id, 'copyedit_id': copyedit_id}))
 
 	form = forms.Copyedit(instance=copyedit)
 
