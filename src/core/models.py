@@ -389,7 +389,7 @@ class IndexAssignment(models.Model):
 
 	def state(self):
 		if self.completed:
-			return {'state': 'completed', 'friendly': 'Indexing completed', 'date': self.completed}
+			return {'state': 'completed', 'friendly': 'Assignment completed', 'date': self.completed}
 		elif self.accepted:
 			return {'state': 'accepted', 'friendly': 'Indexing has accepted', 'date': self.accepted}
 		else:
