@@ -4,20 +4,13 @@
 
 {% block title %}Reviewing #{{ submission.id }}{% endblock %}
 
-{% block breadcrumbs %}
-  <ol class="breadcrumb">
-    <li>Review</li>
-    <li><a class="active" href="">{{ submission.title }}</a></li>
-	</ol>
-{% endblock %}
-
 {% block body %}
 <div class="row">
-<div class="col-md-12" style="background-color:rgb(213,203,171);color:white;">
+<div class="col-md-12 book-heading" style="margin-top:-20px">
       <h4>{% if submission.prefix %}{{ submission.prefix|title }}: {% endif %}{{ submission.title|title }}</h4>
 
 </div>
-	 <div class="col-md-3 dash-left" style="background-color: rgb(230,230,230);">
+	 <div class="col-md-3 dash-left" style="background-color: rgb(230,230,230); ">
 
         <div class="dash-container" >
             <h4 style="color:rgb(106,106,106)">  {% if submission.prefix %}{{ submission.prefix }} {% endif %}{{ submission.title }}</h4> <h5 style="color:rgb(101,117,132)">{{submission.subtitle}}</h5>
@@ -37,7 +30,7 @@
 
    
     </div>
-    <div class="col-md-5 ">
+    <div class="col-md-5 dash-center" >
     <div class="dash-container" >
                        
         <div class="dash-container">
@@ -57,7 +50,19 @@
                      <h6>You accepted on {{review_assignment.accepted}}</h6>
 
                     </div>
-          {% else %}
+                     </br>
+                      </br>
+                       </br>
+         {% elif review_assignment.denied %}
+         <div class="col-md-12" style="background-color:rgb(159,197,88);color:white;">                 
+  
+                     <h6>You denied on {{review_assignment.accepted}}</h6>
+
+                    </div>
+                     </br>
+                      </br>
+                       </br>
+         {% else %}
               <div class="col-md-12" style="background-color:rgb(156,156,156);color:white;font-size:10px ">                 
   
                      <h5>You can accept or reject this task</h5>
@@ -68,8 +73,8 @@
           <div class="dash-container" >
           <form method="post">
           {% csrf_token %}
-             <input class="btn btn-lg btn-decline" type="submit" value="I Decline" style="width:120px; font-size: 14px;" id="task_offer">
-             <input class="btn btn-lg btn-accept" type="submit" value="I Accept" id="task_offer" style="width:120px; font-size: 14px;" >
+             <input class="btn btn-lg btn-decline" type="submit" name="task_offer" value="I Decline" style="width:120px; font-size: 14px;" id="task_offer">
+             <input class="btn btn-lg btn-accept" type="submit" name="task_offer" value="I Accept" id="task_offer" style="width:120px; font-size: 14px;" >
              </form>
             </div> 
           {% endif %}
@@ -77,7 +82,11 @@
             <div class="dash-container" style="margin-top:-25px;color:rgb(150,150,150)">
             <h5>If you would like to contact the editor about this </br> project, please click the button below</h5>
             </br>
-             <a class="btn btn-lg btn-task" type="submit"  style="width:120px; font-size: 14px;border-radius:8px" >Contact Editor</a>
+            {% ifequal editors '' %}
+             <a class="btn btn-lg btn-task" disabled type="submit"  style="width:120px; font-size: 14px;border-radius:8px" >Contact Editor</a>
+            {% else %}
+             <a href='mailto:{{editors}}' class="btn btn-lg btn-task" type="submit"  style="width:120px; font-size: 14px;border-radius:8px" >Contact Editor</a>
+           {% endifequal %}
             </div>
    <!-- {% if review_assignment.review_type == 'internal' %}
     {% include "workflow/review/reviewer_files.html" with file_data=submission.internal_review_files.all %}
@@ -91,6 +100,7 @@
        <div class="dash-container" >
         {% if review_assignment.accepted %}
        </br>
+
        <h4>1. Completed the Review Form</h4>
     <p>Alternatively you may <a href="?download=docx">download</a> the review form, complete it offline, and upload it.</p>
       {{ form_info.intro_text|safe }}

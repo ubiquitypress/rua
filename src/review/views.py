@@ -79,11 +79,7 @@ def reviewer_decision(request, review_type, submission_id, review_assignment, de
 
 @is_reviewer
 def review(request, review_type, submission_id, access_key=None):
-	print 'review'
 
-	print access_key
-	print review_type
-	print submission_id
 	ci_required = core_models.Setting.objects.get(group__name='general', name='ci_required')
 
 	# Check that this review is being access by the user, is not completed and has not been declined.
@@ -91,7 +87,8 @@ def review(request, review_type, submission_id, access_key=None):
 		review_assignment = get_object_or_404(core_models.ReviewAssignment, access_key=access_key, declined__isnull=True, review_type=review_type)
 		submission = get_object_or_404(core_models.Book, pk=submission_id)
 		if review_assignment.completed:
-			pass
+			return redirect(reverse('review_complete_with_access_key', kwargs={'review_type': review_type, 'submission_id': submission.pk,'access_key':access_key}))
+	
 	elif review_type == 'proposal':
 		submission = get_object_or_404(submission_models.Proposal, pk=submission_id)
 		review_assignment = get_object_or_404(submission_models.ProposalReview, user=request.user, proposal=submission, completed__isnull=True, declined__isnull=True)
@@ -99,16 +96,57 @@ def review(request, review_type, submission_id, access_key=None):
 		submission = get_object_or_404(core_models.Book, pk=submission_id)
 		review_assignment = get_object_or_404(core_models.ReviewAssignment, user=request.user, book=submission, declined__isnull=True, review_type=review_type)
 		if review_assignment.completed:
-			pass
+			return redirect(reverse('review_complete', kwargs={'review_type': review_type, 'submission_id': submission.pk}))
+	
+	editors_mail=''
+	if review_assignment:
+		press_editors= review_assignment.book.press_editors.all()
+		i=0
+		for editor in press_editors:
+			editors_mail=editors_mail+editor.email
+		 	if i<len(press_editors):
+		 		editors_mail=editors_mail+','
+		 	i=i+1
 
+	print editors_mail
 	form = forms.GeneratedForm(form=submission.review_form)
 	recommendation_form = core_forms.RecommendationForm(ci_required=ci_required.value)
-
+	print form
 	if not request.POST and request.GET.get('download') == 'docx':
 		path = create_review_form(submission)
 		return serve_file(request, path)
+	if request.POST and 'task_offer' in request.POST:
+		response = request.POST['task_offer']
+		press_editors= review_assignment.book.press_editors.all()
+		if response == 'I Accept':
+			review_assignment.accepted=timezone.now()
+			review_assignment.save(update_fields=['accepted'])
+			message = "Review Assignment request for '"+submission.title+"' has been accepted by "+request.user.first_name+' '+request.user.last_name		
+			log.add_log_entry(book=submission, user=request.user, kind='review', message=message, short_name='Assignment accepted')
+			for editor in press_editors:
+				print editor
+				notification = core_models.Task(book=submission,assignee=editor,creator=request.user,text=message,workflow='review')
+				notification.save()
 
-	if request.POST:
+		elif response == 'I Decline':
+			review_assignment.declined=timezone.now()
+			review_assignment.save(update_fields=['declined'])
+
+			
+			message = "Review Assignment request for '"+submission.title+"' has been declined by "+request.user.first_name+' '+request.user.last_name
+			print message
+			for editor in press_editors:
+				print editor
+				notification = core_models.Task(book=submission,assignee=editor,creator=request.user,text=message,workflow='review')
+				notification.save()
+			log.add_log_entry(book=submission, user=request.user, kind='review', message=message, short_name='Assignment declined')
+
+
+
+			return redirect(reverse('reviewer_dashboard'))
+
+
+	elif request.POST:
 		form = forms.GeneratedForm(request.POST, request.FILES, form=submission.review_form)
 		recommendation_form = core_forms.RecommendationForm(request.POST, ci_required=ci_required.value)
 		if form.is_valid() and recommendation_form.is_valid():
@@ -142,7 +180,13 @@ def review(request, review_type, submission_id, access_key=None):
 			review_assignment.save()
 
 			if not review_type == 'proposal':
-				log.add_log_entry(book=submission, user=request.user, kind='review', message='Reviewer %s %s completed review.' % (review_assignment.user.first_name, review_assignment.user.last_name), short_name='Review Assignment')
+				press_editors = review_assignment.book.press_editors.all()
+				log.add_log_entry(book=submission, user=request.user, kind='review', message='Reviewer %s %s completed review for %s.' % (review_assignment.user.first_name, review_assignment.user.last_name, submission.title), short_name='Assignment Completed')
+				message = "Reviewer "+review_assignment.user.first_name+" "+review_assignment.user.last_name+" completed review for "+submission.title+"."
+				for editor in press_editors:
+					notification = core_models.Task(book=submission,assignee=editor,creator=request.user,text=message,workflow='review')
+					notification.save()
+		
 
 			return redirect(reverse('review_complete', kwargs={'review_type': review_type, 'submission_id': submission.id}))
 
@@ -154,14 +198,19 @@ def review(request, review_type, submission_id, access_key=None):
 		'form': form,
 		'form_info': submission.review_form,
 		'recommendation_form': recommendation_form,
+		'editors':editors_mail,
+
 	}
 
 	return render(request, template, context)
 
 @is_reviewer
-def review_complete(request, review_type, submission_id):
+def review_complete(request, review_type, submission_id,access_key=None):
 
-	if review_type == 'proposal':
+	if access_key:
+		review_assignment = get_object_or_404(core_models.ReviewAssignment, access_key=access_key, declined__isnull=True, review_type=review_type)
+		submission = get_object_or_404(core_models.Book, pk=submission_id)
+	elif review_type == 'proposal':
 		submission = get_object_or_404(submission_models.Proposal, pk=submission_id)
 		review_assignment = get_object_or_404(submission_models.ProposalReview, user=request.user, proposal=submission)
 	else:

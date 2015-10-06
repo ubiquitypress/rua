@@ -2,18 +2,128 @@
 {% load static from staticfiles %}
 {% load bootstrap3 %}
 
-{% block breadcrumbs %}
-  <ol class="breadcrumb">
-    <li>Review</li>
-    <li><a class="active" href="">{{ submission.title }}</a></li>
-	</ol>
-{% endblock %}
-
 {% block body %}
-	<div class="col-md-12">
-		<h2>{{ submission.title }}</h2>
-    {{ form_info.completion_text|safe }}
+<div class="row">
+<div class="col-md-12 book-heading" style="margin-top:-20px">
+      <h4>{% if submission.prefix %}{{ submission.prefix|title }}: {% endif %}{{ submission.title|title }}</h4>
+
+</div>
+	 <div class="col-md-3 dash-left" style="background-color: rgb(230,230,230); ">
+
+        <div class="dash-container" >
+            <h4 style="color:rgb(106,106,106)">  {% if submission.prefix %}{{ submission.prefix }} {% endif %}{{ submission.title }}</h4> <h5 style="color:rgb(101,117,132)">{{submission.subtitle}}</h5>
+        </div>
+        <div style="color:rgb(106,106,106); margin-left:10px">
+    <b>Series: </b>{{submission.series}} </br>
+    <b>Type: </b>{{submission.book_type}} </br>
+    <b>License: </b>{{submission.license}} </br>
+    <b>Review Type: </b>{{submission.get_review_type_display}} </br>
+    </div> </br>
+             <div class="band {{ submission.stage.current_stage }}">
+                        {{ submission.stage.get_current_stage_display }}
+                    </div>
+             <div class="band" style="background-color:rgb(193,193,193);color:rgb(99,99,99)">
+                      <h4>  My Task </h4>
+                    </div>
+
+   
+    </div>
+    <div class="col-md-5 dash-center" >
+    <div class="dash-container" >
+                       
+        <div class="dash-container">
+
+        <h4>INSTRUNCTIONS FOR TASK</h4>
+        </br>
+        <p style="margin-left:-10px;margin-top:-30px">{{ review_assignment.body }}</p>
+     
+         <h5> Task Due <span style="color:rgb(101,117,132)">{{ review_assignment.due }}</span></h5>
+
+        {% include "review/submission_files.html" %}
+   
+        </div>
+              <div class="col-md-12" style="background-color:rgb(159,197,88);color:white;">                 
+  
+                     <h6>You accepted on {{review_assignment.accepted}}</h6>
+
+                    </div>
+                     </br>
+                      </br>
+                       </br>
+
+    
+        
+            <div class="dash-container" style="margin-top:-25px;color:rgb(150,150,150)">
+            <h5>If you would like to contact the editor about this </br> project, please click the button below</h5>
+            </br>
+            {% ifequal editors '' %}
+             <a class="btn btn-lg btn-task" disabled type="submit"  style="width:120px; font-size: 14px;border-radius:8px" >Contact Editor</a>
+            {% else %}
+             <a href='mailto:{{editors}}' class="btn btn-lg btn-task" type="submit"  style="width:120px; font-size: 14px;border-radius:8px" >Contact Editor</a>
+           {% endifequal %}
+            </div>
+   <!-- {% if review_assignment.review_type == 'internal' %}
+    {% include "workflow/review/reviewer_files.html" with file_data=submission.internal_review_files.all %}
+    {% else %}
+    {% include "workflow/review/reviewer_files.html" with file_data=submission.external_review_files.all %}
+    {% endif %}-->
+</div>
+</div>
+
+       <div class="col-md-4 dash-right">
+       <div class="dash-container" >
+        {% if review_assignment.accepted %}
+      
+       <h3>  <i class="fa fa-check-circle-o"></i> You completed this review on {{review_assignment.completed}}</h3>
+  
+</br>
+      <h5><b>Supporting Files:</b></h5>
+<ul class="manuscript-upload-states">
+  {% for file in submission.files.all %}
+  {% if file.kind == 'supporting' %}
+  <li style="background-color:rgb(230,230,230)">
+    <div class="row">
+      <div class="col-md-2" style="margin-left:15px">
+        <h1> 
+        {% if file.mime_type == 'image/jpeg' or file.mime_type == 'image/png' %}
+          <i class="fa fa-file-image-o"></i>
+        {% else %}
+          <i class="fa fa-file-text-o"></i>
+        {% endif %}
+        </h1>
+      </div>
+      <div class="col-md-4">
+        <h5><b>{{ file.label }}</b></h5>
+        <h5><b>{{ file.kind|capfirst }}</b></h5>
+        <h5>{{ file.original_filename }}</h5>
+      </div>
+      <div class="col-md-4">
+        <a href="{% url 'serve_file' submission.id file.id %}" class="btn btn-sm btn-task read pull-right" style="margin-top: 20px;margin-right:10px;border-radius:8px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-cloud-download"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
+      </div>
+    </div>
+  </li>
+  {% endif %}
+  {% endfor %}
+</ul>
+        <hr />
+        <h5> Your Recommendation:</h5>
+        {% ifequal review_assignment.recommendation 'reject' %}
+        <p style="font-size:22px;color:#C6001E;margin-left:-10px;"> <b> {{review_assignment.recommendation|title}} Submission </b></p>
+        {% endifequal %}
+         {% ifequal review_assignment.recommendation 'accept' %}
+        <p style="font-size:22px;color:#74C91F;margin-left:-10px;"> <b> {{review_assignment.recommendation|title}} Submission </b></p>
+        {% endifequal %}
+        {% ifequal review_assignment.recommendation 'revisions' %}
+        <p style="font-size:22px;color:#E9C730;margin-left:-10px;"> <b> Revisions Required</b></p>
+        {% endifequal %}
+  
+        <h5>Competing interests: {{review_assignment.competing_interests}}</h5>
+      <br/><br/>
+
+      </form>
+ {% endif %}
 	</div>
+  </div>
 {% endblock body %}
 
 {% block js %}
