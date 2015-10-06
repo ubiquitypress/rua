@@ -7,8 +7,10 @@ from django.contrib import messages
 from core import models
 from author import forms
 from author import logic
+from workflow.logic import order_data, decode_json
 from submission import models as submission_models
 from revisions import models as revision_models, forms as revision_forms
+from review import models as review_models
 from workflow.views import handle_file_update
 
 @login_required
@@ -75,6 +77,8 @@ def view_review_round(request, submission_id, round_id):
 	reviews = models.ReviewAssignment.objects.filter(book=book, review_round__book=book, review_round__round_number=round_id)
 
 	review_rounds = models.ReviewRound.objects.filter(book=book).order_by('-round_number')
+	internal_review_assignments = models.ReviewAssignment.objects.filter(book=book, review_type='internal', review_round__round_number=round_id).select_related('user', 'review_round')
+	external_review_assignments = models.ReviewAssignment.objects.filter(book=book, review_type='external', review_round__round_number=round_id).select_related('user', 'review_round')
 
 	template = 'author/submission.html'
 	context = {
@@ -84,7 +88,33 @@ def view_review_round(request, submission_id, round_id):
 		'review_round': review_round,
 		'review_rounds': review_rounds,
 		'round_id': round_id,
-		'revision_requests': revision_models.Revision.objects.filter(book=book, revision_type='review')
+		'revision_requests': revision_models.Revision.objects.filter(book=book, revision_type='review'),
+		'internal_review_assignments': internal_review_assignments,
+		'external_review_assignments': external_review_assignments,
+	}
+
+	return render(request, template, context)
+
+def view_review_assignment(request, submission_id, round_id, review_id):
+
+	submission = get_object_or_404(models.Book, pk=submission_id)
+	review_assignment = get_object_or_404(models.ReviewAssignment, pk=review_id)
+	review_rounds = models.ReviewRound.objects.filter(book=submission).order_by('-round_number')
+	result = review_assignment.results
+	relations = review_models.FormElementsRelationship.objects.filter(form=result.form)
+	data_ordered = order_data(decode_json(result.data), relations)
+
+	template = 'author/submission.html'
+	context = {
+		'author_include': 'author/review_revision.html',
+		'submission_files': 'shared/view_review.html',
+		'submission': submission,
+		'review': review_assignment,
+		'data_ordered': data_ordered,
+		'result': result,
+		'active': 'review',
+		'review_rounds': review_rounds,
+		'revision_requests': revision_models.Revision.objects.filter(book=submission, revision_type='review'),
 	}
 
 	return render(request, template, context)
@@ -109,8 +139,6 @@ def view_revisions(request, submission_id, revision_id):
 	revision = get_object_or_404(revision_models.Revision, pk=revision_id, completed__isnull=False, book=book)
 
 	review_rounds = models.ReviewRound.objects.filter(book=book).order_by('-round_number')
-	internal_review_assignments = models.ReviewAssignment.objects.filter(book=book, review_type='internal').select_related('user', 'review_round')
-	external_review_assignments = models.ReviewAssignment.objects.filter(book=book, review_type='external').select_related('user', 'review_round')
 
 	template = 'author/submission.html'
 	context = {
@@ -119,8 +147,6 @@ def view_revisions(request, submission_id, revision_id):
 		'author_include': 'author/review_revision.html',
 		'submission_files': 'author/view_revision.html',
 		'update': False,
-		'internal_review_assignments': internal_review_assignments,
-		'external_review_assignments': external_review_assignments,
 		'review_rounds': review_rounds,
 		'revision_requests': revision_models.Revision.objects.filter(book=book, revision_type='review')
 	}

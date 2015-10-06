@@ -1,0 +1,17 @@
+{% load dict_lookup %}
+<h4>{% if book.review_type == 'open-with' %}Review by {{ review.user.profile.full_name }}{% else %}This review is anonymous.{% endif %}</h4>
+<h5>Review Files</h5>
+{% include "shared/review_files.html" with file_data=review.files.all %}
+
+<h4>Recommendation: </h4>
+ {{ review.get_recommendation_display }}
+ <h4>Competing Interests: </h4>
+{{ review.competing_interests }}
+<h4>Review: </h4>
+<div style="clear:both"></div>
+{% for item in data_ordered %}
+<div>
+  <label>{{ item.0 }}</label>
+  <p>{% lookup result.data item.0 %} </p>
+</div>
+{% endfor %}

@@ -1,3 +1,12 @@
+@import url(https://fonts.googleapis.com/css?family=Lato);
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Lato';
+}
+p, div {
+    font-family: 'Lato';
+}
+
 .navbar-inverse {
     background-color: #363636 !important;
     border-color: #363636 !important;
@@ -137,6 +146,20 @@ html, body {
 
 .upload-modal {
   top: 15%;
+}
+
+.recommendation {
+  background-color:rgb(159,197,88);
+  color: white;
+  padding: 5 5 5 5;
+  margin-left: 10px;
+}
+
+.no-recommendation {
+  background-color:rgb(181, 181, 181);
+  color: white;
+  padding: 5 5 5 5;
+  margin-left: 10px;
 }
 
 .image-upload-states li, .manuscript-upload-states li, .files-list li, .image-files-list li {
