@@ -1,3 +1,12 @@
+@import url(https://fonts.googleapis.com/css?family=Lato);
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Lato';
+}
+p, div {
+    font-family: 'Lato';
+}
+
 .navbar-inverse {
     background-color: #363636 !important;
     border-color: #363636 !important;
