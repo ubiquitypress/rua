@@ -4,6 +4,8 @@ from django.template import Context
 
 from core import models
 from core.cache import cache_result
+from django.db.models import Q
+
 from revisions import models as revisions_models
 
 def send_email(subject, context, from_email, to, html_template, text_template=None):
@@ -51,3 +53,56 @@ def author_tasks(user):
 		task_list.append({'task': 'Typsetting Review', 'title': typeset.book.title, 'url': 'http://%s/typeset/book/%s/typeset/%s/author/' % (base_url, typeset.book.id, typeset.id)})
 
 	return task_list
+
+
+def typesetter_tasks(user):
+
+	pending = models.TypesetAssignment.objects.filter((Q(requested__isnull=False) & Q(completed__isnull=True)) | (Q(typesetter_invited__isnull=False) & Q(typsetter_completed__isnull=True)), typesetter=user)
+	completed = models.TypesetAssignment.objects.filter(completed__isnull=False, typesetter=user).order_by('completed')
+
+	return { 'pending':pending, 'completed':completed}
+	
+	
+
+def copyeditor_tasks(user):
+
+	pending = models.CopyeditAssignment.objects.filter(copyeditor=user, completed__isnull=True)
+	print pending
+	completed = models.CopyeditAssignment.objects.filter(copyeditor=user, completed__isnull=False).order_by('completed')
+
+	return { 'pending':pending, 'completed':completed}
+
+def indexer_tasks(user):
+
+	pending = models.IndexAssignment.objects.filter(indexer=user, completed__isnull=True),
+	completed = models.IndexAssignment.objects.filter(indexer=user, completed__isnull=False).order_by('completed')
+
+	return { 'pending':pending, 'completed':completed}
+	
+
+def onetasker_tasks(user):
+	active = []
+	completed = []
+	base_url = models.Setting.objects.get(group__name='general', name='base_url').value
+	print type(copyeditor_tasks(user).get('completed'))
+
+	for assignment in copyeditor_tasks(user).get('completed'):
+		active.append({'assignment':assignment, 'type': 'Copyedit', 'url': 'http://%s/copyedit/book/%s/typeset/%s/author/' % (base_url, assignment.book.id, assignment.id)})
+
+	for assignment in typesetter_tasks(user).get('completed'):
+		active.append({'assignment':assignment, 'type': 'Typesetting', 'url': 'http://%s/typeset/book/%s/typeset/%s/author/' % (base_url, assignment.book.id, assignment.id)})
+	
+	for assignment in indexer_tasks(user).get('completed'):
+		active.append({'assignment':assignment, 'type': 'Indexing', 'url': 'http://%s/indexing/book/%s/typeset/%s/author/' % (base_url, assignment.book.id, assignment.id)})
+
+	for assignment in copyeditor_tasks(user).get('completed'):
+		completed.append({'assignment':assignment, 'type': 'Copyedit', 'url': 'http://%s/copyedit/book/%s/typeset/%s/author/' % (base_url, assignment.book.id, assignment.id)})
+
+	for assignment in typesetter_tasks(user).get('completed'):
+		completed.append({'assignment':assignment, 'type': 'Typesetting', 'url': 'http://%s/typeset/book/%s/typeset/%s/author/' % (base_url, assignment.book.id, assignment.id)})
+	
+	for assignment in indexer_tasks(user).get('completed'):
+		completed.append({'assignment':assignment, 'type': 'Indexing', 'url': 'http://%s/indexing/book/%s/typeset/%s/author/' % (base_url, assignment.book.id, assignment.id)})
+
+	return {'completed':completed, 'active':active}
+	
