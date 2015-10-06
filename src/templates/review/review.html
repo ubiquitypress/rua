@@ -10,7 +10,7 @@
       <h4>{% if submission.prefix %}{{ submission.prefix|title }}: {% endif %}{{ submission.title|title }}</h4>
 
 </div>
-	 <div class="col-md-3 dash-left-2" style="background-color: rgb(230,230,230); ">
+	 <div class="col-md-3 dash-left" style="background-color: rgb(230,230,230); ">
 
         <div class="dash-container" >
             <h4 style="color:rgb(106,106,106)">  {% if submission.prefix %}{{ submission.prefix }} {% endif %}{{ submission.title }}</h4> <h5 style="color:rgb(101,117,132)">{{submission.subtitle}}</h5>
@@ -30,7 +30,7 @@
 
    
     </div>
-    <div class="col-md-5 dash-center-2" >
+    <div class="col-md-5 dash-center" >
     <div class="dash-container" >
                        
         <div class="dash-container">
@@ -96,11 +96,11 @@
 </div>
 </div>
 
-       <div class="col-md-4 dash-right-2">
+       <div class="col-md-4 dash-right">
        <div class="dash-container" >
         {% if review_assignment.accepted %}
        </br>
-    
+
        <h4>1. Completed the Review Form</h4>
     <p>Alternatively you may <a href="?download=docx">download</a> the review form, complete it offline, and upload it.</p>
       {{ form_info.intro_text|safe }}

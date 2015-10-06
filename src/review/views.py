@@ -117,12 +117,32 @@ def review(request, review_type, submission_id, access_key=None):
 		return serve_file(request, path)
 	if request.POST and 'task_offer' in request.POST:
 		response = request.POST['task_offer']
+		press_editors= review_assignment.book.press_editors.all()
 		if response == 'I Accept':
 			review_assignment.accepted=timezone.now()
 			review_assignment.save(update_fields=['accepted'])
+			message = "Review Assignment request for '"+submission.title+"' has been accepted by "+request.user.first_name+' '+request.user.last_name		
+			log.add_log_entry(book=submission, user=request.user, kind='review', message=message, short_name='Assignment accepted')
+			for editor in press_editors:
+				print editor
+				notification = core_models.Task(book=submission,assignee=editor,creator=request.user,text=message,workflow='review')
+				notification.save()
+
 		elif response == 'I Decline':
 			review_assignment.declined=timezone.now()
 			review_assignment.save(update_fields=['declined'])
+
+			
+			message = "Review Assignment request for '"+submission.title+"' has been declined by "+request.user.first_name+' '+request.user.last_name
+			print message
+			for editor in press_editors:
+				print editor
+				notification = core_models.Task(book=submission,assignee=editor,creator=request.user,text=message,workflow='review')
+				notification.save()
+				log.add_log_entry(book=submission, user=request.user, kind='review', message=message, short_name='Assignment declined')
+
+
+
 			return redirect(reverse('reviewer_dashboard'))
 
 
@@ -160,7 +180,7 @@ def review(request, review_type, submission_id, access_key=None):
 			review_assignment.save()
 
 			if not review_type == 'proposal':
-				log.add_log_entry(book=submission, user=request.user, kind='review', message='Reviewer %s %s completed review.' % (review_assignment.user.first_name, review_assignment.user.last_name), short_name='Review Assignment')
+				log.add_log_entry(book=submission, user=request.user, kind='review', message='Reviewer %s %s completed review for %s.' % (review_assignment.user.first_name, review_assignment.user.last_name, submission.title), short_name='Assignment Completed')
 
 			return redirect(reverse('review_complete', kwargs={'review_type': review_type, 'submission_id': submission.id}))
 
