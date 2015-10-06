@@ -79,19 +79,27 @@ def reviewer_decision(request, review_type, submission_id, review_assignment, de
 
 @is_reviewer
 def review(request, review_type, submission_id, access_key=None):
+	print 'review'
 
+	print access_key
+	print review_type
+	print submission_id
 	ci_required = core_models.Setting.objects.get(group__name='general', name='ci_required')
 
 	# Check that this review is being access by the user, is not completed and has not been declined.
 	if access_key:
-		review_assignment = get_object_or_404(core_models.ReviewAssignment, access_key=access_key, completed__isnull=True, declined__isnull=True, review_type=review_type)
+		review_assignment = get_object_or_404(core_models.ReviewAssignment, access_key=access_key, declined__isnull=True, review_type=review_type)
 		submission = get_object_or_404(core_models.Book, pk=submission_id)
+		if review_assignment.completed:
+			pass
 	elif review_type == 'proposal':
 		submission = get_object_or_404(submission_models.Proposal, pk=submission_id)
 		review_assignment = get_object_or_404(submission_models.ProposalReview, user=request.user, proposal=submission, completed__isnull=True, declined__isnull=True)
 	else:
 		submission = get_object_or_404(core_models.Book, pk=submission_id)
-		review_assignment = get_object_or_404(core_models.ReviewAssignment, user=request.user, book=submission, completed__isnull=True, declined__isnull=True, review_type=review_type)
+		review_assignment = get_object_or_404(core_models.ReviewAssignment, user=request.user, book=submission, declined__isnull=True, review_type=review_type, access_key="")
+		if review_assignment.completed:
+			pass
 
 	form = forms.GeneratedForm(form=submission.review_form)
 	recommendation_form = core_forms.RecommendationForm(ci_required=ci_required.value)
