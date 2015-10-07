@@ -41,7 +41,7 @@
                     <a href="" class="btn btn-sm btn-primary view">View Project</a>
                     <a href="" class="btn btn-sm btn-primary read">View Task</a>
                 </span>
-                <p class="assigned"><i>{% if task.accepted %}Accepted on {{ task.accepted|date:"d M Y"}}<br>{% endif %}{% if task.completed %}Completed on {{task.completed|date:"d M Y"}}{% endif %}</i></p>
+                <p class="assigned"><i>{% if task.assignment.accepted %}Accepted on {{ task.assignment.accepted|date:"d M Y"}}<br>{% endif %}{% if task.assignment.completed %}Completed on {{task.assignment.completed|date:"d M Y"}}{% endif %}</i></p>
             </div>
             {% endfor %}
 
@@ -57,7 +57,7 @@
             {% for task in active_tasks %}
             <div class="notification">
                 <h5><b>{{task.type}} - {{task.assignment.book.title}}</b></h5>
-                <p><b>Task due: <span class="author-due">{{ task.due }} ({{task.assignment.due|timeuntil}} left)</span></b></p>
+                <p><b>Task due: <span class="author-due">{{ task.assignment.due }} ({{task.assignment.due|timeuntil}} left)</span></b></p>
 
                 <span class="pull-right" style="padding-right: 10px;">
                 <br />
