@@ -426,7 +426,7 @@ class TypesetAssignment(models.Model):
 	files = models.ManyToManyField('File', blank=True, null=True)
 	typeset_files = models.ManyToManyField('File', blank=True, null=True, related_name='typeset_files')
 	author_files = models.ManyToManyField('File', blank=True, null=True, related_name='author_typeset_files')
-	typesetter_files = models.ManyToManyField('File', blank=True, null=True, related_name='typsetter_files')
+	typesetter_files = models.ManyToManyField('File', blank=True, null=True, related_name='typesetter_files')
 
 	def __unicode__(self):
 		return u'%s - %s %s' % (self.pk, self.book.title, self.typesetter.username)
@@ -439,7 +439,7 @@ class TypesetAssignment(models.Model):
 
 	def state(self):
 		if self.typesetter_completed:
-			return {'state': 'complete', 'friendly': 'Assignment Complete', 'date': self.typsetter_completed}
+			return {'state': 'complete', 'friendly': 'Assignment Complete', 'date': self.typesetter_completed}
 		elif self.typesetter_invited:
 			return {'state': 'typesetter_second', 'friendly': 'Awaiting final typesetting', 'date': self.typesetter_invited}
 		elif self.author_completed and not self.editor_second_review:
