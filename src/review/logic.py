@@ -3,13 +3,17 @@ def get_editors(review_assignment):
 	press_editors = review_assignment.book.press_editors.all()
 	series_editor = review_assignment.book.series.editor
 
-	press_editor_list = [{'editor': editor, 'isSeriesEditor': False} for editor in press_editors]
-
 	if series_editor:
 		series_editor_list = [{'editor': series_editor, 'isSeriesEditor': True}]
+		press_editor_list = [{'editor': editor, 'isSeriesEditor': False} for editor in press_editors if not editor == series_editor_list[0]['editor']]
+
 	else:
 		series_editor_list = []
+		press_editor_list = [{'editor': editor, 'isSeriesEditor': False} for editor in press_editors]
 
+
+	
+	
 	return (press_editor_list + series_editor_list)
 
 
