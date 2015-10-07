@@ -1,0 +1,26 @@
+{% load static from staticfiles %}
+{% load bootstrap3 %}
+
+<h4>Review Copyediting</h4>
+<hr />
+Complete the form below and upload your files. If you're happy with the copyedit, you can skip uploading files. You will be able to give each file a label. The upload box is capable of uploading more than one file at a time.<br/><br/>
+<form method="POST" enctype="multipart/form-data">
+{% csrf_token %}
+{% bootstrap_form form %}
+<div class="row">
+    <div class="col-md-12">
+      <label for="copyedit_file_upload">Upload Files</label>
+       <div class="input-group">
+          <span class="input-group-btn">
+              <span class="btn btn-primary btn-file">
+                  Browse&hellip; <input type="file" id="copyedit_file_upload" name="copyedit_file_upload" multiple>
+              </span>
+          </span>
+          <input type="text" class="form-control" readonly>
+      </div>
+    </div>
+  </div>
+  <br />
+  <button type="submit" name="submit" class="btn btn-success">Complete Copyedit</button>
+</form>
+</div>
