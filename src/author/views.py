@@ -15,6 +15,7 @@ from workflow.views import handle_file_update
 from copyedit import forms as copyedit_forms
 from copyedit.views import handle_copyedit_file
 from typeset import forms as typeset_forms
+from typeset.views import handle_typeset_file
 
 @login_required
 def author_dashboard(request):
@@ -237,7 +238,7 @@ def copyedit_review(request, submission_id, copyedit_id):
 			for _file in request.FILES.getlist('copyedit_file_upload'):
 				new_file = handle_copyedit_file(_file, book, copyedit, 'copyedit')
 				copyedit.author_files.add(new_file)
-				
+
 			copyedit.author_completed = timezone.now()
 			copyedit.save()
 			log.add_log_entry(book=book, user=request.user, kind='editing', message='Copyedit Author review compeleted by %s %s.' % (request.user.first_name, request.user.last_name), short_name='Copyedit Author Review Complete')
