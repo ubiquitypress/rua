@@ -2,27 +2,21 @@
 {% load static from staticfiles %}
 {% load bootstrap3 %}
 
-{% block breadcrumbs %}
-  <ol class="breadcrumb">
-    <li>Review</li>
-    <li>{{ submission.title }}</li>
-    <li>Decision</li>
-	</ol>
-{% endblock %}
 
 {% block body %}
 
 <div class="row">
-<div class="col-md-12 book-heading" style="margin-top:-20px">
+<div class="col-md-12 book-heading  container-fluid" style="margin-top:-20px">
       <h4>{% if submission.prefix %}{{ submission.prefix|title }}: {% endif %}{{ submission.title|title }}</h4>
 
 </div>
-	 <div class="col-md-3 dash-left" style="background-color: rgb(230,230,230); ">
+	 <div class="col-md-3 dash-left grey-container">
 
         <div class="dash-container" >
-            <h4 style="color:rgb(106,106,106)">  {% if submission.prefix %}{{ submission.prefix }} {% endif %}{{ submission.title }}</h4> <h5 style="color:rgb(101,117,132)">{{submission.subtitle}}</h5>
-        </div>
-        <div style="color:rgb(106,106,106); margin-left:10px">
+              <h4 class="header-text">  {% if submission.prefix %}{{ submission.prefix }} {% endif %}{{ submission.title }}</h4> 
+            <h5 class="subtitle-text">{{submission.subtitle}}</h5>
+            </div>
+        <div class="book-info">
     <b>Series: </b>{{submission.series}} </br>
     <b>Type: </b>{{submission.book_type}} </br>
     <b>License: </b>{{submission.license}} </br>
@@ -31,7 +25,7 @@
              <div class="band {{ submission.stage.current_stage }}">
                         {{ submission.stage.get_current_stage_display }}
                     </div>
-             <div class="band" style="background-color:rgb(193,193,193);color:rgb(99,99,99)">
+             <div class="band" class="task-left-text">
                       <h4>  My Task </h4>
                     </div>
 
@@ -44,35 +38,17 @@
 
         <h4><b>INSTRUNCTIONS FOR TASK</b></h4>
         </br>
-        <p style="margin-left:-10px;margin-top:-30px">You've been asked to undertake a review on behalf of the Press and Author.</p>
+        <p class="task-info-text">You've been asked to undertake a review on behalf of the Press and Author.</p>
      
-         <h5> Task Due <span style="color:rgb(101,117,132)">{{ review_assignment.due }}</span></h5>
+         <h5> Task Due <span class="subtitle-text">{{ review_assignment.due }}</span></h5>
 
         {% include "review/submission_files.html" %}
    
         </div>
-        {% if review_assignment.accepted %}
-              <div class="col-md-12" style="background-color:rgb(159,197,88);color:white;">                 
-  
-                     <h6>You accepted on {{review_assignment.accepted}}</h6>
 
-                    </div>
-                     </br>
-                      </br>
-                       </br>
-         {% elif review_assignment.denied %}
-         <div class="col-md-12" style="background-color:rgb(159,197,88);color:white;">                 
+              <div class="col-md-12 container-fluid decision-info-undecided">                 
   
-                     <h6>You denied on {{review_assignment.accepted}}</h6>
-
-                    </div>
-                     </br>
-                      </br>
-                       </br>
-         {% else %}
-              <div class="col-md-12" style="background-color:rgb(156,156,156);color:white;font-size:10px ">                 
-  
-                     <h5>You can accept or reject this task</h5>
+                     <p>You can accept or reject this task</p>
 
                     </div>
 </br>
@@ -84,7 +60,7 @@
              <input class="btn btn-lg btn-accept" type="submit"  name="accept" id="accept" value="I Accept" style="width:120px; font-size: 14px;" >
              </form>
             </div> 
-          {% endif %}
+   
         
                    {% include "review/contact_editors.html"  %}
   

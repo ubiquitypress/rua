@@ -1,0 +1,47 @@
+<h3>AUTHORS</h3>
+{% if submission.book_type == 'monograph' %}
+	<h4 class="author-note">
+	{% for author in submission.author.all %}
+		{{ author.full_name }}{% if not forloop.last %}, {% endif %}
+	{% endfor %}
+	</h4>
+{% else %}
+	<h4 class="author-note">
+	{% for editor in submission.editor.all %}
+		{{ editor.full_name }}{% if not forloop.last %}, {% endif %}
+	{% endfor %}
+	</h4>
+{% endif %}
+
+<h3>DESCRIPTION</h3>
+{{ submission.description|linebreaks }}
+
+<h3>REVISIONS</h3>
+
+<table class="table table-bordered">
+    <tr>
+      <th>Requested</th>
+      <th>Requested</th>
+      <th></th>
+    </tr>
+    {% for revision in submission.revsision_set.all %}
+    <tr>
+    	<td>Revision {{ forloop.counter }} </td>
+    	<td>{{ revision.requested }}</td>
+    	<td width="25%">{% if revision.completed %}<a class="btn btn-success" href="{% url 'view_revisions' submission.id revision.id %}">View</a>{% else %}<small>Due on {{ revision.due }}</small>{% endif %}</td>
+    </tr>
+    {% empty %}
+    <tr>
+    	<td colspan="3">This book has no revisions</td>
+    </tr>
+    {% endfor %}
+</table>
+
+<h3>COVER LETTER</h3>
+{{ submission.cover_letter|safe }}
+
+<h3>REVIEWER SUGGESTIONS</h3>
+{{ submission.reviewer_suggestions|safe }}
+
+<h3>COMPETING INTERESTS</h3>
+{{ submission.reviewer_suggestions|safe }}

@@ -56,6 +56,7 @@ INSTALLED_APPS = (
     'typeset',
     'author',
     'onetasker',
+    'editor',
 
     # 3rd Party
     'bootstrap3',
