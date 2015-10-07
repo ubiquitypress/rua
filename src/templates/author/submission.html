@@ -32,13 +32,14 @@
     <div class="col-md-12 book-heading container-fluid">
         <h4>Book {{ submission.id }}: {{ submission.title }}</h4>
     </div>
-    <div class="col-md-3 dash-left" style="background-color: rgb(230,230,230);">
+    <div class="col-md-3 dash-left grey-container">
         <div class="dash-container">
-            <h4 style="color:rgb(106,106,106)">{% if submission.prefix %}{{ submission.prefix }} {% endif %}{{ submission.title }}</h4> 
-            <h5 style="color:rgb(101,117,132)" class="author-note">{% if submission.subtitle %}{{ submission.subtitle }}{% endif %}</h5>
+            <h4 class="header-text">{% if submission.prefix %}{{ submission.prefix }} {% endif %}{{ submission.title }}</h4> 
+            <h5 class="subtitle-text" class="author-note">{% if submission.subtitle %}{{ submission.subtitle }}{% endif %}</h5>
+
           </div>
 
-            <div style="color:rgb(106,106,106); margin-left:10px ">
+            <div class="book-info">
     <b>Series: </b>{{submission.series}} </br>
     <b>Type: </b>{{submission.book_type}} </br>
     <b>License: </b>{{submission.license}} </br>

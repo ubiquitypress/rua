@@ -9,12 +9,13 @@
       <h4>{% if submission.prefix %}{{ submission.prefix|title }}: {% endif %}{{ submission.title|title }}</h4>
 
 </div>
-	 <div class="col-md-3 dash-left" style="background-color: rgb(230,230,230); ">
+	 <div class="col-md-3 dash-left grey-container">
 
         <div class="dash-container" >
-            <h4 style="color:rgb(106,106,106)">  {% if submission.prefix %}{{ submission.prefix }} {% endif %}{{ submission.title }}</h4> <h5 style="color:rgb(101,117,132)">{{submission.subtitle}}</h5>
+            <h4 class="header-text">  {% if submission.prefix %}{{ submission.prefix }} {% endif %}{{ submission.title }}</h4> 
+            <h5 class="subtitle-text">{{submission.subtitle}}</h5>
         </div>
-        <div style="color:rgb(106,106,106); margin-left:10px">
+        <div class="book-info">
     <b>Series: </b>{{submission.series}} </br>
     <b>Type: </b>{{submission.book_type}} </br>
     <b>License: </b>{{submission.license}} </br>
@@ -23,7 +24,7 @@
              <div class="band {{ submission.stage.current_stage }}">
                         {{ submission.stage.get_current_stage_display }}
                     </div>
-             <div class="band" style="background-color:rgb(193,193,193);color:rgb(99,99,99)">
+             <div class="band" class="task-left-text">
                       <h4>  My Task </h4>
                     </div>
 
@@ -36,16 +37,16 @@
 
         <h4><b>INSTRUNCTIONS FOR TASK</b></h4>
         </br>
-        <p style="margin-left:-10px;margin-top:-30px">You've been asked to undertake a review on behalf of the Press and Author.</p>
+        <p class="task-info-text">You've been asked to undertake a review on behalf of the Press and Author.</p>
      
-         <h5> Task Due <span style="color:rgb(101,117,132)">{{ review_assignment.due }}</span></h5>
+         <h5> Task Due <span class="subtitle-text">{{ review_assignment.due }}</span></h5>
 
         {% include "review/submission_files.html" %}
    
         </div>
-              <div class="col-md-12 container-fluid" style="background-color:rgb(159,197,88);color:white;">                 
+              <div class="col-md-12 container-fluid decision-info-accept">                 
   
-                     <h6 style="font-size:14px;">You accepted on {{review_assignment.accepted}}</h6>
+                     <p>You accepted on {{review_assignment.accepted}}</p>
 
                     </div>
                      </br>
@@ -64,7 +65,7 @@
         {% if review_assignment.accepted %}
       
        <h4> <b> <i class="fa fa-check-circle-o"></i> You completed this review on {{review_assignment.completed}} </b></h4>
-  <h5 style="color:rgb(100,100,100)"><em> Details of your review are below </em></h5>
+  <h5 class="subtitle-form-completed-text"><em> Details of your review are below </em></h5>
 </br>
 
 
@@ -83,7 +84,7 @@
   {% for file in review_assignment.files.all %}
   
   {% if file.kind == 'reviewer' %}
-  <li class="media" style="background-color:rgb(230,230,230)">
+  <li class="media grey-container">
     <div class="media-left">
       <span > <h1>
         {% if file.mime_type == 'image/jpeg' or file.mime_type == 'image/png' %}
@@ -101,12 +102,12 @@
       </div>
     </div>
          <div class="media-right">
-      <a href="{% url 'serve_file' submission.id file.id %}" class="btn btn-sm btn-task pull-right " style="margin-top: 20px;margin-right:25px;border-radius:8px"><i class="fa fa-cloud-download"> &nbsp; Download</i></a>
+      <a href="{% url 'serve_file' submission.id file.id %}" class="btn btn-sm btn-task pull-right download-small"><i class="fa fa-cloud-download"> &nbsp; Download</i></a>
     </div>
     </li>
     {% endif %}
     {% empty %}
-     <li style="background-color:rgb(230,230,230)">
+     <li class="grey-container">
       <h5>&nbsp;&nbsp;&nbsp;No files</h5>
    </li>
   {% endfor %}
@@ -115,13 +116,13 @@
         <hr />
         <h5><b> Your Recommendation: </b></h5>
         {% ifequal review_assignment.recommendation 'reject' %}
-        <p style="font-size:22px;color:#C6001E;margin-left:-10px;"> <b> {{review_assignment.recommendation|title}} Submission </b></p>
+        <p class="submission-reject"> <b> {{review_assignment.recommendation|title}} Submission </b></p>
         {% endifequal %}
          {% ifequal review_assignment.recommendation 'accept' %}
-        <p style="font-size:22px;color:#74C91F;margin-left:-10px;"> <b> {{review_assignment.recommendation|title}} Submission </b></p>
+        <p class="submission-accept"> <b> {{review_assignment.recommendation|title}} Submission </b></p>
         {% endifequal %}
         {% ifequal review_assignment.recommendation 'revisions' %}
-        <p style="font-size:22px;color:#E9C730;margin-left:-10px;"> <b> Revisions Required</b></p>
+        <p class="submission-revisions"> <b> Revisions Required</b></p>
         {% endifequal %}
   <hr />
         <h5><b>Competing interests:</b> {{review_assignment.competing_interests}}</h5>

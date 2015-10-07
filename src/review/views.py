@@ -213,6 +213,9 @@ def review_complete(request, review_type, submission_id,access_key=None):
 	
 	result = review_assignment.results
 	if not result or not review_assignment.completed:
+		if not result:
+			review_assignment.completed=None
+			review_assignment.save()
 		if access_key:
 			return redirect(reverse('review_with_access_key', kwargs={'review_type': review_type, 'submission_id': submission.id,'access_key':access_key}))
 		else: 
