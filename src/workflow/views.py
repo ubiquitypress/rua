@@ -47,8 +47,6 @@ def dashboard(request):
 		search = None
 		order = 'title'
 
-	print search
-
 	query_list = []
 
 	if filterby:
@@ -61,9 +59,6 @@ def dashboard(request):
 		book_list = models.Book.objects.filter(publication_date__isnull=True).filter(*query_list).order_by(order)
 	else:
 		book_list = models.Book.objects.filter(publication_date__isnull=True).order_by(order)
-
-	print filterby
-	print order
 
 	template = 'workflow/dashboard.html'
 	context = {
