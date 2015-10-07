@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+{% load static from staticfiles %}
+{% load bootstrap3 %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block css %}
+    <style type="text/css">
+    .navbar {
+        margin-bottom: 0px !important;
+    }
+
+    .timeline > li > .timeline-badge{
+        left: 92% !important;
+    }
+
+    .timeline > li > .timeline-panel {
+        width: 80% !important;
+        float: none;
+    }
+
+    .timeline:before {
+        left: 92% !important;
+    }
+    </style>
+    <link href="{% static "css/timeline.css" %}" rel="stylesheet">
+{% endblock %}
+
+{% block body %}
+
+<div class="row">
+    <div class="col-md-12 book-heading">
+        <h3>Book {{ submission.id }}: {{ submission.title }}</h3>
+    </div>
+    <div class="col-md-3 dash-left" style="background-color: #EBEBEB;">
+        <div class="dash-container">
+            <h4>{% if submission.prefix %}{{ submission.prefix }} {% endif %}{{ submission.title }}</h4> 
+            <h5 class="author-note">{% if submission.subtitle %}{{ submission.subtitle }}{% endif %}</h5>
+            <table class="table table-bordered table-condensed small">
+                <tr>
+                    <th>Series</th>
+                    <td>{{ submission.series }}</td>
+                </tr>
+                <tr>
+                    <th>Type</th>
+                    <td>{{ submission.get_book_type_display }}</td>
+                </tr>
+                <tr>
+                    <th>License</th>
+                    <td>{{ submission.license.short_name }}</td>
+                </tr>
+                <tr>
+                    <th>Review Type</th>
+                    <td>{{ submission.get_review_type_display }}</td>
+                </tr>
+            </table>
+        </div>
+        <a href="{% url 'tasks' submission.pk %}">
+        <div class="dash-menu">
+            <h5>My Tasks <i class="fa fa-chevron-right pull-right"></i></h5>
+        </div>
+        </a>
+
+        <a href="{% url 'status' submission.pk %}">
+        <div class="dash-menu">
+            <h5>Current Status <i class="fa fa-chevron-right pull-right"></i></h5>
+        </div>
+        </a>
+        <a href="{% url 'author_submission' submission.pk %}">
+        <div class="dash-menu">
+            <h5>Submission Details <i class="fa fa-chevron-right pull-right"></i></h5>
+        </div>
+        </a>
+        {% if submission.stage.review %}
+        <a href="{% url 'review' submission.pk %}">
+        <div class="dash-menu">
+            <h5>Review <i class="fa fa-chevron-right pull-right"></i></h5>
+        </div>
+        </a>
+        {% endif %}
+        {% if submission.stage.editing %}
+        <a href="{% url 'editing' submission.pk %}">
+        <div class="dash-menu">
+            <h5>Editing <i class="fa fa-chevron-right pull-right"></i></h5>
+        </div>
+        </a>
+        {% endif %}
+        {% if submission.stage.production %}
+        <div class="dash-menu">
+            <h5>Production <i class="fa fa-chevron-right pull-right"></i></h5>
+        </div>
+        {% endif %}
+    </div>
+
+    <div class="col-md-5 dash-center">
+        <div class="dash-container">
+        {% if author_include %}
+            {% include author_include %}
+        {% endif %}
+        </div>
+    </div>
+    <div class="col-md-4 dash-right">
+        <div class="dash-container">
+        {% if submission_files %}
+            {% include submission_files %}
+        {% endif %}
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+
+{% block js %}
+<script type="text/javascript" src="{% static "js/messages.js" %}"></script>
+<script type="text/javascript" src="{% static "js/fancyfile.js" %}"></script>
+{% endblock js %}

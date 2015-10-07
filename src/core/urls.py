@@ -18,6 +18,7 @@ urlpatterns = patterns('',
     url(r'^typeset/', include('typeset.urls')),
     url(r'^api/', include('api.urls')),
     url(r'^author/', include('author.urls')),
+    url(r'^editor/', include('editor.urls')),
     url(r'^tasks/', include('onetasker.urls')),
 
     # 3rd Party Apps
@@ -52,8 +53,6 @@ urlpatterns = patterns('',
     # User submission
     url(r'^user/submission/(?P<submission_id>\d+)/$', 'core.views.user_submission', name='user_submission'),
     
-    # Editor Views
-    url(r'editor/dashboard/$', 'workflow.views.dashboard', name='dashboard'),
     url(r'overview/$', 'core.views.overview', name='overview'),
 )
 
