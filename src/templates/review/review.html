@@ -6,7 +6,7 @@
 
 {% block body %}
 <div class="row">
-<div class="col-md-12 book-heading" style="margin-top:-20px">
+<div class="col-md-12 book-heading container-fluid" style="margin-top:-20px">
       <h4>{% if submission.prefix %}{{ submission.prefix|title }}: {% endif %}{{ submission.title|title }}</h4>
 
 </div>
@@ -44,9 +44,9 @@
         {% include "review/submission_files.html" %}
    
         </div>
-              <div class="col-md-12" style="background-color:rgb(159,197,88);color:white;">                 
+              <div class="col-md-12  container-fluid" style="background-color:rgb(159,197,88);color:white;">                 
   
-                     <h6 >You accepted on {{review_assignment.accepted}}</h6>
+                     <h6 style="font-size:14px">You accepted on {{review_assignment.accepted}}</h6>
 
                     </div>
                      </br>

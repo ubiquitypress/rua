@@ -135,8 +135,7 @@ def review(request, review_type, submission_id, access_key=None):
 				return redirect(reverse('reviewer_decision_without', kwargs={'review_type': review_type, 'submission_id': submission.pk,'review_assignment':review_assignment.pk}))
 	
 	editors = logic.get_editors(review_assignment)
-	print editors
-	
+		
 	form = forms.GeneratedForm(form=submission.review_form)
 	recommendation_form = core_forms.RecommendationForm(ci_required=ci_required.value)
 	
@@ -213,6 +212,12 @@ def review_complete(request, review_type, submission_id,access_key=None):
 		review_assignment = get_object_or_404(core_models.ReviewAssignment, user=request.user, book=submission, review_type=review_type)
 	
 	result = review_assignment.results
+	if not result or not review_assignment.completed:
+		if access_key:
+			return redirect(reverse('review_with_access_key', kwargs={'review_type': review_type, 'submission_id': submission.id,'access_key':access_key}))
+		else: 
+			return redirect(reverse('review_without_access_key', kwargs={'review_type': review_type, 'submission_id': submission.id}))
+
 	relations = models.FormElementsRelationship.objects.filter(form=result.form)
 	data_ordered = workflow_logic.order_data(workflow_logic.decode_json(result.data), relations)
 

@@ -2,18 +2,11 @@
 {% load static from staticfiles %}
 {% load bootstrap3 %}
 
-{% block breadcrumbs %}
-  <ol class="breadcrumb">
-    <li>Review</li>
-    <li>{{ submission.title }}</li>
-    <li>Decision</li>
-	</ol>
-{% endblock %}
 
 {% block body %}
 
 <div class="row">
-<div class="col-md-12 book-heading" style="margin-top:-20px">
+<div class="col-md-12 book-heading  container-fluid" style="margin-top:-20px">
       <h4>{% if submission.prefix %}{{ submission.prefix|title }}: {% endif %}{{ submission.title|title }}</h4>
 
 </div>
@@ -51,28 +44,10 @@
         {% include "review/submission_files.html" %}
    
         </div>
-        {% if review_assignment.accepted %}
-              <div class="col-md-12" style="background-color:rgb(159,197,88);color:white;">                 
-  
-                     <h6>You accepted on {{review_assignment.accepted}}</h6>
 
-                    </div>
-                     </br>
-                      </br>
-                       </br>
-         {% elif review_assignment.denied %}
-         <div class="col-md-12" style="background-color:rgb(159,197,88);color:white;">                 
+              <div class="col-md-12 container-fluid" style="background-color:rgb(156,156,156);color:white;font-size:10px ">                 
   
-                     <h6>You denied on {{review_assignment.accepted}}</h6>
-
-                    </div>
-                     </br>
-                      </br>
-                       </br>
-         {% else %}
-              <div class="col-md-12" style="background-color:rgb(156,156,156);color:white;font-size:10px ">                 
-  
-                     <h5>You can accept or reject this task</h5>
+                     <h6 style="font-size:14px">You can accept or reject this task</h6>
 
                     </div>
 </br>
@@ -84,7 +59,7 @@
              <input class="btn btn-lg btn-accept" type="submit"  name="accept" id="accept" value="I Accept" style="width:120px; font-size: 14px;" >
              </form>
             </div> 
-          {% endif %}
+   
         
                    {% include "review/contact_editors.html"  %}
   

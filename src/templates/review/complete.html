@@ -5,7 +5,7 @@
 
 {% block body %}
 <div class="row">
-<div class="col-md-12 book-heading" style="margin-top:-20px">
+<div class="col-md-12 book-heading  container-fluid" style="margin-top:-20px">
       <h4>{% if submission.prefix %}{{ submission.prefix|title }}: {% endif %}{{ submission.title|title }}</h4>
 
 </div>
@@ -113,7 +113,7 @@
 </ul>
 
         <hr />
-        <h5> Your Recommendation:</h5>
+        <h5><b> Your Recommendation: </b></h5>
         {% ifequal review_assignment.recommendation 'reject' %}
         <p style="font-size:22px;color:#C6001E;margin-left:-10px;"> <b> {{review_assignment.recommendation|title}} Submission </b></p>
         {% endifequal %}
@@ -124,7 +124,7 @@
         <p style="font-size:22px;color:#E9C730;margin-left:-10px;"> <b> Revisions Required</b></p>
         {% endifequal %}
   <hr />
-        <h5>Competing interests: {{review_assignment.competing_interests}}</h5>
+        <h5><b>Competing interests:</b> {{review_assignment.competing_interests}}</h5>
       <br/><br/>
 
       </form>
