@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import logout as logout_user
 from django.contrib.auth import login as login_user
 from django.shortcuts import redirect, render, get_object_or_404
-from django.http import HttpResponseRedirect, Http404, HttpResponse
+from django.http import HttpResponseRedirect, Http404, HttpResponse, StreamingHttpResponse
 from django.contrib import messages
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
@@ -14,12 +14,10 @@ from django.db.models import Q
 from django.core import serializers
 from django.conf import settings
 
-from core import models
-from core import forms
-from core import logic
+from core import models, forms, logic, log
 from workflow import forms as workflow_forms
 from submission import models as submission_models
-from core.decorators import is_editor, is_book_editor, is_book_editor_or_author
+from core.decorators import is_editor, is_book_editor, is_book_editor_or_author, is_onetasker
 from pprint import pprint
 import json
 from time import strftime
@@ -343,7 +341,7 @@ def upload_misc_file(request, submission_id):
 
 	return render(request, template, context)
 
-@is_book_editor_or_author
+@is_onetasker
 def serve_file(request, submission_id, file_id):
 	book = get_object_or_404(models.Book, pk=submission_id)
 	_file = get_object_or_404(models.File, pk=file_id)

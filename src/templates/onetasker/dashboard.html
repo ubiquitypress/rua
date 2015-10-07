@@ -30,13 +30,13 @@
 
 <div class="row">
 
-    <div class="col-md-4 dash-left" style="background-color: rgb(230,230,230);">
+    <div class="col-md-4 dash-left">
         <div class="dash-container">
             <h4>COMPLETED TASKS <span class="badge circle">{{ completed_count }}</span></h4>
             {% for task in completed_tasks %}
             <div class="notification">
                 <h5><b>{{task.assignment.type|capfirst }} - {{task.assignment.book.title}}</b></h5>
-                <span class="pull-right" style="padding-right: 10px;">
+                <span class="pull-right">
                 <br />
                     <a href="/tasks/{{task.type}}/{{task.assignment.pk}}/about" class="btn btn-sm btn-primary view">View Project</a>
                     <a href="/tasks/{{task.type}}/{{task.assignment.pk}}" class="btn btn-sm btn-primary read">View Task</a>
@@ -59,7 +59,7 @@
                 <h5><b>{{task.type|capfirst}} - {{task.assignment.book.title}}</b></h5>
                 <p><b>Task due: <span class="author-due">{{ task.assignment.due }} ({{task.assignment.due|timeuntil}} left)</span></b></p>
 
-                <span class="pull-right" style="padding-right: 10px;">
+                <span class="pull-right">
                 <br />
                     <a href="/tasks/{{task.type}}/{{task.assignment.pk}}/about" class="btn btn-sm btn-primary view">View Project</a>
                     <a href="/tasks/{{task.type}}/{{task.assignment.pk}}" class="btn btn-sm btn-primary read">View Task</a>

@@ -217,6 +217,12 @@ class Book(models.Model):
 	def formats(self):
 		return self.format_set.all()
 
+	def onetaskers(self):
+		users =  [copyedit.copyeditor for copyedit in CopyeditAssignment.objects.filter(book=self)]
+		users.append(typeset.typesetter for typeset in TypesetAssignment.objects.filter(book=self))
+		users.append(typeset.typesetter for typeset in TypesetAssignment.objects.filter(book=self))
+		return users
+
 	def full_title(self):
 		if self.prefix and self.subtitle:
 			return '%s %s %s' % (self.prefix, self.title, self.subtitle)

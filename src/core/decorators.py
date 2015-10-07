@@ -209,13 +209,12 @@ def is_onetasker(function):
 				return function(request, *args, **kwargs)
 			elif submission_id:
 				book = get_object_or_404(models.Book, pk=submission_id)
-				onetaskers = list(chain.from_iterable((reviewer.typesetter, reviewer.copyeditor, reviewer.indexer)))
-				if request.user in onetaskers or book.owner == request.user:
+				if request.user in book.onetaskers() or book.owner == request.user:
 					return function(request, *args, **kwargs)
 				else:
 					messages.add_message(request, messages.ERROR, 'you don.')
 					raise exceptions.PermissionDenied 
-			elif not submission_id and (set(user_roles) & set('copyeditor', 'typesetter', 'indexer')):
+			elif not submission_id and (set(user_roles) & set(['copyeditor', 'typesetter', 'indexer'])):
 				return function(request, *args, **kwargs)
 			else:
 				messages.add_message(request, messages.ERROR, 'You need to have Press Editor, Book Editor or Series Editor level permission to view this page.')
