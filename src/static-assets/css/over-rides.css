@@ -355,7 +355,23 @@ body > div.container > div > div.col-md-4.dash-right > div > ul > li > div > div
     box-shadow: none;
 }
 
-
+.btn-other{
+  background-color:#29039C;
+  color:#ffffff;
+  border-color:#B6A3EE;
+  border-radius: 24px;
+}
+ 
+.btn-other:hover, .btn-other:focus, .btn-other:active, .btn-other.active, .open > .dropdown-toggle.btn-other {
+    background: #5E2AFA;
+    color:#ffffff;
+}
+ 
+.btn-other:active, .btn-other.active {
+    background: #13004C;
+    color:#ffffff;
+    box-shadow: none;
+}
 .btn-task{
   background-color:rgb(68, 86, 104);
   color:#ffffff;

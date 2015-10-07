@@ -33,7 +33,7 @@
 	{% endfor %}
 </ul>
 
-{% if additional_files %}
+{% if has_additional_files %}
 <h5><b>Additional Files:</b></h5>
 <ul class="manuscript-upload-states">
 	{% for file in submission.files.all %}

@@ -11,17 +11,86 @@
 {% endblock %}
 
 {% block body %}
-	<div class="col-md-12">
-		<h3>Review Request</h3>
-		<p>You've been asked to undertake a review on behalf of the Press and Author. The review is due on <strong>{{ review_assignment.due }}</strong>. You can accept and decline.</p>
-		<h3>About this Book</h3>
-		{% include "workflow/elements/summary.html" %}
-		<form method="POST">
-			{% csrf_token %}
-			<button class="btn btn-success" type="submit" name="accept" id="accept">Agree to Review</button>
-			<button class="btn btn-danger" type="submit" name="decline" id="decline">Decline to Review</button>
-		</form>
-	</div>
+
+<div class="row">
+<div class="col-md-12 book-heading" style="margin-top:-20px">
+      <h4>{% if submission.prefix %}{{ submission.prefix|title }}: {% endif %}{{ submission.title|title }}</h4>
+
+</div>
+	 <div class="col-md-3 dash-left" style="background-color: rgb(230,230,230); ">
+
+        <div class="dash-container" >
+            <h4 style="color:rgb(106,106,106)">  {% if submission.prefix %}{{ submission.prefix }} {% endif %}{{ submission.title }}</h4> <h5 style="color:rgb(101,117,132)">{{submission.subtitle}}</h5>
+        </div>
+        <div style="color:rgb(106,106,106); margin-left:10px">
+    <b>Series: </b>{{submission.series}} </br>
+    <b>Type: </b>{{submission.book_type}} </br>
+    <b>License: </b>{{submission.license}} </br>
+    <b>Review Type: </b>{{submission.get_review_type_display}} </br>
+    </div> </br>
+             <div class="band {{ submission.stage.current_stage }}">
+                        {{ submission.stage.get_current_stage_display }}
+                    </div>
+             <div class="band" style="background-color:rgb(193,193,193);color:rgb(99,99,99)">
+                      <h4>  My Task </h4>
+                    </div>
+
+   
+    </div>
+    <div class="col-md-5 dash-center" >
+    <div class="dash-container" >
+                       
+        <div class="dash-container">
+
+        <h4><b>INSTRUNCTIONS FOR TASK</b></h4>
+        </br>
+        <p style="margin-left:-10px;margin-top:-30px">You've been asked to undertake a review on behalf of the Press and Author.</p>
+     
+         <h5> Task Due <span style="color:rgb(101,117,132)">{{ review_assignment.due }}</span></h5>
+
+        {% include "review/submission_files.html" %}
+   
+        </div>
+        {% if review_assignment.accepted %}
+              <div class="col-md-12" style="background-color:rgb(159,197,88);color:white;">                 
+  
+                     <h6>You accepted on {{review_assignment.accepted}}</h6>
+
+                    </div>
+                     </br>
+                      </br>
+                       </br>
+         {% elif review_assignment.denied %}
+         <div class="col-md-12" style="background-color:rgb(159,197,88);color:white;">                 
+  
+                     <h6>You denied on {{review_assignment.accepted}}</h6>
+
+                    </div>
+                     </br>
+                      </br>
+                       </br>
+         {% else %}
+              <div class="col-md-12" style="background-color:rgb(156,156,156);color:white;font-size:10px ">                 
+  
+                     <h5>You can accept or reject this task</h5>
+
+                    </div>
+</br>
+</br>
+          <div class="dash-container" >
+          <form method="post">
+          {% csrf_token %}
+             <input class="btn btn-lg btn-decline" type="submit" name="decline" value="I Decline"id="decline" style="width:120px; font-size: 14px;">
+             <input class="btn btn-lg btn-accept" type="submit"  name="accept" id="accept" value="I Accept" style="width:120px; font-size: 14px;" >
+             </form>
+            </div> 
+          {% endif %}
+        
+                   {% include "review/contact_editors.html"  %}
+  
+</div>
+</div>
+
 {% endblock body %}
 
 {% block js %}
