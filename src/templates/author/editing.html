@@ -1,0 +1,45 @@
+<h2>Copyediting</h2>
+<table class="table table-condensed table-bordered">
+	<tr>
+		<th>Copyeditor</th><th>Status</th><th>Date</th>
+	</tr>
+	{% for assignment in submission.copyeditassignment_set.all %}
+	<tr>
+		<td>{{ assignment.copyeditor.profile.full_name }}</td>
+		<td>
+			{{ assignment.state.friendly }}
+		</td>
+		<td>
+			{{ assignment.state.date }}
+		</td>
+	</tr>
+	{% empty %}
+	<tr>
+		<td colspan="3">No assignments</td>
+	</tr>
+	{% endfor %}
+</table>
+
+<h2>Indexing</h2>
+<table class="table table-condensed table-bordered">
+	<tr>
+		<th>Indexer</th><th>Status</th><th>Date</th>
+	</tr>
+	{% for assignment in submission.indexassignment_set.all %}
+	<tr>
+		<td>{{ assignment.indexer.profile.full_name }}</td>
+		<td>
+			{{ assignment.state.friendly }}
+			<br />
+			<small>{{ assignment.state.date }}</small>
+		</td>
+		<td>
+			{{ assignment.state.date }}
+		</td>
+	</tr>
+	{% empty %}
+	<tr>
+		<td colspan="3">No assignments</td>
+	</tr>
+	{% endfor %}
+</table>

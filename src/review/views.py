@@ -16,6 +16,7 @@ from django.core.urlresolvers import reverse
 from django.contrib import messages
 from django.http import Http404, HttpResponse, StreamingHttpResponse, HttpResponseRedirect
 
+from workflow import logic as workflow_logic
 from core import models as core_models
 from core import views as core_views
 from core import forms as core_forms
@@ -24,6 +25,7 @@ from core import log
 from core import models as core_models
 from review import forms
 from review import models
+from review import logic
 from submission import models as submission_models
 
 @is_reviewer
@@ -31,51 +33,91 @@ def reviewer_dashboard(request):
 
 	pending_tasks = core_models.ReviewAssignment.objects.filter(user=request.user,completed__isnull=True,declined__isnull=True)
 	completed_tasks = core_models.ReviewAssignment.objects.filter(user=request.user,completed__isnull=False)
+	
 	template = 'review/dashboard.html'
 	context = {	
-	'pending_tasks': pending_tasks,
-	'pending_count': len(pending_tasks),
-	'completed_tasks': completed_tasks,
-	'completed_count':len(completed_tasks),
+		'pending_tasks': pending_tasks,
+		'pending_count': len(pending_tasks),
+		'completed_tasks': completed_tasks,
+		'completed_count':len(completed_tasks),
 	}
 
 	return render(request, template, context)
 
 @is_reviewer
-def reviewer_decision(request, review_type, submission_id, review_assignment, decision=None):
+def reviewer_decision(request, review_type, submission_id, review_assignment, decision=None,access_key=None):
 
 	# Check the review assignment as not been completed and is being accessed by the assigned user
 	submission = get_object_or_404(core_models.Book, pk=submission_id)
-	review_assignment = get_object_or_404(core_models.ReviewAssignment, pk=review_assignment, user=request.user, completed__isnull=True, declined__isnull=True, accepted__isnull=True)
+	if access_key:
+		review_assignment = get_object_or_404(core_models.ReviewAssignment, pk=review_assignment, user=request.user, completed__isnull=True, declined__isnull=True, accepted__isnull=True,access_key=access_key)
+	else:
+		review_assignment = get_object_or_404(core_models.ReviewAssignment, pk=review_assignment, user=request.user, completed__isnull=True, declined__isnull=True, accepted__isnull=True)
+	
+	editors = logic.get_editors(review_assignment)
+	has_additional = has_additional_files(submission)
 
 	if decision and decision == 'accept':
 		review_assignment.accepted = timezone.now()
+		message = "Review Assignment request for '%s' has been accepted by %s %s."  % (submission.title,review_assignment.user.first_name, review_assignment.user.last_name)
+		log.add_log_entry(book=submission, user=request.user, kind='review', message=message, short_name='Assignment accepted')
+		
+		for t in range(0,len(editors)):
+			notification = core_models.Task(book=submission,assignee=editors[t][0]['editor'],creator=request.user,text=message,workflow='review')
+			notification.save()
+		
 	elif decision and decision == 'decline':
 		review_assignment.declined = timzeone.now()
+		message = "Review Assignment request for '%s' has been declined by %s %s."  % (submission.title,review_assignment.user.first_name, review_assignment.user.last_name)
+		
+		for t in range(0,len(editors)):
+			notification = core_models.Task(book=submission,assignee=editors[t][0]['editor'],creator=request.user,text=message,workflow='review')
+			notification.save()
+			
+		log.add_log_entry(book=submission, user=request.user, kind='review', message=message, short_name='Assignment declined')
+
 
 	# If we didn't get a decision above, offer the user a choice.
 	if request.POST:
 		if 'accept' in request.POST:
 			review_assignment.accepted = timezone.now()
+			message = "Review Assignment request for '%s' has been accepted by %s %s."  % (submission.title,review_assignment.user.first_name, review_assignment.user.last_name)
+			log.add_log_entry(book=submission, user=request.user, kind='review', message=message, short_name='Assignment accepted')
+			
+			for t in range(0,len(editors)):
+				notification = core_models.Task(book=submission,assignee=editors[t][0]['editor'],creator=request.user,text=message,workflow='review')
+				notification.save()
+				
 		elif 'decline' in request.POST:
 			review_assignment.declined = timezone.now()
+			message = "Review Assignment request for '%s' has been declined by %s %s."  % (submission.title,review_assignment.user.first_name, review_assignment.user.last_name)
+		
+			for t in range(0,len(editors)):
+				notification = core_models.Task(book=submission,assignee=editors[t][0]['editor'],creator=request.user,text=message,workflow='review')
+				notification.save()
+			
+			log.add_log_entry(book=submission, user=request.user, kind='review', message=message, short_name='Assignment declined')
+
 
 	if request.POST or decision:
 		review_assignment.save()
 		if review_assignment.accepted:
-			return redirect(reverse('review_without_access_key', kwargs={'review_type': review_type, 'submission_id': submission.pk}))
+			if access_key:
+				return redirect(reverse('review_with_access_key', kwargs={'review_type': review_type, 'submission_id': submission.pk,'access_key':access_key}))
+			else:
+				return redirect(reverse('review_without_access_key', kwargs={'review_type': review_type, 'submission_id': submission.pk}))
 		elif review_assignment.declined:
-			return redirect(reverse('user_home'))
+			return redirect(reverse('reviewer_dashboard'))
 
 	template = 'review/reviewer_decision.html'
 	context = {
 		'submission': submission,
 		'review_assignment': review_assignment,
+		'has_additional_files': has_additional,
+		'editors': editors
 	}
 
 	return render(request, template, context)
-
-
 
 @is_reviewer
 def review(request, review_type, submission_id, access_key=None):
@@ -98,54 +140,22 @@ def review(request, review_type, submission_id, access_key=None):
 		if review_assignment.completed:
 			return redirect(reverse('review_complete', kwargs={'review_type': review_type, 'submission_id': submission.pk}))
 	
-	editors_mail=''
 	if review_assignment:
-		press_editors= review_assignment.book.press_editors.all()
-		i=0
-		for editor in press_editors:
-			editors_mail=editors_mail+editor.email
-		 	if i<len(press_editors):
-		 		editors_mail=editors_mail+','
-		 	i=i+1
-
-	print editors_mail
+		if not review_assignment.accepted and not review_assignment.declined:
+			if access_key:
+				return redirect(reverse('reviewer_decision_without_access_key', kwargs={'review_type': review_type, 'submission_id': submission.pk,'access_key':access_key,'review_assignment':review_assignment.pk}))
+			else:
+				return redirect(reverse('reviewer_decision_without', kwargs={'review_type': review_type, 'submission_id': submission.pk,'review_assignment':review_assignment.pk}))
+	
+	editors = logic.get_editors(review_assignment)
+	print editors
+	
 	form = forms.GeneratedForm(form=submission.review_form)
 	recommendation_form = core_forms.RecommendationForm(ci_required=ci_required.value)
-	print form
+	
 	if not request.POST and request.GET.get('download') == 'docx':
 		path = create_review_form(submission)
 		return serve_file(request, path)
-	if request.POST and 'task_offer' in request.POST:
-		response = request.POST['task_offer']
-		press_editors= review_assignment.book.press_editors.all()
-		if response == 'I Accept':
-			review_assignment.accepted=timezone.now()
-			review_assignment.save(update_fields=['accepted'])
-			message = "Review Assignment request for '"+submission.title+"' has been accepted by "+request.user.first_name+' '+request.user.last_name		
-			log.add_log_entry(book=submission, user=request.user, kind='review', message=message, short_name='Assignment accepted')
-			for editor in press_editors:
-				print editor
-				notification = core_models.Task(book=submission,assignee=editor,creator=request.user,text=message,workflow='review')
-				notification.save()
-
-		elif response == 'I Decline':
-			review_assignment.declined=timezone.now()
-			review_assignment.save(update_fields=['declined'])
-
-			
-			message = "Review Assignment request for '"+submission.title+"' has been declined by "+request.user.first_name+' '+request.user.last_name
-			print message
-			for editor in press_editors:
-				print editor
-				notification = core_models.Task(book=submission,assignee=editor,creator=request.user,text=message,workflow='review')
-				notification.save()
-			log.add_log_entry(book=submission, user=request.user, kind='review', message=message, short_name='Assignment declined')
-
-
-
-			return redirect(reverse('reviewer_dashboard'))
-
-
 	elif request.POST:
 		form = forms.GeneratedForm(request.POST, request.FILES, form=submission.review_form)
 		recommendation_form = core_forms.RecommendationForm(request.POST, ci_required=ci_required.value)
@@ -180,11 +190,11 @@ def review(request, review_type, submission_id, access_key=None):
 			review_assignment.save()
 
 			if not review_type == 'proposal':
-				press_editors = review_assignment.book.press_editors.all()
 				log.add_log_entry(book=submission, user=request.user, kind='review', message='Reviewer %s %s completed review for %s.' % (review_assignment.user.first_name, review_assignment.user.last_name, submission.title), short_name='Assignment Completed')
-				message = "Reviewer "+review_assignment.user.first_name+" "+review_assignment.user.last_name+" completed review for "+submission.title+"."
-				for editor in press_editors:
-					notification = core_models.Task(book=submission,assignee=editor,creator=request.user,text=message,workflow='review')
+				
+				message = "Reviewer %s %s has completed a review for '%s'."  % (submission.title,review_assignment.user.first_name, review_assignment.user.last_name)
+				for t in range(0,len(editors)):
+					notification = core_models.Task(book=submission,assignee=editors[t][0]['editor'],creator=request.user,text=message,workflow='review')
 					notification.save()
 		
 
@@ -198,7 +208,8 @@ def review(request, review_type, submission_id, access_key=None):
 		'form': form,
 		'form_info': submission.review_form,
 		'recommendation_form': recommendation_form,
-		'editors':editors_mail,
+		'editors':editors,
+		'has_additional_files': logic.has_additional_files(submission),
 
 	}
 
@@ -216,12 +227,20 @@ def review_complete(request, review_type, submission_id,access_key=None):
 	else:
 		submission = get_object_or_404(core_models.Book, pk=submission_id)
 		review_assignment = get_object_or_404(core_models.ReviewAssignment, user=request.user, book=submission, review_type=review_type)
+	
+	result = review_assignment.results
+	relations = models.FormElementsRelationship.objects.filter(form=result.form)
+	data_ordered = workflow_logic.order_data(workflow_logic.decode_json(result.data), relations)
 
 	template = 'review/complete.html'
 	context = {
 		'submission': submission,
 		'review_assignment': review_assignment,
 		'form_info': submission.review_form,
+		'data_ordered': data_ordered,
+		'result': result,
+		'additional_files': logic.has_additional_files(submission),
+		'editors': logic.get_editors(review_assignment)
 	}
 
 	return render(request,template, context)
@@ -269,7 +288,7 @@ def serve_file(request, file_path):
 		mimetype = mimetypes.guess_type(file_path)
 		response = StreamingHttpResponse(fsock, content_type=mimetype)
 		response['Content-Disposition'] = "attachment; filename=review_form.docx"
-		pprint(response)
+		
 		return response
 	except IOError:
 		messages.add_message(request, messages.ERROR, 'File not found.')
@@ -292,7 +311,7 @@ def handle_review_file(file, book, review_assignment, kind):
 
 	file_mime = mime.guess_type(filename)
 
-	print(file_mime)
+	
 
 	try:
 		file_mime = file_mime[0]

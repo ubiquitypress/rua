@@ -89,23 +89,23 @@
     </div>
 
     <div class="col-md-5 dash-center">
-        <div class="dash-container">
+        <div class="dash-container"  id="task-list">
             <h4>NOTIFICATIONS <span class="badge">{{ task_count }}</span></h4>
 
             {% for note in notifications %}
-            <div class="notification">
+            <div class="notification" id="task-{{ note.id }}" id="callout-helper-bg-specificity">
                 <h5>{{ note.text }}</h5>
                 <p><em>Book {{ note.book.id }}: {{ note.book.full_title }}</em></p>
-                <span class="pull-right" style="padding-right: 10px;">
+                <span class="pull-right" style="padding-right: 10px;" >
                 <br />
-                    <a class="btn btn-xs btn-primary read">Mark as Read</a>
-                    <a class="btn btn-xs btn-primary view">View</a>
+                       <button class="btn btn-xs btn-read" id="{{ note.id }}" value="{{ note.id }}">&nbsp;&nbsp;Mark as Read&nbsp;&nbsp;</button>
+         
+                    <a class="btn btn-xs btn-view">&nbsp;&nbsp;View&nbsp;&nbsp;</a>
                 </span>
                 <p><em>Posted {{ note.assigned }}</em></p>
             </div>
             {% endfor %}
-
-        </div>
+            </div>
     </div>
 
     <div class="col-md-4 dash-right">
@@ -133,4 +133,37 @@
 
 </div>
 
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+  $(document).on("click", ":button", function(){
+        var id = $(this).attr('id');
+        var div_id = "#task-" + $(this).attr('id');
+        $.post("/user/task/" + id + "/complete/");
+        $( div_id ).remove()
+    });
+</script>
+
+<script type="text/javascript">
+    var frm = $('#task_form');
+    frm.submit(function () {
+        $.ajax({
+            type: frm.attr('method'),
+            url: frm.attr('action'),
+            data: frm.serialize(),
+            success: function (data) {
+                data = $.parseJSON(data);
+                $( "#task-list" ).append( '<div id="task-' + data.id + '" class="bs-callout" id="callout-helper-bg-specificity"><label class="checkbox-inline"><input type="checkbox" id="'+ data.id + '" value="' + data.id + '"> ' + data.text + '</label></div>' );
+                $('#id_text').val("");
+                $('#myModal').modal('hide')
+            },
+            error: function(data) {
+                $("#MESSAGE-DIV").html("Something went wrong!");
+                console.log(data)
+            }
+        });
+        return false;
+    });
+</script>
 {% endblock %}

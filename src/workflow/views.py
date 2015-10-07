@@ -47,8 +47,6 @@ def dashboard(request):
 		search = None
 		order = 'title'
 
-	print search
-
 	query_list = []
 
 	if filterby:
@@ -61,9 +59,6 @@ def dashboard(request):
 		book_list = models.Book.objects.filter(publication_date__isnull=True).filter(*query_list).order_by(order)
 	else:
 		book_list = models.Book.objects.filter(publication_date__isnull=True).order_by(order)
-
-	print filterby
-	print order
 
 	template = 'workflow/dashboard.html'
 	context = {
@@ -670,6 +665,8 @@ def serve_file(request, submission_id, file_id):
 	_file = get_object_or_404(models.File, pk=file_id)
 	file_path = os.path.join(settings.BOOK_DIR, submission_id, _file.uuid_filename)
 
+	print file_path
+
 	try:
 		fsock = open(file_path, 'r')
 		mimetype = mimetypes.guess_type(file_path)
@@ -678,7 +675,7 @@ def serve_file(request, submission_id, file_id):
 		log.add_log_entry(book=book, user=request.user, kind='file', message='File %s downloaded.' % _file.uuid_filename, short_name='Download')
 		return response
 	except IOError:
-		messages.add_message(request, messages.ERROR, 'File not found. %s/%s' % (file_path, _file.uuid_filename))
+		messages.add_message(request, messages.ERROR, 'File not found. %s' % (file_path))
 		return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 @is_book_editor_or_author

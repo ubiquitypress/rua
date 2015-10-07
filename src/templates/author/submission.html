@@ -75,9 +75,11 @@
         </a>
         {% endif %}
         {% if submission.stage.editing %}
+        <a href="{% url 'editing' submission.pk %}">
         <div class="dash-menu">
             <h5>Editing <i class="fa fa-chevron-right pull-right"></i></h5>
         </div>
+        </a>
         {% endif %}
         {% if submission.stage.production %}
         <div class="dash-menu">

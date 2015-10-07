@@ -8,7 +8,6 @@ class Copyedit(forms.ModelForm):
 		model = models.CopyeditAssignment
 		fields = ('note',)
 
-
 class CopyeditAuthorInvite(forms.ModelForm):
 
 	class Meta:

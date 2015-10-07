@@ -299,11 +299,24 @@ body > div.container > div > div.col-md-4.dash-right > div > ul > li > div > div
   padding: 5 5 5 10;
 }
 
-.view {
+.btn-view{
   background-color: rgb(196, 183, 140);
   border-color: rgb(196, 183, 140);
-  
+  color:#ffffff;
+  border-radius: 8px;
 }
+ 
+.btn-view:hover, .btn-view:focus, .btn-view:active, .btn-view.active, .open > .dropdown-toggle.btn-view {
+    background: #D7CDAC;
+    color:#ffffff;
+}
+ 
+.btn-view:active, .btn-view.active {
+    background: #A69A72;
+    color:#ffffff;
+    box-shadow: none;
+}
+
 .btn-accept{
   background-color:rgb(159, 197, 88);
   color:#ffffff;
@@ -337,6 +350,41 @@ body > div.container > div > div.col-md-4.dash-right > div > ul > li > div > div
  
 .btn-decline:active, .btn-decline.active {
     background: #E7113C;
+    color:#ffffff;
+    box-shadow: none;
+}
+.btn-read{
+  background-color:rgb(68, 86, 104);
+  color:#ffffff;
+  border-color:rgb(138,149,160);
+  border-radius: 8px;
+}
+ 
+.btn-read:hover, .btn-read:focus, .btn-read:active, .btn-read.active, .open > .dropdown-toggle.btn-read {
+    background: #517476;
+    color:#ffffff;
+}
+ 
+.btn-read:active, .btn-read.active {
+    background: #2D5355;
+    color:#ffffff;
+    box-shadow: none;
+}
+
+.btn-other{
+  background-color:#29039C;
+  color:#ffffff;
+  border-color:#B6A3EE;
+  border-radius: 24px;
+}
+ 
+.btn-other:hover, .btn-other:focus, .btn-other:active, .btn-other.active, .open > .dropdown-toggle.btn-other {
+    background: #5E2AFA;
+    color:#ffffff;
+}
+ 
+.btn-other:active, .btn-other.active {
+    background: #13004C;
     color:#ffffff;
     box-shadow: none;
 }
