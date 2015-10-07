@@ -30,31 +30,21 @@
 
 <div class="row">
     <div class="col-md-12 book-heading container-fluid">
-        <h3>Book {{ submission.id }}: {{ submission.title }}</h3>
+        <h4>Book {{ submission.id }}: {{ submission.title }}</h4>
     </div>
-    <div class="col-md-3 dash-left" style="background-color: #EBEBEB;">
+    <div class="col-md-3 dash-left" style="background-color: rgb(230,230,230);">
         <div class="dash-container">
-            <h4>{% if submission.prefix %}{{ submission.prefix }} {% endif %}{{ submission.title }}</h4> 
-            <h5 class="author-note">{% if submission.subtitle %}{{ submission.subtitle }}{% endif %}</h5>
-            <table class="table table-bordered table-condensed small">
-                <tr>
-                    <th>Series</th>
-                    <td>{{ submission.series }}</td>
-                </tr>
-                <tr>
-                    <th>Type</th>
-                    <td>{{ submission.get_book_type_display }}</td>
-                </tr>
-                <tr>
-                    <th>License</th>
-                    <td>{{ submission.license.short_name }}</td>
-                </tr>
-                <tr>
-                    <th>Review Type</th>
-                    <td>{{ submission.get_review_type_display }}</td>
-                </tr>
-            </table>
-        </div>
+            <h4 style="color:rgb(106,106,106)">{% if submission.prefix %}{{ submission.prefix }} {% endif %}{{ submission.title }}</h4> 
+            <h5 style="color:rgb(101,117,132)" class="author-note">{% if submission.subtitle %}{{ submission.subtitle }}{% endif %}</h5>
+          </div>
+
+            <div style="color:rgb(106,106,106); margin-left:10px ">
+    <b>Series: </b>{{submission.series}} </br>
+    <b>Type: </b>{{submission.book_type}} </br>
+    <b>License: </b>{{submission.license}} </br>
+    <b>Review Type: </b>{{submission.get_review_type_display}} </br>
+    </div> </br>
+       
         <a href="{% url 'tasks' submission.pk %}">
         <div class="dash-menu">
             <h5>My Tasks <i class="fa fa-chevron-right pull-right"></i></h5>
