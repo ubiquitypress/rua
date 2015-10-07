@@ -2,11 +2,11 @@
   <h5>If you would like to contact the editor about this </br> project, please click the button below</h5></br>
   {% for editor_dict in editors %}
     {% if editor_dict.isSeriesEditor == True %}
-    <a href="mailto:{{editor_dict.editor.email}}" class="btn btn-lg btn-other"  type="submit"  style="font-size: 14px;border-radius:8px" >Contact {{ editor_dict.editor.profile.full_name }}</a> 
+    <a href="mailto:{{editor_dict.editor.email}}" class="btn btn-lg btn-other btn-contact"  type="submit" >Contact {{ editor_dict.editor.profile.full_name }}</a> 
     {% else %}
-    <a href="mailto:{{editor_dict.editor.email}}" class="btn btn-lg btn-task"  type="submit"  style="font-size: 14px;border-radius:8px" >Contact {{ editor_dict.editor.profile.full_name }}</a>
+    <a href="mailto:{{editor_dict.editor.email}}" class="btn btn-lg btn-task btn-contact"  type="submit" >Contact {{ editor_dict.editor.profile.full_name }}</a>
     {% endif %}
   {% empty %}
-    <a disabled class="btn btn-lg btn-task" type="submit"  style="width:120px; font-size: 14px;border-radius:8px" >No Editors Assigned</a>
+    <a disabled class="btn btn-lg btn-task btn-contact" type="submit"  >No Editors Assigned</a>
   {% endfor %}
 </div>

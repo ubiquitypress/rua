@@ -245,6 +245,10 @@ body > div.container > div > div.col-md-4.dash-right > div > ul > li > div > div
   background-color:rgb(193,193,193);
   color:rgb(99,99,99);
 }
+.btn-contact{
+  font-size: 14px !important;
+  border-radius:8px !important
+}
 .book-info{
   color:rgb(106,106,106);
   margin-left:10px;
