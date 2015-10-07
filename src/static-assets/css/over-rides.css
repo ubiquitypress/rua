@@ -16,10 +16,10 @@ p, div {
     color: #FFFFFF;
     border-right: 1px double #5b5b5b;
 }
-.navbar .container { height: 5em; }
+.navbar .container { min-height: 5em; }
 
 nav > div > div.navbar-collapse.collapse > ul > li > a {
-    height: 5em;
+    min-height: 5em;
     padding-top: 25;
 }
 
