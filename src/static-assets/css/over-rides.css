@@ -87,8 +87,13 @@ html, body {
   height: 92%;
   border-right: 1px double #c7c7c7;
   border-left: 1px double #c7c7c7;
-  overflow-y: scroll;
+  overflow-y: auto;
   overflow-x: hidden;
+  background-color: #EBEBEB;
+}
+
+.dash-left a {
+  text-decoration: none;
 }
 .grey-container{
   background-color: rgb(230,230,230);
@@ -98,7 +103,7 @@ html, body {
   height: 92%;
   border-left: 1px double #c7c7c7;
   border-right: 1px double #c7c7c7;
-  overflow-y: scroll;
+  overflow-y: auto;
   overflow-x: hidden;
 }
 
@@ -156,10 +161,6 @@ html, body {
   background-color: rgb(230,230,230);
   padding-left: 10px;
   padding-top: 10px;
-}
-
-.dash-left a {
-  text-decoration: none;
 }
 
 .manuscript-upload-states {
@@ -366,9 +367,28 @@ body > div.container > div > div.col-md-4.dash-right > div > ul > li > div > div
   font-size: 1.5em;
   padding: 5 5 5 10;
 }
+.band-new {
+  background-color:rgb(156,156,156);
+  color:white;
+  font-size:10px;
+  padding:2 2 2 10;
+  margin-bottom: 10px;
+}
+
+.band-accepted {
+  background-color:rgb(159,197,88);
+  color:white;
+  font-size:10px;
+  padding:2 2 2 10;
+  margin-bottom: 10px;
+}
 
 .activity {
   padding: 5 5 5 10;
+}
+
+.btn-action {
+  width: 90px;
 }
 
 .btn-view{
@@ -484,6 +504,7 @@ body > div.container > div > div.col-md-4.dash-right > div > ul > li > div > div
 
 .button-block-center {
   text-align: center;
+  padding-bottom: 10px;
 }
 
 .button-block-center hr {

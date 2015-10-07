@@ -4,7 +4,7 @@ from django.utils import timezone
 from django.core.urlresolvers import reverse
 from django.contrib import messages
 
-from core import models, log, task
+from core import models, log, task, logic as core_logic
 from author import forms
 from author import logic
 from workflow.logic import order_data, decode_json
@@ -51,9 +51,9 @@ def status(request, submission_id):
 	context = {
 		'submission': book,
 		'active': 'user_submission',
-		'author_include': 'author/status.html',
+		'author_include': 'shared/status.html',
 		'submission_files': 'shared/messages.html',
-		'timeline': logic.build_time_line(book),
+		'timeline': core_logic.build_time_line(book),
 	}
 
 	return render(request, template, context)
@@ -132,7 +132,7 @@ def tasks(request, submission_id):
 	context = {
 		'submission': book,
 		'tasks': logic.submission_tasks(book, request.user),
-		'author_include': 'author/tasks.html',
+		'author_include': 'shared/tasks.html',
 	}
 
 	return render(request, template, context)
@@ -227,7 +227,7 @@ def editing(request, submission_id):
 @login_required
 def copyedit_review(request, submission_id, copyedit_id):
 	book = get_object_or_404(models.Book, pk=submission_id, owner=request.user)
-	copyedit = get_object_or_404(models.CopyeditAssignment, pk=copyedit_id, book__owner=request.user, book=book)
+	copyedit = get_object_or_404(models.CopyeditAssignment, pk=copyedit_id, book__owner=request.user, book=book, author_invited__isnull=False, author_completed__isnull=True)
 
 	form = copyedit_forms.CopyeditAuthor(instance=copyedit)
 

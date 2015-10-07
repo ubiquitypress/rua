@@ -354,6 +354,9 @@ class CopyeditAssignment(models.Model):
 	def __repr__(self):
 		return u'%s - %s %s' %  (self.pk, self.book.title, self.copyeditor.username)
 
+	def type(self):
+		return 'copyedit'
+
 	def state(self):
 		if self.author_completed:
 			return {'state': 'complete', 'friendly': 'Assignment Complete', 'date': self.author_completed}
@@ -386,6 +389,9 @@ class IndexAssignment(models.Model):
 
 	def __repr__(self):
 		return u'%s - %s %s' %  (self.pk, self.book.title, self.indexer.username)
+
+	def type(self):
+		return 'indexing'
 
 	def state(self):
 		if self.completed:
@@ -427,6 +433,9 @@ class TypesetAssignment(models.Model):
 
 	def __repr__(self):
 		return u'%s - %s %s' %  (self.pk, self.book.title, self.typesetter.username)
+
+	def type(self):
+		return 'typesetting'
 
 		def state(self):
 			if self.typsetter_completed:
