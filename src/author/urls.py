@@ -14,6 +14,7 @@ urlpatterns = patterns('',
 
 		url(r'^submission/(?P<submission_id>\d+)/editing/$', 'author.views.editing', name='editing'),
 	    url(r'^submission/(?P<submission_id>\d+)/editing/copyedit/(?P<copyedit_id>\d+)/$', 'author.views.copyedit_review', name='copyedit_review'),
+	    url(r'^submission/(?P<submission_id>\d+)/editing/typeset/(?P<typeset_id>\d+)/$', 'author.views.typeset_review', name='typeset_review'),
 
 	    url(r'^submission/(?P<submission_id>\d+)/revisions/(?P<revision_id>\d+)/$', 'author.views.revision', name='author_revision'),
 	    url(r'^submission/(?P<submission_id>\d+)/revisions/(?P<revision_id>\d+)/update_file/(?P<file_id>\d+)/$', 'author.views.revise_file', name='revise_file'),

@@ -1,0 +1,8 @@
+{% if press.general.copyedit_instructions %}
+<h4>Copyediting Instructions</h4>
+{{ press.general.typeset_author_instructions|safe }}
+{% endif %}
+<h4>Note from Editor</h4>
+<p>{{ typeset.note_to_author|linebreaks }}</p>
+<h4>Files</h4>
+{% include "shared/review_files.html" with file_data=typeset.typeset_files.all %}

@@ -14,6 +14,7 @@ from review import models as review_models
 from workflow.views import handle_file_update
 from copyedit import forms as copyedit_forms
 from copyedit.views import handle_copyedit_file
+from typeset import forms as typeset_forms
 
 @login_required
 def author_dashboard(request):
@@ -97,6 +98,7 @@ def view_review_round(request, submission_id, round_id):
 
 	return render(request, template, context)
 
+@login_required
 def view_review_assignment(request, submission_id, round_id, review_id):
 
 	submission = get_object_or_404(models.Book, pk=submission_id, owner=request.user)
@@ -224,7 +226,7 @@ def editing(request, submission_id):
 @login_required
 def copyedit_review(request, submission_id, copyedit_id):
 	book = get_object_or_404(models.Book, pk=submission_id, owner=request.user)
-	copyedit = get_object_or_404(models.CopyeditAssignment, pk=copyedit_id, book__owner=request.user, book=book, author_invited__isnull=False, author_completed__isnull=True)
+	copyedit = get_object_or_404(models.CopyeditAssignment, pk=copyedit_id, book__owner=request.user, book=book)
 
 	form = copyedit_forms.CopyeditAuthor(instance=copyedit)
 
@@ -235,17 +237,53 @@ def copyedit_review(request, submission_id, copyedit_id):
 			for _file in request.FILES.getlist('copyedit_file_upload'):
 				new_file = handle_copyedit_file(_file, book, copyedit, 'copyedit')
 				copyedit.author_files.add(new_file)
-				copyedit.author_completed = timezone.now()
-				copyedit.save()
-				log.add_log_entry(book=book, user=request.user, kind='editing', message='Copyedit Author review compeleted by %s %s.' % (request.user.first_name, request.user.last_name), short_name='Copyedit Author Review Complete')
-				messages.add_message(request, messages.SUCCESS, 'Copyedit task complete. Thanks.')
-				new_task = task.create_new_task(book, copyedit.book.owner, copyedit.requestor, "Author Copyediting completed for %s" % book.title, workflow='editing')
-				return redirect(reverse('author_submission', kwargs={'submission_id': submission_id}))
+				
+			copyedit.author_completed = timezone.now()
+			copyedit.save()
+			log.add_log_entry(book=book, user=request.user, kind='editing', message='Copyedit Author review compeleted by %s %s.' % (request.user.first_name, request.user.last_name), short_name='Copyedit Author Review Complete')
+			messages.add_message(request, messages.SUCCESS, 'Copyedit task complete. Thanks.')
+			new_task = task.create_new_task(book, copyedit.book.owner, copyedit.requestor, "Author Copyediting completed for %s" % book.title, workflow='editing')
+			return redirect(reverse('editing', kwargs={"submission_id": submission_id,}))
 
-	template = 'copyedit/copyedit_author.html'
+	template = 'author/submission.html'
 	context = {
 		'submission': book,
 		'copyedit': copyedit,
+		'author_include': 'author/copyedit.html',
+		'submission_files': 'author/copyedit_review.html',
+		'form': form,
+	}
+
+	return render(request, template, context)
+
+@login_required
+def typeset_review(request, submission_id, typeset_id):
+	book = get_object_or_404(models.Book, pk=submission_id)
+	typeset = get_object_or_404(models.TypesetAssignment, pk=typeset_id, book__owner=request.user, book=book)
+
+	form = typeset_forms.TypesetAuthor(instance=typeset)
+
+	if request.POST:
+		form = typeset_forms.TypesetAuthor(request.POST, instance=typeset)
+		if form.is_valid():
+			form.save()
+			for _file in request.FILES.getlist('typeset_file_upload'):
+				new_file = handle_typeset_file(_file, book, typeset, 'typeset')
+				typeset.author_files.add(new_file)
+
+			typeset.author_completed = timezone.now()
+			typeset.save()
+			log.add_log_entry(book=book, user=request.user, kind='production', message='Author Typesetting review %s %s completed.' % (request.user.first_name, request.user.last_name), short_name='Author Typesetting Review Completed')
+			messages.add_message(request, messages.SUCCESS, 'Typesetting task complete. Thanks.')
+			new_task = task.create_new_task(book, typeset.book.owner, typeset.requestor, "Author Typesetting completed for %s" % book.title, workflow='production')
+			return redirect(reverse('editing', kwargs={"submission_id": submission_id,}))
+
+	template = 'author/submission.html'
+	context = {
+		'submission': book,
+		'typeset': typeset,
+		'author_include': 'author/typeset.html',
+		'submission_files': 'author/typeset_review.html',
 		'form': form,
 	}
 
