@@ -1,0 +1,136 @@
+<h3>FILES</h3>
+
+
+
+<h5><b>Manuscript Files:</b></h5>
+<ul class="media-list manuscript-upload-states">
+  {% for file in submission.files.all %}
+  {% if file.kind == 'manuscript' %}
+  <li class="media" style="background-color:rgb(230,230,230)">
+    <div class="media-left">
+      <span > <h1>
+        {% if file.mime_type == 'image/jpeg' or file.mime_type == 'image/png' %}
+       &nbsp; &nbsp;    <i class="fa fa-file-image-o"></i>
+        {% else %}
+        &nbsp; &nbsp;   <i class="fa fa-file-text-o"></i>
+        {% endif %}
+      </span></h1>
+    </div>
+    <div class="media-body">
+
+        <div class="col-md-4">
+        <h5><b>{{ file.label }}</b></h5>
+        <h5>{{ file.original_filename }}</h5>
+      </div>
+    </div>
+    <div class="button-block-center">
+      <hr />
+      <a href="{% url 'serve_file' submission.id file.id %}" class="btn btn-sm btn-task"><i class="fa fa-download">&nbsp;</i>Download</a>
+      <td><a href="{% url 'update_file' submission.id file.id active %}" class="btn btn-sm btn-accept"><i class="fa fa-cloud-upload">&nbsp;</i>Update</a>
+      <a href="{% url 'versions_file' submission.id file.id %}" class="btn btn-sm btn-view"><i class="fa fa-files-o">&nbsp;</i>Versions</a>
+      <a href="{% url 'delete_file' submission.id file.id active %}" class="btn btn-sm btn-decline"><i class="fa fa-trash-o">&nbsp;</i>Delete</a>
+    </div>
+    </li>
+  {% endif %}
+    {% empty %}
+     <li style="background-color:rgb(230,230,230)">
+      <h5>&nbsp;&nbsp;&nbsp;No files</h5>
+   </li>
+  {% endfor %}
+</ul>
+
+<h5><b>Additional Files:</b></h5>
+<ul class="media-list manuscript-upload-states">
+  {% for file in submission.files.all %}
+  {% if file.kind == 'additional' %}
+  <li class="media" style="background-color:rgb(230,230,230)">
+    <div class="media-left">
+      <span > <h1>
+        {% if file.mime_type == 'image/jpeg' or file.mime_type == 'image/png' %}
+       &nbsp; &nbsp;    <i class="fa fa-file-image-o"></i>
+        {% else %}
+        &nbsp; &nbsp;   <i class="fa fa-file-text-o"></i>
+        {% endif %}
+      </span></h1>
+    </div>
+    <div class="media-body">
+        <div class="col-md-4">
+        <h5><b>{{ file.label }}</b></h5>
+        <h5>{{ file.original_filename }}</h5>
+      </div>
+    </div>
+    <div class="button-block-center">
+      <hr />
+      <a href="{% url 'serve_file' submission.id file.id %}" class="btn btn-sm btn-task"><i class="fa fa-download">&nbsp;</i>Download</a>
+      <td><a href="{% url 'update_file' submission.id file.id active %}" class="btn btn-sm btn-accept"><i class="fa fa-cloud-upload">&nbsp;</i>Update</a>
+      <a href="{% url 'versions_file' submission.id file.id %}" class="btn btn-sm btn-view"><i class="fa fa-files-o">&nbsp;</i>Versions</a>
+      <a href="{% url 'delete_file' submission.id file.id active %}" class="btn btn-sm btn-decline"><i class="fa fa-trash-o">&nbsp;</i>Delete</a>
+    </div>
+    </li>
+  {% endif %}
+    {% empty %}
+     <li style="background-color:rgb(230,230,230)">
+      <h5>&nbsp;&nbsp;&nbsp;No files</h5>
+   </li>
+  {% endfor %}
+</ul>
+
+{% if submission.misc_files.all %}
+<h5><b>Misc Files:</b></h5>
+<ul class="media-list manuscript-upload-states">
+  {% for file in submission.misc_files.all %}
+
+  <li class="media" style="background-color:rgb(230,230,230)">
+    <div class="media-left">
+      <span > <h1>
+        {% if file.mime_type == 'image/jpeg' or file.mime_type == 'image/png' %}
+       &nbsp; &nbsp;    <i class="fa fa-file-image-o"></i>
+        {% else %}
+        &nbsp; &nbsp;   <i class="fa fa-file-text-o"></i>
+        {% endif %}
+      </span></h1>
+    </div>
+    <div class="media-body">
+      
+        <div class="col-md-4">
+        <h5><b>{{ file.label }}</b></h5>
+        <h5><b>{{ file.kind|capfirst }}</b></h5>
+        <h5>{{ file.original_filename }}</h5>
+      </div>
+    </div>
+      <div class="media-right">
+      <a href="{% url 'serve_file' submission.id file.id %}" class="btn btn-sm btn-task pull-right " style="margin-top: 20px;margin-right:25px;border-radius:8px"><i class="fa fa-cloud-download"> &nbsp; Download</i></a>
+    </div>
+    </li>
+    {% empty %}
+     <li style="background-color:rgb(230,230,230)">
+      <h5>&nbsp;&nbsp;&nbsp;No files</h5>
+   </li>
+  {% endfor %}
+</ul>
+{% endif %}
+
+<h5>Contract:</h5>
+{% if submission.contract %}
+  <strong>Title: </strong>{{ submission.contract.title }}
+  <table class="table table-bordered table-condensed small">
+  <tr>
+    <td></td>
+    <th>Signoff</th>
+    <th>File</th>
+  </tr>
+    <tr>
+      <th>Editor</th>
+      <td>{{ submission.contract.editor_signed_off }}</td>
+      <td><a href="{% url 'serve_file' submission.id submission.contract.editor_file.id %}" class="btn btn-xs btn-primary"><i class="fa fa-download">&nbsp;</i>Download</a></td>
+  </tr>
+  <tr>
+    <th>Author</th>
+      <td>{% if not submission.contract.author_signed_off %}<a href="{% url 'author_contract_signoff' submission.id submission.contract.id %}" class="btn btn-xs btn-primary"><i class="fa fa-check">&nbsp;</i>Sign Off</a>{% else %}{{ submission.contract.author_signed_off }}{% endif %}</td>
+      <td>{% if submission.contract.author_file %}<a href="{% url 'serve_file' submission.id submission.contract.author_file.id %}" class="btn btn-xs btn-primary"><i class="fa fa-download">&nbsp;</i>Download</a>{% else %}No File{% endif %}</td>
+  </tr>
+  </table>
+{% else %}
+<p>&nbsp;<i class="fa fa-file-o">&nbsp;</i>This book doesn't have a contract yet.</p>
+{% endif %}
+
