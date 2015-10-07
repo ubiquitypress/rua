@@ -9,14 +9,17 @@
     <div class="col-md-12">
      {% include 'shared/submission_file.html' %}
     </div><br>
+    {% if not file.label %}
     <form method="POST">
-    <div class="col-md-8">
-      <input type="text" name="note" class="form-control">
-    </div>
-    <div class="col-md-4">
-      <button class="btn btn-info btn-sm">add label</button>
-    </div>
+    {% csrf_token %}
+      <div class="col-md-8">
+        <input type="text" name="label" class="form-control">
+      </div>
+      <div class="col-md-4">
+        <button class="btn btn-info btn-sm" name="file_id" value="{{ file.pk }}"><i class="fa fa-pencil-square"></i>&nbsp;&nbsp;Add label </button>
+      </div>
     </form>
-    <hr><hr>
+    {% endif %}
+    <div class="col-md-12"><hr></div>
   {% endfor %}
  

@@ -110,7 +110,7 @@ html, body {
 .dash-center {
   padding: 0;
   height: 92%;
-  overflow-y: scroll;
+  overflow-y: auto;
   overflow-x: hidden;
 }
 

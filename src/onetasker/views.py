@@ -67,7 +67,9 @@ def task_hub(request, assignment_type, assignment_id):
 
 		#handle label
 		elif 'label' in request.POST:
-			print request.POST
+			_file = get_object_or_404(models.File, pk=request.POST.get('file_id'))
+			_file.label = request.POST.get('label')
+			_file.save()
 			
 
 
