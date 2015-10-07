@@ -30,11 +30,11 @@ def dashboard(request):
 	return render(request, template, context)
 
 
-def task_hub(request, assignment_type, assignment_id):
+def task_hub(request, assignment_type, assignment_id, about):
 
 	assignment = logic.get_assignment(assignment_type, assignment_id)
 	form = logic.get_assignemnt_form(request, assignment_type, assignment)
-	center_block = 'onetasker/elements/files.html'
+	center_block = 'onetasker/elements/submission_details.html' if about else 'onetasker/elements/files.html'
 	right_block = logic.right_block(assignment)
 	submitted_files = logic.get_submitted_files(assignment)
 

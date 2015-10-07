@@ -129,7 +129,7 @@ def typeset_complete(request, submission_id, typeset_id):
 @login_required
 def typeset_typesetter(request, submission_id, typeset_id):
 	book = get_object_or_404(models.Book, pk=submission_id)
-	typeset = get_object_or_404(models.TypesetAssignment, pk=typeset_id, typesetter=request.user, book=book, typsetter_completed__isnull=True)
+	typeset = get_object_or_404(models.TypesetAssignment, pk=typeset_id, typesetter=request.user, book=book, typesetter_completed__isnull=True)
 
 	form = forms.TypesetTypesetter(instance=typeset)
 
@@ -140,7 +140,7 @@ def typeset_typesetter(request, submission_id, typeset_id):
 			for _file in request.FILES.getlist('typeset_file_upload'):
 				new_file = handle_typeset_file(_file, book, typeset, 'typeset')
 				typeset.typesetter_files.add(new_file)
-				typeset.typsetter_completed = timezone.now()
+				typeset.typesetter_completed = timezone.now()
 				typeset.save()
 				log.add_log_entry(book=book, user=request.user, kind='production', message='Final Typesetting %s %s completed.' % (request.user.first_name, request.user.last_name), short_name='Final Typesetting Completed')
 				messages.add_message(request, messages.SUCCESS, 'Typesetting task complete. Thanks.')

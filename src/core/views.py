@@ -164,7 +164,7 @@ def user_home(request):
 		'user_submissions': models.Book.objects.filter(owner=request.user),
 		'author_copyedit_tasks': logic.author_tasks(request.user),
 		'indexes': models.IndexAssignment.objects.filter(indexer=request.user, completed__isnull=True),
-		'typesetting': models.TypesetAssignment.objects.filter((Q(requested__isnull=False) & Q(completed__isnull=True)) | (Q(typesetter_invited__isnull=False) & Q(typsetter_completed__isnull=True)), typesetter=request.user),
+		'typesetting': models.TypesetAssignment.objects.filter((Q(requested__isnull=False) & Q(completed__isnull=True)) | (Q(typesetter_invited__isnull=False) & Q(typesetter_completed__isnull=True)), typesetter=request.user),
 		'user_proposals': submission_models.Proposal.objects.filter(owner=request.user)
 	}
 

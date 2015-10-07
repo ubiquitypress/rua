@@ -57,13 +57,13 @@ def author_tasks(user):
 		task_list.append({'task': 'Copyedit Review', 'title': copyedit.book.title, 'url': 'http://%s/copyedit/book/%s/edit/%s/author/' % (base_url, copyedit.book.id, copyedit.id)})
 
 	for typeset in typeset_tasks:
-		task_list.append({'task': 'Typsetting Review', 'title': typeset.book.title, 'url': 'http://%s/typeset/book/%s/typeset/%s/author/' % (base_url, typeset.book.id, typeset.id)})
+		task_list.append({'task': 'Typesetting Review', 'title': typeset.book.title, 'url': 'http://%s/typeset/book/%s/typeset/%s/author/' % (base_url, typeset.book.id, typeset.id)})
 
 	return task_list
 
 def typesetter_tasks(user):
 
-	active = models.TypesetAssignment.objects.filter((Q(requested__isnull=False) & Q(completed__isnull=True)) | (Q(typesetter_invited__isnull=False) & Q(typsetter_completed__isnull=True)), typesetter=user)
+	active = models.TypesetAssignment.objects.filter((Q(requested__isnull=False) & Q(completed__isnull=True)) | (Q(typesetter_invited__isnull=False) & Q(typesetter_completed__isnull=True)), typesetter=user)
 	completed = models.TypesetAssignment.objects.filter(completed__isnull=False, typesetter=user).order_by('completed')[:5]
 
 	return { 'active':active, 'completed':completed}
