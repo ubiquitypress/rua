@@ -4,17 +4,6 @@
 
 {% block title %}New Submissions{% endblock %}
 
-{% block breadcrumbs %}
-		<ol class="breadcrumb">
-		<li><a href="{% url 'user_home' %}">User Home</a></li>
-		<li class="">Workflow</li>
-		<li>{{ submission.title }}</li>
-		<li>Files</li>
-		<li>{{ file.id }}</li>
-		<li class="active">Update</li>
-	</ol>
-{% endblock %}
-
 {% block css %}
 	<link href="{% static "css/timeline.css" %}" rel="stylesheet">
 {% endblock %}
@@ -69,6 +58,7 @@
      		<div class="col-md-12">
           <table class="table" >
 		</br>
+		<tbody style="background-color:white">
 			<tr>
 				<td>Label</td><td>{{ file.label }}</td>
 			</tr>
@@ -84,7 +74,7 @@
 			<tr>
 				<td>Uploaded</td><td>{{ file.date_uploaded }}</td>
 				</tr>
-			
+			</tbody>
 		</table>
 			</div>
     </div>
