@@ -38,21 +38,3 @@ def submission_tasks(book, user):
 		task_list.append({'type': 'typeset', 'book': typeset.book, 'task': 'Typsetting Review', 'date': typeset.author_invited, 'title': typeset.book.title, 'url': 'http://%s/author/submission/%s/editing/typeset/%s/' % (base_url, typeset.book.id, typeset.id)})
 
 	return task_list
-
-def build_time_line(book):
-	timeline = []
-
-	timeline.append({'stage': 'Proposal', 'date': book.stage.proposal})
-	timeline.append({'stage': 'Submission', 'date': book.stage.submission})
-	timeline.append({'stage': 'Review', 'date': book.stage.review})
-	timeline.append({'stage': 'Internal Review', 'date': book.stage.internal_review})
-	timeline.append({'stage': 'External Review', 'date': book.stage.external_review})
-	timeline.append({'stage': 'Editing', 'date': book.stage.editing})
-	timeline.append({'stage': 'Copyediting', 'date': book.stage.copyediting})
-	timeline.append({'stage': 'Indexing', 'date': book.stage.indexing})
-	timeline.append({'stage': 'Typesetting', 'date': book.stage.typesetting})
-	timeline.append({'stage': 'Production', 'date': book.stage.production})
-	timeline.append({'stage': 'Publication', 'date': book.stage.publication})
-	timeline.append({'stage': 'Declined', 'date': book.stage.declined})
-
-	return timeline

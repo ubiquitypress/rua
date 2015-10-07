@@ -4,7 +4,7 @@ from django.utils import timezone
 from django.core.urlresolvers import reverse
 from django.contrib import messages
 
-from core import models, log, task
+from core import models, log, task, logic as core_logic
 from author import forms
 from author import logic
 from workflow.logic import order_data, decode_json
@@ -51,9 +51,9 @@ def status(request, submission_id):
 	context = {
 		'submission': book,
 		'active': 'user_submission',
-		'author_include': 'author/status.html',
+		'author_include': 'shared/status.html',
 		'submission_files': 'shared/messages.html',
-		'timeline': logic.build_time_line(book),
+		'timeline': core_logic.build_time_line(book),
 	}
 
 	return render(request, template, context)

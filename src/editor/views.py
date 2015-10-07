@@ -5,7 +5,7 @@ from django.utils import timezone
 from django.contrib import messages
 from django.core.urlresolvers import reverse
 
-from core import models, log
+from core import models, log, logic as core_logic
 from workflow import logic as workflow_logic
 from editor import logic
 
@@ -99,7 +99,7 @@ def editor_review(request, submission_id):
 		'submission': book,
 		'active': 'user_submission',
 		'author_include': 'editor/submission_details.html',
-		'submission_files': 'editor/submission_files.html'
+		'submission_files': 'editor/submission_files.html',
 	}
 
 	return render(request, template, context)
@@ -112,8 +112,9 @@ def editor_status(request, submission_id):
 	context = {
 		'submission': book,
 		'active': 'user_submission',
-		'author_include': 'editor/submission_details.html',
-		'submission_files': 'editor/submission_files.html'
+		'author_include': 'shared/status.html',
+		'submission_files': 'shared/messages.html',
+		'timeline': core_logic.build_time_line(book),
 	}
 
 	return render(request, template, context)
