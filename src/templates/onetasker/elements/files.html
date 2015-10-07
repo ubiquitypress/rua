@@ -1,0 +1,62 @@
+ <div class="dash-container">
+
+        <h4>INSTRUNCTIONS FOR TASK</h4>
+        </br>
+        <p style="margin-left:-10px;margin-top:-30px">{{ review_assignment.body }}</p>
+     
+         <h5> Task Due <span style="color:rgb(101,117,132)">{{ review_assignment.due }}</span></h5>
+
+          <h5><b>Manuscript Files:</b></h5>
+            <ul class="manuscript-upload-states">
+              {% for file in assignment.files.all %}
+              {% if file.kind == 'manuscript' %}
+                {% include 'shared/submission_file.html' %}
+              {% endif %}
+              {% endfor %}
+            </ul>
+
+            <h5><b>Additional Files:</b></h5>
+            <ul class="manuscript-upload-states">
+              {% for file in assignment.files.all %}
+              {% if file.kind == 'additional' %}
+                {% include 'shared/submission_file.html' %}
+              {% endif %}
+              {% endfor %}
+            </ul>
+
+            {% if submission.misc_files.all %}
+            <h5><b>Misc Files:</b></h5>
+            <ul class="manuscript-upload-states">
+              {% for file in submission.misc_files.all %}
+                {% include 'shared/submission_file.html' %}
+              {% endfor %}
+            </ul>
+            {% endif %}
+        </div>
+
+        {% if assignment.accepted %}
+              <div class="col-md-12 band band-accepted">               
+                  <h6>You accepted on {{assignment.accepted}}</h6>
+              </div>
+        {% else %}
+              <div class="col-md-12 band band-new">                 
+                     <h5 class=>You can accept or reject this task</h5>
+              </div>
+              <div class="dash-container">
+              <form method="post">
+              {% csrf_token %}
+                 <button class="btn btn-decline" name="decision" value="decline">Decline</button>
+                 <button class="btn btn-accept" name="decision" value="accept">Accept</button>
+                 </form>
+                </div> 
+          {% endif %}
+        
+            <div class="dash-container" style="margin-top:-25px;color:rgb(150,150,150)">
+            <h5>If you would like to contact the editor about this </br> project, please click the button below</h5>
+            </br>
+            {% ifequal editors '' %}
+             <a class="btn btn-lg btn-task" disabled type="submit"  style="width:120px; font-size: 14px;border-radius:8px" >Contact Editor</a>
+            {% else %}
+             <a href='mailto:{{editors}}' class="btn btn-lg btn-task" type="submit"  style="width:120px; font-size: 14px;border-radius:8px" >Contact Editor</a>
+           {% endifequal %}
+            </div>

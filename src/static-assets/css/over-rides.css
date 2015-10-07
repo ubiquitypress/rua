@@ -61,22 +61,49 @@ html, body {
 .dash-container {
   padding: 10px;
 }
+.download-small{
+  margin-top: 20px;
+  margin-right:25px;
+  border-radius:8px
 
+}
+.submission-accept{
+  font-size:22px;
+  color:#74C91F;
+  margin-left:-10px;
+}
+.submission-reject{
+  font-size:22px;
+  color:#C6001E;
+  margin-left:-10px;
+}
+.submission-revisions{
+  font-size:22px;
+  color:#E9C730;
+  margin-left:-10px;
+}
 .dash-left {
   padding: 0;
   height: 92%;
   border-right: 1px double #c7c7c7;
   border-left: 1px double #c7c7c7;
-  overflow-y: scroll;
+  overflow-y: auto;
   overflow-x: hidden;
+  background-color: #EBEBEB;
 }
 
+.dash-left a {
+  text-decoration: none;
+}
+.grey-container{
+  background-color: rgb(230,230,230);
+}
 .dash-right {
   padding: 0;
   height: 92%;
   border-left: 1px double #c7c7c7;
   border-right: 1px double #c7c7c7;
-  overflow-y: scroll;
+  overflow-y: auto;
   overflow-x: hidden;
 }
 
@@ -136,10 +163,6 @@ html, body {
   padding-top: 10px;
 }
 
-.dash-left a {
-  text-decoration: none;
-}
-
 .manuscript-upload-states {
   padding-left: 0px;
 }
@@ -195,12 +218,52 @@ body > div.container > div > div.col-md-4.dash-right > div > ul > li > div > div
 .book-heading {
   background-color: rgb(196, 183, 140);
   color: #FFF;
+
 }
 
 .book-heading h3 {
   margin-top: 10px !important;
 }
-
+.subtitle-text{
+  color:rgb(101,117,132);
+}
+.subtitle-form-text{
+ margin-left:-10px;
+ margin-top:-5px;
+ color:rgb(100,100,100)
+}
+.subtitle-form-completed-text{
+ color:rgb(100,100,100)
+}
+.header-text{
+  color:rgb(106,106,106);
+}
+.task-info-text{
+  margin-left:-10px;
+  margin-top:-30px
+}
+.task-left-text{
+  background-color:rgb(193,193,193);
+  color:rgb(99,99,99);
+}
+.btn-contact{
+  font-size: 14px !important;
+  border-radius:8px !important
+}
+.book-info{
+  color:rgb(106,106,106);
+  margin-left:10px;
+}
+.decision-info-undecided{
+  background-color:rgb(156,156,156);
+  color:white;
+  font-size:14px;
+}
+.decision-info-accept{
+  background-color:rgb(159,197,88);
+  color:white;
+  font-size:14px;
+}
 .submission {
   background-color: rgb(233, 181, 69);
   width: 130px;
@@ -277,6 +340,21 @@ body > div.container > div > div.col-md-4.dash-right > div > ul > li > div > div
   text-align: left;
   font-size: 1.5em;
   padding: 5 5 5 10;
+}
+.band-new {
+  background-color:rgb(156,156,156);
+  color:white;
+  font-size:10px;
+  padding:2 2 2 10;
+  margin-bottom: 10px;
+}
+
+.band-accepted {
+  background-color:rgb(159,197,88);
+  color:white;
+  font-size:10px;
+  padding:2 2 2 10;
+  margin-bottom: 10px;
 }
 
 .activity {

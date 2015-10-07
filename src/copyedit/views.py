@@ -52,6 +52,8 @@ def copyedit(request, submission_id, copyedit_id):
 
 	return render(request, template, context)
 
+
+ ##################################################          MOVED TO ONE TASKER			############################################################
 @is_copyeditor
 def copyedit_files(request, submission_id, copyedit_id):
 	book = get_object_or_404(models.Book, pk=submission_id)
@@ -78,6 +80,10 @@ def copyedit_files(request, submission_id, copyedit_id):
 	}
 
 	return render(request, template, context)
+
+########################################################################################################################################################
+
+
 
 @is_copyeditor
 def copyedit_author(request, submission_id, copyedit_id):
@@ -109,6 +115,9 @@ def copyedit_author(request, submission_id, copyedit_id):
 
 	return render(request, template, context)
 
+
+
+##################################################          MOVED TO ONE TASKER			############################################################
 @is_copyeditor
 def copyedit_complete(request, submission_id, copyedit_id):
 	book = get_object_or_404(models.Book, pk=submission_id)
@@ -125,6 +134,8 @@ def copyedit_complete(request, submission_id, copyedit_id):
 	}
 
 	return render(request, template, context)
+
+##################################################          MOVED TO ONE TASKER			############################################################
 
 
 def handle_copyedit_file(file, book, copyedit, kind):

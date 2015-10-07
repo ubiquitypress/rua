@@ -87,15 +87,15 @@
                     </br>
 </div>
                     {% if task.accepted %}
-                    <div class="col-md-12" style="background-color:rgb(159,197,88);color:white; ">                 
+                    <div class="col-md-12 decision-info-accept">                 
   
-                     <h5>You accepted on {{task.accepted}}</h5>
+                     <p>You accepted on {{task.accepted}}</p>
 
                     </div>
                     {% else %}
-                      <div class="col-md-12" style="background-color:rgb(156,156,156);color:white; ">                 
+                      <div class="col-md-12 decision-info-undecided">                 
   
-                     <h5>You can accept or reject this task</h5>
+                     <p>You can accept or reject this task</p>
 
                     </div>
                  {% endif %}

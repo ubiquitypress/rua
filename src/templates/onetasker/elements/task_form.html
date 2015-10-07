@@ -1,0 +1,30 @@
+{% load static from staticfiles %}
+{% load bootstrap3 %}
+<h4>{{ assignment.type|capfirst }}</h4>
+<hr />
+Complete the form below and upload your files. The upload box is capable of uploading more than one file at a time.<br /><br />
+    <form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    {% bootstrap_form form %}
+    <div class="row">
+        <div class="col-md-12">
+          <label for="file_upload">Upload Files</label>
+           <div class="input-group">
+              <span class="input-group-btn">
+                  <span class="btn btn-primary btn-file">
+                      Browse&hellip; <input type="file" id="file_upload" name="file_upload" multiple required>
+                  </span>
+              </span>
+              <input type="text" class="form-control" readonly>
+          </div>
+        </div>
+      </div>
+      <br />
+      <button type="submit" name="task" class="btn btn-success">Complete {{ assignment.type|capfirst }}</button>
+    </form>
+    </div>
+  </div>
+
+{% block js %}
+<script type="text/javascript" src="{% static "js/fancyfile.js" %}"></script>
+{% endblock js %}
