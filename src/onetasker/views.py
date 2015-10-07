@@ -1,9 +1,11 @@
 from django.shortcuts import render
 from django.shortcuts import redirect, render, get_object_or_404, Http404
+from django.contrib import messages
 
-from core import models
+from core import models, logic as core_logic, task as notify
 from onetasker import forms
-from core import logic as core_logic
+
+import logic
 
 from datetime import datetime
 
@@ -29,18 +31,13 @@ def dashboard(request):
 
 def task_hub(request, assignment_type, assignment_id):
 
-	assignment = get_assignment(assignment_type, assignment_id)
-	form = get_assignemnt_form(assignment_type, assignment)
+	assignment = logic.get_assignment(assignment_type, assignment_id)
+	form = logic.get_assignemnt_form(request, assignment_type, assignment)
 	center_block = 'onetasker/elements/files.html'
-
-	if assignment.accepted:
-		right_block = 'onetasker/elements/task_form.html'
-	else:
-		right_block = None
-
+	right_block = logic.right_block(assignment)
 
 	if request.POST:
-
+		#Handle decision
 		decision = request.POST.get('decision', None)
 		if decision == 'accept':
 			assignment.accepted = datetime.now()
@@ -48,9 +45,24 @@ def task_hub(request, assignment_type, assignment_id):
 		elif decision == 'decline':
 			assignment.declined = datetime.now()
 			assignment.save()
+
 			return redirect(reverse('tasks'))
 
-
+		#handle submission
+		elif 'task' in request.POST:
+			form = logic.get_assignemnt_form(request, assignment_type, assignment)
+			if form.is_valid():
+				assignment = form.save(commit=False)
+				files = request.FILES.getlist('file_upload'):
+				assignment = logic.handle_files(assignment, files)
+				for _file in request.FILES.getlist('file_upload'):
+					new_file = logic.handle_file(_file, assignment)
+					assignment = logic.add_file(assignment, new_file)
+				assignment = logic.complete_task(assignment)
+				assignment.save()
+				logic.notify_editor(assignment)
+				messages.add_message(request, messages.SUCCESS, 'Task completed. Thanks!')
+			
 
 
 	template = 'onetasker/taskhub.html'
@@ -58,6 +70,7 @@ def task_hub(request, assignment_type, assignment_id):
 	context = {
 		'submission': assignment.book,
 		'assignment':assignment,
+		'form': form,
 		'center_block': center_block,
 		'right_block': right_block
 	}
@@ -66,32 +79,6 @@ def task_hub(request, assignment_type, assignment_id):
 
 
 
-###Helpers###
 
-def get_assignment(assignment_type, assignment_id):
-	''' given one of the 3 assignment types and it's id it returns an Assignment object'''
 
-	if assignment_type == 'copyedit':
-		assignment = get_object_or_404(models.CopyeditAssignment, pk=assignment_id)
-	elif assignment_type == 'typesetting':
-		assignment = get_object_or_404(models.TypesetAssignment, pk=assignment_id)
-	elif assignment_type == 'indexing':
-		assignment = get_object_or_404(models.IndexAssignment, pk=assignment_id)
-	else:
-		raise Http404
-
-	return assignment
-
-def get_assignemnt_form(assignment_type, assignment):
-
-	if assignment_type == 'copyedit':
-		form = forms.Copyedit(instance=assignment)
-	elif assignment_type == 'typesetting':
-		form = forms.Typeset(instance=assignment)
-	elif assignment_type == 'indexing':
-		form = forms.Index(instance=assignment)
-	else:
-		raise Http404
-
-	return form
 
