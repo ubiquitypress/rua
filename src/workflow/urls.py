@@ -20,13 +20,6 @@ urlpatterns = patterns('',
     url(r'^new/$', 'workflow.views.new_submissions', name='new_submissions'),
     url(r'^new/(?P<submission_id>\d+)/$', 'workflow.views.view_new_submission', name='view_new_submission'),
 
-    # Files
-    url(r'^submission/(?P<submission_id>\d+)/file/(?P<file_id>\d+)/download/$', 'workflow.views.serve_file', name='serve_file'),
-    url(r'^submission/(?P<submission_id>\d+)/file/(?P<revision_id>\d+)/download_versioned_file/$', 'workflow.views.serve_versioned_file', name='serve_versioned_file'),
-    url(r'^submission/(?P<submission_id>\d+)/file/(?P<file_id>\d+)/delete/returner/(?P<returner>[-\w]+)/$', 'workflow.views.delete_file', name='delete_file'),
-    url(r'^submission/(?P<submission_id>\d+)/file/(?P<file_id>\d+)/update/returner/(?P<returner>[-\w]+)/$', 'workflow.views.update_file', name='update_file'),
-    url(r'^submission/(?P<submission_id>\d+)/file/(?P<file_id>\d+)/versions/$', 'workflow.views.versions_file', name='versions_file'),
-
     # Contract
     url(r'^contract/(?P<submission_id>\d+)/manage/$', 'workflow.views.contract_manager', name='contract_manager'),
     url(r'^contract/(?P<submission_id>\d+)/manage/(?P<contract_id>\d+)/$', 'workflow.views.contract_manager', name='contract_manager_edit'),
@@ -34,8 +27,7 @@ urlpatterns = patterns('',
     # Decline
     url(r'^submission/(?P<submission_id>\d+)/decline/$', 'workflow.views.decline_submission', name='decline_submission'),
 
-    # Misc files
-    url(r'^misc_files/(?P<submission_id>\d+)/upload/$', 'workflow.views.upload_misc_file', name='upload_misc_file'),
+   
 
     # Review
     url(r'^review/$', 'workflow.views.in_review', name='in_review'),

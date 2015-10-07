@@ -19,7 +19,7 @@ from core import forms
 from core import logic
 from workflow import forms as workflow_forms
 from submission import models as submission_models
-
+from core.decorators import is_editor, is_book_editor, is_book_editor_or_author
 from pprint import pprint
 import json
 from time import strftime
@@ -319,3 +319,111 @@ def handle_file(file, book, kind):
 	new_file.save()
 
 	return new_file
+
+
+
+@is_book_editor
+def upload_misc_file(request, submission_id):
+
+	submission = get_object_or_404(models.Book, pk=submission_id)
+	if request.POST:
+		file_form = forms.UploadMiscFile(request.POST)
+		if file_form.is_valid():
+			new_file = handle_file(request.FILES.get('misc_file'), submission, file_form.cleaned_data.get('file_type'), request.user, file_form.cleaned_data.get('label'))
+			submission.misc_files.add(new_file)
+			return redirect(reverse('editor_submission', kwargs={'submission_id': submission.id}))
+	else:
+		file_form = forms.UploadMiscFile()
+
+	template = 'core/misc_files/upload.html'
+	context = {
+		'submission': submission,
+		'file_form': file_form,
+	}
+
+	return render(request, template, context)
+
+@is_book_editor_or_author
+def serve_file(request, submission_id, file_id):
+	book = get_object_or_404(models.Book, pk=submission_id)
+	_file = get_object_or_404(models.File, pk=file_id)
+	file_path = os.path.join(settings.BOOK_DIR, submission_id, _file.uuid_filename)
+
+	print file_path
+
+	try:
+		fsock = open(file_path, 'r')
+		mimetype = mimetypes.guess_type(file_path)
+		response = StreamingHttpResponse(fsock, content_type=mimetype)
+		response['Content-Disposition'] = "attachment; filename=%s" % (_file.uuid_filename)
+		log.add_log_entry(book=book, user=request.user, kind='file', message='File %s downloaded.' % _file.uuid_filename, short_name='Download')
+		return response
+	except IOError:
+		messages.add_message(request, messages.ERROR, 'File not found. %s' % (file_path))
+		return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+@is_book_editor_or_author
+def serve_versioned_file(request, submission_id, revision_id):
+	book = get_object_or_404(models.Book, pk=submission_id)
+	versions_file = get_object_or_404(models.FileVersion, pk=revision_id)
+	file_path = os.path.join(settings.BOOK_DIR, submission_id, versions_file.uuid_filename)
+
+	try:
+		fsock = open(file_path, 'r')
+		mimetype = mimetypes.guess_type(file_path)
+		response = StreamingHttpResponse(fsock, content_type=mimetype)
+		response['Content-Disposition'] = "attachment; filename=%s" % (versions_file.uuid_filename)
+		log.add_log_entry(book=book, user=request.user, kind='file', message='File %s downloaded.' % versions_file.uuid_filename, short_name='Download')
+		return response
+	except IOError:
+		messages.add_message(request, messages.ERROR, 'File not found. %s/%s' % (file_path, versions_file.uuid_filename))
+		return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+@is_book_editor_or_author
+def delete_file(request, submission_id, file_id, returner):
+	book = get_object_or_404(models.Book, pk=submission_id)
+	_file = get_object_or_404(models.File, pk=file_id)
+	file_id = _file.id
+	_file.delete()
+
+	if returner == 'new':
+		return redirect(reverse('editor_submission', kwargs={'submission_id': book.id}))
+	elif returner == 'review':
+		return redirect(reverse('editor_review', kwargs={'submission_id': book.id}))
+
+@is_book_editor_or_author
+def update_file(request, submission_id, file_id, returner):
+	book = get_object_or_404(models.Book, pk=submission_id)
+	_file = get_object_or_404(models.File, pk=file_id)
+
+	if request.POST:
+		for file in request.FILES.getlist('update_file'):
+			handle_file_update(file, _file, book, _file.kind, request.user)
+			messages.add_message(request, messages.INFO, 'File updated.')
+
+		if returner == 'new':
+			return redirect(reverse('editor_submission', kwargs={'submission_id': book.id}))
+
+	template = 'core/update_file.html'
+	context = {
+		'submission': book,
+		'file': _file,
+	}
+
+	return render(request, template, context)
+
+@is_book_editor_or_author
+def versions_file(request, submission_id, file_id):
+	book = get_object_or_404(models.Book, pk=submission_id)
+	_file = get_object_or_404(models.File, pk=file_id)
+	versions = models.FileVersion.objects.filter(file=_file)
+
+	template = 'core/versions_file.html'
+	context = {
+		'submission': book,
+		'file': _file,
+		'versions': versions
+	}
+
+	return render(request, template, context)
+

@@ -115,4 +115,22 @@ def onetasker_tasks(user):
 	for assignment in completed_indexer_tasks:
 		completed.append({'assignment':assignment, 'type': 'indexing'})
 	return {'completed':completed, 'active':active}
+
+def build_time_line(book):
+	timeline = []
+
+	timeline.append({'stage': 'Proposal', 'date': book.stage.proposal})
+	timeline.append({'stage': 'Submission', 'date': book.stage.submission})
+	timeline.append({'stage': 'Review', 'date': book.stage.review})
+	timeline.append({'stage': 'Internal Review', 'date': book.stage.internal_review})
+	timeline.append({'stage': 'External Review', 'date': book.stage.external_review})
+	timeline.append({'stage': 'Editing', 'date': book.stage.editing})
+	timeline.append({'stage': 'Copyediting', 'date': book.stage.copyediting})
+	timeline.append({'stage': 'Indexing', 'date': book.stage.indexing})
+	timeline.append({'stage': 'Typesetting', 'date': book.stage.typesetting})
+	timeline.append({'stage': 'Production', 'date': book.stage.production})
+	timeline.append({'stage': 'Publication', 'date': book.stage.publication})
+	timeline.append({'stage': 'Declined', 'date': book.stage.declined})
+
+	return timeline
 	
