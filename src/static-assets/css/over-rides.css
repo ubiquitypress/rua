@@ -219,6 +219,32 @@ body > div.container > div > div.col-md-4.dash-right > div > ul > li > div > div
   color: #FFF;
 
 }
+.file-heading {
+  background-color: #00A6A1;
+  color: #FFF;
+
+}
+
+.btn-upload{
+  background-color:#00A6A1 !important;
+  color:#ffffff;
+  border-color:#8DD8D6 !important;
+  border-radius: 24px;
+}
+ 
+.btn-upload:hover, .btn-upload:focus, .btn-upload:active, .btn-upload.active, .open > .dropdown-toggle.btn-upload {
+    background: #00D7D0 !important;
+    color:#ffffff;
+}
+ 
+.btn-upload:active, .btn-upload.active {
+    background: #055956 !important;
+    color:#ffffff;
+    box-shadow: none;
+}
+.btn-browse{
+  border-radius: -4px !important;
+}
 
 .book-heading h3 {
   margin-top: 10px !important;
