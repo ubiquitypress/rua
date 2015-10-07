@@ -53,7 +53,7 @@ def task_hub(request, assignment_type, assignment_id):
 			form = logic.get_assignemnt_form(request, assignment_type, assignment)
 			if form.is_valid():
 				assignment = form.save(commit=False)
-				files = request.FILES.getlist('file_upload'):
+				files = request.FILES.getlist('file_upload')
 				assignment = logic.handle_files(assignment, files)
 				for _file in request.FILES.getlist('file_upload'):
 					new_file = logic.handle_file(_file, assignment)

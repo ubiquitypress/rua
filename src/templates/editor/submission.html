@@ -55,18 +55,18 @@
                 </tr>
             </table>
         </div>
-        <a href="{% url 'tasks' submission.pk %}">
+        <a href="{% url 'editor_tasks' submission.pk %}">
         <div class="dash-menu">
             <h5>My Tasks <i class="fa fa-chevron-right pull-right"></i></h5>
         </div>
         </a>
 
-        <a href="{% url 'status' submission.pk %}">
+        <a href="{% url 'editor_status' submission.pk %}">
         <div class="dash-menu">
             <h5>Current Status <i class="fa fa-chevron-right pull-right"></i></h5>
         </div>
         </a>
-        <a href="{% url 'author_submission' submission.pk %}">
+        <a href="{% url 'editor_submission' submission.pk %}">
         <div class="dash-menu">
             <h5>Submission Details <i class="fa fa-chevron-right pull-right"></i></h5>
         </div>

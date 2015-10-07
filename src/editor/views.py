@@ -7,6 +7,7 @@ from django.core.urlresolvers import reverse
 
 from core import models, log
 from workflow import logic as workflow_logic
+from editor import logic
 
 
 @is_editor
@@ -74,5 +75,45 @@ def editor_submission(request, submission_id):
 	return render(request, template, context)
 
 @is_editor
+def editor_tasks(request, submission_id):
+	book = get_object_or_404(models.Book, pk=submission_id)
+
+	tasks = logic.get_submission_tasks(book, request.user)
+
+	template = 'editor/submission.html'
+	context = {
+		'submission': book,
+		'active': 'user_submission',
+		'author_include': 'shared/tasks.html',
+		'tasks': tasks,
+	}
+
+	return render(request, template, context)
+
+@is_editor
 def editor_review(request, submission_id):
-	pass
+	book = get_object_or_404(models.Book, pk=submission_id)
+
+	template = 'editor/submission.html'
+	context = {
+		'submission': book,
+		'active': 'user_submission',
+		'author_include': 'editor/submission_details.html',
+		'submission_files': 'editor/submission_files.html'
+	}
+
+	return render(request, template, context)
+
+@is_editor
+def editor_status(request, submission_id):
+	book = get_object_or_404(models.Book, pk=submission_id)
+
+	template = 'editor/submission.html'
+	context = {
+		'submission': book,
+		'active': 'user_submission',
+		'author_include': 'editor/submission_details.html',
+		'submission_files': 'editor/submission_files.html'
+	}
+
+	return render(request, template, context)
