@@ -742,3 +742,10 @@ iframe {
 #dashboard-grid .col-md-4:nth-child(7) {
     clear: left;
 }
+
+.current {
+  pointer-events: none;
+  cursor: default;
+  background-color:white;
+
+}

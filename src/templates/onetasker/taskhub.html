@@ -54,9 +54,15 @@
         <div class="band {{ submission.stage.current_stage }}">
                         {{ submission.stage.get_current_stage_display }}
         </div>
-        <div class="dash-menu">
+        <a href="{% url 'onetasker_task_hub' assignment.type assignment.pk %}">
+        <div class="dash-menu {%if not about%}current{% endif %}">
             <h5>My Task <i class="fa fa-chevron-right pull-right"></i></h5>
         </div>
+        </a>
+        <a  href="{% url 'onetasker_task_about' assignment.type assignment.pk 'about' %}">
+        <div class="dash-menu {%if about%}current{% endif %}">
+            <h5>Submission Details <i class="fa fa-chevron-right pull-right"></i></h5>
+        </div></a>
     </div>
 
     <div class="col-md-5 dash-center">

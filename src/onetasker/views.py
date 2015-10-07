@@ -30,7 +30,7 @@ def dashboard(request):
 	return render(request, template, context)
 
 
-def task_hub(request, assignment_type, assignment_id, about):
+def task_hub(request, assignment_type, assignment_id, about=None):
 
 	assignment = logic.get_assignment(assignment_type, assignment_id)
 	form = logic.get_assignemnt_form(request, assignment_type, assignment)
@@ -82,6 +82,7 @@ def task_hub(request, assignment_type, assignment_id, about):
 		'center_block': center_block,
 		'right_block': right_block,
 		'files':submitted_files,
+		'about':about
 	}
 
 	return render(request, template, context)
