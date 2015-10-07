@@ -1,0 +1,18 @@
+<div class="button-block-center">
+	{% if submission.stage.current_stage == 'production' %}
+	<a href="" class="btn btn-accept">Publish Book</a>
+	{% elif submission.stage.current_stage == 'submission' %}
+	<form method="POST">
+	{% csrf_token %}
+	<button name="review" type="submit" class="btn btn-sm btn-accept btn-action">Move to<br />Review</button>
+	<a href="" class="btn btn-sm btn-read btn-action">Request<br />Revisions</a>
+	<a href="" class="btn btn-sm btn-decline btn-action">Reject<br />Submission</a>
+	</form>
+	{% elif submission.stage.current_stage == 'review' %}
+	<button type="submit" class="btn btn-sm btn-accept btn-action">Move to<br />Editing</button>
+	<a href="" class="btn btn-sm btn-read btn-action">Request<br />Revisions</a>
+	<a href="" class="btn btn-sm btn-decline btn-action">Reject<br />Submission</a>
+	{% elif submission.stage.current_stage == 'editing' %}
+	<a href="" class="btn btn-sm btn-accept btn-action">Move to<br />Priduction</a>
+	{% endif %}
+</div>

@@ -283,6 +283,10 @@ body > div.container > div > div.col-md-4.dash-right > div > ul > li > div > div
   padding: 5 5 5 10;
 }
 
+.btn-action {
+  width: 90px;
+}
+
 .btn-view{
   background-color: rgb(196, 183, 140);
   border-color: rgb(196, 183, 140);
@@ -396,6 +400,7 @@ body > div.container > div > div.col-md-4.dash-right > div > ul > li > div > div
 
 .button-block-center {
   text-align: center;
+  padding-bottom: 10px;
 }
 
 .button-block-center hr {

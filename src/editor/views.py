@@ -1,8 +1,12 @@
 from django.shortcuts import redirect, render, get_object_or_404
 from core.decorators import is_editor, is_book_editor, is_book_editor_or_author
 from django.db.models import Q
+from django.utils import timezone
+from django.contrib import messages
+from django.core.urlresolvers import reverse
 
-from core import models
+from core import models, log
+from workflow import logic as workflow_logic
 
 
 @is_editor
@@ -46,6 +50,19 @@ def editor_dashboard(request):
 def editor_submission(request, submission_id):
 	book = get_object_or_404(models.Book, pk=submission_id)
 
+	if request.POST and 'review' in request.POST:
+		workflow_logic.create_new_review_round(book)
+		book.stage.review = timezone.now()
+		book.stage.current_stage = 'review'
+		book.stage.save()
+
+		if book.stage.current_stage == 'review':
+			log.add_log_entry(book=book, user=request.user, kind='review', message='Submission moved to Review', short_name='Submission in Review')
+
+		messages.add_message(request, messages.SUCCESS, 'Submission has been moved to the review stage.')
+
+		return redirect(reverse('editor_review', kwargs={'submission_id': book.id}))
+
 	template = 'editor/submission.html'
 	context = {
 		'submission': book,
@@ -55,3 +72,7 @@ def editor_submission(request, submission_id):
 	}
 
 	return render(request, template, context)
+
+@is_editor
+def editor_review(request, submission_id):
+	pass
