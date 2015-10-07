@@ -55,24 +55,18 @@ def reviewer_decision(request, review_type, submission_id, review_assignment, de
 		review_assignment = get_object_or_404(core_models.ReviewAssignment, pk=review_assignment, user=request.user, completed__isnull=True, declined__isnull=True, accepted__isnull=True)
 	
 	editors = logic.get_editors(review_assignment)
-	has_additional = has_additional_files(submission)
+
 
 	if decision and decision == 'accept':
 		review_assignment.accepted = timezone.now()
 		message = "Review Assignment request for '%s' has been accepted by %s %s."  % (submission.title,review_assignment.user.first_name, review_assignment.user.last_name)
 		log.add_log_entry(book=submission, user=request.user, kind='review', message=message, short_name='Assignment accepted')
-		
-		for t in range(0,len(editors)):
-			notification = core_models.Task(book=submission,assignee=editors[t][0]['editor'],creator=request.user,text=message,workflow='review')
-			notification.save()
+		logic.notify_editors(submission,message,editors,request.user,'review')
 		
 	elif decision and decision == 'decline':
 		review_assignment.declined = timzeone.now()
 		message = "Review Assignment request for '%s' has been declined by %s %s."  % (submission.title,review_assignment.user.first_name, review_assignment.user.last_name)
-		
-		for t in range(0,len(editors)):
-			notification = core_models.Task(book=submission,assignee=editors[t][0]['editor'],creator=request.user,text=message,workflow='review')
-			notification.save()
+		logic.notify_editors(submission,message,editors,request.user,'review')
 			
 		log.add_log_entry(book=submission, user=request.user, kind='review', message=message, short_name='Assignment declined')
 
@@ -83,19 +77,12 @@ def reviewer_decision(request, review_type, submission_id, review_assignment, de
 			review_assignment.accepted = timezone.now()
 			message = "Review Assignment request for '%s' has been accepted by %s %s."  % (submission.title,review_assignment.user.first_name, review_assignment.user.last_name)
 			log.add_log_entry(book=submission, user=request.user, kind='review', message=message, short_name='Assignment accepted')
-			
-			for t in range(0,len(editors)):
-				notification = core_models.Task(book=submission,assignee=editors[t][0]['editor'],creator=request.user,text=message,workflow='review')
-				notification.save()
+			logic.notify_editors(submission,message,editors,request.user,'review')
 				
 		elif 'decline' in request.POST:
 			review_assignment.declined = timezone.now()
 			message = "Review Assignment request for '%s' has been declined by %s %s."  % (submission.title,review_assignment.user.first_name, review_assignment.user.last_name)
-		
-			for t in range(0,len(editors)):
-				notification = core_models.Task(book=submission,assignee=editors[t][0]['editor'],creator=request.user,text=message,workflow='review')
-				notification.save()
-			
+			logic.notify_editors(submission,message,editors,request.user,'review')
 			log.add_log_entry(book=submission, user=request.user, kind='review', message=message, short_name='Assignment declined')
 
 
@@ -113,7 +100,7 @@ def reviewer_decision(request, review_type, submission_id, review_assignment, de
 	context = {
 		'submission': submission,
 		'review_assignment': review_assignment,
-		'has_additional_files': has_additional,
+		'has_additional_files': logic.has_additional_files(submission),
 		'editors': editors
 	}
 
@@ -193,10 +180,7 @@ def review(request, review_type, submission_id, access_key=None):
 				log.add_log_entry(book=submission, user=request.user, kind='review', message='Reviewer %s %s completed review for %s.' % (review_assignment.user.first_name, review_assignment.user.last_name, submission.title), short_name='Assignment Completed')
 				
 				message = "Reviewer %s %s has completed a review for '%s'."  % (submission.title,review_assignment.user.first_name, review_assignment.user.last_name)
-				for t in range(0,len(editors)):
-					notification = core_models.Task(book=submission,assignee=editors[t][0]['editor'],creator=request.user,text=message,workflow='review')
-					notification.save()
-		
+				logic.notify_editors(submission,message,editors,request.user,'review')
 
 			return redirect(reverse('review_complete', kwargs={'review_type': review_type, 'submission_id': submission.id}))
 
