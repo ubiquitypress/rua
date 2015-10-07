@@ -1,26 +1,15 @@
  <div class="dash-container">
 
-        <h4>INSTRUNCTIONS FOR TASK</h4>
+        <h4>INSTRUCTIONS FOR TASK</h4>
         </br>
-        <p style="margin-left:-10px;margin-top:-30px">{{ review_assignment.body }}</p>
+        <p>{{ assignment.note }}</p>
      
-         <h5> Task Due <span style="color:rgb(101,117,132)">{{ review_assignment.due }}</span></h5>
+         <h5> Task Due <span class="author-due">{{ assignment.due }} ({{assignment.due|timeuntil}} left)</span></h5>
 
-          <h5><b>Manuscript Files:</b></h5>
+            <h5><b>Files:</b></h5>
             <ul class="manuscript-upload-states">
               {% for file in assignment.files.all %}
-              {% if file.kind == 'manuscript' %}
                 {% include 'shared/submission_file.html' %}
-              {% endif %}
-              {% endfor %}
-            </ul>
-
-            <h5><b>Additional Files:</b></h5>
-            <ul class="manuscript-upload-states">
-              {% for file in assignment.files.all %}
-              {% if file.kind == 'additional' %}
-                {% include 'shared/submission_file.html' %}
-              {% endif %}
               {% endfor %}
             </ul>
 
@@ -51,12 +40,12 @@
                 </div> 
           {% endif %}
         
-            <div class="dash-container" style="margin-top:-25px;color:rgb(150,150,150)">
+            <div class="dash-container">
             <h5>If you would like to contact the editor about this </br> project, please click the button below</h5>
             </br>
             {% ifequal editors '' %}
-             <a class="btn btn-lg btn-task" disabled type="submit"  style="width:120px; font-size: 14px;border-radius:8px" >Contact Editor</a>
+             <a class="btn btn-lg btn-task" disabled type="submit" >Contact Editor</a>
             {% else %}
-             <a href='mailto:{{editors}}' class="btn btn-lg btn-task" type="submit"  style="width:120px; font-size: 14px;border-radius:8px" >Contact Editor</a>
+             <a href='mailto:{{editors}}' class="btn btn-task" type="submit" >Contact Editor</a>
            {% endifequal %}
             </div>

@@ -2,6 +2,7 @@ from django.core.mail import EmailMultiAlternatives
 from django.template.loader import get_template
 from django.template import Context
 
+from core.decorators import is_copyeditor, is_typesetter, is_indexer
 from core import models
 from core.cache import cache_result
 from django.db.models import Q
@@ -60,7 +61,6 @@ def author_tasks(user):
 
 	return task_list
 
-
 def typesetter_tasks(user):
 
 	active = models.TypesetAssignment.objects.filter((Q(requested__isnull=False) & Q(completed__isnull=True)) | (Q(typesetter_invited__isnull=False) & Q(typsetter_completed__isnull=True)), typesetter=user)
@@ -69,7 +69,6 @@ def typesetter_tasks(user):
 	return { 'active':active, 'completed':completed}
 	
 	
-
 def copyeditor_tasks(user):
 
 	active = models.CopyeditAssignment.objects.filter(copyeditor=user, completed__isnull=True)

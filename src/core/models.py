@@ -415,7 +415,7 @@ class TypesetAssignment(models.Model):
 	author_completed = models.DateField(blank=True, null=True)
 	editor_second_review = models.DateField(blank=True, null=True)
 	typesetter_invited = models.DateField(blank=True, null=True)
-	typsetter_completed = models.DateField(blank=True, null=True)
+	typesetter_completed = models.DateField(blank=True, null=True)
 
 	note = models.TextField(blank=True, null=True)
 	note_to_author = models.TextField(blank=True, null=True)
@@ -437,23 +437,23 @@ class TypesetAssignment(models.Model):
 	def type(self):
 		return 'typesetting'
 
-		def state(self):
-			if self.typsetter_completed:
-				return {'state': 'complete', 'friendly': 'Assignment Complete', 'date': self.typsetter_completed}
-			elif self.typesetter_invited:
-				return {'state': 'typesetter_second', 'friendly': 'Awaiting final typesetting', 'date': self.typesetter_invited}
-			elif self.author_completed and not self.editor_second_review:
-				return {'state': 'editor_second_review', 'friendly': 'Awaiting editor review', 'date': self.editor_second_review}
-			elif self.author_completed:
-				return {'state': 'author_complete', 'friendly': 'Author Review Complete', 'date': self.author_completed}
-			elif self.author_invited:
-				return {'state': 'author_invited', 'friendly': 'Awaiting author review', 'date': self.author_invited}
-			elif self.completed and not self.editor_review:
-				return {'state': 'editor_review', 'friendly': 'Awaiting editor review', 'date': self.completed}
-			elif self.accepted:
-				return {'state': 'accepted', 'friendly': 'Typesetter has accepted', 'date': self.accepted}
-			else:
-				return {'state': 'assigned', 'friendly': 'Awaiting response from typesetter', 'date': self.requested} 
+	def state(self):
+		if self.typesetter_completed:
+			return {'state': 'complete', 'friendly': 'Assignment Complete', 'date': self.typsetter_completed}
+		elif self.typesetter_invited:
+			return {'state': 'typesetter_second', 'friendly': 'Awaiting final typesetting', 'date': self.typesetter_invited}
+		elif self.author_completed and not self.editor_second_review:
+			return {'state': 'editor_second_review', 'friendly': 'Awaiting editor review', 'date': self.editor_second_review}
+		elif self.author_completed:
+			return {'state': 'author_complete', 'friendly': 'Author Review Complete', 'date': self.author_completed}
+		elif self.author_invited:
+			return {'state': 'author_invited', 'friendly': 'Awaiting author review', 'date': self.author_invited}
+		elif self.completed and not self.editor_review:
+			return {'state': 'editor_review', 'friendly': 'Awaiting editor review', 'date': self.completed}
+		elif self.accepted:
+			return {'state': 'accepted', 'friendly': 'Typesetter has accepted', 'date': self.accepted}
+		else:
+			return {'state': 'assigned', 'friendly': 'Awaiting response from typesetter', 'date': self.requested} 
 
 class License(models.Model):
 	name = models.CharField(max_length=1000)
