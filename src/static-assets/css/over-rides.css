@@ -394,6 +394,14 @@ body > div.container > div > div.col-md-4.dash-right > div > ul > li > div > div
   border-color: rgb(69, 86, 104);
 }
 
+.button-block-center {
+  text-align: center;
+}
+
+.button-block-center hr {
+  margin-top: 0;
+}
+
 .bs-callout {
     padding: 20px;
     margin: 20px 0;

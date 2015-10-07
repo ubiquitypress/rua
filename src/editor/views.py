@@ -51,7 +51,7 @@ def editor_submission(request, submission_id):
 		'submission': book,
 		'active': 'user_submission',
 		'author_include': 'editor/submission_details.html',
-		'submission_files': 'author/submission_files.html'
+		'submission_files': 'editor/submission_files.html'
 	}
 
 	return render(request, template, context)
