@@ -16,7 +16,7 @@ from django.core.urlresolvers import reverse
 from django.contrib import messages
 from django.http import Http404, HttpResponse, StreamingHttpResponse, HttpResponseRedirect
 
-from workflow import logic
+from workflow import logic as workflow_logic
 from core import models as core_models
 from core import views as core_views
 from core import forms as core_forms
@@ -25,6 +25,7 @@ from core import log
 from core import models as core_models
 from review import forms
 from review import models
+from review import logic
 from submission import models as submission_models
 
 @is_reviewer
@@ -32,12 +33,13 @@ def reviewer_dashboard(request):
 
 	pending_tasks = core_models.ReviewAssignment.objects.filter(user=request.user,completed__isnull=True,declined__isnull=True)
 	completed_tasks = core_models.ReviewAssignment.objects.filter(user=request.user,completed__isnull=False)
+	
 	template = 'review/dashboard.html'
 	context = {	
-	'pending_tasks': pending_tasks,
-	'pending_count': len(pending_tasks),
-	'completed_tasks': completed_tasks,
-	'completed_count':len(completed_tasks),
+		'pending_tasks': pending_tasks,
+		'pending_count': len(pending_tasks),
+		'completed_tasks': completed_tasks,
+		'completed_count':len(completed_tasks),
 	}
 
 	return render(request, template, context)
@@ -51,8 +53,8 @@ def reviewer_decision(request, review_type, submission_id, review_assignment, de
 		review_assignment = get_object_or_404(core_models.ReviewAssignment, pk=review_assignment, user=request.user, completed__isnull=True, declined__isnull=True, accepted__isnull=True,access_key=access_key)
 	else:
 		review_assignment = get_object_or_404(core_models.ReviewAssignment, pk=review_assignment, user=request.user, completed__isnull=True, declined__isnull=True, accepted__isnull=True)
-	editors=get_editors(review_assignment)
 	
+	editors = logic.get_editors(review_assignment)
 	has_additional = has_additional_files(submission)
 
 	if decision and decision == 'accept':
@@ -111,35 +113,12 @@ def reviewer_decision(request, review_type, submission_id, review_assignment, de
 	context = {
 		'submission': submission,
 		'review_assignment': review_assignment,
-		'has_additional_files':has_additional,
-		'editors':editors
+		'has_additional_files': has_additional,
+		'editors': editors
 	}
 
 	return render(request, template, context)
 
-def get_editors(review_assignment):
-	editors=[{}]
-	if review_assignment:
-		press_editors= review_assignment.book.press_editors.all()
-		editors= list_of_articles =[[{}] for t in range(0,len(press_editors)) ]
-		t=0
-		for editor in press_editors:
-			isSeriesEditor = False
-			roles = editor.profile.roles.all()
-			for role in roles :
-				if role.name == 'Series Editor':
-					isSeriesEditor=True
-			editors[t]=[{'editor':editor,'isSeriesEditor':isSeriesEditor}]
-			t=t+1
-	print editors
-	return editors
-def has_additional_files(submission):
-	additional_files=False
-	files =  submission.files.all()
-	for submission_file in files:
-		if submission_file.kind == 'additional' :
-			additional_files = True
-	return additional_files
 @is_reviewer
 def review(request, review_type, submission_id, access_key=None):
 
@@ -168,9 +147,8 @@ def review(request, review_type, submission_id, access_key=None):
 			else:
 				return redirect(reverse('reviewer_decision_without', kwargs={'review_type': review_type, 'submission_id': submission.pk,'review_assignment':review_assignment.pk}))
 	
-	editors=get_editors(review_assignment)
-	print editors	
-	has_additional = has_additional_files(submission)
+	editors = logic.get_editors(review_assignment)
+	print editors
 	
 	form = forms.GeneratedForm(form=submission.review_form)
 	recommendation_form = core_forms.RecommendationForm(ci_required=ci_required.value)
@@ -231,7 +209,7 @@ def review(request, review_type, submission_id, access_key=None):
 		'form_info': submission.review_form,
 		'recommendation_form': recommendation_form,
 		'editors':editors,
-		'has_additional_files':has_additional,
+		'has_additional_files': logic.has_additional_files(submission),
 
 	}
 
@@ -252,12 +230,7 @@ def review_complete(request, review_type, submission_id,access_key=None):
 	
 	result = review_assignment.results
 	relations = models.FormElementsRelationship.objects.filter(form=result.form)
-	data_ordered = logic.order_data(logic.decode_json(result.data), relations)
-	additional_files=False
-	files =  submission.files.all()
-	for submission_file in files:
-		if submission_file.kind == 'additional' :
-			additional_files = True
+	data_ordered = workflow_logic.order_data(workflow_logic.decode_json(result.data), relations)
 
 	template = 'review/complete.html'
 	context = {
@@ -266,7 +239,8 @@ def review_complete(request, review_type, submission_id,access_key=None):
 		'form_info': submission.review_form,
 		'data_ordered': data_ordered,
 		'result': result,
-		'additional_files':additional_files,
+		'additional_files': logic.has_additional_files(submission),
+		'editors': logic.get_editors(review_assignment)
 	}
 
 	return render(request,template, context)

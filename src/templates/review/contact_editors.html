@@ -1,18 +1,12 @@
-   <div class="dash-container" style="margin-top:-25px;color:rgb(150,150,150)">
-            <h5>If you would like to contact the editor about this </br> project, please click the button below</h5>
-            </br>
-            {% if editors %}
-            {% for editor in editors %}
-            {% for detail in editor%}
-        
-           {% if detail.isSeriesEditor%} 
-           <a href="mailto:{{detail.editor.email}}" class="btn btn-lg btn-other"  type="submit"  style="font-size: 14px;border-radius:8px" >Contact {{detail.editor.first_name}} {{detail.editor.last_name}}</a>
-           {% else %}
-             <a href="mailto:{{detail.editor.email}}" class="btn btn-lg btn-task"  type="submit"  style="font-size: 14px;border-radius:8px" >Contact {{detail.editor.first_name}} {{detail.editor.last_name}}</a>
-          {% endif %}
-             {% endfor %}
-             {% endfor %}
-            {% else %}
-             <a  disabled class="btn btn-lg btn-task" type="submit"  style="width:120px; font-size: 14px;border-radius:8px" >Contact Editor</a>
-           {% endif %}
-            </div>
+<div class="dash-container" style="margin-top:-25px;color:rgb(150,150,150)">
+  <h5>If you would like to contact the editor about this </br> project, please click the button below</h5></br>
+  {% for editor_dict in editors %}
+    {% if editor_dict.isSeriesEditor == True %}
+    <a href="mailto:{{editor_dict.editor.email}}" class="btn btn-lg btn-other"  type="submit"  style="font-size: 14px;border-radius:8px" >Contact {{ editor_dict.editor.profile.full_name }}</a>
+    {% else %}
+    <a href="mailto:{{editor_dict.editor.email}}" class="btn btn-lg btn-task"  type="submit"  style="font-size: 14px;border-radius:8px" >Contact {{ editor_dict.editor.profile.full_name }}</a>
+    {% endif %}
+  {% empty %}
+    <a disabled class="btn btn-lg btn-task" type="submit"  style="width:120px; font-size: 14px;border-radius:8px" >No Editors Assigned</a>
+  {% endfor %}
+</div>
