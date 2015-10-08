@@ -399,8 +399,14 @@ def delete_file(request, submission_id, file_id, returner):
 def update_file(request, submission_id, file_id, returner):
 	book = get_object_or_404(models.Book, pk=submission_id)
 	_file = get_object_or_404(models.File, pk=file_id)
+	if request.POST and 'rename' in request.POST:
+		label = request.POST['rename']
+		if label:
+			print label
+			_file.label=label
+			_file.save()
 
-	if request.POST:
+	elif request.POST:
 		for file in request.FILES.getlist('update_file'):
 			handle_file_update(file, _file, book, _file.kind, request.user)
 			messages.add_message(request, messages.INFO, 'File updated.')
