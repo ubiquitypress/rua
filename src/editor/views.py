@@ -48,7 +48,7 @@ def editor_dashboard(request):
 	return render(request, template, context)
 
 
-@is_editor
+@is_book_editor
 def editor_submission(request, submission_id):
 	book = get_object_or_404(models.Book, pk=submission_id)
 
@@ -75,7 +75,7 @@ def editor_submission(request, submission_id):
 
 	return render(request, template, context)
 
-@is_editor
+@is_book_editor
 def editor_tasks(request, submission_id):
 	book = get_object_or_404(models.Book, pk=submission_id)
 
@@ -91,7 +91,7 @@ def editor_tasks(request, submission_id):
 
 	return render(request, template, context)
 
-@is_editor
+@is_book_editor
 def editor_review(request, submission_id):
 	book = get_object_or_404(models.Book, pk=submission_id)
 	review_rounds = models.ReviewRound.objects.filter(book=book).order_by('-round_number')
@@ -110,7 +110,7 @@ def editor_review(request, submission_id):
 
 	return render(request, template, context)
 
-@is_editor
+@is_book_editor
 def editor_review_round(request, submission_id, round_number):
 	book = get_object_or_404(models.Book, pk=submission_id, owner=request.user)
 	review_round = get_object_or_404(models.ReviewRound, book=book, round_number=round_number)
@@ -135,7 +135,42 @@ def editor_review_round(request, submission_id, round_number):
 
 	return render(request, template, context)
 
-@is_editor
+@is_book_editor
+def add_review_files(request, submission_id, review_type):
+	submission = get_object_or_404(models.Book, pk=submission_id)
+
+	if request.POST:
+		files = models.File.objects.filter(pk__in=request.POST.getlist('file'))
+		for file in files:
+			if review_type == 'internal':
+				submission.internal_review_files.add(file)
+			else:
+				submission.external_review_files.add(file)
+
+		messages.add_message(request, messages.SUCCESS, '%s files added to Review' % files.count())
+
+		return redirect(reverse('editor_review_round', kwargs={'submission_id': submission_id, 'round_number': submission.get_latest_review_round()}))
+
+	template = 'editor/add_review_files.html'
+	context = {
+		'submission': submission,
+	}
+
+	return render(request, template, context)
+
+@is_book_editor
+def delete_review_files(request, submission_id, review_type, file_id):
+	submission = get_object_or_404(models.Book, pk=submission_id)
+	file = get_object_or_404(models.File, pk=file_id)
+
+	if review_type == 'internal':
+		submission.internal_review_files.remove(file)
+	else:
+		submission.external_review_files.remove(file)
+
+	return redirect(reverse('editor_review_round', kwargs={'submission_id': submission_id, 'round_number': submission.get_latest_review_round()}))
+
+@is_book_editor
 def editor_status(request, submission_id):
 	book = get_object_or_404(models.Book, pk=submission_id)
 

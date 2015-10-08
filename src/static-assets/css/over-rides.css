@@ -178,6 +178,13 @@ html, body {
   margin-left: 10px;
 }
 
+.declined {
+  background-color:rgb(171, 30, 59);
+  color: white;
+  padding: 5 5 5 5;
+  margin-left: 10px;
+}
+
 .no-recommendation {
   background-color:rgb(181, 181, 181);
   color: white;
