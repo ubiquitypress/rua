@@ -402,7 +402,6 @@ def update_file(request, submission_id, file_id, returner):
 	if request.POST and 'rename' in request.POST:
 		label = request.POST['rename']
 		if label:
-			print label
 			_file.label=label
 			_file.save()
 

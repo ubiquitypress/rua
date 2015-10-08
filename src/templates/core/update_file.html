@@ -60,7 +60,13 @@
 		</br>
 		<tbody style="background-color:white">
 			<tr>
-				<td>Label</td><td>{{ file.label }}</td>
+				<td>Label</td><td><form method="post" enctype="multipart/form-data">	
+			{% csrf_token %}
+				<div class="form-group">
+									
+							 		<input type="text" class=" form-control" id="rename" name="rename" value="{{file.label}}">		
+		</div>
+	</form></td>
 			</tr>
 			<tr>
 				<td>Original Filename</td><td>{{ file.original_filename }}</td>
@@ -82,27 +88,6 @@
   	</li>
 
 </ul>
-	<form method="post" enctype="multipart/form-data">	
-			{% csrf_token %}
-			<div class="well">
-					<div class="dash-container">
-				<h5 class="subtitle-form-text">You can change the label below.</h5>
-				<div class="form-group">
-					<div class="row col-md-4">
-						
-							 <div class="input-group">
-							 		<input type="text" class=" form-control" style="width:200px"id="rename" name="rename">
-									<span class="input-group-btn">
-											
-											<button class="btn btn-primary " type="submit" name="update" id="update">&nbsp;&nbsp;&nbsp;</i>Change Label&nbsp;&nbsp;&nbsp;&nbsp;</button>
-									</span>
-							
-							</div>
-</div>
-			</div></div>
-					</br>
-		</div>
-	</form>
 		<form method="post" enctype="multipart/form-data">
 			{% csrf_token %}
 			<div class="well">
