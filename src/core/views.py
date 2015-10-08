@@ -285,45 +285,22 @@ def new_message(request, book_id):
 	else:
 		return HttpResponse(json.dumps(new_message_form.errors))
 
+@is_book_editor
+def email_author(request,submission_id,author_id):
+	book = get_object_or_404(models.Book, pk=submission_id)
+	author = get_object_or_404(models.Author, pk=author_id)
+	authors = models.Author.objects.all()
 
-## File helpers
-def handle_file(file, book, kind):
+	template = 'core/email_author.html'
+	context = {
+		'submission': book,
+		'to_author': author,
+		'from': request.user,
+		'authors': authors,
+		
+	}
 
-	original_filename = str(file._get_name())
-	filename = str(uuid4()) + str(os.path.splitext(original_filename)[1])
-	folder_structure = os.path.join(settings.BASE_DIR, 'files', 'books', str(book.id))
-
-	if not os.path.exists(folder_structure):
-		os.makedirs(folder_structure)
-
-	path = os.path.join(folder_structure, str(filename))
-	fd = open(path, 'wb')
-	for chunk in file.chunks():
-		fd.write(chunk)
-	fd.close()
-
-	file_mime = mime.guess_type(filename)
-
-	try:
-		file_mime = file_mime[0]
-	except IndexError:
-		file_mime = 'unknown'
-
-	if not file_mime:
-		file_mime = 'unknown'
-
-	new_file = models.File(
-		mime_type=file_mime,
-		original_filename=original_filename,
-		uuid_filename=filename,
-		stage_uploaded=1,
-		kind=kind,
-		owner=book.owner,
-	)
-	new_file.save()
-
-	return new_file
-
+	return render(request, template, context)
 
 
 @is_book_editor

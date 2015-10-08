@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% load bootstrap3 %}
+
+{% block body %}
+	<div class="row">
+		<div class="col-md-7">
+				<form method="post" enctype="multipart/form-data">	
+			{% csrf_token %}
+				<div class="form-group">
+					<div class="input-group">
+					<span class="input-group-addon" id="sizing-addon3">To</span>
+					<input type="text" class=" form-control" id="to" name="to" value="{{to_author.author_email}}">
+					<span class="input-group-btn">
+					<button class="btn btn-browse btn-decline " >&nbsp;Look Up&nbsp;&nbsp;&nbsp;&nbsp;</button>
+					</span>	
+					</div>	
+			</div>
+			<div class="form-group">
+					<div class="input-group">
+					<span class="input-group-addon" id="sizing-addon3">From</span>
+					<input type="text" class=" form-control" readonly value="{{from.email}}">
+			
+					</div>	
+			</div>
+					<div class="form-group">
+					<div class="input-group">
+					<span class="input-group-addon" id="sizing-addon3">Cc</span>
+					<input type="text" class=" form-control" id="cc" name="cc">
+					<span class="input-group-btn">
+					<button class="btn btn-browse btn-decline " >&nbsp;Look Up&nbsp;&nbsp;&nbsp;&nbsp;</button>
+					</span>	
+					</div>	
+			</div>
+				<div class="form-group">
+					<div class="input-group">
+					<span class="input-group-addon" id="sizing-addon3">Bcc</span>
+					<input type="text" class=" form-control" id="bcc" name="bcc">
+					<span class="input-group-btn">
+					<button class="btn btn-browse btn-decline " >&nbsp;Look Up&nbsp;&nbsp;&nbsp;&nbsp;</button>
+					</span>	
+					</div>	
+			</div>
+			<div class="form-group">
+					    <textarea type="text" class=" form-control" id="body" name="body"></textarea>
+					  </div>
+				<div class="form-group">
+						
+							 <div class="input-group">
+									<span class="input-group-addon" id="sizing-addon3">Attachments</span>
+									<input type="text" class="form-control" readonly>
+									<span class="input-group-btn">
+											<span class="btn btn-browse btn-accept btn-file">
+													Browse&hellip; <input type="file" id="update_file" name="update_file">
+											</span>
+									</span>
+							</div>
+				
+									
+			</div>
+		</br>
+			<button class="btn btn-info btn-group-justified" type="submit" name="send" id="send">&nbsp;&nbsp;&nbsp;<i class="fa fa-paper-plane">&nbsp;</i>Send&nbsp;&nbsp;&nbsp;&nbsp;</button>
+		</form>
+	</div>
+	</div>
+{% endblock body %}
+
+{% block js %}
+<script type="text/javascript">$("textarea").jqte();</script>
+{% endblock %}
