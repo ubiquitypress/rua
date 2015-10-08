@@ -9,6 +9,7 @@ from core import models, log, logic as core_logic
 from workflow import logic as workflow_logic
 from editor import logic
 from revisions import models as revision_models
+from review import models as review_models
 
 
 @is_editor
@@ -32,9 +33,9 @@ def editor_dashboard(request):
 		query_list.append(Q(title__contains=search) | Q(subtitle__contains=search) | Q(prefix__contains=search))
 
 	if filterby:
-		book_list = models.Book.objects.filter(publication_date__isnull=True).filter(*query_list).order_by(order)
+		book_list = models.Book.objects.filter(publication_date__isnull=True).filter(*query_list).exclude(stage__current_stage='declined').order_by(order)
 	else:
-		book_list = models.Book.objects.filter(publication_date__isnull=True).order_by(order)
+		book_list = models.Book.objects.filter(publication_date__isnull=True).exclude(stage__current_stage='declined').order_by(order)
 
 	template = 'editor/dashboard.html'
 	context = {
@@ -135,6 +136,8 @@ def editor_review_round(request, submission_id, round_number):
 
 	return render(request, template, context)
 
+
+
 @is_book_editor
 def add_review_files(request, submission_id, review_type):
 	submission = get_object_or_404(models.Book, pk=submission_id)
@@ -152,6 +155,50 @@ def add_review_files(request, submission_id, review_type):
 		return redirect(reverse('editor_review_round', kwargs={'submission_id': submission_id, 'round_number': submission.get_latest_review_round()}))
 
 	template = 'editor/add_review_files.html'
+	context = {
+		'submission': submission,
+	}
+
+	return render(request, template, context)
+
+@is_book_editor
+def editor_review_assignment(request, submission_id, round_id, review_id):
+
+	submission = get_object_or_404(models.Book, pk=submission_id, owner=request.user)
+	review_assignment = get_object_or_404(models.ReviewAssignment, pk=review_id)
+	review_rounds = models.ReviewRound.objects.filter(book=submission).order_by('-round_number')
+	result = review_assignment.results
+	relations = review_models.FormElementsRelationship.objects.filter(form=result.form)
+	data_ordered = workflow_logic.order_data(workflow_logic.decode_json(result.data), relations)
+
+	template = 'editor/submission.html'
+	context = {
+		'author_include': 'editor/review_revisions.html',
+		'submission_files': 'shared/view_review.html',
+		'submission': submission,
+		'review': review_assignment,
+		'data_ordered': data_ordered,
+		'result': result,
+		'active': 'review',
+		'review_rounds': review_rounds,
+		'revision_requests': revision_models.Revision.objects.filter(book=submission, revision_type='review'),
+	}
+
+	return render(request, template, context)
+
+@is_book_editor
+def decline_submission(request, submission_id):
+
+	submission = get_object_or_404(models.Book, pk=submission_id)
+
+	if request.POST and 'decline' in request.POST:
+		submission.stage.declined = timezone.now()
+		submission.stage.current_stage = 'declined'
+		submission.stage.save()
+		messages.add_message(request, messages.SUCCESS, 'Submission declined.')
+		return redirect(reverse('editor_dashboard'))
+
+	template = 'editor/decline_submission.html'
 	context = {
 		'submission': submission,
 	}
