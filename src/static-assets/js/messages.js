@@ -8,9 +8,9 @@ frm.submit(function () {
             data = $.parseJSON(data);
 
             if ($('#message-list > div').length %2 != 0){
-                var style = 'odd'
-            }else{
                 var style = 'even'
+            }else{
+                var style = 'odd'
             }
 
             $( "#message-list" ).prepend( '<div class="message ' + style + '"><div class="row message-container"><div class="col-md-2"><h3 style="margin-top: 15px;">AB</h3></div><div class="col-md-10"><small>' + data.message + '</small></div><div class="col-md-12 message-date"><small>' + data.date_sent + '</small></div></div></div>' );
