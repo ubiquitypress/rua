@@ -1,0 +1,25 @@
+<h4> <b> <i class="fa fa-check-circle-o"></i> You completed this {{ assignment.type }} on {{ assignment.completed }} </b></h4>
+  <h5 class="subtitle-form-completed-text"><em> Details of your {{ assignment.type }} are below </em></h5>
+</br>
+
+      <h5><b>Submitted Files:</b></h5>
+      <ul class="media-list manuscript-upload-states">
+ 
+  {% for file in files %}
+    <div class="col-md-12">
+     {% include 'shared/submission_file.html' %}
+    </div><br>
+    {% if not file.label %}
+    <form method="POST">
+    {% csrf_token %}
+      <div class="col-md-8">
+        <input type="text" name="label" class="form-control">
+      </div>
+      <div class="col-md-4">
+        <button class="btn btn-info btn-sm" name="file_id" value="{{ file.pk }}"><i class="fa fa-pencil-square"></i>&nbsp;&nbsp;Add label </button>
+      </div>
+    </form>
+    {% endif %}
+    <div class="col-md-12"><hr></div>
+  {% endfor %}
+ 

@@ -110,7 +110,7 @@ html, body {
 .dash-center {
   padding: 0;
   height: 92%;
-  overflow-y: scroll;
+  overflow-y: auto;
   overflow-x: hidden;
 }
 
@@ -219,6 +219,46 @@ body > div.container > div > div.col-md-4.dash-right > div > ul > li > div > div
   background-color: rgb(196, 183, 140);
   color: #FFF;
 
+}
+.file-heading {
+  background-color: #00A6A1;
+  color: #FFF;
+  margin-bottom:5px;
+
+}
+.file-icon-large{
+  font-size:70px !important
+}
+.file-icon-medium{
+  font-size:50px !important
+}
+.btn-file-download{
+  width: 120px !important; 
+  margin-left:24px !important;
+}
+.btn-file-version-download{
+  width: 120px !important; 
+  margin-left:30px !important;
+}
+.btn-upload{
+  background-color:#00A6A1 !important;
+  color:#ffffff;
+  border-color:#8DD8D6 !important;
+  border-radius: 24px;
+}
+ 
+.btn-upload:hover, .btn-upload:focus, .btn-upload:active, .btn-upload.active, .open > .dropdown-toggle.btn-upload {
+    background: #00D7D0 !important;
+    color:#ffffff;
+}
+ 
+.btn-upload:active, .btn-upload.active {
+    background: #055956 !important;
+    color:#ffffff;
+    box-shadow: none;
+}
+.btn-browse{
+  border-radius: -4px !important;
 }
 
 .book-heading h3 {
@@ -364,7 +404,9 @@ body > div.container > div > div.col-md-4.dash-right > div > ul > li > div > div
 .btn-action {
   width: 90px;
 }
-
+.versions-badge{
+  background-color: rgb(196, 183, 140) !important;
+}
 .btn-view{
   background-color: rgb(196, 183, 140);
   border-color: rgb(196, 183, 140);
@@ -408,7 +450,9 @@ body > div.container > div > div.col-md-4.dash-right > div > ul > li > div > div
   border-radius: 12px;
  
 }
- 
+ .btn-round{
+  border-radius: 24px !important;
+ }
 .btn-decline:hover, .btn-decline:focus, .btn-decline:active, .btn-decline.active, .open > .dropdown-toggle.btn-decline {
     background: #E43A5C;
     color:#ffffff;
@@ -715,4 +759,11 @@ iframe {
 
 #dashboard-grid .col-md-4:nth-child(7) {
     clear: left;
+}
+
+.current {
+  pointer-events: none;
+  cursor: default;
+  background-color:white;
+
 }

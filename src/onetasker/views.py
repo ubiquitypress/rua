@@ -2,7 +2,8 @@ from django.shortcuts import render
 from django.shortcuts import redirect, render, get_object_or_404, Http404
 from django.contrib import messages
 
-from core import models, logic as core_logic, task as notify
+from core import models, logic as core_logic, task
+from core.decorators import is_onetasker
 from onetasker import forms
 
 import logic
@@ -11,7 +12,7 @@ from datetime import datetime
 
 
 
-
+@is_onetasker
 def dashboard(request):
 
 	onetasker_tasks = core_logic.onetasker_tasks(request.user)
@@ -29,12 +30,13 @@ def dashboard(request):
 	return render(request, template, context)
 
 
-def task_hub(request, assignment_type, assignment_id):
+def task_hub(request, assignment_type, assignment_id, about=None):
 
 	assignment = logic.get_assignment(assignment_type, assignment_id)
 	form = logic.get_assignemnt_form(request, assignment_type, assignment)
-	center_block = 'onetasker/elements/files.html'
+	center_block = 'onetasker/elements/submission_details.html' if about else 'onetasker/elements/files.html'
 	right_block = logic.right_block(assignment)
+	submitted_files = logic.get_submitted_files(assignment)
 
 	if request.POST:
 		#Handle decision
@@ -45,23 +47,29 @@ def task_hub(request, assignment_type, assignment_id):
 		elif decision == 'decline':
 			assignment.declined = datetime.now()
 			assignment.save()
+			task.create_new_task
 
 			return redirect(reverse('tasks'))
 
 		#handle submission
 		elif 'task' in request.POST:
+			print'yoyo'
 			form = logic.get_assignemnt_form(request, assignment_type, assignment)
 			if form.is_valid():
 				assignment = form.save(commit=False)
 				files = request.FILES.getlist('file_upload')
 				assignment = logic.handle_files(assignment, files)
-				for _file in request.FILES.getlist('file_upload'):
-					new_file = logic.handle_file(_file, assignment)
-					assignment = logic.add_file(assignment, new_file)
-				assignment = logic.complete_task(assignment)
 				assignment.save()
-				logic.notify_editor(assignment)
+				logic.notify_editor(assignment, '%s task completed' % (assignment.type()))
 				messages.add_message(request, messages.SUCCESS, 'Task completed. Thanks!')
+			else:
+				print form
+
+		#handle label
+		elif 'label' in request.POST:
+			_file = get_object_or_404(models.File, pk=request.POST.get('file_id'))
+			_file.label = request.POST.get('label')
+			_file.save()
 			
 
 
@@ -72,7 +80,9 @@ def task_hub(request, assignment_type, assignment_id):
 		'assignment':assignment,
 		'form': form,
 		'center_block': center_block,
-		'right_block': right_block
+		'right_block': right_block,
+		'files':submitted_files,
+		'about':about
 	}
 
 	return render(request, template, context)

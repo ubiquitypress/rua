@@ -4,8 +4,17 @@
 <hr />
 Complete the form below and upload your files. The upload box is capable of uploading more than one file at a time.<br /><br />
     <form method="POST" enctype="multipart/form-data">
+    {% if form.errors %}
+      <div class="alert alert-info">
+          Please correct errors below. Note, you'll have to reselect any files you want uploaded.
+          {% for error in form.errors %}
+            {{ error }}
+            {% endfor %}
+        </div>
+        {% endif %}
     {% csrf_token %}
     {% bootstrap_form form %}
+    {{ form.errors }}
     <div class="row">
         <div class="col-md-12">
           <label for="file_upload">Upload Files</label>

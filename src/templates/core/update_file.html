@@ -1,0 +1,125 @@
+{% extends "base.html" %}
+{% load static from staticfiles %}
+{% load bootstrap3 %}
+
+{% block title %}New Submissions{% endblock %}
+
+{% block css %}
+	<link href="{% static "css/timeline.css" %}" rel="stylesheet">
+{% endblock %}
+
+{% block body %}
+<div class="row">
+<div class="col-md-12 book-heading container-fluid" style="margin-top:-20px">
+      <h4>  {% if submission.prefix %}{{ submission.prefix|title }}: {% endif %}{{ submission.title|title }}</h4>
+
+</div>
+	 <div class="col-md-3 dash-left grey-container">
+
+        <div class="dash-container" >
+            <h4 class="header-text">  {% if submission.prefix %}{{ submission.prefix }} {% endif %}{{ submission.title }}</h4> 
+            <h5 class="subtitle-text">{{submission.subtitle}}</h5>
+        </div>
+    <div class="book-info">
+    <b>Series: </b>{{submission.series}} </br>
+    <b>Type: </b>{{submission.book_type}} </br>
+    <b>License: </b>{{submission.license}} </br>
+    <b>Review Type: </b>{{submission.get_review_type_display}} </br>
+    </div> </br>
+            
+
+   
+    </div>
+    <div class="col-md-9 dash-center" >
+    </br>
+    	<div class="col-md-12 file-heading container-fluid">
+      <h4>Update file "{{file.label}}"</h4>
+
+</div>
+</br>
+
+    <div class="dash-container" >
+
+    	<ul class="media-list manuscript-upload-states ">
+
+  <li class="media">
+    <div class="media-left media-middle">
+      <span > <h1 class="file-icon-large ">
+        {% if file.mime_type == 'image/jpeg' or file.mime_type == 'image/png' %}
+			 &nbsp; &nbsp;  	<i class="fa fa-file-image-o"></i>&nbsp; &nbsp; 
+			  {% else %}
+			  &nbsp; &nbsp;  	<i class="fa fa-file-text-o"></i>&nbsp; &nbsp; 
+			  {% endif %}
+      </h1><a href="{% url 'serve_file' submission.id file.id %}" class="btn btn-task btn-file-download">&nbsp;<i class="fa fa-cloud-download">&nbsp;</i>Download &nbsp;</a></span>
+    </div>
+
+    <div class="media-body" >
+
+     		<div class="col-md-12">
+          <table class="table" >
+		</br>
+		<tbody style="background-color:white">
+			<tr>
+				<td>Label</td><td><form method="post" enctype="multipart/form-data">	
+			{% csrf_token %}
+				<div class="form-group">
+									
+							 		<input type="text" class=" form-control" id="rename" name="rename" value="{{file.label}}">		
+		</div>
+	</td>
+			</tr>
+			<tr>
+				<td>Original Filename</td><td>{{ file.original_filename }}</td>
+				</tr>
+			<tr>
+				<td>System Filename</td><td>{{ file.uuid_filename }}</td>
+				</tr>
+			<tr>
+				<td>Owner</td><td>{{ file.owner.profile.full_name }}</td>
+				</tr>
+			<tr>
+				<td>Uploaded</td><td>{{ file.date_uploaded }}</td>
+				</tr>
+				<tr>
+				<td>Last Modified</td><td>{{ file.date_modified }}</td>
+				</tr>
+			</tbody>
+		</table>
+			</div>
+    </div>
+   
+  	</li>
+
+</ul>
+		
+			<div class="well">
+				<div class="dash-container">
+				<h5 class="subtitle-form-text">You can upload a new version of this file below. The old version will be stored unless explicitly deleted.</h5>
+				<div class="form-group">
+					<div class="row">
+						
+							 <div class="input-group">
+									<span class="input-group-btn">
+											<span class="btn btn-browse btn-accept btn-file">
+													Browse&hellip; <input type="file" id="update_file" name="update_file">
+											</span>
+									</span>
+									<input type="text" class="col-md-4 form-control" readonly>
+							</div>
+							<div class="input-group pull-right">
+									</br>
+									<button class="btn btn-accept " type="submit" name="update" id="update">&nbsp;&nbsp;&nbsp;<i class="fa fa-cloud-upload">&nbsp;</i>Update File&nbsp;&nbsp;&nbsp;&nbsp;</button>
+							</div>
+						</div>
+					
+				</div></div>
+			</div>
+		</form>
+</div>
+</div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript" src="{% static "js/fancyfile.js" %}"></script>
+{% endblock %}
