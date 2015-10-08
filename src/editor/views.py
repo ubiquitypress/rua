@@ -100,6 +100,13 @@ def editor_review(request, submission_id):
 	if request.POST and 'new_round' in request.POST:
 		new_round = logic.create_new_review_round(book)
 		return redirect(reverse('editor_review_round', kwargs={'submission_id': submission_id, 'round_number': new_round.round_number}))
+	elif request.POST and 'move_to_editing' in request.POST:
+		if not book.stage.editing:
+			log.add_log_entry(book=book, user=request.user, kind='editing', message='Submission moved to Editing.', short_name='Submission in Editing')
+		book.stage.editing = timezone.now()
+		book.stage.current_stage = 'editing'
+		book.stage.save()
+		return redirect(reverse('editor_editing', kwargs={'submission_id': submission_id}))
 
 	template = 'editor/submission.html'
 	context = {
@@ -113,7 +120,7 @@ def editor_review(request, submission_id):
 
 @is_book_editor
 def editor_review_round(request, submission_id, round_number):
-	book = get_object_or_404(models.Book, pk=submission_id, owner=request.user)
+	book = get_object_or_404(models.Book, pk=submission_id)
 	review_round = get_object_or_404(models.ReviewRound, book=book, round_number=round_number)
 	reviews = models.ReviewAssignment.objects.filter(book=book, review_round__book=book, review_round__round_number=round_number)
 
@@ -135,8 +142,6 @@ def editor_review_round(request, submission_id, round_number):
 	}
 
 	return render(request, template, context)
-
-
 
 @is_book_editor
 def add_review_files(request, submission_id, review_type):
@@ -164,7 +169,7 @@ def add_review_files(request, submission_id, review_type):
 @is_book_editor
 def editor_review_assignment(request, submission_id, round_id, review_id):
 
-	submission = get_object_or_404(models.Book, pk=submission_id, owner=request.user)
+	submission = get_object_or_404(models.Book, pk=submission_id)
 	review_assignment = get_object_or_404(models.ReviewAssignment, pk=review_id)
 	review_rounds = models.ReviewRound.objects.filter(book=submission).order_by('-round_number')
 	result = review_assignment.results
@@ -182,6 +187,58 @@ def editor_review_assignment(request, submission_id, round_id, review_id):
 		'active': 'review',
 		'review_rounds': review_rounds,
 		'revision_requests': revision_models.Revision.objects.filter(book=submission, revision_type='review'),
+	}
+
+	return render(request, template, context)
+
+@is_book_editor
+def editor_editing(request, submission_id):
+	book = get_object_or_404(models.Book, pk=submission_id)
+
+	if request.POST and request.GET.get('start', None):
+		action = request.GET.get('start')
+
+		if action == 'copyediting':
+			book.stage.copyediting = timezone.now()
+			log.add_log_entry(book=book, user=request.user, kind='editing', message='Copyediting has commenced.', short_name='Copyediting Started')
+		elif action == 'indexing':
+			book.stage.indexing = timezone.now()
+			log.add_log_entry(book=book, user=request.user, kind='editing', message='Indexing has commenced.', short_name='Indexing Started')
+		elif action == 'production':
+			book.stage.production = timezone.now()
+			book.stage.current_stage = 'production'
+			log.add_log_entry(book=book, user=request.user, kind='production', message='Submission moved to Production', short_name='Submission in Production')
+			book.stage.save()
+			return redirect(reverse('editor_production', kwargs={'submission_id': submission_id}))
+
+		book.stage.save()
+		return redirect(reverse('editor_editing', kwargs={'submission_id': submission_id}))
+
+	template = 'editor/submission.html'
+	context = {
+		'submission': book,
+		'author_include': 'editor/editing.html',
+	}
+
+	return render(request, template, context)
+
+@is_book_editor
+def editor_production(request, submission_id):
+	book = get_object_or_404(models.Book, pk=submission_id)
+	typeset_assignments = models.TypesetAssignment.objects.filter(book=book)
+
+	if request.POST and request.GET.get('start', None):
+		if request.GET.get('start') == 'typesetting':
+			book.stage.typesetting = timezone.now()
+			book.stage.save()
+
+	template = 'workflow/production/view.html'
+	context = {
+		'active': 'production',
+		'submission': book,
+		'format_list': models.Format.objects.filter(book=book).select_related('file'),
+		'chapter_list': models.Chapter.objects.filter(book=book).select_related('file'),
+		'typeset_assignments': typeset_assignments,
 	}
 
 	return render(request, template, context)

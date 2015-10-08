@@ -1,0 +1,64 @@
+<h2>Copyediting{% if submission.stage.copyediting %}<a class="btn btn-xs btn-task pull-right"><i class="fa fa-plus">&nbsp;</i>Add Copyeditor</a>{% endif %}</h2>
+
+{% if not submission.stage.copyediting %}
+<p>Stage has not been initialised.</p>
+<form method="POST" action="?start=copyediting">
+	{% csrf_token %}
+	<button class="btn btn-primary" type="submit">Start Copyediting</button>
+</form>
+{% else %}
+<table class="table table-condensed table-bordered">
+	<tr>
+		<th>Copyeditor</th><th>Status</th><th>Date</th>
+	</tr>
+	{% for assignment in submission.copyeditassignment_set.all %}
+	<tr>
+		<td>{{ assignment.copyeditor.profile.full_name }}</td>
+		<td>
+			{{ assignment.state.friendly }}
+		</td>
+		<td>
+			{{ assignment.state.date }}
+		</td>
+	</tr>
+	{% empty %}
+	<tr>
+		<td colspan="3">No assignments</td>
+	</tr>
+	{% endfor %}
+</table>
+{% endif %}
+
+<hr />
+
+<h2>Indexing{% if submission.stage.indexing %}<a class="btn btn-xs btn-task pull-right"><i class="fa fa-plus">&nbsp;</i>Add Indexer</a>{% endif %}</h2>
+{% if not submission.stage.indexing %}
+<form method="POST" action="?start=indexing">
+	<p>Stage has not been initialised.</p>
+	{% csrf_token %}
+	<button class="btn btn-primary" type="submit">Start Indexing</button>
+</form>
+{% else %}
+<table class="table table-condensed table-bordered">
+	<tr>
+		<th>Indexer</th><th>Status</th><th>Date</th>
+	</tr>
+	{% for assignment in submission.indexassignment_set.all %}
+	<tr>
+		<td>{{ assignment.indexer.profile.full_name }}</td>
+		<td>
+			{{ assignment.state.friendly }}
+			<br />
+			<small>{{ assignment.state.date }}</small>
+		</td>
+		<td>
+			{{ assignment.state.date }}
+		</td>
+	</tr>
+	{% empty %}
+	<tr>
+		<td colspan="3">No assignments</td>
+	</tr>
+	{% endfor %}
+</table>
+{% endif %}
