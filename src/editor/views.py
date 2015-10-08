@@ -8,6 +8,7 @@ from django.core.urlresolvers import reverse
 from core import models, log, logic as core_logic
 from workflow import logic as workflow_logic
 from editor import logic
+from revisions import models as revision_models
 
 
 @is_editor
@@ -93,13 +94,43 @@ def editor_tasks(request, submission_id):
 @is_editor
 def editor_review(request, submission_id):
 	book = get_object_or_404(models.Book, pk=submission_id)
+	review_rounds = models.ReviewRound.objects.filter(book=book).order_by('-round_number')
+
+	if request.POST and 'new_round' in request.POST:
+		new_round = logic.create_new_review_round(book)
+		return redirect(reverse('editor_review_round', kwargs={'submission_id': submission_id, 'round_number': new_round.round_number}))
 
 	template = 'editor/submission.html'
 	context = {
 		'submission': book,
-		'active': 'user_submission',
-		'author_include': 'editor/submission_details.html',
-		'submission_files': 'editor/submission_files.html',
+		'author_include': 'editor/review_revisions.html',
+		'review_rounds': review_rounds,
+		'revision_requests': revision_models.Revision.objects.filter(book=book, revision_type='review')
+	}
+
+	return render(request, template, context)
+
+@is_editor
+def editor_review_round(request, submission_id, round_number):
+	book = get_object_or_404(models.Book, pk=submission_id, owner=request.user)
+	review_round = get_object_or_404(models.ReviewRound, book=book, round_number=round_number)
+	reviews = models.ReviewAssignment.objects.filter(book=book, review_round__book=book, review_round__round_number=round_number)
+
+	review_rounds = models.ReviewRound.objects.filter(book=book).order_by('-round_number')
+	internal_review_assignments = models.ReviewAssignment.objects.filter(book=book, review_type='internal', review_round__round_number=round_number).select_related('user', 'review_round')
+	external_review_assignments = models.ReviewAssignment.objects.filter(book=book, review_type='external', review_round__round_number=round_number).select_related('user', 'review_round')
+
+	template = 'editor/submission.html'
+	context = {
+		'submission': book,
+		'author_include': 'editor/review_revisions.html',
+		'submission_files': 'editor/view_review_round.html',
+		'review_round': review_round,
+		'review_rounds': review_rounds,
+		'round_id': round_number,
+		'revision_requests': revision_models.Revision.objects.filter(book=book, revision_type='review'),
+		'internal_review_assignments': internal_review_assignments,
+		'external_review_assignments': external_review_assignments,
 	}
 
 	return render(request, template, context)
