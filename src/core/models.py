@@ -217,6 +217,12 @@ class Book(models.Model):
 	def formats(self):
 		return self.format_set.all()
 
+	def onetaskers(self):
+		users =  [copyedit.copyeditor for copyedit in CopyeditAssignment.objects.filter(book=self)]
+		users.append(typeset.typesetter for typeset in TypesetAssignment.objects.filter(book=self))
+		users.append(typeset.typesetter for typeset in TypesetAssignment.objects.filter(book=self))
+		return users
+
 	def full_title(self):
 		if self.prefix and self.subtitle:
 			return '%s %s %s' % (self.prefix, self.title, self.subtitle)
@@ -415,7 +421,7 @@ class TypesetAssignment(models.Model):
 	author_completed = models.DateField(blank=True, null=True)
 	editor_second_review = models.DateField(blank=True, null=True)
 	typesetter_invited = models.DateField(blank=True, null=True)
-	typsetter_completed = models.DateField(blank=True, null=True)
+	typesetter_completed = models.DateField(blank=True, null=True)
 
 	note = models.TextField(blank=True, null=True)
 	note_to_author = models.TextField(blank=True, null=True)
@@ -426,7 +432,7 @@ class TypesetAssignment(models.Model):
 	files = models.ManyToManyField('File', blank=True, null=True)
 	typeset_files = models.ManyToManyField('File', blank=True, null=True, related_name='typeset_files')
 	author_files = models.ManyToManyField('File', blank=True, null=True, related_name='author_typeset_files')
-	typesetter_files = models.ManyToManyField('File', blank=True, null=True, related_name='typsetter_files')
+	typesetter_files = models.ManyToManyField('File', blank=True, null=True, related_name='typesetter_files')
 
 	def __unicode__(self):
 		return u'%s - %s %s' % (self.pk, self.book.title, self.typesetter.username)
@@ -437,23 +443,23 @@ class TypesetAssignment(models.Model):
 	def type(self):
 		return 'typesetting'
 
-		def state(self):
-			if self.typsetter_completed:
-				return {'state': 'complete', 'friendly': 'Assignment Complete', 'date': self.typsetter_completed}
-			elif self.typesetter_invited:
-				return {'state': 'typesetter_second', 'friendly': 'Awaiting final typesetting', 'date': self.typesetter_invited}
-			elif self.author_completed and not self.editor_second_review:
-				return {'state': 'editor_second_review', 'friendly': 'Awaiting editor review', 'date': self.editor_second_review}
-			elif self.author_completed:
-				return {'state': 'author_complete', 'friendly': 'Author Review Complete', 'date': self.author_completed}
-			elif self.author_invited:
-				return {'state': 'author_invited', 'friendly': 'Awaiting author review', 'date': self.author_invited}
-			elif self.completed and not self.editor_review:
-				return {'state': 'editor_review', 'friendly': 'Awaiting editor review', 'date': self.completed}
-			elif self.accepted:
-				return {'state': 'accepted', 'friendly': 'Typesetter has accepted', 'date': self.accepted}
-			else:
-				return {'state': 'assigned', 'friendly': 'Awaiting response from typesetter', 'date': self.requested} 
+	def state(self):
+		if self.typesetter_completed:
+			return {'state': 'complete', 'friendly': 'Assignment Complete', 'date': self.typesetter_completed}
+		elif self.typesetter_invited:
+			return {'state': 'typesetter_second', 'friendly': 'Awaiting final typesetting', 'date': self.typesetter_invited}
+		elif self.author_completed and not self.editor_second_review:
+			return {'state': 'editor_second_review', 'friendly': 'Awaiting editor review', 'date': self.editor_second_review}
+		elif self.author_completed:
+			return {'state': 'author_complete', 'friendly': 'Author Review Complete', 'date': self.author_completed}
+		elif self.author_invited:
+			return {'state': 'author_invited', 'friendly': 'Awaiting author review', 'date': self.author_invited}
+		elif self.completed and not self.editor_review:
+			return {'state': 'editor_review', 'friendly': 'Awaiting editor review', 'date': self.completed}
+		elif self.accepted:
+			return {'state': 'accepted', 'friendly': 'Typesetter has accepted', 'date': self.accepted}
+		else:
+			return {'state': 'assigned', 'friendly': 'Awaiting response from typesetter', 'date': self.requested} 
 
 class License(models.Model):
 	name = models.CharField(max_length=1000)

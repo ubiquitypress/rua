@@ -110,7 +110,7 @@ html, body {
 .dash-center {
   padding: 0;
   height: 92%;
-  overflow-y: scroll;
+  overflow-y: auto;
   overflow-x: hidden;
 }
 
@@ -748,4 +748,11 @@ iframe {
 
 #dashboard-grid .col-md-4:nth-child(7) {
     clear: left;
+}
+
+.current {
+  pointer-events: none;
+  cursor: default;
+  background-color:white;
+
 }

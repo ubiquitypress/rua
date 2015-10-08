@@ -1,6 +1,6 @@
 from django.shortcuts import redirect, render, get_object_or_404, Http404
 
-from core import files, models
+from core import files, models, task
 import forms
 
 from datetime import datetime
@@ -25,20 +25,20 @@ def get_assignemnt_form(request, assignment_type, assignment):
 	if assignment_type == 'copyedit':
 		form = forms.Copyedit(request.POST, instance=assignment)
 	elif assignment_type == 'typesetting':
-		form = forms.Typeset(instance=assignment)
+		form = forms.Typeset(request.POST, instance=assignment)
 	elif assignment_type == 'indexing':
-		form = forms.Index(instance=assignment)
+		form = forms.Index(request.POST, instance=assignment)
 	else:
 		raise Http404
 
 	return form
 
 def handle_files(assignment, files):
-	for _file in request.FILES.getlist('file_upload'):
+	for _file in files:
 		new_file = handle_file(_file, assignment)
 		assignment = add_file(assignment, new_file)
 	assignment = complete_task(assignment)
-	
+
 	return assignment
 
 def handle_file(_file, assignment):
@@ -70,13 +70,14 @@ def add_file(assignment, new_file):
 	return assignment
 
 def complete_task(assignment):
+	print 'hey'
 	if assignment.type()== 'copyedit':
 		assignment.completed = datetime.now()
 	elif assignment.type()== 'typesetting':
 		if assignment.state().get('state') == 'typesetter_second':
 			assignment.typesetter_completed = datetime.now()
 		else:
-			assignment.completed == datetime.now()
+			assignment.completed = datetime.now()
 	elif assignment.type()== 'indexing':
 		assignment.completed = datetime.now()
 
@@ -86,8 +87,8 @@ def right_block(assignment):
 
 	if assignment.completed:
 		right_block = 'onetasker/elements/completed.html'
-		if assignment.type() == 'typesetting' and not assignment.typesetter_completed:
-			right_block = 'onetasker/elements/task_form.html'		
+		if assignment.type() == 'typesetting' and not assignment.typesetter_completed and assignment.state().get('state') == 'typesetter_second':
+			right_block = 'onetasker/elements/task_form.html'	
 	elif assignment.accepted:
 		right_block = 'onetasker/elements/task_form.html'
 	else:
@@ -99,8 +100,21 @@ def notify_editor( assignment, text):
 	if assignment.type()== 'copyedit':
 		assignee = assignment.copyeditor
 	elif assignment.type()== 'typesetting':
-		assignee = assignemnt.typesetter
+		assignee = assignment.typesetter
 	elif assignment.type()== 'indexing':
-		assignee = assignemnt.indexer
+		assignee = assignment.indexer
 
-	return task.create_new_task(assignment.book, assigment.requester, assignee, text, assignment.type() )
+	return task.create_new_task(assignment.book, assignment.requestor, assignee, text, assignment.type() )
+
+def get_submitted_files(assignment):
+
+	if assignment.type()== 'copyedit':
+		files = assignment.copyedit_files.all()
+	elif assignment.type()== 'typesetting':
+		if assignment.state().get('state') == 'typesetter_second':
+			files = assignment.typesetter_files.all()
+		else:
+			files = assignment.typeset_files.all()
+	elif assignment.type()== 'indexing':
+		files = assignment.copyedit_files.all()
+	return files

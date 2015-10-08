@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import logout as logout_user
 from django.contrib.auth import login as login_user
 from django.shortcuts import redirect, render, get_object_or_404
-from django.http import HttpResponseRedirect, Http404, HttpResponse, StreamingHttpResponse
+from django.http import HttpResponseRedirect, Http404, HttpResponse
 from django.contrib import messages
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
@@ -13,12 +13,12 @@ from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Q
 from django.core import serializers
 from django.conf import settings
-from core import log
+
 from core import models
 from core import forms
 from core import logic
 from workflow import forms as workflow_forms
-from workflow.views import handle_file_update
+
 from submission import models as submission_models
 from core.decorators import is_editor, is_book_editor, is_book_editor_or_author
 from pprint import pprint
