@@ -5,7 +5,45 @@
 
 <div class="inline-headers"><h4>Internal Reviews</h4><a href="{% url 'add_reviewers' submission.id 'internal' review_round.round_number %}" class="btn btn-sm btn-success" style="float: right;"{% if review_round.round_number != submission.get_latest_review_round %}disabled{% endif %}><i class="fa fa-plus">&nbsp;</i>Add Reviewers</a></div>
 
-{% include "workflow/review/reviewer_block.html" with review_data=internal_review_assignments %}
+<ul class="manuscript-upload-states">
+  {% for review in internal_review_assignments %}
+  <li>
+    <div class="row">
+      <div class="col-md-7">
+        <p>
+        <strong>{{ review.user.profile.full_name }}</strong>
+        </p>
+        {% if review.declined %}
+        	<span class="declined">Review Declined on {{ review.declined }}</span>
+        {% else %}
+        <span class="{% if review.recommendation %}recommendation{% else %}no-recommendation{% endif %}">
+        {% if review.recommendation %}Recommend to {{ review.get_recommendation_display }}{% else %}Awaiting recommendation{% endif %}
+        </span>
+        {% endif %}
+
+        <p>
+        	{% if review.completed %}
+        	<strong>Completed on: </strong>{{ review.completed }}
+        	{% elif review.accepted %}
+        	<strong>Accepted on: </strong>{{ review.accepted }}
+        	{% else %}
+        	<strong>Assigned on: </strong>{{ review.assigned }}
+        	{% endif %}
+        </p>
+      </div>
+      <div class="col-md-4">
+        {% if not review.completed %}<h5>Due: {{ review.due }}</h5>{% else %}<a href="{% url 'editor_review_assignment' submission.id review_round.round_number review.id %}" style="margin-top: 20px;margin-right:10px;" class="btn btn-xs btn-success">View Review</a>{% endif %}
+      </div>
+    </div>
+  </li>
+  {% empty %}
+  <li>
+  <p>
+	<strong>No internal review assignments.</strong>
+  </p>
+  </li>
+  {% endfor %}
+</ul>
 
 <hr />
 
@@ -16,5 +54,38 @@
 {% include "shared/review_files.html" with file_data=submission.external_review_files.all file_type='external' %}
 
 <div class="inline-headers"><h4>External Reviews</h4><a href="{% url 'add_reviewers' submission.id 'external' review_round.round_number %}" class="btn btn-sm btn-success" style="float: right;"{% if review_round.round_number != submission.get_latest_review_round %}disabled{% endif %}><i class="fa fa-plus">&nbsp;</i>Add Reviewers</a></div>
+<ul class="manuscript-upload-states">
+  {% for review in external_review_assignments %}
+  <li>
+    <div class="row">
+      <div class="col-md-7">
+        <p>
+        <strong>{{ review.user.profile.full_name }}</strong>
+        </p>
+        <span class="{% if review.recommendation %}recommendation{% else %}no-recommendation{% endif %}">
+        {% if review.recommendation %}Recommend to {{ review.get_recommendation_display }}{% else %}Awaiting recommendation{% endif %}
+        </span>
+        <p>
+        	{% if review.completed %}
+        	<strong>Completed on: </strong>{{ review.completed }}
+        	{% elif review.accepted %}
+        	<strong>Accepted on: </strong>{{ review.accepted }}
+        	{% else %}
+        	<strong>Assigned on: </strong>{{ review.assigned }}
+        	{% endif %}
+        </p>
+      </div>
+      <div class="col-md-4">
+        {% if not review.completed %}<h5>Due: {{ review.due }}</h5>{% else %}<a href="{% url 'editor_review_assignment' submission.id review_round.round_number review.id %}" style="margin-top: 20px;margin-right:10px;" class="btn btn-xs btn-success">View Review</a>{% endif %}
+      </div>
+    </div>
+  </li>
+  {% empty %}
+  <li>
+  <p>
+	<strong>No external review assignments.</strong>
+  </p>
+  </li>
+  {% endfor %}
 
-{% include "workflow/review/reviewer_block.html" with review_data=external_review_assignments %}
+</ul>

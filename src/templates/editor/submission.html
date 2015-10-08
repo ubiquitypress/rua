@@ -79,16 +79,18 @@
         </a>
         {% endif %}
         {% if submission.stage.editing %}
-        <a href="{% url 'editing' submission.pk %}">
+        <a href="{% url 'editor_editing' submission.pk %}">
         <div class="dash-menu">
             <h5>Editing <i class="fa fa-chevron-right pull-right"></i></h5>
         </div>
         </a>
         {% endif %}
         {% if submission.stage.production %}
+        <a href="{% url 'editor_production' submission.id %}">
         <div class="dash-menu">
             <h5>Production <i class="fa fa-chevron-right pull-right"></i></h5>
         </div>
+        </a>
         {% endif %}
         {% include "editor/snippets/available_actions.html" %}
     </div>

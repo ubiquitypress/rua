@@ -1,5 +1,5 @@
 {% load dict_lookup %}
-<h4>{% if book.review_type == 'open-with' %}Review by {{ review.user.profile.full_name }}{% else %}This review is anonymous.{% endif %}</h4>
+<h4>{% if book.review_type == 'open-with' or active == 'review' %}Review by {{ review.user.profile.full_name }}{% else %}This review is anonymous.{% endif %}</h4>
 <h5>Review Files</h5>
 {% include "shared/review_files.html" with file_data=review.files.all %}
 

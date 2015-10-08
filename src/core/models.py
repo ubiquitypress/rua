@@ -239,6 +239,7 @@ def identifier_choices():
 		('isbn-10', 'ISBN 10'),
 		('isbn-13', 'ISBN 13'),
 		('urn', 'URN'),
+		('pub_id', 'Publisher ID'),
 	)
 
 class Identifier(models.Model):
@@ -596,7 +597,11 @@ class Stage(models.Model):
 	typesetting = models.DateTimeField(null=True, blank=True)
 
 	def __unicode__(self):
-		return u'%s' % self.current_stage
+		try:
+			book = self.book_set.all()[0]
+			return u'%s - %s' % (book.title, self.current_stage)
+		except IndexError:
+			return u'%s' % self.current_stage
 
 	def __repr__(self):
 		return u'%s' % self.current_stage
