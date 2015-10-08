@@ -285,18 +285,39 @@ def new_message(request, book_id):
 	else:
 		return HttpResponse(json.dumps(new_message_form.errors))
 
+def get_authors(request):
+    if request.is_ajax():
+        q = request.GET.get('term', '')
+        authors = models.Author.objects.filter(first_name__icontains = q )[:20]
+        results = []
+        for author in authors:
+            author_json = {}
+            author_json['id'] = author.id
+            author_json['label'] = author.full_name()
+            author_json['value'] = author.full_name()
+            results.append(author_json)
+        data = json.dumps(results)
+    else:
+        data = 'Unable to get authors'
+    mimetype = 'application/json'
+    return HttpResponse(data, mimetype)
+
 @is_book_editor
 def email_author(request,submission_id,author_id):
 	book = get_object_or_404(models.Book, pk=submission_id)
 	author = get_object_or_404(models.Author, pk=author_id)
 	authors = models.Author.objects.all()
-
+	author_emails = []
+	if request.POST:
+		print request.POST
+	for author in authors:
+		author_emails.append(str(author.author_email))
 	template = 'core/email_author.html'
 	context = {
 		'submission': book,
 		'to_author': author,
 		'from': request.user,
-		'authors': authors,
+		'authors': author_emails,
 		
 	}
 

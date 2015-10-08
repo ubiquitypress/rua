@@ -57,6 +57,7 @@ urlpatterns = patterns('',
 
     # Email
     url(r'^email/submission/(?P<submission_id>\d+)/author/(?P<author_id>\d+)/$', 'core.views.email_author', name='email_author'),
+     url(r'^email/get/authors/$', 'core.views.get_authors', name='get_authors'),
     # Files
     url(r'^files/user/submission/(?P<submission_id>\d+)/file/(?P<file_id>\d+)/download/$', 'core.views.serve_file', name='serve_file'),
     url(r'^files/submission/(?P<submission_id>\d+)/file/(?P<revision_id>\d+)/download_versioned_file/$', 'core.views.serve_versioned_file', name='serve_versioned_file'),

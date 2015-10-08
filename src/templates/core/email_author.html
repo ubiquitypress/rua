@@ -4,14 +4,19 @@
 {% block body %}
 	<div class="row">
 		<div class="col-md-7">
-				<form method="post" enctype="multipart/form-data">	
-			{% csrf_token %}
+			<form method="post"   enctype="multipart/form-data">		
+					{% csrf_token %}
 				<div class="form-group">
+						<div class="input-group">
+						<span class="input-group-addon" id="sizing-addon3">To</span>
+						<input class=" form-control" style="background-color:lightgrey!important"   type="text"  id="to_test" name="to_values" value=" " readonly> </br>
+				</div>	
 					<div class="input-group">
-					<span class="input-group-addon" id="sizing-addon3">To</span>
-					<input type="text" class=" form-control" id="to" name="to" value="{{to_author.author_email}}">
+					
+					<input type="text" class=" form-control" id="to" name="to">
 					<span class="input-group-btn">
-					<button class="btn btn-browse btn-decline " >&nbsp;Look Up&nbsp;&nbsp;&nbsp;&nbsp;</button>
+					<a href="#" id="toAdd"class="btn btn-decline " >&nbsp;Add&nbsp;&nbsp;&nbsp;&nbsp;</a>
+
 					</span>	
 					</div>	
 			</div>
@@ -22,15 +27,21 @@
 			
 					</div>	
 			</div>
+			
 					<div class="form-group">
+							<div class="input-group">
+						<span class="input-group-addon" id="sizing-addon3">Cc</span>
+						<input class=" form-control" style="background-color:lightgrey!important"   type="text"  id="cc_test" name="cc_values" value=" " readonly> </br>
+				</div>	
+
 					<div class="input-group">
-					<span class="input-group-addon" id="sizing-addon3">Cc</span>
-					<input type="text" class=" form-control" id="cc" name="cc">
+					<input  id="cc"type="text" class=" form-control" name="cc">
 					<span class="input-group-btn">
-					<button class="btn btn-browse btn-decline " >&nbsp;Look Up&nbsp;&nbsp;&nbsp;&nbsp;</button>
+					<a href="#" id="ccAdd"class="btn btn-decline " >&nbsp;Add&nbsp;&nbsp;&nbsp;&nbsp;</a>
 					</span>	
-					</div>	
+					
 			</div>
+		</br>
 				<div class="form-group">
 					<div class="input-group">
 					<span class="input-group-addon" id="sizing-addon3">Bcc</span>
@@ -57,13 +68,46 @@
 				
 									
 			</div>
-		</br>
-			<button class="btn btn-info btn-group-justified" type="submit" name="send" id="send">&nbsp;&nbsp;&nbsp;<i class="fa fa-paper-plane">&nbsp;</i>Send&nbsp;&nbsp;&nbsp;&nbsp;</button>
+		</br><div class="ui-widget">
+  <label for="tags">Tags: </label>
+  <input>
+</div>
+		
+			<button  class="btn btn-info btn-group-justified" type="submit" name="send" id="send">&nbsp;&nbsp;&nbsp;<i class="fa fa-paper-plane">&nbsp;</i>Send&nbsp;&nbsp;&nbsp;&nbsp;</button>
 		</form>
 	</div>
+
 	</div>
+
+<br>
 {% endblock body %}
 
 {% block js %}
 <script type="text/javascript">$("textarea").jqte();</script>
-{% endblock %}
+
+ <script>
+
+    $( "#cc" ).autocomplete({
+      source: "/email/get/authors",
+      minLength: 2,     
+    });
+        $( "#to" ).autocomplete({
+      source: "/email/get/authors",
+      minLength: 2,     
+    });
+            $( "#cc" ).autocomplete({
+      source: "/email/get/authors",
+      minLength: 2,     
+    });
+     </script>
+ <script type="text/javascript">
+$("#ccAdd").click(function () {
+	var original= document.getElementById('cc_test').value
+	if (!original){
+		var value = document.getElementById('cc').value}
+	else{
+	    var value= original+document.getElementById('cc').value+';'}
+    $("#cc_test").val(value);
+});
+  </script>
+{% endblock%}
