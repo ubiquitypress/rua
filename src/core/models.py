@@ -2,7 +2,7 @@ from django.db import models
 from django.core.files.storage import FileSystemStorage
 from django.conf import settings
 from django.contrib.auth.models import User
-
+from django.utils import timezone
 import uuid
 import os
 
@@ -524,7 +524,8 @@ class File(models.Model):
 	uuid_filename = models.CharField(max_length=100)
 	label = models.CharField(max_length=200, null=True, blank=True)
 	description = models.CharField(max_length=1000, null=True, blank=True)
-	date_uploaded = models.DateTimeField(auto_now=True)
+	date_uploaded = models.DateTimeField(auto_now_add=True)
+	date_modified = models.DateTimeField(auto_now=True)
 	stage_uploaded = models.IntegerField()
 	kind = models.CharField(max_length=100)
 	sequence = models.IntegerField(default=1)

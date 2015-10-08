@@ -66,7 +66,7 @@
 									
 							 		<input type="text" class=" form-control" id="rename" name="rename" value="{{file.label}}">		
 		</div>
-	</form></td>
+	</td>
 			</tr>
 			<tr>
 				<td>Original Filename</td><td>{{ file.original_filename }}</td>
@@ -80,6 +80,9 @@
 			<tr>
 				<td>Uploaded</td><td>{{ file.date_uploaded }}</td>
 				</tr>
+				<tr>
+				<td>Last Modified</td><td>{{ file.date_modified }}</td>
+				</tr>
 			</tbody>
 		</table>
 			</div>
@@ -88,8 +91,7 @@
   	</li>
 
 </ul>
-		<form method="post" enctype="multipart/form-data">
-			{% csrf_token %}
+		
 			<div class="well">
 				<div class="dash-container">
 				<h5 class="subtitle-form-text">You can upload a new version of this file below. The old version will be stored unless explicitly deleted.</h5>
