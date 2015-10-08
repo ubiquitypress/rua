@@ -44,13 +44,13 @@
 
   <li class="media">
     <div class="media-left media-middle">
-      <span > <h1 style="font-size:70px ">
+      <span > <h1 class="file-icon-large ">
         {% if file.mime_type == 'image/jpeg' or file.mime_type == 'image/png' %}
 			 &nbsp; &nbsp;  	<i class="fa fa-file-image-o"></i>&nbsp; &nbsp; 
 			  {% else %}
 			  &nbsp; &nbsp;  	<i class="fa fa-file-text-o"></i>&nbsp; &nbsp; 
 			  {% endif %}
-      </h1>&nbsp; &nbsp; &nbsp; &nbsp;  &nbsp; &nbsp;<a href="{% url 'serve_file' submission.id file.id %}" class="btn btn-task">&nbsp;<i class="fa fa-cloud-download">&nbsp;</i>Download</a></span>
+      </h1><a href="{% url 'serve_file' submission.id file.id %}" class="btn btn-task btn-file-download">&nbsp;<i class="fa fa-cloud-download">&nbsp;</i>Download &nbsp;</a></span>
     </div>
 
     <div class="media-body" >
@@ -86,26 +86,26 @@
 		<form method="post" enctype="multipart/form-data">
 			{% csrf_token %}
 			<div class="well">
-				<p>You can upload a new version of this file below. The old version will be stored unless explicitly deleted.</p>
+				<div class="dash-container">
+				<h5 class="subtitle-form-text">You can upload a new version of this file below. The old version will be stored unless explicitly deleted.</h5>
 				<div class="form-group">
 					<div class="row">
-						<div class="col-md-6">
+						
 							 <div class="input-group">
 									<span class="input-group-btn">
 											<span class="btn btn-browse btn-primary btn-file">
 													Browse&hellip; <input type="file" id="update_file" name="update_file">
 											</span>
 									</span>
-									<input type="text" class="form-control" readonly>
+									<input type="text" class="col-md-4 form-control" readonly>
 							</div>
-							<div class="input-group">
+							<div class="input-group pull-right">
 									</br>
-									</br>
-									<button class="btn btn-upload" type="submit" name="update" id="update">&nbsp;&nbsp;&nbsp;<i class="fa fa-cloud-upload">&nbsp;</i>Upload&nbsp;&nbsp;&nbsp;&nbsp;</button>
+									<button class="btn btn-upload " type="submit" name="update" id="update">&nbsp;&nbsp;&nbsp;<i class="fa fa-cloud-upload">&nbsp;</i>Upload&nbsp;&nbsp;&nbsp;&nbsp;</button>
 							</div>
 						</div>
-					</div>
-				</div>
+					
+				</div></div>
 			</div>
 		</form>
 </div>
