@@ -1,4 +1,5 @@
 from django.db.models import Q
+from django.db.models import Max
 
 from core import models
 
@@ -16,3 +17,8 @@ def get_submission_tasks(book, user):
 		task_list.append({'type': 'typeset', 'book': typeset.book, 'task': 'Typsetting Review', 'date': typeset.completed, 'title': typeset.book.title, 'url': 'http://%s/editor/submission/%s/editing/typeset/%s/' % (base_url, typeset.book.id, typeset.id)})
 
 	return task_list
+
+def create_new_review_round(book):
+	latest_round = models.ReviewRound.objects.filter(book=book).aggregate(max=Max('round_number'))
+	next_round = latest_round.get('max')+1 if latest_round.get('max') > 0 else 1
+	return models.ReviewRound.objects.create(book=book, round_number=next_round)

@@ -1,4 +1,4 @@
-<h2>Review Rounds <button class="btn btn-xs btn-task pull-right"><i class="fa fa-plus">&nbsp;</i>Start New Round</button></h2>
+<h2>Review Rounds <form method="post" action="{% url 'editor_review' submission.id %}">{% csrf_token %}<button type="submit" name="new_round" class="btn btn-xs btn-task pull-right"><i class="fa fa-plus">&nbsp;</i>Start New Round</button></h2>
 <table class="table table-bordered table-condensed">
 	<tr>
 		<th>Round</th>
