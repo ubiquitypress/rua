@@ -56,12 +56,6 @@
       
         
           {% include "review/contact_editors.html"  %}
-
-   <!-- {% if review_assignment.review_type == 'internal' %}
-    {% include "workflow/review/reviewer_files.html" with file_data=submission.internal_review_files.all %}
-    {% else %}
-    {% include "workflow/review/reviewer_files.html" with file_data=submission.external_review_files.all %}
-    {% endif %}-->
 </div>
 </div>
 
@@ -103,7 +97,7 @@
      <h4>2. Upload Review File</h4>
       <div class="form-group">
           <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-12">
                <div class="input-group">
                   <span class="input-group-btn">
                       <span class="btn btn-primary btn-file">
