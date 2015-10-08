@@ -10,16 +10,17 @@
 
 {% block body %}
 <div class="col-md-12">
-  <div class="col-md-12 file-heading container-fluid">
-  <h4>{{ submission.title }} File {{ file.id }} - Versions</h4>
+
+  <div class="col-md-12 file-heading  container-fluid">
+  <h4>{{ submission.title }} - File: {{ file.id }} - Versions</h4>
 </div>
   <hr />
-  <div class="container">
+  <div class="container-fluid">
     <ul class="timeline">
       {% for file in versions %}
         <li {% if forloop.counter|divisibleby:2 %}class="timeline-inverted"{% endif %}>
-            <div class="timeline-badge">
-
+            <div class="timeline-badge versions-badge">
+              {{forloop.counter}}
             </div>
             <div class="timeline-panel" align="center">
                  <div class="pull-left">

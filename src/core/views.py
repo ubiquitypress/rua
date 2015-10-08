@@ -420,7 +420,7 @@ def update_file(request, submission_id, file_id, returner):
 def versions_file(request, submission_id, file_id):
 	book = get_object_or_404(models.Book, pk=submission_id)
 	_file = get_object_or_404(models.File, pk=file_id)
-	versions = models.FileVersion.objects.filter(file=_file)
+	versions = models.FileVersion.objects.filter(file=_file).extra(order_by = ['date_uploaded'])
 
 	template = 'core/versions_file.html'
 	context = {
