@@ -6,7 +6,7 @@ from django.core.urlresolvers import reverse
 from django.utils import timezone
 
 from revisions import models
-from workflow.views import handle_file_update
+from core.files import handle_file_update,handle_attachment,handle_file
 from revisions import forms
 from core import models as core_models
 from core import log

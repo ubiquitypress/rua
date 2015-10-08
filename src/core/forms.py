@@ -11,6 +11,11 @@ from core import logic
 
 import uuid
 
+class UploadMiscFile(forms.Form):
+
+	label = forms.CharField(required=True)
+	file_type = forms.ChoiceField(required=True, choices=(('marketing', 'Marketing'), ('agreements', 'Agreements'), ('other', 'Other')))
+
 class UserCreationForm(forms.ModelForm):
 	"""
 	A form that creates a user, with no privileges, from the given username and

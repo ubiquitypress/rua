@@ -21,7 +21,7 @@ from core import logic
 
 from core import models, forms, logic, log
 from workflow import forms as workflow_forms
-from workflow.views import handle_file_update
+from files import handle_file_update,handle_attachment,handle_file
 from submission import models as submission_models
 from core.decorators import is_editor, is_book_editor, is_book_editor_or_author, is_onetasker
 from pprint import pprint

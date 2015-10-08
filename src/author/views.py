@@ -11,7 +11,7 @@ from workflow.logic import order_data, decode_json
 from submission import models as submission_models
 from revisions import models as revision_models, forms as revision_forms
 from review import models as review_models
-from workflow.views import handle_file_update
+from core.files import handle_file_update,handle_attachment,handle_file
 from copyedit import forms as copyedit_forms
 from copyedit.views import handle_copyedit_file
 from typeset import forms as typeset_forms
