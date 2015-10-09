@@ -86,6 +86,7 @@ admin_list = [
 	(Language,),
 	(CopyeditAssignment,),
 	(TypesetAssignment,),
+	(IndexAssignment,),
 	(EmailLog,),
 	(Message,),
 ]
