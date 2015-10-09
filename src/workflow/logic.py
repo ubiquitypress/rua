@@ -46,22 +46,6 @@ def create_submission_from_proposal(proposal, proposal_type):
 
     return book
 
-def handle_review_assignment(book, reviewer, review_type, due_date, review_round, user, email_text, attachment=None):
-    new_review_assignment = models.ReviewAssignment(
-        review_type=review_type,
-        user=reviewer,
-        book=book,
-        due=due_date,
-        review_round=review_round,
-    )
-
-    new_review_assignment.save()
-    book.review_assignments.add(new_review_assignment)
-    log.add_log_entry(book=book, user=user, kind='review', message='Reviewer %s %s assigned. Round %d' % (reviewer.first_name, reviewer.last_name, review_round.round_number), short_name='Review Assignment')
-    send_review_request(book, new_review_assignment, email_text, attachment)
-
-    return new_review_assignment
-
 
 def handle_copyeditor_assignment(book, copyedit, files, due_date, email_text, requestor, attachment=None):
     

@@ -139,5 +139,11 @@
 {% endblock %}
 
 {% block js %}
+{{ block.super }}
 <script type="text/javascript" src="{% static "js/fancyfile.js" %}"></script>
-{% endblock %}
+<script type="text/javascript">
+$(document).ready(function() {
+      $('#due_date').datepicker({ dateFormat: 'yy-mm-dd' }).val();
+  });
+</script>
+{% endblock js %}
