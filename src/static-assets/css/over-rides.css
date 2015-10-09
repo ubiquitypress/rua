@@ -36,7 +36,15 @@ html, body {
 .message {
   min-height: 100px;
 }
-
+.selected-row-table{
+  background-color:#DDDDDD; 
+  right: -5px  ; 
+  left: -5px  ; 
+   border-top: 14px solid transparent;
+  border-left: 14px solid #fff;
+  border-right: 5px solid #DDDDDD;
+     
+}
 .message-container {
   padding: 10px;
 }
