@@ -12,7 +12,11 @@
 		<th>Copyeditor</th><th>Status</th><th>Date</th><th></th>
 	</tr>
 	{% for assignment in submission.copyeditassignment_set.all %}
+	{% ifequal copyedit.id assignment.id %}
+	<tr class="selected-row-table">
+	{% else %}
 	<tr>
+	{% endifequal %}
 		<td>{{ assignment.copyeditor.profile.full_name }}</td>
 		<td>
 			{{ assignment.state.friendly }}
@@ -21,7 +25,7 @@
 			{{ assignment.state.date }}
 		</td>
 		<td>
-			<a href="{% url 'view_copyedit' submission.id assignment.id %}" class="btn btn-default"> View </a>
+			<a href="{% url 'view_copyedit' submission.id assignment.id %}" class="btn btn-task"> View </a>
 		</td>
 	</tr>
 	{% empty %}
@@ -42,13 +46,17 @@
 	<button class="btn btn-primary" type="submit">Start Indexing</button>
 </form>
 {% else %}
-<table class="table table-condensed table-bordered">
-	<tr>
+<table class="table table-condensed table-bordered" >
+	<tr> 
 		<th>Indexer</th><th>Status</th><th>Date</th><th></th>
 	</tr>
 	{% for assignment in submission.indexassignment_set.all %}
+	{% ifequal index.id assignment.id %}
+	<tr class="selected-row-table">
+	{% else %}
 	<tr>
-		<td>{{ assignment.indexer.profile.full_name }}</td>
+	{% endifequal %}
+		<td>{{ assignment.indexer.profile.full_name }} </td>
 		<td>
 			{{ assignment.state.friendly }}
 			<br />
@@ -58,7 +66,7 @@
 			{{ assignment.state.date }}
 		</td>
 		<td>
-			<a href="{% url 'view_index' submission.id assignment.id %}" class="btn btn-default"> View </a>
+			<a href="{% url 'view_index' submission.id assignment.id %}" class="btn btn-task"> View </a>
 		</td>
 	</tr>
 	{% empty %}
