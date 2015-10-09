@@ -118,4 +118,10 @@
 {% block js %}
 <script type="text/javascript" src="{% static "js/messages.js" %}"></script>
 <script type="text/javascript" src="{% static "js/fancyfile.js" %}"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+      $('#due_date').datepicker({ dateFormat: 'yy-mm-dd' }).val();
+  });
+</script>
+
 {% endblock js %}

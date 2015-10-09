@@ -5,8 +5,9 @@ from django.utils import timezone
 from django.contrib import messages
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
-
+from core.files import handle_attachment,handle_file_update,handle_attachment,handle_file
 from core import models, log, logic as core_logic
+from core import forms as core_forms
 from workflow import logic as workflow_logic
 from editor import logic
 from revisions import models as revision_models
@@ -350,39 +351,6 @@ def editor_status(request, submission_id):
 
 	return render(request, template, context)
 
-
-
-@is_book_editor
-def view_editing(request, submission_id):
-	book = get_object_or_404(models.Book, pk=submission_id)
-
-	if request.POST and request.GET.get('start', None):
-		action = request.GET.get('start')
-
-		if action == 'copyediting':
-			book.stage.copyediting = timezone.now()
-			log.add_log_entry(book=book, user=request.user, kind='editing', message='Copyediting has commenced.', short_name='Copyediting Started')
-		elif action == 'indexing':
-			book.stage.indexing = timezone.now()
-			log.add_log_entry(book=book, user=request.user, kind='editing', message='Indexing has commenced.', short_name='Indexing Started')
-		elif action == 'production':
-			book.stage.production = timezone.now()
-			book.stage.current_stage = 'production'
-			log.add_log_entry(book=book, user=request.user, kind='production', message='Submission moved to Production', short_name='Submission in Production')
-			book.stage.save()
-			return redirect(reverse('view_production', kwargs={'submission_id': submission_id}))
-
-		book.stage.save()
-		return redirect(reverse('view_editing', kwargs={'submission_id': submission_id}))
-
-	template = 'editor/view_editing.html'
-	context = {
-		'submission': book,
-		'active': 'editing',
-	}
-
-	return render(request, template, context)
-
 @is_book_editor
 def assign_copyeditor(request, submission_id):
 	book = get_object_or_404(models.Book, pk=submission_id)
@@ -400,12 +368,14 @@ def assign_copyeditor(request, submission_id):
 			logic.handle_copyeditor_assignment(book, copyeditor, file_list, due_date, email_text, requestor=request.user, attachment=attachment)
 			log.add_log_entry(book=book, user=request.user, kind='editing', message='Copyeditor %s %s assigend to %s' % (copyeditor.first_name, copyeditor.last_name, book.title), short_name='Copyeditor Assigned')
 
-		return redirect(reverse('view_editing', kwargs={'submission_id': submission_id}))
+		return redirect(reverse('editor_editing', kwargs={'submission_id': submission_id}))
 
-	template = 'editor/assign_copyeditor.html'
+	template = 'editor/submission.html'
 	context = {
 		'submission': book,
 		'copyeditors': copyeditors,
+		'author_include': 'editor/editing.html',
+		'submission_files': 'editor/assign_copyeditor.html',
 		'email_text': models.Setting.objects.get(group__name='email', name='copyedit_request'),
 	}
 
@@ -415,7 +385,7 @@ def assign_copyeditor(request, submission_id):
 def view_copyedit(request, submission_id, copyedit_id):
 	book = get_object_or_404(models.Book, pk=submission_id)
 	copyedit = get_object_or_404(models.CopyeditAssignment, pk=copyedit_id)
-	author_form = forms.CopyeditAuthorInvite(instance=copyedit)
+	author_form = core_forms.CopyeditAuthorInvite(instance=copyedit)
 	email_text = models.Setting.objects.get(group__name='email', name='author_copyedit_request').value
 
 	if request.POST and 'invite_author' in request.POST:
@@ -431,7 +401,7 @@ def view_copyedit(request, submission_id, copyedit_id):
 
 		attachment = handle_attachment(request, book)
 
-		author_form = forms.CopyeditAuthorInvite(request.POST, instance=copyedit)
+		author_form = core_forms.CopyeditAuthorInvite(request.POST, instance=copyedit)
 		author_form.save()
 		copyedit.author_invited = timezone.now()
 		copyedit.save()
@@ -439,11 +409,13 @@ def view_copyedit(request, submission_id, copyedit_id):
 		logic.send_author_invite(book, copyedit, email_text, request.user, attachment)
 		return redirect(reverse('view_copyedit', kwargs={'submission_id': submission_id, 'copyedit_id': copyedit_id}))
 
-	template = 'editor/view_copyedit.html'
+	template = 'editor/submission.html'
 	context = {
 		'submission': book,
 		'copyedit': copyedit,
 		'author_form': author_form,
+		'author_include': 'editor/editing.html',
+		'submission_files': 'editor/view_copyedit.html',
 		'email_text': email_text,
 	}
 
@@ -466,12 +438,14 @@ def assign_indexer(request, submission_id):
 			logic.handle_indexer_assignment(book, indexer, file_list, due_date, email_text, requestor=request.user, attachment=attachment)
 			log.add_log_entry(book=book, user=request.user, kind='editing', message='Indexer %s %s assigend to %s' % (indexer.first_name, indexer.last_name, book.title), short_name='Indexer Assigned')
 
-		return redirect(reverse('view_editing', kwargs={'submission_id': submission_id}))
+		return redirect(reverse('editor_editing', kwargs={'submission_id': submission_id}))
 
-	template = 'editor/assign_indexer.html'
+	template = 'editor/submission.html'
 	context = {
 		'submission': book,
 		'indexers': indexers,
+		'author_include': 'editor/editing.html',
+		'submission_files': 'editor/assign_indexer.html',
 		'email_text': models.Setting.objects.get(group__name='email', name='index_request'),
 	}
 
@@ -482,10 +456,13 @@ def view_index(request, submission_id, index_id):
 	book = get_object_or_404(models.Book, pk=submission_id)
 	index = get_object_or_404(models.IndexAssignment, pk=index_id)
 
-	template = 'editor/view_index.html'
+	template = 'editor/submission.html'
 	context = {
 		'submission': book,
 		'index': index,
+		'author_include': 'editor/editing.html',
+		'submission_files': 'editor/view_index.html',
+
 	}
 
 	return render(request, template, context)

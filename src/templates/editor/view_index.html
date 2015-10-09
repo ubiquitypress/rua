@@ -1,19 +1,4 @@
-{% extends "base.html" %}
 {% load bootstrap3 %}
-{% load static from staticfiles %}
-
-{% block title %}Editing{% endblock %}
-
-{% block breadcrumbs %}
-  <ol class="breadcrumb">
-	  <li><a href="{% url 'user_home' %}">User Home</a></li>
-	  <li class="">Workflow</li>
-    <li><a href="{% url 'in_editing'%}">In Editing</a></li>
-    <li>{{ submission.title }}</li>
-	</ol>
-{% endblock %}
-
-{% block body %}
 <h4>Assignment</h4>
 <table class="table table-bordered">
 	<tr>
@@ -35,52 +20,10 @@
 </table>
 <hr />
 <h4>Assigned Files</h4>
-<table class="table table-bordered">
-    <tr>
-      <th>Label</th>
-      <th>Original File Name</th>
-      <th>New File Name</th>
-      <th>Mimetype</th>
-      <th>File Type</th>
-      <th>Download</th>
-    </tr>
-  {% for file in index.files.all %}
-    <tr>
-      <td>{{ file.label }}</td>
-      <td>{{ file.original_filename }}</td>
-      <td>{{ file.uuid_filename }}</td>
-      <td>{{ file.mime_type }}</td>
-      <td>{{ file.kind }}</td>
-      <td><a href="{% url 'serve_file' submission.id file.id %}" class="btn btn-primary">&nbsp;<i class="fa fa-download">&nbsp;</i></a>
-    </tr>
-  {% endfor %}
-</table>
+{% include 'shared/review_files.html' with file_data=index.files.all  %}
 <hr />
 <h4>Indexer Files</h4>
-<table class="table table-bordered">
-    <tr>
-      <th>Label</th>
-      <th>Original File Name</th>
-      <th>New File Name</th>
-      <th>Mimetype</th>
-      <th>File Type</th>
-      <th>Download</th<
-    </tr>
-  {% for file in index.index_files.all %}
-    <tr>
-      <td>{{ file.label }}</td>
-      <td>{{ file.original_filename }}</td>
-      <td>{{ file.uuid_filename }}</td>
-      <td>{{ file.mime_type }}</td>
-      <td>{{ file.kind }}</td>
-      <td><a href="{% url 'serve_file' submission.id file.id %}" class="btn btn-primary">&nbsp;<i class="fa fa-download">&nbsp;</i></a>
-    </tr>
-  {% empty %}
-  <tr>
-    <td colspan="5">No files uploaded yet.</td>
-  </tr>
-  {% endfor %}
-</table>
+{% include 'shared/review_files.html' with file_data=index.index_files.all  %}
 
 {% if copyedit.completed and not copyedit.editor_review %}
 <form method="POST">
@@ -124,23 +67,6 @@
   </tr>
 </table>
 <h4>Author Files</h4>
-<table class="table table-bordered">
-    <tr>
-      <th>Label</th>
-      <th>Original File Name</th>
-      <th>New File Name</th>
-      <th>Mimetype</th>
-      <th>File Type</th>
-    </tr>
-  {% for file in copyedit.author_files.all %}
-    <tr>
-      <td>{{ file.label }}</td>
-      <td>{{ file.original_filename }}</td>
-      <td>{{ file.uuid_filename }}</td>
-      <td>{{ file.mime_type }}</td>
-      <td>{{ file.kind }}</td>
-    </tr>
-  {% endfor %}
-</table>
+{% include 'shared/review_files.html' with file_data=copyedit.author_files.all %}
+
 {% endif %}
-{% endblock %}
