@@ -9,7 +9,7 @@
 				<div class="form-group">
 						<div class="input-group">
 						<span class="input-group-addon" id="sizing-addon3">To</span>
-						<input class=" form-control" style="background-color:lightgrey!important"   type="text"  id="to_test" name="to_values" value=" " readonly> </br>
+						<input class=" form-control" style="background-color:lightgrey!important"   type="text"  id="to_values" name="to_values" value=" " readonly> </br>
 				</div>	
 					<div class="input-group">
 					
@@ -23,7 +23,7 @@
 			<div class="form-group">
 					<div class="input-group">
 					<span class="input-group-addon" id="sizing-addon3">From</span>
-					<input type="text" class=" form-control" readonly value="{{from.email}}">
+					<input type="text" class=" form-control" style="background-color:lightgrey!important" readonly value="{{from.email}}">
 			
 					</div>	
 			</div>
@@ -31,7 +31,7 @@
 					<div class="form-group">
 							<div class="input-group">
 						<span class="input-group-addon" id="sizing-addon3">Cc</span>
-						<input class=" form-control" style="background-color:lightgrey!important"   type="text"  id="cc_test" name="cc_values" value=" " readonly> </br>
+						<input class=" form-control" style="background-color:lightgrey!important"   type="text"  id="cc_values" name="cc_values" value=" " readonly> </br>
 				</div>	
 
 					<div class="input-group">
@@ -44,10 +44,13 @@
 		</br>
 				<div class="form-group">
 					<div class="input-group">
-					<span class="input-group-addon" id="sizing-addon3">Bcc</span>
+						<span class="input-group-addon" id="sizing-addon3">Bcc</span>
+						<input class=" form-control" style="background-color:lightgrey!important"   type="text"  id="bcc_values" name="bcc_values" value=" " readonly> </br>
+				</div>	
+					<div class="input-group">
 					<input type="text" class=" form-control" id="bcc" name="bcc">
 					<span class="input-group-btn">
-					<button class="btn btn-browse btn-decline " >&nbsp;Look Up&nbsp;&nbsp;&nbsp;&nbsp;</button>
+					<a href="#" id="bccAdd"class="btn btn-decline " >&nbsp;Add&nbsp;&nbsp;&nbsp;&nbsp;</a>
 					</span>	
 					</div>	
 			</div>
@@ -68,10 +71,7 @@
 				
 									
 			</div>
-		</br><div class="ui-widget">
-  <label for="tags">Tags: </label>
-  <input>
-</div>
+		</br>
 		
 			<button  class="btn btn-info btn-group-justified" type="submit" name="send" id="send">&nbsp;&nbsp;&nbsp;<i class="fa fa-paper-plane">&nbsp;</i>Send&nbsp;&nbsp;&nbsp;&nbsp;</button>
 		</form>
@@ -87,7 +87,7 @@
 
  <script>
 
-    $( "#cc" ).autocomplete({
+    $( "#bcc" ).autocomplete({
       source: "/email/get/authors",
       minLength: 2,     
     });
@@ -102,12 +102,28 @@
      </script>
  <script type="text/javascript">
 $("#ccAdd").click(function () {
-	var original= document.getElementById('cc_test').value
+	var original= document.getElementById('cc_values').value
 	if (!original){
 		var value = document.getElementById('cc').value}
 	else{
 	    var value= original+document.getElementById('cc').value+';'}
-    $("#cc_test").val(value);
+    $("#cc_values").val(value);
+});
+$("#toAdd").click(function () {
+	var original= document.getElementById('to_values').value
+	if (!original){
+		var value = document.getElementById('to').value}
+	else{
+	    var value= original+document.getElementById('to').value+';'}
+    $("#to_values").val(value);
+});
+$("#bccAdd").click(function () {
+	var original= document.getElementById('bcc_values').value
+	if (!original){
+		var value = document.getElementById('bcc').value}
+	else{
+	    var value= original+document.getElementById('bcc').value+';'}
+    $("#bcc_values").val(value);
 });
   </script>
 {% endblock%}

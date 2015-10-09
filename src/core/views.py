@@ -294,7 +294,7 @@ def get_authors(request):
             author_json = {}
             author_json['id'] = author.id
             author_json['label'] = author.full_name()
-            author_json['value'] = author.full_name()
+            author_json['value'] = author.author_email
             results.append(author_json)
         data = json.dumps(results)
     else:
