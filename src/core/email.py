@@ -11,7 +11,7 @@ from pprint import pprint
 def filepath(book, attachment):
 	return '%s/%s/%s' % (settings.BOOK_DIR, book.id, attachment.uuid_filename)
 
-def send_email(subject, context, from_email, to, html_template,bcc=None,cc=None, book=None, attachment=None):
+def send_email(subject, context, from_email, to, html_template, bcc=None, cc=None, book=None, attachment=None):
 
 	htmly = Template(html_template)
 	con = Context(context)
