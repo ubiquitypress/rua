@@ -116,5 +116,5 @@ def get_submitted_files(assignment):
 		else:
 			files = assignment.typeset_files.all()
 	elif assignment.type()== 'indexing':
-		files = assignment.copyedit_files.all()
+		files = assignment.index_files.all()
 	return files
