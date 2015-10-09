@@ -45,7 +45,6 @@ def task_hub(request, assignment_type, assignment_id, about=None):
 		if decision == 'accept':
 			assignment.accepted = datetime.now()
 			assignment.save()
-
 			return redirect(reverse('onetasker_task_hub', kwargs={'assignment_type': assignment_type, 'assignment_id': assignment_id}))
 		elif decision == 'decline':
 			assignment.declined = datetime.now()
@@ -64,6 +63,7 @@ def task_hub(request, assignment_type, assignment_id, about=None):
 				assignment.save()
 				logic.notify_editor(assignment, '%s task completed' % (assignment.type()))
 				messages.add_message(request, messages.SUCCESS, 'Task completed. Thanks!')
+				return redirect(reverse('onetasker_task_hub', kwargs={'assignment_type': assignment_type, 'assignment_id': assignment_id}))
 			else:
 				print form
 
@@ -72,7 +72,6 @@ def task_hub(request, assignment_type, assignment_id, about=None):
 			_file = get_object_or_404(models.File, pk=request.POST.get('file_id'))
 			_file.label = request.POST.get('label')
 			_file.save()
-			
 
 
 	template = 'onetasker/taskhub.html'
