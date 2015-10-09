@@ -42,10 +42,6 @@ urlpatterns = patterns('',
     # Editing
     url(r'^editing/$', 'workflow.views.in_editing', name='in_editing'),
     url(r'^editing/(?P<submission_id>\d+)/$', 'workflow.editing_views.view_editing', name='view_editing'),
-    url(r'^editing/(?P<submission_id>\d+)/assign/copyeditor/$', 'workflow.editing_views.assign_copyeditor', name='assign_copyeditor'),
-    url(r'^editing/(?P<submission_id>\d+)/view/copyeditor/(?P<copyedit_id>\d+)$', 'workflow.editing_views.view_copyedit', name='view_copyedit'),
-    url(r'^editing/(?P<submission_id>\d+)/assign/indexer/$', 'workflow.editing_views.assign_indexer', name='assign_indexer'),
-    url(r'^editing/(?P<submission_id>\d+)/view/indexer/(?P<index_id>\d+)$', 'workflow.editing_views.view_index', name='view_index'),
 
 
     # Production

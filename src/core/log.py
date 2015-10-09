@@ -15,7 +15,6 @@ def add_email_log_entry(book, subject, from_address, to, bcc, cc, content):
         'bcc': bcc if bcc else '',
         'content': content,
     }
-	print log_dict
 	new_log_entry = models.EmailLog(**log_dict)
 	new_log_entry.save()
 	return new_log_entry

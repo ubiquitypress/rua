@@ -1,4 +1,4 @@
-<h2>Copyediting{% if submission.stage.copyediting %}<a class="btn btn-xs btn-task pull-right"><i class="fa fa-plus">&nbsp;</i>Add Copyeditor</a>{% endif %}</h2>
+<h2>Copyediting{% if submission.stage.copyediting %}<a class="btn btn-xs btn-task pull-right" href="{% url 'assign_copyeditor' submission.id %}"><i class="fa fa-plus">&nbsp;</i>Add Copyeditor</a>{% endif %}</h2>
 
 {% if not submission.stage.copyediting %}
 <p>Stage has not been initialised.</p>
@@ -31,7 +31,7 @@
 
 <hr />
 
-<h2>Indexing{% if submission.stage.indexing %}<a class="btn btn-xs btn-task pull-right"><i class="fa fa-plus">&nbsp;</i>Add Indexer</a>{% endif %}</h2>
+<h2>Indexing{% if submission.stage.indexing %}<a class="btn btn-xs btn-task pull-right" href="{% url 'assign_indexer' submission.id %}"><i class="fa fa-plus">&nbsp;</i>Add Indexer</a>{% endif %}</h2>
 {% if not submission.stage.indexing %}
 <form method="POST" action="?start=indexing">
 	<p>Stage has not been initialised.</p>
