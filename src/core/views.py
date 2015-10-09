@@ -18,7 +18,7 @@ from core import log
 from core import models
 from core import forms
 from core import logic
-
+from email import send_email
 from core import models, forms, logic, log
 from workflow import forms as workflow_forms
 from files import handle_file_update,handle_attachment,handle_file
@@ -303,21 +303,39 @@ def get_authors(request):
     return HttpResponse(data, mimetype)
 
 @is_book_editor
-def email_author(request,submission_id,author_id):
-	book = get_object_or_404(models.Book, pk=submission_id)
-	author = get_object_or_404(models.Author, pk=author_id)
-	authors = models.Author.objects.all()
-	author_emails = []
+def email_authors(request,submission_id,author_id=None):
+	submission = get_object_or_404(models.Book, pk=submission_id)
+	to_value=""
 	if request.POST:
-		print request.POST
-	for author in authors:
-		author_emails.append(str(author.author_email))
+		print request.POST.get('subject')
+		attachment = request.FILES.get('attachment')
+		subject = request.POST.get('subject')
+		to_addresses = request.POST.get('to_values')
+		cc_addresses = request.POST.get('cc_values')
+		bcc_addresses = request.POST.get('bcc_values')
+		body = request.POST.get('body')
+		print body
+		if attachment: 
+			handle_file(attachment, submission, 'other', request.user, "Attachment: Uploaded by %s" % (request.user.username))
+		
+		if to_addresses:
+			pass
+		#	send_email(subject, context, request.user.email, to_addresses, body, submission, attachment)
+		if cc_addresses:
+			pass
+	#		send_email(subject, context, request.user.email, cc_addresses, body, submission, attachment)
+		if bcc_addresses:
+			pass
+		#	send_email(subject, context, request.user.email, bcc_addresses, body, submission, attachment)
+	if author_id:
+		author = get_object_or_404(models.Author, pk=author_id)
+		to_value="%s;" % (author.author_email)
+
 	template = 'core/email_author.html'
 	context = {
-		'submission': book,
-		'to_author': author,
+		'submission': submission,
 		'from': request.user,
-		'authors': author_emails,
+		'to_value':to_value
 		
 	}
 

@@ -1,4 +1,6 @@
 {% extends "base.html" %}
+
+{% load static from staticfiles %}
 {% load bootstrap3 %}
 
 {% block body %}
@@ -6,20 +8,23 @@
 		<div class="col-md-7">
 			<form method="post"   enctype="multipart/form-data">		
 					{% csrf_token %}
+					<div class="well">
+					<div class="container-fluid"> 
+					<div class="form-group">
+						<div class="input-group input-group-email-field">
+						<span class="input-group-addon" id="sizing-addon3">Subject</span>
+						<input class=" form-control" type="text"  id="subject" name="subject" value=" " >
+				</div>	
+			</div>
 				<div class="form-group">
 						<div class="input-group input-group-email-field">
 						<span class="input-group-addon" id="sizing-addon3">To</span>
-						<input class=" form-control" style="background-color:lightgrey!important"   type="text"  id="to_values" name="to_values" value=" " readonly>
-						<span class="input-group-btn"> <a href="#" id="toClear"class="btn btn-default " >&nbsp;Clear&nbsp;</a> </span>
+						<input class=" form-control" style="background-color:lightgrey!important"   type="text"  id="to_values" name="to_values" value="{{to_value}}" readonly>
+						<input type="text" class=" form-control" id="to" name="to">
+						<span class="input-group-btn"><div class="btn-group" role="group"> <a href="#" id="toClear"class="btn btn-default " >&nbsp;Clear&nbsp;</a><a href="#" id="toAdd"class="btn btn-decline " >&nbsp;Add&nbsp;&nbsp;&nbsp;&nbsp;</a>
+				</div>< </span>
 				</div>	
-					<div class="input-group">
 					
-					<input type="text" class=" form-control" id="to" name="to">
-					<span class="input-group-btn">
-					<a href="#" id="toAdd"class="btn btn-decline " >&nbsp;Add&nbsp;&nbsp;&nbsp;&nbsp;</a>
-
-					</span>	
-					</div>	
 			</div>
 			<div class="form-group">
 					<div class="input-group">
@@ -33,51 +38,47 @@
 							<div class="input-group input-group-email-field">
 						<span class="input-group-addon" id="sizing-addon3">Cc</span>
 						<input class=" form-control" style="background-color:lightgrey!important"   type="text"  id="cc_values" name="cc_values" value=" " readonly> 
-						<span class="input-group-btn"> <a href="#" id="ccClear"class="btn btn-default " >&nbsp;Clear&nbsp;</a> </span>
+						<input  id="cc"type="text" class=" form-control" name="cc">
+						<span class="input-group-btn"><div class="btn-group" role="group"> <a href="#" id="ccClear"class="btn btn-default " >&nbsp;Clear&nbsp;</a><a href="#" id="ccAdd"class="btn btn-decline " >&nbsp;Add&nbsp;&nbsp;&nbsp;&nbsp;</a></div></span>
 				</div>	
 
-					<div class="input-group">
-					<input  id="cc"type="text" class=" form-control" name="cc">
-					<span class="input-group-btn">
-					<a href="#" id="ccAdd"class="btn btn-decline " >&nbsp;Add&nbsp;&nbsp;&nbsp;&nbsp;</a>
-					</span>	
-					
-			</div>
+			
 		</br>
 				<div class="form-group">
 					<div class="input-group input-group-email-field">
-						<span class="input-group-addon" id="sizing-addon3">Bcc</span>
+						<span class="input-group-addon" >Bcc</span>
 						<input class=" form-control" style="background-color:lightgrey!important"   type="text"  id="bcc_values" name="bcc_values" value=" " readonly> 
-						<span class="input-group-btn"> <a href="#" id="bccClear"class="btn btn-default " >&nbsp;Clear&nbsp;</a> </span>
+						<input type="text" class=" form-control" id="bcc" name="bcc">
+						<span class="input-group-btn"> <div class="btn-group" role="group"> <a href="#" id="bccClear"class="btn btn-default" >&nbsp;Clear&nbsp;</a> </br>
+							<a href="#" id="bccAdd"class="btn btn-decline " >&nbsp;Add&nbsp;&nbsp;&nbsp;&nbsp;</a></div></span>	
 				</div>	
-					<div class="input-group">
-					<input type="text" class=" form-control" id="bcc" name="bcc">
-					<span class="input-group-btn">
-					<a href="#" id="bccAdd"class="btn btn-decline " >&nbsp;Add&nbsp;&nbsp;&nbsp;&nbsp;</a>
-					</span>	
-					</div>	
+					
 			</div>
+	
 			<div class="form-group">
-					    <textarea type="text" class=" form-control" id="body" name="body"></textarea>
-					  </div>
-				<div class="form-group">
 						
 							 <div class="input-group">
 									<span class="input-group-addon" id="sizing-addon3">Attachments</span>
 									<input type="text" class="form-control" readonly>
 									<span class="input-group-btn">
-											<span class="btn btn-browse btn-accept btn-file">
-													Browse&hellip; <input type="file" id="update_file" name="update_file">
+											<span class="btn btn-browse btn-default btn-file">
+													Browse&hellip; <input type="file" id="attachment" name="attachment">
 											</span>
 									</span>
 							</div>
 				
 									
 			</div>
-		</br>
+	</div>
+		<hr/>	
+			<div class="form-group">
+					    <textarea type="text" class=" form-control" id="body" name="body"></textarea>
+					  </div>
+				
+		<hr/>	
 		
 			<button  class="btn btn-info btn-group-justified" type="submit" name="send" id="send">&nbsp;&nbsp;&nbsp;<i class="fa fa-paper-plane">&nbsp;</i>Send&nbsp;&nbsp;&nbsp;&nbsp;</button>
-		</form>
+		</form></div>	
 	</div>
 
 	</div>
@@ -86,6 +87,7 @@
 {% endblock body %}
 
 {% block js %}
+<script type="text/javascript" src="{% static "js/fancyfile.js" %}"></script>
 <script type="text/javascript">$("textarea").jqte();</script>
 
  <script>
