@@ -515,9 +515,9 @@ class Editor(models.Model):
 
 	def full_name(self):
 		if self.middle_name:
-			return "%s %s %s" % (self.user.first_name, self.middle_name, self.user.last_name)
+			return "%s %s %s" % (self.first_name, self.middle_name, self.last_name)
 		else:
-			return "%s %s" % (self.user.first_name, self.user.last_name)
+			return "%s %s" % (self.first_name, self.last_name)
 
 class File(models.Model):
 	mime_type = models.CharField(max_length=50)

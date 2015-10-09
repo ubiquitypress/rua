@@ -519,7 +519,7 @@ def delete_format_or_chapter(request, submission_id, format_or_chapter, id):
 	else:
 		messages.add_message(request, messages.WARNING, 'Item not found.')
 
-	return redirect(reverse('view_production', kwargs={'submission_id': book.id}))
+	return redirect(reverse('editor_production', kwargs={'submission_id': book.id}))
 
 @is_book_editor
 def update_format_or_chapter(request, submission_id, format_or_chapter, id):

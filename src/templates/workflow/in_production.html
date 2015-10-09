@@ -33,7 +33,7 @@
         <td>{{ submission.stage.submission|date:"DATETIME_FORMAT" }}</td>
         <td>{{ submission.stage.production|date:"DATETIME_FORMAT" }}</td>
         <td>{{ submission.stage.current_stage|capfirst }}</td>
-        <td><a href="{% url 'view_production' submission.id %}">View</a></td>
+        <td><a href="{% url 'editor_production' submission.id %}">View</a></td>
       </tr>
       {% empty %}
       <tr>

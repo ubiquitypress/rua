@@ -35,7 +35,7 @@ def view_editing(request, submission_id):
 			book.stage.current_stage = 'production'
 			log.add_log_entry(book=book, user=request.user, kind='production', message='Submission moved to Production', short_name='Submission in Production')
 			book.stage.save()
-			return redirect(reverse('view_production', kwargs={'submission_id': submission_id}))
+			return redirect(reverse('editor_production', kwargs={'submission_id': submission_id}))
 
 		book.stage.save()
 		return redirect(reverse('view_editing', kwargs={'submission_id': submission_id}))

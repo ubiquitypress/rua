@@ -89,7 +89,7 @@ def copyeditor_tasks(user):
 
 def indexer_tasks(user):
 
-	active = models.IndexAssignment.objects.filter(indexer=user, completed__isnull=True),
+	active = models.IndexAssignment.objects.filter(indexer=user, completed__isnull=True)
 	completed = models.IndexAssignment.objects.filter(indexer=user, completed__isnull=False).order_by('-completed')[:5]
 
 	return { 'active':active, 'completed':completed}
@@ -125,6 +125,7 @@ def onetasker_tasks(user):
 	
 	for assignment in completed_indexer_tasks:
 		completed.append({'assignment':assignment, 'type': 'indexing'})
+
 	return {'completed':completed, 'active':active}
 
 def build_time_line(book):
