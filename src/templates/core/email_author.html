@@ -123,25 +123,25 @@
 $("#ccAdd").click(function () {
 	var original= document.getElementById('cc_values').value
 	if (!original){
-		var value = document.getElementById('cc').value}
+		var value = (document.getElementById('cc').value).replace(/\s+/g, '')}
 	else{
-	    var value= original+document.getElementById('cc').value+';'}
+	    var value= original+(document.getElementById('cc').value).replace(/\s+/g, '')+';'}
     $("#cc_values").val(value);
 });
 $("#toAdd").click(function () {
 	var original= document.getElementById('to_values').value
 	if (!original){
-		var value = document.getElementById('to').value}
+		var value = (document.getElementById('to').value).replace(/\s+/g, '')}
 	else{
-	    var value= original+document.getElementById('to').value+';'}
+	    var value= original+(document.getElementById('to').value).replace(/\s+/g, '')+';'}
     $("#to_values").val(value);
 });
 $("#bccAdd").click(function () {
 	var original= document.getElementById('bcc_values').value
 	if (!original){
-		var value = document.getElementById('bcc').value}
+		var value = (document.getElementById('bcc').value).replace(/\s+/g, '')}
 	else{
-	    var value= original+document.getElementById('bcc').value+';'}
+	    var value= original+(document.getElementById('bcc').value).replace(/\s+/g, '')+';'}
     $("#bcc_values").val(value);
 });
   </script>

@@ -658,13 +658,15 @@ class Log(models.Model):
 class EmailLog(models.Model):
 	book = models.ForeignKey(Book)
 	to = models.EmailField(max_length=1000)
+	cc = models.EmailField(max_length=1000, null=True,blank=True)
+	bcc = models.EmailField(max_length=1000, null=True,blank=True)
 	from_address = models.EmailField(max_length=1000)
 	subject = models.CharField(max_length=1000)
 	content = models.TextField()
 	sent = models.DateTimeField(auto_now_add=True)
 
 	def __unicode__(self):
-		return u"%s-%s: %s" % (self.from_address, self.to, self.subject)
+		return u"From: %s To: %s, CC: %s BCC: %s : Subject: %s" % (self.from_address, self.to,self.cc,self.bcc, self.subject)
 
 setting_types = (
 	('rich_text', 'Rich Text'),
