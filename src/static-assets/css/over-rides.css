@@ -457,8 +457,14 @@ body > div.container > div > div.col-md-4.dash-right > div > ul > li > div > div
   border-radius: 12px;
  
 }
+.input-group-email-field{
+  margin-bottom: 5px
+}
  .btn-round{
   border-radius: 24px !important;
+ }
+  .btn-round-half{
+  border-radius: 12px !important;
  }
 .btn-decline:hover, .btn-decline:focus, .btn-decline:active, .btn-decline.active, .open > .dropdown-toggle.btn-decline {
     background: #E43A5C;
