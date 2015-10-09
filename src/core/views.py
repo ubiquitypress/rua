@@ -307,7 +307,6 @@ def email_authors(request,submission_id,author_id=None):
 	submission = get_object_or_404(models.Book, pk=submission_id)
 	to_value=""
 	if request.POST:
-		print request.POST.get('subject')
 		attachment = request.FILES.get('attachment')
 		subject = request.POST.get('subject')
 		to_addresses = request.POST.get('to_values')
@@ -316,17 +315,24 @@ def email_authors(request,submission_id,author_id=None):
 		body = request.POST.get('body')
 		print body
 		if attachment: 
-			handle_file(attachment, submission, 'other', request.user, "Attachment: Uploaded by %s" % (request.user.username))
+			attachment = handle_file(attachment, submission, 'other', request.user, "Attachment: Uploaded by %s" % (request.user.username))
 		
 		if to_addresses:
-			pass
-		#	send_email(subject, context, request.user.email, to_addresses, body, submission, attachment)
+			if attachment: 
+				send_email(subject, {}, request.user.email, to_addresses, body, submission, attachment)
+			else:
+				send_email(subject, {}, request.user.email, to_addresses, body, submission)
+			messages.add_message(request, messages.INFO, 'E-mail sent.')
 		if cc_addresses:
-			pass
-	#		send_email(subject, context, request.user.email, cc_addresses, body, submission, attachment)
+			if attachment: 
+				send_email(subject, {}, request.user.email, cc_addresses, body, submission, attachment)
+			else:
+				send_email(subject, {}, request.user.email, cc_addresses, body, submission)
 		if bcc_addresses:
-			pass
-		#	send_email(subject, context, request.user.email, bcc_addresses, body, submission, attachment)
+			if attachment:
+				send_email(subject, {}, request.user.email, bcc_addresses, body, submission, attachment)
+			else:
+				send_email(subject, {}, request.user.email, bcc_addresses, body, submission)
 	if author_id:
 		author = get_object_or_404(models.Author, pk=author_id)
 		to_value="%s;" % (author.author_email)
