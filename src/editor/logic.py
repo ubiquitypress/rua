@@ -61,6 +61,27 @@ def handle_indexer_assignment(book, index, files, due_date, email_text, requesto
 
     log.add_log_entry(book=book, user=requestor, kind='index', message='Indexer %s %s assigned. Due %s' % (index.first_name, index.last_name, due_date), short_name='Indexing Assignment')
 
+def handle_typeset_assignment(book, typesetter, files, due_date, email_text, requestor, attachment):
+
+    new_typesetter = models.TypesetAssignment(
+        book=book,
+        typesetter=typesetter,
+        requestor=requestor,
+        due=due_date,
+    )
+
+    new_typesetter.save()
+
+    for _file in files:
+        new_typesetter.files.add(_file)
+
+    new_typesetter.save()
+
+    send_invite_typesetter(book, new_typesetter, email_text, requestor, attachment)
+
+    log.add_log_entry(book=book, user=requestor, kind='typeser', message='Typesetter %s %s assigned. Due %s' % (typesetter.first_name, typesetter.last_name, due_date), short_name='Typeset Assignment')
+
+
 def send_copyedit_assignment(submission, copyedit, email_text, sender, attachment):
     from_email = models.Setting.objects.get(group__name='email', name='from_address')
 

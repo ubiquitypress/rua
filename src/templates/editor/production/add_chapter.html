@@ -2,50 +2,85 @@
 {% load static from staticfiles %}
 {% load bootstrap3 %}
 
-{% block title %}Add New Format{% endblock %}
+{% block title %}Update File{% endblock %}
 
-{% block breadcrumbs %}
-    <ol class="breadcrumb">
-	  <li><a href="{% url 'user_home' %}">User Home</a></li>
-	  <li class="">Workflow</li>
-    <li><a href="{% url 'in_production'%}">In Production</a></li>
-    <li>{{ submission.title }}</li>
-    <li class="active">Add Format</li>
-	</ol>
+{% block css %}
+  <link href="{% static "css/timeline.css" %}" rel="stylesheet">
 {% endblock %}
 
 {% block body %}
-<div class="col-md-12">
-  <h3>{{ submission.title }}</h3>
-  <hr />
-  {% include "workflow/elements/workflow_view_buttons.html" %}
-
-  <h4>Add Formats</h4>
-  <form method="POST" enctype="multipart/form-data">
-    {% csrf_token %}
-    {% bootstrap_form_errors chapter_form layout='inline' %}
-      <div class="form-group">
-          <div class="row">
-            <div class="col-md-6">
-            {% bootstrap_field chapter_form.name %}
-            {% bootstrap_field chapter_form.identifier %}
-            {% bootstrap_field chapter_form.sequence %}
-               <div class="input-group">
-                  <span class="input-group-btn">
-                      <span class="btn btn-primary btn-file">
-                          Browse&hellip; <input class="" id="id_chapter_file" name="chapter_file" title="" type="file">
-                      </span>
-                  </span>
-                  <input type="text" class="form-control" readonly>
-              </div>
-              <div class="input-group">
-                  <br />
-                  <button class="btn btn-primary" type="submit" name="update" id="update"><i class="fa fa-cloud-upload">&nbsp;</i>Upload</button>
-              </div>
-            </div>
-          </div>
+<div class="row">
+  <div class="col-md-12 book-heading container-fluid" style="margin-top:-20px">
+        <h4>{% if submission.prefix %}{{ submission.prefix|title }}: {% endif %}{{ submission.title|title }}</h4>
+  </div>
+  <div class="col-md-3 dash-left grey-container">
+        <div class="dash-container" >
+            <h4 class="header-text">  {% if submission.prefix %}{{ submission.prefix }} {% endif %}{{ submission.title }}</h4> 
+            <h5 class="subtitle-text">{{submission.subtitle}}</h5>
         </div>
-  </form>
+
+      <div class="book-info">
+        <table class="table table-bordered table-condensed small">
+            <tr>
+                <th>Series</th>
+                <td>{{ submission.series }}</td>
+            </tr>
+            <tr>
+                <th>Type</th>
+                <td>{{ submission.get_book_type_display }}</td>
+            </tr>
+            <tr>
+                <th>License</th>
+                <td>{{ submission.license.short_name }}</td>
+            </tr>
+            <tr>
+                <th>Review Type</th>
+                <td>{{ submission.get_review_type_display }}</td>
+            </tr>
+        </table>
+      </div>
+               
+    </div>
+
+    <div class="col-md-9 dash-center">
+    </br>
+      <div class="col-md-12 file-heading container-fluid">
+          <h4>Add Chapters</h4>
+    </div>
+
+      <div class="dash-container">
+        <div class="media-body">
+        <div class="col-md-12">
+          <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            {% bootstrap_form_errors chapter_form layout='inline' %}
+              <div class="form-group">
+                  <div class="row">
+                    <div class="col-md-6">
+                    {% bootstrap_field chapter_form.name %}
+                    {% bootstrap_field chapter_form.identifier %}
+                    {% bootstrap_field chapter_form.sequence %}
+                       <div class="input-group">
+                          <span class="input-group-btn">
+                              <span class="btn btn-primary btn-file">
+                                  Browse&hellip; <input class="" id="id_chapter_file" name="chapter_file" title="" type="file">
+                              </span>
+                          </span>
+                          <input type="text" class="form-control" readonly>
+                      </div>
+                      <div class="input-group">
+                          <br />
+                          <button class="btn btn-primary" type="submit" name="update" id="update"><i class="fa fa-cloud-upload">&nbsp;</i>Upload</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
 {% endblock %}
 
