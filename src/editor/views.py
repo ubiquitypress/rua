@@ -1,18 +1,21 @@
 from django.shortcuts import redirect, render, get_object_or_404
-from core.decorators import is_editor, is_book_editor, is_book_editor_or_author
 from django.db.models import Q
 from django.utils import timezone
 from django.contrib import messages
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
+
 from core.files import handle_attachment,handle_file_update,handle_attachment,handle_file
 from core import models, log, logic as core_logic
 from core import forms as core_forms
+from core.decorators import is_editor, is_book_editor, is_book_editor_or_author
 from workflow import logic as workflow_logic
 from editor import logic
 from revisions import models as revision_models
 from review import models as review_models
 from manager import models as manager_models
+
+from editor import forms
 
 
 @is_editor
@@ -466,9 +469,9 @@ def add_format(request, submission_id):
 			new_format.file = new_file
 			new_format.save()
 			log.add_log_entry(book=book, user=request.user, kind='production', message='%s %s loaded a new format, %s' % (request.user.first_name, request.user.last_name, new_format.identifier), short_name='New Format Loaded')
-			return redirect(reverse('view_production', kwargs={'submission_id': book.id}))
+			return redirect(reverse('editor_production', kwargs={'submission_id': book.id}))
 
-	template = 'workflow/production/add_format.html'
+	template = 'editor/production/add_format.html'
 	context = {
 		'submission': book,
 		'format_form': format_form,
@@ -490,9 +493,9 @@ def add_chapter(request, submission_id):
 			new_chapter.file = new_file
 			new_chapter.save()
 			log.add_log_entry(book=book, user=request.user, kind='production', message='%s %s loaded a new chapter, %s' % (request.user.first_name, request.user.last_name, new_chapter.identifier), short_name='New Chapter Loaded')
-			return redirect(reverse('view_production', kwargs={'submission_id': book.id}))
+			return redirect(reverse('editor_production', kwargs={'submission_id': book.id}))
 
-	template = 'workflow/production/add_chapter.html'
+	template = 'editor/production/add_chapter.html'
 	context = {
 		'submission': book,
 		'chapter_form': chapter_form,
@@ -533,11 +536,13 @@ def update_format_or_chapter(request, submission_id, format_or_chapter, id):
 		form = forms.UpdateChapterFormat(request.POST, request.FILES)
 		if form.is_valid():
 			item.name = request.POST.get('name')
+			item.identifier = request.POST.get('identifier')
 			item.save()
-			handle_file_update(request.FILES.get('file'), item.file, book, item.file.kind, request.user)
-			return redirect(reverse('view_production', kwargs={'submission_id': book.id}))
+			if request.FILES:
+				handle_file_update(request.FILES.get('file'), item.file, book, item.file.kind, request.user)
+			return redirect(reverse('editor_production', kwargs={'submission_id': book.id}))
 
-	template = 'workflow/production/update.html'
+	template = 'editor/production/update.html'
 	context = {
 		'submission': book,
 		'item': item,
@@ -562,7 +567,7 @@ def assign_typesetter(request, submission_id):
 		for typesetter in typesetter_list:
 			logic.handle_typeset_assignment(book, typesetter, file_list, due_date, email_text, requestor=request.user, attachment=attachment)
 
-		return redirect(reverse('view_production', kwargs={'submission_id': submission_id}))
+		return redirect(reverse('editor_production', kwargs={'submission_id': submission_id}))
 
 	template = 'editor/submission.html'
 	context = {

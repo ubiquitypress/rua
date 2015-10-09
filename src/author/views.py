@@ -4,7 +4,7 @@ from django.utils import timezone
 from django.core.urlresolvers import reverse
 from django.contrib import messages
 
-from core import models, log, task, logic as core_logic
+from core import models, log, task, logic as core_logic, forms as core_forms
 from author import forms
 from author import logic
 from workflow.logic import order_data, decode_json
@@ -12,7 +12,6 @@ from submission import models as submission_models
 from revisions import models as revision_models, forms as revision_forms
 from review import models as review_models
 from core.files import handle_file_update,handle_attachment,handle_file
-from copyedit import forms as copyedit_forms
 from copyedit.views import handle_copyedit_file
 from typeset import forms as typeset_forms
 from typeset.views import handle_typeset_file
@@ -229,10 +228,10 @@ def copyedit_review(request, submission_id, copyedit_id):
 	book = get_object_or_404(models.Book, pk=submission_id, owner=request.user)
 	copyedit = get_object_or_404(models.CopyeditAssignment, pk=copyedit_id, book__owner=request.user, book=book, author_invited__isnull=False, author_completed__isnull=True)
 
-	form = copyedit_forms.CopyeditAuthor(instance=copyedit)
+	form = core_forms.CopyeditAuthor(instance=copyedit)
 
 	if request.POST:
-		form = copyedit_forms.CopyeditAuthor(request.POST, instance=copyedit)
+		form = core_forms.CopyeditAuthor(request.POST, instance=copyedit)
 		if form.is_valid():
 			form.save()
 			for _file in request.FILES.getlist('copyedit_file_upload'):

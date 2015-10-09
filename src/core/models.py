@@ -723,7 +723,7 @@ class Chapter(models.Model):
 	file = models.ForeignKey(File)
 	name = models.CharField(max_length=200)
 	identifier = models.CharField(max_length=200, unique=True)
-	sequence = models.IntegerField(default=9999)
+	sequence = models.IntegerField(default=999)
 
 	class Meta:
 		ordering = ('sequence', 'name')

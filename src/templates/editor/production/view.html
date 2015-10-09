@@ -3,12 +3,12 @@
 
     <hr />
   <h4>Publication Formats</h4>
-  {% include "editor/production/public_files.html" with format_data=format_list %}
+  {% include "editor/production/public_files.html" with format_data=format_list format_type='format' %}
 
   <a href="{% url 'add_format' submission.id %}" class="btn btn-success"><i class="fa fa-upload">&nbsp;</i>Add New Format</a>
   <hr />
   <h4>Publication Chapters</h4>
-  {% include "editor/production/public_files.html" with format_data=chapter_list %}
+  {% include "editor/production/public_files.html" with format_data=chapter_list format_type='chapter' %}
 
   <a href="{% url 'add_chapter' submission.id %}" class="btn btn-success"><i class="fa fa-upload">&nbsp;</i>Add New Chapter</a>
 
