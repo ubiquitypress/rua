@@ -42,33 +42,7 @@ urlpatterns = patterns('',
     # Editing
     url(r'^editing/$', 'workflow.views.in_editing', name='in_editing'),
     url(r'^editing/(?P<submission_id>\d+)/$', 'workflow.editing_views.view_editing', name='view_editing'),
-    url(r'^editing/(?P<submission_id>\d+)/assign/copyeditor/$', 'workflow.editing_views.assign_copyeditor', name='assign_copyeditor'),
-    url(r'^editing/(?P<submission_id>\d+)/view/copyeditor/(?P<copyedit_id>\d+)$', 'workflow.editing_views.view_copyedit', name='view_copyedit'),
-    url(r'^editing/(?P<submission_id>\d+)/assign/indexer/$', 'workflow.editing_views.assign_indexer', name='assign_indexer'),
-    url(r'^editing/(?P<submission_id>\d+)/view/indexer/(?P<index_id>\d+)$', 'workflow.editing_views.view_index', name='view_index'),
 
-
-    # Production
-    url(r'^production/$', 'workflow.views.in_production', name='in_production'),
-    url(r'^production/(?P<submission_id>\d+)/$', 'workflow.production_views.view_production', name='view_production'),
-    url(r'^production/(?P<submission_id>\d+)/add/format/$', 'workflow.production_views.add_format', name='add_format'),
-    url(r'^production/(?P<submission_id>\d+)/add/chapter/$', 'workflow.production_views.add_chapter', name='add_chapter'),
-    url(r'^production/(?P<submission_id>\d+)/delete/(?P<format_or_chapter>[-\w]+)/(?P<id>\d+)/$', 'workflow.production_views.delete_format_or_chapter', name='delete_format_or_chapter'),
-    url(r'^production/(?P<submission_id>\d+)/update/(?P<format_or_chapter>[-\w]+)/(?P<id>\d+)/$', 'workflow.production_views.update_format_or_chapter', name='update_format_or_chapter'),
-    url(r'^production/(?P<submission_id>\d+)/catalog/$', 'workflow.production_views.catalog', name='catalog'),
-
-    url(r'^production/(?P<submission_id>\d+)/catalog/identifiers/$', 'workflow.production_views.identifiers', name='identifiers'),
-    url(r'^production/(?P<submission_id>\d+)/catalog/identifiers/(?P<identifier_id>\d+)/$', 'workflow.production_views.identifiers', name='identifiers_with_id'),
-
-    url(r'^production/(?P<submission_id>\d+)/catalog/retailers/$', 'workflow.production_views.retailers', name='retailers'),
-    url(r'^production/(?P<submission_id>\d+)/catalog/retailers/(?P<retailer_id>\d+)/$', 'workflow.production_views.retailers', name='retailer_with_id'),
-
-    url(r'^production/(?P<submission_id>\d+)/catalog/contributor/(?P<contributor_type>[-\w]+)/(?P<contributor_id>\d+)/$', 'workflow.production_views.update_contributor', name='update_contributor'),
-    url(r'^production/(?P<submission_id>\d+)/catalog/contributor/(?P<contributor_type>[-\w]+)/$', 'workflow.production_views.update_contributor', name='add_contributor'),
-    url(r'^production/(?P<submission_id>\d+)/catalog/contributor/(?P<contributor_type>[-\w]+)/(?P<contributor_id>\d+)/delete/$', 'workflow.production_views.delete_contributor', name='delete_contributor'),
-
-    url(r'^production/(?P<submission_id>\d+)/assign/typesetter/$', 'workflow.production_views.assign_typesetter', name='assign_typesetter'),\
-    url(r'^production/(?P<submission_id>\d+)/view/typesetter/(?P<typeset_id>\d+)$', 'workflow.production_views.view_typesetter', name='view_typesetter'),
 
     url(r'^log/(?P<submission_id>\d+)/', 'workflow.views.view_log', name='view_log'),
 

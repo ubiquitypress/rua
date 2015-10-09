@@ -18,7 +18,7 @@ from core import log
 from core import models
 from core import forms
 from core import logic
-
+from email import send_email
 from core import models, forms, logic, log
 from workflow import forms as workflow_forms
 from files import handle_file_update,handle_attachment,handle_file
@@ -294,7 +294,7 @@ def get_authors(request):
             author_json = {}
             author_json['id'] = author.id
             author_json['label'] = author.full_name()
-            author_json['value'] = author.full_name()
+            author_json['value'] = author.author_email
             results.append(author_json)
         data = json.dumps(results)
     else:
@@ -302,22 +302,44 @@ def get_authors(request):
     mimetype = 'application/json'
     return HttpResponse(data, mimetype)
 
+
+
 @is_book_editor
-def email_author(request,submission_id,author_id):
-	book = get_object_or_404(models.Book, pk=submission_id)
-	author = get_object_or_404(models.Author, pk=author_id)
-	authors = models.Author.objects.all()
-	author_emails = []
+def email_authors(request,submission_id,author_id=None):
+	submission = get_object_or_404(models.Book, pk=submission_id)
+	to_value=""
 	if request.POST:
-		print request.POST
-	for author in authors:
-		author_emails.append(str(author.author_email))
+		attachment = request.FILES.get('attachment')
+		subject = request.POST.get('subject')
+		body = request.POST.get('body')
+		
+		to_addresses = request.POST.get('to_values').split(';')
+		cc_addresses = request.POST.get('cc_values').split(';')
+		bcc_addresses = request.POST.get('bcc_values').split(';')
+
+		to_list=logic.clean_email_list(to_addresses)
+		cc_list=logic.clean_email_list(cc_addresses)
+		bcc_list=logic.clean_email_list(bcc_addresses)
+		
+		if attachment: 
+			attachment = handle_file(attachment, submission, 'other', request.user, "Attachment: Uploaded by %s" % (request.user.username))
+		
+		if to_addresses:
+			if attachment: 
+				send_email(subject=subject, context={}, from_email=request.user.email, to=to_list, bcc=bcc_list,cc=cc_list, html_template=body, book=submission, attachment=attachment)
+			else:
+				send_email(subject=subject, context={}, from_email=request.user.email, to=to_list,bcc=bcc_list,cc=cc_list, html_template=body, book=submission)
+			messages.add_message(request, messages.INFO, "E-mail with subject '%s' was sent." % subject)
+
+	if author_id:
+		author = get_object_or_404(models.Author, pk=author_id)
+		to_value="%s;" % (author.author_email)
+
 	template = 'core/email_author.html'
 	context = {
-		'submission': book,
-		'to_author': author,
+		'submission': submission,
 		'from': request.user,
-		'authors': author_emails,
+		'to_value':to_value
 		
 	}
 
@@ -392,6 +414,8 @@ def delete_file(request, submission_id, file_id, returner):
 		return redirect(reverse('editor_submission', kwargs={'submission_id': book.id}))
 	elif returner == 'review':
 		return redirect(reverse('editor_review', kwargs={'submission_id': book.id}))
+	elif returner == 'production':
+		return redirect(reverse('editor_production', kwargs={'submission_id': book.id}))
 
 @is_book_editor_or_author
 def update_file(request, submission_id, file_id, returner):
@@ -409,6 +433,10 @@ def update_file(request, submission_id, file_id, returner):
 
 		if returner == 'new':
 			return redirect(reverse('editor_submission', kwargs={'submission_id': book.id}))
+		elif returner == 'review':
+			return redirect(reverse('editor_review', kwargs={'submission_id': book.id}))
+		elif returner == 'production':
+			return redirect(reverse('editor_production', kwargs={'submission_id': book.id}))
 
 	template = 'core/update_file.html'
 	context = {

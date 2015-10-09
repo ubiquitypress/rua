@@ -1,0 +1,72 @@
+{% load bootstrap3 %}
+<h4>Assignment</h4>
+<table class="table table-bordered">
+	<tr>
+		<th>Copyeditor</th>
+		<th>Requested</th>
+		<th>Accepted</th>
+		<th>Declined</th>
+		<th>Due</th>
+		<th>Completed</th>
+	</tr>
+	<tr>
+		<td>{{ copyedit.copyeditor.profile.full_name }}</td>
+		<td>{{ copyedit.requested }}</td>
+		<td>{% if copyedit.accepted %}{{ copyedit.accepted }}{% else %}--{% endif %}</td>
+		<td>{% if copyedit.declined %}{{ copyedit.declined }}{% else %}--{% endif %}</td>
+		<td>{{ copyedit.due }}</td>
+		<td>{% if copyedit.completed %}{{ copyedit.completed }}{% else %}--{% endif %}</td>
+	</tr>
+</table>
+<hr />
+<h4>Assigned Files</h4>
+{% include 'shared/review_files.html' with file_data=copyedit.files.all %}
+<hr />
+<h4>Copyeditor Files</h4>
+
+{% include 'shared/review_files.html' with file_data=copyedit.copyedit_files.all %}
+
+{% if copyedit.completed and not copyedit.editor_review %}
+<form method="POST">
+  {% csrf_token %}
+  <button class="btn btn-success" name="invite_author">Invite Author to Review Copyedits</button>
+</form>
+{% elif copyedit.completed and copyedit.editor_review and not copyedit.author_invited %}
+<h4>Invite Author to Review</h4>
+<form method="POST">
+  {% csrf_token %}
+  {% bootstrap_form author_form %}
+  <div class="form-group">
+    <label class="control-label" for="id_note_to_author">Email to Author</label>
+    <textarea class="form-control" cols="40" id="email_text" name="email_text" rows="10" title="">{{ email_text }}</textarea>
+  </div>
+  <button class="btn btn-success" name="send_invite_author" id="send_invite_author" type="submit">Send Request</button>
+</form>
+{% elif copyedit.completed and copyedit.editor_review and copyedit.author_invited %}
+<hr />
+<h4>Author Revision</h4>
+<table class="table table-bordered">
+  <tr>
+    <th>Editor Review</th>
+    <th>Author Invited</th>
+    <th>Author Completed</th>
+  </tr>
+  <tr>
+    <td>{{ copyedit.editor_review }}</td>
+    <td>{{ copyedit.author_invited }}</td>
+    <td>{{ copyedit.author_completed }}</td>
+  </tr>
+  <tr>
+    <th colspan="2">Note to Author</th>
+    <th colspan="2">Note from Author</th>
+  </tr>
+  <tr>
+    <td colspan="2">{{ copyedit.note_to_author }}</td>
+    <td colspan="2">{{ copyedit.note_from_author }}</td>
+  </tr>
+</table>
+<h4>Author Files</h4>
+
+{% include 'shared/review_files.html' with file_data=copyedit.author_files.all %}
+
+{% endif %}

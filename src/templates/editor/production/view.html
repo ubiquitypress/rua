@@ -1,0 +1,14 @@
+   <h4>Typesetting{% if submission.stage.typesetting %}<a href="{% url 'assign_typesetter' submission.id %}" class="btn btn-xs btn-task pull-right"><i class="fa fa-plus">&nbsp;</i>Add Typesetter</a>{% endif %}</h4>
+  {% include "editor/production/typesetting.html" %}
+
+    <hr />
+  <h4>Publication Formats</h4>
+  {% include "editor/production/public_files.html" with format_data=format_list format_type='format' %}
+
+  <a href="{% url 'add_format' submission.id %}" class="btn btn-success"><i class="fa fa-upload">&nbsp;</i>Add New Format</a>
+  <hr />
+  <h4>Publication Chapters</h4>
+  {% include "editor/production/public_files.html" with format_data=chapter_list format_type='chapter' %}
+
+  <a href="{% url 'add_chapter' submission.id %}" class="btn btn-success"><i class="fa fa-upload">&nbsp;</i>Add New Chapter</a>
+

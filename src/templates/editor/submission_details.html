@@ -2,7 +2,9 @@
 {% if submission.book_type == 'monograph' %}
 	<h4 class="author-note">
 	{% for author in submission.author.all %}
-		{{ author.full_name }}{% if not forloop.last %}, {% endif %}
+
+		{{ author.full_name }}<sup> <a href="{% url 'email_author' submission.id author.id %}"class="fa fa-envelope-o btn btn-xs btn-default"></a></sup>{% if not forloop.last %}, {% endif %}
+
 	{% endfor %}
 	</h4>
 {% else %}

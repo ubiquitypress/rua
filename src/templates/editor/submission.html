@@ -5,6 +5,7 @@
 {% block title %}Dashboard{% endblock %}
 
 {% block css %}
+
     <style type="text/css">
     .navbar {
         margin-bottom: 0px !important;
@@ -117,4 +118,11 @@
 {% block js %}
 <script type="text/javascript" src="{% static "js/messages.js" %}"></script>
 <script type="text/javascript" src="{% static "js/fancyfile.js" %}"></script>
+<script type="text/javascript">$("textarea").jqte();</script>
+<script type="text/javascript">
+$(document).ready(function() {
+      $('#due_date').datepicker({ dateFormat: 'yy-mm-dd' }).val();
+  });
+</script>
+
 {% endblock js %}

@@ -450,7 +450,7 @@ class TypesetAssignment(models.Model):
 		elif self.typesetter_invited:
 			return {'state': 'typesetter_second', 'friendly': 'Awaiting final typesetting', 'date': self.typesetter_invited}
 		elif self.author_completed and not self.editor_second_review:
-			return {'state': 'editor_second_review', 'friendly': 'Awaiting editor review', 'date': self.editor_second_review}
+			return {'state': 'editor_second_review', 'friendly': 'Awaiting editor review', 'date': self.author_completed}
 		elif self.author_completed:
 			return {'state': 'author_complete', 'friendly': 'Author Review Complete', 'date': self.author_completed}
 		elif self.author_invited:
@@ -658,13 +658,15 @@ class Log(models.Model):
 class EmailLog(models.Model):
 	book = models.ForeignKey(Book)
 	to = models.EmailField(max_length=1000)
+	cc = models.EmailField(max_length=1000, null=True,blank=True)
+	bcc = models.EmailField(max_length=1000, null=True,blank=True)
 	from_address = models.EmailField(max_length=1000)
 	subject = models.CharField(max_length=1000)
 	content = models.TextField()
 	sent = models.DateTimeField(auto_now_add=True)
 
 	def __unicode__(self):
-		return u"%s-%s: %s" % (self.from_address, self.to, self.subject)
+		return u"From: %s To: %s, CC: %s BCC: %s : Subject: %s" % (self.from_address, self.to,self.cc,self.bcc, self.subject)
 
 setting_types = (
 	('rich_text', 'Rich Text'),
@@ -721,7 +723,7 @@ class Chapter(models.Model):
 	file = models.ForeignKey(File)
 	name = models.CharField(max_length=200)
 	identifier = models.CharField(max_length=200, unique=True)
-	sequence = models.IntegerField(default=9999)
+	sequence = models.IntegerField(default=999)
 
 	class Meta:
 		ordering = ('sequence', 'name')

@@ -9,6 +9,17 @@ from django.db.models import Q
 
 from revisions import models as revisions_models
 
+def clean_email_list(addresses):
+	list_of_email_addresses=[]
+	for address in addresses:
+		if '@' in address:
+			if address.replace(" ", "") not in list_of_email_addresses:
+				list_of_email_addresses.append(address.replace(" ", ""))
+	if len(list_of_email_addresses)<1:
+		return None
+	else:
+		return list_of_email_addresses
+
 def send_email(subject, context, from_email, to, html_template, text_template=None):
 	plaintext = get_template(text_template)
 	htmly     = get_template(html_template)
