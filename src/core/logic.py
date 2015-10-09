@@ -74,7 +74,7 @@ def author_tasks(user):
 
 def typesetter_tasks(user):
 
-	active = models.TypesetAssignment.objects.filter((Q(requested__isnull=False) & Q(completed__isnull=True)) | (Q(typesetter_invited__isnull=False) & Q(typesetter_completed__isnull=True)), typesetter=user)
+	active = models.TypesetAssignment.objects.filter((Q(requested__isnull=False) & Q(completed__isnull=True)) | (Q(typesetter_invited__isnull=False) & Q(typesetter_completed__isnull=True)), typesetter=user).exclude(declined__isnull=False)
 	completed = models.TypesetAssignment.objects.filter((Q(completed__isnull=False) & Q(typesetter_completed__isnull=True)) | (Q(completed__isnull=False) & Q(typesetter_completed__isnull=False)), typesetter=user).order_by('-completed')[:5]
 
 	return { 'active':active, 'completed':completed}
@@ -82,14 +82,14 @@ def typesetter_tasks(user):
 	
 def copyeditor_tasks(user):
 
-	active = models.CopyeditAssignment.objects.filter(copyeditor=user, completed__isnull=True)
+	active = models.CopyeditAssignment.objects.filter(copyeditor=user, completed__isnull=True).exclude(declined__isnull=False)
 	completed = models.CopyeditAssignment.objects.filter(copyeditor=user, completed__isnull=False).order_by('-completed')[:5]
 
 	return { 'active':active, 'completed':completed}
 
 def indexer_tasks(user):
 
-	active = models.IndexAssignment.objects.filter(indexer=user, completed__isnull=True)
+	active = models.IndexAssignment.objects.filter(indexer=user, completed__isnull=True).exclude(declined__isnull=False)
 	completed = models.IndexAssignment.objects.filter(indexer=user, completed__isnull=False).order_by('-completed')[:5]
 
 	return { 'active':active, 'completed':completed}
