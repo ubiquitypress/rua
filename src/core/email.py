@@ -16,7 +16,11 @@ def send_email(subject, context, from_email, to, html_template, bcc=None, cc=Non
 	htmly = Template(html_template)
 	con = Context(context)
 	html_content = htmly.render(con)
-	msg = EmailMultiAlternatives(subject, html_content, from_email, to,bcc=bcc,cc=cc)
+
+	if not type(to) in [list,tuple]:
+		to = [to]
+
+	msg = EmailMultiAlternatives(subject, html_content, from_email, to, bcc=bcc, cc=cc)
 	
 	if book:
 		log.add_email_log_entry(book, subject, from_email, to,bcc,cc, html_content)
