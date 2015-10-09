@@ -28,8 +28,6 @@
       <tr>
         <th>Label</th>
         <th>Original File Name</th>
-        <th>New File Name</th>
-        <th>Mimetype</th>
         <th>File Type</th>
         <th>Select</th>
       </tr>
@@ -37,8 +35,6 @@
       <tr>
         <td>{{ file.label }}</td>
         <td>{{ file.original_filename }}</td>
-        <td>{{ file.uuid_filename }}</td>
-        <td>{{ file.mime_type }}</td>
         <td>{{file.kind }}</td>
         <td><input type="checkbox" name="file" value="{{ file.id }}"/></td>
       </tr>
@@ -49,8 +45,6 @@
     <tr>
         <td>{{ file.label }}</td>
         <td>{{ file.original_filename }}</td>
-        <td>{{ file.uuid_filename }}</td>
-        <td>{{ file.mime_type }}</td>
         <td>{{file.kind }}</td>
         <td><input type="checkbox" name="file" value="{{ file.id }}"/></td>
     </tr>
@@ -59,8 +53,6 @@
     <tr>
         <td>{{ file.label }}</td>
         <td>{{ file.original_filename }}</td>
-        <td>{{ file.uuid_filename }}</td>
-        <td>{{ file.mime_type }}</td>
         <td>{{file.kind }}</td>
         <td><input type="checkbox" name="file" value="{{ file.id }}"/></td>
     </tr>
@@ -72,7 +64,7 @@
 
   <hr />
   <h3>3. Set Due Date</h3>
-  
+
   <p class="small">Set a due date for the edits.</p>
   <input class="form-control" type="text" name="due_date" id="due_date" required="required" />
   <hr />
