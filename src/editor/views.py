@@ -4,6 +4,7 @@ from django.db.models import Q
 from django.utils import timezone
 from django.contrib import messages
 from django.core.urlresolvers import reverse
+from django.contrib.auth.models import User
 
 from core import models, log, logic as core_logic
 from workflow import logic as workflow_logic
@@ -212,7 +213,7 @@ def editor_add_reviewers(request, submission_id, review_type, round_number):
 		submission.review_form = review_form
 		submission.save()
 
-		return redirect(reverse('view_review', kwargs={'submission_id': submission.id}))
+		return redirect(reverse('editor_review_round', kwargs={'submission_id': submission_id, 'round_number': submission.get_latest_review_round()}))
 
 	template = 'editor/add_reviewers.html'
 	context = {
