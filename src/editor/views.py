@@ -785,6 +785,7 @@ def view_copyedit(request, submission_id, copyedit_id):
 		'author_include': 'editor/editing.html',
 		'submission_files': 'editor/view_copyedit.html',
 		'email_text': email_text,
+		'timeline': core_logic.build_time_line(book),
 	}
 
 	return render(request, template, context)

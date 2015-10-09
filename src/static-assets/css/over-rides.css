@@ -42,8 +42,7 @@ html, body {
   left: -5px  ; 
    border-top: 14px solid transparent;
   border-left: 14px solid #fff;
-  border-right: 5px solid #DDDDDD;
-     
+  border-right: 5px solid #DDDDDD;    
 }
 .message-container {
   padding: 10px;
