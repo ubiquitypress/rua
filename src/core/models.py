@@ -450,7 +450,7 @@ class TypesetAssignment(models.Model):
 		elif self.typesetter_invited:
 			return {'state': 'typesetter_second', 'friendly': 'Awaiting final typesetting', 'date': self.typesetter_invited}
 		elif self.author_completed and not self.editor_second_review:
-			return {'state': 'editor_second_review', 'friendly': 'Awaiting editor review', 'date': self.editor_second_review}
+			return {'state': 'editor_second_review', 'friendly': 'Awaiting editor review', 'date': self.author_completed}
 		elif self.author_completed:
 			return {'state': 'author_complete', 'friendly': 'Author Review Complete', 'date': self.author_completed}
 		elif self.author_invited:
