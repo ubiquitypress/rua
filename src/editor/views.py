@@ -5,8 +5,9 @@ from django.utils import timezone
 from django.contrib import messages
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
-
+from core.files import handle_attachment,handle_file_update,handle_attachment,handle_file
 from core import models, log, logic as core_logic
+from core import forms as core_forms
 from workflow import logic as workflow_logic
 from editor import logic
 from revisions import models as revision_models
@@ -717,3 +718,121 @@ def editor_status(request, submission_id):
 	}
 
 	return render(request, template, context)
+
+@is_book_editor
+def assign_copyeditor(request, submission_id):
+	book = get_object_or_404(models.Book, pk=submission_id)
+	copyeditors = models.User.objects.filter(profile__roles__slug='copyeditor')
+
+	if request.POST:
+		copyeditor_list = User.objects.filter(pk__in=request.POST.getlist('copyeditor'))
+		file_list = models.File.objects.filter(pk__in=request.POST.getlist('file'))
+		due_date = request.POST.get('due_date')
+		email_text = request.POST.get('message')
+
+		attachment = handle_attachment(request, book)
+
+		for copyeditor in copyeditor_list:
+			logic.handle_copyeditor_assignment(book, copyeditor, file_list, due_date, email_text, requestor=request.user, attachment=attachment)
+			log.add_log_entry(book=book, user=request.user, kind='editing', message='Copyeditor %s %s assigend to %s' % (copyeditor.first_name, copyeditor.last_name, book.title), short_name='Copyeditor Assigned')
+
+		return redirect(reverse('editor_editing', kwargs={'submission_id': submission_id}))
+
+	template = 'editor/submission.html'
+	context = {
+		'submission': book,
+		'copyeditors': copyeditors,
+		'author_include': 'editor/editing.html',
+		'submission_files': 'editor/assign_copyeditor.html',
+		'email_text': models.Setting.objects.get(group__name='email', name='copyedit_request'),
+	}
+
+	return render(request, template, context)
+
+@is_book_editor
+def view_copyedit(request, submission_id, copyedit_id):
+	book = get_object_or_404(models.Book, pk=submission_id)
+	copyedit = get_object_or_404(models.CopyeditAssignment, pk=copyedit_id)
+	author_form = core_forms.CopyeditAuthorInvite(instance=copyedit)
+	email_text = models.Setting.objects.get(group__name='email', name='author_copyedit_request').value
+
+	if request.POST and 'invite_author' in request.POST:
+		if not copyedit.completed:
+			messages.add_message(request, messages.WARNING, 'This copyedit has not been completed, you cannot invite the author to review.')
+			return redirect(reverse('view_copyedit', kwargs={'submission_id': submission_id, 'copyedit_id': copyedit_id}))
+		else:
+			copyedit.editor_review = timezone.now()
+			log.add_log_entry(book=book, user=request.user, kind='editing', message='Copyedit Review Completed by %s %s' % (request.user.first_name, request.user.last_name), short_name='Editor Copyedit Review Complete')
+			copyedit.save()
+
+	elif request.POST and 'send_invite_author' in request.POST:
+
+		attachment = handle_attachment(request, book)
+
+		author_form = core_forms.CopyeditAuthorInvite(request.POST, instance=copyedit)
+		author_form.save()
+		copyedit.author_invited = timezone.now()
+		copyedit.save()
+		email_text = request.POST.get('email_text')
+		logic.send_author_invite(book, copyedit, email_text, request.user, attachment)
+		return redirect(reverse('view_copyedit', kwargs={'submission_id': submission_id, 'copyedit_id': copyedit_id}))
+
+	template = 'editor/submission.html'
+	context = {
+		'submission': book,
+		'copyedit': copyedit,
+		'author_form': author_form,
+		'author_include': 'editor/editing.html',
+		'submission_files': 'editor/view_copyedit.html',
+		'email_text': email_text,
+	}
+
+	return render(request, template, context)
+
+@is_book_editor
+def assign_indexer(request, submission_id):
+	book = get_object_or_404(models.Book, pk=submission_id)
+	indexers = models.User.objects.filter(profile__roles__slug='indexer')
+
+	if request.POST:
+		indexer_list = User.objects.filter(pk__in=request.POST.getlist('indexer'))
+		file_list = models.File.objects.filter(pk__in=request.POST.getlist('file'))
+		due_date = request.POST.get('due_date')
+		email_text = request.POST.get('message')
+
+		attachment = handle_attachment(request, book)
+
+		for indexer in indexer_list:
+			logic.handle_indexer_assignment(book, indexer, file_list, due_date, email_text, requestor=request.user, attachment=attachment)
+			log.add_log_entry(book=book, user=request.user, kind='editing', message='Indexer %s %s assigend to %s' % (indexer.first_name, indexer.last_name, book.title), short_name='Indexer Assigned')
+
+		return redirect(reverse('editor_editing', kwargs={'submission_id': submission_id}))
+
+	template = 'editor/submission.html'
+	context = {
+		'submission': book,
+		'indexers': indexers,
+		'author_include': 'editor/editing.html',
+		'submission_files': 'editor/assign_indexer.html',
+		'email_text': models.Setting.objects.get(group__name='email', name='index_request'),
+	}
+
+	return render(request, template, context)
+
+@is_book_editor
+def view_index(request, submission_id, index_id):
+	book = get_object_or_404(models.Book, pk=submission_id)
+	index = get_object_or_404(models.IndexAssignment, pk=index_id)
+
+	template = 'editor/submission.html'
+	context = {
+		'submission': book,
+		'index': index,
+		'author_include': 'editor/editing.html',
+		'submission_files': 'editor/view_index.html',
+
+	}
+
+	return render(request, template, context)
+
+
