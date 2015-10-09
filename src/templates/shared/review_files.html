@@ -19,11 +19,13 @@
       </div>
     </div>
         <div class="media-right">
+           <div class="button-group" role="group">
          {% if file_type == 'internal' or file_type == 'external' %}
-        <a href="{% url 'delete_review_files' submission.id file.id file_type %}" class="btn btn-sm btn-decline pull-right" style="margin-top: 20px;margin-right:10px;"><i class="fa fa-trash"></i></a>
-        {% endif %}
+         
+        <a href="{% url 'delete_review_files' submission.id file.id file_type %}" class="btn btn-sm btn-decline download-small" style="margin-right:0px!important" ><i class="fa fa-trash"></i></a>
+       {% endif %}
         <a href="{% url 'serve_file' submission.id file.id %}" class="btn btn-sm btn-task pull-right download-small" ><i class="fa fa-cloud-download"> &nbsp; Download</i></a>
-    </div>
+    </div>    </div>
   
    
   </li>
