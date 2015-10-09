@@ -1,5 +1,6 @@
 from django.shortcuts import Http404
 from django.conf import settings
+from django.utils import timezone
 
 from core import models
 from core.forms import UploadMiscFile
@@ -82,7 +83,7 @@ def handle_file_update(file, old_file, book, kind, owner):
 	old_file.mime_type=file_mime
 	old_file.original_filename=original_filename
 	old_file.uuid_filename=filename
-	old_file.date_uploaded=timezone.now
+	old_file.date_uploaded=timezone.now()
 	old_file.owner=owner
 	old_file.save()
 

@@ -414,6 +414,8 @@ def delete_file(request, submission_id, file_id, returner):
 		return redirect(reverse('editor_submission', kwargs={'submission_id': book.id}))
 	elif returner == 'review':
 		return redirect(reverse('editor_review', kwargs={'submission_id': book.id}))
+	elif returner == 'production':
+		return redirect(reverse('editor_production', kwargs={'submission_id': book.id}))
 
 @is_book_editor_or_author
 def update_file(request, submission_id, file_id, returner):
@@ -431,6 +433,10 @@ def update_file(request, submission_id, file_id, returner):
 
 		if returner == 'new':
 			return redirect(reverse('editor_submission', kwargs={'submission_id': book.id}))
+		elif returner == 'review':
+			return redirect(reverse('editor_review', kwargs={'submission_id': book.id}))
+		elif returner == 'production':
+			return redirect(reverse('editor_production', kwargs={'submission_id': book.id}))
 
 	template = 'core/update_file.html'
 	context = {
