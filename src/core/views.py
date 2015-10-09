@@ -313,26 +313,28 @@ def email_authors(request,submission_id,author_id=None):
 		cc_addresses = request.POST.get('cc_values')
 		bcc_addresses = request.POST.get('bcc_values')
 		body = request.POST.get('body')
-		print body
+		print to_addresses
+		print cc_addresses
+		print bcc_addresses
 		if attachment: 
 			attachment = handle_file(attachment, submission, 'other', request.user, "Attachment: Uploaded by %s" % (request.user.username))
 		
 		if to_addresses:
 			if attachment: 
-				send_email(subject, {}, request.user.email, to_addresses, body, submission, attachment)
+				send_email(subject=subject, context={}, from_email=request.user.email, to=to_addresses, html_template=body, book=submission, attachment=attachment)
 			else:
-				send_email(subject, {}, request.user.email, to_addresses, body, submission)
-			messages.add_message(request, messages.INFO, 'E-mail sent.')
-		if cc_addresses:
-			if attachment: 
-				send_email(subject, {}, request.user.email, cc_addresses, body, submission, attachment)
-			else:
-				send_email(subject, {}, request.user.email, cc_addresses, body, submission)
-		if bcc_addresses:
-			if attachment:
-				send_email(subject, {}, request.user.email, bcc_addresses, body, submission, attachment)
-			else:
-				send_email(subject, {}, request.user.email, bcc_addresses, body, submission)
+				send_email(subject=subject, context={}, from_email=request.user.email, to=to_addresses, html_template=body, book=submission)
+			messages.add_message(request, messages.INFO, "E-mail with subject '%s' was sent." % subject)
+			if cc_addresses:
+				if attachment: 
+					send_email(subject= "CC: %s" % (subject), context= {}, from_email=request.user.email, to=cc_addresses,html_template=body, book = submission, attachment=attachment)
+				else:
+					send_email(subject= "CC: %s" % (subject), context= {}, from_email=request.user.email, to=cc_addresses,html_template=body, book = submission)
+			if bcc_addresses:
+				if attachment:
+					send_email(subject= "BCC: %s" % (subject), context= {}, from_email=request.user.email, to=bcc_addresses,html_template=body, book = submission, attachment=attachment)
+				else:
+					send_email(subject= "BCC: %s" % (subject), context= {}, from_email=request.user.email, to=bcc_addresses,html_template=body, book = submission)
 	if author_id:
 		author = get_object_or_404(models.Author, pk=author_id)
 		to_value="%s;" % (author.author_email)
