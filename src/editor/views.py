@@ -10,6 +10,7 @@ from workflow import logic as workflow_logic
 from editor import logic
 from revisions import models as revision_models
 from review import models as review_models
+from manager import models as manager_models
 
 
 @is_editor
@@ -161,6 +162,65 @@ def add_review_files(request, submission_id, review_type):
 
 	template = 'editor/add_review_files.html'
 	context = {
+		'submission': submission,
+	}
+
+	return render(request, template, context)
+
+@is_book_editor
+def editor_add_reviewers(request, submission_id, review_type, round_number):
+
+	submission = get_object_or_404(models.Book, pk=submission_id)
+	reviewers = models.User.objects.filter(profile__roles__slug='reviewer')
+	review_forms = review_models.Form.objects.all()
+	committees = manager_models.Group.objects.filter(group_type='review_committee')
+	review_round = get_object_or_404(models.ReviewRound, book=submission, round_number=round_number)
+
+	if request.POST:
+		reviewers = User.objects.filter(pk__in=request.POST.getlist('reviewer'))
+		committees = manager_models.Group.objects.filter(pk__in=request.POST.getlist('committee'))
+		review_form = review_models.Form.objects.get(ref=request.POST.get('review_form'))
+		due_date = request.POST.get('due_date')
+		email_text = request.POST.get('message')
+
+		if request.FILES.get('attachment'):
+			attachment = handle_file(request.FILES.get('attachment'), submission, 'misc', request.user)
+		else:
+			attachment = None
+
+		# Handle reviewers
+		for reviewer in reviewers:
+			logic.handle_review_assignment(submission, reviewer, review_type, due_date, review_round, request.user, email_text, attachment)
+
+		# Handle committees
+		for committee in committees:
+			members = manager_models.GroupMembership.objects.filter(group=committee)
+			for member in members:
+				logic.handle_review_assignment(submission, member.user, review_type, due_date, review_round, request.user, email_text, attachment)
+
+		# Tidy up and save
+		if review_type == 'internal' and not submission.stage.internal_review:
+			submission.stage.internal_review = timezone.now()
+			submission.stage.save()
+			log.add_log_entry(book=submission, user=request.user, kind='review', message='Internal Review Started', short_name='Submission entered Internal Review')
+
+		elif review_type == 'external' and not submission.stage.external_review:
+			submission.stage.external_review = timezone.now()
+			submission.stage.save()
+			log.add_log_entry(book=submission, user=request.user, kind='review', message='External Review Started', short_name='Submission entered External Review')
+
+		submission.review_form = review_form
+		submission.save()
+
+		return redirect(reverse('view_review', kwargs={'submission_id': submission.id}))
+
+	template = 'editor/add_reviewers.html'
+	context = {
+		'reviewers': reviewers,
+		'committees': committees,
+		'active': 'new',
+		'email_text': models.Setting.objects.get(group__name='email', name='review_request'),
+		'review_forms': review_forms,
 		'submission': submission,
 	}
 

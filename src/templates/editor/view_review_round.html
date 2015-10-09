@@ -3,7 +3,7 @@
 
 {% include "shared/review_files.html" with file_data=submission.internal_review_files.all file_type='internal' %}
 
-<div class="inline-headers"><h4>Internal Reviews</h4><a href="{% url 'add_reviewers' submission.id 'internal' review_round.round_number %}" class="btn btn-sm btn-success" style="float: right;"{% if review_round.round_number != submission.get_latest_review_round %}disabled{% endif %}><i class="fa fa-plus">&nbsp;</i>Add Reviewers</a></div>
+<div class="inline-headers"><h4>Internal Reviews</h4><a href="{% url 'editor_add_reviewers' submission.id 'internal' review_round.round_number %}" class="btn btn-sm btn-success" style="float: right;"{% if review_round.round_number != submission.get_latest_review_round %}disabled{% endif %}><i class="fa fa-plus">&nbsp;</i>Add Reviewers</a></div>
 
 <ul class="manuscript-upload-states">
   {% for review in internal_review_assignments %}
@@ -53,7 +53,7 @@
 
 {% include "shared/review_files.html" with file_data=submission.external_review_files.all file_type='external' %}
 
-<div class="inline-headers"><h4>External Reviews</h4><a href="{% url 'add_reviewers' submission.id 'external' review_round.round_number %}" class="btn btn-sm btn-success" style="float: right;"{% if review_round.round_number != submission.get_latest_review_round %}disabled{% endif %}><i class="fa fa-plus">&nbsp;</i>Add Reviewers</a></div>
+<div class="inline-headers"><h4>External Reviews</h4><a href="{% url 'editor_add_reviewers' submission.id 'external' review_round.round_number %}" class="btn btn-sm btn-success" style="float: right;"{% if review_round.round_number != submission.get_latest_review_round %}disabled{% endif %}><i class="fa fa-plus">&nbsp;</i>Add Reviewers</a></div>
 <ul class="manuscript-upload-states">
   {% for review in external_review_assignments %}
   <li>
