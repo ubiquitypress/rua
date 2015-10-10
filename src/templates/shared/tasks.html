@@ -10,4 +10,8 @@
     </span>
     <p><em>Posted {{ task.date }}</em></p>
 </div>
+{% empty %}
+<div class="notification">
+    <h5>No outstanding tasks</h5>
+</div>
 {% endfor %}
