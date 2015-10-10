@@ -22,6 +22,8 @@
 		<td>{{ assignment.copyeditor.profile.full_name }}</td>
 		<td>
 			{{ assignment.state.friendly }}
+			<br />
+			<small>{{ assignment.state.date }}</small>
 		</td>
 		<td>
 			{{ assignment.due }}
@@ -32,7 +34,7 @@
 	</tr>
 	{% empty %}
 	<tr>
-		<td colspan="3">No assignments</td>
+		<td colspan="4">No assignments</td>
 	</tr>
 	{% endfor %}
 </table>
@@ -72,7 +74,7 @@
 	</tr>
 	{% empty %}
 	<tr>
-		<td colspan="3">No assignments</td>
+		<td colspan="4">No assignments</td>
 	</tr>
 	{% endfor %}
 </table>
