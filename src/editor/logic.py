@@ -9,7 +9,7 @@ from submission import logic as submission_logic
 
 import json
 
-def send_author_invite(submission, copyedit, email_text, sender, attachment):
+def send_author_invite(submission, copyedit, email_text, sender, attachment=None):
     from_email = models.Setting.objects.get(group__name='email', name='from_address')
 
     context = {
@@ -68,6 +68,7 @@ def handle_typeset_assignment(book, typesetter, files, due_date, email_text, req
         typesetter=typesetter,
         requestor=requestor,
         due=due_date,
+        note=email_text,
     )
 
     new_typesetter.save()
@@ -205,7 +206,7 @@ def send_author_sign_off(submission, email_text, sender):
 
     email.send_email('Book Contract Uploaded', context, from_email.value, submission.owner.email, email_text, book=submission)
 
-def send_copyedit_assignment(submission, copyedit, email_text, sender, attachment):
+def send_copyedit_assignment(submission, copyedit, email_text, sender, attachment=None):
     from_email = models.Setting.objects.get(group__name='email', name='from_address')
 
     context = {
@@ -217,7 +218,7 @@ def send_copyedit_assignment(submission, copyedit, email_text, sender, attachmen
 
     email.send_email('Copyedit Assignment', context, from_email.value, copyedit.copyeditor.email, email_text, book=submission, attachment=attachment)
 
-def send_author_invite(submission, copyedit, email_text, sender, attachment):
+def send_author_invite(submission, copyedit, email_text, sender, attachment=None):
     from_email = models.Setting.objects.get(group__name='email', name='from_address')
 
     context = {
@@ -229,7 +230,7 @@ def send_author_invite(submission, copyedit, email_text, sender, attachment):
 
     email.send_email('Copyediting Completed', context, from_email.value, submission.owner.email, email_text, book=submission, attachment=attachment)
 
-def send_invite_indexer(book, index, email_text, sender, attachment):
+def send_invite_indexer(book, index, email_text, sender, attachment=None):
     from_email = models.Setting.objects.get(group__name='email', name='from_address')
 
     context = {
@@ -241,9 +242,8 @@ def send_invite_indexer(book, index, email_text, sender, attachment):
 
     email.send_email('Indexing Request', context, from_email.value, index.indexer.email, email_text, book=book, attachment=attachment)
 
-def send_invite_typesetter(book, typeset, email_text, sender, attachment):
+def send_invite_typesetter(book, typeset, email_text, sender, attachment=None):
 
-    print attachment
     from_email = models.Setting.objects.get(group__name='email', name='from_address')
 
     context = {

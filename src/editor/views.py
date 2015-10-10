@@ -588,9 +588,9 @@ def view_typesetter(request, submission_id, typeset_id):
 	typeset = get_object_or_404(models.TypesetAssignment, pk=typeset_id)
 	email_text = models.Setting.objects.get(group__name='email', name='author_typeset_request').value
 
-	author_form = typeset_forms.TypesetAuthorInvite(instance=typeset)
+	author_form = forms.TypesetAuthorInvite(instance=typeset)
 	if typeset.editor_second_review:
-		author_form = typeset_forms.TypesetTypesetterInvite(instance=typeset)
+		author_form = forms.TypesetTypesetterInvite(instance=typeset)
 		email_text = models.Setting.objects.get(group__name='email', name='typesetter_typeset_request').value
 
 	if request.POST and 'invite_author' in request.POST:
@@ -607,7 +607,7 @@ def view_typesetter(request, submission_id, typeset_id):
 		return redirect(reverse('view_typesetter', kwargs={'submission_id': submission_id, 'typeset_id': typeset_id}))
 
 	elif request.POST and 'send_invite_typesetter' in request.POST:
-		author_form = typeset_forms.TypesetTypesetterInvite(request.POST, instance=typeset)
+		author_form = forms.TypesetTypesetterInvite(request.POST, instance=typeset)
 		if author_form.is_valid():
 			author_form.save()
 			typeset.typesetter_invited = timezone.now()
@@ -617,18 +617,23 @@ def view_typesetter(request, submission_id, typeset_id):
 		return redirect(reverse('view_typesetter', kwargs={'submission_id': submission_id, 'typeset_id': typeset_id}))
 
 	elif request.POST and 'send_invite_author' in request.POST:
-		author_form = typeset_forms.TypesetAuthorInvite(request.POST, instance=typeset)
+		author_form = forms.TypesetAuthorInvite(request.POST, instance=typeset)
 		if author_form.is_valid():
 			author_form.save()
 			typeset.author_invited = timezone.now()
 			typeset.save()
 			email_text = request.POST.get('email_text')
-			logic.send_author_invite(book, typeset, email_text, request.user)
+			logic.send_invite_typesetter(book, typeset, email_text, request.user)
 		return redirect(reverse('view_typesetter', kwargs={'submission_id': submission_id, 'typeset_id': typeset_id}))
 
-	template = 'workflow/production/view_typeset.html'
+	template = 'editor/submission.html'
 	context = {
 		'submission': book,
+		'author_include': 'editor/production/view.html',
+		'submission_files': 'editor/production/view_typeset.html',
+		'active': 'production',
+		'format_list': models.Format.objects.filter(book=book).select_related('file'),
+		'chapter_list': models.Chapter.objects.filter(book=book).select_related('file'),
 		'typeset': typeset,
 		'author_form': author_form,
 		'email_text': email_text,

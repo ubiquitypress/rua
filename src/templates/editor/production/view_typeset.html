@@ -1,98 +1,115 @@
-{% extends "base.html" %}
 {% load bootstrap3 %}
-{% load static from staticfiles %}
+<style>
+HTML  CSS   Result
+Edit on 
+.timeline {
+  list-style: none;
+}
+.timeline > li {
+  margin-bottom: 60px;
+}
 
-{% block title %}Typesetting{% endblock %}
+/* for Desktop */
+@media ( min-width : 640px ){
+  .timeline > li {
+    overflow: hidden;
+    margin-top:-22px;
+    margin-bottom:-10px;
+    position: relative;
+  }
+  .timeline-date {
+    width: 30px;
+    float: left;
+    margin-top: 20px;
+  }
+  .timeline-content {
+    width: 60%;
+    float: left;
+    border-left: 4px #e5e5d1 solid;
+    padding-left: 30px;
+  }
+  .timeline-content:before {
+    content: '';
+    width: 22px;
+    height: 22px;
+    background: rgb(159, 197, 88);
+    position: absolute;
+    left: 21px;
+    top: 35px;
+    border-radius: 100%;
+  }
+}
+</style>
 
-{% block breadcrumbs %}
-  <ol class="breadcrumb">
-    <li><a href="{% url 'user_home' %}">User Home</a></li>
-    <li class="">Workflow</li>
-    <li><a href="{% url 'in_production'%}">In Production</a></li>
-    <li>{{ submission.title }}</li>
-  </ol>
-{% endblock %}
+  <h4>TYPESETTING: {{ typeset.typesetter.profile.full_name }}</h4>
 
-{% block body %}
-
-  <h4>Assignment</h4>
-  <table class="table table-bordered">
-    <tr>
-      <th>typesetter</th>
-      <th>Requested</th>
-      <th>Accepted</th>
-      <th>Declined</th>
-      <th>Due</th>
-      <th>Completed</th>
-    </tr>
-    <tr>
-      <td>{{ typeset.typesetter.profile.full_name }}</td>
-      <td>{{ typeset.requested }}</td>
-      <td>{% if typeset.accepted %}{{ typeset.accepted }}{% else %}--{% endif %}</td>
-      <td>{% if typeset.declined %}{{ typeset.declined }}{% else %}--{% endif %}</td>
-      <td>{{ typeset.due }}</td>
-      <td>{% if typeset.completed %}{{ typeset.completed }}{% else %}--{% endif %}</td>
-    </tr>
-  </table>
+  <ul class="timeline">
+    <li>
+      <p class="timeline-date"><p>
+      <div class="timeline-content">
+        <h5>Requested<br />{{ typeset.requested }}</h5>
+      </div>
+    </li>
+    {% if typeset.accepted %}
+    <li>
+      <p class="timeline-date"><p>
+      <div class="timeline-content">
+        <h5>Accepted<br />{{ typeset.accepted }}</h5>
+      </div>
+    </li>
+    {% endif %}
+    {% if typeset.completed %}
+    <li>
+      <p class="timeline-date"><p>
+      <div class="timeline-content">
+        <h5>Initial Assigment Completed<br />{{ typeset.completed }}</h5>
+      </div>
+    </li>
+    {% endif %}
+    {% if typeset.editor_review %}
+    <li>
+      <p class="timeline-date"><p>
+      <div class="timeline-content">
+        <h5>Editor Review<br />{{ typeset.editor_review }}</h5>
+      </div>
+    </li>
+    {% endif %}
+    {% if typeset.author_completed %}
+    <li>
+      <p class="timeline-date"><p>
+      <div class="timeline-content">
+        <h5>Author Review<br />{{ typeset.author_completed }}</h5>
+      </div>
+    </li>
+    {% endif %}
+    {% if typeset.editor_second_review %}
+    <li>
+      <p class="timeline-date"><p>
+      <div class="timeline-content">
+        <h5>Editor Review<br />{{ typeset.editor_second_review }}</h5>
+      </div>
+    </li>
+    {% endif %}
+    {% if typeset.typesetter_completed %}
+    <li>
+      <p class="timeline-date"><p>
+      <div class="timeline-content">
+        <h5>Assignment Completed<br />{{ typeset.typesetter_completed }}</h5>
+      </div>
+    </li>
+    {% endif %}
+  </ul>
   <hr />
   <h4>Assigned Files</h4>
-  <table class="table table-bordered">
-      <tr>
-        <th>Label</th>
-        <th>Original File Name</th>
-        <th>New File Name</th>
-        <th>Mimetype</th>
-        <th>File Type</th>
-        <th>Download</th>
-      </tr>
-    {% for file in typeset.files.all %}
-      <tr>
-        <td>{{ file.label }}</td>
-        <td>{{ file.original_filename }}</td>
-        <td>{{ file.uuid_filename }}</td>
-        <td>{{ file.mime_type }}</td>
-        <td>{{ file.kind }}</td>
-        <td><a href="{% url 'serve_file' submission.id file.id %}" class="btn btn-primary">&nbsp;<i class="fa fa-download">&nbsp;</i></a></td>
-      </tr>
-    {% endfor %}
-  </table>
-
-  <ul id="typesetting_tabs" class="nav nav-tabs" role="tablist">
-    <li role="presentation" class="active"><a href="#initial" aria-controls="home" role="tab" data-toggle="tab">Initial Typesetting</a></li>
-    <li role="presentation"><a href="#author" aria-controls="home" role="tab" data-toggle="tab">Author Revisions</a></li>
-    <li role="presentation"><a href="#final" aria-controls="home" role="tab" data-toggle="tab">Final Typesetting</a></li>
-  </ul>
+  {% include 'shared/review_files.html' with file_data=typeset.files.all %}
 
   <!-- Tab panes -->
-  <div class="tab-content">
-    <div role="tabpanel" class="tab-pane active" id="initial">
-      <h4>typesetter Files</h4>
-      <table class="table table-bordered">
-          <tr>
-            <th>Label</th>
-            <th>Original File Name</th>
-            <th>New File Name</th>
-            <th>Mimetype</th>
-            <th>File Type</th>
-            <th>Download</th>
-          </tr>
-        {% for file in typeset.typeset_files.all %}
-          <tr>
-            <td>{{ file.label }}</td>
-            <td>{{ file.original_filename }}</td>
-            <td>{{ file.uuid_filename }}</td>
-            <td>{{ file.mime_type }}</td>
-            <td>{{ file.kind }}</td>
-            <td><a href="{% url 'serve_file' submission.id file.id %}" class="btn btn-primary">&nbsp;<i class="fa fa-download">&nbsp;</i></a></td>
-          </tr>
-        {% empty %}
-        <tr>
-          <td colspan="5">No files uploaded yet.</td>
-        </tr>
-        {% endfor %}
-      </table>
-    </div>
-    <div role="tabpanel" class="tab-pane" id="author">
+    <hr />
+      <h4>Initial Typesetter Assignment</h4>
+      <h5>Note</h5>
+      {{ typeset.note|linebreaks }}
+      <h4>Typesetter Files</h4>
+      {% include 'shared/review_files.html' with file_data=typeset.typeset_files.all %}
       {% if typeset.completed and not typeset.editor_review %}
       <form method="POST">
         {% csrf_token %}
@@ -113,50 +130,14 @@
       {% elif typeset.completed and typeset.editor_review and typeset.author_invited %}
       <hr />
       <h4>Author Revision</h4>
-      <table class="table table-bordered">
-        <tr>
-          <th>Editor Review</th>
-          <th>Author Invited</th>
-          <th>Author Completed</th>
-        </tr>
-        <tr>
-          <td>{{ typeset.editor_review }}</td>
-          <td>{{ typeset.author_invited }}</td>
-          <td>{{ typeset.author_completed }}</td>
-        </tr>
-        <tr>
-          <th colspan="2">Note to Author</th>
-          <th colspan="2">Note from Author</th>
-        </tr>
-        <tr>
-          <td colspan="2">{{ typeset.note_to_author }}</td>
-          <td colspan="2">{{ typeset.note_from_author }}</td>
-        </tr>
-      </table>
+      <h5>Not to Author</h5>
+      {{ typeset.note_to_author|linebreaks }}
+      <h5>Note from Author</h5>
+      {{ typeset.note_from_author|linebreaks }}
       <h4>Author Files</h4>
-      <table class="table table-bordered">
-          <tr>
-            <th>Label</th>
-            <th>Original File Name</th>
-            <th>New File Name</th>
-            <th>Mimetype</th>
-            <th>File Type</th>
-            <th>Downdload</th>
-          </tr>
-        {% for file in typeset.author_files.all %}
-          <tr>
-            <td>{{ file.label }}</td>
-            <td>{{ file.original_filename }}</td>
-            <td>{{ file.uuid_filename }}</td>
-            <td>{{ file.mime_type }}</td>
-            <td>{{ file.kind }}</td>
-            <td><a href="{% url 'serve_file' submission.id file.id %}" class="btn btn-primary">&nbsp;<i class="fa fa-download">&nbsp;</i></a></td>
-          </tr>
-        {% endfor %}
+      {% include 'shared/review_files.html' with file_data=typeset.author_files.all %}
       </table>
       {% endif %}
-    </div>
-    <div role="tabpanel" class="tab-pane" id="final">
       {% if typeset.author_completed and not typeset.editor_second_review %}
       <form method="POST">
         {% csrf_token %}
@@ -180,51 +161,16 @@
       {% elif typeset.author_completed and typeset.editor_second_review and typeset.typesetter_invited %}
       <hr />
       <h4>Typesetter Final Revision</h4>
-      <table class="table table-bordered">
-        <tr>
-          <th>Editor Second Review</th>
-          <th>Typesetter Invited</th>
-          <th>Author Completed</th>
-        </tr>
-        <tr>
-          <td>{{ typeset.editor_second_review }}</td>
-          <td>{{ typeset.typesetter_invited }}</td>
-          <td>{{ typeset.typesetter_completeted }}</td>
-        </tr>
-        <tr>
-          <th colspan="2">Note to Typesetter</th>
-          <th colspan="2">Note from Typesetter</th>
-        </tr>
-        <tr>
-          <td colspan="2">{{ typeset.note_to_typesetter }}</td>
-          <td colspan="2">{{ typeset.note_from_typesetter }}</td>
-        </tr>
-      </table>
+      <h5>Note to Typesetter</h5>
+      {{ typeset.note_to_typesetter|linebreaks }}
+      <h5>Note from Typesetter</h5>
+      {{ typeset.note_from_typesetter|linebreaks }}
       <h4>Typesetter Final Files</h4>
-      <table class="table table-bordered">
-          <tr>
-            <th>Label</th>
-            <th>Original File Name</th>
-            <th>New File Name</th>
-            <th>Mimetype</th>
-            <th>File Type</th>
-            <th>Download</th>
-          </tr>
-        {% for file in typeset.typesetter_files.all %}
-          <tr>
-            <td>{{ file.label }}</td>
-            <td>{{ file.original_filename }}</td>
-            <td>{{ file.uuid_filename }}</td>
-            <td>{{ file.mime_type }}</td>
-            <td>{{ file.kind }}</td>
-            <td><a href="{% url 'serve_file' submission.id file.id %}" class="btn btn-primary">&nbsp;<i class="fa fa-download">&nbsp;</i></a></td>
-          </tr>
-        {% endfor %}
-      </table>
+      {% include 'shared/review_files.html' with file_data=typeset.typesetter_files.all %}
+
 {% endif %}
     </div>
   </div>
-{% endblock %}
 
 {% block js %}
 <script>
