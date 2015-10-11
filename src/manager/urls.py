@@ -37,4 +37,9 @@ urlpatterns = patterns('',
     # Cache
     url(r'^cache/flush/$', 'manager.views.flush_cache', name='manager_flush_cache'),
 
+    # Users
+    url(r'^user/$', 'manager.views.users', name='manager_users'),
+    url(r'^user/add/$', 'manager.views.add_user', name='add_user'),
+    url(r'^user/(?P<user_id>\d+)/edit/$', 'manager.views.user_edit', name='user_edit'),
+
 )

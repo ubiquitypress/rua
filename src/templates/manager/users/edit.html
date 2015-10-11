@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+{% load static from staticfiles %}
+{% load bootstrap3 %}
+
+{% block title %}Update Profile{% endblock %}
+
+{% block breadcrumbs %}
+    <ol class="breadcrumb">
+		<li><a href="{% url 'manager_index' %}">Manager</a></li>
+    	<li><a href="{% url 'manager_users' %}" class="active">Users</a></li>
+	  	<li class="active">{{ active|capfirst }}</li>
+	</ol>
+{% endblock %}
+
+{% block body %}
+<div class="col-md-12">
+	<div class="row">
+		<div class="col-md-11">
+			<h1>{{ active|capfirst }} Profile</h1>
+		</div>
+    </div>
+	<br />
+  	<form method="post" class="form" enctype="multipart/form-data">
+	    {% csrf_token %}
+	      {% if active == 'add' %}
+	      <div class="form-group">
+		  	<div class="row">
+		  		<div class="col-md-6">{% bootstrap_field user_form.username %}</div>
+		  	</div>
+		  </div>
+		  <hr />
+		  {% endif %}
+		  <div class="form-group">
+		  	<div class="row">
+		  		<div class="col-md-3">{% bootstrap_field profile_form.salutation %}</div>
+		  		<div class="col-md-3">{% bootstrap_field user_form.first_name %}</div>
+		  		<div class="col-md-3">{% bootstrap_field profile_form.middle_name %}</div>
+		  		<div class="col-md-3">{% bootstrap_field user_form.last_name %}</div>
+		  	</div>
+		  </div>
+		  <hr />
+		  <div class="form-group">
+		  	<div class="row">
+		  		<div class="col-md-12">{% bootstrap_field profile_form.biography %}</div>
+		  	</div>
+		  </div>
+		  <hr />
+		  <div class="form-group">
+		  	<div class="row">
+		  		<div class="col-md-4">{% bootstrap_field profile_form.institution %}</div>
+		  		<div class="col-md-4">{% bootstrap_field profile_form.department %}</div>
+		  		<div class="col-md-4">{% bootstrap_field profile_form.country %}</div>
+		  	</div>
+		  </div>
+		  <hr />
+		  <div class="form-group">
+		  	<div class="row">
+		  		<div class="col-md-4">{% bootstrap_field profile_form.orcid %}</div>
+		  		<div class="col-md-4">{% bootstrap_field profile_form.twitter %}</div>
+		  		<div class="col-md-4">{% bootstrap_field profile_form.facebook %}</div>
+		  		<div class="col-md-4">{% bootstrap_field profile_form.linkedin %}</div>
+		  		<div class="col-md-4">{% bootstrap_field profile_form.impactstory %}</div>
+		  		<div class="col-md-4">{% bootstrap_field profile_form.github %}</div>
+		  	</div>
+		  </div>
+		  <hr />
+		  <div class="form-group">
+		  	<div class="row">
+		  		<div class="col-md-6">{% bootstrap_field profile_form.signature %}
+		  			<p class="small">This signature will be appended to the end of outgoing emails.</p>
+		  		</div>
+		  		<div class="col-md-6">{% bootstrap_field profile_form.roles %}
+		  		</div>
+		  	</div>
+		  </div>
+		  <hr />
+		  <div class="form-group">
+		  	<div class="row">
+		  		<div class="col-md-6">{% bootstrap_field user_form.email %}</div>
+		  		<div class="col-md-6">
+		  			<label class="control-label" for="id_profile_image">Profile Image</label><br />
+					       <div class="input-group">
+		                <span class="input-group-btn">
+		                    <span class="btn btn-primary btn-file">
+		                        Browse&hellip; <input type="file" id="id_profile_image" name="profile_image">
+		                    </span>
+		                </span>
+		                <input type="text" class="form-control" readonly>
+		            </div>
+				</div>
+		  		</div>
+		  	</div>
+		  	<div class="form-group">
+		  	<div class="row">
+		  		<div class="col-md-6">
+					{% if active == 'add' %}
+						<label class="control-label" for="new_password">If you would like to generate a new password for the account, check this box.</label><br /><input type="checkbox" name="new_password" {% if new_password %}checked{% endif %} />
+					{% endif %}
+				</div>
+		  	</div>
+		  </div>
+		  </div>
+			{% buttons %}
+		        <button name="register" id="register" type="submit" class="btn btn-primary" style="margin-left:15px;">
+		            <i class="fa fa-user"></i> Update Profile
+		        </button>
+		    {% endbuttons %}
+		</form>
+
+	</form>
+
+</div>
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript" src="{% static "js/fancyfile.js" %}"></script>
+<script type="text/javascript">$("textarea").jqte();</script>
+{% endblock %}

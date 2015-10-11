@@ -11,8 +11,9 @@ from django.core.exceptions import ObjectDoesNotExist
 
 from manager import models
 from manager import forms
+from manager import logic
 from django.conf import settings
-from core import models as core_models
+from core import models as core_models, forms as core_forms
 from submission import forms as submission_forms
 from submission import models as submission_models
 
@@ -253,6 +254,70 @@ def proposal_forms(request):
 		'choices_form': choices_form,
 		'selected_form' : selected_form,
 		'default_fields': default_fields,
+	}
+
+	return render(request, template, context)
+
+@staff_member_required
+def users(request):
+
+	template = 'manager/users/index.html'
+	context = {
+		'users': User.objects.all(),
+	}
+
+	return render(request, template, context)
+
+@staff_member_required
+def add_user(request):
+	user_form = core_forms.FullUserProfileForm()
+	profile_form = core_forms.FullProfileForm()
+
+	if request.method == 'POST':
+		user_form = core_forms.FullUserProfileForm(request.POST)
+		profile_form = core_forms.FullProfileForm(request.POST, request.FILES)
+		if profile_form.is_valid() and user_form.is_valid():
+			user = user_form.save()
+
+			if 'new_password' in request.POST:
+				new_pass = logic.generate_password()
+				user.set_password(new_pass)
+				messages.add_message(request, messages.SUCCESS, 'New user %s, password set to %s.' % (user.username, new_pass))
+
+			profile = profile_form.save(commit=False)
+			profile.user = user
+			profile.save()
+			return redirect(reverse('manager_users'))
+
+	template = 'manager/users/edit.html'
+	context = {
+		'profile_form' : profile_form,
+		'user_form': user_form,
+		'active': 'add',
+	}
+
+	return render(request, template, context)
+
+@staff_member_required
+def user_edit(request, user_id):
+	user = User.objects.get(pk=user_id)
+	user_form = core_forms.UserProfileForm(instance=user)
+	profile_form = core_forms.FullProfileForm(instance=user.profile)
+
+	if request.method == 'POST':
+		user_form = core_forms.UserProfileForm(request.POST, instance=user)
+		profile_form = core_forms.FullProfileForm(request.POST, request.FILES, instance=user.profile)
+		if profile_form.is_valid() and user_form.is_valid():
+			user = user_form.save()
+			profile = profile_form.save()
+			return redirect(reverse('manager_users'))
+
+	template = 'manager/users/edit.html'
+	context = {
+		'user': user,
+		'profile_form' : profile_form,
+		'user_form': user_form,
+		'active': 'update',
 	}
 
 	return render(request, template, context)

@@ -786,5 +786,8 @@ iframe {
   pointer-events: none;
   cursor: default;
   background-color:white;
+}
 
+.jqte {
+  margin: 0 0;
 }
