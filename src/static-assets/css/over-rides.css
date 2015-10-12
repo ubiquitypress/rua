@@ -639,6 +639,26 @@ body > div.container > div > div.col-md-4.dash-right > div > ul > li > div > div
      margin-top: 5px;
     border-radius: 100%;
   }
+    .timeline-content-dash-declined {
+    width: 50%;
+    float: left;
+    border-left: 4px #e5e5d1 solid;
+    padding-left: 30px;
+    margin-left: 40px;
+    padding-top:5px;
+    margin-top: 13.8px;
+  }
+  .timeline-content-dash-declined:before {
+    content: '';
+    width: 15px;
+    height: 15px;
+    background: red;
+    position: absolute;
+    left: 125px;
+    top: 24px;
+     margin-top: 5px;
+    border-radius: 100%;
+  }
   .timeline-content-dash-overdue {
     width: 50%;
     float: left;
@@ -652,7 +672,7 @@ body > div.container > div > div.col-md-4.dash-right > div > ul > li > div > div
     content: '';
     width: 15px;
     height: 15px;
-    background: red;
+    background: orange;
     position: absolute;
     left: 125px;
     top: 24px;

@@ -8,8 +8,10 @@
  {% if item.date %}
   <li>
       <p class="timeline-dash-date">{{ item.date|date:"Y-m-d" }}</p>
-             {% if item.overdue or item.declined %}
+             {% if item.overdue %}
               <div class="timeline-content-dash-overdue">
+                {% elif item.declined %}
+                 <div class="timeline-content-dash-declined">
               {% else %}
               <div class="timeline-content-dash-closed">
               {% endif %}
@@ -25,7 +27,9 @@
 </ul>
 <div class="dash-container">
 <h4>Assignment</h4>
-{{copyedit.note_from_author}}
+<h5>Notes:</h5>
+<div class="well">
+{{copyedit.note_from_author}}</div>
 <table class="table table-bordered">
 	<tr>
 		<th>Copyeditor</th>
