@@ -162,10 +162,10 @@ def revision(request, revision_id, submission_id):
 	revision = get_object_or_404(revision_models.Revision, pk=revision_id, book__owner=request.user, completed__isnull=True)
 	book = get_object_or_404(models.Book, pk=submission_id, owner=request.user)
 
-	form = revision_forms.AuthorRevisionForm(instance=revision)
+	form = forms.AuthorRevisionForm(instance=revision)
 
 	if request.POST:
-		form = revision_forms.AuthorRevisionForm(request.POST, instance=revision)
+		form = forms.AuthorRevisionForm(request.POST, instance=revision)
 		if form.is_valid():
 			revision = form.save(commit=False)
 			revision.completed = timezone.now()
@@ -190,7 +190,7 @@ def revise_file(request, submission_id, revision_id, file_id):
 	revision = get_object_or_404(revision_models.Revision, pk=revision_id, book__owner=request.user)
 	book = revision.book
 	_file = get_object_or_404(models.File, pk=file_id)
-	form = revision_forms.AuthorRevisionForm(instance=revision)
+	form = forms.AuthorRevisionForm(instance=revision)
 
 	if request.POST:
 		for file in request.FILES.getlist('update_file'):
