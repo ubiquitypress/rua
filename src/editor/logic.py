@@ -9,7 +9,7 @@ from submission import logic as submission_logic
 
 import json
 
-def send_author_invite(submission, copyedit, email_text, sender, attachment):
+def send_author_invite(submission, copyedit, email_text, sender, attachment=None):
     from_email = models.Setting.objects.get(group__name='email', name='from_address')
 
     context = {
@@ -68,6 +68,7 @@ def handle_typeset_assignment(book, typesetter, files, due_date, email_text, req
         typesetter=typesetter,
         requestor=requestor,
         due=due_date,
+        note=email_text,
     )
 
     new_typesetter.save()
@@ -113,10 +114,10 @@ def get_submission_tasks(book, user):
 	base_url = models.Setting.objects.get(group__name='general', name='base_url').value
 
 	copyedit_tasks = models.CopyeditAssignment.objects.filter(book=book, completed__isnull=False, editor_review__isnull=True, author_completed__isnull=True)
-	typeset_tasks = models.TypesetAssignment.objects.filter((Q(completed__isnull=False) & Q(editor_review__isnull=True)) | (Q(author_completed__isnull=False) & Q(editor_second_review__isnull=True)), requestor=user)
+	typeset_tasks = models.TypesetAssignment.objects.filter((Q(completed__isnull=False) & Q(editor_review__isnull=True)) | (Q(author_completed__isnull=False) & Q(editor_second_review__isnull=True)), book=book, requestor=user)
 
 	for copyedit in copyedit_tasks:
-		task_list.append({'type': 'copyedit', 'book': copyedit.book, 'task': 'Copyedit Review', 'date': copyedit.completed, 'title': copyedit.book.title, 'url': 'http://%s/editor/submission/%s/editing/copyedit/%s/' % (base_url, copyedit.book.id, copyedit.id)})
+		task_list.append({'type': 'copyedit', 'book': copyedit.book, 'task': 'Copyedit Review', 'date': copyedit.completed, 'title': copyedit.book.title, 'url': 'http://%s/editor/submission/%s/editing/view/copyeditor/%s/' % (base_url, copyedit.book.id, copyedit.id)})
 
 	for typeset in typeset_tasks:
 		task_list.append({'type': 'typeset', 'book': typeset.book, 'task': 'Typsetting Review', 'date': typeset.completed, 'title': typeset.book.title, 'url': 'http://%s/editor/submission/%s/editing/typeset/%s/' % (base_url, typeset.book.id, typeset.id)})
@@ -205,7 +206,7 @@ def send_author_sign_off(submission, email_text, sender):
 
     email.send_email('Book Contract Uploaded', context, from_email.value, submission.owner.email, email_text, book=submission)
 
-def send_copyedit_assignment(submission, copyedit, email_text, sender, attachment):
+def send_copyedit_assignment(submission, copyedit, email_text, sender, attachment=None):
     from_email = models.Setting.objects.get(group__name='email', name='from_address')
 
     context = {
@@ -217,7 +218,7 @@ def send_copyedit_assignment(submission, copyedit, email_text, sender, attachmen
 
     email.send_email('Copyedit Assignment', context, from_email.value, copyedit.copyeditor.email, email_text, book=submission, attachment=attachment)
 
-def send_author_invite(submission, copyedit, email_text, sender, attachment):
+def send_author_invite(submission, copyedit, email_text, sender, attachment=None):
     from_email = models.Setting.objects.get(group__name='email', name='from_address')
 
     context = {
@@ -229,7 +230,7 @@ def send_author_invite(submission, copyedit, email_text, sender, attachment):
 
     email.send_email('Copyediting Completed', context, from_email.value, submission.owner.email, email_text, book=submission, attachment=attachment)
 
-def send_invite_indexer(book, index, email_text, sender, attachment):
+def send_invite_indexer(book, index, email_text, sender, attachment=None):
     from_email = models.Setting.objects.get(group__name='email', name='from_address')
 
     context = {
@@ -241,9 +242,8 @@ def send_invite_indexer(book, index, email_text, sender, attachment):
 
     email.send_email('Indexing Request', context, from_email.value, index.indexer.email, email_text, book=book, attachment=attachment)
 
-def send_invite_typesetter(book, typeset, email_text, sender, attachment):
+def send_invite_typesetter(book, typeset, email_text, sender, attachment=None):
 
-    print attachment
     from_email = models.Setting.objects.get(group__name='email', name='from_address')
 
     context = {

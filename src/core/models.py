@@ -365,7 +365,9 @@ class CopyeditAssignment(models.Model):
 		return 'copyedit'
 
 	def state(self):
-		if self.author_completed:
+		if self.declined:
+			return {'state': 'declined', 'friendly': 'Assignment declined', 'date': self.declined}
+		elif self.author_completed:
 			return {'state': 'complete', 'friendly': 'Assignment Complete', 'date': self.author_completed}
 		elif self.author_invited:
 			return {'state': 'author_invited', 'friendly': 'Awaiting author review', 'date': self.author_invited}
@@ -401,7 +403,9 @@ class IndexAssignment(models.Model):
 		return 'indexing'
 
 	def state(self):
-		if self.completed:
+		if self.declined:
+			return {'state': 'declined', 'friendly': 'Assignment declined', 'date': self.declined}
+		elif self.completed:
 			return {'state': 'completed', 'friendly': 'Assignment completed', 'date': self.completed}
 		elif self.accepted:
 			return {'state': 'accepted', 'friendly': 'Indexing has accepted', 'date': self.accepted}
@@ -445,7 +449,9 @@ class TypesetAssignment(models.Model):
 		return 'typesetting'
 
 	def state(self):
-		if self.typesetter_completed:
+		if self.declined:
+			return {'state': 'declined', 'friendly': 'Assignment declined', 'date': self.declined}
+		elif self.typesetter_completed:
 			return {'state': 'complete', 'friendly': 'Assignment Complete', 'date': self.typesetter_completed}
 		elif self.typesetter_invited:
 			return {'state': 'typesetter_second', 'friendly': 'Awaiting final typesetting', 'date': self.typesetter_invited}
@@ -515,9 +521,9 @@ class Editor(models.Model):
 
 	def full_name(self):
 		if self.middle_name:
-			return "%s %s %s" % (self.user.first_name, self.middle_name, self.user.last_name)
+			return "%s %s %s" % (self.first_name, self.middle_name, self.last_name)
 		else:
-			return "%s %s" % (self.user.first_name, self.user.last_name)
+			return "%s %s" % (self.first_name, self.last_name)
 
 class File(models.Model):
 	mime_type = models.CharField(max_length=50)

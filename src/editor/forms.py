@@ -77,3 +77,34 @@ class RetailerForm(forms.ModelForm):
 	class Meta:
 		model = core_models.Retailer
 		fields = ('name', 'link', 'price', 'enabled')
+
+class Typeset(forms.ModelForm):
+
+	class Meta:
+		model = core_models.TypesetAssignment
+		fields = ('note',)
+
+class TypesetAuthorInvite(forms.ModelForm):
+
+	class Meta:
+		model = core_models.TypesetAssignment
+		fields = ('note_to_author',)
+
+class TypesetAuthor(forms.ModelForm):
+
+	class Meta:
+		model = core_models.TypesetAssignment
+		fields = ('note_from_author',)
+
+class TypesetTypesetterInvite(forms.ModelForm):
+
+	class Meta:
+		model = core_models.TypesetAssignment
+		fields = ('note_to_typesetter',)
+
+
+class TypesetTypesetter(forms.ModelForm):
+
+	class Meta:
+		model = core_models.TypesetAssignment
+		fields = ('note_from_typesetter',)

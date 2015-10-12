@@ -15,7 +15,7 @@
 	<tr>
 		<td>{{ typeset.typesetter.profile.full_name }}</td>
 		<td><strong>{{ typeset.state.friendly }}</strong><br>{{ typeset.state.date }}</td>
-		<td><a href="" class="btn btn-sm btn-success">View</a></td>
+		<td><a href="{% url 'view_typesetter' submission.id typeset.id %}" class="btn btn-sm btn-success">View</a></td>
 	</tr>
 	{% empty %}
 	<tr>

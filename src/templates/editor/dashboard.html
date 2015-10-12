@@ -94,13 +94,11 @@
 
             {% for note in notifications %}
             <div class="notification" id="task-{{ note.id }}" id="callout-helper-bg-specificity">
-                <h5>{{ note.text }}</h5>
+                <h5>{{ note.text|capfirst }}</h5>
                 <p><em>Book {{ note.book.id }}: {{ note.book.full_title }}</em></p>
                 <span class="pull-right" style="padding-right: 10px;" >
                 <br />
                        <button class="btn btn-xs btn-read" id="{{ note.id }}" value="{{ note.id }}">&nbsp;&nbsp;Mark as Read&nbsp;&nbsp;</button>
-         
-                    <a class="btn btn-xs btn-view">&nbsp;&nbsp;View&nbsp;&nbsp;</a>
                 </span>
                 <p><em>Posted {{ note.assigned }}</em></p>
             </div>

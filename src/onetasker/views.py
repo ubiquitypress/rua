@@ -1,6 +1,6 @@
-from django.shortcuts import render
 from django.shortcuts import redirect, render, get_object_or_404, Http404
 from django.contrib import messages
+from django.core.urlresolvers import reverse
 
 from core import models, logic as core_logic, task
 from core.decorators import is_onetasker
@@ -41,19 +41,20 @@ def task_hub(request, assignment_type, assignment_id, about=None):
 	if request.POST:
 		#Handle decision
 		decision = request.POST.get('decision', None)
+		print decision
 		if decision == 'accept':
 			assignment.accepted = datetime.now()
 			assignment.save()
+			return redirect(reverse('onetasker_task_hub', kwargs={'assignment_type': assignment_type, 'assignment_id': assignment_id}))
 		elif decision == 'decline':
 			assignment.declined = datetime.now()
 			assignment.save()
-			task.create_new_task
-
-			return redirect(reverse('tasks'))
+			messages.add_message(request, messages.SUCCESS, 'Task declined.')
+			return redirect(reverse('onetasker_dashboard'))
 
 		#handle submission
 		elif 'task' in request.POST:
-			print'yoyo'
+
 			form = logic.get_assignemnt_form(request, assignment_type, assignment)
 			if form.is_valid():
 				assignment = form.save(commit=False)
@@ -62,6 +63,7 @@ def task_hub(request, assignment_type, assignment_id, about=None):
 				assignment.save()
 				logic.notify_editor(assignment, '%s task completed' % (assignment.type()))
 				messages.add_message(request, messages.SUCCESS, 'Task completed. Thanks!')
+				return redirect(reverse('onetasker_task_hub', kwargs={'assignment_type': assignment_type, 'assignment_id': assignment_id}))
 			else:
 				print form
 
@@ -70,7 +72,6 @@ def task_hub(request, assignment_type, assignment_id, about=None):
 			_file = get_object_or_404(models.File, pk=request.POST.get('file_id'))
 			_file.label = request.POST.get('label')
 			_file.save()
-			
 
 
 	template = 'onetasker/taskhub.html'

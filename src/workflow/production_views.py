@@ -22,7 +22,7 @@ from pprint import pprint
 ## PRODUCTION ##
 
 @is_book_editor
-def view_production(request, submission_id):
+def editor_production(request, submission_id):
 	book = get_object_or_404(models.Book, pk=submission_id)
 	typeset_assignments = models.TypesetAssignment.objects.filter(book=book)
 

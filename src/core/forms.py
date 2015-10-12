@@ -72,11 +72,23 @@ class UserProfileForm(forms.ModelForm):
 		model = User
 		fields = ("first_name", "last_name", "email")
 
+class FullUserProfileForm(forms.ModelForm):
+
+	class Meta:
+		model = User
+		fields = ("username", "first_name", "last_name", "email")
+
 class ProfileForm(forms.ModelForm):
 
 	class Meta:
 		model = models.Profile
 		fields = ("salutation", "middle_name", "biography", "orcid", "institution", "department", "country", "twitter", "facebook", "linkedin", "impactstory", "github", "profile_image", "signature")
+
+class FullProfileForm(forms.ModelForm):
+
+	class Meta:
+		model = models.Profile
+		fields = ("salutation", "middle_name", "biography", "orcid", "institution", "department", "country", "twitter", "facebook", "linkedin", "impactstory", "github", "profile_image", "signature", "roles")
 
 class TaskForm(forms.ModelForm):
 
