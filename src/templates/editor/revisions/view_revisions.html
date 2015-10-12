@@ -1,0 +1,9 @@
+
+	<div class="col-md-12">
+		<h2>{{ revision.book.title }}</h2>
+        <h4>Notes from Author</h4>
+        {{ revision.cover_letter|safe }}
+        <hr />
+        <p>Revised files</p>
+        {% include 'shared/review_files.html' with file_data=revision.book.files.all %}
+	</div>

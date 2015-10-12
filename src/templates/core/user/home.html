@@ -88,9 +88,6 @@
 			<div class="bs-callout bs-callout-editing" id="callout-helper-bg-specificity">
 				<p><a href="{% url 'in_editing' %}">{{ in_editing }} Submissions in Editing</a></p>
 			</div>
-			<div class="bs-callout bs-callout-production" id="callout-helper-bg-specificity">
-				<p><a href="{% url 'in_production' %}">{{ in_production }} Submissions in Production</a></p>
-			</div>
 		</div>
 		{% endif %}
 		{% if 'copyeditor' in roles %}

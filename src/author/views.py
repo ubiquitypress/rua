@@ -11,7 +11,7 @@ from workflow.logic import order_data, decode_json
 from submission import models as submission_models
 from revisions import models as revision_models, forms as revision_forms
 from review import models as review_models
-from core.files import handle_file_update,handle_attachment,handle_file
+from core.files import handle_file_update, handle_attachment,handle_file
 from copyedit.views import handle_copyedit_file
 from typeset import forms as typeset_forms
 from typeset.views import handle_typeset_file
@@ -162,10 +162,10 @@ def revision(request, revision_id, submission_id):
 	revision = get_object_or_404(revision_models.Revision, pk=revision_id, book__owner=request.user, completed__isnull=True)
 	book = get_object_or_404(models.Book, pk=submission_id, owner=request.user)
 
-	form = revision_forms.AuthorRevisionForm(instance=revision)
+	form = forms.AuthorRevisionForm(instance=revision)
 
 	if request.POST:
-		form = revision_forms.AuthorRevisionForm(request.POST, instance=revision)
+		form = forms.AuthorRevisionForm(request.POST, instance=revision)
 		if form.is_valid():
 			revision = form.save(commit=False)
 			revision.completed = timezone.now()
@@ -190,11 +190,12 @@ def revise_file(request, submission_id, revision_id, file_id):
 	revision = get_object_or_404(revision_models.Revision, pk=revision_id, book__owner=request.user)
 	book = revision.book
 	_file = get_object_or_404(models.File, pk=file_id)
-	form = revision_forms.AuthorRevisionForm(instance=revision)
+	form = forms.AuthorRevisionForm(instance=revision)
 
 	if request.POST:
 		for file in request.FILES.getlist('update_file'):
-			handle_file_update(file, _file, book, _file.kind, request.user)
+			file_label = request.POST.get('file_label', None)
+			handle_file_update(file, _file, book, _file.kind, request.user, label=file_label)
 			messages.add_message(request, messages.INFO, 'File updated.')
 
 		return redirect(reverse('author_revision', kwargs={'submission_id': submission_id, 'revision_id': revision.id}))

@@ -1,20 +1,13 @@
-{% extends "base.html" %}
+{% extends "secondary_page.html" %}
 {% load static from staticfiles %}
 {% load bootstrap3 %}
 
 {% block title %}Request Revisions {{ book.title }}{% endblock %}
+{% block page-title %}Request Revisions {{ book.title }}{% endblock %}
 
-{% block breadcrumbs %}
-  <ol class="breadcrumb">
-    <li>Revisions</li>
-    <li>Request</li>
-    <li><a class="active" href="">{{ book.title }}</a></li>
-	</ol>
-{% endblock %}
-
-{% block body %}
+{% block page-content %}
 	<div class="col-md-12">
-		<h2>Request Revisions for: {{ book.title }}</h2>
+		<h2>Request Revisions for: {{ submission.title }}</h2>
         <p>Complete the form below to request revisons from the Author/Editor.</p>
         <hr />
         <form method="post" class="form">
@@ -31,7 +24,7 @@
         {% endbuttons %}
         </form>
 	</div>
-{% endblock body %}
+{% endblock %}
 
 {% block js %}
 <script type="text/javascript" src="{% static "js/fancyfile.js" %}"></script>

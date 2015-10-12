@@ -35,11 +35,7 @@ import mimetypes as mime
 # Website Views
 
 def index(request):
-
-	template = "core/index.html"
-	context = {}
-
-	return render(request, template, context)
+	return redirect(reverse('login'))
 
 def contact(request):
 
