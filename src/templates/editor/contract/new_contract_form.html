@@ -1,9 +1,10 @@
   {% load bootstrap3 %}
- </br>
-  <div class="file-sub-heading container-fluid">
-    {% if new_contract_form.instance.pk %}
+   {% if new_contract_form.instance.pk %}
+  <div class="file-sub-heading-accept container-fluid">
+  
   <h4>Update Contract</h4> 
   {% else %}
+    <div class="file-sub-heading container-fluid">
     <h4>Upload Contract</h4> 
     {% endif %}
 </div>

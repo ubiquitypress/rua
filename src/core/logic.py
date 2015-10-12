@@ -129,56 +129,69 @@ def onetasker_tasks(user):
 def build_time_line_editing_copyedit(copyedit):
 	timeline = []
 
-	timeline.append({'stage': 'Requested', 'date': copyedit.requested })
-
+	
+	overdue = False
 	if copyedit.accepted:
-		timeline.append({'stage': 'Accepted', 'date': copyedit.accepted })
-		if copyedit.completed > copyedit.due:
-			timeline.append({'stage': 'Due', 'date': copyedit.due,'overdue':True  })
-			timeline.append({'stage': 'Completed', 'date': copyedit.completed,'overdue':True  })
+		if copyedit.completed and copyedit.completed > copyedit.due:
+			overdue=True
+		timeline.append({'stage': 'Requested', 'date': copyedit.requested,'overdue':overdue   })
+		timeline.append({'stage': 'Accepted', 'date': copyedit.accepted,'overdue':overdue  })
+		timeline.append({'stage': 'Editor Review', 'date': copyedit.editor_review,'overdue':overdue  })
+		timeline.append({'stage': 'Author Invited', 'date': copyedit.author_invited,'overdue':overdue  })
+		timeline.append({'stage': 'Author completed', 'date': copyedit.author_completed,'overdue':overdue  })
+		if copyedit.completed:
+			if overdue:
+				timeline.append({'stage': 'Due', 'date': copyedit.due,'overdue':overdue  })
+				timeline.append({'stage': 'Completed', 'date': copyedit.completed,'overdue':overdue  })
+			else:
+				timeline.append({'stage': 'Completed', 'date': copyedit.completed,'overdue':overdue  })
+				timeline.append({'stage': 'Due', 'date': copyedit.due,'overdue':overdue  })
 		else:
-			timeline.append({'stage': 'Completed', 'date': copyedit.completed,'overdue':False  })
-			timeline.append({'stage': 'Due', 'date': copyedit.due,'overdue':False  })
-		timeline.append({'stage': 'Editor Review', 'date': copyedit.editor_review })
-		timeline.append({'stage': 'Author Invited', 'date': copyedit.author_invited })
-		timeline.append({'stage': 'Author completed', 'date': copyedit.author_completed })
+			timeline.append({'stage': 'Due', 'date': copyedit.due,'overdue':overdue  })
 	else:
+		timeline.append({'stage': 'Requested', 'date': copyedit.requested,'overdue':overdue   })
 		timeline.append({'stage': 'Declined', 'date': copyedit.declined,'declined': True })
+		timeline.append({'stage': 'Due', 'date': copyedit.due,'overdue':overdue   })
 
 	return timeline
 def build_time_line_editing_indexer(index):
 	timeline = []
 
-	timeline.append({'stage': 'Requested', 'date': index.requested })
-
+	overdue = False
 	if index.accepted:
-		timeline.append({'stage': 'Accepted', 'date': index.accepted })
-		if index.completed > index.due:
-			timeline.append({'stage': 'Due', 'date': index.due,'overdue':True })
-			timeline.append({'stage': 'Completed', 'date': index.completed,'overdue':True })
+		if index.completed and index.completed > index.due:
+			overdue=True
+		timeline.append({'stage': 'Requested', 'date': index.requested,'overdue':overdue  })
+		timeline.append({'stage': 'Accepted', 'date': index.accepted,'overdue':overdue  })
+		if index.completed:
+			if overdue:
+				timeline.append({'stage': 'Due', 'date': index.due,'overdue':overdue })
+				timeline.append({'stage': 'Completed', 'date': index.completed,'overdue':overdue })
+			else:
+				timeline.append({'stage': 'Completed', 'date': index.completed,'overdue':overdue  })
+				timeline.append({'stage': 'Due', 'date': index.due,'overdue':overdue   })
 		else:
-			timeline.append({'stage': 'Completed', 'date': index.completed,'overdue':False  })
-
-			timeline.append({'stage': 'Due', 'date': index.due,'overdue':False   })
+			timeline.append({'stage': 'Due', 'date': index.due,'overdue':overdue   })
 	else:
 		timeline.append({'stage': 'Declined', 'date': index.declined,'declined': True  })
+		timeline.append({'stage': 'Due', 'date': index.due,'overdue':overdue   })
 
 	return timeline
 def build_time_line(book):
 	timeline = []
-
-	timeline.append({'stage': 'Proposal', 'date': book.stage.proposal})
-	timeline.append({'stage': 'Submission', 'date': book.stage.submission})
-	timeline.append({'stage': 'Review', 'date': book.stage.review})
-	timeline.append({'stage': 'Internal Review', 'date': book.stage.internal_review})
-	timeline.append({'stage': 'External Review', 'date': book.stage.external_review})
-	timeline.append({'stage': 'Editing', 'date': book.stage.editing})
-	timeline.append({'stage': 'Copyediting', 'date': book.stage.copyediting})
-	timeline.append({'stage': 'Indexing', 'date': book.stage.indexing})
-	timeline.append({'stage': 'Typesetting', 'date': book.stage.typesetting})
-	timeline.append({'stage': 'Production', 'date': book.stage.production})
-	timeline.append({'stage': 'Publication', 'date': book.stage.publication})
-	timeline.append({'stage': 'Declined', 'date': book.stage.declined})
+	if book.stage:
+		timeline.append({'stage': 'Proposal', 'date': book.stage.proposal})
+		timeline.append({'stage': 'Submission', 'date': book.stage.submission})
+		timeline.append({'stage': 'Review', 'date': book.stage.review})
+		timeline.append({'stage': 'Internal Review', 'date': book.stage.internal_review})
+		timeline.append({'stage': 'External Review', 'date': book.stage.external_review})
+		timeline.append({'stage': 'Editing', 'date': book.stage.editing})
+		timeline.append({'stage': 'Copyediting', 'date': book.stage.copyediting})
+		timeline.append({'stage': 'Indexing', 'date': book.stage.indexing})
+		timeline.append({'stage': 'Typesetting', 'date': book.stage.typesetting})
+		timeline.append({'stage': 'Production', 'date': book.stage.production})
+		timeline.append({'stage': 'Publication', 'date': book.stage.publication})
+		timeline.append({'stage': 'Declined', 'date': book.stage.declined})
 
 	return timeline
 	

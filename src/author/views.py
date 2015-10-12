@@ -11,10 +11,7 @@ from workflow.logic import order_data, decode_json
 from submission import models as submission_models
 from revisions import models as revision_models, forms as revision_forms
 from review import models as review_models
-from core.files import handle_file_update, handle_attachment,handle_file
-from copyedit.views import handle_copyedit_file
-from typeset import forms as typeset_forms
-from typeset.views import handle_typeset_file
+from core.files import handle_file_update, handle_attachment,handle_file,handle_copyedit_file,handle_typeset_file
 
 @login_required
 def author_dashboard(request):
@@ -262,10 +259,10 @@ def typeset_review(request, submission_id, typeset_id):
 	book = get_object_or_404(models.Book, pk=submission_id)
 	typeset = get_object_or_404(models.TypesetAssignment, pk=typeset_id, book__owner=request.user, book=book)
 
-	form = typeset_forms.TypesetAuthor(instance=typeset)
+	form = core_forms.TypesetAuthor(instance=typeset)
 
 	if request.POST:
-		form = typeset_forms.TypesetAuthor(request.POST, instance=typeset)
+		form = core_forms.TypesetAuthor(request.POST, instance=typeset)
 		if form.is_valid():
 			form.save()
 			for _file in request.FILES.getlist('typeset_file_upload'):

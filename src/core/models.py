@@ -537,7 +537,24 @@ class File(models.Model):
 	kind = models.CharField(max_length=100)
 	sequence = models.IntegerField(default=1)
 	owner = models.ForeignKey(User)
+	def truncated_filename(self):
+		name, extension = os.path.splitext(self.original_filename)
+		file_name=''
+		if len(name)>16:
+			file_name=name[:16]+'...'+' '+extension
+		else:
+			file_name=name+extension
 
+		return file_name
+	def truncated_filename_long(self):
+		name, extension = os.path.splitext(self.original_filename)
+		file_name=''
+		if len(name)>32:
+			file_name=name[:32]+'...'+' '+extension
+		else:
+			file_name=name+extension
+
+		return file_name	
 	def __unicode__(self):
 		return u'%s' % self.original_filename
 

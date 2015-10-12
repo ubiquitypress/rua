@@ -46,7 +46,12 @@
     </div>
     <div class="col-md-9 dash-center" >
     </br>
+
     	<div class="col-md-12 file-heading container-fluid">
+      <h4>File manager</h4>
+
+</div><div class="col-md-12">
+<div class="col-md-12 file-sub-heading-accept container-fluid">
       <h4>Update file "{{file.label}}"</h4>
 
 </div>
@@ -95,7 +100,7 @@
 				<td>Uploaded</td><td>{{ file.date_uploaded }}</td>
 				</tr>
 				<tr>
-				<td>Last Modified</td><td>{{ file.date_modified }}</td>
+				<td>Last Modified</td><td>{{ file.date_modified }} (<a href="{% url 'versions_file' submission.id file.id %}">History</a>)</td>
 				</tr>
 			</tbody>
 		</table>
@@ -131,7 +136,7 @@
 		</form>
 </div>
 </div>
-</div>
+</div></div>
 {% endblock %}
 
 {% block js %}

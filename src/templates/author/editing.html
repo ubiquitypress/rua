@@ -1,45 +1,82 @@
-<h2>Copyediting</h2>
-<table class="table table-condensed table-bordered">
+<div class="dash-container">
+
+<h3>COPYEDITING:{% if submission.stage.copyediting %}<a class="btn btn-sm btn-accept pull-right" href="{% url 'assign_copyeditor' submission.id %}"><i class="fa fa-plus">&nbsp;</i>Add Copyeditor</a>{% endif %}</h3>
+
+{% if not submission.stage.copyediting %}
+<p>Stage has not been initialised.</p>
+<form method="POST" action="?start=copyediting">
+	{% csrf_token %}
+	<button class="btn btn-primary" type="submit">Start Copyediting</button>
+</form>
+{% else %}
+<table class="table table-condensed table-bordered table-responsive" style="font-size:14px">
 	<tr>
-		<th>Copyeditor</th><th>Status</th><th>Date</th>
+		<th>Copyeditor</th><th>Status</th><th>Due</th><th></th>
 	</tr>
 	{% for assignment in submission.copyeditassignment_set.all %}
+	{% ifequal copyedit.id assignment.id %}
+	<tr class="selected-row-table">
+	{% else %}
 	<tr>
+	{% endifequal %}
 		<td>{{ assignment.copyeditor.profile.full_name }}</td>
-		<td>
-			{{ assignment.state.friendly }}
-		</td>
-		<td>
-			{{ assignment.state.date }}
-		</td>
-	</tr>
-	{% empty %}
-	<tr>
-		<td colspan="3">No assignments</td>
-	</tr>
-	{% endfor %}
-</table>
-
-<h2>Indexing</h2>
-<table class="table table-condensed table-bordered">
-	<tr>
-		<th>Indexer</th><th>Status</th><th>Date</th>
-	</tr>
-	{% for assignment in submission.indexassignment_set.all %}
-	<tr>
-		<td>{{ assignment.indexer.profile.full_name }}</td>
 		<td>
 			{{ assignment.state.friendly }}
 			<br />
 			<small>{{ assignment.state.date }}</small>
 		</td>
 		<td>
-			{{ assignment.state.date }}
+			{{ assignment.due }}
+		</td>
+		<td>
+			<a href="{% url 'view_copyedit' submission.id assignment.id %}" class="btn btn-task"> View </a>
 		</td>
 	</tr>
 	{% empty %}
 	<tr>
-		<td colspan="3">No assignments</td>
+		<td colspan="4">No assignments</td>
 	</tr>
 	{% endfor %}
 </table>
+{% endif %}
+
+</br>
+<h3>INDEXING:{% if submission.stage.indexing %}<a class="btn btn-sm btn-accept pull-right" href="{% url 'assign_indexer' submission.id %}"><i class="fa fa-plus">&nbsp;</i>Assign Indexer</a>{% endif %}</h3>
+{% if not submission.stage.indexing %}
+<form method="POST" action="?start=indexing">
+	<p>Stage has not been initialised.</p>
+	{% csrf_token %}
+	<button class="btn btn-primary" type="submit">Start Indexing</button>
+</form>
+{% else %}
+<table class="table table-condensed table-bordered table-responsive" style="font-size:14px">
+	<tr> 
+		<th>Indexer</th><th>Status</th><th>Due</th><th></th>
+	</tr>
+	{% for assignment in submission.indexassignment_set.all %}
+	{% ifequal index.id assignment.id %}
+	<tr class="selected-row-table">
+	{% else %}
+	<tr>
+	{% endifequal %}
+		<td>{{ assignment.indexer.profile.full_name }} </td>
+		<td>
+			{{ assignment.state.friendly }}
+			<br />
+			<small>{{ assignment.state.date }}</small>
+		</td>
+		<td>
+			{{ assignment.due }}
+		</td>
+		<td>
+			<a href="{% url 'view_index' submission.id assignment.id %}" class="btn btn-task"> View </a>
+		</td>
+	</tr>
+	{% empty %}
+	<tr>
+		<td colspan="4">No assignments</td>
+	</tr>
+	{% endfor %}
+</table>
+{% endif %}
+</div>
