@@ -1,79 +1,25 @@
 {% load bootstrap3 %}
-<style>
-HTML  CSS   Result
-Edit on 
 
-.timeline {
-  list-style: none;
-}
-.timeline > li {
-  margin-bottom: 60px;
-}
-
-/* for Desktop */
-@media ( min-width : 640px ){
-  .timeline > li {
-    overflow: hidden;
-    margin-top:-22px;
-    margin-bottom:-10px;
-    position: relative;
-  }
-  .timeline-date {
-    width: 30px;
-    float: left;
-    margin-top: 24px;
-  }
-  .timeline-content {
-    width: 60%;
-    float: left;
-    border-left: 4px #e5e5d1 solid;
-    padding-left: 30px;
-    padding-top:5px;
-  }
-  .timeline-content-open {
-    width: 60%;
-    float: left;
-    border-left: 4px #e5e5d1 solid;
-    padding-left: 30px;
-    padding-top:5px;
-  }
-    .timeline-content-open:before {
-    content: '';
-    width: 22px;
-    height: 22px;
-    border: 2px solid rgb(159, 197, 88) ; 
-    background: white;
-    position: absolute;
-    left: 21px;
-    top: 35px;
-    border-radius: 100%;
-  }
-  .timeline-content:before {
-    content: '';
-    width: 22px;
-    height: 22px;
-    background: rgb(159, 197, 88);
-    position: absolute;
-    left: 21px;
-    top: 35px;
-    border-radius: 100%;
-  }
-}
-</style>
 <h3>INDEXING: {{ index.indexer.profile.full_name|upper  }}</h3>
 
-<ul class="timeline">
-    <!-- add for loop here -->
-    <li>
-      <p class="timeline-date"><p>
-      <div class="timeline-content">
-        <h5>{{ index.state.friendly  }}</h5>
+<ul class="timeline-dash">
+  <!-- add for loop here -->
+  {% for item in timeline %}
+ {% if item.date %}
+  <li>
+      <p class="timeline-dash-date">{{ item.date|date:"Y-m-d" }}</p>
+      <div class="timeline-content-closed">
+        <h5> {{ item.stage }}</h5>
       </div>
     </li>
+  {% endif %}
+   
+      {% if forloop.last %} <li>  <p class="timelined-dash-date"></p> <div class="timeline-content-open"><h5> {{ index.state.friendly  }}   </h5></li></div>{% endif %}
 
+  {% endfor %}
+    
 </ul>
-<hr />
-
+<div class="dash-container" >
 <h4>Assignment</h4>
 {{index.note_from_indexer}}
 <table class="table table-bordered">
@@ -118,7 +64,7 @@ Edit on
   <button class="btn btn-success" name="send_invite_author" id="send_invite_author" type="submit">Send Request</button>
 </form>
 {% elif copyedit.completed and copyedit.editor_review and copyedit.author_invited %}
-<hr />
+
 <h4>Author Revision</h4>
 <table class="table table-bordered">
   <tr>
@@ -146,3 +92,4 @@ Edit on
 {% include 'shared/review_files.html' with file_data=copyedit.author_files.all %}
 
 {% endif %}
+</div>

@@ -127,7 +127,29 @@ def onetasker_tasks(user):
 		completed.append({'assignment':assignment, 'type': 'indexing'})
 
 	return {'completed':completed, 'active':active}
+def build_time_line_editing_copyedit(copyedit):
+	timeline = []
 
+	timeline.append({'stage': 'Requested', 'date': copyedit.requested })
+	timeline.append({'stage': 'Accepted', 'date': copyedit.accepted })
+	timeline.append({'stage': 'Declined', 'date': copyedit.declined })
+	timeline.append({'stage': 'Completed', 'date': copyedit.completed })
+	timeline.append({'stage': 'Due', 'date': copyedit.due })
+	timeline.append({'stage': 'Editor Review', 'date': copyedit.editor_review })
+	timeline.append({'stage': 'Author Invited', 'date': copyedit.author_invited })
+	timeline.append({'stage': 'Author completed', 'date': copyedit.author_completed })
+
+	return timeline
+def build_time_line_editing_indexer(index):
+	timeline = []
+
+	timeline.append({'stage': 'Requested', 'date': index.requested })
+	timeline.append({'stage': 'Accepted', 'date': index.accepted })
+	timeline.append({'stage': 'Declined', 'date': index.declined })
+	timeline.append({'stage': 'Completed', 'date': index.completed })
+	timeline.append({'stage': 'Due', 'date': index.due })
+
+	return timeline
 def build_time_line(book):
 	timeline = []
 

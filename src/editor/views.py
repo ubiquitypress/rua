@@ -795,7 +795,7 @@ def view_copyedit(request, submission_id, copyedit_id):
 		'author_include': 'editor/editing.html',
 		'submission_files': 'editor/view_copyedit.html',
 		'email_text': email_text,
-		'timeline': core_logic.build_time_line(book),
+		'timeline': core_logic.build_time_line_editing_copyedit(copyedit),
 	}
 
 	return render(request, template, context)
@@ -826,6 +826,7 @@ def assign_indexer(request, submission_id):
 		'author_include': 'editor/editing.html',
 		'submission_files': 'editor/assign_indexer.html',
 		'email_text': models.Setting.objects.get(group__name='email', name='index_request'),
+
 	}
 
 	return render(request, template, context)
@@ -841,6 +842,7 @@ def view_index(request, submission_id, index_id):
 		'index': index,
 		'author_include': 'editor/editing.html',
 		'submission_files': 'editor/view_index.html',
+		'timeline': core_logic.build_time_line_editing_indexer(index),
 
 	}
 

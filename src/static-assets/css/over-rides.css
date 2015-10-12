@@ -540,6 +540,65 @@ body > div.container > div > div.col-md-4.dash-right > div > ul > li > div > div
     color:#ffffff;
     box-shadow: none;
 }
+
+.timeline-dash {
+  list-style: none;
+}
+
+  .timeline-dash  > li {
+    overflow: hidden;
+    margin-top:-15px;
+    margin-bottom:-10px;
+    position: relative;
+  }
+  .timeline-dash-date {
+    width: 90px;
+    float: left;
+    margin-top: 10px;
+    padding-top:15px;
+  }
+  .timeline-content-closed {
+    width: 50%;
+    float: left;
+    border-left: 4px #e5e5d1 solid;
+    padding-left: 30px;
+    margin-left: 40px;
+    padding-top:5px;
+    margin-top: 13.8px;
+  }
+  .timeline-content-open {
+    width: 50%;
+    float: left;
+    border-left: 4px #e5e5d1 solid;
+    padding-left: 30px;
+    margin-left: 130px;
+    margin-top:-8.5px;  }
+    .timeline-content-open:before {
+    content: '';
+    width: 16px;
+    height: 16px;
+     margin-top: 12px;
+    border: 2px solid rgb(159, 197, 88) ; 
+    background: white;
+    position: absolute;
+    left: 125px;
+    top: 10px;
+    border-radius: 100%;
+  }
+  .timeline-content-closed:before {
+    content: '';
+    width: 15px;
+    height: 15px;
+    background: rgb(159, 197, 88);
+    position: absolute;
+    left: 125px;
+    top: 24px;
+     margin-top: 5px;
+    border-radius: 100%;
+  }
+
+
+
 .read {
   background-color: rgb(69, 86, 104);
   border-color: rgb(69, 86, 104);
