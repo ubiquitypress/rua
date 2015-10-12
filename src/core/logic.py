@@ -144,6 +144,7 @@ def build_time_line_editing_copyedit(copyedit):
 		timeline.append({'stage': 'Author completed', 'date': copyedit.author_completed })
 	else:
 		timeline.append({'stage': 'Declined', 'date': copyedit.declined,'declined': True })
+		timeline.append({'stage': 'Due', 'date': copyedit.due,'overdue':False   })
 
 	return timeline
 def build_time_line_editing_indexer(index):
@@ -162,23 +163,24 @@ def build_time_line_editing_indexer(index):
 			timeline.append({'stage': 'Due', 'date': index.due,'overdue':False   })
 	else:
 		timeline.append({'stage': 'Declined', 'date': index.declined,'declined': True  })
+		timeline.append({'stage': 'Due', 'date': index.due,'overdue':False   })
 
 	return timeline
 def build_time_line(book):
 	timeline = []
-
-	timeline.append({'stage': 'Proposal', 'date': book.stage.proposal})
-	timeline.append({'stage': 'Submission', 'date': book.stage.submission})
-	timeline.append({'stage': 'Review', 'date': book.stage.review})
-	timeline.append({'stage': 'Internal Review', 'date': book.stage.internal_review})
-	timeline.append({'stage': 'External Review', 'date': book.stage.external_review})
-	timeline.append({'stage': 'Editing', 'date': book.stage.editing})
-	timeline.append({'stage': 'Copyediting', 'date': book.stage.copyediting})
-	timeline.append({'stage': 'Indexing', 'date': book.stage.indexing})
-	timeline.append({'stage': 'Typesetting', 'date': book.stage.typesetting})
-	timeline.append({'stage': 'Production', 'date': book.stage.production})
-	timeline.append({'stage': 'Publication', 'date': book.stage.publication})
-	timeline.append({'stage': 'Declined', 'date': book.stage.declined})
+	if book.stage:
+		timeline.append({'stage': 'Proposal', 'date': book.stage.proposal})
+		timeline.append({'stage': 'Submission', 'date': book.stage.submission})
+		timeline.append({'stage': 'Review', 'date': book.stage.review})
+		timeline.append({'stage': 'Internal Review', 'date': book.stage.internal_review})
+		timeline.append({'stage': 'External Review', 'date': book.stage.external_review})
+		timeline.append({'stage': 'Editing', 'date': book.stage.editing})
+		timeline.append({'stage': 'Copyediting', 'date': book.stage.copyediting})
+		timeline.append({'stage': 'Indexing', 'date': book.stage.indexing})
+		timeline.append({'stage': 'Typesetting', 'date': book.stage.typesetting})
+		timeline.append({'stage': 'Production', 'date': book.stage.production})
+		timeline.append({'stage': 'Publication', 'date': book.stage.publication})
+		timeline.append({'stage': 'Declined', 'date': book.stage.declined})
 
 	return timeline
 	
