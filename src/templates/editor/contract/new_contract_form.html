@@ -1,7 +1,11 @@
   {% load bootstrap3 %}
  </br>
   <div class="file-sub-heading container-fluid">
-  <h4>Upload Contract</h4>
+    {% if new_contract_form.instance.pk %}
+  <h4>Update Contract</h4> 
+  {% else %}
+    <h4>Upload Contract</h4> 
+    {% endif %}
 </div>
   <p>If no author sign off date is set, the author will be emailed asking them to compelet the sign off process.</p>
    <form method="post" class="form" enctype="multipart/form-data">
@@ -25,7 +29,11 @@
         <label class="control-label" for="id_title">Contract File</label>
           <div class="input-group">
              <span class="input-group-btn">
+                    {% if new_contract_form.instance.pk %}
+                    <span class="btn btn-accept btn-browse btn-file">
+                      {% else %}
                  <span class="btn btn-task btn-file">
+                     {% endif %}
                      Browse&hellip; <input type="file" id="contract_file" name="contract_file">
                  </span>
              </span>
@@ -37,9 +45,14 @@
    <hr />
    <div class="col-md-6">
      <br />
-     <button name="next_stage" type="submit" class="btn btn-task">
+      {% if new_contract_form.instance.pk %}
+     <button name="next_stage" type="submit" class="btn btn-accept btn-round-half">
+      {% else %}
+  <button name="next_stage" type="submit" class="btn btn-task">
+      {% endif %}
       <!-- might need to change it to "fa-cloud-upload" -->
-         <i class="fa fa-file-o"></i>&nbsp;  Upload Contract
+
+        {% if new_contract_form.instance.pk %} <i class="fa fa-cloud-upload"></i>&nbsp;  Update {% else %} <i class="fa fa-file-o"></i>&nbsp;  Upload {% endif %} Contract
      </button>
      {% if action == 'edit' %}
      <a href="{% url 'contract_manager' submission.id %}" class="btn btn-danger btn-round-half">Cancel</a>
