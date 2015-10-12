@@ -8,12 +8,12 @@
   	<tr>
   		<th>Editor</th>
   		<td>{{ submission.contract.editor_signed_off }}</td>
-  		<td><a href="{% url 'serve_file' submission.id submission.contract.editor_file.id %}" class="btn btn-xs btn-primary"><i class="fa fa-download">&nbsp;</i>Download</a></td>
+  		<td><a href="{% url 'serve_file' submission.id submission.contract.editor_file.id %}" class="btn btn-xs btn-task">&nbsp;&nbsp;<i class="fa fa-cloud-download">&nbsp;</i>&nbsp;Download &nbsp;&nbsp;</a></td>
 	</tr>
 	<tr>
 		<th>Author</th>
   		<td>{% if not submission.contract.author_signed_off %}<a href="{% url 'author_contract_signoff' submission.id submission.contract.id %}" class="btn btn-xs btn-primary"><i class="fa fa-check">&nbsp;</i>Sign Off</a>{% else %}{{ submission.contract.author_signed_off }}{% endif %}</td>
-  		<td>{% if submission.contract.author_file %}<a href="{% url 'serve_file' submission.id submission.contract.author_file.id %}" class="btn btn-xs btn-primary"><i class="fa fa-download">&nbsp;</i>Download</a>{% else %}No File{% endif %}</td>
+  		<td>{% if submission.contract.author_file %}<a href="{% url 'serve_file' submission.id submission.contract.author_file.id %}" class="btn btn-xs btn-task">&nbsp;&nbsp;<i class="fa fa-cloud-download">&nbsp;</i>&nbsp;Download &nbsp;&nbsp;</a>{% else %}No File{% endif %}</td>
 	</tr>
 	</table>
 </table>
