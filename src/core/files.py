@@ -47,7 +47,7 @@ def handle_onetasker_file(file, book, assignment, kind):
 	return new_file
 
 ## File helpers
-def handle_file_update(file, old_file, book, kind, owner):
+def handle_file_update(file, old_file, book, kind, owner, label=None):
 
 	original_filename = str(file._get_name())
 	filename = str(uuid4()) + str(os.path.splitext(original_filename)[1])
@@ -85,6 +85,10 @@ def handle_file_update(file, old_file, book, kind, owner):
 	old_file.uuid_filename=filename
 	old_file.date_uploaded=timezone.now()
 	old_file.owner=owner
+
+	if label:
+		old_file.label = label
+
 	old_file.save()
 
 	return path

@@ -1,6 +1,13 @@
 from django import forms
 from django.forms import ModelForm
 from core import models as core_models
+from revisions import models as revision_models
+
+class RevisionForm(ModelForm):
+
+	class Meta:
+		model = revision_models.Revision
+		fields = ('notes_from_editor', 'due')
 
 class FormatForm(forms.ModelForm):
 

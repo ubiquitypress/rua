@@ -16,6 +16,7 @@ from review import models as review_models
 from manager import models as manager_models
 from submission import forms as submission_forms
 from editor import forms
+from revisions import models as revision_models
 
 
 @is_editor
@@ -145,6 +146,40 @@ def editor_review_round(request, submission_id, round_number):
 		'revision_requests': revision_models.Revision.objects.filter(book=book, revision_type='review'),
 		'internal_review_assignments': internal_review_assignments,
 		'external_review_assignments': external_review_assignments,
+	}
+
+	return render(request, template, context)
+
+@is_book_editor
+def request_revisions(request, submission_id, returner):
+	book = get_object_or_404(models.Book, pk=submission_id)
+	email_text = models.Setting.objects.get(group__name='email', name='request_revisions').value
+	form = forms.RevisionForm()
+
+	if revision_models.Revision.objects.filter(book=book, completed__isnull=True, revision_type=returner):
+		messages.add_message(request, messages.WARNING, 'There is already an outstanding revision request for this book.')
+
+	if request.POST:
+		form = forms.RevisionForm(request.POST)
+		if form.is_valid():
+			new_revision_request = form.save(commit=False)
+			new_revision_request.book = book
+			new_revision_request.revision_type = returner
+			new_revision_request.requestor = request.user
+			new_revision_request.save()
+
+			email_text = request.POST.get('id_email_text')
+			logic.send_requests_revisions(book, new_revision_request, email_text)
+			log.add_log_entry(book, request.user, 'revisions', '%s %s requested revisions for %s' % (request.user.first_name, request.user.last_name, book.title), 'Revisions Requested')
+
+			if returner == 'review':
+				return redirect(reverse('editor_review', kwargs={'submission_id': submission_id}))
+
+	template = 'editor/revisions/request_revisions.html'
+	context = {
+		'submission': book,
+		'form': form,
+		'email_text': email_text,
 	}
 
 	return render(request, template, context)

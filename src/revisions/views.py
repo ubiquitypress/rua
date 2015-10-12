@@ -18,43 +18,6 @@ import mimetypes
 import mimetypes as mime
 from uuid import uuid4
 
-@is_book_editor
-def request_revisions(request, submission_id, returner):
-	book = get_object_or_404(core_models.Book, pk=submission_id)
-	email_text = core_models.Setting.objects.get(group__name='email', name='request_revisions').value
-	form = forms.RevisionForm()
-
-	if models.Revision.objects.filter(book=book, completed__isnull=True, revision_type=returner):
-		messages.add_message(request, messages.WARNING, 'There is already an outstanding revision request for this book.')
-
-	if request.POST:
-		form = forms.RevisionForm(request.POST)
-		if form.is_valid():
-			new_revision_request = form.save(commit=False)
-			new_revision_request.book = book
-			new_revision_request.revision_type = returner
-			new_revision_request.requestor = request.user
-			new_revision_request.save()
-
-			email_text = request.POST.get('id_email_text')
-			logic.send_requests_revisions(book, new_revision_request, email_text)
-			log.add_log_entry(book, request.user, 'revisions', '%s %s requested revisions for %s' % (request.user.first_name, request.user.last_name, book.title), 'Revisions Requested')
-
-			if returner == 'submission':
-				return redirect(reverse('view_new_submission', kwargs={'submission_id': submission_id}))
-			elif returner == 'review':
-				return redirect(reverse('view_review', kwargs={'submission_id': submission_id}))
-
-	template = 'revisions/request_revisions.html'
-	context = {
-		'book': book,
-		'form': form,
-		'email_text': email_text,
-	}
-
-	return render(request, template, context)
-
-
 @login_required
 def revision(request, revision_id, submission_id=None):
 	revision = get_object_or_404(models.Revision, pk=revision_id, book__owner=request.user, completed__isnull=True)

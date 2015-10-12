@@ -16,10 +16,10 @@
 
 {% if revision_requests %}
   <hr />
-  <h2>Revisions Requests <button class="btn btn-xs btn-task pull-right"><i class="fa fa-plus">&nbsp;</i>Request Revisions</button></h2>
+  <h2>Revisions Requests <a href="{% url 'request_revisions' submission.id 'review' %}" class="btn btn-xs btn-task pull-right"><i class="fa fa-plus">&nbsp;</i>Request Revisions</a></h2>
   <table class="table table-bordered">
     <tr>
-      <th>Requested</th>
+      <th>Revision</th>
       <th>Requested</th>
       <th></th>
     </tr>

@@ -11,7 +11,7 @@ from workflow.logic import order_data, decode_json
 from submission import models as submission_models
 from revisions import models as revision_models, forms as revision_forms
 from review import models as review_models
-from core.files import handle_file_update,handle_attachment,handle_file
+from core.files import handle_file_update, handle_attachment,handle_file
 from copyedit.views import handle_copyedit_file
 from typeset import forms as typeset_forms
 from typeset.views import handle_typeset_file
@@ -194,7 +194,8 @@ def revise_file(request, submission_id, revision_id, file_id):
 
 	if request.POST:
 		for file in request.FILES.getlist('update_file'):
-			handle_file_update(file, _file, book, _file.kind, request.user)
+			file_label = request.POST.get('file_label', None)
+			handle_file_update(file, _file, book, _file.kind, request.user, label=file_label)
 			messages.add_message(request, messages.INFO, 'File updated.')
 
 		return redirect(reverse('author_revision', kwargs={'submission_id': submission_id, 'revision_id': revision.id}))
