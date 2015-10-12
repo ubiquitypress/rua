@@ -1,0 +1,64 @@
+{% extends "secondary_page.html" %}
+{% load static from staticfiles %}
+{% load bootstrap3 %}
+
+{% block title %}Contract Manager{% endblock %}
+{% block page-title %} Contract Manager{% endblock %}
+ {% block page-content %}
+	<div class="col-md-12">
+  {% if submission.contract and action != 'normal' %}
+   </br>
+  <div class="col-md-12 file-sub-heading container-fluid" style="align:justify;height:40px">
+ <h4>&nbsp;Contract Info &nbsp;<a href="{% url 'contract_manager_edit' submission.id submission.contract.id %}" class="btn  btn-trasnparent-white" style="position: absolute;right:20;margin-top:-3.7px"><i class="fa fa-edit"></i></a></h4>
+</div>
+</br><br/><br/>
+   <table class="table table-bordered">
+  	<tr>
+  		<th width="40%" >Title</th>
+  		<th>Editor Sign Off</th>
+  		<th >Author Sign Off</th>
+  	</tr>
+  	<tr>
+  		<td>{{ submission.contract.title }}</td>
+  		<td>{{ submission.contract.editor_signed_off }}</td>
+      <td>{{ submission.contract.author_signed_off }}</td>
+  	</tr>
+    <tr>
+      </table> 
+      <table  class="table table-bordered"> 
+      <th colspan="4">Notes</th>
+    </tr>
+    <tr>
+      <td colspan="4">{% if submission.contract.notes %}{{ submission.contract.notes }}{% else %}No notes entered{% endif %}</td>
+    </tr>
+  </table> </br>
+  <h3><span class="label label-task">&nbsp;&nbsp;&nbsp;&nbsp;Files&nbsp; &nbsp;&nbsp;   &nbsp;&nbsp; &nbsp;   </span></h3>
+  <table class="table table-condensed table-striped">
+      <tr>
+      <td>Editor File</td>
+      <td><a href="{% url 'serve_file' submission.id submission.contract.editor_file.id %}" class="btn btn-task " ><i class="fa fa-cloud-download"> &nbsp; Download</i></a></td>
+      </tr>
+      <tr>
+         <td>Author File</td>
+      <td>{% if submission.contract.author_file %}<a href="{% url 'serve_file' submission.id submission.contract.author_file.id %}" class="btn btn-task" ><i class="fa fa-cloud-download"> &nbsp; Download</i></i>Download</a>{% else %}No file uploaded{% endif %}</td>
+    </tr>
+  </table>
+  {% else %}
+  {% include "editor/contract/new_contract_form.html" %}
+  {% endif %}
+  </div>
+{% endblock %}
+
+{% block js %}
+{{ block.super }}
+<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+<script type="text/javascript" src="{% static "js/fancyfile.js" %}"></script>
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css">
+<script src="http://code.jquery.com/ui/1.11.0/jquery-ui.js"></script>
+ <script>
+  $(document).ready(function() {
+        $('#id_editor_signed_off').datepicker({ dateFormat: 'yy-mm-dd' }).val();
+        $('#id_author_signed_off').datepicker({ dateFormat: 'yy-mm-dd' }).val();
+    });
+  </script>
+{% endblock js %}

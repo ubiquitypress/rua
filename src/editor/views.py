@@ -848,4 +848,52 @@ def view_index(request, submission_id, index_id):
 
 	return render(request, template, context)
 
+## CONTRACTS ##
 
+@is_book_editor
+def contract_manager(request, submission_id, contract_id=None):
+	submission = get_object_or_404(models.Book, pk=submission_id)
+	action = 'normal'
+	if contract_id:
+		new_contract_form = forms.UploadContract(instance=submission.contract)
+		action = 'edit'
+	else:
+		new_contract_form = forms.UploadContract()
+
+	if request.POST:
+		if contract_id:
+			new_contract_form = forms.UploadContract(request.POST, request.FILE, instance=submission.contract)
+		else:
+			new_contract_form = forms.UploadContract(request.POST, request.FILES)
+		if new_contract_form.is_valid():
+			new_contract = new_contract_form.save(commit=False)
+
+			author_file = request.FILES.get('contract_file')
+			new_file = handle_file(author_file, submission, 'contract', request.user)
+
+			new_contract.editor_file = new_file
+			new_contract.save()
+			submission.contract = new_contract
+			submission.save()
+
+			if not new_contract.author_signed_off:
+				email_text = models.Setting.objects.get(group__name='email', name='contract_author_sign_off').value
+				logic.send_author_sign_off(submission, email_text, sender=request.user)
+
+			if contract_id:
+				_kwargs = {'submission_id': submission.id, 'contract_id': contract_id}
+			else:
+				_kwargs = {'submission_id': submission.id}
+
+			return redirect(reverse('contract_manager', kwargs=_kwargs))
+
+	template = 'editor/contract/contract_manager.html'
+	context = {
+		'submission': submission,
+		'new_contract_form': new_contract_form,
+		'action': action,
+	}
+
+	return render(request, template, context)
+
+## END CONTRACTS ##
