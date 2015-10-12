@@ -27,6 +27,25 @@ Edit on
     float: left;
     border-left: 4px #e5e5d1 solid;
     padding-left: 30px;
+   padding-top:5px;
+  }
+  .timeline-content-open {
+    width: 60%;
+    float: left;
+    border-left: 4px #e5e5d1 solid;
+    padding-left: 30px;
+    padding-top:5px;
+  }
+    .timeline-content-open:before {
+    content: '';
+    width: 22px;
+    height: 22px;
+    border: 2px solid rgb(159, 197, 88) ; 
+    background: white;
+    position: absolute;
+    left: 21px;
+    top: 35px;
+    border-radius: 100%;
   }
   .timeline-content:before {
     content: '';
@@ -43,13 +62,13 @@ Edit on
 <h3>COPYEDITING: {{ copyedit.copyeditor.profile.full_name|upper  }}</h3>
 
 <ul class="timeline">
+  <!-- add for loop here -->
     <li>
       <p class="timeline-date"><p>
       <div class="timeline-content">
         <h5>{{ copyedit.state.friendly  }}</h5>
       </div>
     </li>
-
 </ul>
 <hr />
 <h4>Assignment</h4>
