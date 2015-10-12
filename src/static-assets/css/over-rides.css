@@ -557,7 +557,7 @@ body > div.container > div > div.col-md-4.dash-right > div > ul > li > div > div
     margin-top: 10px;
     padding-top:15px;
   }
-  .timeline-content-closed {
+  .timeline-content-dash-closed {
     width: 50%;
     float: left;
     border-left: 4px #e5e5d1 solid;
@@ -566,14 +566,14 @@ body > div.container > div > div.col-md-4.dash-right > div > ul > li > div > div
     padding-top:5px;
     margin-top: 13.8px;
   }
-  .timeline-content-open {
+  .timeline-content-dash-open {
     width: 50%;
     float: left;
     border-left: 4px #e5e5d1 solid;
     padding-left: 30px;
     margin-left: 130px;
     margin-top:-8.5px;  }
-    .timeline-content-open:before {
+    .timeline-content-dash-open:before {
     content: '';
     width: 16px;
     height: 16px;
@@ -585,7 +585,7 @@ body > div.container > div > div.col-md-4.dash-right > div > ul > li > div > div
     top: 10px;
     border-radius: 100%;
   }
-  .timeline-content-closed:before {
+  .timeline-content-dash-closed:before {
     content: '';
     width: 15px;
     height: 15px;
@@ -596,8 +596,26 @@ body > div.container > div > div.col-md-4.dash-right > div > ul > li > div > div
      margin-top: 5px;
     border-radius: 100%;
   }
-
-
+  .timeline-content-dash-overdue {
+    width: 50%;
+    float: left;
+    border-left: 4px #e5e5d1 solid;
+    padding-left: 30px;
+    margin-left: 40px;
+    padding-top:5px;
+    margin-top: 13.8px;
+  }
+  .timeline-content-dash-overdue:before {
+    content: '';
+    width: 15px;
+    height: 15px;
+    background: red;
+    position: absolute;
+    left: 125px;
+    top: 24px;
+     margin-top: 5px;
+    border-radius: 100%;
+  }
 
 .read {
   background-color: rgb(69, 86, 104);

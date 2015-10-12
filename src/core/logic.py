@@ -6,7 +6,6 @@ from core.decorators import is_copyeditor, is_typesetter, is_indexer
 from core import models
 from core.cache import cache_result
 from django.db.models import Q
-
 from revisions import models as revisions_models
 
 def clean_email_list(addresses):
@@ -131,31 +130,38 @@ def build_time_line_editing_copyedit(copyedit):
 	timeline = []
 
 	timeline.append({'stage': 'Requested', 'date': copyedit.requested })
-	timeline.append({'stage': 'Accepted', 'date': copyedit.accepted })
-	timeline.append({'stage': 'Declined', 'date': copyedit.declined })
-	if copyedit.completed > copyedit.due:
-		timeline.append({'stage': 'Due', 'date': copyedit.due })
-		timeline.append({'stage': 'Completed', 'date': copyedit.completed })
+
+	if copyedit.accepted:
+		timeline.append({'stage': 'Accepted', 'date': copyedit.accepted })
+		if copyedit.completed > copyedit.due:
+			timeline.append({'stage': 'Due', 'date': copyedit.due,'overdue':True  })
+			timeline.append({'stage': 'Completed', 'date': copyedit.completed,'overdue':True  })
+		else:
+			timeline.append({'stage': 'Completed', 'date': copyedit.completed,'overdue':False  })
+			timeline.append({'stage': 'Due', 'date': copyedit.due,'overdue':False  })
+		timeline.append({'stage': 'Editor Review', 'date': copyedit.editor_review })
+		timeline.append({'stage': 'Author Invited', 'date': copyedit.author_invited })
+		timeline.append({'stage': 'Author completed', 'date': copyedit.author_completed })
 	else:
-		timeline.append({'stage': 'Completed', 'date': copyedit.completed })
-		timeline.append({'stage': 'Due', 'date': copyedit.due })
-	timeline.append({'stage': 'Editor Review', 'date': copyedit.editor_review })
-	timeline.append({'stage': 'Author Invited', 'date': copyedit.author_invited })
-	timeline.append({'stage': 'Author completed', 'date': copyedit.author_completed })
+		timeline.append({'stage': 'Declined', 'date': copyedit.declined,'declined': True })
 
 	return timeline
 def build_time_line_editing_indexer(index):
 	timeline = []
 
 	timeline.append({'stage': 'Requested', 'date': index.requested })
-	timeline.append({'stage': 'Accepted', 'date': index.accepted })
-	timeline.append({'stage': 'Declined', 'date': index.declined })
-	if index.completed > index.due:
-		timeline.append({'stage': 'Due', 'date': index.due })
-		timeline.append({'stage': 'Completed', 'date': index.completed })
+
+	if index.accepted:
+		timeline.append({'stage': 'Accepted', 'date': index.accepted })
+		if index.completed > index.due:
+			timeline.append({'stage': 'Due', 'date': index.due,'overdue':True })
+			timeline.append({'stage': 'Completed', 'date': index.completed,'overdue':True })
+		else:
+			timeline.append({'stage': 'Completed', 'date': index.completed,'overdue':False  })
+
+			timeline.append({'stage': 'Due', 'date': index.due,'overdue':False   })
 	else:
-		timeline.append({'stage': 'Completed', 'date': index.completed })
-		timeline.append({'stage': 'Due', 'date': index.due })
+		timeline.append({'stage': 'Declined', 'date': index.declined,'declined': True  })
 
 	return timeline
 def build_time_line(book):
