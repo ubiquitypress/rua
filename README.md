@@ -57,6 +57,7 @@ Core developers:
 
 - Andy Byers
 - Mauro Sanchez
+- Ioannis Cleary
 - Paige MacKay
 
 # Milestones
