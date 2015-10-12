@@ -238,7 +238,11 @@ body > div.container > div > div.col-md-4.dash-right > div > ul > li > div > div
   background-color: #00A6A1;
   color: #FFF;
   margin-bottom:5px;
-
+}
+.file-sub-heading {
+  background-color: #558381;
+  color: #FFF;
+  margin-bottom:5px;
 }
 .file-icon-large{
   font-size:70px !important
@@ -523,6 +527,18 @@ body > div.container > div > div.col-md-4.dash-right > div > ul > li > div > div
     color:#ffffff;
     box-shadow: none;
 }
+.label-task-table{
+  background-color:#77A7A5 !important;
+  color:#ffffff  !important;
+}
+.label-task-table-2{
+  background-color:#A0A9A9 !important;
+  color:#ffffff  !important;
+}
+.label-task{
+  background-color:#558381 !important;
+  color:#ffffff  !important;
+}
 .btn-task{
   background-color:rgb(68, 86, 104);
   color:#ffffff;
@@ -539,6 +555,23 @@ body > div.container > div > div.col-md-4.dash-right > div > ul > li > div > div
     background: #2D5355;
     color:#ffffff;
     box-shadow: none;
+}
+.btn-trasnparent-white{
+  background-color: transparent;
+  color:#ffffff;
+  border-radius: 24px;
+  border-color: rgba(255,255,255,0.4);
+}
+ 
+.btn-trasnparent-white:hover, .btn-trasnparent-white:focus, .btn-trasnparent-white:active, .btn-trasnparent-white.active, .open > .dropdown-toggle.btn-trasnparent-white {
+  color:#ffffff;
+   background:rgba(255,255,255,0.3);
+  border-color:white;
+}
+ 
+.btn-trasnparent-white:active, .btn-trasnparent-white.active {
+    color:#000000;
+     border-color:white;
 }
 
 .timeline-dash {

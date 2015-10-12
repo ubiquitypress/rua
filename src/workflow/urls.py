@@ -20,10 +20,6 @@ urlpatterns = patterns('',
     url(r'^new/$', 'workflow.views.new_submissions', name='new_submissions'),
     url(r'^new/(?P<submission_id>\d+)/$', 'workflow.views.view_new_submission', name='view_new_submission'),
 
-    # Contract
-    url(r'^contract/(?P<submission_id>\d+)/manage/$', 'workflow.views.contract_manager', name='contract_manager'),
-    url(r'^contract/(?P<submission_id>\d+)/manage/(?P<contract_id>\d+)/$', 'workflow.views.contract_manager', name='contract_manager_edit'),
-
     # Decline
     url(r'^submission/(?P<submission_id>\d+)/decline/$', 'workflow.views.decline_submission', name='decline_submission'),
 
