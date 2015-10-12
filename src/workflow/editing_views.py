@@ -12,7 +12,7 @@ from core import email
 from core.decorators import is_editor, is_book_editor, is_book_editor_or_author
 from core.cache import cache_result
 from workflow.views import handle_file, handle_attachment
-from copyedit import forms
+from core import forms
 from workflow import logic
 
 from pprint import pprint

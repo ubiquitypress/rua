@@ -51,7 +51,6 @@ INSTALLED_APPS = (
     'api',
     'cron',
     'revisions',
-    'copyedit',
     'indexing',
     'typeset',
     'author',
