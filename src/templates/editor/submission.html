@@ -93,6 +93,11 @@
         </div>
         </a>
         {% endif %}
+        <a href="{% url 'catalog' submission.id %}">
+        <div class="dash-menu">
+            <h5>Catalog <i class="fa fa-chevron-right pull-right"></i></h5>
+        </div>
+        </a>
         {% include "editor/snippets/available_actions.html" %}
     </div>
 

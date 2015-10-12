@@ -18,7 +18,7 @@
     <td>{{ reviewer.due }}</td>
     <td>{% if reviewer.completed %}{{ reviewer.completed }}{% elif reviewer.declined %}{% else %}--{% endif %}</td>
     <td>{% if reviewer.completed %}{{ reviewer.get_recommendation_display }}{% else %}--{% endif %}</td>
-    <td>{% if reviewer.completed %}<a href="{% url 'view_review_assignment' submission.id reviewer.id %}">View Review</a>{% else %}--{% endif %}</td>
+    <td>{% if reviewer.completed %}<a href="{% url 'editor_review_assignment' submission.id submission.get_latest_review_round reviewer.id %}">View Review</a>{% else %}--{% endif %}</td>
   </tr>
 {% empty %}
   <tr>

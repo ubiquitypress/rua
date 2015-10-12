@@ -1,0 +1,305 @@
+{% extends "base.html" %}
+{% load static from staticfiles %}
+{% load bootstrap3 %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block css %}
+
+    <style type="text/css">
+    .navbar {
+        margin-bottom: 0px !important;
+    }
+
+    .timeline > li > .timeline-badge{
+        left: 92% !important;
+    }
+
+    .timeline > li > .timeline-panel {
+        width: 80% !important;
+        float: none;
+    }
+
+    .timeline:before {
+        left: 92% !important;
+    }
+    </style>
+    <link href="{% static "css/timeline.css" %}" rel="stylesheet">
+    <link type='text/css' href="{% static "css/jq-ui.css" %}" rel="stylesheet">
+    <link type='text/css' href="{% static "css/jquery.tagit.css" %}" rel="stylesheet">
+{% endblock %}
+
+{% block body %}
+
+<div class="row">
+    <div class="col-md-12 book-heading">
+        <h3>Book {{ submission.id }}: {{ submission.title }}</h3>
+    </div>
+    <div class="col-md-3 dash-left" style="background-color: #EBEBEB;">
+        <div class="dash-container">
+            <h4>{% if submission.prefix %}{{ submission.prefix }} {% endif %}{{ submission.title }}</h4> 
+            <h5 class="author-note">{% if submission.subtitle %}{{ submission.subtitle }}{% endif %}</h5>
+            <table class="table table-bordered table-condensed small">
+                <tr>
+                    <th>Series</th>
+                    <td>{{ submission.series }}</td>
+                </tr>
+                <tr>
+                    <th>Type</th>
+                    <td>{{ submission.get_book_type_display }}</td>
+                </tr>
+                <tr>
+                    <th>License</th>
+                    <td>{{ submission.license.short_name }}</td>
+                </tr>
+                <tr>
+                    <th>Review Type</th>
+                    <td>{{ submission.get_review_type_display }}</td>
+                </tr>
+            </table>
+        </div>
+        <a href="{% url 'editor_tasks' submission.pk %}">
+        <div class="dash-menu">
+            <h5>My Tasks <i class="fa fa-chevron-right pull-right"></i></h5>
+        </div>
+        </a>
+
+        <a href="{% url 'editor_status' submission.pk %}">
+        <div class="dash-menu">
+            <h5>Current Status <i class="fa fa-chevron-right pull-right"></i></h5>
+        </div>
+        </a>
+        <a href="{% url 'editor_submission' submission.pk %}">
+        <div class="dash-menu">
+            <h5>Submission Details <i class="fa fa-chevron-right pull-right"></i></h5>
+        </div>
+        </a>
+        {% if submission.stage.review %}
+        <a href="{% url 'editor_review' submission.pk %}">
+        <div class="dash-menu">
+            <h5>Review <i class="fa fa-chevron-right pull-right"></i></h5>
+        </div>
+        </a>
+        {% endif %}
+        {% if submission.stage.editing %}
+        <a href="{% url 'editor_editing' submission.pk %}">
+        <div class="dash-menu">
+            <h5>Editing <i class="fa fa-chevron-right pull-right"></i></h5>
+        </div>
+        </a>
+        {% endif %}
+        {% if submission.stage.production %}
+        <a href="{% url 'editor_production' submission.id %}">
+        <div class="dash-menu">
+            <h5>Production <i class="fa fa-chevron-right pull-right"></i></h5>
+        </div>
+        </a>
+        {% endif %}
+        <a href="{% url 'catalog' submission.id %}">
+        <div class="dash-menu">
+            <h5>Catalog <i class="fa fa-chevron-right pull-right"></i></h5>
+        </div>
+        </a>
+        {% include "editor/snippets/available_actions.html" %}
+    </div>
+
+    <div class="col-md-9 dash-center">
+        <div class="dash-container">
+        <h4>{{ submission.title }} Catalog</h4>
+
+
+          <ul id="main_summary_tabs" class="nav nav-tabs" role="tablist">
+            <li role="presentation" class="active"><a href="#metadata" aria-controls="home" role="tab" data-toggle="tab">Metadata</a></li>
+            <li role="presentation"><a href="#identifiers" aria-controls="home" role="tab" data-toggle="tab">Identifiers</a></li>
+            <li role="presentation"><a href="#contributors" aria-controls="home" role="tab" data-toggle="tab">Contributors</a></li>
+            <li role="presentation"><a href="#retailers" aria-controls="home" role="tab" data-toggle="tab">Retailers</a></li>
+            <li role="presentation"><a href="#cover" aria-controls="home" role="tab" data-toggle="tab">Cover Image</a></li>
+            <li role="presentation"><a href="#peer-review" aria-controls="home" role="tab" data-toggle="tab">Peer Review</a></li>
+          </ul>
+
+          <!-- Tab panes -->
+          <div class="tab-content">
+            <div role="tabpanel" class="tab-pane active" id="metadata">
+              <form method="POST" action="?metadata=true">
+                {% csrf_token %}
+                <br />
+                <div class="form-group">
+                  <div class="row">
+                    <div class="col-md-12">
+                      {{ metadata_form.errors }}
+                      {% bootstrap_form_errors metadata_form layout='inline' %}
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-4">
+                      {% bootstrap_field metadata_form.prefix %}
+                    </div>
+                    <div class="col-md-4">
+                      {% bootstrap_field metadata_form.title %}
+                    </div>
+                    <div class="col-md-4">
+                      {% bootstrap_field metadata_form.subtitle %}
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-md-4">
+                      {% bootstrap_field metadata_form.series %}
+                    </div>
+                    <div class="col-md-4">
+                      {% bootstrap_field metadata_form.license %}
+                    </div>
+                    <div class="col-md-4">
+                      {% bootstrap_field metadata_form.pages %}
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-md-4">
+                      {% bootstrap_field metadata_form.slug %}
+                    </div>
+                    <div class="col-md-4">
+                      {% bootstrap_field metadata_form.review_type %}
+                    </div>
+                    <div class="col-md-4">
+                      {% bootstrap_field metadata_form.publication_date %}
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-md-6" style="max-height: 200px; overflow-x: scroll;">
+                      {% bootstrap_field metadata_form.languages %}
+                    </div>
+                    <div class="col-md-6">
+                      <div class="aside"><strong>Keywords</strong> Hit space or enter to add a new keyword.</div>
+                      <ul id="tags">
+                        {% for keyword in submission.keywords.all %}<li>{{ keyword }}</li>{% endfor %}
+                      </ul>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-md-12">
+                      {% bootstrap_field metadata_form.description %}
+                    </div>
+                  </div>
+
+                </div>
+
+                <button class="btn btn-success" type="submt">Update Metadata</button>
+              </form>
+            </div>
+
+            <div role="tabpanel" class="tab-pane" id="identifiers">
+              <br />
+              <a href="{% url 'identifiers' submission.id %}" class="btn btn-small btn-primary pull-right">Add/Manage Identifers</a>
+              <br /><br />
+              <table class="table table-bordered">
+                <tr>
+                  <th>Identifier</th>
+                  <th>Value</th>
+                  <th>Displayed?</th>
+                </tr>
+                {% for ident in submission.identifier_set.all %}
+                <tr>
+                  <td>{{ ident.get_identifier_display }}</td>
+                  <td>{{ ident.value }}</td>
+                  <td>{% if ident.displayed %}<i style="color:green;" class="fa fa-check-circle"></i>{% else %}<i style="color:red;" class="fa fa-times-circle"></i>{% endif %}</td>
+                {% empty %}
+                <tr>
+                  <td colspan="3">This book has no identifiers.</td>
+                </tr>
+                {% endfor %}
+              </table>
+            </div>
+            <div role="tabpanel" class="tab-pane" id="contributors">
+              <br />
+              {% if submission.book_type == 'monograph' %}
+              <h4 id="files">Authors</h4>
+              {% include "shared/authors.html" %}
+              {% else %}
+              <h4 id="files">Editors</h4>
+              {% include "shared/editors.html" %}
+              {% endif %}
+            </div>
+            <div role="tabpanel" class="tab-pane" id="retailers">
+              <br />
+              {% include "shared/retailers.html" %}
+            </div>
+            <div role="tabpanel" class="tab-pane" id="cover">
+              <br />
+              <div class="col-md-6">
+                <form method="POST" action="?cover=true" enctype="multipart/form-data">
+                  {% csrf_token %}
+                  {% bootstrap_field cover_form.cover %}
+                  <button class="btn btn-success" type="submt">Submit</button>
+                </form>
+              </div>
+              <div class="col-md-6">
+                <label>Current Cover</label>
+                {% if submission.cover %}
+                <img src="{{ MEDIA_URL }}{{ submission.cover }}" class="img-responsive" />
+                {% else %}
+                <img src="holder.js/350x500" class="img-responsive" />
+                {% endif %}
+              </div>
+            </div>
+
+            <div role="tabpanel" class="tab-pane" id="peer-review">
+              <br />
+              <h4>Summary</h4>
+              <p>NB. This page only shows completed reviews.</p>
+              <ul>
+                {% if internal_review_assignments.count > 1 %}<li>This Book was internally reviewed.</li>{% else %}<li>No internal reivew undertaken.</li>{% endif %}
+                {% if external_review_assignments.count > 1 %}<li>This Book was externally reviewed.</li>{% else %}<li>No external review undertaken.</li>{% endif %}
+              </ul>
+              <h4>Internal</h4>
+              {% include "editor/production/reviewer_block.html" with review_data=internal_review_assignments %}
+              <h4>External</h4>
+              {% include "editor/production/reviewer_block.html" with review_data=external_review_assignments %}
+            </div>
+          </div>
+
+          <hr />
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+
+{% block js %}
+<script type="text/javascript" src="{% static "js/messages.js" %}"></script>
+<script type="text/javascript" src="{% static "js/fancyfile.js" %}"></script>
+<script type="text/javascript">$("textarea").jqte();</script>
+<script type="text/javascript">
+$(document).ready(function() {
+      $('#due_date').datepicker({ dateFormat: 'yy-mm-dd' }).val();
+  });
+</script>
+
+<script>
+$(function() {
+    $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+        localStorage.setItem('catalog_tab', $(this).attr('href'));
+    });
+    var lastTab = localStorage.getItem('catalog_tab');
+    if (lastTab) {
+        $('[href="' + lastTab + '"]').tab('show');
+    }
+});
+</script>
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css">
+<script src="http://code.jquery.com/ui/1.11.0/jquery-ui.js"></script>
+<script src="{% static "js/tag-it.min.js" %}"></script>
+<script type="text/javascript">
+  $(document).ready(function() {
+      $("#tags").tagit();
+  });
+</script>
+<script type="text/javascript">
+  $(document).ready(function() {
+      $('#id_publication_date').datepicker({ dateFormat: 'yy-mm-dd' }).val();
+  });
+</script>
+{% endblock js %}

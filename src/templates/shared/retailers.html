@@ -1,0 +1,21 @@
+<a href="{% url 'retailers' submission.id %}" class="btn btn-small btn-primary pull-right">Add/Manage Retailers</a>
+<br /><br />
+<table class="table table-bordered">
+<tr>
+  <th>Name</th>
+  <th>Link</th>
+  <th>Price</th>
+  <th>Enabled</th>
+</tr>
+{% for retailer in submission.retailer_set.all %}
+<tr>
+  <td>{{ retailer.name }}</td>
+  <td>{{ retailer.link }}</td>
+  <td>{{ retailer.price }}</td>
+  <td>{{ retailer.enabled }}</td>
+{% empty %}
+<tr>
+  <td colspan="4">This book has no retailers.</td>
+</tr>
+{% endfor %}
+</table>

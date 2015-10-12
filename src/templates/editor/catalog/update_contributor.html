@@ -1,23 +1,11 @@
-{% extends "base.html" %}
+{% extends "secondary_page.html" %}
 {% load static from staticfiles %}
 {% load bootstrap3 %}
 
 {% block title %}Update Contributor{% endblock %}
+{% block page-title %}Update Contributor{% endblock %}
 
-{% block breadcrumbs %}
-   <ol class="breadcrumb">
-    <li><a href="{% url 'user_home' %}">User Home</a></li>
-    <li class="">Workflow</li>
-    <li><a href="{% url 'in_production'%}">In Production</a></li>
-    <li>{{ submission.title }}</li>
-    <li><a href="{% url 'catalog' submission.id %}">Catalog</a></li>
-    <li>Contributor</li>
-    <li class="active">{{ contributor.first_name }} {{ contributor.last_name }}</li>
-
-  </ol>
-{% endblock %}
-
-{% block body %}
+{% block page-content %}
 <div class="col-md-12">
 	<br />
     {{ form.errors }}
