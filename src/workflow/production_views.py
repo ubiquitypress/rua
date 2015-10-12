@@ -11,11 +11,10 @@ from core import log
 from core import email
 from core.decorators import is_book_editor
 from core.cache import cache_result
-from typeset import forms
+from core import forms
 from workflow import logic
 from workflow import forms
 from workflow.views import handle_file, handle_file_update, handle_attachment
-from typeset import forms as typeset_forms
 
 from pprint import pprint
 

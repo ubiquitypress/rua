@@ -51,7 +51,6 @@ INSTALLED_APPS = (
     'api',
     'cron',
     'revisions',
-    'typeset',
     'author',
 
     # 3rd Party
