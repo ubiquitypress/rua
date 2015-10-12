@@ -1,0 +1,30 @@
+<table class="table table-striped">
+	<tr>
+		<td width="30%"><strong>Title</strong></td>
+		<td width="25%"><strong>Subtitle</strong></td>
+		<td width="15%"><strong>Series</strong></td>
+		<td width="15%"><strong>License</strong></td>
+		<td width="15%"><strong>Stage</strong></td>
+	</tr>
+	<tr>
+		<td>{% if submission.prefix %}{{ submission.prefix }} {% endif %}{{ submission.title }}</td>
+		<td>{{ submission.subtitle }}</td>
+		<td>{{ submission.series }}</td>
+		<td>{{ submission.license }} {{ submission.license.version }}</td>
+		<td>{{ submission.stage.get_current_stage_display }}</td>
+	</tr>
+	<tr>
+		<td width="30%"><strong>Type</strong></td>
+		<td width="25%"><strong>Slug</strong></td>
+		<td width="15%"><strong>Review Type</strong></td>
+		<td></td>
+		<td></td>
+	</tr>
+	<tr>
+		<td>{{ submission.get_book_type_display }}</td>
+		<td>{{ submission.slug }}</td>
+		<td>{{ submission.get_review_type_display }}</td>
+		<td></td>
+		<td></td>
+	</tr>
+</table>

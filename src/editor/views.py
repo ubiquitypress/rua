@@ -14,7 +14,7 @@ from editor import logic
 from revisions import models as revision_models
 from review import models as review_models
 from manager import models as manager_models
-
+from submission import forms as submission_forms
 from editor import forms
 
 
@@ -340,7 +340,7 @@ def catalog(request, submission_id):
 				cover_form.save()
 				return redirect(reverse('catalog', kwargs={'submission_id': submission_id}))
 
-	template = 'workflow/production/catalog.html'
+	template = 'editor/catalog/catalog.html' 
 	context = {
 		'active': 'production',
 		'submission': book,
@@ -381,7 +381,7 @@ def identifiers(request, submission_id, identifier_id=None):
 
 			return redirect(reverse('identifiers', kwargs={'submission_id': submission_id}))
 
-	template = 'workflow/production/identifiers.html'
+	template = 'editor/catalog/identifiers.html'
 	context = {
 		'submission': book,
 		'identifier': identifier,
@@ -432,7 +432,7 @@ def update_contributor(request, submission_id, contributor_type, contributor_id=
 
 		return redirect(reverse('catalog', kwargs={'submission_id': submission_id}))
 
-	template = 'workflow/production/update_contributor.html'
+	template = 'editor/catalog/update_contributor.html'
 	context = {
 		'submission': book,
 		'form': form,
@@ -673,7 +673,7 @@ def retailers(request, submission_id, retailer_id=None):
 			
 			return redirect(reverse('retailers', kwargs={'submission_id': submission_id}))
 
-	template = 'workflow/production/retailers.html'
+	template = 'editor/catalog/retailers.html'
 	context = {
 		'submission': book,
 		'retailers': retailers,
