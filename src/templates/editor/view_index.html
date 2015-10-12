@@ -8,13 +8,17 @@
  {% if item.date %}
   <li>
       <p class="timeline-dash-date">{{ item.date|date:"Y-m-d" }}</p>
-      <div class="timeline-content-closed">
+              {% if item.overdue  or item.declined%}
+              <div class="timeline-content-dash-overdue">
+              {% else %}
+              <div class="timeline-content-dash-closed">
+              {% endif %}
         <h5> {{ item.stage }}</h5>
       </div>
     </li>
   {% endif %}
    
-      {% if forloop.last %} <li>  <p class="timelined-dash-date"></p> <div class="timeline-content-open"><h5> {{ index.state.friendly  }}   </h5></li></div>{% endif %}
+      {% if forloop.last %} <li>  <p class="timelined-dash-date"></p> <div class="timeline-content-dash-open"><h5> {{ index.state.friendly  }}   </h5></li></div>{% endif %}
 
   {% endfor %}
     
