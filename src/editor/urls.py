@@ -14,6 +14,7 @@ urlpatterns = patterns('',
     url(r'^submission/(?P<submission_id>\d+)/files/(?P<file_id>\d+)/(?P<review_type>[-\w]+)/delete/$', 'editor.views.delete_review_files', name='delete_review_files'),
     url(r'^submission/(?P<submission_id>\d+)/reviewers/(?P<review_type>[-\w]+)/add/(?P<round_number>\d+)/$', 'editor.views.editor_add_reviewers', name='editor_add_reviewers'),
     url(r'^submission/submission/(?P<submission_id>\d+)/revisions/request/returner/(?P<returner>[-\w]+)/$', 'editor.views.request_revisions', name='request_revisions'),
+    url(r'^submission/submission/(?P<submission_id>\d+)/revisions/view/(?P<revision_id>\d+)/$', 'editor.views.editor_view_revisions', name='editor_view_revisions'),
 
     url(r'^submission/(?P<submission_id>\d+)/editing/$', 'editor.views.editor_editing', name='editor_editing'),
     url(r'^submission/(?P<submission_id>\d+)/editing/assign/copyeditor/$', 'editor.views.assign_copyeditor', name='assign_copyeditor'),

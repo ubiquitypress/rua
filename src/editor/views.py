@@ -126,6 +126,23 @@ def editor_review(request, submission_id):
 	return render(request, template, context)
 
 @is_book_editor
+def editor_view_revisions(request, submission_id, revision_id):
+	book = get_object_or_404(models.Book, pk=submission_id) 
+	revision = get_object_or_404(revision_models.Revision, pk=revision_id, completed__isnull=False)
+
+	template = 'editor/submission.html'
+	context = {
+		'submission': book,
+		'revision': revision,
+		'author_include': 'editor/review_revisions.html',
+		'submission_files': 'editor/revisions/view_revisions.html',
+		'review_rounds': models.ReviewRound.objects.filter(book=book).order_by('-round_number'),
+		'revision_requests': revision_models.Revision.objects.filter(book=book, revision_type='review')
+	}
+
+	return render(request, template, context)
+
+@is_book_editor
 def editor_review_round(request, submission_id, round_number):
 	book = get_object_or_404(models.Book, pk=submission_id)
 	review_round = get_object_or_404(models.ReviewRound, book=book, round_number=round_number)
