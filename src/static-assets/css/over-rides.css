@@ -457,13 +457,8 @@ body > div.container > div > div.col-md-4.dash-right > div > ul > li > div > div
     color:#ffffff;
     box-shadow: none;
 }
-.btn-decline{
-  background-color:rgb(171, 30, 59);
-  color:#ffffff;
-  border-color:rgb(231,188,197);
-  border-radius: 12px;
- 
-}
+
+
 .input-group-email-field{
   margin-bottom: 5px
 }
@@ -474,6 +469,15 @@ body > div.container > div > div.col-md-4.dash-right > div > ul > li > div > div
   .btn-round-half{
   border-radius: 12px !important;
  }
+
+.btn-decline{
+  background-color:rgb(171, 30, 59);
+  color:#ffffff;
+  border-color:rgb(231,188,197);
+  border-radius: 12px;
+ 
+}
+
 .btn-decline:hover, .btn-decline:focus, .btn-decline:active, .btn-decline.active, .open > .dropdown-toggle.btn-decline {
     background: #E43A5C;
     color:#ffffff;
