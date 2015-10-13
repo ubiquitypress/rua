@@ -30,19 +30,33 @@
 
 <div class="row">
     <div class="col-md-12 book-heading container-fluid">
-        <h4>Book {{ submission.id }}: {{ submission.title }}</h4>
+        <h3>Book {{ submission.id }}: {{ submission.title }}</h3>
     </div>
     <div class="col-md-3 dash-left grey-container">
           <div class="dash-container" >
             <h4 class="header-text">  {% if submission.prefix %}{{ submission.prefix }} {% endif %}{{ submission.title }}</h4> 
             <h5 class="subtitle-text">{{submission.subtitle}}</h5>
         </div>
-    <div class="book-info">
-    <b>Series: </b>{{submission.series}} </br>
-    <b>Type: </b>{{submission.book_type}} </br>
-    <b>License: </b>{{submission.license}} </br>
-    <b>Review Type: </b>{{submission.get_review_type_display}} </br>
-    </div> </br>
+          <div class="book-info">
+        <table class="table table-bordered table-condensed small">
+            <tr>
+                <th>Series</th>
+                <td>{{ submission.series }}</td>
+            </tr>
+            <tr>
+                <th>Type</th>
+                <td>{{ submission.get_book_type_display }}</td>
+            </tr>
+            <tr>
+                <th>License</th>
+                <td>{{ submission.license.short_name }}</td>
+            </tr>
+            <tr>
+                <th>Review Type</th>
+                <td>{{ submission.get_review_type_display }}</td>
+            </tr>
+        </table>
+      </div>
         <a href="{% url 'tasks' submission.pk %}">
         <div class="dash-menu">
             <h5>My Tasks <i class="fa fa-chevron-right pull-right"></i></h5>
