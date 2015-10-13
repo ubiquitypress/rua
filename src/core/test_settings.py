@@ -50,7 +50,6 @@ INSTALLED_APPS = (
     'review',
     'api',
     'cron',
-    'revisions',
     'author',
 
     # 3rd Party
