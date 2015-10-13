@@ -368,7 +368,7 @@ def start_proposal(request):
 			proposal = submission_models.Proposal(form=core_models.ProposalForm.objects.get(pk=proposal_form_id), data=json_data, owner=request.user, **defaults)
 			proposal.save()
 			messages.add_message(request, messages.SUCCESS, 'Proposal %s submitted' % proposal.id)
-			return redirect(reverse('user_home'))
+			return redirect(reverse('user_dashboard'))
 
 
 	template = "submission/start_proposal.html"
@@ -392,7 +392,7 @@ def proposal_revisions(request, proposal_id):
 			proposal.status = 'revisions_submitted'
 			proposal.save()
 			messages.add_message(request, messages.SUCCESS, 'Revisions for Proposal %s submitted' % proposal.id)
-			return redirect(reverse('user_home'))
+			return redirect(reverse('user_dashboard'))
 
 	template = "submission/start_proposal.html"
 	context = {

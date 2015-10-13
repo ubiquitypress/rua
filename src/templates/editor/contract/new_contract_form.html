@@ -58,7 +58,8 @@
      {% if action == 'edit' %}
      <a href="{% url 'contract_manager' submission.id %}" class="btn btn-danger btn-round-half">Cancel</a>
      {% else %}
-     <a href="{% url 'view_new_submission' submission.id %}" class="btn btn-danger btn-round-half">Cancel</a>
+     <!--view_new_submission view deleted-->
+     <a href="{% url 'editor_submission' submission.id %}" class="btn btn-danger btn-round-half">Cancel</a>
      {% endif %}
    </div>
    </div>

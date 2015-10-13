@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% load static from staticfiles %}
+{% load bootstrap3 %}
+
+{% block title %}Book Proposals{% endblock %}
+
+{% block breadcrumbs %}
+    <ol class="breadcrumb">
+	  <li><a href="{% url 'user_dashboard' %}">Dashboard</a></li>
+	  <li class="">Workflow</li>
+    <li class="active"><a href="{% url 'proposals' %}">Proposals</a></li>
+    <li class="active"><a href="{% url 'view_proposal' proposal.id %}">{{ proposal.title }}</a></li>
+	</ol>
+{% endblock %}
+
+{% block body %}
+<div class="col-md-12">
+  <h3>Book Proposals</h3>
+  <hr />
+  <table class="table table-bordered">
+  <tr>
+    <thead>
+    <th>Title</th>
+    <th>Subtitle</th>
+    <th>Author</th>
+    <th>User</th>
+    <th>Date Submitted</th>
+    </thead>
+  </tr>
+  <tr>
+    <td>{{ proposal.title }}</td>
+    <td>{{ proposal.subtitle }}</td>
+    <td>{{ proposal.author }}</td>
+    <td>{{ proposal.user.username }}</td>
+    <td>{{ proposal.date_submitted }}</td>
+  </tr>
+  </table>
+  {% for field in relationships %}
+  <div class="{{ field.width }}">
+  <div class="row">
+    <div class="panel panel-default">
+      <div class="panel-heading"><span class="panel-heading"><b>{{ field.element.name }}</b></span></div>
+      <div class="panel-body">{% for k,v in data.items %}{% if k == field.element.name %}{{ v.0 }}{% endif %}{% endfor %}</div>
+    </div>
+  </div>
+  </div>
+{% endfor %}
+
+  <hr />
+<div class="col-md-12">
+  {% if not proposal.date_review_started %}<a href="{% url 'start_proposal_review' proposal.id %}" class="btn btn-sm btn-success"><i class="fa fa-plus">&nbsp;</i>Start Review Process</a>{% else %}</div>
+
+  <div class="inline-headers"><h4>Review</h4><a href="{% url 'add_proposal_reviewers' proposal.id %}" class="btn btn-sm btn-success" style="float: right;"><i class="fa fa-plus">&nbsp;</i>Add Reviewers</a></div>
+
+  {% include "core/proposals/proposal_review_block.html" with review_data=proposal.review_assignments.all %}
+  {% endif %}
+
+  <h3>Action</h3>
+  <p>Once you have compeleted the review process, you can accept, decline or as the author to submit revisions the proposal. Accepting the proposal will create a submission for the author to complete and allow you to send them some notes on the proposal. Declining will move the proposal to the archive. If revisions are requested, the author will be able to edit and resubmit their proposal.</p>
+  {% include "core/proposals/proposal_action_buttons.html" %}
+</div>
+{% endblock %}

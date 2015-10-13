@@ -46,4 +46,9 @@ urlpatterns = patterns('',
     url(r'^contract/(?P<submission_id>\d+)/manage/(?P<contract_id>\d+)/$', 'editor.views.contract_manager', name='contract_manager_edit'),
 
     url(r'^submission/(?P<submission_id>\d+)/decline/$', 'editor.views.decline_submission', name='editor_decline_submission'),
+
+
+    # WORKFLOW New Submissions
+    url(r'^new/$', 'editor.views.new_submissions', name='new_submissions'),
+    url(r'^new/submission/(?P<submission_id>\d+)/$', 'editor.views.view_new_submission', name='view_new_submission'),
 	)

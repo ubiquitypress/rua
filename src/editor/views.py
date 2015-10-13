@@ -9,7 +9,6 @@ from core.files import handle_attachment,handle_file_update,handle_attachment,ha
 from core import models, log, logic as core_logic
 from core import forms as core_forms
 from core.decorators import is_editor, is_book_editor, is_book_editor_or_author
-from workflow import logic as workflow_logic
 from editor import logic
 from revisions import models as revision_models
 from review import models as review_models
@@ -61,7 +60,7 @@ def editor_submission(request, submission_id):
 	book = get_object_or_404(models.Book, pk=submission_id)
 
 	if request.POST and 'review' in request.POST:
-		workflow_logic.create_new_review_round(book)
+		core_logic.create_new_review_round(book)
 		book.stage.review = timezone.now()
 		book.stage.current_stage = 'review'
 		book.stage.save()
@@ -291,7 +290,7 @@ def editor_review_assignment(request, submission_id, round_id, review_id):
 	review_rounds = models.ReviewRound.objects.filter(book=submission).order_by('-round_number')
 	result = review_assignment.results
 	relations = review_models.FormElementsRelationship.objects.filter(form=result.form)
-	data_ordered = workflow_logic.order_data(workflow_logic.decode_json(result.data), relations)
+	data_ordered = core_logic.order_data(core_logic.decode_json(result.data), relations)
 
 	template = 'editor/submission.html'
 	context = {
@@ -967,3 +966,45 @@ def contract_manager(request, submission_id, contract_id=None):
 	return render(request, template, context)
 
 ## END CONTRACTS ##
+### WORKFLOW NEW SUBMISSIONS 
+
+@is_editor
+def new_submissions(request):
+
+	submission_list = models.Book.objects.filter(stage__current_stage='submission')
+
+	template = 'editor/new_submissions.html'
+	context = {
+		'submission_list': submission_list,
+		'active': 'new',
+	}
+
+	return render(request, template, context)
+
+@is_book_editor
+def view_new_submission(request, submission_id):
+
+	submission = get_object_or_404(models.Book, pk=submission_id)
+
+	if request.POST and 'review' in request.POST:
+		logic.create_new_review_round(submission)
+		submission.stage.review = timezone.now()
+		submission.stage.current_stage = 'review'
+		submission.stage.save()
+
+		if submission.stage.current_stage == 'review':
+			log.add_log_entry(book=submission, user=request.user, kind='review', message='Submission moved to Review', short_name='Submission in Review')
+
+		messages.add_message(request, messages.SUCCESS, 'Submission has been moved to the review stage.')
+
+		return redirect(reverse('editor_review', kwargs={'submission_id': submission.id}))
+
+
+	template = 'editor/new/view_new_submission.html'
+	context = {
+		'submission': submission,
+		'active': 'new',
+		'revision_requests': revision_models.Revision.objects.filter(book=submission, revision_type='submission')
+	}
+
+	return render(request, template, context)

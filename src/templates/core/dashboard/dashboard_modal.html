@@ -18,7 +18,7 @@
 
           <!-- Tab panes -->
           <div class="tab-content">
-            <div role="tabpanel" class="tab-pane active" id="main_summary-{{ submission.id }}">{% include "workflow/elements/summary.html" %}</div>
+            <div role="tabpanel" class="tab-pane active" id="main_summary-{{ submission.id }}">{% include "core/elements/summary.html" %}</div>
             <div role="tabpanel" class="tab-pane" id="description-{{ submission.id }}"><p class="tab-p">{{ submission.description|safe }}</p></div>
             <div role="tabpanel" class="tab-pane" id="cover_letter-{{ submission.id }}"><p class="tab-p">{{ submission.cover_letter|safe }}</p></div>
             <div role="tabpanel" class="tab-pane" id="reviewer_sugestions-{{ submission.id }}"><p class="tab-p">{{ submission.reviewer_suggestions|safe }}</p></div>

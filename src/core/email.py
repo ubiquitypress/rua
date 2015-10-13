@@ -32,4 +32,3 @@ def send_email(subject, context, from_email, to, html_template, bcc=None, cc=Non
 
 	msg.send()
 
-

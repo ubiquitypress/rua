@@ -361,7 +361,7 @@
 },
 {
     "fields": {
-        "value": "A new submission has been uploaded to.\r\n\r\nView the submission: http://{{base_url}}/workflow/new/{{submission.id}}\r\n\r\nRegards,\r\n\r\nRUA Bot",
+        "value": "A new submission has been uploaded to.\r\n\r\nView the submission: http://{{base_url}}/editor/new/submission/{{submission.id}}\r\n\r\nRegards,\r\n\r\nRUA Bot",
         "group": 3,
         "name": "editor_submission_ack",
         "types": "text"
