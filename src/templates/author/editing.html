@@ -11,10 +11,14 @@
 {% else %}
 <table class="table table-condensed table-bordered table-responsive" style="font-size:14px">
 	<tr>
-		<th>Copyeditor</th><th>Status</th><th>Due</th>
+		<th>Copyeditor</th><th>Status</th><th>Due</th><th></th>
 	</tr>
 	{% for assignment in submission.copyeditassignment_set.all %}
-
+	{% ifequal copyedit.id assignment.id %}
+	<tr class="selected-row-table">
+	{% else %}
+	<tr>
+	{% endifequal %}
 		<td>{{ assignment.copyeditor.profile.full_name }}</td>
 		<td>
 			{{ assignment.state.friendly }}
@@ -23,6 +27,9 @@
 		</td>
 		<td>
 			{{ assignment.due }}
+		</td>
+			<td>
+			<a href="{% url 'author_view_copyedit' submission.id assignment.id %}" class="btn btn-task"> View </a>
 		</td>
 	</tr>
 	{% empty %}
@@ -44,7 +51,7 @@
 {% else %}
 <table class="table table-condensed table-bordered table-responsive" style="font-size:14px">
 	<tr> 
-		<th>Indexer</th><th>Status</th><th>Due</th>
+		<th>Indexer</th><th>Status</th><th>Due</th><th></th>
 	</tr>
 	{% for assignment in submission.indexassignment_set.all %}
 	{% ifequal index.id assignment.id %}
@@ -60,6 +67,9 @@
 		</td>
 		<td>
 			{{ assignment.due }}
+		</td>
+			<td>
+			<a href="{% url 'author_view_index' submission.id assignment.id %}" class="btn btn-task"> View </a>
 		</td>
 	</tr>
 	{% empty %}

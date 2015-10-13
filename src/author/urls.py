@@ -13,6 +13,9 @@ urlpatterns = patterns('',
 	    url(r'^submission/(?P<submission_id>\d+)/review/round/(?P<round_id>\d+)/assignment/(?P<review_id>\d+)/$', 'author.views.view_review_assignment', name='view_review_assignment'),
 
 		url(r'^submission/(?P<submission_id>\d+)/editing/$', 'author.views.editing', name='editing'),
+		url(r'^submission/(?P<submission_id>\d+)/editing/view/copyeditor/(?P<copyedit_id>\d+)/$', 'author.views.view_copyedit', name='author_view_copyedit'),
+		url(r'^submission/(?P<submission_id>\d+)/editing/view/indexer/(?P<index_id>\d+)/$', 'author.views.view_index', name='author_view_index'),
+
 	    url(r'^submission/(?P<submission_id>\d+)/editing/copyedit/(?P<copyedit_id>\d+)/$', 'author.views.copyedit_review', name='copyedit_review'),
 	    url(r'^submission/(?P<submission_id>\d+)/editing/typeset/(?P<typeset_id>\d+)/$', 'author.views.typeset_review', name='typeset_review'),
 

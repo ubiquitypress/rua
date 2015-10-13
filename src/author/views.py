@@ -222,6 +222,65 @@ def editing(request, submission_id):
 	return render(request, template, context)
 
 @login_required
+def view_copyedit(request, submission_id, copyedit_id):
+	book = get_object_or_404(models.Book, pk=submission_id)
+	copyedit = get_object_or_404(models.CopyeditAssignment, pk=copyedit_id)
+	author_form = core_forms.CopyeditAuthorInvite(instance=copyedit)
+	email_text = models.Setting.objects.get(group__name='email', name='author_copyedit_request').value
+
+	if request.POST and 'invite_author' in request.POST:
+		if not copyedit.completed:
+			messages.add_message(request, messages.WARNING, 'This copyedit has not been completed, you cannot invite the author to review.')
+			return redirect(reverse('view_copyedit', kwargs={'submission_id': submission_id, 'copyedit_id': copyedit_id}))
+		else:
+			copyedit.editor_review = timezone.now()
+			log.add_log_entry(book=book, user=request.user, kind='editing', message='Copyedit Review Completed by %s %s' % (request.user.first_name, request.user.last_name), short_name='Editor Copyedit Review Complete')
+			copyedit.save()
+
+	elif request.POST and 'send_invite_author' in request.POST:
+
+		attachment = handle_attachment(request, book)
+
+		author_form = core_forms.CopyeditAuthorInvite(request.POST, instance=copyedit)
+		author_form.save()
+		copyedit.author_invited = timezone.now()
+		copyedit.save()
+		email_text = request.POST.get('email_text')
+		logic.send_author_invite(book, copyedit, email_text, request.user, attachment)
+		return redirect(reverse('view_copyedit', kwargs={'submission_id': submission_id, 'copyedit_id': copyedit_id}))
+
+	template = 'author/submission.html'
+	context = {
+		'submission': book,
+		'copyedit': copyedit,
+		'author_form': author_form,
+		'author_include': 'author/editing.html',
+		'submission_files': 'author/view_copyedit.html',
+		'email_text': email_text,
+		'timeline': core_logic.build_time_line_editing_copyedit(copyedit),
+	}
+
+	return render(request, template, context)
+
+@login_required
+def view_index(request, submission_id, index_id):
+	book = get_object_or_404(models.Book, pk=submission_id)
+	index = get_object_or_404(models.IndexAssignment, pk=index_id)
+
+	template = 'author/submission.html'
+	context = {
+		'submission': book,
+		'index': index,
+		'author_include': 'author/editing.html',
+		'submission_files': 'author/view_index.html',
+		'timeline': core_logic.build_time_line_editing_indexer(index),
+
+	}
+
+	return render(request, template, context)
+
+
+@login_required
 def copyedit_review(request, submission_id, copyedit_id):
 	book = get_object_or_404(models.Book, pk=submission_id, owner=request.user)
 	copyedit = get_object_or_404(models.CopyeditAssignment, pk=copyedit_id, book__owner=request.user, book=book, author_invited__isnull=False, author_completed__isnull=True)
