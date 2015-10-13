@@ -60,6 +60,7 @@ urlpatterns = patterns('',
     url(r'^files/user/submission/(?P<submission_id>\d+)/file/(?P<file_id>\d+)/download/$', 'core.views.serve_file', name='serve_file'),
     url(r'^files/submission/(?P<submission_id>\d+)/file/(?P<revision_id>\d+)/download_versioned_file/$', 'core.views.serve_versioned_file', name='serve_versioned_file'),
     url(r'^files/submission/(?P<submission_id>\d+)/file/(?P<file_id>\d+)/delete/returner/(?P<returner>[-\w]+)/$', 'core.views.delete_file', name='delete_file'),
+    url(r'^files/submission/(?P<submission_id>\d+)/file/(?P<file_id>\d+)/view/$', 'core.views.view_file', name='view_file'),
     url(r'^files/submission/(?P<submission_id>\d+)/file/(?P<file_id>\d+)/update/returner/(?P<returner>[-\w]+)/$', 'core.views.update_file', name='update_file'),
     url(r'^files/submission/(?P<submission_id>\d+)/file/(?P<file_id>\d+)/versions/$', 'core.views.versions_file', name='versions_file'),
 

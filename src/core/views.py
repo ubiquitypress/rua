@@ -438,6 +438,21 @@ def update_file(request, submission_id, file_id, returner):
 	context = {
 		'submission': book,
 		'file': _file,
+		'update': True
+	}
+
+	return render(request, template, context)
+
+@is_book_editor_or_author
+def view_file(request, submission_id, file_id):
+	book = get_object_or_404(models.Book, pk=submission_id)
+	_file = get_object_or_404(models.File, pk=file_id)
+	
+	template = 'core/update_file.html'
+	context = {
+		'submission': book,
+		'file': _file,
+		'update': False
 	}
 
 	return render(request, template, context)
