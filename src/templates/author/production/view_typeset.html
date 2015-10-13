@@ -1,0 +1,133 @@
+{% load bootstrap3 %}
+
+
+  <h3>TYPESETTING: {{ typeset.typesetter.profile.full_name }}</h3>
+
+  <ul class="timeline-dash">
+    <li>
+      <p class="timeline-dash-date">{{ typeset.requested }}</p>
+      <div class="timeline-content-dash-closed">
+        <h5>Requested</h5>
+      </div>
+    </li>
+    {% if typeset.accepted %}
+    <li>
+       <p class="timeline-dash-date">{{ typeset.accepted }}</p>
+      <div class="timeline-content-dash-closed">
+        <h5>Accepted</h5>
+      </div>
+    </li>
+    {% endif %}
+    {% if typeset.completed %}
+    <li>
+       <p class="timeline-dash-date">{{ typeset.completed }}</p>
+      <div class="timeline-content-dash-closed">
+        <h5>Initial Assigment Completed</h5>
+      </div>
+    </li>
+    {% endif %}
+    {% if typeset.editor_review %}
+    <li>
+       <p class="timeline-dash-date">{{ typeset.editor_review }}</p>
+      <div class="timeline-content-dash-closed">
+        <h5>Editor Review</h5>
+      </div>
+    </li>
+    {% endif %}
+    {% if typeset.author_completed %}
+    <li>
+       <p class="timeline-dash-date">{{ typeset.author_completed }}</p>
+      <div class="timeline-content-dash-closed">
+        <h5>Author Review</h5>
+      </div>
+    </li>
+    {% endif %}
+    {% if typeset.editor_second_review %}
+    <li>
+       <p class="timeline-dash-date">{{ typeset.editor_second_review }}</p>
+      <div class="timeline-content-dash-closed">
+        <h5>Editor Review</h5>
+      </div>
+    </li>
+    {% endif %}
+    {% if typeset.typesetter_completed %}
+    <li>
+       <p class="timeline-dash-date">{{ typeset.typesetter_completed }}</p>
+      <div class="timeline-content-dash-closed">
+        <h5>Assignment Completed</h5>
+      </div>
+    </li>
+    {% endif %}
+  </ul>
+  <hr />
+  <h4>Assigned Files</h4>
+  {% include 'shared/review_files.html' with file_data=typeset.files.all %}
+
+  <!-- Tab panes -->
+    <hr />
+      <h4>Initial Typesetter Assignment</h4>
+      <h5>Note</h5>
+      {{ typeset.note|linebreaks }}
+      <h4>Typesetter Files</h4>
+      {% include 'shared/review_files.html' with file_data=typeset.typeset_files.all %}
+      {% if typeset.completed and not typeset.editor_review %}
+      <form method="POST">
+        {% csrf_token %}
+        <br />
+        <button class="btn btn-success" name="invite_author">Invite Author to Review Typesetting</button>
+      </form>
+      {% elif typeset.completed and typeset.editor_review and not typeset.author_invited %}
+      <h4>Invite Author to Review</h4>
+      <form method="POST">
+        {% csrf_token %}
+        {% bootstrap_form author_form %}
+        <div class="form-group">
+          <label class="control-label" for="id_note_to_author">Email to Author</label>
+          <textarea class="form-control" cols="40" id="email_text" name="email_text" rows="10" title="">{{ email_text }}</textarea>
+        </div>
+        <button class="btn btn-success" name="send_invite_author" id="send_invite_author" type="submit">Send Request</button>
+      </form>
+      {% elif typeset.completed and typeset.editor_review and typeset.author_invited %}
+      <hr />
+      <h4>Author Revision</h4>
+      <h5>Not to Author</h5>
+      {{ typeset.note_to_author|linebreaks }}
+      <h5>Note from Author</h5>
+      {{ typeset.note_from_author|linebreaks }}
+      <h4>Author Files</h4>
+      {% include 'shared/review_files.html' with file_data=typeset.author_files.all %}
+      </table>
+      {% endif %}
+      {% if typeset.author_completed and not typeset.editor_second_review %}
+      <form method="POST">
+        {% csrf_token %}
+        <br />
+      </form>
+     
+      {% elif typeset.author_completed and typeset.editor_second_review and typeset.typesetter_invited %}
+      <hr />
+      <h4>Typesetter Final Revision</h4>
+      <h5>Note to Typesetter</h5>
+      {{ typeset.note_to_typesetter|linebreaks }}
+      <h5>Note from Typesetter</h5>
+      {{ typeset.note_from_typesetter|linebreaks }}
+      <h4>Typesetter Final Files</h4>
+      {% include 'shared/review_files.html' with file_data=typeset.typesetter_files.all %}
+
+{% endif %}
+    </div>
+  </div>
+
+{% block js %}
+<script>
+$(function() {
+    $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+        localStorage.setItem('typesetting_tabs', $(this).attr('href'));
+    });
+    var lastTab = localStorage.getItem('typesetting_tabs');
+    if (lastTab) {
+        $('[href="' + lastTab + '"]').tab('show');
+    }
+});
+</script>
+{% endblock js %}

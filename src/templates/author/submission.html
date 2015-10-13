@@ -83,8 +83,9 @@
         </a>
         {% endif %}
         {% if submission.stage.production %}
+                <a href="{% url 'author_production' submission.id %}">
         <div class="dash-menu">
-            <h5>Production <i class="fa fa-chevron-right pull-right"></i></h5>
+            <h5>Production <i class="fa fa-chevron-right pull-right"></i></h5></a>
         </div>
         {% endif %}
     </div>

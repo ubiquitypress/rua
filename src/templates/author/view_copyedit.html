@@ -56,23 +56,7 @@
 
 {% include 'shared/review_files.html' with file_data=copyedit.copyedit_files.all %}
 
-{% if copyedit.completed and not copyedit.editor_review %}
-<form method="POST">
-  {% csrf_token %}
-  <button class="btn btn-success" name="invite_author">Invite Author to Review Copyedits</button>
-</form>
-{% elif copyedit.completed and copyedit.editor_review and not copyedit.author_invited %}
-<h4>Invite Author to Review</h4>
-<form method="POST">
-  {% csrf_token %}
-  {% bootstrap_form author_form %}
-  <div class="form-group">
-    <label class="control-label" for="id_note_to_author">Email to Author</label>
-    <textarea class="form-control" cols="40" id="email_text" name="email_text" rows="10" title="">{{ email_text }}</textarea>
-  </div>
-  <button class="btn btn-success" name="send_invite_author" id="send_invite_author" type="submit">Send Request</button>
-</form>
-{% elif copyedit.completed and copyedit.editor_review and copyedit.author_invited %}
+{% if copyedit.completed and copyedit.editor_review and copyedit.author_invited %}
 <hr />
 <h4>Author Revision</h4>
 <table class="table table-bordered">

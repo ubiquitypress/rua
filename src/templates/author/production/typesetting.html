@@ -1,0 +1,26 @@
+{% if not submission.stage.typesetting %}
+<p>Stage has not been initialised.</p>
+{% else %}
+<table class="table table-bordered">
+	<tr>
+		<th>Typesetter</th>
+		<th>Status</th>
+		<th>View</th>
+	</tr>
+	{% for typeset in submission.typesetassignment_set.all %}
+	{% ifequal typeset.id typeset_id %}
+		<tr class="selected-row-table">
+	{% else %}
+		<tr>
+	{% endifequal %}
+		<td>{{ typeset.typesetter.profile.full_name }}</td>
+		<td><strong>{{ typeset.state.friendly }}</strong><br>{{ typeset.state.date }}</td>
+		<td><a href="{% url 'author_view_typesetter' submission.id typeset.id %}" class="btn  btn-task">View</a></td>
+	</tr>
+	{% empty %}
+	<tr>
+		<td colspan="3">No typesetters have been assigned</td>
+	</tr>
+	{% endfor %}
+</table>
+{% endif %}

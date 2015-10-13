@@ -210,6 +210,87 @@ def revise_file(request, submission_id, revision_id, file_id):
 	return render(request, template, context)
 
 @login_required
+def author_production(request, submission_id):
+	book = get_object_or_404(models.Book, pk=submission_id)
+
+	if request.POST and request.GET.get('start', None):
+		if request.GET.get('start') == 'typesetting':
+			book.stage.typesetting = timezone.now()
+			book.stage.save()
+
+	template = 'author/submission.html'
+	context = {
+		'author_include': 'author/production/view.html',
+		'active': 'production',
+		'submission': book,
+		'format_list': models.Format.objects.filter(book=book).select_related('file'),
+		'chapter_list': models.Chapter.objects.filter(book=book).select_related('file'),
+	}
+
+	return render(request, template, context)
+
+
+@login_required
+def author_view_typesetter(request, submission_id, typeset_id):
+	book = get_object_or_404(models.Book, pk=submission_id)
+	typeset = get_object_or_404(models.TypesetAssignment, pk=typeset_id)
+	email_text = models.Setting.objects.get(group__name='email', name='author_typeset_request').value
+
+	author_form = core_forms.TypesetAuthorInvite(instance=typeset)
+	if typeset.editor_second_review:
+		author_form = core_forms.TypesetTypesetterInvite(instance=typeset)
+		email_text = models.Setting.objects.get(group__name='email', name='typesetter_typeset_request').value
+
+	if request.POST and 'invite_author' in request.POST:
+		if not typeset.completed:
+			messages.add_message(request, messages.WARNING, 'This typeset has not been completed, you cannot invite the author to review.')
+			return redirect(reverse('author_view_typesetter', kwargs={'submission_id': submission_id, 'typeset_id': typeset_id}))
+		else:
+			typeset.editor_review = timezone.now()
+			typeset.save()
+
+	elif request.POST and 'invite_typesetter' in request.POST:
+		typeset.editor_second_review = timezone.now()
+		typeset.save()
+		return redirect(reverse('author_view_typesetter', kwargs={'submission_id': submission_id, 'typeset_id': typeset_id}))
+
+	elif request.POST and 'send_invite_typesetter' in request.POST:
+		author_form = core_forms.TypesetTypesetterInvite(request.POST, instance=typeset)
+		if author_form.is_valid():
+			author_form.save()
+			typeset.typesetter_invited = timezone.now()
+			typeset.save()
+			email_text = request.POST.get('email_text')
+			logic.send_invite_typesetter(book, typeset, email_text, request.user)
+		return redirect(reverse('author_view_typesetter', kwargs={'submission_id': submission_id, 'typeset_id': typeset_id}))
+
+	elif request.POST and 'send_invite_author' in request.POST:
+		author_form = core_forms.TypesetAuthorInvite(request.POST, instance=typeset)
+		if author_form.is_valid():
+			author_form.save()
+			typeset.author_invited = timezone.now()
+			typeset.save()
+			email_text = request.POST.get('email_text')
+			logic.send_invite_typesetter(book, typeset, email_text, request.user)
+		return redirect(reverse('author_view_typesetter', kwargs={'submission_id': submission_id, 'typeset_id': typeset_id}))
+
+	template = 'author/submission.html'
+	context = {
+		'submission': book,
+		'author_include': 'author/production/view.html',
+		'submission_files': 'author/production/view_typeset.html',
+		'active': 'production',
+		'format_list': models.Format.objects.filter(book=book).select_related('file'),
+		'chapter_list': models.Chapter.objects.filter(book=book).select_related('file'),
+		'typeset': typeset,
+		'typeset_id': typeset.id,
+		'author_form': author_form,
+		'email_text': email_text,
+	}
+
+	return render(request, template, context)
+
+@login_required
 def editing(request, submission_id):
 	book = get_object_or_404(models.Book, pk=submission_id, owner=request.user)
 
@@ -278,6 +359,7 @@ def view_index(request, submission_id, index_id):
 	}
 
 	return render(request, template, context)
+
 
 
 @login_required

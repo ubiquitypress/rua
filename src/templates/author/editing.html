@@ -4,10 +4,6 @@
 
 {% if not submission.stage.copyediting %}
 <p>Stage has not been initialised.</p>
-<form method="POST" action="?start=copyediting">
-	{% csrf_token %}
-	<button class="btn btn-primary" type="submit">Start Copyediting</button>
-</form>
 {% else %}
 <table class="table table-condensed table-bordered table-responsive" style="font-size:14px">
 	<tr>
@@ -43,11 +39,7 @@
 </br>
 <h3>INDEXING:</h3>
 {% if not submission.stage.indexing %}
-<form method="POST" action="?start=indexing">
 	<p>Stage has not been initialised.</p>
-	{% csrf_token %}
-	<button class="btn btn-primary" type="submit">Start Indexing</button>
-</form>
 {% else %}
 <table class="table table-condensed table-bordered table-responsive" style="font-size:14px">
 	<tr> 
