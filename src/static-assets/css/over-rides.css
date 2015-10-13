@@ -62,7 +62,7 @@ html, body {
 }
 
 .even {
-  background-color: #FFFFFF;
+  background-color: #FFFFFF !important;
 }
 
 .dash-container {

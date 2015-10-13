@@ -6,164 +6,109 @@
 
 {% block css %}
 <link href="{% static "css/dashboard.css" %}" rel="stylesheet">
-<link href="{% static "css/bootcards-android.css" %}" rel="stylesheet">
-{% endblock %}
-
-{% block breadcrumbs %}
-    <ol class="breadcrumb">
-	  <li><a href="/">Home</a></li>
-	  <li class="active">Dashboard</li>
-	</ol>
 {% endblock %}
 
 {% block body %}
-	<div class="DocumentList dragscroll">
-    <ul class="list-inline">
-        <li class="DocumentItem">
-        	<div class="well well-sm">
-            <h4>Proposals</h4>
-            {% for proposal in proposals %}
-            <div class="panel panel-default">
-            <div class="panel-heading clearfix">
-            <h3 class="panel-title pull-left">{{ proposal.title }}</h3>
-              <a class="btn btn-default pull-right" href="{% url 'view_proposal' proposal.id %}">
-                <i class="fa fa-eye"></i>
-                View
-              </a>
+  <div class="row">
+    <div class="col-md-3">
+      <div class="well well-sm">
+        <h4>New Submissions</h4>
+        {% for submission in new_submissions %}
+          <div class="panel panel-default">
+            <div class="panel-heading clearfix even">
+              <h3 class="panel-title pull-left">{{ submission.title }}</h3>
+              <br /><br />
+              <div class="row">
+                <div class="col-md-6">
+                 <span class="small">By {{ submission.owner.profile.full_name }}</p>
+                </div>
+                <div class="col-md-6">
+                <span class="small pull-right">Submitted {{ submission.submission_date }}</p>
+                </div>
+              </div>
             </div>
-			  <div class="panel-body">
-                <p class="small">Author: {{ proposal.owner.profile.full_name }}</p>
-			    <p class="small">Submitted: {{ proposal.date_submitted }}</p>
-			  </div>
-			  <div class="panel-footer">
-		        <button class="btn btn-primary btn-block" data-toggle="modal" data-target="#pro-{{ proposal.id }}">
-		          <i class="fa fa-tasks"></i>
-		          &nbsp;Quick Look
-		        </button>
-			  </div>
+            <div class="panel-body small">
+            <i class="fa fa-circle-o">&nbsp;</i>Awaiting review by editor
             </div>
-            {% include "core/dashboard/dashboard_proposal_modal.html" with proposal=proposal %}
-			{% endfor %}
           </div>
-        </li>
-        <li class="DocumentItem">
-        	<div class="well well-sm">
-            	<h4>New Submissions</h4>
-            	{% for submission in new_submissions %}
-            	<div class="panel panel-default">
-				  <div class="panel-heading clearfix">
-				    <h3 class="panel-title pull-left">{{ submission.title }}</h3>
-				      <a class="btn btn-default pull-right" href="{% url 'view_new_submission' submission.id %}">
-				        <i class="fa fa-eye"></i>
-				        View
-				      </a>
-				  </div>
-				  <div class="panel-body">
-                    <p class="small">{% if submission.book_type == 'monograph' %}Author{% else %}Editor{% endif %}: {{ submission.owner.profile.full_name }}</p>
-				    <p class="small">Submitted: {{ submission.submission_date }}</p>
-				  </div>
-                  <div class="panel-footer">
-                    <button class="btn btn-primary btn-block" data-toggle="modal" data-target="#sub-{{ submission.id }}">
-                      <i class="fa fa-tasks"></i>
-                      &nbsp;Quick Look
-                    </button>
-                  </div>
-				</div>
-                {% include "core/dashboard/dashboard_modal.html" with submission=submission %}
-				{% endfor %}
+        {% include "core/dashboard/dashboard_modal.html" with submission=submission %}
+        {% endfor %}
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="well well-sm">
+        <h4>In Review</h4>
+        {% for submission in in_review %}
+          <div class="panel panel-default">
+            <div class="panel-heading clearfix even">
+              <h3 class="panel-title pull-left">{{ submission.title }}</h3>
+              <br /><br />
+              <div class="row">
+                <div class="col-md-6">
+                 <span class="small">By {{ submission.owner.profile.full_name }}</p>
+                </div>
+                <div class="col-md-6">
+                <span class="small pull-right">Submitted {{ submission.submission_date }}</p>
+                </div>
+              </div>
             </div>
-        </li>
-        <li class="DocumentItem">
-        	<div class="well well-sm">
-            	<h4>Review</h4>
-            	{% for submission in in_review %}
-            	<div class="panel panel-default">
-				  <div class="panel-heading clearfix">
-				    <h3 class="panel-title pull-left">{{ submission.title }}</h3>
-				      <a class="btn btn-default pull-right" href="{% url 'view_review' submission.pk %}">
-				        <i class="fa fa-eye"></i>
-				        View
-				      </a>
-				  </div>
-				  <div class="panel-body">
-                    <p class="small">Author: {{ submission.owner.profile.full_name }}</p>
-				    <p class="small">Submitted: {{ submission.submission_date }}</p>
-				  </div>
-          <div class="panel-footer">
-            <button class="btn btn-primary btn-block" data-toggle="modal" data-target="#sub-{{ submission.id }}">
-              <i class="fa fa-tasks"></i>
-              &nbsp;Quick Look
-            </button>
+            <div class="panel-body small">
+            <i class="fa fa-circle-o">&nbsp;</i>Awaiting review by editor
+            </div>
           </div>
-				</div>
-                {% include "core/dashboard/dashboard_modal.html" with submission=submission %}
-				{% endfor %}
+        {% include "core/dashboard/dashboard_modal.html" with submission=submission %}
+        {% endfor %}
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="well well-sm">
+        <h4>In Editing</h4>
+        {% for submission in in_editing %}
+          <div class="panel panel-default">
+            <div class="panel-heading clearfix even">
+              <h3 class="panel-title pull-left">{{ submission.title }}</h3>
+              <br /><br />
+              <div class="row">
+                <div class="col-md-6">
+                 <span class="small">By {{ submission.owner.profile.full_name }}</p>
+                </div>
+                <div class="col-md-6">
+                <span class="small pull-right">Submitted {{ submission.submission_date }}</p>
+                </div>
+              </div>
             </div>
-        </li>
-        <li class="DocumentItem">
-        	<div class="well well-sm">
-            	<h4>Editing</h4>
-            	{% for submission in in_editing %}
-            	<div class="panel panel-default">
-				  <div class="panel-heading clearfix">
-				    <h3 class="panel-title pull-left">{{ submission.title }}</h3>
-				      <a class="btn btn-default pull-right" href="{% url 'view_editing' submission.pk %}">
-				        <i class="fa fa-eye"></i>
-				        View
-				      </a>
-				  </div>
-				  <div class="panel-body">
-            <p class="small">Author: {{ submission.owner.profile.full_name }}</p>
-				    <p class="small">Submitted: {{ submission.submission_date }}</p>
-				  </div>
-          <div class="panel-footer">
-            <button class="btn btn-primary btn-block" data-toggle="modal" data-target="#sub-{{ submission.id }}">
-              <i class="fa fa-tasks"></i>
-              &nbsp;Quick Look
-            </button>
+            <div class="panel-body small">
+            <i class="fa fa-circle-o">&nbsp;</i>Awaiting review by editor
+            </div>
           </div>
-				</div>
-                {% include "core/dashboard/dashboard_modal.html" with submission=submission %}
-				{% endfor %}
+        {% include "core/dashboard/dashboard_modal.html" with submission=submission %}
+        {% endfor %}
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="well well-sm">
+        <h4>In Production</h4>
+        {% for submission in in_production %}
+          <div class="panel panel-default">
+            <div class="panel-heading clearfix even">
+              <h3 class="panel-title pull-left">{{ submission.title }}</h3>
+              <br /><br />
+              <div class="row">
+                <div class="col-md-6">
+                 <span class="small">By {{ submission.owner.profile.full_name }}</p>
+                </div>
+                <div class="col-md-6">
+                <span class="small pull-right">Submitted {{ submission.submission_date }}</p>
+                </div>
+              </div>
             </div>
-        </li>
-        <li class="DocumentItem">
-        	<div class="well well-sm">
-            	<h4>Production</h4>
-            	{% for submission in in_production %}
-            	<div class="panel panel-default">
-				  <div class="panel-heading clearfix">
-				    <h3 class="panel-title pull-left">{{ submission.title }}</h3>
-				      <a class="btn btn-default pull-right" href="{% url 'editor_production' submission.pk %}">
-				        <i class="fa fa-eye"></i>
-				        View
-				      </a>
-				  </div>
-				  <div class="panel-body">
-            <p class="small">Author: {{ submission.owner.profile.full_name }}</p>
-				    <p class="small">Submitted: {{ submission.submission_date }}</p>
-				  </div>
-          <div class="panel-footer">
-            <button class="btn btn-primary btn-block" data-toggle="modal" data-target="#sub-{{ submission.id }}">
-              <i class="fa fa-tasks"></i>
-              &nbsp;Quick Look
-            </button>
+            <div class="panel-body small">
+            <i class="fa fa-circle-o">&nbsp;</i>Awaiting review by editor
+            </div>
           </div>
-				</div>
-                {% include "core/dashboard/dashboard_modal.html" with submission=submission %}
-				{% endfor %}
-            </div>
-        </li>
-        <li class="DocumentItem">
-        	<div class="well well-sm">
-            	<h4>Published</h4>
-            </div>
-        </li>
-    </ul>
-	</div>
+        {% include "core/dashboard/dashboard_modal.html" with submission=submission %}
+        {% endfor %}
+      </div>
+    </div>
+  </div>
 {% endblock %}
-
-{% block js %}
-<script type="text/javascript" src="{% static "js/bootcards.min.js" %}"></script>
-<script type="text/javascript" src="{% static "js/dragscroll.js" %}"></script>
-{% endblock js %}
