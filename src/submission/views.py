@@ -92,6 +92,7 @@ def submission_two(request, book_id):
 			book = book_form.save(commit=False)
 			if not book.submission_stage > 3:
 				book.submission_stage = 3
+
 			book.save()
 			return redirect(reverse('submission_three', kwargs={'book_id': book.id}))
 
@@ -117,6 +118,7 @@ def submission_three(request, book_id):
 			if manuscript_files.count() >= 1:
 				if not book.submission_stage > 4:
 					book.submission_stage = 4
+				logic.handle_book_labels(request.POST, book, kind='manuscript')
 				book.save()
 				return redirect(reverse('submission_three_additional', kwargs={'book_id': book.id}))
 			else:
@@ -140,14 +142,12 @@ def submission_three_additional(request, book_id):
 	book = get_object_or_404(core_models.Book, pk=book_id, owner=request.user)
 	additional_files = core_models.File.objects.filter(book=book, kind='additional')
 
-	print book.title
-	pprint(additional_files)
-
 	logic.check_stage(book, 4)
 
 	if request.method == 'POST':
 		if not book.submission_stage > 5:
 			book.submission_stage = 5
+		logic.handle_book_labels(request.POST, book, kind='additional')
 		book.save()
 		return redirect(reverse('submission_four', kwargs={'book_id': book.id}))
 
@@ -194,7 +194,9 @@ def upload(request, book_id, type_to_handle):
 		'name' : new_file.uuid_filename,
 		'size' : file.size,
 		'deleteUrl': reverse('jfu_delete', kwargs = { 'book_id': book_id, 'file_pk': new_file.pk }),
+		'url': reverse('serve_file', kwargs = {'submission_id': book_id, 'file_id': new_file.pk }),
 		'deleteType': 'POST',
+		'ruaId': new_file.pk,
 	}
 
 	return UploadResponse( request, file_dict )
@@ -439,9 +441,6 @@ def handle_file(file, book, kind, user):
 	new_file.save()
 	book.files.add(new_file)
 	book.save()
-
-	print kind
-
 
 	return new_file
 

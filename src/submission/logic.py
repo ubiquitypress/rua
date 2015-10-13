@@ -45,10 +45,6 @@ def copy_editor_to_submission(user, book):
     return editor
 
 def check_stage(book, check):
-
-    print book.submission_stage
-    print check
-
     if book.submission_stage >= check:
         pass
     elif book.submission_date:
@@ -70,3 +66,10 @@ def send_acknowldgement_email(book, press_editors):
 
     for editor in press_editors:
         email.send_email('New Submission', context, from_email, editor.email, editor_text, book=book) 
+
+def handle_book_labels(post, book, kind):
+    for _file in book.files.all():
+        if _file.kind == kind and  post.get("%s" % _file.id, None):
+            _file.label = post.get("%s" % _file.id)
+            _file.save()
+
