@@ -1,0 +1,9 @@
+<i class="fa fa-check-circle-o" style="color:green">&nbsp;</i>Entered production {{ submission.stage.production }}
+
+{% if submission.stage.typesetting %}
+<br />
+<i class="fa fa-check-circle-o" style="color:green">&nbsp;</i>Typesetting started {{ submission.stage.typesetting }}
+{% else %}
+<br />
+<i class="fa fa-circle-o">&nbsp;</i>No typesetting tasks started
+{% endif %}

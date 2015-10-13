@@ -8,13 +8,12 @@
 	<link href="{% static "css/font-awesome.min.css" %}" rel="stylesheet">
 	<link href="{% static "css/jquery-te-1.4.0.css" %}" rel="stylesheet">
 	<link href="{% static "css/over-rides.css" %}" rel="stylesheet">
-	<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+	<link href="{% static "css/jq-ui.css" %}" rel="stylesheet">
 
     {% block css %}{% endblock %}
 	</head>
 
 	<body>
-	<div id="wrap">
 	{% include "nav.html" %}
 	<div class="container-fluid">
 		{% block breadcrumbs %}
@@ -27,14 +26,13 @@
 		{% endfor %}
 		{% block body %}{% endblock body %}
 	</div>
-	</div>
 	</body>
 
 	<script type="text/javascript" src="{% static "js/jquery.js" %}"></script>
 	<script type="text/javascript" src="{% static "js/bootstrap.min.js" %}"></script>
 	<script type="text/javascript" src="{% static "js/jquery-te-1.4.0.min.js" %}"></script>
 	<script src="{% static "js/holder.js" %}"></script>
-	<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+	<script src="{% static "js/jq-ui.js" %}"></script>
 	<script type="text/javascript">
 		$('input[id=lefile]').change(function() {
 		$('#id_profile_image').val($(this).val());

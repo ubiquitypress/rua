@@ -1,0 +1,14 @@
+<i class="fa fa-check-circle-o" style="color:green">&nbsp;</i>Entered review {{ submission.stage.review }}
+
+{% if submission.stage.internal_review %}
+<br />
+<i class="fa fa-check-circle-o" style="color:green">&nbsp;</i>Internal Review started {{ submission.stage.internal_review }}
+{% endif %}
+{% if submission.stage.external_review %}
+<br />
+<i class="fa fa-check-circle-o" style="color:green">&nbsp;</i>External Review started {{ submission.stage.external_review }}
+{% endif %}
+{% if not submission.stage.external_review and not submission.stage.internal_review %}
+<br />
+<i class="fa fa-circle-o">&nbsp;</i>No editing tasks started
+{% endif %}
