@@ -1,6 +1,6 @@
 <div class="button-block-center">
 	{% if submission.stage.current_stage == 'production' %}
-	<a href="" class="btn btn-accept">Publish Book</a>
+	<a href="{% url 'editor_publish' submission.id %}" class="btn btn-accept">Publish Book</a>
 	{% elif submission.stage.current_stage == 'submission' %}
 	<form method="POST">
 	{% csrf_token %}

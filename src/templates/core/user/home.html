@@ -95,7 +95,7 @@
 			<h3><i class="fa fa-tasks"></i>&nbsp;Copyeditor</h3>
 			{% for copyedit in copyedits %}
 			<div class="bs-callout bs-callout-submission" id="callout-helper-bg-specificity">
-				<p><a href="{% url 'copyedit' copyedit.book.id copyedit.id %}">Copyedit for {{ copyedit.book.title }} due on {{ copyedit.due }}</a></p>
+				<p><a href="#">Copyedit for {{ copyedit.book.title }} due on {{ copyedit.due }}</a></p>
 			</div>
 			{% empty %}
 			<div class="bs-callout" id="callout-helper-bg-specificity">

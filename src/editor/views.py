@@ -360,6 +360,23 @@ def editor_production(request, submission_id):
 	return render(request, template, context)
 
 @is_book_editor
+def editor_publish(request, submission_id):
+	book = get_object_or_404(models.Book, pk=submission_id)
+	if not  book.stage.publication:
+		book.stage.publication= timezone.now()
+		book.stage.current_stage='published'
+		book.stage.save()
+		if not book.publication_date:
+			book.publication_date = timezone.now()
+		book.save()
+		messages.add_message(request, messages.SUCCESS, 'Book has successfully been published')
+	else:
+		messages.add_message(request, messages.INFO, 'Book is already published')
+
+	return redirect(reverse('editor_submission', kwargs={'submission_id': submission_id}))
+
+
+@is_book_editor
 def catalog(request, submission_id):
 	book = get_object_or_404(models.Book, pk=submission_id)
 
