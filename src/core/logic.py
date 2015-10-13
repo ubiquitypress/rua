@@ -8,6 +8,7 @@ from core import models
 from core.cache import cache_result
 from django.db.models import Q
 from revisions import models as revisions_models
+import json
 
 def clean_email_list(addresses):
 	list_of_email_addresses=[]

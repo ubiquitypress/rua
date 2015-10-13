@@ -1,11 +1,15 @@
 from core import models as core_models
 def get_editors(review_assignment):
 	press_editors = review_assignment.book.press_editors.all()
-	series_editor = review_assignment.book.series.editor
+	if review_assignment.book.series:
+		series_editor = review_assignment.book.series.editor
 
-	if series_editor:
-		series_editor_list = [{'editor': series_editor, 'isSeriesEditor': True}]
-		press_editor_list = [{'editor': editor, 'isSeriesEditor': False} for editor in press_editors if not editor == series_editor_list[0]['editor']]
+		if series_editor:
+			series_editor_list = [{'editor': series_editor, 'isSeriesEditor': True}]
+			press_editor_list = [{'editor': editor, 'isSeriesEditor': False} for editor in press_editors if not editor == series_editor_list[0]['editor']]
+		else:
+			series_editor_list = []
+			press_editor_list = [{'editor': editor, 'isSeriesEditor': False} for editor in press_editors]
 
 	else:
 		series_editor_list = []
