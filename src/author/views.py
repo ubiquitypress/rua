@@ -9,7 +9,7 @@ from author import forms
 from author import logic
 from core.logic import order_data, decode_json
 from submission import models as submission_models
-from revisions import models as revision_models, forms as revision_forms
+from revisions import models as revision_models
 from review import models as review_models
 from core.files import handle_file_update, handle_attachment,handle_file,handle_copyedit_file,handle_typeset_file
 

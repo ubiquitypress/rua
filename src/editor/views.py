@@ -803,6 +803,10 @@ def assign_copyeditor(request, submission_id):
 	book = get_object_or_404(models.Book, pk=submission_id)
 	copyeditors = models.User.objects.filter(profile__roles__slug='copyeditor')
 
+	if not book.stage.current_stage == 'editing':
+		messages.add_message(request, messages.WARNING, 'You cannot assign a Copyeditor, this book is not in the Editing phase.')
+		return redirect(reverse('editor_editing', kwargs={'submission_id': book.id}))
+
 	if request.POST:
 		copyeditor_list = User.objects.filter(pk__in=request.POST.getlist('copyeditor'))
 		file_list = models.File.objects.filter(pk__in=request.POST.getlist('file'))
@@ -873,6 +877,10 @@ def view_copyedit(request, submission_id, copyedit_id):
 def assign_indexer(request, submission_id):
 	book = get_object_or_404(models.Book, pk=submission_id)
 	indexers = models.User.objects.filter(profile__roles__slug='indexer')
+
+	if not book.stage.current_stage == 'editing':
+		messages.add_message(request, messages.WARNING, 'You cannot assign an Indexer, this book is not in the Editing phase.')
+		return redirect(reverse('editor_editing', kwargs={'submission_id': book.id}))
 
 	if request.POST:
 		indexer_list = User.objects.filter(pk__in=request.POST.getlist('indexer'))
