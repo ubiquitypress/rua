@@ -24,6 +24,7 @@ urlpatterns = patterns('',
 
 
     url(r'^submission/(?P<submission_id>\d+)/production/$', 'editor.views.editor_production', name='editor_production'),
+    url(r'^submission/(?P<submission_id>\d+)/publish/$', 'editor.views.editor_publish', name='editor_publish'),
 
     url(r'^submission/(?P<submission_id>\d+)/production/add/format/$', 'editor.views.add_format', name='add_format'),
     url(r'^submission/(?P<submission_id>\d+)/production/add/chapter/$', 'editor.views.add_chapter', name='add_chapter'),
@@ -37,7 +38,7 @@ urlpatterns = patterns('',
     url(r'^submission/(?P<submission_id>\d+)/catalog/contributor/(?P<contributor_type>[-\w]+)/(?P<contributor_id>\d+)/$', 'editor.views.update_contributor', name='update_contributor'),
     url(r'^submission/(?P<submission_id>\d+)/catalog/contributor/(?P<contributor_type>[-\w]+)/$', 'editor.views.update_contributor', name='add_contributor'),
     url(r'^submission/(?P<submission_id>\d+)/catalog/contributor/(?P<contributor_type>[-\w]+)/(?P<contributor_id>\d+)/delete/$', 'editor.views.delete_contributor', name='delete_contributor'),
-    url(r'^submission/(?P<submission_id>\d+)/production/assign/typesetter/$', 'editor.views.assign_typesetter', name='assign_typesetter'),\
+    url(r'^submission/(?P<submission_id>\d+)/production/assign/typesetter/$', 'editor.views.assign_typesetter', name='assign_typesetter'),
     url(r'^submission/(?P<submission_id>\d+)/production/view/typesetter/(?P<typeset_id>\d+)$', 'editor.views.view_typesetter', name='view_typesetter'),
 
     # Contract

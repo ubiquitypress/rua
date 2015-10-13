@@ -51,9 +51,13 @@
       <h4>File manager</h4>
 
 </div><div class="col-md-12">
+{% if update %}
 <div class="col-md-12 file-sub-heading-accept container-fluid">
-      <h4>Update file "{{file.label}}"</h4>
-
+      <h4>Update file "{% if file.label %}{{file.label}}{% else %}{{file.original_filename}}{% endif %}"</h4>
+{% else %}
+<div class="col-md-12 file-sub-heading container-fluid">
+      <h4>Viewing file "{% if file.label %}{{file.label}}{% else %}{{file.original_filename}}{% endif %}"</h4>
+{% endif %}
 </div>
 </br>
 
@@ -79,13 +83,16 @@
 		</br>
 		<tbody style="background-color:white">
 			<tr>
-				<td>Label</td><td><form method="post" enctype="multipart/form-data">	
-			{% csrf_token %}
-				<div class="form-group">
-									
-							 		<input type="text" class=" form-control" id="rename" name="rename" value="{{file.label}}">		
-		</div>
-	</td>
+				<td>Label</td><td>{% if update %}
+					<form method="post" enctype="multipart/form-data">	
+						{% csrf_token %}
+						<div class="form-group">
+							<input type="text" class=" form-control" id="rename" name="rename" value="{{file.label}}">		
+						</div>
+						{% else %}
+						{{file.label}}
+						{% endif %}
+				</td>
 			</tr>
 			<tr>
 				<td>Original Filename</td><td>{{ file.original_filename }}</td>
@@ -110,7 +117,7 @@
   	</li>
 
 </ul>
-		
+		{% if update %}
 			<div class="well">
 				<div class="dash-container">
 				<h5 class="subtitle-form-text">You can upload a new version of this file below. The old version will be stored unless explicitly deleted.</h5>
@@ -134,6 +141,7 @@
 				</div></div>
 			</div>
 		</form>
+		{% endif %}
 </div>
 </div>
 </div></div>

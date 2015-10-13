@@ -360,6 +360,23 @@ def editor_production(request, submission_id):
 	return render(request, template, context)
 
 @is_book_editor
+def editor_publish(request, submission_id):
+	book = get_object_or_404(models.Book, pk=submission_id)
+	if not  book.stage.publication:
+		book.stage.publication= timezone.now()
+		book.stage.current_stage='published'
+		book.stage.save()
+		if not book.publication_date:
+			book.publication_date = timezone.now()
+		book.save()
+		messages.add_message(request, messages.SUCCESS, 'Book has successfully been published')
+	else:
+		messages.add_message(request, messages.INFO, 'Book is already published')
+
+	return redirect(reverse('editor_submission', kwargs={'submission_id': submission_id}))
+
+
+@is_book_editor
 def catalog(request, submission_id):
 	book = get_object_or_404(models.Book, pk=submission_id)
 
@@ -687,6 +704,7 @@ def view_typesetter(request, submission_id, typeset_id):
 		'format_list': models.Format.objects.filter(book=book).select_related('file'),
 		'chapter_list': models.Chapter.objects.filter(book=book).select_related('file'),
 		'typeset': typeset,
+		'typeset_id': typeset.id,
 		'author_form': author_form,
 		'email_text': email_text,
 	}

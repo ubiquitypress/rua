@@ -95,7 +95,7 @@
 			<h3><i class="fa fa-tasks"></i>&nbsp;Copyeditor</h3>
 			{% for copyedit in copyedits %}
 			<div class="bs-callout bs-callout-submission" id="callout-helper-bg-specificity">
-				<p><a href="{% url 'copyedit' copyedit.book.id copyedit.id %}">Copyedit for {{ copyedit.book.title }} due on {{ copyedit.due }}</a></p>
+				<p><a href="#">Copyedit for {{ copyedit.book.title }} due on {{ copyedit.due }}</a></p>
 			</div>
 			{% empty %}
 			<div class="bs-callout" id="callout-helper-bg-specificity">
@@ -120,8 +120,9 @@
 		<div class="col-md-4">
 			<h3><i class="fa fa-tasks"></i>&nbsp;Indexing</h3>
 			{% for index in indexes %}
+			<!-- url 'index' index.book.id index.id  removed-->
 			<div class="bs-callout bs-callout-submission" id="callout-helper-bg-specificity">
-				<p><a href="{% url 'index' index.book.id index.id %}">Index for {{ index.book.title }} due on {{ index.due }}</a></p>
+				<p><a href="#">Index for {{ index.book.title }} due on {{ index.due }}</a></p>
 			</div>
 			{% empty %}
 			<div class="bs-callout" id="callout-helper-bg-specificity">
@@ -136,7 +137,8 @@
 			{% for typeset in typesetting %}
 			<div class="bs-callout bs-callout-submission" id="callout-helper-bg-specificity">
 				{% if not typeset.typesetter_invited %}
-				<p><a href="{% url 'typeset' typeset.book.id typeset.id %}">Typesetting for {{ typeset.book.title }} due on {{ typeset.due }}</a></p>
+				<!-- url 'typeset' typeset.book.id typeset.id removed -->
+				<p><a href="#">Typesetting for {{ typeset.book.title }} due on {{ typeset.due }}</a></p>
 				{% else %}
 				<p><a href="{% url 'typeset_typesetter' typeset.book.id typeset.id %}">Final Typesetting for {{ typeset.book.title }}</a></p>
 				{% endif %}

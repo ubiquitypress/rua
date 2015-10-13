@@ -1,13 +1,9 @@
 <div class="dash-container">
 
-<h3>COPYEDITING:{% if submission.stage.copyediting %}<a class="btn btn-sm btn-accept pull-right" href="{% url 'assign_copyeditor' submission.id %}"><i class="fa fa-plus">&nbsp;</i>Add Copyeditor</a>{% endif %}</h3>
+<h3>COPYEDITING:</h3>
 
 {% if not submission.stage.copyediting %}
 <p>Stage has not been initialised.</p>
-<form method="POST" action="?start=copyediting">
-	{% csrf_token %}
-	<button class="btn btn-primary" type="submit">Start Copyediting</button>
-</form>
 {% else %}
 <table class="table table-condensed table-bordered table-responsive" style="font-size:14px">
 	<tr>
@@ -28,8 +24,8 @@
 		<td>
 			{{ assignment.due }}
 		</td>
-		<td>
-			<a href="{% url 'view_copyedit' submission.id assignment.id %}" class="btn btn-task"> View </a>
+			<td>
+			<a href="{% url 'author_view_copyedit' submission.id assignment.id %}" class="btn btn-task"> View </a>
 		</td>
 	</tr>
 	{% empty %}
@@ -41,13 +37,9 @@
 {% endif %}
 
 </br>
-<h3>INDEXING:{% if submission.stage.indexing %}<a class="btn btn-sm btn-accept pull-right" href="{% url 'assign_indexer' submission.id %}"><i class="fa fa-plus">&nbsp;</i>Assign Indexer</a>{% endif %}</h3>
+<h3>INDEXING:</h3>
 {% if not submission.stage.indexing %}
-<form method="POST" action="?start=indexing">
 	<p>Stage has not been initialised.</p>
-	{% csrf_token %}
-	<button class="btn btn-primary" type="submit">Start Indexing</button>
-</form>
 {% else %}
 <table class="table table-condensed table-bordered table-responsive" style="font-size:14px">
 	<tr> 
@@ -68,8 +60,8 @@
 		<td>
 			{{ assignment.due }}
 		</td>
-		<td>
-			<a href="{% url 'view_index' submission.id assignment.id %}" class="btn btn-task"> View </a>
+			<td>
+			<a href="{% url 'author_view_index' submission.id assignment.id %}" class="btn btn-task"> View </a>
 		</td>
 	</tr>
 	{% empty %}

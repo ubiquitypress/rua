@@ -102,22 +102,8 @@
       <form method="POST">
         {% csrf_token %}
         <br />
-        <button class="btn btn-success" name="invite_typesetter">Invite Typesetter to Complete Typesetting</button>
       </form>
-      {% elif typeset.author_completed and typeset.editor_second_review and not typeset.typesetter_invited %}
-      {{ typeset.typesetter_invited }}
-
-      <h4>Invite Typesetter to Review</h4>
-      <form method="POST">
-        {% csrf_token %}
-        {% bootstrap_form author_form %}
-        <div class="form-group">
-          <label class="control-label" for="id_note_to_author">Email to Typesetter</label>
-          <textarea class="form-control" cols="40" id="email_text" name="email_text" rows="10" title="">{{ email_text }}</textarea>
-        </div>
-        <button class="btn btn-success" name="send_invite_typesetter" id="send_invite_typesetter" type="submit">Send Request</button>
-      </form>
-
+     
       {% elif typeset.author_completed and typeset.editor_second_review and typeset.typesetter_invited %}
       <hr />
       <h4>Typesetter Final Revision</h4>

@@ -1,4 +1,4 @@
-   <h4>Typesetting{% if submission.stage.typesetting %}<a href="{% url 'assign_typesetter' submission.id %}" class="btn btn-xs btn-task pull-right"><i class="fa fa-plus">&nbsp;</i>Add Typesetter</a>{% endif %}</h4>
+   <h4>Typesetting{% if submission.stage.typesetting %} <a href="{% url 'assign_typesetter' submission.id %}" class="btn btn-sm btn-accept btn-round-half pull-right" style="margin-bottom:5px"><i class="fa fa-plus">&nbsp;</i>Add Typesetter</a>{% endif %}</h4>
   {% include "editor/production/typesetting.html" %}
 
     <hr />

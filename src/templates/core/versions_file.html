@@ -20,6 +20,7 @@
   <hr />
   <div class="container-fluid">
     <ul class="timeline">
+      {% if versions%}
       {% for file in versions %}
         <li {% if forloop.counter|divisibleby:2 %}class="timeline-inverted"{% endif %}>
             <div class="timeline-badge versions-badge">
@@ -47,7 +48,6 @@
                     <p><small class="text-muted"><i class="fa fa-file-o">&nbsp;</i>File Version<p>Original Filename: {{ file.original_filename }}<br />Uploaded: {{ file.date_uploaded }}<br />Owner: {{ file.owner.profile.full_name }}</p></small></p>
               
                 <div class="timeline-body">
-                    <p>{{ item.message }}</p>
                 </div>
 
             </div>
@@ -57,6 +57,42 @@
           </div>
         </li>
         {% endfor %}
+        {% else %}
+        <li>
+            <div class="timeline-badge versions-badge">
+              1
+            </div>
+            <div class="timeline-panel" align="center">
+                 <div class="pull-left">
+  <div class="pull-left container-fluid" align="center" style="">
+    <div class="row">
+     <div class="span6" style="float: none; margin: 0 auto;">
+            <h1 class="file-icon-medium" style="margin-right:28px">
+            {% if file.mime_type == 'image/jpeg' or file.mime_type == 'image/png' %}
+           &nbsp; &nbsp;    <i class="fa fa-file-image-o"></i>
+            {% else %}
+            &nbsp; &nbsp;   <i class="fa fa-file-text-o"></i>
+            {% endif %}
+          </h1>
+          <a href="{% url 'serve_file' submission.id file.id %}" style="float:right;" class="btn btn-sm btn-task">&nbsp;<i class="fa fa-cloud-download">&nbsp;</i>Download &nbsp;</a>
+  </div>
+  </div>
+    </div>
+<div class="pull-left">
+          </br>
+                   <b>File name :</b>{{ file.uuid_filename }}&nbsp;
+                    <p><small class="text-muted"><i class="fa fa-file-o">&nbsp;</i>File Version<p>Original Filename: {{ file.original_filename }}<br />Uploaded: {{ file.date_uploaded }}<br />Owner: {{ file.owner.profile.full_name }}</p></small></p>
+              
+                <div class="timeline-body">
+                </div>
+
+            </div>
+
+          </div>
+              
+          </div>
+        </li>
+        {% endif %}
     </ul>
 </div>
 </div>

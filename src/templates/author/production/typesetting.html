@@ -1,9 +1,5 @@
 {% if not submission.stage.typesetting %}
 <p>Stage has not been initialised.</p>
-<form method="POST" action="?start=typesetting">
-	{% csrf_token %}
-	<button class="btn btn-primary" type="submit">Start Typesetting</button>
-</form>
 {% else %}
 <table class="table table-bordered">
 	<tr>
@@ -19,7 +15,7 @@
 	{% endifequal %}
 		<td>{{ typeset.typesetter.profile.full_name }}</td>
 		<td><strong>{{ typeset.state.friendly }}</strong><br>{{ typeset.state.date }}</td>
-		<td><a href="{% url 'view_typesetter' submission.id typeset.id %}" class="btn  btn-task">View</a></td>
+		<td><a href="{% url 'author_view_typesetter' submission.id typeset.id %}" class="btn  btn-task">View</a></td>
 	</tr>
 	{% empty %}
 	<tr>
