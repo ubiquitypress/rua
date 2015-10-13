@@ -49,6 +49,7 @@ INSTALLED_APPS = (
     'review',
     'api',
     'cron',
+    'revisions',
     'author',
     'onetasker',
     'editor',
