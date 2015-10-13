@@ -324,22 +324,6 @@ def move_to_editing(request, submission_id):
 
 	return redirect(reverse('view_editing', kwargs={'submission_id': submission_id}))
 
-# Log
-@is_book_editor
-def view_log(request, submission_id):
-	book = get_object_or_404(models.Book, pk=submission_id)
-	log_list = models.Log.objects.filter(book=book).order_by('-date_logged')
-	email_list = models.EmailLog.objects.filter(book=book).order_by('-sent')
-
-	template = 'workflow/log.html'
-	context = {
-		'submission': book,
-		'log_list': log_list,
-		'email_list': email_list,
-		'active': 'log',
-	}
-
-	return render(request, template, context)
 
 ## PROPOSALS ##
 

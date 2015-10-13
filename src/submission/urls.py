@@ -22,6 +22,11 @@ urlpatterns = patterns('',
 	url(r'^book/(?P<book_id>\d+)/file/(?P<file_pk>\d+)/delete/$', 'submission.views.upload_delete', name = 'jfu_delete' ),
 
 
+
 	url(r'^proposal/$', 'submission.views.start_proposal', name='proposal_start'),
 	url(r'^proposal/(?P<proposal_id>\d+)/revisions/$', 'submission.views.proposal_revisions', name='proposal_revisions'),
+
+
+
+
 )
