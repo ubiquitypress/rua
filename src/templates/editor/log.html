@@ -4,29 +4,19 @@
 
 {% block title %}{{ submission.title }} - Log{% endblock %}
 
-{% block breadcrumbs %}
-    <ol class="breadcrumb">
-	  <li><a href="{% url 'user_home' %}">User Home</a></li>
-	  <li class="">Workflow</li>
-    <li>Log</li>
-    <li class="active">{{ submission.title }}</li>
-	</ol>
-{% endblock %}
-  
 {% block css %}
   <link href="{% static "css/timeline.css" %}" rel="stylesheet">
 {% endblock %}
 
 {% block body %}
-<div class="col-md-12">
-  <h3>{{ submission.title }} - Log</h3>
+  <div class="col-md-12 book-heading  container-fluid" style="margin-top:-20px">
+  <h4>Book {{ submission.id }}: {{ submission.title }}<a href="{% url 'editor_submission' submission.id  %}" class="btn  btn-trasnparent-white" style="position: absolute;right:20;margin-top:-8px">Go back</a></h4>
+</div>
+  <div class="col-md-12 file-sub-heading-grey  container-fluid">
+  <h4>Log</h4>
+</div>
   <hr />
-  {% include "workflow/elements/workflow_view_buttons.html" %}
-  <ul id="log_tabs" class="nav nav-tabs" role="tablist">
-    <li role="presentation" class="active"><a href="#action_log" aria-controls="home" role="tab" data-toggle="tab">Log</a></li>
-    <li role="presentation"><a href="#email_log" aria-controls="home" role="tab" data-toggle="tab">Email Log</a></li>
-  </ul>
-
+  <div class="dash-center col-md-12"
   <!-- Tab panes -->
   <div class="tab-content">
     <div role="tabpanel" class="tab-pane active" id="action_log">
@@ -68,8 +58,6 @@
       </ul>
     </div>
   </div>
-</div>
-
 {% endblock %}
 
 {% block js %}

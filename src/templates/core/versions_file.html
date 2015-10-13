@@ -12,13 +12,12 @@
   <div class="col-md-12 file-heading  container-fluid" style="margin-top:-20px">
   <h4>File Manager</h4>
 </div>
-<div class="col-md-12">
   <div class="col-md-12 file-sub-heading-versions  container-fluid">
   <h4>Book: {{ submission.title }} - File: {{ file.id }} -- Versions</h4>
 </div>
 
   <hr />
-  <div class="container-fluid">
+  <div class="dash-center col-md-12 ">
     <ul class="timeline">
       {% if versions%}
       {% for file in versions %}
@@ -95,6 +94,6 @@
         {% endif %}
     </ul>
 </div>
-</div>
+
 
 {% endblock %}

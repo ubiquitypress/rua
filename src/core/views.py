@@ -472,3 +472,20 @@ def versions_file(request, submission_id, file_id):
 
 	return render(request, template, context)
 
+# Log
+@is_book_editor
+def view_log(request, submission_id):
+	book = get_object_or_404(models.Book, pk=submission_id)
+	log_list = models.Log.objects.filter(book=book).order_by('-date_logged')
+	email_list = models.EmailLog.objects.filter(book=book).order_by('-sent')
+
+	template = 'editor/log.html'
+	context = {
+		'submission': book,
+		'log_list': log_list,
+		'email_list': email_list,
+		'active': 'log',
+	}
+
+	return render(request, template, context)
+

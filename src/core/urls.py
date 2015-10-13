@@ -64,6 +64,9 @@ urlpatterns = patterns('',
     url(r'^files/submission/(?P<submission_id>\d+)/file/(?P<file_id>\d+)/update/returner/(?P<returner>[-\w]+)/$', 'core.views.update_file', name='update_file'),
     url(r'^files/submission/(?P<submission_id>\d+)/file/(?P<file_id>\d+)/versions/$', 'core.views.versions_file', name='versions_file'),
 
+    #log
+    url(r'^log/submission/(?P<submission_id>\d+)/', 'core.views.view_log', name='view_log'),
+
     url(r'^misc_files/(?P<submission_id>\d+)/upload/$', 'core.views.upload_misc_file', name='upload_misc_file'),
 )
 

@@ -253,6 +253,11 @@ body > div.container-fluid > div > div > div > a {
   color: #FFF;
   margin-bottom:5px;
 }
+.file-sub-heading-grey {
+  background-color: #AEAEAE;
+  color: #FFF;
+  margin-bottom:5px;
+}
 .file-sub-heading-accept {
   background-color: rgb(159, 197, 88);
   color: #FFF;

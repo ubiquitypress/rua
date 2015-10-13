@@ -40,6 +40,6 @@ urlpatterns = patterns('',
     url(r'^editing/(?P<submission_id>\d+)/$', 'workflow.editing_views.view_editing', name='view_editing'),
 
 
-    url(r'^log/(?P<submission_id>\d+)/', 'workflow.views.view_log', name='view_log'),
+   
 
 )
