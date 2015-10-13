@@ -91,16 +91,6 @@
 },
 {
     "fields": {
-        "value": "8accaeed-f073-4df9-a31b-bc7d6d455b07..jpg",
-        "group": 4,
-        "name": "logo",
-        "types": "file"
-    },
-    "model": "core.setting",
-    "pk": 10
-},
-{
-    "fields": {
         "value": "If you have any suggestions about who could review this book, please add them here. Please ensure you include a current, active, email address.",
         "group": 1,
         "name": "review_suggestions",
@@ -361,7 +351,7 @@
 },
 {
     "fields": {
-        "value": "A new submission has been uploaded to.\r\n\r\nView the submission: http://{{base_url}}/editor/new/submission/{{submission.id}}\r\n\r\nRegards,\r\n\r\nRUA Bot",
+        "value": "A new submission has been uploaded to.\r\n\r\nView the submission: http://{{base_url}}/workflow/new/{{submission.id}}\r\n\r\nRegards,\r\n\r\nRUA Bot",
         "group": 3,
         "name": "editor_submission_ack",
         "types": "text"
@@ -371,22 +361,52 @@
 },
 {
     "fields": {
-        "value": "Dear someone,\r\n\r\nSomething something,\r\n\r\nRegards,\r\n\r\n{{ sender.profile.signature }}",
+        "value": "GO AWAY!",
         "group": 3,
-        "name": "proposal_request_revisison",
+        "name": "proposal_accept",
         "types": "rich_text"
     },
     "model": "core.setting",
-    "pk": 38
+    "pk": 39
 },
 {
     "fields": {
-        "value": "",
-        "group": 1,
+        "value": "dsfff",
+        "group": 3,
+        "name": "proposal_decline",
+        "types": "rich_text"
+    },
+    "model": "core.setting",
+    "pk": 40
+},
+{
+    "fields": {
+        "value": "Dear someone,\r\n\r\nSomething something,\r\n\r\nRegards,\r\n\r\n{{ sender.profile.signature }}",
+        "group": 3,
+        "name": "proposal_request_revisisons",
+        "types": "rich_text"
+    },
+    "model": "core.setting",
+    "pk": 41
+},
+{
+    "fields": {
+        "value": "afea9c80-b081-42e9-99bd-a4b710e6aafc..png",
+        "group": 4,
         "name": "brand_header",
         "types": "file"
     },
     "model": "core.setting",
-    "pk": 39
+    "pk": 42
+},
+{
+    "fields": {
+        "value": "0791a2db-c180-4fe5-a951-dc002ae08fd6..ico",
+        "group": 4,
+        "name": "favicon",
+        "types": "file"
+    },
+    "model": "core.setting",
+    "pk": 43
 }
 ]
