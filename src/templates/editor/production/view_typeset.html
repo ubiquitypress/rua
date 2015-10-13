@@ -1,100 +1,60 @@
 {% load bootstrap3 %}
-<style>
-HTML  CSS   Result
-Edit on 
-.timeline {
-  list-style: none;
-}
-.timeline > li {
-  margin-bottom: 60px;
-}
 
-/* for Desktop */
-@media ( min-width : 640px ){
-  .timeline > li {
-    overflow: hidden;
-    margin-top:-22px;
-    margin-bottom:-10px;
-    position: relative;
-  }
-  .timeline-date {
-    width: 30px;
-    float: left;
-    margin-top: 20px;
-  }
-  .timeline-content {
-    width: 60%;
-    float: left;
-    border-left: 4px #e5e5d1 solid;
-    padding-left: 30px;
-  }
-  .timeline-content:before {
-    content: '';
-    width: 22px;
-    height: 22px;
-    background: rgb(159, 197, 88);
-    position: absolute;
-    left: 21px;
-    top: 35px;
-    border-radius: 100%;
-  }
-}
-</style>
 
-  <h4>TYPESETTING: {{ typeset.typesetter.profile.full_name }}</h4>
+  <h3>TYPESETTING: {{ typeset.typesetter.profile.full_name }}</h3>
 
-  <ul class="timeline">
+  <ul class="timeline-dash">
     <li>
-      <p class="timeline-date"><p>
-      <div class="timeline-content">
-        <h5>Requested<br />{{ typeset.requested }}</h5>
+      <p class="timeline-dash-date">{{ typeset.requested }}</p>
+      <div class="timeline-content-dash-closed">
+        <h5>Requested</h5>
       </div>
     </li>
     {% if typeset.accepted %}
     <li>
-      <p class="timeline-date"><p>
-      <div class="timeline-content">
-        <h5>Accepted<br />{{ typeset.accepted }}</h5>
+       <p class="timeline-dash-date">{{ typeset.accepted }}</p>
+      <div class="timeline-content-dash-closed">
+        <h5>Accepted</h5>
       </div>
     </li>
     {% endif %}
     {% if typeset.completed %}
     <li>
-      <p class="timeline-date"><p>
-      <div class="timeline-content">
-        <h5>Initial Assigment Completed<br />{{ typeset.completed }}</h5>
+       <p class="timeline-dash-date">{{ typeset.completed }}</p>
+      <div class="timeline-content-dash-closed">
+        <h5>Initial Assigment Completed</h5>
       </div>
     </li>
     {% endif %}
     {% if typeset.editor_review %}
     <li>
-      <p class="timeline-date"><p>
-      <div class="timeline-content">
-        <h5>Editor Review<br />{{ typeset.editor_review }}</h5>
+       <p class="timeline-dash-date">{{ typeset.editor_review }}</p>
+      <div class="timeline-content-dash-closed">
+        <h5>Editor Review</h5>
       </div>
     </li>
     {% endif %}
     {% if typeset.author_completed %}
     <li>
-      <p class="timeline-date"><p>
-      <div class="timeline-content">
-        <h5>Author Review<br />{{ typeset.author_completed }}</h5>
+       <p class="timeline-dash-date">{{ typeset.author_completed }}</p>
+      <div class="timeline-content-dash-closed">
+        <h5>Author Review</h5>
       </div>
     </li>
     {% endif %}
     {% if typeset.editor_second_review %}
     <li>
-      <p class="timeline-date"><p>
-      <div class="timeline-content">
-        <h5>Editor Review<br />{{ typeset.editor_second_review }}</h5>
+       <p class="timeline-dash-date">{{ typeset.editor_second_review }}</p>
+      <div class="timeline-content-dash-closed">
+        <h5>Editor Review</h5>
       </div>
     </li>
     {% endif %}
     {% if typeset.typesetter_completed %}
     <li>
-      <p class="timeline-date"><p>
-      <div class="timeline-content">
-        <h5>Assignment Completed<br />{{ typeset.typesetter_completed }}</h5>
+       <p class="timeline-dash-date">{{ typeset.typesetter_completed }}</p>
+      <div class="timeline-content-dash-closed">
+        <h5>Assignment Completed</h5>
       </div>
     </li>
     {% endif %}

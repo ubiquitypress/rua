@@ -704,6 +704,7 @@ def view_typesetter(request, submission_id, typeset_id):
 		'format_list': models.Format.objects.filter(book=book).select_related('file'),
 		'chapter_list': models.Chapter.objects.filter(book=book).select_related('file'),
 		'typeset': typeset,
+		'typeset_id': typeset.id,
 		'author_form': author_form,
 		'email_text': email_text,
 	}

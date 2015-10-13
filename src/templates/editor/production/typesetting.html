@@ -12,10 +12,14 @@
 		<th>View</th>
 	</tr>
 	{% for typeset in submission.typesetassignment_set.all %}
-	<tr>
+	{% ifequal typeset.id typeset_id %}
+		<tr class="selected-row-table">
+	{% else %}
+		<tr>
+	{% endifequal %}
 		<td>{{ typeset.typesetter.profile.full_name }}</td>
 		<td><strong>{{ typeset.state.friendly }}</strong><br>{{ typeset.state.date }}</td>
-		<td><a href="{% url 'view_typesetter' submission.id typeset.id %}" class="btn btn-sm btn-success">View</a></td>
+		<td><a href="{% url 'view_typesetter' submission.id typeset.id %}" class="btn  btn-task">View</a></td>
 	</tr>
 	{% empty %}
 	<tr>
