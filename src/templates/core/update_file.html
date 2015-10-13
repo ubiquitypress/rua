@@ -16,52 +16,38 @@
 </div>
 	 <div class="col-md-3 dash-left grey-container">
 
-        <div class="dash-container" >
+          <div class="dash-container" >
             <h4 class="header-text">  {% if submission.prefix %}{{ submission.prefix }} {% endif %}{{ submission.title }}</h4> 
             <h5 class="subtitle-text">{{submission.subtitle}}</h5>
         </div>
     <div class="book-info">
-    <table class="table table-bordered table-condensed small">
-        <tr>
-            <th>Series</th>
-            <td>{{ submission.series }}</td>
-        </tr>
-        <tr>
-            <th>Type</th>
-            <td>{{ submission.get_book_type_display }}</td>
-        </tr>
-        <tr>
-            <th>License</th>
-            <td>{{ submission.license.short_name }}</td>
-        </tr>
-        <tr>
-            <th>Review Type</th>
-            <td>{{ submission.get_review_type_display }}</td>
-        </tr>
-    </table>
-    </div> </br>
+    <b>Series: </b>{{submission.series}} </br>
+    <b>Type: </b>{{submission.book_type}} </br>
+    <b>License: </b>{{submission.license}} </br>
+    <b>Review Type: </b>{{submission.get_review_type_display}} </br>
+    </div>  </br>
             
 
    
     </div>
-    <div class="col-md-9 dash-center" >
+    <div class="col-md-9 dash-center" style="margin-top:-10px">
     </br>
 
     	<div class="col-md-12 file-heading container-fluid">
       <h4>File manager</h4>
 
-</div><div class="col-md-12">
+</div><div class="col-md-12" >
 {% if update %}
-<div class="col-md-12 file-sub-heading-accept container-fluid">
+<div class="col-md-12 file-sub-heading-accept container-fluid" style="margin-bottom:10px" >
       <h4>Update file "{% if file.label %}{{file.label}}{% else %}{{file.original_filename}}{% endif %}"</h4>
 {% else %}
-<div class="col-md-12 file-sub-heading container-fluid">
+<div class="col-md-12 file-sub-heading container-fluid"style="margin-bottom:10px">
       <h4>Viewing file "{% if file.label %}{{file.label}}{% else %}{{file.original_filename}}{% endif %}"</h4>
 {% endif %}
 </div>
 </br>
 
-    <div class="dash-container" >
+    <div class="dash-container">
 
     	<ul class="media-list manuscript-upload-states ">
 
