@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+{% load bootstrap3 %}
+
+{% block title %}New Submissions{% endblock %}
+
+{% block breadcrumbs %}
+    <ol class="breadcrumb">
+	  <li><a href="{% url 'user_dashboard' %}">Dashboard</a></li>
+	  <li class="">Editor</li>
+    <li><a href="{% url 'new_submissions'%}">New Submissions</a></li>
+    <li class="active">{{ submission.title }}</li>
+	</ol>
+{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/plug-ins/1.10.7/integration/bootstrap/3/dataTables.bootstrap.css">
+{% endblock css %}
+
+{% block body %}
+<div class="col-md-12">
+  <h3>{{ submission.title }}</h3>
+  <hr />
+  {% include "core/elements/workflow_view_buttons.html" %}
+  <h4 id="summary">Summary</h4>
+  <ul id="main_summary_tabs" class="nav nav-tabs" role="tablist">
+    <li role="presentation" class="active"><a href="#main_summary" aria-controls="home" role="tab" data-toggle="tab">Summary</a></li>
+    <li role="presentation"><a href="#description" aria-controls="profile" role="tab" data-toggle="tab">Description</a></li>
+    <li role="presentation"><a href="#cover_letter" aria-controls="messages" role="tab" data-toggle="tab">Cover Letter</a></li>
+    <li role="presentation"><a href="#reviewer_sugestions" aria-controls="messages" role="tab" data-toggle="tab">Reviewer Suggestions</a></li>
+    <li role="presentation"><a href="#competing_interests" aria-controls="messages" role="tab" data-toggle="tab">Competing Interests</a></li>
+  </ul>
+
+  <!-- Tab panes -->
+  <div class="tab-content">
+    <div role="tabpanel" class="tab-pane active" id="main_summary">{% include "core/elements/summary.html" %}</div>
+    <div role="tabpanel" class="tab-pane" id="description"><p class="tab-p">{{ submission.description|safe }}</p></div>
+    <div role="tabpanel" class="tab-pane" id="cover_letter"><p class="tab-p">{{ submission.cover_letter|safe }}</p></div>
+    <div role="tabpanel" class="tab-pane" id="reviewer_sugestions"><p class="tab-p">{{ submission.reviewer_suggestions|safe }}</p></div>
+    <div role="tabpanel" class="tab-pane" id="competing_interests"><p class="tab-p">{{ submission.competing_interests|safe }}</p></div>
+  </div>
+  <hr />
+  <div>
+
+    <!-- Nav tabs -->
+    <ul id="summary_tabs" class="nav nav-tabs" role="tablist">
+      <li role="presentation" class="active"><a href="#submission_files" aria-controls="home" role="tab" data-toggle="tab">Submission Files</a></li>
+      <li role="presentation"><a href="#misc_files" aria-controls="profile" role="tab" data-toggle="tab">Misc Files</a></li>
+      <li role="presentation"><a href="#contracts" aria-controls="messages" role="tab" data-toggle="tab">Contract</a></li>
+    </ul>
+
+    <!-- Tab panes -->
+    <div class="tab-content">
+      <div role="tabpanel" class="tab-pane active" id="submission_files">{% include "editor/submission_files.html" %}</div>
+      <div role="tabpanel" class="tab-pane" id="misc_files">{% include "core/misc_files.html" %}</div>
+      <div role="tabpanel" class="tab-pane" id="contracts">{% include "editor/contract/contract.html" %}</div>
+    </div>
+
+  </div>
+  <hr />
+  {% if submission.book_type == 'monograph' %}
+  <h4 id="files">Authors</h4>
+  {% include "core/user/authors.html" %}
+  {% else %}
+  <h4 id="files">Editors</h4>
+  {% include "core/user/editors.html" %}
+  {% endif %}
+  <hr />
+  {% if revision_requests %}
+  <h4>Revisions Requests</h4>
+  <table class="table table-bordered">
+    <tr>
+      <th>Requested</th>
+      <th>Due</th>
+      <th>Completed</th>
+      <th></th>
+    </tr>
+    {% for revision in revision_requests %}
+    <tr>
+      <td>{{ revision.requested }}</td>
+      <td>{{ revision.due }}</td>
+      <td>{% if revision.completed %}{{ revision.completed }}{% else %}--{% endif %}</td>
+      <td>{% if revision.completed %}<a href="{% url 'editor_view_revisions' revision.id %}">View</a>{% else %}--{% endif %}</td>
+    </tr>
+    {% endfor %}
+  </table>
+  {% endif %}
+  {% include "editor/snippets/available_actions.html" %}
+</div>
+
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript" language="javascript" src="//cdn.datatables.net/1.10.7/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" language="javascript" src="//cdn.datatables.net/plug-ins/1.10.7/integration/bootstrap/3/dataTables.bootstrap.js"></script>
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css">
+<script src="http://code.jquery.com/ui/1.11.0/jquery-ui.js"></script>
+
+<script>
+$(function() {
+    // for bootstrap 3 use 'shown.bs.tab', for bootstrap 2 use 'shown' in the next line
+    $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+        // save the latest tab; use cookies if you like 'em better:
+        localStorage.setItem('new_tab', $(this).attr('href'));
+    });
+    // go to the latest tab, if it exists:
+    var lastTab = localStorage.getItem('new_tab');
+    if (lastTab) {
+        $('[href="' + lastTab + '"]').tab('show');
+    }
+});
+</script>
+{% endblock js %}

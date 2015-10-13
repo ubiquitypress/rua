@@ -16,7 +16,7 @@ from django.core.urlresolvers import reverse
 from django.contrib import messages
 from django.http import Http404, HttpResponse, StreamingHttpResponse, HttpResponseRedirect
 
-from workflow import logic as workflow_logic
+from core import logic as core_logic
 from core import models as core_models
 from core import views as core_views
 from core import forms as core_forms
@@ -222,7 +222,7 @@ def review_complete(request, review_type, submission_id,access_key=None):
 			return redirect(reverse('review_without_access_key', kwargs={'review_type': review_type, 'submission_id': submission.id}))
 
 	relations = models.FormElementsRelationship.objects.filter(form=result.form)
-	data_ordered = workflow_logic.order_data(workflow_logic.decode_json(result.data), relations)
+	data_ordered = core_logic.order_data(core_logic.decode_json(result.data), relations)
 
 	template = 'review/complete.html'
 	context = {

@@ -7,7 +7,7 @@ from django.contrib import messages
 from core import models, log, task, logic as core_logic, forms as core_forms
 from author import forms
 from author import logic
-from workflow.logic import order_data, decode_json
+from core.logic import order_data, decode_json
 from submission import models as submission_models
 from revisions import models as revision_models
 from review import models as review_models

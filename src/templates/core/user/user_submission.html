@@ -5,7 +5,7 @@
 
 {% block breadcrumbs %}
     <ol class="breadcrumb">
-	  <li><a href="{% url 'user_home' %}">User Home</a></li>
+	  <li><a href="{% url 'login' %}">Dashboard</a></li>
 	  <li class="">Submissions</li>
     <li class="active">{{ submission.title }}</li>
 	</ol>
@@ -67,7 +67,7 @@
 
   <!-- Tab panes -->
   <div class="tab-content">
-    <div role="tabpanel" class="tab-pane active" id="main_summary">{% include "workflow/elements/summary.html" %}</div>
+    <div role="tabpanel" class="tab-pane active" id="main_summary">{% include "core/elements/summary.html" %}</div>
     <div role="tabpanel" class="tab-pane" id="description"><p class="tab-p">{{ submission.description|safe }}</p></div>
     <div role="tabpanel" class="tab-pane" id="cover_letter"><p class="tab-p">{{ submission.cover_letter|safe }}</p></div>
     <div role="tabpanel" class="tab-pane" id="reviewer_sugestions"><p class="tab-p">{{ submission.reviewer_suggestions|safe }}</p></div>
@@ -87,7 +87,7 @@
   <!-- Tab panes -->
   <div class="tab-content">
     <div role="tabpanel" class="tab-pane active" id="submission_files">{% include "core/user/read_only_file_block.html" %}</div>
-    <div role="tabpanel" class="tab-pane" id="misc_files">{% include "workflow/misc_files.html" %}</div>
+    <div role="tabpanel" class="tab-pane" id="misc_files">{% include "core/misc_files.html" %}</div>
     <div role="tabpanel" class="tab-pane" id="contracts">{% include "core/user/contract.html" %}</div>
   </div>
   <hr />

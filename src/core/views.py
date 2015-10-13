@@ -13,14 +13,13 @@ from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Q
 from django.core import serializers
 from django.conf import settings
-
+from  __builtin__ import any as string_any
 from core import log
 from core import models
 from core import forms
 from core import logic
 from email import send_email
 from core import models, forms, logic, log
-from workflow import forms as workflow_forms
 from files import handle_file_update,handle_attachment,handle_file
 from submission import models as submission_models
 from core.decorators import is_editor, is_book_editor, is_book_editor_or_author, is_onetasker
@@ -45,14 +44,29 @@ def contact(request):
 	return render(request, template, context)
 
 # Authentication Views
-
+def dashboard(request):
+	if request.user.is_authenticated():
+		roles=  request.user.profile.roles.all()
+		if request.GET.get('next'):
+			return redirect(request.GET.get('next'))
+		elif string_any('Editor' for role in roles):
+			return redirect(reverse('editor_dashboard'))
+		elif string_any('Author' for role in roles):
+			return redirect(reverse('author_dashboard'))
+		elif string_any('Reviewer' for role in roles):
+			return redirect(reverse('reviewer_dashboard'))
+		else:
+			return redirect(reverse('onetasker_dashboard'))
+			
 def login(request):
 	if request.user.is_authenticated():
 		messages.info(request, 'You are already logged in.')
+		roles=  request.user.profile.roles.all()
 		if request.GET.get('next'):
 			return redirect(request.GET.get('next'))
 		else:
-			return redirect(reverse('user_home'))
+			return redirect(reverse('user_dashboard'))
+			
 
 	if request.POST:
 		user = request.POST.get('user_name')
@@ -64,10 +78,11 @@ def login(request):
 			if user.is_active:
 				login_user(request, user)
 				messages.info(request, 'Login successful.')
+				roles=  user.profile.roles.all()
 				if request.GET.get('next'):
 					return redirect(request.GET.get('next'))
 				else:
-					return redirect(reverse('user_home'))
+					return redirect(reverse('user_dashboard'))
 			else:
 				messages.add_message(request, messages.ERROR, 'User account is not active.')
 		else:
@@ -196,7 +211,7 @@ def reset_password(request):
 				user.set_password(password_1)
 				user.save()
 				messages.add_message(request, messages.SUCCESS, 'Password successfully changed.')
-				return redirect(reverse('user_home'))
+				return redirect(reverse('login'))
 			else:
 				messages.add_message(request, messages.ERROR, 'Password is not long enough, must be greater than 8 characters.')
 		else:
@@ -488,4 +503,251 @@ def view_log(request, submission_id):
 	}
 
 	return render(request, template, context)
+
+## PROPOSALS ##
+
+@is_editor
+def proposal(request):
+	proposal_list = submission_models.Proposal.objects.exclude(status='declined').exclude(status='accepted')
+
+	template = 'core/proposals/proposal.html'
+	context = {
+		'proposal_list': proposal_list,
+	}
+
+	return render(request, template, context)
+
+@is_editor
+def view_proposal(request, proposal_id):
+	proposal = get_object_or_404(submission_models.Proposal, pk=proposal_id)
+	relationships = models.ProposalFormElementsRelationship.objects.filter(form=proposal.form)
+	data = json.loads(proposal.data)
+
+	template = 'core/proposals/view_proposal.html'
+	context = {
+		'proposal': proposal,
+		'relationships':relationships,
+		'data':data,
+	}
+
+	return render(request, template, context)
+
+@is_editor
+def start_proposal_review(request, proposal_id):
+	proposal = get_object_or_404(submission_models.Proposal, pk=proposal_id, date_review_started__isnull=True)
+	reviewers = models.User.objects.filter(profile__roles__slug='reviewer')
+	committees = manager_models.Group.objects.filter(group_type='review_committee')
+	start_form = submission_forms.ProposalStart()
+
+	if request.POST:
+		start_form = submission_forms.ProposalStart(request.POST, instance=proposal)
+		if start_form.is_valid():
+			proposal = start_form.save(commit=False)
+			proposal.date_review_started = timezone.now()
+			due_date = request.POST.get('due_date')
+			email_text = models.Setting.objects.get(group__name='email', name='proposal_review_request').value
+			reviewers = User.objects.filter(pk__in=request.POST.getlist('reviewer'))
+			committees = manager_models.Group.objects.filter(pk__in=request.POST.getlist('committee'))
+
+			# Handle reviewers
+			for reviewer in reviewers:
+				new_review_assignment = submission_models.ProposalReview(
+					user=reviewer,
+					proposal=proposal,
+					due=due_date,
+				)
+
+				try:
+					new_review_assignment.save()
+					proposal.review_assignments.add(new_review_assignment)
+					send_proposal_review_request(proposal, new_review_assignment, email_text)
+				except IntegrityError:
+					messages.add_message(request, messages.WARNING, '%s %s is already a reviewer' % (reviewer.first_name, reviewer.last_name))
+
+			# Handle committees
+			for committee in committees:
+				members = manager_models.GroupMembership.objects.filter(group=committee)
+				for member in members:
+					new_review_assignment = submission_models.ProposalReview(
+						user=member.user,
+						proposal=proposal,
+						due=due_date,
+					)
+
+					try:
+						new_review_assignment.save()
+						proposal.review_assignments.add(new_review_assignment)
+						send_proposal_review_request(proposal, new_review_assignment, email_text)
+					except IntegrityError:
+						messages.add_message(request, messages.WARNING, '%s %s is already a reviewer' % (member.user.first_name, member.user.last_name))
+
+			# Tidy up and save
+
+			proposal.date_review_started = timezone.now()
+			proposal.save()
+
+			return redirect(reverse('view_proposal', kwargs={'proposal_id': proposal.id}))
+
+	template = 'core/proposals/start_proposal_review.html'
+	context = {
+		'proposal': proposal,
+		'start_form': start_form,
+		'reviewers': reviewers,
+		'committees': committees,
+	}
+
+	return render(request, template, context)
+
+@is_editor
+def view_proposal_review(request, submission_id, assignment_id):
+
+	submission = get_object_or_404(submission_models.Proposal, pk=submission_id)
+	review_assignment = get_object_or_404(submission_models.ProposalReview, pk=assignment_id)
+	result = review_assignment.results
+	if result:
+		relations = review_models.FormElementsRelationship.objects.filter(form=result.form)
+		data_ordered = logic.order_data(logic.decode_json(result.data), relations)
+	else:
+		relations = None
+		data_ordered = None
+
+	template = 'core/review/review_assignment.html'
+	context = {
+		'submission': submission,
+		'review': review_assignment,
+		'data_ordered': data_ordered,
+		'result': result,
+		'active': 'proposal_review',
+	}
+
+	return render(request, template, context)
+
+@is_editor
+def add_proposal_reviewers(request, proposal_id):
+
+	proposal = get_object_or_404(submission_models.Proposal, pk=proposal_id)
+	reviewers = models.User.objects.filter(profile__roles__slug='reviewer')
+	committees = manager_models.Group.objects.filter(group_type='review_committee')
+
+	if request.POST:
+		due_date = request.POST.get('due_date')
+		email_text = models.Setting.objects.get(group__name='email', name='proposal_review_request').value
+		reviewers = User.objects.filter(pk__in=request.POST.getlist('reviewer'))
+		committees = manager_models.Group.objects.filter(pk__in=request.POST.getlist('committee'))
+
+		# Handle reviewers
+		for reviewer in reviewers:
+			new_review_assignment = submission_models.ProposalReview(
+				user=reviewer,
+				proposal=proposal,
+				due=due_date,
+			)
+
+			try:
+				new_review_assignment.save()
+				proposal.review_assignments.add(new_review_assignment)
+				send_proposal_review_request(proposal, new_review_assignment, email_text)
+			except IntegrityError:
+				messages.add_message(request, messages.WARNING, '%s %s is already a reviewer' % (reviewer.first_name, reviewer.last_name))
+
+		# Handle committees
+		for committee in committees:
+			members = manager_models.GroupMembership.objects.filter(group=committee)
+			for member in members:
+				new_review_assignment = submission_models.ProposalReview(
+					user=reviewer,
+					proposal=proposal,
+					due=due_date,
+				)
+
+				try:
+					new_review_assignment.save()
+					proposal.review_assignments.add(new_review_assignment)
+					send_proposal_review_request(proposal, new_review_assignment, email_text)
+				except IntegrityError:
+					messages.add_message(request, messages.WARNING, '%s %s is already a reviewer' % (member.user.first_name, member.user.last_name))
+
+		# Tidy up and save
+
+		proposal.date_review_started = timezone.now()
+		proposal.save()
+
+		return redirect(reverse('view_proposal', kwargs={'proposal_id': proposal.id}))
+
+	template = 'core/proposals/add_reviewers.html'
+	context = {
+		'proposal': proposal,
+		'reviewers': reviewers,
+		'committees': committees,
+	}
+
+	return render(request, template, context)
+
+@is_editor
+def decline_proposal(request, proposal_id):
+
+	proposal = get_object_or_404(submission_models.Proposal, pk=proposal_id)
+	email_text = models.Setting.objects.get(group__name='email', name='proposal_decline').value
+
+	if request.POST:
+		proposal.status = 'declined'
+		logic.close_active_reviews(proposal)
+		proposal.save()
+		logic.send_proposal_decline(proposal, email_text=request.POST.get('decline-email'), sender=request.user)
+		return redirect(reverse('proposals'))
+
+	template = 'core/proposals/decline_proposal.html'
+	context = {
+		'proposal': proposal,
+		'email_text': email_text,
+	}
+
+	return render(request, template, context)
+
+
+@is_editor
+def accept_proposal(request, proposal_id):
+	'Marks a proposal as accepted, creates a submission and emails the user'
+	proposal = get_object_or_404(submission_models.Proposal, pk=proposal_id)
+	email_text = models.Setting.objects.get(group__name='email', name='proposal_accept').value
+
+	if request.POST:
+		proposal.status = 'accepted'
+		logic.close_active_reviews(proposal)
+		submission = logic.create_submission_from_proposal(proposal, proposal_type=request.POST.get('proposal-type'))
+		attachment = handle_attachment(request, submission)
+		logic.send_proposal_accept(proposal, email_text=request.POST.get('accept-email'), submission=submission, sender=request.user, attachment=attachment)
+		proposal.save()
+		return redirect(reverse('proposals'))
+
+	template = 'core/proposals/accept_proposal.html'
+	context = {
+		'proposal': proposal,
+		'email_text': email_text,
+	}
+
+	return render(request, template, context)
+
+@is_editor
+def request_proposal_revisions(request, proposal_id):
+
+	proposal = get_object_or_404(submission_models.Proposal, pk=proposal_id)
+	email_text = models.Setting.objects.get(group__name='email', name='proposal_request_revisisons').value
+
+	if request.POST:
+		proposal.status = 'revisions_required'
+		logic.close_active_reviews(proposal)
+		logic.send_proposal_revisions(proposal, email_text=request.POST.get('revisions-email'), sender=request.user)
+		proposal.save()
+		return redirect(reverse('proposals'))
+
+	template = 'core/proposals/revisions_proposal.html'
+	context = {
+		'proposal': proposal,
+		'email_text': email_text,
+	}
+
+	return render(request, template, context)
+
+## END PROPOSAL ##
 

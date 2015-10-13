@@ -167,4 +167,159 @@ class TypesetTypesetter(forms.ModelForm):
 		model = models.TypesetAssignment
 		fields = ('note_from_typesetter',)
 
+#####WORKFLOW forms #####
+
+class FormatForm(forms.ModelForm):
+
+	format_file = forms.FileField(required=True)
+
+	class Meta:
+		model = models.Format
+		exclude = ('book', 'file')
+
+class ChapterForm(forms.ModelForm):
+
+	chapter_file = forms.FileField(required=True)
+
+	class Meta:
+		model = models.Chapter
+		exclude = ('book', 'file')
+
+class UpdateChapterFormat(forms.Form):
+
+	file = forms.FileField(required=True)
+	name = forms.CharField(required=True)
+
+class UploadContract(forms.ModelForm):
+
+	class Meta:
+		model = models.Contract
+		exclude = ('author_file',)
+
+class AuthorContractSignoff(forms.ModelForm):
+
+	class Meta:
+		model = models.Contract
+		fields = ('author_file',)
+
+
+
+class EditMetadata(forms.ModelForm):
+
+	class Meta:
+		model = models.Book
+		fields = (
+			'prefix',
+			'title',
+			'subtitle',
+			'series',
+			'description',
+			'license',
+			'pages',
+			'slug',
+			'review_type',
+			'languages',
+			'publication_date'
+		)
+
+		widgets = {
+            'languages': forms.CheckboxSelectMultiple(),
+        }
+
+class IdentifierForm(forms.ModelForm):
+
+	class Meta:
+		model = models.Identifier
+		fields = ('identifier', 'value', 'displayed')
+
+class CoverForm(forms.ModelForm):
+
+	class Meta:
+		model = models.Book
+		fields = ('cover',)
+
+class RetailerForm(forms.ModelForm):
+
+	class Meta:
+		model = models.Retailer
+		fields = ('name', 'link', 'price', 'enabled')
+
+
+#####WORKFLOW forms #####
+
+class FormatForm(forms.ModelForm):
+
+	format_file = forms.FileField(required=True)
+
+	class Meta:
+		model = models.Format
+		exclude = ('book', 'file')
+
+class ChapterForm(forms.ModelForm):
+
+	chapter_file = forms.FileField(required=True)
+
+	class Meta:
+		model = models.Chapter
+		exclude = ('book', 'file')
+
+class UpdateChapterFormat(forms.Form):
+
+	file = forms.FileField(required=True)
+	name = forms.CharField(required=True)
+
+class UploadContract(forms.ModelForm):
+
+	class Meta:
+		model = models.Contract
+		exclude = ('author_file',)
+
+class AuthorContractSignoff(forms.ModelForm):
+
+	class Meta:
+		model = models.Contract
+		fields = ('author_file',)
+
+
+
+class EditMetadata(forms.ModelForm):
+
+	class Meta:
+		model = models.Book
+		fields = (
+			'prefix',
+			'title',
+			'subtitle',
+			'series',
+			'description',
+			'license',
+			'pages',
+			'slug',
+			'review_type',
+			'languages',
+			'publication_date'
+		)
+
+		widgets = {
+            'languages': forms.CheckboxSelectMultiple(),
+        }
+
+class IdentifierForm(forms.ModelForm):
+
+	class Meta:
+		model = models.Identifier
+		fields = ('identifier', 'value', 'displayed')
+
+class CoverForm(forms.ModelForm):
+
+	class Meta:
+		model = models.Book
+		fields = ('cover',)
+
+class RetailerForm(forms.ModelForm):
+
+	class Meta:
+		model = models.Retailer
+		fields = ('name', 'link', 'price', 'enabled')
+		
 		

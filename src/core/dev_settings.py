@@ -45,7 +45,6 @@ INSTALLED_APPS = (
     # Django
     'core',
     'submission',
-    'workflow',
     'manager',
     'review',
     'api',

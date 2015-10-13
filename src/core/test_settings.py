@@ -45,12 +45,13 @@ INSTALLED_APPS = (
     # Django
     'core',
     'submission',
-    'workflow',
     'manager',
     'review',
     'api',
     'cron',
     'author',
+    'onetasker',
+    'editor',
 
     # 3rd Party
     'bootstrap3',

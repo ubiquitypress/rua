@@ -6,7 +6,7 @@
 
 {% block breadcrumbs %}
 		<ol class="breadcrumb">
-		<li><a href="{% url 'user_home' %}">User Home</a></li>
+		<li><a href="{% url 'user_dashboard' %}">Dashboard</a></li>
 		<li class="">Workflow</li>
 		<li>{{ submission.title }}</li>
 		<li>Misc Files</li>
@@ -23,7 +23,7 @@
 <div class="col-md-12">
 	<h3>{{ submission.title }} File {{ file.id }} - Versions</h3>
 	<hr />
-	{% include "workflow/elements/workflow_view_buttons.html" %}
+	{% include "core/elements/workflow_view_buttons.html" %}
 		<form method="post" enctype="multipart/form-data">
 			{% csrf_token %}
 			<div class="well">
