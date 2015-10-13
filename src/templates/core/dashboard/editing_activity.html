@@ -1,0 +1,14 @@
+<i class="fa fa-check-circle-o" style="color:green">&nbsp;</i>Entered editing {{ submission.stage.editing }}
+
+{% if submission.stage.copyediting %}
+<br />
+<i class="fa fa-check-circle-o" style="color:green">&nbsp;</i>Copyediting started {{ submission.stage.copyediting }}
+{% endif %}
+{% if submission.stage.indexing %}
+<br />
+<i class="fa fa-check-circle-o" style="color:green">&nbsp;</i>Indexing started {{ submission.stage.indexing }}
+{% endif %}
+{% if not submission.stage.copyediting and not submission.stage.indexing %}
+<br />
+<i class="fa fa-circle-o">&nbsp;</i>No editing tasks started
+{% endif %}
