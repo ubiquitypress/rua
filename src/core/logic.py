@@ -9,6 +9,114 @@ from core.cache import cache_result
 from django.db.models import Q
 from revisions import models as revisions_models
 import json
+from pymarc import Record, Field
+import re
+from core.files import handle_file,handle_copyedit_file
+from  __builtin__ import any as string_any
+
+def record_field(tag,indicators,subfields):
+	return	Field( tag = tag, indicators = indicators, subfields = subfields)
+
+def record_control_field(tag,field):
+	return	Field(tag=tag, data=field)
+
+def book_to_mark21_file(book):
+	#New record
+	record = Record()
+	
+	# Number and value explanation : http://www.loc.gov/marc/bibliographic/bdleader.html
+	# Adding Leader tags
+	l = list(record.leader)
+	l[5] = 'n' # New
+	l[6] = 'a'   #For manuscript file use 't' 
+	l[7] = 'm' # Monograph
+	l[9] = 'a'
+	l[19] = '#'
+	record.leader = "".join(l)
+
+	# Category of material  - Text
+	record.add_field(record_control_field('007','t'))
+
+	#Languages
+	languages = book.languages.all()
+	if languages:
+		for lang in languages:
+			record.add_field(record_control_field('008',lang.code)) 
+	else:
+		record.add_field(record_control_field('008','eng'))
+
+	#ISBN - International Standard Book Number 
+	isbn = models.Identifier.objects.filter(book=book).exclude(identifier='pub_id').exclude(identifier='urn').exclude(identifier='doi')
+	for identifier in isbn:
+		if book.book_type:
+			record.add_field(record_field('020',['#','#'],['a', str(identifier.value)+' '+book.book_type]))
+		else:
+			record.add_field(record_field('020',['#','#'],['a', str(identifier.value)]))
+	
+	#Source of acquisition
+	base_url = models.Setting.objects.get(group__name='general', name='base_url').value
+	book_url = 'http://%s/editor/submission/%s/' % (base_url, book.id)
+	record.add_field(record_field('030',['#','#'],['b', book_url]))
+
+	# Main entry - Personal name
+	authors = book.author.all()
+	author_names=''
+	for author in authors:
+		auhtor_names=author_names+author.full_name()+' '
+		name=author.last_name+', '+author.first_name
+		if author.middle_name:
+			name=name+' '+author.middle_name[:1]+'.'
+		record.add_field(record_field('100',['1','#'],['a', name]))
+
+	#Title statement
+	title_words = (book.title).split(' ')
+	first_word = title_words[0]
+	if first_word.lower() == 'the':
+		record.add_field(record_field('245',['1','4'],['a', book.title,'c',author_names]))
+	else:
+		record.add_field(record_field('245',['1','0'],['a', book.title,'c',author_names]))
+
+	#Publication
+	if book.publication_date:
+		record.add_field(record_field('260',['#','#'],['c',str(book.publication_date)]))
+
+	#Physical details
+	if book.pages:
+		record.add_field(record_field('300',['#','#'],['a',str(book.pages)+' pages']))
+	
+	#Content type
+	record.add_field(record_field('336',['#','#'],['a', 'text','2','rdacontent']))
+
+	#Media type
+	record.add_field(record_field('337',['#','#'],['a', 'unmediated','2','rdamedia']))
+
+	#Carrier type
+	record.add_field(record_field('338',['#','#'],['a', 'volume','2','rdacarrier']))
+
+	#Language note
+	if languages:
+		for lang in languages:
+			record.add_field(record_field('546',['#','#'],['a', lang.display]))
+	else:
+		record.add_field(record_field('546',['#','#'],['a', 'In English']))
+	
+	press_editors = book.press_editors.all()
+	#editors
+	for editor in press_editors:
+		record.add_field(record_field('700',['1','#'],['a', '%s, %s' % (editor.last_name,editor.first_name),'e','Press editor']))
+	
+	#Series
+	if book.series:
+		record.add_field(record_field('830',['#','0'],['a', book.series.name ]))
+		if book.series.editor:
+			record.add_field(record_field('700',['1','#'],['a', '%s, %s' % (book.series.editor.last_name,book.series.editor.first_name),'e','Series editor']))
+	#Add record to file
+	title= book.title
+	filename=re.sub('[^a-zA-Z0-9\n\.]', '', title.lower())+'_marc21.dat'
+	out = open(filename, 'wb+')
+	out.write(record.as_marc())
+	out.close()
+	#add handle_file ?
 
 def clean_email_list(addresses):
 	list_of_email_addresses=[]

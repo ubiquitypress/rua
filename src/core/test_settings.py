@@ -59,6 +59,7 @@ INSTALLED_APPS = (
     'debug_toolbar',
     'django_summernote',
     'rest_framework',
+    'pymarc',
 
      'allauth',
      'allauth.account',

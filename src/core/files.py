@@ -3,7 +3,6 @@ from django.conf import settings
 from django.utils import timezone
 
 from core import models
-from core.forms import UploadMiscFile
 import mimetypes as mime
 from uuid import uuid4
 import os
