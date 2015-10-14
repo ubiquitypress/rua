@@ -139,6 +139,8 @@
         var id = $(this).attr('id');
         var div_id = "#task-" + $(this).attr('id');
         (document.getElementById('notifications')).innerHTML = (parseFloat((document.getElementById('notifications')).innerHTML)) - 1;
+        (document.getElementById('editor_notifications_nav')).innerHTML = (parseFloat((document.getElementById('editor_notifications_nav')).innerHTML)) - 1;
+        
         $.post("/user/task/" + id + "/complete/");
         $( div_id ).remove();
     });
