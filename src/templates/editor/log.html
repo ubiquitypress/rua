@@ -13,13 +13,17 @@
   <h3>Book {{ submission.id }}: {{ submission.title }}<a href="{% url 'editor_submission' submission.id  %}" class="btn  btn-trasnparent-white" style="position: absolute;right:20;margin-top:-4px">Go back</a></h3>
 </div>
   <div class="col-md-12 file-sub-heading-grey  container-fluid">
-  <h4>Log</h4>
+  <h4>Logs</h4>
 </div>
   <hr />
-  <div class="dash-center col-md-12"
+  <ul id="main_summary_tabs" class="nav nav-tabs" role="tablist">
+            <li role="presentation" class="active"><a href="#activity" aria-controls="home" role="tab" data-toggle="tab">Activity Log</a></li>
+            <li role="presentation"><a href="#email" aria-controls="home" role="tab" data-toggle="tab">Email Log</a></li>
+  </ul>
+  <div class="dash-center col-md-12">
   <!-- Tab panes -->
   <div class="tab-content">
-    <div role="tabpanel" class="tab-pane active" id="action_log">
+    <div role="tabpanel"  class="tab-pane active" id="activity">
       <ul class="timeline">
         {% for item in log_list %}
           <li {% if forloop.counter|divisibleby:2 %}class="timeline-inverted"{% endif %}>
@@ -38,7 +42,7 @@
           {% endfor %}
       </ul>
     </div>
-    <div role="tabpanel" class="tab-pane" id="email_log">
+ <div role="tabpanel"  class="tab-pane" id="email">   
       <ul class="timeline">
         {% for item in email_list %}
           <li {% if forloop.counter|divisibleby:2 %}class="timeline-inverted"{% endif %}>
@@ -58,6 +62,7 @@
       </ul>
     </div>
   </div>
+   </div>
 {% endblock %}
 
 {% block js %}
