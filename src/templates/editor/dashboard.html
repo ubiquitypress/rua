@@ -90,7 +90,7 @@
 
     <div class="col-md-5 dash-center">
         <div class="dash-container"  id="task-list">
-            <h4>NOTIFICATIONS <span class="badge">{{ task_count }}</span></h4>
+            <h4>NOTIFICATIONS <span class="badge"><label id="notifications" style="height:7px">{{task_count}}</label></span></h4>
 
             {% for note in notifications %}
             <div class="notification" id="task-{{ note.id }}" id="callout-helper-bg-specificity">
@@ -138,14 +138,30 @@
   $(document).on("click", ":button", function(){
         var id = $(this).attr('id');
         var div_id = "#task-" + $(this).attr('id');
+        (document.getElementById('notifications')).innerHTML = (parseFloat((document.getElementById('notifications')).innerHTML)) - 1;
         $.post("/user/task/" + id + "/complete/");
-        $( div_id ).remove()
+        $( div_id ).remove();
     });
 </script>
-
+<script>
+function addLoadEvent(func) {  
+      var oldonload = window.onload;  
+      if (typeof window.onload != 'function') {  
+        window.onload = func;  
+      } else {  
+        window.onload = function() {  
+          if (oldonload) {  
+            oldonload();  
+          }  
+          func();  
+        }  
+      }  
+    }  
+</script>
 <script type="text/javascript">
     var frm = $('#task_form');
     frm.submit(function () {
+
         $.ajax({
             type: frm.attr('method'),
             url: frm.attr('action'),
@@ -155,6 +171,7 @@
                 $( "#task-list" ).append( '<div id="task-' + data.id + '" class="bs-callout" id="callout-helper-bg-specificity"><label class="checkbox-inline"><input type="checkbox" id="'+ data.id + '" value="' + data.id + '"> ' + data.text + '</label></div>' );
                 $('#id_text').val("");
                 $('#myModal').modal('hide')
+                  
             },
             error: function(data) {
                 $("#MESSAGE-DIV").html("Something went wrong!");
