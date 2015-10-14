@@ -7,7 +7,7 @@
          <h5> Task Due <span class="author-due">{{ assignment.due }} ({{assignment.due|timeuntil}} left)</span></h5>
 
             <h5><b>Files:</b></h5>
-            <ul class="manuscript-upload-states">
+            <ul class="media-list manuscript-upload-states">
               {% for file in assignment.files.all %}
                 {% include 'shared/submission_file.html' %}
               {% endfor %}
@@ -15,7 +15,7 @@
 
             {% if submission.misc_files.all %}
             <h5><b>Misc Files:</b></h5>
-            <ul class="manuscript-upload-states">
+            <ul class="media-list  manuscript-upload-states">
               {% for file in submission.misc_files.all %}
                 {% include 'shared/submission_file.html' %}
               {% endfor %}
