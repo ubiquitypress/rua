@@ -1,8 +1,6 @@
-<li class="file ">
-    <div class="row">
-      <div class="col-md-2">
+<li class="media">
       <div class="media-left" >
-      <span > <h1 style="margin-top:10px" >
+      <span> <h1 style="margin-top:20px" >
         {% if file.mime_type == 'image/jpeg' or file.mime_type == 'image/png' %}
        &nbsp; &nbsp;    <i class="fa fa-file-image-o"></i>
         {% else %}
@@ -10,17 +8,15 @@
         {% endif %}
       </span></h1>
     </div>
-      </div>
-         <div class="media-body">
-
+    
+    <div class="media-body">
       <div class="col-md-6">
         <h5>{% if file.label %}{{ file.label }}{% else %}(no label){% endif %}</h5>
         <h5>{{ file.kind|capfirst }}</h5>
         <h5>{{ file.truncated_filename }}</h5>
-      </div></div>
-          <div class="media-right">
-        <a href="{% url 'serve_file' submission.id file.id %}" class="btn btn-sm btn-primary read pull-right" style="margin-top: 20px;margin-right:10px;"><i class="fa fa-cloud-download"> &nbsp; Download</i></a></a>
-      </div>
       </div>
     </div>
+   <div class="media-right">
+        <a href="{% url 'serve_file' submission.id file.id %}" class="btn btn-sm btn-primary read pull-right" style="margin-top: 20px;margin-right:20px;"><i class="fa fa-cloud-download"> &nbsp; Download</i></a>
+  </div>
 </li>

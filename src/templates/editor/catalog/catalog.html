@@ -36,68 +36,75 @@
         <h3>Book {{ submission.id }}: {{ submission.title }}</h3>
     </div>
     <div class="col-md-3 dash-left" style="background-color: #EBEBEB;">
-        <div class="dash-container">
-            <h4>{% if submission.prefix %}{{ submission.prefix }} {% endif %}{{ submission.title }}</h4> 
-            <h5 class="author-note">{% if submission.subtitle %}{{ submission.subtitle }}{% endif %}</h5>
-            <table class="table table-bordered table-condensed small">
-                <tr>
-                    <th>Series</th>
-                    <td>{{ submission.series }}</td>
-                </tr>
-                <tr>
-                    <th>Type</th>
-                    <td>{{ submission.get_book_type_display }}</td>
-                </tr>
-                <tr>
-                    <th>License</th>
-                    <td>{{ submission.license.short_name }}</td>
-                </tr>
-                <tr>
-                    <th>Review Type</th>
-                    <td>{{ submission.get_review_type_display }}</td>
-                </tr>
-            </table>
+              <div class="dash-container" >
+            <h4 class="header-text">  {% if submission.prefix %}{{ submission.prefix }} {% endif %}{{ submission.title }}</h4> 
+            <h5 class="subtitle-text">{{submission.subtitle}}</h5>
         </div>
-        <a href="{% url 'editor_tasks' submission.pk %}">
-        <div class="dash-menu">
+          <div class="book-info">
+        <table class="table table-bordered table-condensed small">
+            <tr>
+                <th>Series</th>
+                <td>{{ submission.series }}</td>
+            </tr>
+            <tr>
+                <th>Type</th>
+                <td>{{ submission.get_book_type_display }}</td>
+            </tr>
+            <tr>
+                <th>License</th>
+                <td>{{ submission.license.short_name }}</td>
+            </tr>
+            <tr>
+                <th>Review Type</th>
+                <td>{{ submission.get_review_type_display }}</td>
+            </tr>
+        </table>
+      </div>
+       <a href="{% url 'editor_tasks' submission.pk %}">
+        <div class="dash-menu {%if my_tasks%}current{% endif %}">
             <h5>My Tasks <i class="fa fa-chevron-right pull-right"></i></h5>
         </div>
         </a>
 
         <a href="{% url 'editor_status' submission.pk %}">
-        <div class="dash-menu">
+        <div class="dash-menu {%if status%}current{% endif %}">
             <h5>Current Status <i class="fa fa-chevron-right pull-right"></i></h5>
         </div>
         </a>
         <a href="{% url 'editor_submission' submission.pk %}">
-        <div class="dash-menu">
+        <div class="dash-menu {%if editor_submission%}current{% endif %}">
             <h5>Submission Details <i class="fa fa-chevron-right pull-right"></i></h5>
         </div>
         </a>
         {% if submission.stage.review %}
         <a href="{% url 'editor_review' submission.pk %}">
-        <div class="dash-menu">
+        <div class="dash-menu {%if editor_review%}current{% endif %}">
             <h5>Review <i class="fa fa-chevron-right pull-right"></i></h5>
         </div>
         </a>
         {% endif %}
         {% if submission.stage.editing %}
         <a href="{% url 'editor_editing' submission.pk %}">
-        <div class="dash-menu">
+        <div class="dash-menu {%if editing%}current{% endif %}">
             <h5>Editing <i class="fa fa-chevron-right pull-right"></i></h5>
         </div>
         </a>
         {% endif %}
         {% if submission.stage.production %}
         <a href="{% url 'editor_production' submission.id %}">
-        <div class="dash-menu">
+        <div class="dash-menu {%if production%}current{% endif %}">
             <h5>Production <i class="fa fa-chevron-right pull-right"></i></h5>
         </div>
         </a>
         {% endif %}
         <a href="{% url 'catalog' submission.id %}">
-        <div class="dash-menu">
+        <div class="dash-menu {%if catalog_view %}current{% endif %}">
             <h5>Catalog <i class="fa fa-chevron-right pull-right"></i></h5>
+        </div>
+        </a>
+         <a href="{% url 'view_log' submission.id %}">
+        <div class="dash-menu">
+            <h5>Logs <i class="fa fa-chevron-right pull-right"></i></h5>
         </div>
         </a>
         {% include "editor/snippets/available_actions.html" %}
