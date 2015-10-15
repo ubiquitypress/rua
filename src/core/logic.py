@@ -191,7 +191,12 @@ def review_assignment_count(request):
 		return models.ReviewAssignment.objects.filter(user=request.user, completed__isnull=True,declined__isnull=True).count()
 	except TypeError:
 		return 0
-
+def onetasker_task_count(request):
+	# TODO: change this to be handled based on whether the user is logged in or not.
+	try:
+		return models.ReviewAssignment.objects.filter(user=request.user, completed__isnull=True,declined__isnull=True).count()
+	except TypeError:
+		return 0
 def author_tasks(user):
 	base_url = models.Setting.objects.get(group__name='general', name='base_url').value
 	task_list = []

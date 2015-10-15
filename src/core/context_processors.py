@@ -2,6 +2,7 @@ from core import logic
 from core.cache import cache_result
 
 from django.contrib.auth.models import Group
+from core import logic
 
 @cache_result(300)
 def press(request):
@@ -15,6 +16,12 @@ def task_count(request):
 def review_assignment_count(request):
 	try:
 		return {'review_assignment_count': logic.review_assignment_count(request)}
+	except:
+		return 0
+def onetasker_task_count(request):
+	onetasker_tasks = logic.onetasker_tasks(request.user)
+	try:
+		return {'onetasker_task_count':  len(onetasker_tasks.get('active'))}
 	except:
 		return 0
 
