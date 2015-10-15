@@ -377,7 +377,25 @@ def upload_misc_file(request, submission_id):
 	}
 
 	return render(request, template, context)
+@login_required
+def serve_marc21_file(request, submission_id):
+	book = get_object_or_404(models.Book, pk=submission_id)
+	file_pk=logic.book_to_mark21_file(book,request.user)
+	_file = get_object_or_404(models.File, pk=file_pk)
+	file_path = os.path.join(settings.BOOK_DIR, submission_id, _file.uuid_filename)
 
+	print file_path
+
+	try:
+		fsock = open(file_path, 'r')
+		mimetype = mimetypes.guess_type(file_path)
+		response = StreamingHttpResponse(fsock, content_type=mimetype)
+		response['Content-Disposition'] = "attachment; filename=%s" % (_file.uuid_filename)
+		log.add_log_entry(book=book, user=request.user, kind='file', message='File %s downloaded.' % _file.uuid_filename, short_name='Download')
+		return response
+	except IOError:
+		messages.add_message(request, messages.ERROR, 'File not found. %s' % (file_path))
+		return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 @is_onetasker
 def serve_file(request, submission_id, file_id):
 	book = get_object_or_404(models.Book, pk=submission_id)

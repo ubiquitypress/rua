@@ -11,7 +11,7 @@ from revisions import models as revisions_models
 import json
 from pymarc import Record, Field
 import re
-from core.files import handle_file,handle_copyedit_file
+from core.files import handle_file,handle_copyedit_file,handle_marc21_file
 from  __builtin__ import any as string_any
 
 def record_field(tag,indicators,subfields):
@@ -20,7 +20,7 @@ def record_field(tag,indicators,subfields):
 def record_control_field(tag,field):
 	return	Field(tag=tag, data=field)
 
-def book_to_mark21_file(book):
+def book_to_mark21_file(book,owner):
 	#New record
 	record = Record()
 	
@@ -88,7 +88,7 @@ def book_to_mark21_file(book):
 		city = models.Setting.objects.get(group__name='general', name='city').value
 	except:
 		city = None
-	
+
 	publication_info=[]
 	if book.publication_date:
 		#Press' city
@@ -137,9 +137,8 @@ def book_to_mark21_file(book):
 	#Add record to file
 	title= book.title
 	filename=re.sub('[^a-zA-Z0-9\n\.]', '', title.lower())+'_marc21.dat'
-	out = open(filename, 'wb+')
-	out.write(record.as_marc())
-	out.close()
+	file=handle_marc21_file(record.as_marc(),filename, book, owner)
+	return file.pk
 	#add handle_file ?
 
 def clean_email_list(addresses):
