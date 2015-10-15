@@ -398,5 +398,15 @@
     },
     "model": "core.setting",
     "pk": 40
+},
+{
+    "fields": {
+        "value": "localhost:8000",
+        "group": 1,
+        "name": "oai_identifier",
+        "types": "text"
+    },
+    "model": "core.setting",
+    "pk": 41
 }
 ]
