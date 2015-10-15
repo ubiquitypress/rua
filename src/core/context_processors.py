@@ -22,7 +22,8 @@ def review_assignment_count(request):
 
 def onetasker_task_count(request):
 	try:
-		return {'onetasker_task_count':  logic.onetasker_task_count(request)}
+		onetasker_tasks = logic.onetasker_tasks(request.user)
+		return {'onetasker_task_count':  len(onetasker_tasks.get('active')),}
 	except:
 		return {'onetasker_task_count':  0}
 def author_task_count(request):
