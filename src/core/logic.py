@@ -54,7 +54,10 @@ def book_to_mark21_file(book):
 			record.add_field(record_field('020',['#','#'],['a', str(identifier.value)]))
 	
 	#Source of acquisition
-	base_url = models.Setting.objects.get(group__name='general', name='base_url').value
+	try:
+		base_url = models.Setting.objects.get(group__name='general', name='base_url').value
+	except:
+		base_url='localhost:8000'
 	book_url = 'http://%s/editor/submission/%s/' % (base_url, book.id)
 	record.add_field(record_field('030',['#','#'],['b', book_url]))
 
@@ -77,8 +80,29 @@ def book_to_mark21_file(book):
 		record.add_field(record_field('245',['1','0'],['a', book.title,'c',author_names]))
 
 	#Publication
+	try:
+		press_name = models.Setting.objects.get(group__name='general', name='press_name').value
+	except:
+		press_name=None
+	try: 
+		city = models.Setting.objects.get(group__name='general', name='city').value
+	except:
+		city = None
+	
+	publication_info=[]
 	if book.publication_date:
-		record.add_field(record_field('260',['#','#'],['c',str(book.publication_date)]))
+		#Press' city
+		if city :
+			publication_info.append('a')
+			publication_info.append(str(city))
+		#Press' name
+		if press_name:
+			publication_info.append('b')
+			publication_info.append(str(press_name))
+		#Date of Publication
+		publication_info.append('c')
+		publication_info.append(str(book.publication_date))
+		record.add_field(record_field('260',['#','#'],publication_info))
 
 	#Physical details
 	if book.pages:
