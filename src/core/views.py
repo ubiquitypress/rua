@@ -393,7 +393,7 @@ def serve_marc21_file(request, submission_id,type):
 		fsock = open(file_path, 'r')
 		mimetype = mimetypes.guess_type(file_path)
 		response = StreamingHttpResponse(fsock, content_type=mimetype)
-		response['Content-Disposition'] = "attachment; filename=%s" % (_file.uuid_filename)
+		response['Content-Disposition'] = "attachment; filename=%s" % (_file.original_filename)
 		log.add_log_entry(book=book, user=request.user, kind='file', message='File %s downloaded.' % _file.uuid_filename, short_name='Download')
 		return response
 	except IOError:

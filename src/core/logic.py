@@ -138,10 +138,10 @@ def book_to_mark21_file(book,owner, xml = False):
 	#Add record to file
 	title= book.title
 	if not xml:
-		filename=re.sub('[^a-zA-Z0-9\n\.]', '', title.lower())+'_marc21.dat'
+		filename='book_'+str(book.id)+'_'+re.sub('[^a-zA-Z0-9\n\.]', '', title.lower())+'_marc21.dat'
 		file=handle_marc21_file(record.as_marc(),filename, book, owner)
 	else:
-		filename=re.sub('[^a-zA-Z0-9\n\.]', '', title.lower())+'_marc21.xml'
+		filename='book_'+str(book.id)+'_'+re.sub('[^a-zA-Z0-9\n\.]', '', title.lower())+'_marc21.xml'
 		content=record_to_xml(record, quiet=False, namespace=False)
 		file=handle_marc21_file(content,filename, book, owner)
 	return file.pk
