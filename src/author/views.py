@@ -21,6 +21,7 @@ def author_dashboard(request):
 		'user_submissions': models.Book.objects.filter(owner=request.user),
 		'user_proposals': submission_models.Proposal.objects.filter(owner=request.user),
 		'author_tasks': logic.author_tasks(request.user),
+		'author_task_number': len(logic.author_tasks(request.user)),
 	}
 
 	return render(request, template, context)

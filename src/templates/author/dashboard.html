@@ -59,17 +59,25 @@
 
     <div class="col-md-6 dash-center">
         <div class="dash-container">
-            <h4>TO DO</h4>
+            <h4>TO DO <sup><span class="badge" style="background-color:rgb(207,94,129);">{{author_task_number}}</span></sup></h4>
+            <hr/>
+
 
             {% for note in author_tasks %}
             <div class="notification">
-                <h5><span class="author-note">{{ note.task }}</span> requested for <span class="author-note">{{ note.book.full_title }}</span></h5>
-                <span class="pull-right" style="padding-right: 10px;">
+                    <div class="row">
+                     <div class="band" style="margin-left:10px;margin-right:10px">
+               <h5><span class="author-note">{{ note.task }}</span> requested for <span class="author-note">{{ note.book.full_title }}</span></h5>
+                 <h5><strong>{% if note.type == 'revisions' %}Task Due{% else %}Invited on{% endif %} <span class="author-due">{{ note.date }}</span></strong></h5>
+                    </div>
+                
                 <br />
-                    <a href="{% url 'author_submission' note.book.pk %}" class="btn btn-xs btn-primary view">View Submission</a>
-                    <a href="{{ note.url }}" class="btn btn-xs btn-primary read">View Task</a>
-                </span>
-                <p><strong>{% if note.type == 'revisions' %}Task Due{% else %}Invited on{% endif %} <span class="author-due">{{ note.date }}</span></strong></p>
+                       <a href="{{ note.url }}"  style="margin-right:25px; margin-bottom:8px;" class=" pull-right  btn btn-sm btn-task read">&nbsp;&nbsp;&nbsp;View Task&nbsp;&nbsp;&nbsp;</a>
+                    <a href="{% url 'author_submission' note.book.pk %}"  style="margin-right:3px;margin-bottom:8px;" class=" pull-right  btn btn-sm btn-round btn-primary view">&nbsp;&nbsp;&nbsp;View Submission&nbsp;&nbsp;&nbsp;</a>
+</div>
+                
+                 
+       </br>      
             </div>
             {% endfor %}
 
