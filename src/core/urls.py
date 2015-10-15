@@ -55,7 +55,7 @@ urlpatterns = patterns('',
     url(r'^email/get/authors/$', 'core.views.get_authors', name='get_authors'),
     
     # Files
-    url(r'^files/submission/(?P<submission_id>\d+)/get/marc21/original/$', 'core.views.serve_marc21_file', name='serve_marc21_file'),
+    url(r'^files/submission/(?P<submission_id>\d+)/get/marc21/(?P<type>[-\w]+)//$', 'core.views.serve_marc21_file', name='serve_marc21_file'),
     url(r'^files/user/submission/(?P<submission_id>\d+)/file/(?P<file_id>\d+)/download/$', 'core.views.serve_file', name='serve_file'),
     url(r'^files/submission/(?P<submission_id>\d+)/file/(?P<revision_id>\d+)/download_versioned_file/$', 'core.views.serve_versioned_file', name='serve_versioned_file'),
     url(r'^files/submission/(?P<submission_id>\d+)/file/(?P<file_id>\d+)/delete/returner/(?P<returner>[-\w]+)/$', 'core.views.delete_file', name='delete_file'),

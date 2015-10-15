@@ -10,6 +10,7 @@ from django.db.models import Q
 from revisions import models as revisions_models
 import json
 from pymarc import Record, Field
+from pymarc import *
 import re
 from core.files import handle_file,handle_copyedit_file,handle_marc21_file
 from  __builtin__ import any as string_any
@@ -20,7 +21,7 @@ def record_field(tag,indicators,subfields):
 def record_control_field(tag,field):
 	return	Field(tag=tag, data=field)
 
-def book_to_mark21_file(book,owner):
+def book_to_mark21_file(book,owner, xml = False):
 	#New record
 	record = Record()
 	
@@ -136,8 +137,13 @@ def book_to_mark21_file(book,owner):
 			record.add_field(record_field('700',['1','#'],['a', '%s, %s' % (book.series.editor.last_name,book.series.editor.first_name),'e','Series editor']))
 	#Add record to file
 	title= book.title
-	filename=re.sub('[^a-zA-Z0-9\n\.]', '', title.lower())+'_marc21.dat'
-	file=handle_marc21_file(record.as_marc(),filename, book, owner)
+	if not xml:
+		filename=re.sub('[^a-zA-Z0-9\n\.]', '', title.lower())+'_marc21.dat'
+		file=handle_marc21_file(record.as_marc(),filename, book, owner)
+	else:
+		filename=re.sub('[^a-zA-Z0-9\n\.]', '', title.lower())+'_marc21.xml'
+		content=record_to_xml(record, quiet=False, namespace=False)
+		file=handle_marc21_file(content,filename, book, owner)
 	return file.pk
 	#add handle_file ?
 

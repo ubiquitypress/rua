@@ -378,9 +378,12 @@ def upload_misc_file(request, submission_id):
 
 	return render(request, template, context)
 @login_required
-def serve_marc21_file(request, submission_id):
+def serve_marc21_file(request, submission_id,type):
 	book = get_object_or_404(models.Book, pk=submission_id)
-	file_pk=logic.book_to_mark21_file(book,request.user)
+	if type=='xml':
+		file_pk=logic.book_to_mark21_file(book,request.user,True)
+	else:
+		file_pk=logic.book_to_mark21_file(book,request.user)
 	_file = get_object_or_404(models.File, pk=file_pk)
 	file_path = os.path.join(settings.BOOK_DIR, submission_id, _file.uuid_filename)
 
@@ -396,6 +399,7 @@ def serve_marc21_file(request, submission_id):
 	except IOError:
 		messages.add_message(request, messages.ERROR, 'File not found. %s' % (file_path))
 		return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
 @is_onetasker
 def serve_file(request, submission_id, file_id):
 	book = get_object_or_404(models.Book, pk=submission_id)
