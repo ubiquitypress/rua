@@ -18,10 +18,10 @@ def review_assignment_count(request):
 		return {'review_assignment_count': logic.review_assignment_count(request)}
 	except:
 		return 0
+
 def onetasker_task_count(request):
-	onetasker_tasks = logic.onetasker_tasks(request.user)
 	try:
-		return {'onetasker_task_count':  len(onetasker_tasks.get('active'))}
+		return {'onetasker_task_count':  logic.onetasker_task_count(request)}
 	except:
 		return 0
 
