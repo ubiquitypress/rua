@@ -150,6 +150,7 @@ TEMPLATES = [
                 "core.context_processors.task_count",
                 "core.context_processors.review_assignment_count",
                 "core.context_processors.onetasker_task_count",
+                "core.context_processors.author_task_count",
                 "core.context_processors.roles",
             ],
         },
