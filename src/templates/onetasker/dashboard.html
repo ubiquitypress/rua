@@ -31,20 +31,23 @@
 <div class="row">
 
     <div class="col-md-4 dash-left">
-        <div class="dash-container">
-            <h4>COMPLETED TASKS <span class="badge circle">{{ completed_count }}</span></h4>
-            {% for task in completed_tasks %}
-            <div class="notification">
-                <h5><b>{{task.assignment.type|capfirst }} - {{task.assignment.book.title}}</b></h5>
-                <span class="pull-right">
-                <br />
-                    <a href="/tasks/{{task.type}}/{{task.assignment.pk}}/about" class="btn btn-sm btn-primary view">View Project</a>
-                    <a href="/tasks/{{task.type}}/{{task.assignment.pk}}" class="btn btn-sm btn-primary read">View Task</a>
-                </span>
-                <p class="assigned"><i>{% if task.assignment.accepted %}Accepted on {{ task.assignment.accepted|date:"d M Y"}}<br>{% endif %}{% if task.assignment.completed %}Completed on {{task.assignment.completed|date:"d M Y"}}{% endif %}</i></p>
-            </div>
-            {% endfor %}
-
+        <div class="dash-container" style="background-color: rgb(230,230,230);">
+            <h4 class="header-text">{{completed_count}} COMPLETED{% ifequal completed_count 1%} TASK {% else %} TASKS {% endifequal %}</h4>
+             {% for task in completed_tasks %}
+                <div class="notification" style=" padding-bottom:8px;">
+                   
+                    <div class="band" style="margin-left:10px;margin-right:10px">
+                        <p class="small"> <span style="color:rgb(101,117,132)"> {{task.assignment.type|capfirst }} - {{task.assignment.book.title}}</span> </p>
+                          <h5> {% if task.assignment.accepted %}Accepted on {{ task.assignment.accepted|date:"d M Y"}}<br>{% endif %}{% if task.assignment.completed %}Completed on {{task.assignment.completed|date:"d M Y"}}{% endif %}</br></h5>
+                    </div>
+                    
+                  <br />
+                       <a href="/tasks/{{task.type}}/{{task.assignment.pk}}"  style="margin-right:25px; margin-bottom:8px;" class=" pull-right  btn btn-sm btn-task read">&nbsp;&nbsp;&nbsp;View Task&nbsp;&nbsp;&nbsp;</a>
+                    <a href="/tasks/{{task.type}}/{{task.assignment.pk}}/about"  style="margin-right:3px;margin-bottom:8px;" class=" pull-right  btn btn-sm btn-round btn-primary view">&nbsp;&nbsp;&nbsp;View Project&nbsp;&nbsp;&nbsp;</a>
+                      </br>
+                    </br> 
+                </div>
+                {% endfor %}
         </div>
     </div>
 
@@ -52,25 +55,32 @@
 
     <div class="col-md-6 dash-center">
         <div class="dash-container">
-            <h4>TO DO <span class="badge circle">{{active_count}}</span></h4>
-
+            <h4>TO DO <sup><span class="badge" style="background-color:rgb(207,94,129);">{{active_count}}</span></sup></h4>
+       <hr/>
             {% for task in active_tasks %}
             <div class="notification">
+                 <div class="row">
+                     <div class="band" style="margin-left:10px;margin-right:10px">
                 <h5><b>{{task.type|capfirst}} - {{task.assignment.book.title}}</b></h5>
-                <p><b>Task due: <span class="author-due">{{ task.assignment.due }} ({{task.assignment.due|timeuntil}} left)</span></b></p>
-
-                <span class="pull-right">
+                <h5><b>Task due: <span class="author-due">{{ task.assignment.due }} ({{task.assignment.due|timeuntil}} left)</span></b></h5>
+                    </div>
+                
                 <br />
-                    <a href="/tasks/{{task.type}}/{{task.assignment.pk}}/about" class="btn btn-sm btn-primary view">View Project</a>
-                    <a href="/tasks/{{task.type}}/{{task.assignment.pk}}" class="btn btn-sm btn-primary read">View Task</a>
-                </span>
-                <br>
-                <p class="assigned"><i>{{task.assigned}}</i></p>
-                <div class="status  {% if task.assignment.accepted %}accepted {% else %}new {%endif%}">
-                    {% if task.assignment.accepted %} This task has been accepted on {{ task.assignment.accepted }}
-                    {% else %} You can either accept or reject this task{% endif %}
-                </div>
+                       <a href="/tasks/{{task.type}}/{{task.assignment.pk}}"  style="margin-right:25px; margin-bottom:8px;" class=" pull-right  btn btn-sm btn-task read">&nbsp;&nbsp;&nbsp;View Task&nbsp;&nbsp;&nbsp;</a>
+                    <a href="/tasks/{{task.type}}/{{task.assignment.pk}}/about"  style="margin-right:3px;margin-bottom:8px;" class=" pull-right  btn btn-sm btn-round btn-primary view">&nbsp;&nbsp;&nbsp;View Project&nbsp;&nbsp;&nbsp;</a>
+</div>
+                
+                <div class="container-fluid">
+                <p class="assigned"><i>{{task.assigned}}</i></p>  </div>
+               {% if task.assignment.accepted %}  <div class="col-md-12 decision-info-accept">
+                   <p> You accepted on {{ task.assignment.accepted }}
+                    {% else %}  <div class="col-md-12 decision-info-undecided">
+                   <p> You can accept or reject this task{% endif %}
+                </div>  
             </div>
+      
+       </br>      
+       </br>
             {% endfor %}
 
         </div>

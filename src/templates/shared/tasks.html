@@ -2,13 +2,18 @@
 
 {% for task in tasks %}
 <div class="notification">
+
+	<div class="container-fluid">
     <h5>{{ task.task }}</h5>
     <p><em>Book {{ task.book.id }}: {{ task.book.full_title }}</em></p>
     <span class="pull-right" style="padding-right: 10px;">
     <br />
-        <a href="{{ task.url }}" class="btn btn-xs btn-primary read">View Task</a>
+        <a href="{{ task.url }}" class="btn btn-sm btn-task read">View Task</a>
     </span>
     <p><em>Posted {{ task.date }}</em></p>
+</br>
+    </div>
+
 </div>
 {% empty %}
 <div class="notification">
