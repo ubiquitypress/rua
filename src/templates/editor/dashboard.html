@@ -90,8 +90,8 @@
 
     <div class="col-md-5 dash-center">
         <div class="dash-container"  id="task-list">
-            <h4>NOTIFICATIONS <span class="badge"><label id="notifications" style="height:7px">{{task_count}}</label></span></h4>
-
+            <h4>NOTIFICATIONS <sup><span class="badge" style="background-color:rgb(207,94,129);"><label id="notifications" style="height:7px">{{task_count}}</label></span></sup></h4>
+            <hr/>
             {% for note in notifications %}
             <div class="notification" id="task-{{ note.id }}" id="callout-helper-bg-specificity">
                 <h5>{{ note.text|capfirst }}</h5>

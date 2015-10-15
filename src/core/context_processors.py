@@ -3,6 +3,7 @@ from core.cache import cache_result
 
 from django.contrib.auth.models import Group
 from core import logic
+from author.logic import author_tasks
 
 @cache_result(300)
 def press(request):
@@ -22,6 +23,11 @@ def review_assignment_count(request):
 def onetasker_task_count(request):
 	try:
 		return {'onetasker_task_count':  logic.onetasker_task_count(request)}
+	except:
+		return 0
+def author_task_count(request):
+	try:
+		return {'author_task_count':  len(author_tasks(request.user))}
 	except:
 		return 0
 
