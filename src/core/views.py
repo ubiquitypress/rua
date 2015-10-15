@@ -160,6 +160,37 @@ def update_profile(request):
 
 	return render(request, template, context)
 
+def oai(request):
+	try:
+		base_url = models.Setting.objects.get(group__name='general', name='base_url').value
+	except:
+		base_url='localhost:8000'
+	oai_dc = 'http://%s/oai' % (base_url)
+	oai_identifier = models.Setting.objects.get(group__name='general', name='oai_identifier').value
+
+	books = models.Book.objects.all()
+	list_of_books =[[{}] for t in range(0,len(books)) ]	
+	t=0
+	for book in books:
+		try:
+			isbns = models.Identifier.objects.filter(book=book).exclude(identifier='pub_id').exclude(identifier='urn').exclude(identifier='doi')
+		except:
+			isbns=None
+		formats=book.formats()
+		list_format=[]
+		for format in formats:
+			list_format.append(format.file.mime_type)
+		list_of_books[t] = [{'book': book, 'isbns': isbns,'formats':list_format,}]
+		t=t+1  
+	template = 'core/oai.xml'
+	context = {
+		'books': list_of_books,
+		'oai_dc': oai_dc,
+		'base_url':base_url,
+		'oai_identifier': oai_identifier,
+	}
+
+	return render(request, template, context,content_type="application/xhtml+xml")
 @login_required
 def user_home(request):
 

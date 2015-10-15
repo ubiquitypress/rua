@@ -81,6 +81,9 @@ urlpatterns = patterns('',
     url(r'^proposals/(?P<proposal_id>\d+)/revisions/$', 'core.views.request_proposal_revisions', name='request_proposal_revisions'),
     url(r'^proposals/(?P<proposal_id>\d+)/decline/$', 'core.views.decline_proposal', name='decline_proposal'),
 
+    # OAI - /oai?verb=ListRecords&metadataPrefix=oai_dc
+    url(r'^oai/$', 'core.views.oai', name='oai'),
+
 )
 
 handler403 = 'core.views.permission_denied'
