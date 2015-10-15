@@ -32,7 +32,7 @@
 
     <div class="col-md-4 dash-left">
         <div class="dash-container" style="background-color: rgb(230,230,230);">
-            <h4>MY SUBMISSIONS<a href="{% url 'submission_start' %}" class="btn btn-primary btn-xs pull-right">Submit New</a></h4> 
+            <h4>MY SUBMISSIONS<a href="{% url 'submission_start' %}" class="btn  btn-round btn-primary btn-xs pull-right">&nbsp;&nbsp;&nbsp;Submit New&nbsp;&nbsp;&nbsp;</a></h4> 
             {% for submission in user_submissions %}
                 <div class="notification author">
                     <div class="row">
@@ -51,7 +51,7 @@
                         {% include "core/dashboard/activity.html" %}
                     </div>
 
-                    <a href="{% url 'author_submission' submission.pk %}" class="btn btn-sm btn-primary view pull-right" style="margin-right:10px;">View Submission</a><br /><br />
+                    <a href="{% url 'author_submission' submission.pk %}" class="btn btn-sm btn-primary btn-round  view pull-right" style="margin-right:10px;">View Submission</a><br /><br />
                 </div>
             {% endfor %}
         </div>
