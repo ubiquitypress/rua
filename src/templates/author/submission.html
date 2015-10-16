@@ -116,7 +116,11 @@
 
 
 {% block js %}
+<script type="text/javascript">$("textarea").jqte();</script>
 <script type="text/javascript" src="{% static "js/messages.js" %}"></script>
 <script type="text/javascript" src="{% static "js/fancyfile.js" %}"></script>
 <script type="text/javascript" src="{% static "js/emailpopup.js" %}"></script>
+<script type="text/javascript">
+    $(window.location.hash).modal('show')
+</script>
 {% endblock js %}

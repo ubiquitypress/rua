@@ -14,7 +14,7 @@ from revisions import models as revision_models
 from review import models as review_models
 from manager import models as manager_models
 from submission import forms as submission_forms
-from editor import forms
+from editor import forms, models as editor_models
 from revisions import models as revision_models
 
 
@@ -450,6 +450,13 @@ def catalog(request, submission_id):
 				cover_form.save()
 				return redirect(reverse('catalog', kwargs={'submission_id': submission_id}))
 
+		if request.GET.get('invite_author', None):
+			note_to_author = request.POST.get('author_invite', None)
+			new_cover_proof = editor_models.CoverImageProof(book=book, editor=request.user, note_to_author=note_to_author)
+			new_cover_proof.save()
+			messages.add_message(request, messages.SUCCESS, 'Cover Image Proof request added.')
+			return redirect(reverse('catalog', kwargs={'submission_id': submission_id}))
+
 	template = 'editor/catalog/catalog.html' 
 	context = {
 		'active': 'production',
@@ -716,6 +723,7 @@ def assign_typesetter(request, submission_id):
 		'editor_submission': False,
 		'catalog_view':False,
 		'status': False ,
+		'email_text': models.Setting.objects.get(group__name='email', name='typeset_request'),
 	}
 
 	return render(request, template, context)

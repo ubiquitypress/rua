@@ -14,12 +14,8 @@ from django.db.models import Q
 from django.core import serializers
 from django.conf import settings
 from  __builtin__ import any as string_any
-from core import log
-from core import models
-from core import forms
-from core import logic
+from core import log, models, forms, logic
 from email import send_email
-from core import models, forms, logic, log
 from files import handle_file_update,handle_attachment,handle_file
 from submission import models as submission_models
 from core.decorators import is_editor, is_book_editor, is_book_editor_or_author, is_onetasker
@@ -320,7 +316,7 @@ def new_message(request, book_id):
 			'message_id': new_message.pk,
 			'sender': '%s %s' % (new_message.sender.first_name, new_message.sender.last_name),
 			'message': new_message.message,
-			'date_sent': str(new_message.date_sent),
+			'date_sent': new_message.date_sent.strftime("%-d %b %Y, %H:%M"),
 		}
 
 		return HttpResponse(json.dumps(response_dict))

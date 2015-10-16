@@ -180,7 +180,7 @@
                       {% bootstrap_field metadata_form.languages %}
                     </div>
                     <div class="col-md-6">
-                      <div class="aside"><strong>Keywords</strong> Hit space or enter to add a new keyword.</div>
+                      <div class="aside"><strong>Keywords</strong> Hit Enter to add a new keyword.</div>
                       <ul id="tags">
                         {% for keyword in submission.keywords.all %}<li>{{ keyword }}</li>{% endfor %}
                       </ul>
@@ -237,20 +237,57 @@
             </div>
             <div role="tabpanel" class="tab-pane" id="cover">
               <br />
-              <div class="col-md-6">
-                <form method="POST" action="?cover=true" enctype="multipart/form-data">
-                  {% csrf_token %}
-                  {% bootstrap_field cover_form.cover %}
-                  <button class="btn btn-success" type="submt">Submit</button>
-                </form>
+              <div class="row">
+                <div class="col-md-6">
+                  <form method="POST" action="?cover=true" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {% bootstrap_field cover_form.cover %}
+                    <button class="btn btn-success" type="submt">Submit</button>
+                  </form>
+                </div>
+                <div class="col-md-6">
+                  <label>Current Cover</label>
+                  {% if submission.cover %}
+                  <img src="{{ MEDIA_URL }}{{ submission.cover }}" class="img-responsive" />
+                  {% else %}
+                  <img src="holder.js/350x500" class="img-responsive" />
+                  {% endif %}
+                </div>
               </div>
-              <div class="col-md-6">
-                <label>Current Cover</label>
-                {% if submission.cover %}
-                <img src="{{ MEDIA_URL }}{{ submission.cover }}" class="img-responsive" />
-                {% else %}
-                <img src="holder.js/350x500" class="img-responsive" />
-                {% endif %}
+              <div class="row">
+                <div class="col-md-12">
+                  <hr />
+                  <h4>Cover Image Review</h4>
+                  <table class="table table-bordered table-condensed">
+                    <tr>
+                      <th>Editor</th>
+                      <th>Requested</th>
+                      <th>Completed</th>
+                      <th></th>
+                    </tr>
+                    {% for proof in submission.coverimageproof_set.all %}
+                    <tr>
+                      <td>{{ proof.editor.profile.full_name }}</td>
+                      <td>{{ proof.assigned }}</td>
+                      <td>{% if proof.completed %}{{ proof.completed }}{% else %}Awaiting response from author{% endif %}</td>
+                      <td><a class="btn btn-success" data-toggle="modal" data-target="#{{ proof.id }}">View</a></td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                      <td colspan="4">No outstanding proof requests.</td>
+                    </tr>
+                    {% endfor %}
+                  </table>
+                  {% for proof in submission.coverimageproof_set.all %}
+                    {% include "shared/modals/complete_cover_proof.html" %}
+                  {% endfor %}
+                  <form method="POST" action="?invite_author=true">
+                    {% csrf_token %}
+                    <small>You can invite an author to review the cover image. Add some notes below</small><br /><br />
+                    <textarea name="author_invite" id="author_invite"></textarea><br />
+                    <button type="submit" class="btn btn-accept">Invite Author to Review Cover</button>
+                  </form>
+                </div>
               </div>
             </div>
 
@@ -303,7 +340,8 @@ $(function() {
 <script src="{% static "js/tag-it.min.js" %}"></script>
 <script type="text/javascript">
   $(document).ready(function() {
-      $("#tags").tagit();
+      $("#tags").tagit(
+        {allowSpaces: true});
   });
 </script>
 <script type="text/javascript">

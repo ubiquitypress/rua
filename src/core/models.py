@@ -140,9 +140,9 @@ class Author(models.Model):
 			return "%s %s" % (self.first_name, self.last_name)
 
 class Book(models.Model):
-	prefix = models.CharField(max_length=100, null=True, blank=True)
-	title = models.CharField(max_length=1000, null=True, blank=True)
-	subtitle = models.CharField(max_length=1000, null=True, blank=True)
+	prefix = models.CharField(max_length=100, null=True, blank=True, help_text='A prefix like "The" that shouldn\'t be used for searching')
+	title = models.CharField(max_length=1000, null=True, blank=True, help_text='The main title.')
+	subtitle = models.CharField(max_length=1000, null=True, blank=True, help_text='Subtitle of the book.')
 	series = models.ForeignKey('Series', null=True, blank=True, help_text="If you are submitting this work to an existing Series please selected it.")
 	author = models.ManyToManyField('Author', null=True, blank=True)
 	editor = models.ManyToManyField('Editor', null=True, blank=True)
