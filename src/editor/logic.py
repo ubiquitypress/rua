@@ -141,13 +141,13 @@ def handle_review_assignment(book, reviewer, review_type, due_date, review_round
     new_review_assignment.save()
     book.review_assignments.add(new_review_assignment)
     log.add_log_entry(book=book, user=user, kind='review', message='Reviewer %s %s assigned. Round %d' % (reviewer.first_name, reviewer.last_name, review_round.round_number), short_name='Review Assignment')
-    send_review_request(book, new_review_assignment, email_text, attachment)
+    send_review_request(book, new_review_assignment, email_text, user, attachment)
 
     return new_review_assignment
 
 # Email Handlers - TODO: move to email.py?
 
-def send_review_request(book, review_assignment, email_text, attachment=None):
+def send_review_request(book, review_assignment, email_text, sender, attachment=None):
     from_email = models.Setting.objects.get(group__name='email', name='from_address')
     base_url = models.Setting.objects.get(group__name='general', name='base_url')
 
@@ -157,6 +157,7 @@ def send_review_request(book, review_assignment, email_text, attachment=None):
         'book': book,
         'review': review_assignment,
         'decision_url': decision_url,
+        'sender': sender,
     }
 
     email.send_email('Review Request', context, from_email.value, review_assignment.user.email, email_text, book=book, attachment=attachment)
