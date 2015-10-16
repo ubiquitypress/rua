@@ -79,12 +79,6 @@ def editor_submission(request, submission_id):
 		'author_include': 'editor/submission_details.html',
 		'submission_files': 'editor/submission_files.html',
 		'editor_submission': True,
-		'my_tasks': False,
-		'editor_review': False,
-		'editing': False ,
-		'catalog_view':False,
-		'production': False,
-		'status': False ,
 	}
 
 	return render(request, template, context)
@@ -102,12 +96,6 @@ def editor_tasks(request, submission_id):
 		'author_include': 'shared/tasks.html',
 		'tasks': tasks,
 		'my_tasks': True,
-		'editor_review': False,
-		'editor_submission': False,
-		'editing': False ,
-		'catalog_view':False,
-		'production': False,
-		'status': False ,
 	}
 
 	return render(request, template, context)
@@ -135,12 +123,6 @@ def editor_review(request, submission_id):
 		'review_rounds': review_rounds,
 		'revision_requests': revision_models.Revision.objects.filter(book=book, revision_type='review'),
 		'editor_review': True,
-		'my_tasks': False,
-		'editor_submission': False,
-		'editing': False ,
-		'catalog_view':False,
-		'status': False ,
-		'production': False,
 	}
 
 	return render(request, template, context)
@@ -184,12 +166,6 @@ def editor_review_round(request, submission_id, round_number):
 		'internal_review_assignments': internal_review_assignments,
 		'external_review_assignments': external_review_assignments,
 		'editor_review': True,
-		'my_tasks': False,
-		'editor_submission': False,
-		'editing': False ,
-		'catalog_view':False,
-		'production': False,
-		'status': False ,
 	}
 
 	return render(request, template, context)
@@ -363,12 +339,6 @@ def editor_editing(request, submission_id):
 		'submission': book,
 		'author_include': 'editor/editing.html',
 		'editing': True ,
-		'my_tasks': False,
-		'editor_review': False,
-		'editor_submission': False,
-		'catalog_view':False,
-		'production': False,
-		'status': False ,
 	}
 
 	return render(request, template, context)
@@ -390,12 +360,6 @@ def editor_production(request, submission_id):
 		'format_list': models.Format.objects.filter(book=book).select_related('file'),
 		'chapter_list': models.Chapter.objects.filter(book=book).select_related('file'),
 		'production': True,
-		'catalog_view':False,
-		'editing': False ,
-		'my_tasks': False,
-		'editor_review': False,
-		'editor_submission': False,
-		'status': False ,
 	}
 
 	return render(request, template, context)
@@ -467,12 +431,6 @@ def catalog(request, submission_id):
 		'internal_review_assignments': internal_review_assignments,
 		'external_review_assignments': external_review_assignments,
 		'catalog_view': True,
-		'production': False,
-		'editing': False ,
-		'my_tasks': False,
-		'editor_review': False,
-		'editor_submission': False,
-		'status': False ,
 	}
 
 	return render(request, template, context)
@@ -512,12 +470,6 @@ def identifiers(request, submission_id, identifier_id=None):
 		'identifier': identifier,
 		'form': form,
 		'catalog_view': True,
-		'production': False,
-		'editing': False ,
-		'my_tasks': False,
-		'editor_review': False,
-		'editor_submission': False,
-		'status': False ,
 	}
 
 	return render(request, template, context)
@@ -570,12 +522,6 @@ def update_contributor(request, submission_id, contributor_type, contributor_id=
 		'form': form,
 		'contributor': contributor,
 		'catalog_view': True,
-		'production': False,
-		'editing': False ,
-		'my_tasks': False,
-		'editor_review': False,
-		'editor_submission': False,
-		'status': False ,
 	}
 
 	return render(request, template, context)
@@ -718,12 +664,6 @@ def assign_typesetter(request, submission_id):
 		'chapter_list': models.Chapter.objects.filter(book=book).select_related('file'),
 		'typesetters': typesetters,
 		'production': True,
-		'editing': False ,
-		'my_tasks': False,
-		'editor_review': False,
-		'editor_submission': False,
-		'catalog_view':False,
-		'status': False ,
 		'email_text': models.Setting.objects.get(group__name='email', name='typeset_request'),
 	}
 
@@ -786,12 +726,6 @@ def view_typesetter(request, submission_id, typeset_id):
 		'author_form': author_form,
 		'email_text': email_text,
 		'production': True,
-		'editing': False ,
-		'my_tasks': False,
-		'editor_review': False,
-		'editor_submission': False,
-		'catalog_view':False,
-		'status': False ,
 	}
 
 	return render(request, template, context)
@@ -835,12 +769,6 @@ def retailers(request, submission_id, retailer_id=None):
 		'form': form,
 		'retailer_id': retailer_id,
 		'catalog_view': True,
-		'production': False,
-		'editing': False ,
-		'my_tasks': False,
-		'editor_review': False,
-		'editor_submission': False,
-		'status': False ,
 	}
 
 	return render(request, template, context)
@@ -884,13 +812,7 @@ def editor_status(request, submission_id):
 	context = {
 		'submission': book,
 		'active': 'user_submission',
-		'status': True ,		
-		'editing': False ,
-		'my_tasks': False,
-		'editor_review': False,
-		'editor_submission': False,
-		'production': False,
-		'catalog_view': False,
+		'status': True ,
 		'author_include': 'shared/status.html',
 		'submission_files': 'shared/messages.html',
 		'timeline': core_logic.build_time_line(book),
@@ -929,12 +851,6 @@ def assign_copyeditor(request, submission_id):
 		'submission_files': 'editor/assign_copyeditor.html',
 		'email_text': models.Setting.objects.get(group__name='email', name='copyedit_request'),
 		'editing': True ,
-		'my_tasks': False,
-		'editor_review': False,
-		'editor_submission': False,
-		'production': False,
-		'catalog_view': False,
-		'status': False ,
 	}
 
 	return render(request, template, context)
@@ -977,12 +893,6 @@ def view_copyedit(request, submission_id, copyedit_id):
 		'email_text': email_text,
 		'timeline': core_logic.build_time_line_editing_copyedit(copyedit),
 		'editing': True ,
-		'my_tasks': False,
-		'editor_review': False,
-		'editor_submission': False,
-		'production': False,
-		'catalog_view': False,
-		'status': False ,
 	}
 
 	return render(request, template, context)
@@ -1018,12 +928,6 @@ def assign_indexer(request, submission_id):
 		'submission_files': 'editor/assign_indexer.html',
 		'email_text': models.Setting.objects.get(group__name='email', name='index_request'),
 		'editing': True ,
-		'my_tasks': False,
-		'editor_review': False,
-		'editor_submission': False,
-		'production': False,
-		'catalog_view': False,
-		'status': False ,
 
 	}
 
@@ -1042,12 +946,6 @@ def view_index(request, submission_id, index_id):
 		'submission_files': 'editor/view_index.html',
 		'timeline': core_logic.build_time_line_editing_indexer(index),
 		'editing': True ,
-		'my_tasks': False,
-		'editor_review': False,
-		'editor_submission': False,
-		'production': False,
-		'catalog_view': False,
-		'status': False ,
 
 	}
 
