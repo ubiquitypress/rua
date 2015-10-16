@@ -317,8 +317,8 @@
 {% block js %}
 <script language="javascript" type="text/javascript">
 <!--
-function popitup(url) {
-    newwindow=window.open(url,'{{http://localhost:8000/email/authors/submission/4/user/3/}}','height=800,width=600');
+function popitup(url,title) {
+    newwindow=window.open(url,title,'height=750,width=600');
     if (window.focus) {newwindow.focus()}
     return false;
 }
