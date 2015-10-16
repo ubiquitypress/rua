@@ -1,3 +1,4 @@
+<input type="hidden" id="book_id" value="{{ submission.id }}">
 <form method="POST" id="message_form" action="{% url 'new_message' submission.id %}">
 	<div class="input-group">
 	  <input type="text" class="form-control" id="id_message" name="message" placeholder="Add a message...">
@@ -8,12 +9,19 @@
 <br />
 <div id="message-list">
 {% for message in submission.message_set.all %}
-<div class="message {% if forloop.counter|divisibleby:2 %}odd{% else %}even{% endif %}">
+<div class="message {% if message.sender != request.user %}message-green{% endif %}">
 	<div class="row message-container">
-		<div class="col-md-2"><h3 style="margin-top: 15px;">{{ message.sender.profile.initials }}</h3></div>
-		<div class="col-md-10"><small>{{ message.message|linebreaks }}</small></div>
+		{% if message.sender == request.user %}
+			<div class="col-md-2"><h3>{{ message.sender.profile.initials }}</h3></div>
+			<div class="col-md-10"><small>{{ message.message|linebreaks }}</small></div>
+		{% else %}
+			<div class="col-md-10"><small>{{ message.message|linebreaks }}</small></div>
+			<div class="col-md-2"><h3 style="margin-top: 15px;">{{ message.sender.profile.initials }}</h3></div>
+		{% endif %}
+
 		<div class="col-md-12 message-date"><small>{{ message.date_sent|date:"Y-m-d - H:i" }}</small></div>
 	</div>
+	<input class="last_message" type="hidden" value="{{ message.pk }}">
 </div>
 {% empty %}
 	<p>This book has no messages.</p>

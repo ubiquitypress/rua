@@ -323,6 +323,34 @@ def new_message(request, book_id):
 	else:
 		return HttpResponse(json.dumps(new_message_form.errors))
 
+@csrf_exempt
+@is_book_editor_or_author
+def get_messages(request, book_id):
+	try:
+		last_message = int(request.GET.get('last_message', 0))
+		messages = models.Message.objects.filter(book__pk=book_id, pk__gt=last_message).exclude(sender=request.user).order_by('-id')
+
+		message_list = [{
+				'message': message.message,
+				'message_id': message.pk,
+				'sender': '%s %s' % (message.sender.first_name, message.sender.last_name),
+				'initials': message.sender.profile.initials(),
+				'message': message.message,
+				'date_sent': message.date_sent.strftime("%-d %b %Y, %H:%M"),
+				'user':'same',
+			} for message in messages
+		]
+		response_dict = {
+			'status_code': 200,
+			'messages': message_list,
+		}
+
+		return HttpResponse(json.dumps(response_dict))
+	except Exception, e:
+		print e
+
+
+
 def get_authors(request,submission_id):
     if request.is_ajax():
         q = request.GET.get('term', '')
@@ -869,6 +897,8 @@ def request_proposal_revisions(request, proposal_id):
 	}
 
 	return render(request, template, context)
+
+
 
 ## END PROPOSAL ##
 

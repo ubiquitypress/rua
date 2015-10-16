@@ -35,17 +35,33 @@ html, body {
 
 .message {
   min-height: 100px;
+  border-style: solid;
+  border-width: 1px;
+  border-color: #B0B0B0;
+  margin-bottom: 8px;
 }
+.message-new {
+  box-shadow:0 0 1em #0000FF;
+}
+
+.message-green {
+  background-color: #d5e5d5;
+}
+
 .selected-row-table{
   background-color:#DDDDDD; 
   right: -5px  ; 
   left: -5px  ; 
-   border-top: 14px solid transparent;
+  border-top: 14px solid transparent;
   border-left: 14px solid #fff;
   border-right: 5px solid #DDDDDD;    
 }
 .message-container {
   padding: 10px;
+}
+.message-container h3 {
+  color:#2a2a2a;
+  font-size: 18px;
 }
 
 .message-user {

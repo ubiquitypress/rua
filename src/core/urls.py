@@ -43,6 +43,8 @@ urlpatterns = patterns('',
 
     # Message AJAX
     url(r'^book/(?P<book_id>\d+)/message/new/$', 'core.views.new_message', name='new_message'),
+    url(r'^book/(?P<book_id>\d+)/messages/$', 'core.views.get_messages', name='get_messages'),
+
 
     # User submission
     url(r'^user/submission/(?P<submission_id>\d+)/$', 'core.views.user_submission', name='user_submission'),
