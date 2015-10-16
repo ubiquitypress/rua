@@ -716,6 +716,7 @@ def assign_typesetter(request, submission_id):
 		'editor_submission': False,
 		'catalog_view':False,
 		'status': False ,
+		'email_text': models.Setting.objects.get(group__name='email', name='typeset_request'),
 	}
 
 	return render(request, template, context)
