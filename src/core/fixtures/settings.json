@@ -21,8 +21,8 @@
 },
 {
     "fields": {
-        "value": "<p><img src=\"/media/django-summernote/2015-07-08/3ead64c0-5ac8-4c89-be03-188ce8ce3450.jpg\" style=\"width: 605px;\"><br></p>",
-        "group": 2,
+        "value": "<h4>SUBMISSION PREPARATION CHECKLIST</h4><p>As part of the submission process, authors are required to check off their submission's compliance with all of the following items, and submissions may be returned to authors that do not adhere to these guidelines.</p><ul><li>The submission has not been previously published, nor is it before another press for consideration (or an explanation has been provided in Comments to the Editor).</li><li><span style=\"line-height: 1.42857;\">The submission file is in the Microsoft Word, RTF, OpenDocument, or WordPerfect file format.</span></li><li><span style=\"line-height: 1.42857;\">Where available, URLs for the references have been provided.</span></li><li><span style=\"line-height: 1.42857;\">The text is single-spaced; uses a 12-point font; employs italics, rather than underlining (except with URL addresses); and all illustrations, figures, and tables are placed within the text at the appropriate points, rather than at the end.</span></li><li><span style=\"line-height: 1.42857;\">The text adheres to the stylistic and bibliographic requirements outlined in the Author Guidelines, which is found in About the Press.</span></li></ul><h4>PRIVACY STATEMENT</h4><p>The names and email addresses entered in this press site will be used exclusively for the stated purposes of this press and will not be made available for any other purpose or to any other party.</p>",
+        "group": 1,
         "name": "submission_guidelines",
         "types": "rich_text"
     },
@@ -88,16 +88,6 @@
     },
     "model": "core.setting",
     "pk": 9
-},
-{
-    "fields": {
-        "value": "8accaeed-f073-4df9-a31b-bc7d6d455b07..jpg",
-        "group": 4,
-        "name": "logo",
-        "types": "file"
-    },
-    "model": "core.setting",
-    "pk": 10
 },
 {
     "fields": {
@@ -371,23 +361,53 @@
 },
 {
     "fields": {
-        "value": "Dear someone,\r\n\r\nSomething something,\r\n\r\nRegards,\r\n\r\n{{ sender.profile.signature }}",
+        "value": "GO AWAY!",
         "group": 3,
-        "name": "proposal_request_revisison",
+        "name": "proposal_accept",
         "types": "rich_text"
     },
     "model": "core.setting",
-    "pk": 38
+    "pk": 39
 },
 {
     "fields": {
-        "value": "brand_header.png",
-        "group": 1,
+        "value": "dsfff",
+        "group": 3,
+        "name": "proposal_decline",
+        "types": "rich_text"
+    },
+    "model": "core.setting",
+    "pk": 40
+},
+{
+    "fields": {
+        "value": "Dear someone,\r\n\r\nSomething something,\r\n\r\nRegards,\r\n\r\n{{ sender.profile.signature }}",
+        "group": 3,
+        "name": "proposal_request_revisisons",
+        "types": "rich_text"
+    },
+    "model": "core.setting",
+    "pk": 41
+},
+{
+    "fields": {
+        "value": "afea9c80-b081-42e9-99bd-a4b710e6aafc..png",
+        "group": 4,
         "name": "brand_header",
         "types": "file"
     },
     "model": "core.setting",
-    "pk": 39
+    "pk": 42
+},
+{
+    "fields": {
+        "value": "0791a2db-c180-4fe5-a951-dc002ae08fd6..ico",
+        "group": 4,
+        "name": "favicon",
+        "types": "file"
+    },
+    "model": "core.setting",
+    "pk": 43
 },
 {
     "fields": {
@@ -397,7 +417,17 @@
         "types": "text"
     },
     "model": "core.setting",
-    "pk": 40
+    "pk": 44
+},
+{
+    "fields": {
+        "value": "<p>You must agree to the below terms in order to submit your book to this press.</p>",
+        "group": 1,
+        "name": "submission_checklist_help",
+        "types": "rich_text"
+    },
+    "model": "core.setting",
+    "pk": 45
 },
 {
     "fields": {
@@ -407,6 +437,6 @@
         "types": "text"
     },
     "model": "core.setting",
-    "pk": 41
+    "pk": 46
 }
 ]
