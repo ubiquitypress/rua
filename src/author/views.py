@@ -228,6 +228,7 @@ def author_production(request, submission_id):
 		proof.completed = timezone.now()
 		proof.note_to_editor = author_feedback
 		proof.save()
+		log.add_log_entry(book=book, user=request.user, kind='production', message='%s %s completed Cover Image Proofs' % (request.user.first_name, request.user.last_name), short_name='Cover Image Proof Request')
 		new_task = task.create_new_task(book, request.user, proof.editor, "Cover Proofing completed for %s" % book.title, workflow='production')
 		return redirect(reverse('author_production', kwargs={'submission_id': submission_id}))
 

@@ -454,6 +454,7 @@ def catalog(request, submission_id):
 			note_to_author = request.POST.get('author_invite', None)
 			new_cover_proof = editor_models.CoverImageProof(book=book, editor=request.user, note_to_author=note_to_author)
 			new_cover_proof.save()
+			log.add_log_entry(book=book, user=request.user, kind='production', message='%s %s requested Cover Image Proofs' % (request.user.first_name, request.user.last_name), short_name='Cover Image Proof Request')
 			messages.add_message(request, messages.SUCCESS, 'Cover Image Proof request added.')
 			return redirect(reverse('catalog', kwargs={'submission_id': submission_id}))
 
