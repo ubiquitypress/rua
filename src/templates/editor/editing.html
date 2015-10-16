@@ -19,7 +19,14 @@
 	{% else %}
 	<tr>
 	{% endifequal %}
-		<td>{{ assignment.copyeditor.profile.full_name }}</td>
+		<td>{{ assignment.copyeditor.profile.full_name }} <sup> &nbsp;&nbsp;
+
+{% ifequal copyedit.id assignment.id %}
+	<a href="{% url 'email_user' 'onetaskers' submission.id assignment.copyeditor.pk %}"class="fa fa-envelope-o btn btn-xs btn-trasnparent"></a></sup>&nbsp;&nbsp;</td>
+	{% else %}
+	
+			<a href="{% url 'email_user' 'onetaskers' submission.id assignment.copyeditor.pk %}"class="fa fa-envelope-o btn btn-xs btn-default"></a></sup>&nbsp;&nbsp;</td>
+				{% endifequal %}
 		<td>
 			{{ assignment.state.friendly }}
 			<br />
@@ -59,7 +66,15 @@
 	{% else %}
 	<tr>
 	{% endifequal %}
-		<td>{{ assignment.indexer.profile.full_name }} </td>
+		<td>{{ assignment.indexer.profile.full_name }} <sup> 
+
+{% ifequal index.id assignment.id %}
+	<a href="{% url 'email_user' 'onetaskers' submission.id assignment.indexer.pk %}"class="fa fa-envelope-o btn btn-xs btn-trasnparent"></a></sup>&nbsp;&nbsp;</td>
+	{% else %}
+	
+			<a href="{% url 'email_user' 'onetaskers' submission.id assignment.indexer.pk %}"class="fa fa-envelope-o btn btn-xs btn-default"></a></sup>&nbsp;&nbsp;</td>
+				{% endifequal %}
+			
 		<td>
 			{{ assignment.state.friendly }}
 			<br />
