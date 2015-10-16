@@ -93,15 +93,15 @@
  <script>
 
     $( "#bcc" ).autocomplete({
-      source: "/email/get/authors",
+      source: "{{source}}",
       minLength: 2,     
     });
         $( "#to" ).autocomplete({
-      source: "/email/get/authors",
+      source: "{{source}}",
       minLength: 2,     
     });
             $( "#cc" ).autocomplete({
-      source: "/email/get/authors",
+     source: "{{source}}",
       minLength: 2,     
     });
      </script>
@@ -123,25 +123,31 @@
 $("#ccAdd").click(function () {
 	var original= document.getElementById('cc_values').value
 	if (!original){
-		var value = (document.getElementById('cc').value).replace(/\s+/g, '')}
+		var value = (document.getElementById('cc').value).replace(/\s+/g, '')+';'}
 	else{
-	    var value= original+(document.getElementById('cc').value).replace(/\s+/g, '')+';'}
+		var email = (document.getElementById('cc').value).replace(/\s+/g, '')
+		if (original.indexOf(email) < 0){
+	    var value= original+email+';'} else{value=original}}
     $("#cc_values").val(value);
 });
 $("#toAdd").click(function () {
 	var original= document.getElementById('to_values').value
 	if (!original){
-		var value = (document.getElementById('to').value).replace(/\s+/g, '')}
+		var value = (document.getElementById('to').value).replace(/\s+/g, '')+';'}
 	else{
-	    var value= original+(document.getElementById('to').value).replace(/\s+/g, '')+';'}
+		var email = (document.getElementById('to').value).replace(/\s+/g, '')
+		if (original.indexOf(email) < 0){
+	    var value= original+email+';'} else{value=original}}
     $("#to_values").val(value);
 });
 $("#bccAdd").click(function () {
 	var original= document.getElementById('bcc_values').value
 	if (!original){
-		var value = (document.getElementById('bcc').value).replace(/\s+/g, '')}
+		var value = (document.getElementById('bcc').value).replace(/\s+/g, '')+';'}
 	else{
-	    var value= original+(document.getElementById('bcc').value).replace(/\s+/g, '')+';'}
+		var email = (document.getElementById('bcc').value).replace(/\s+/g, '')
+		if (original.indexOf(email) < 0){
+	    var value= original+email+';'} else{value=original}}
     $("#bcc_values").val(value);
 });
   </script>

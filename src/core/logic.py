@@ -12,6 +12,7 @@ import json
 from pymarc import Record, Field
 from pymarc import *
 import re
+from django.shortcuts import redirect, render, get_object_or_404
 from core.files import handle_file,handle_copyedit_file,handle_marc21_file
 from  __builtin__ import any as string_any
 
@@ -146,7 +147,107 @@ def book_to_mark21_file(book,owner, xml = False):
 		file=handle_marc21_file(content,filename, book, owner)
 	return file.pk
 	#add handle_file ?
+def get_author_emails(submission_id,term):
+    submission = get_object_or_404(models.Book, pk=submission_id)
+    authors = submission.author.all()
+    results = []
+    for author in authors:
+        name=author.full_name()
+        author_json = {}
+        author_json['id'] = author.id
+        author_json['label'] = author.full_name()
+        author_json['value'] = author.author_email
+        if term:
+        	print term
+        	print name.lower()
+        	if term.lower() in name.lower():
+	        	results.append(author_json)
+    return results
 
+def get_editor_emails(submission_id,term):
+    submission = get_object_or_404(models.Book, pk=submission_id)
+    editors = get_editors(submission)
+    results = []
+    for editor in editors:
+	    try:
+	        name=editor.full_name()
+	    except:
+	   		name=editor.first_name+' '+editor.last_name
+	    editor_json = {}
+	    editor_json['id'] = editor.id
+	    editor_json['label'] = name
+	    try:
+	        editor_json['value'] = editor.author_email
+	    except:
+	      	editor_json['value'] = editor.email
+	    if term:
+	       	if term.lower() in name.lower():
+	       	    results.append(editor_json)
+    return results
+
+def get_onetasker_emails(submission_id,term):
+    submission = get_object_or_404(models.Book, pk=submission_id)
+    copyedit_assignments = models.CopyeditAssignment.objects.filter(book=submission)
+    index_assignments = models.IndexAssignment.objects.filter(book=submission)
+    typeset_assignments = models.TypesetAssignment.objects.filter(book=submission)
+    review_assignments = models.ReviewAssignment.objects.filter(book=submission)
+
+    results = []
+    for assignment in copyedit_assignments:
+        user_json = {}
+        user = assignment.copyeditor
+        name = user.first_name+' '+user.last_name
+        user_json['id'] = user.id
+        user_json['label'] = user.profile.full_name()
+        user_json['value'] = user.email
+        if not string_any(user_json['value'] for result in results) and term.lower() in name.lower():
+        	    results.append(user_json)
+    for assignment in index_assignments:
+        user_json = {}
+        user = assignment.indexer
+        name = user.first_name+' '+user.last_name
+        user_json['id'] = user.id
+        user_json['label'] = user.profile.full_name()
+        user_json['value'] = user.email
+        if not string_any(user_json['value'] for result in results) and term.lower() in name.lower():
+        	    results.append(user_json)
+    for assignment in typeset_assignments:
+        user_json = {}
+        user = assignment.typesetter
+        name = user.first_name+' '+user.last_name
+        user_json['id'] = user.id
+        user_json['label'] = user.profile.full_name()
+        user_json['value'] = user.email
+        if not string_any(user_json['value'] for result in results) and term.lower() in name.lower():
+        	    results.append(user_json)
+    for assignment in review_assignments:
+        user_json = {}
+        user = assignment.user
+        name = user.first_name+' '+user.last_name
+        user_json['id'] = user.id
+        user_json['label'] = user.profile.full_name()
+        user_json['value'] = user.email
+        if not string_any(user_json['value'] for result in results) and term.lower() in name.lower():
+        	    results.append(user_json)
+    return results
+	
+def get_editors(book):
+	press_editors = book.press_editors.all()
+	if book.series:
+		series_editor = book.series.editor
+
+		if series_editor:
+			series_editor_list = [series_editor]
+			press_editor_list = [ editor for editor in press_editors if not editor == series_editor_list[0]]
+		else:
+			series_editor_list = []
+			press_editor_list = [ editor for editor in press_editors]
+
+	else:
+		series_editor_list = []
+		press_editor_list = [ editor for editor in press_editors]
+	
+	return (press_editor_list + series_editor_list)
 def clean_email_list(addresses):
 	list_of_email_addresses=[]
 	for address in addresses:

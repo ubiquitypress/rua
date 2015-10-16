@@ -50,9 +50,12 @@ urlpatterns = patterns('',
     url(r'overview/$', 'core.views.overview', name='overview'),
 
     # Email
-    url(r'^email/authors/submission/(?P<submission_id>\d+)/$', 'core.views.email_authors', name='email_authors'),
-    url(r'^email/authors/submission/(?P<submission_id>\d+)/author/(?P<author_id>\d+)/$', 'core.views.email_authors', name='email_author'),
-    url(r'^email/get/authors/$', 'core.views.get_authors', name='get_authors'),
+    url(r'^email/(?P<group>[-\w]+)/submission/(?P<submission_id>\d+)/$', 'core.views.email_users', name='email_users'),
+    url(r'^email/(?P<group>[-\w]+)/submission/(?P<submission_id>\d+)/user/(?P<user_id>\d+)/$', 'core.views.email_users', name='email_user'),
+    url(r'^email/get/authors/submission/(?P<submission_id>\d+)/$', 'core.views.get_authors', name='get_authors'),
+    url(r'^email/get/editors/submission/(?P<submission_id>\d+)/$', 'core.views.get_editors', name='get_editors'),
+    url(r'^email/get/onetaskers/submission/(?P<submission_id>\d+)/$', 'core.views.get_onetaskers', name='get_onetaskers'),
+    url(r'^email/get/all/submission/(?P<submission_id>\d+)/$', 'core.views.get_all', name='get_all'),
     
     # Files
     url(r'^files/submission/(?P<submission_id>\d+)/get/marc21/(?P<type>[-\w]+)/$', 'core.views.serve_marc21_file', name='serve_marc21_file'),

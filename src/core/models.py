@@ -220,7 +220,8 @@ class Book(models.Model):
 	def onetaskers(self):
 		users =  [copyedit.copyeditor for copyedit in CopyeditAssignment.objects.filter(book=self)]
 		users.append(typeset.typesetter for typeset in TypesetAssignment.objects.filter(book=self))
-		users.append(typeset.typesetter for typeset in TypesetAssignment.objects.filter(book=self))
+		users.append(index.indexer for index in IndexAssignment.objects.filter(book=self))
+		users.append(review.user for review in ReviewAssignment.objects.filter(book=self))
 		return users
 
 	def full_title(self):

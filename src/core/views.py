@@ -327,28 +327,66 @@ def new_message(request, book_id):
 	else:
 		return HttpResponse(json.dumps(new_message_form.errors))
 
-def get_authors(request):
+def get_authors(request,submission_id):
     if request.is_ajax():
         q = request.GET.get('term', '')
-        authors = models.Author.objects.filter(first_name__icontains = q )[:20]
-        results = []
-        for author in authors:
-            author_json = {}
-            author_json['id'] = author.id
-            author_json['label'] = author.full_name()
-            author_json['value'] = author.author_email
-            results.append(author_json)
-        data = json.dumps(results)
+        data = json.dumps(logic.get_author_emails(submission_id,q))
     else:
         data = 'Unable to get authors'
     mimetype = 'application/json'
     return HttpResponse(data, mimetype)
 
+def get_editors(request,submission_id):
+    if request.is_ajax():
+	    q = request.GET.get('term', '')
+	    results = []
+	    data = json.dumps(logic.get_editor_emails(submission_id,q))
+    else:
+		data = 'Unable to get editors'
+
+    mimetype = 'application/json'
+    return HttpResponse(data, mimetype)
+
+def get_onetaskers(request,submission_id):
+    if request.is_ajax():
+        q = request.GET.get('term', '')
+        data = json.dumps(logic.get_onetasker_emails(submission_id,q))
+    else:
+        data = 'Unable to get onetaskers'
+    mimetype = 'application/json'
+    return HttpResponse(data, mimetype)
+def get_all(request,submission_id):
+    submission = get_object_or_404(models.Book, pk=submission_id)
+    if request.is_ajax():
+        q = request.GET.get('term', '')
+        onetasker_results = logic.get_onetasker_emails(submission_id,q)
+        editor_results = logic.get_editor_emails(submission_id,q)
+        author_results = logic.get_author_emails(submission_id,q)
+        results = []
+        for user in onetasker_results:
+        	if not string_any(user['value'] for result in results):
+
+        	   results.append(user)
+        for author in author_results:
+        	if not string_any(author['value'] for result in results):
+        	    results.append(author)
+        	    
+        for editor in editor_results:
+        	if not string_any(editor['value'] for result in results):
+        	    results.append(editor)
+        data = json.dumps(results)
+    else:
+        data = 'Unable to get any user'
+    mimetype = 'application/json'
+    return HttpResponse(data, mimetype)
 
 
 @is_book_editor
-def email_authors(request,submission_id,author_id=None):
+def email_users(request,group,submission_id=None,user_id=None):
 	submission = get_object_or_404(models.Book, pk=submission_id)
+	editors = logic.get_editors(submission)
+	authors = submission.author.all
+	print editors
 	to_value=""
 	if request.POST:
 		attachment = request.FILES.get('attachment')
@@ -373,20 +411,34 @@ def email_authors(request,submission_id,author_id=None):
 				send_email(subject=subject, context={}, from_email=request.user.email, to=to_list,bcc=bcc_list,cc=cc_list, html_template=body, book=submission)
 			messages.add_message(request, messages.INFO, "E-mail with subject '%s' was sent." % subject)
 
-	if author_id:
-		author = get_object_or_404(models.Author, pk=author_id)
-		to_value="%s;" % (author.author_email)
+	if not group == "all" and user_id:
+		if group == "editors":
+			editor = get_object_or_404(models.Editor, pk=user_id)
+			to_value="%s;" % (editor.author_email)
+		elif group == "authors":
+			author = get_object_or_404(models.Author, pk=user_id)
+			to_value="%s;" % (author.author_email)
+		elif group == "onetaskers":
+			user = get_object_or_404(models.User, pk=user_id)
+			to_value="%s;" % (user.email)
+	elif group =="all" and user_id:
+		messages.add_message(request, messages.ERROR, "Cannot use the user field on this page because of the 'all' in the url. Try replacing it with other email groups: 'authors' or 'editors' or 'onetaskers'")
+	group_name=group
+	if not group_name == "editors" and not group_name == "all" and not group_name == "authors" and not group_name == "onetaskers":
+		group_name="all"
+	
+	source = "/email/get/%s/submission/%s/" % (group_name,submission_id)
 
-	template = 'core/email_author.html'
+	template = 'core/email.html'
 	context = {
 		'submission': submission,
 		'from': request.user,
-		'to_value':to_value
+		'to_value':to_value,
+		'source': source,
+		'group': group_name,
 		
 	}
-
 	return render(request, template, context)
-
 
 @is_book_editor
 def upload_misc_file(request, submission_id):
