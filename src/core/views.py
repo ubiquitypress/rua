@@ -316,7 +316,7 @@ def new_message(request, book_id):
 			'message_id': new_message.pk,
 			'sender': '%s %s' % (new_message.sender.first_name, new_message.sender.last_name),
 			'message': new_message.message,
-			'date_sent': str(new_message.date_sent),
+			'date_sent': new_message.date_sent.strftime("%-d %b %Y, %H:%M"),
 		}
 
 		return HttpResponse(json.dumps(response_dict))
