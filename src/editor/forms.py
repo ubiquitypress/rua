@@ -2,6 +2,7 @@ from django import forms
 from django.forms import ModelForm
 from core import models as core_models
 from revisions import models as revision_models
+from editor import models
 
 class RevisionForm(ModelForm):
 
@@ -115,3 +116,9 @@ class TypesetTypesetter(forms.ModelForm):
 	class Meta:
 		model = core_models.TypesetAssignment
 		fields = ('note_from_typesetter',)
+
+class CoverImageReviewForm(forms.ModelForm):
+
+	class Meta:
+		model = models.CoverImageProof
+		fields = ('note_to_author', )
