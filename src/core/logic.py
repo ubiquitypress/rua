@@ -158,8 +158,6 @@ def get_author_emails(submission_id,term):
         author_json['label'] = author.full_name()
         author_json['value'] = author.author_email
         if term:
-        	print term
-        	print name.lower()
         	if term.lower() in name.lower():
 	        	results.append(author_json)
     return results
@@ -187,42 +185,11 @@ def get_editor_emails(submission_id,term):
 
 def get_onetasker_emails(submission_id,term):
     submission = get_object_or_404(models.Book, pk=submission_id)
-    copyedit_assignments = models.CopyeditAssignment.objects.filter(book=submission)
-    index_assignments = models.IndexAssignment.objects.filter(book=submission)
-    typeset_assignments = models.TypesetAssignment.objects.filter(book=submission)
-    review_assignments = models.ReviewAssignment.objects.filter(book=submission)
+    onetaskers = submission.onetaskers()
 
     results = []
-    for assignment in copyedit_assignments:
+    for user in onetaskers:
         user_json = {}
-        user = assignment.copyeditor
-        name = user.first_name+' '+user.last_name
-        user_json['id'] = user.id
-        user_json['label'] = user.profile.full_name()
-        user_json['value'] = user.email
-        if not string_any(user_json['value'] for result in results) and term.lower() in name.lower():
-        	    results.append(user_json)
-    for assignment in index_assignments:
-        user_json = {}
-        user = assignment.indexer
-        name = user.first_name+' '+user.last_name
-        user_json['id'] = user.id
-        user_json['label'] = user.profile.full_name()
-        user_json['value'] = user.email
-        if not string_any(user_json['value'] for result in results) and term.lower() in name.lower():
-        	    results.append(user_json)
-    for assignment in typeset_assignments:
-        user_json = {}
-        user = assignment.typesetter
-        name = user.first_name+' '+user.last_name
-        user_json['id'] = user.id
-        user_json['label'] = user.profile.full_name()
-        user_json['value'] = user.email
-        if not string_any(user_json['value'] for result in results) and term.lower() in name.lower():
-        	    results.append(user_json)
-    for assignment in review_assignments:
-        user_json = {}
-        user = assignment.user
         name = user.first_name+' '+user.last_name
         user_json['id'] = user.id
         user_json['label'] = user.profile.full_name()

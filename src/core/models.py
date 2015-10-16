@@ -218,10 +218,27 @@ class Book(models.Model):
 		return self.format_set.all()
 
 	def onetaskers(self):
-		users =  [copyedit.copyeditor for copyedit in CopyeditAssignment.objects.filter(book=self)]
-		users.append(typeset.typesetter for typeset in TypesetAssignment.objects.filter(book=self))
-		users.append(index.indexer for index in IndexAssignment.objects.filter(book=self))
-		users.append(review.user for review in ReviewAssignment.objects.filter(book=self))
+		copyedit_assignments = CopyeditAssignment.objects.filter(book=self)
+		index_assignments = IndexAssignment.objects.filter(book=self)
+		typeset_assignments = TypesetAssignment.objects.filter(book=self)
+		review_assignments = ReviewAssignment.objects.filter(book=self)
+		users =  []
+		for assignment in copyedit_assignments:
+			user=assignment.copyeditor
+			if user not in users:
+				users.append(user)
+		for assignment in index_assignments:
+			user=assignment.indexer
+			if user not in users:
+				users.append(user)
+		for assignment in typeset_assignments:
+			user=assignment.typesetter
+			if user not in users:
+				users.append(user)
+		for assignment in review_assignments:
+			user=assignment.user
+			if user not in users:
+				users.append(user)
 		return users
 
 	def full_title(self):
