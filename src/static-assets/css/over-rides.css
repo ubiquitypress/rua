@@ -467,12 +467,24 @@ body > div.container-fluid > div > div > div > a {
     box-shadow: none;
 }
 
-.btn-accept{
+.btn-accept {
   background-color:rgb(159, 197, 88);
   color:#ffffff;
   border-color:rgb(190,217,140);
   border-radius: 12px;
+}
 
+.btn-back {
+  background-color:#97ccf1;
+  color:#ffffff;
+  border-color:rgb(190,217,140);
+  border-radius: 12px;
+  margin-bottom: 10px;
+}
+
+.btn-back:hover, .btn-back:focus, .btn-back:active, .btn-back.active, .open > .dropdown-toggle.btn-back {
+    background: #bedff6;
+    color:#000000;
 }
  
 .btn-accept:hover, .btn-accept:focus, .btn-accept:active, .btn-accept.active, .open > .dropdown-toggle.btn-accept {
