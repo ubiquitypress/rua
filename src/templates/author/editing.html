@@ -7,7 +7,7 @@
 {% else %}
 <table class="table table-condensed table-bordered table-responsive" style="font-size:14px">
 	<tr>
-		<th>Copyeditor</th><th>Status</th><th>Due</th><th></th>
+		<th>Copyedit Assignment</th><th>Status</th><th>Due</th><th></th>
 	</tr>
 	{% for assignment in submission.copyeditassignment_set.all %}
 	{% ifequal copyedit.id assignment.id %}
@@ -15,7 +15,7 @@
 	{% else %}
 	<tr>
 	{% endifequal %}
-		<td>{{ assignment.copyeditor.profile.full_name }}</td>
+		<td align="center">{{ assignment.id }}</td>
 		<td>
 			{{ assignment.state.friendly }}
 			<br />
@@ -43,7 +43,7 @@
 {% else %}
 <table class="table table-condensed table-bordered table-responsive" style="font-size:14px">
 	<tr> 
-		<th>Indexer</th><th>Status</th><th>Due</th><th></th>
+		<th>Index Assignment</th><th>Status</th><th>Due</th><th></th>
 	</tr>
 	{% for assignment in submission.indexassignment_set.all %}
 	{% ifequal index.id assignment.id %}
@@ -51,7 +51,7 @@
 	{% else %}
 	<tr>
 	{% endifequal %}
-		<td>{{ assignment.indexer.profile.full_name }} </td>
+		<td align="center">{{ assignment.id }} </td>
 		<td>
 			{{ assignment.state.friendly }}
 			<br />

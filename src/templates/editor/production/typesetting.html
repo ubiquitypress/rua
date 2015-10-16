@@ -17,7 +17,16 @@
 	{% else %}
 		<tr>
 	{% endifequal %}
-		<td>{{ typeset.typesetter.profile.full_name }}</td>
+		<td>{{ typeset.typesetter.profile.full_name }} <sup>
+
+{% ifequal typeset.id typeset_id %}
+	<a href="{% url 'email_user' 'onetaskers' submission.id typeset.typesetter.pk %}"class="fa fa-envelope-o btn btn-xs btn-trasnparent"></a></sup>&nbsp;&nbsp;</td>
+	{% else %}
+	
+			<a href="{% url 'email_user' 'onetaskers' submission.id typeset.typesetter.pk %}"class="fa fa-envelope-o btn btn-xs btn-default"></a></sup>&nbsp;&nbsp;</td>
+				{% endifequal %}
+
+		</td>
 		<td><strong>{{ typeset.state.friendly }}</strong><br>{{ typeset.state.date }}</td>
 		<td><a href="{% url 'view_typesetter' submission.id typeset.id %}" class="btn  btn-task">View</a></td>
 	</tr>
