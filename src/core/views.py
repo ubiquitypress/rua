@@ -452,6 +452,7 @@ def email_users(request,group,submission_id=None,user_id=None):
 		'to_value':to_value,
 		'source': source,
 		'group': group_name,
+		'user_id':user_id,
 		
 	}
 	return render(request, template, context)

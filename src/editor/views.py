@@ -281,6 +281,7 @@ def editor_add_reviewers(request, submission_id, review_type, round_number):
 		'active': 'new',
 		'email_text': models.Setting.objects.get(group__name='email', name='review_request'),
 		'review_forms': review_forms,
+		
 		'submission': submission,
 	}
 
