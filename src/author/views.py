@@ -23,6 +23,7 @@ def author_dashboard(request):
 		'user_proposals': submission_models.Proposal.objects.filter(owner=request.user),
 		'author_tasks': logic.author_tasks(request.user),
 		'author_task_number': len(logic.author_tasks(request.user)),
+		'new_messages': logic.check_for_new_messages(request.user),
 	}
 
 	return render(request, template, context)

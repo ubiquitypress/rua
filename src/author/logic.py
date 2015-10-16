@@ -48,3 +48,13 @@ def submission_tasks(book, user):
 		task_list.append({'type': 'coverimage', 'book': proof.book, 'task': 'Cover Image Proof', 'date': proof.assigned, 'title': proof.book.title, 'url': 'http://%s/author/submission/%s/production/#%s' % (base_url, proof.book.id, proof.id)})
 
 	return task_list
+
+def check_for_new_messages(user):
+	book_list = user.book_set.all()
+	messages = models.Message.objects.filter(book__in=book_list, date_sent__gte=user.last_login)
+	return messages
+
+
+
+
+

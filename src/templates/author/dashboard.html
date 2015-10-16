@@ -59,6 +59,11 @@
 
     <div class="col-md-6 dash-center">
         <div class="dash-container">
+            {% if new_messages %}
+            <h4>NEW MESSAGES</h4>
+            {{ new_messages|length }} new messages since you last logged in.
+            <hr />
+            {% endif %}
             <h4>TO DO <sup><span class="badge" style="background-color:rgb(207,94,129);">{{author_task_number}}</span></sup></h4>
             <hr/>
 
