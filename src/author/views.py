@@ -116,7 +116,6 @@ def view_review_assignment(request, submission_id, round_id, review_id):
 		'review': review_assignment,
 		'data_ordered': data_ordered,
 		'result': result,
-		'active': 'review',
 		'review_rounds': review_rounds,
 		'revision_requests': revision_models.Revision.objects.filter(book=submission, revision_type='review'),
 	}
