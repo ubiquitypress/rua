@@ -5,6 +5,7 @@ from django.core.urlresolvers import reverse
 from django.contrib import messages
 
 from core import models, log, task, logic as core_logic, forms as core_forms
+from editor import models as editor_models
 from author import forms
 from author import logic
 from core.logic import order_data, decode_json
@@ -219,6 +220,16 @@ def author_production(request, submission_id):
 			book.stage.typesetting = timezone.now()
 			book.stage.save()
 
+	elif request.POST and 'proof_id' in request.POST:
+		proof_id = request.POST.get('proof_id')
+		author_feedback = request.POST.get('author_feedback')
+		proof = get_object_or_404(editor_models.CoverImageProof, pk=proof_id)
+		proof.completed = timezone.now()
+		proof.note_to_editor = author_feedback
+		proof.save()
+		new_task = task.create_new_task(book, request.user, proof.editor, "Cover Proofing completed for %s" % book.title, workflow='production')
+		return redirect(reverse('author_production', kwargs={'submission_id': submission_id}))
+
 	template = 'author/submission.html'
 	context = {
 		'author_include': 'author/production/view.html',
@@ -229,7 +240,6 @@ def author_production(request, submission_id):
 	}
 
 	return render(request, template, context)
-
 
 @login_required
 def author_view_typesetter(request, submission_id, typeset_id):
