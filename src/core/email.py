@@ -13,6 +13,8 @@ def filepath(book, attachment):
 
 def send_email(subject, context, from_email, to, html_template, bcc=None, cc=None, book=None, attachment=None):
 
+	html_template.replace('\n', '<br />')
+
 	htmly = Template(html_template)
 	con = Context(context)
 	html_content = htmly.render(con)
@@ -24,8 +26,8 @@ def send_email(subject, context, from_email, to, html_template, bcc=None, cc=Non
 	
 	if book:
 		log.add_email_log_entry(book, subject, from_email, to,bcc,cc, html_content)
-
-	msg.attach_alternative(html_content, "text/html")
+		
+	msg.content_subtype = "html"
 
 	if attachment:
 		msg.attach_file(filepath(book, attachment))

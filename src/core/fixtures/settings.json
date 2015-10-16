@@ -41,10 +41,10 @@
 },
 {
     "fields": {
-        "value": "Dear {{ review.user.first_name }} {{ review.user.last_name }},\r\n\r\n__YOUR_MESSAGE_HERE__\r\n\r\nPlease log into the press web site to indicate whether you will undertake the review or not, as well as to access the submission and to record your review and recommendation.\r\n\r\nThe review itself is due {{ review.due }}.\r\n\r\nThe Author has requested that this review be {{book.get_review_type_display}}.\r\n\r\nPlease notify us if you intend to undertake the review by clicking this link: {{ decision_url }}\r\n\r\nThank you for considering this request.\r\n\r\nSincerely,\r\nPress Team\r\n",
+        "value": "<p>Dear {{ review.user.first_name }} {{ review.user.last_name }},\r\n</p><p>\r\n__YOUR_MESSAGE_HERE__\r\n\r\nPlease log into the press web site to indicate whether you will undertake the review or not, as well as to access the submission and to record your review and recommendation.\r\n\r\nThe review itself is due {{ review.due }}.</p><p>\r\n\r\nThe Author has requested that this review be {{book.get_review_type_display}}.\r\n</p><p>\r\nPlease notify us if you intend to undertake the review by clicking this link: {{ decision_url }}\r\n</p><p>\r\nThank you for considering this request.\r\n</p><p>\r\nSincerely,</p><p>\r\nPress Team</p><p>{% if sender %}{{ sender.profile.signature|safe }}{% endif %}<br></p><p>\r\n</p>",
         "group": 3,
         "name": "review_request",
-        "types": "text"
+        "types": "rich_text"
     },
     "model": "core.setting",
     "pk": 5
@@ -74,17 +74,17 @@
         "value": "main@localhost.com",
         "group": 3,
         "name": "from_address",
-        "types": "text"
+        "types": "rich_text"
     },
     "model": "core.setting",
     "pk": 8
 },
 {
     "fields": {
-        "value": "Dear {{ review.user.first_name }} {{ review.user.last_name }},\r\n\r\n__YOUR_MESSAGE_HERE__\r\n\r\nPlease log into the press web site to indicate whether you will undertake the review or not, as well as to access the submission and to record your review and recommendation.\r\n\r\nThe review itself is due {{ review.due }}.\r\n\r\nReview URL: {{ review_url }}\r\n\r\nThank you for considering this request.\r\n\r\n\r\nSincerely,\r\nPress Team\r\n",
+        "value": "Dear {{ review.user.first_name }} {{ review.user.last_name }},\r\n<br><br>__YOUR_MESSAGE_HERE__\r\n\r\nPlease log into the press web site to indicate whether you will undertake the review or not, as well as to access the submission and to record your review and recommendation.\r\n<br><br>The review itself is due {{ review.due }}.\r\n\r\nReview URL: {{ review_url }}\r\n<br><br>Thank you for considering this request.\r\n<br><br>Sincerely,\r\nPress Team\r\n",
         "group": 3,
         "name": "external_review_request",
-        "types": "text"
+        "types": "rich_text"
     },
     "model": "core.setting",
     "pk": 9
@@ -121,10 +121,10 @@
 },
 {
     "fields": {
-        "value": "Dear {{submission.owner.first_name}} {{submission.owner.last_name}},\r\n\r\nA contract has been uploaded by the Editor for you to review. Please login using the link below to review and sign off the contract.\r\n\r\n{{base_url}}/user/submission/{{submission.id}}\r\n\r\nRegards,\r\n\r\nEditorial",
+        "value": "Dear {{submission.owner.first_name}} {{submission.owner.last_name}},\r\n<br><br>A contract has been uploaded by the Editor for you to review. Please login using the link below to review and sign off the contract.\r\n\r\n{{base_url}}/user/submission/{{submission.id}}\r\n\r\n<br><br>Regards<br>{% if sender %}{{ sender.profile.signature|safe }}{% endif %}<br>",
         "group": 3,
         "name": "contract_author_sign_off",
-        "types": "text"
+        "types": "rich_text"
     },
     "model": "core.setting",
     "pk": 14
@@ -141,7 +141,7 @@
 },
 {
     "fields": {
-        "value": "Dear {{review.user.profile.salutation}} {{review.user.last_name}},\r\n\r\nThis is a gentle reminder that we requested you review a book for us called {{book.title}}. This review is due to be completed by {{review.due:date\"c\"}}. If you are unable to undertake this review, please let us know.\r\n\r\nRegards,",
+        "value": "<p>Dear {{review.user.profile.salutation}} {{review.user.last_name}},\r\n</p><p>\r\nThis is a gentle reminder that we requested you review a book for us called {{book.title}}. </p><p>This review is due to be completed by {{review.due:date\"c\"}}. </p><p>If you are unable to undertake this review, please let us know.\r\n</p><p>\r\nRegards,</p>",
         "group": 3,
         "name": "unaccepted_reminder",
         "types": "rich_text"
@@ -161,7 +161,7 @@
 },
 {
     "fields": {
-        "value": "Dear {{review.user.profile.salutation}} {{review.user.last_name}},\r\n<br><br>This is a gentle reminder that you agreed to review a book for us called {{book.title}}. This review is due to be completed by {{review.due|date:\"c\"}}. If you are unable to undertake this review, please let us know.\r\n<br><br>Regards,",
+        "value": "Dear {{review.user.profile.salutation}} {{review.user.last_name}},\r\n<br><br>This is a gentle reminder that you agreed to review a book for us called {{book.title}}. This review is due to be completed by {{review.due|date:\"c\"}}. If you are unable to undertake this review, please let us know.\r\n<br><br>Regards,<br>{% if sender %}{{ sender.profile.signature|safe }}{% endif %}<br>",
         "group": 3,
         "name": "accepted_reminder",
         "types": "rich_text"
@@ -181,7 +181,7 @@
 },
 {
     "fields": {
-        "value": "Dear {{review.user.profile.salutation}} {{review.user.last_name}},\r\n\r\nThis is a gentle reminder that you agreed to review a book for us called {{book.title}}. This review is overdue, we requested that the review be completed by {{review.due|date:\"c\"}}. If you are unable to undertake this review, please let us know.\r\n\r\nRegards,",
+        "value": "<p>Dear {{review.user.profile.salutation}} {{review.user.last_name}},</p><p><br></p><p>This is a gentle reminder that you agreed to review a book for us called {{book.title}}. </p><p>This review is overdue, we requested that the review be completed by {{review.due|date:\"c\"}}. </p><p>If you are unable to undertake this review, please let us know.\r\n</p><p><br></p><p>\r\nRegards,</p>",
         "group": 3,
         "name": "overdue_reminder",
         "types": "rich_text"
@@ -201,7 +201,7 @@
 },
 {
     "fields": {
-        "value": "Dear {{ revision.book.owner.first_name }} {{ revision.book.owner.last_name }},\r\n\r\nWe think you should undertake some revisions to this article before it moves forward.\r\n\r\nYou can submit revisions here: {{ revision_url }}\r\n\r\nRegards,\r\n\r\n",
+        "value": "<p>Dear {{ revision.book.owner.first_name }} {{ revision.book.owner.last_name }},\r\n</p><p>\r\nWe think you should undertake some revisions to this article before it moves forward.\r\n</p><p>\r\nYou can submit revisions here: {{ revision_url }}\r\n</p><p>\r\nRegards,\r\n\r\n</p>",
         "group": 3,
         "name": "request_revisions",
         "types": "rich_text"
@@ -221,7 +221,7 @@
 },
 {
     "fields": {
-        "value": "Dear {{review.user.profile.salutation}} {{review.user.last_name}},\r\n\r\nThis is a gentle reminder that we requested you submit revisions for your book, {{book.title}}. This revisions were due to be completed by {{review.due}}\r\n\r\nRegards,",
+        "value": "<p>Dear {{review.user.profile.salutation}} {{review.user.last_name}},\r\n</p><p>\r\nThis is a gentle reminder that we requested you submit revisions for your book, {{book.title}}. </p><p>This revisions were due to be completed by {{review.due}}\r\n</p><p>\r\nRegards,</p>",
         "group": 3,
         "name": "revisions_reminder_email",
         "types": "rich_text"
@@ -231,7 +231,7 @@
 },
 {
     "fields": {
-        "value": "Dear {% if copyedit.copyeditor.profile.salutation %}{{copyedit.copyeditor.profile.salutation}}{% else %}{{copyedit.copyeditor.first_name}}{% endif %} {{copyedit.copyeditor.last_name}},\r\n<br><br>This is a request that you undertake copyediting on {{submission.title}}. Please login to the BMS, you will be directed to undertake your copyedit from the user dashboard.\r\n<br><br>Your username is: {{copyedit.copyeditor.username}}\r\n<br><br>Copyedits are requested to be completed by: {{copyedit.due}}.\r\n<br><br>Regards",
+        "value": "Dear {% if copyedit.copyeditor.profile.salutation %}{{copyedit.copyeditor.profile.salutation}}{% else %}{{copyedit.copyeditor.first_name}}{% endif %} {{copyedit.copyeditor.last_name}},\r\n<br><br>This is a request that you undertake copyediting on {{submission.title}}. Please login to the BMS, you will be directed to undertake your copyedit from the user dashboard.\r\n<br><br>Your username is: {{copyedit.copyeditor.username}}\r\n<br><br>Copyedits are requested to be completed by: {{copyedit.due}}.\r\n<br><br>Regards<br>{% if sender %}{{ sender.profile.signature|safe }}{% endif %}<br>",
         "group": 3,
         "name": "copyedit_request",
         "types": "rich_text"
@@ -251,7 +251,7 @@
 },
 {
     "fields": {
-        "value": "<p>Dear {{ submission.owner.first_name }} {{ submission.owner.last_name }},\r\n<br><br>The copyeditor has completed their work. You can login and review the copyedits now.\r\n<br></p><p>Regards,</p>",
+        "value": "<p>Dear {{ submission.owner.first_name }} {{ submission.owner.last_name }},\r\n<br><br>The copyeditor has completed their work. You can login and review the copyedits now.\r\n<br></p><p>Regards,<br>{% if sender %}{{ sender.profile.signature|safe }}{% endif %}<br></p>",
         "group": 3,
         "name": "author_copyedit_request",
         "types": "rich_text"
@@ -331,7 +331,7 @@
 },
 {
     "fields": {
-        "value": "Dear {{typeset.typesetter.profile.full_name}},\r\n\r\nDO SOME TYPESETTING PLEASE!\r\n\r\nRegards,",
+        "value": "<p>Dear {{typeset.typesetter.profile.full_name}},\r\n</p><p>\r\nDO SOME TYPESETTING PLEASE!\r\n</p><p>\r\nRegards,</p>",
         "group": 3,
         "name": "typesetter_typeset_request",
         "types": "rich_text"
@@ -341,27 +341,27 @@
 },
 {
     "fields": {
-        "value": "Dear {{ submission.owner.first_name }} {{ submission.owner.last_name }},\r\n\r\nYour submission has been received. An Editor will be in touch soon with the next steps.\r\n\r\nRegards,\r\n\r\n{% if sender %}{{ sender.profile.signature }}{% endif %}",
+        "value": "<p>Dear {{ submission.owner.first_name }} {{ submission.owner.last_name }},\r\n<br><br>Your submission has been received. An Editor will be in touch soon with the next steps.<br><br><span style=\"line-height: 1.42857;\">Regards,&nbsp;</span></p><p>{{press.general.name}}</p>",
         "group": 3,
         "name": "author_submission_ack",
-        "types": "text"
+        "types": "rich_text"
     },
     "model": "core.setting",
     "pk": 36
 },
 {
     "fields": {
-        "value": "A new submission has been uploaded to.\r\n\r\nView the submission: http://{{base_url}}/workflow/new/{{submission.id}}\r\n\r\nRegards,\r\n\r\nRUA Bot",
+        "value": "<p><span style=\"line-height: 1.42857;\">A new submission has been uploaded.\r\n\r\nView the submission: http://{{base_url}}/workflow/new/{{submission.id}}\r\n<br></span></p><p><span style=\"line-height: 1.42857;\">Regards,\r\n<br><br>RUA Bot</span><br></p>",
         "group": 3,
         "name": "editor_submission_ack",
-        "types": "text"
+        "types": "rich_text"
     },
     "model": "core.setting",
     "pk": 37
 },
 {
     "fields": {
-        "value": "GO AWAY!",
+        "value": "<p>GO AWAY!</p><p>{% if sender %}{{ sender.profile.signature|safe }}{% endif %}<br></p>",
         "group": 3,
         "name": "proposal_accept",
         "types": "rich_text"
@@ -381,7 +381,7 @@
 },
 {
     "fields": {
-        "value": "Dear someone,\r\n\r\nSomething something,\r\n\r\nRegards,\r\n\r\n{{ sender.profile.signature }}",
+        "value": "<p>Dear someone,\r\n</p><p>\r\nSomething something,\r\n</p><p>\r\nRegards,\r\n</p><p>\r\n{{ sender.profile.signature }}</p>",
         "group": 3,
         "name": "proposal_request_revisisons",
         "types": "rich_text"
@@ -428,15 +428,5 @@
     },
     "model": "core.setting",
     "pk": 45
-},
-{
-    "fields": {
-        "value": "localhost:8000",
-        "group": 1,
-        "name": "oai_identifier",
-        "types": "text"
-    },
-    "model": "core.setting",
-    "pk": 46
 }
 ]

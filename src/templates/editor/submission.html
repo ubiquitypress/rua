@@ -60,44 +60,44 @@
         </table>
       </div>
         <a href="{% url 'editor_tasks' submission.pk %}">
-        <div class="dash-menu {%if my_tasks%}current{% endif %}">
+        <div class="dash-menu {%ifequal active_page 'my_tasks' %}current{% endifequal %}">
             <h5>My Tasks <i class="fa fa-chevron-right pull-right"></i></h5>
         </div>
         </a>
 
         <a href="{% url 'editor_status' submission.pk %}">
-        <div class="dash-menu {%if status%}current{% endif %}">
+        <div class="dash-menu {%ifequal active_page 'status' %}current{% endifequal %}">
             <h5>Current Status <i class="fa fa-chevron-right pull-right"></i></h5>
         </div>
         </a>
         <a href="{% url 'editor_submission' submission.pk %}">
-        <div class="dash-menu {%if editor_submission%}current{% endif %}">
+        <div class="dash-menu {%ifequal active_page 'editor_submission' %}current{% endifequal %}">
             <h5>Submission Details <i class="fa fa-chevron-right pull-right"></i></h5>
         </div>
         </a>
         {% if submission.stage.review %}
         <a href="{% url 'editor_review' submission.pk %}">
-        <div class="dash-menu {%if editor_review%}current{% endif %}">
+        <div class="dash-menu {%ifequal active_page 'editor_review' %}current{% endifequal %}">
             <h5>Review <i class="fa fa-chevron-right pull-right"></i></h5>
         </div>
         </a>
         {% endif %}
         {% if submission.stage.editing %}
         <a href="{% url 'editor_editing' submission.pk %}">
-        <div class="dash-menu {%if editing%}current{% endif %}">
+        <div class="dash-menu {%ifequal active_page 'editing' %}current{% endifequal %}">
             <h5>Editing <i class="fa fa-chevron-right pull-right"></i></h5>
         </div>
         </a>
         {% endif %}
         {% if submission.stage.production %}
         <a href="{% url 'editor_production' submission.id %}">
-        <div class="dash-menu {%if production%}current{% endif %}">
+        <div class="dash-menu {%ifequal active_page 'production' %}current{% endifequal %}">
             <h5>Production <i class="fa fa-chevron-right pull-right"></i></h5>
         </div>
         </a>
         {% endif %}
         <a href="{% url 'catalog' submission.id %}">
-        <div class="dash-menu {%if catalog_view %}current{% endif %}">
+        <div class="dash-menu {%ifequal active_page 'catalog_view' %}current{% endifequal %}">
             <h5>Catalog <i class="fa fa-chevron-right pull-right"></i></h5>
         </div>
         </a>
@@ -129,6 +129,16 @@
 
 
 {% block js %}
+<script language="javascript" type="text/javascript">
+<!--
+function popitup(url,title) {
+    newwindow=window.open(url,title,'height=750,width=600');
+    if (window.focus) {newwindow.focus()}
+    return false;
+}
+
+// -->
+</script>
 <script type="text/javascript" src="{% static "js/messages.js" %}"></script>
 <script type="text/javascript" src="{% static "js/fancyfile.js" %}"></script>
 <script type="text/javascript">$("textarea").jqte();</script>

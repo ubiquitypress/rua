@@ -33,6 +33,10 @@ html, body {
     }
 }
 
+.alert {
+  margin-bottom: 0px;
+}
+
 .message {
   min-height: 100px;
   border-style: solid;
@@ -40,6 +44,7 @@ html, body {
   border-color: #B0B0B0;
   margin-bottom: 8px;
 }
+
 .message-new {
   box-shadow:0 0 1em #0000FF;
 }
@@ -391,6 +396,15 @@ body > div.container-fluid > div > div > div > a {
 
 .production {
   background-color: rgb(123, 195, 61);
+  width: 130px;
+  text-align: right;
+  color: white;
+  padding: 0;
+  text-transform: uppercase;
+}
+
+.published {
+  background-color: #155D00;
   width: 130px;
   text-align: right;
   color: white;

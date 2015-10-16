@@ -2,9 +2,9 @@
   <h5>If you would like to contact the editor about this </br> project, please click the button below</h5></br>
   {% for editor_dict in editors %}
     {% if editor_dict.isSeriesEditor == True %}
-    <a href="{% url 'email_user' 'editors' submission.id editor_dict.editor.pk %}" class="btn btn-lg btn-other btn-contact"  type="submit" >Contact {{ editor_dict.editor.profile.full_name }}</a> 
+    <a href="core/email.html" onclick="return popitup('/email/editors/submission/{{submission.id}}/user/{{editor_dict.editor.pk}}/','editors_{{editor_dict.editor.pk}}')" class="btn btn-lg btn-other btn-contact"  type="submit" >Contact {{ editor_dict.editor.profile.full_name }}</a> 
     {% else %}
-    <a href="{% url 'email_user' 'editors' submission.id editor_dict.editor.pk %}" class="btn btn-lg btn-task btn-contact"  type="submit" >Contact {{ editor_dict.editor.profile.full_name }}</a>
+    <a href="core/email.html" onclick="return popitup('/email/editors/submission/{{submission.id}}/user/{{editor_dict.editor.pk}}/','editors_{{editor_dict.editor.pk}}')"class="btn btn-lg btn-task btn-contact"  type="submit" >Contact {{ editor_dict.editor.profile.full_name }}</a>
     {% endif %}
   {% empty %}
     <a disabled class="btn btn-lg btn-task btn-contact" type="submit"  >No Editors Assigned</a>

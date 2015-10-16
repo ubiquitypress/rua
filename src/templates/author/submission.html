@@ -56,6 +56,31 @@
                 <td>{{ submission.get_review_type_display }}</td>
             </tr>
         </table>
+        <table class="table table-bordered table-condensed small">
+            <tr>
+                <th>Editor Name</th>
+                <th>Contact</th>
+
+            </tr>
+            {% for editor in submission.press_editors.all %}
+             <tr>
+                <th>{{ editor.profile.full_name }}</th>
+                <td><a href="{% url 'email_user' 'authors' submission.id editor.pk %}"class="fa fa-envelope-o btn btn-xs btn-default">&nbsp;Email</a></td>
+            </tr>
+            {% empty %}
+            {% if not submission.series %}
+            <tr>
+                <td colspan="2">No Editors assigned</td>
+            </tr>
+            {% endif %}
+            {% endfor %}
+            {% if submission.series %}
+            <tr>
+                <td>{{ submission.series.editor.profile.full_name }} (<i>Series</i>)</td>
+                <td><a href="{% url 'email_user' 'authors' submission.id submission.series.editor.pk %}"class="fa fa-envelope-o btn btn-xs btn-default">&nbsp;Email</a></td>
+            </tr>
+            {% endif %}
+        </table>
       </div>
         <a href="{% url 'tasks' submission.pk %}">
         <div class="dash-menu">
@@ -116,6 +141,16 @@
 
 
 {% block js %}
+<script language="javascript" type="text/javascript">
+<!--
+function popitup(url,title) {
+    newwindow=window.open(url,title,'height=750,width=600');
+    if (window.focus) {newwindow.focus()}
+    return false;
+}
+
+// -->
+</script>
 <script type="text/javascript">$("textarea").jqte();</script>
 <script type="text/javascript" src="{% static "js/messages.js" %}"></script>
 <script type="text/javascript" src="{% static "js/fancyfile.js" %}"></script>

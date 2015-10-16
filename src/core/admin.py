@@ -30,6 +30,7 @@ class LogAdmin(admin.ModelAdmin):
 
 class SettingAdmin(admin.ModelAdmin):
 	list_display = ('name', 'group', 'types')
+	list_filter = ('group', 'types')
 
 class RoleAdmin(admin.ModelAdmin):
 	list_display = ('name',)

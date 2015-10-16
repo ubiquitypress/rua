@@ -1,14 +1,17 @@
-{% extends "base.html" %}
+{% extends "base_no_nav.html" %}
 
 {% load static from staticfiles %}
 {% load bootstrap3 %}
 
 {% block body %}
+</br>
 	<div class="row">
+	
 		<div class="col-md-7">
 			<form method="post"   enctype="multipart/form-data">		
 					{% csrf_token %}
 					<div class="well">
+							
 					<div class="container-fluid"> 
 					<div class="form-group">
 						<div class="input-group input-group-email-field">
@@ -87,6 +90,7 @@
 {% endblock body %}
 
 {% block js %}
+
 <script type="text/javascript" src="{% static "js/fancyfile.js" %}"></script>
 <script type="text/javascript">$("textarea").jqte();</script>
 
@@ -119,6 +123,11 @@
 	    $("#bcc").val(null);
 	});
      </script>
+  
+ <script type="text/javascript">
+$("#send").click(function () {
+   window.close('/email/{{group}}/submission/{{submission.id}}/user/{{user_id}}/','{{group}}_{{user_id}}','height=750,width=600')});
+</script>
  <script type="text/javascript">
 $("#ccAdd").click(function () {
 	var original= document.getElementById('cc_values').value

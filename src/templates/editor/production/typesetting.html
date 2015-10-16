@@ -20,10 +20,10 @@
 		<td>{{ typeset.typesetter.profile.full_name }} <sup>
 
 {% ifequal typeset.id typeset_id %}
-	<a href="{% url 'email_user' 'onetaskers' submission.id typeset.typesetter.pk %}"class="fa fa-envelope-o btn btn-xs btn-trasnparent"></a></sup>&nbsp;&nbsp;</td>
+	<a href="core/email.html" onclick="return popitup('/email/onetaskers/submission/{{submission.id}}/user/{{typeset.typesetter.pk}}/','onetaskers_{{assignment.indexer.pk}}')" class="fa fa-envelope-o btn btn-xs btn-trasnparent"></a></sup>&nbsp;&nbsp;</td>
 	{% else %}
 	
-			<a href="{% url 'email_user' 'onetaskers' submission.id typeset.typesetter.pk %}"class="fa fa-envelope-o btn btn-xs btn-default"></a></sup>&nbsp;&nbsp;</td>
+			<a href="core/email.html" onclick="return popitup('/email/onetaskers/submission/{{submission.id}}/user/{{typeset.typesetter.pk}}/','onetaskers_{{assignment.indexer.pk}}')" class="fa fa-envelope-o btn btn-xs btn-default"></a></sup>&nbsp;&nbsp;</td>
 				{% endifequal %}
 
 		</td>
