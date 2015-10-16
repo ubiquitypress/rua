@@ -301,7 +301,7 @@ def task_new(request):
 		return HttpResponse(new_task_form.errors)
 
 @csrf_exempt
-@login_required
+@is_book_editor_or_author
 def new_message(request, book_id):
 
 	new_message_form = forms.MessageForm(request.POST)

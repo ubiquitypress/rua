@@ -44,8 +44,12 @@
                             <h5><i class="fa fa-eye"></i></h5>
                         </div>
                     </div>
-                    <div class="band {{ submission.stage.current_stage }}">
+                    <div class="band {% if submission.stage.current_stage %}{{ submission.stage.current_stage }}{% else %}submission{% endif %}">
+                        {% if submission.stage.current_stage %}
                         {{ submission.stage.get_current_stage_display }}
+                        {% else %}
+                        IN PROGRESS
+                        {% endif %}
                     </div>
                     <div class="activity">
                         {% include "core/dashboard/activity.html" %}
