@@ -33,6 +33,10 @@ html, body {
     }
 }
 
+.alert {
+  margin-bottom: 0px;
+}
+
 .message {
   min-height: 100px;
 }
