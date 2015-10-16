@@ -351,6 +351,7 @@ def get_onetaskers(request,submission_id):
         data = 'Unable to get onetaskers'
     mimetype = 'application/json'
     return HttpResponse(data, mimetype)
+
 def get_all(request,submission_id):
     submission = get_object_or_404(models.Book, pk=submission_id)
     if request.is_ajax():
@@ -376,13 +377,12 @@ def get_all(request,submission_id):
     mimetype = 'application/json'
     return HttpResponse(data, mimetype)
 
-
 @is_book_editor
 def email_users(request,group,submission_id=None,user_id=None):
 	submission = get_object_or_404(models.Book, pk=submission_id)
 	editors = logic.get_editors(submission)
-	authors = submission.author.all
-	print editors
+	authors = submission.author.all()
+	onetaskers = submission.onetaskers()
 	to_value=""
 	if request.POST:
 		attachment = request.FILES.get('attachment')
@@ -408,20 +408,40 @@ def email_users(request,group,submission_id=None,user_id=None):
 			messages.add_message(request, messages.INFO, "E-mail with subject '%s' was sent." % subject)
 
 	if not group == "all" and user_id:
+		
 		if group == "editors":
-			editor = get_object_or_404(models.Editor, pk=user_id)
-			to_value="%s;" % (editor.author_email)
+			try:
+				editor = models.User.objects.get(pk=user_id)
+				if editor in editors:
+					to_value="%s;" % (editor.email)
+				else:
+					messages.add_message(request, messages.ERROR, "This editor is not an editor of this submission")
+			except models.User.DoesNotExist:
+				messages.add_message(request, messages.ERROR, "This editor was not found")
+
 		elif group == "authors":
 			author = get_object_or_404(models.Author, pk=user_id)
-			to_value="%s;" % (author.author_email)
+			authors = submission.author.all()
+			if author in authors:
+				to_value="%s;" % (author.author_email)
+			else:
+				messages.add_message(request, messages.ERROR, "This author is not an author of this submission")
+
 		elif group == "onetaskers":
 			user = get_object_or_404(models.User, pk=user_id)
-			to_value="%s;" % (user.email)
+			if user in onetaskers:
+				to_value="%s;" % (user.email)
+			else:
+				messages.add_message(request, messages.ERROR, "This onetasker was not found")
+
 	elif group =="all" and user_id:
 		messages.add_message(request, messages.ERROR, "Cannot use the user field on this page because of the 'all' in the url. Try replacing it with other email groups: 'authors' or 'editors' or 'onetaskers'")
+	
 	group_name=group
+	
 	if not group_name == "editors" and not group_name == "all" and not group_name == "authors" and not group_name == "onetaskers":
-		group_name="all"
+		messages.add_message(request, messages.ERROR, "Group type does not exist. Redirected to page of all groups")
+		return redirect(reverse('email_users', kwargs={'group':'all','submission_id': submission.id}))
 	
 	source = "/email/get/%s/submission/%s/" % (group_name,submission_id)
 
