@@ -1,6 +1,6 @@
 {% load bootstrap3 %}
 
-<h3>INDEXING: {{ index.indexer.profile.full_name|upper  }}</h3>
+<h3>INDEX ASSIGNMENT: {{ index.id  }}</h3>
 
 <ul class="timeline-dash">
   <!-- add for loop here -->
@@ -27,13 +27,9 @@
 </ul>
 <div class="dash-container" >
 <h4>Assignment</h4>
-<h5>Notes:</h5>
-<div class="well">
-
-{{index.note_from_indexer}}</div>
 <table class="table table-bordered">
 	<tr>
-		<th>Indexer</th>
+		<th>Index Assignment</th>
 		<th>Requested</th>
 		<th>Accepted</th>
 		<th>Declined</th>
@@ -41,7 +37,7 @@
 		<th>Completed</th>
 	</tr>
 	<tr>
-		<td>{{ index.indexer.profile.full_name }}</td>
+		<td align="center">{{ index.id }}</td>
 		<td>{{ index.requested }}</td>
 		<td>{% if index.accepted %}{{ index.accepted }}{% else %}--{% endif %}</td>
 		<td>{% if index.declined %}{{ index.declined }}{% else %}--{% endif %}</td>
@@ -72,13 +68,11 @@
     <td>{{ copyedit.author_completed }}</td>
     <td>{{ copyedit.note_to_author }}</td>
   </tr>
-  <tr>
+<tr>
     <th colspan="2">Note to Author</th>
-    <th colspan="2">Note from Author</th>
   </tr>
   <tr>
     <td colspan="2">{{ copyedit.note_to_author }}</td>
-    <td colspan="2">{{ copyedit.note_from_author }}</td>
   </tr>
 </table>
 <h4>Author Files</h4>

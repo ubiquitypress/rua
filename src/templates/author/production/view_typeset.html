@@ -1,7 +1,7 @@
 {% load bootstrap3 %}
 
 
-  <h3>TYPESETTING: {{ typeset.typesetter.profile.full_name }}</h3>
+  <h3>TYPESET ASSIGNMENT: {{ typeset.id }}</h3>
 
   <ul class="timeline-dash">
     <li>
@@ -66,8 +66,6 @@
   <!-- Tab panes -->
     <hr />
       <h4>Initial Typesetter Assignment</h4>
-      <h5>Note</h5>
-      {{ typeset.note|linebreaks }}
       <h4>Typesetter Files</h4>
       {% include 'shared/review_files.html' with file_data=typeset.typeset_files.all %}
       {% if typeset.completed and not typeset.editor_review %}
@@ -89,11 +87,6 @@
       </form>
       {% elif typeset.completed and typeset.editor_review and typeset.author_invited %}
       <hr />
-      <h4>Author Revision</h4>
-      <h5>Not to Author</h5>
-      {{ typeset.note_to_author|linebreaks }}
-      <h5>Note from Author</h5>
-      {{ typeset.note_from_author|linebreaks }}
       <h4>Author Files</h4>
       {% include 'shared/review_files.html' with file_data=typeset.author_files.all %}
       </table>
@@ -106,9 +99,7 @@
      
       {% elif typeset.author_completed and typeset.editor_second_review and typeset.typesetter_invited %}
       <hr />
-      <h4>Typesetter Final Revision</h4>
-      <h5>Note to Typesetter</h5>
-      {{ typeset.note_to_typesetter|linebreaks }}
+       <h4>Typesetter Final Revision</h4>
       <h5>Note from Typesetter</h5>
       {{ typeset.note_from_typesetter|linebreaks }}
       <h4>Typesetter Final Files</h4>

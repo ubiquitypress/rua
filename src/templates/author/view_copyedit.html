@@ -1,6 +1,6 @@
 {% load bootstrap3 %}
 
-<h3>COPYEDITING: {{ copyedit.copyeditor.profile.full_name|upper  }}</h3>
+<h3>COPYEDIT ASSIGNMENT: {{ copyedit.id }}</h3>
 
 <ul class="timeline-dash">
   <!-- add for loop here -->
@@ -27,12 +27,9 @@
 </ul>
 <div class="dash-container">
 <h4>Assignment</h4>
-<h5>Notes:</h5>
-<div class="well">
-{{copyedit.note_from_author}}</div>
 <table class="table table-bordered">
 	<tr>
-		<th>Copyeditor</th>
+		<th>Copyedit Assignment</th>
 		<th>Requested</th>
 		<th>Accepted</th>
 		<th>Declined</th>
@@ -40,7 +37,7 @@
 		<th>Completed</th>
 	</tr>
 	<tr>
-		<td>{{ copyedit.copyeditor.profile.full_name }}</td>
+		<td align="center">{{ copyedit.id }}</td>
 		<td>{{ copyedit.requested }}</td>
 		<td>{% if copyedit.accepted %}{{ copyedit.accepted }}{% else %}--{% endif %}</td>
 		<td>{% if copyedit.declined %}{{ copyedit.declined }}{% else %}--{% endif %}</td>
@@ -72,11 +69,9 @@
   </tr>
   <tr>
     <th colspan="2">Note to Author</th>
-    <th colspan="2">Note from Author</th>
   </tr>
   <tr>
     <td colspan="2">{{ copyedit.note_to_author }}</td>
-    <td colspan="2">{{ copyedit.note_from_author }}</td>
   </tr>
 </table>
 <h4>Author Files</h4>
