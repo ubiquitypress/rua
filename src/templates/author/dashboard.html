@@ -54,8 +54,12 @@
                     <div class="activity">
                         {% include "core/dashboard/activity.html" %}
                     </div>
-
-                    <a href="{% url 'status' submission.pk %}" class="btn btn-sm btn-primary btn-round  view pull-right" style="margin-right:10px;">View Submission</a><br /><br />
+                    {% if submission.stage %}
+                    <a href="{% url 'status' submission.pk %}" class="btn btn-sm btn-primary btn-round  view pull-right" style="margin-right:10px;">View Submission</a>
+                    {% else %}
+                    <a href="/submission/book/{{ submission.id }}/stage/{{ submission.submission_stage }}/" class="btn btn-sm btn-primary btn-round  view pull-right" style="margin-right:10px;">Continue Submission</a>
+                    {% endif %}
+                    <br /><br />
                 </div>
             {% endfor %}
         </div>
