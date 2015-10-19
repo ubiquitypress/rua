@@ -623,9 +623,11 @@ def update_format_or_chapter(request, submission_id, format_or_chapter, id):
 
 	if format_or_chapter == 'chapter':
 		item = get_object_or_404(models.Chapter, pk=id)
+		type='chapter'
 	elif format_or_chapter == 'format':
 		item = get_object_or_404(models.Format, pk=id)
-
+		type='format'
+	file = item.file
 	form = forms.UpdateChapterFormat()
 
 	if request.POST:
@@ -650,6 +652,8 @@ def update_format_or_chapter(request, submission_id, format_or_chapter, id):
 		'submission': book,
 		'item': item,
 		'form': form,
+		'type':type,
+		'file': file
 	}
 
 	return render(request, template, context)

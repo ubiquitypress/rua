@@ -1,30 +1,97 @@
-{% extends "base.html" %}
+{% extends "secondary_page.html" %}
 {% load static from staticfiles %}
 {% load bootstrap3 %}
 
 {% block title %}Add New Format{% endblock %}
 
+{% block page-title %}  <h3>Edit {% ifequal type 'format' %} Format: {% else %} Chapter: {% endifequal%}{{ submission.title }}</h3> {% endblock %}
+{% block page-button %} <a href="{% url 'editor_production' submission.id  %}" class="btn  btn-trasnparent-white" style="position: absolute;right:20;margin-top:-45px">Go back</a> {% endblock %}
+{% block page-buttons %} 
+<a href="{% url 'editor_tasks' submission.pk %}">
+        <div class="dash-menu">
+            <h5>My Tasks <i class="fa fa-chevron-right pull-right"></i></h5>
+        </div>
+        </a>
 
-{% block body %}
-<div class="col-md-12">
-  <h3>{{ submission.title }}</h3>
-  <hr />
+        <a href="{% url 'editor_status' submission.pk %}">
+        <div class="dash-menu ">
+            <h5>Current Status <i class="fa fa-chevron-right pull-right"></i></h5>
+        </div>
+        </a>
+        <a href="{% url 'editor_submission' submission.pk %}">
+        <div class="dash-menu">
+            <h5>Submission Details <i class="fa fa-chevron-right pull-right"></i></h5>
+        </div>
+        </a>
+        {% if submission.stage.review %}
+        <a href="{% url 'editor_review' submission.pk %}">
+        <div class="dash-menu">
+            <h5>Review <i class="fa fa-chevron-right pull-right"></i></h5>
+        </div>
+        </a>
+        {% endif %}
+        {% if submission.stage.editing %}
+        <a href="{% url 'editor_editing' submission.pk %}">
+        <div class="dash-menu">
+            <h5>Editing <i class="fa fa-chevron-right pull-right"></i></h5>
+        </div>
+        </a>
+        {% endif %}
+        {% if submission.stage.production %}
+        <a href="{% url 'editor_production' submission.id %}">
+        <div class="dash-menu current">
+            <h5>Production <i class="fa fa-chevron-right pull-right"></i></h5>
+        </div>
+        </a>
+        {% endif %}
+        <a href="{% url 'catalog' submission.id %}">
+        <div class="dash-menu">
+            <h5>Catalog <i class="fa fa-chevron-right pull-right"></i></h5>
+        </div>
+        </a>
+         <a href="{% url 'view_log' submission.id %}">
+        <div class="dash-menu">
+            <h5>Logs <i class="fa fa-chevron-right pull-right"></i></h5>
+        </div>
+        </a>{% endblock %}
+{% block page-content %}
+<div class="col-md-12 dash-container">
 
-  <h4>Edit Format</h4>
   {{ form.errors }}
   <form method="POST" enctype="multipart/form-data">
     {% csrf_token %}  
     
       <div class="form-group">
           <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-10 dash-centre">
               <div class="form-group"><label class="control-label" for="id_name">Name</label><input class="form-control" id="id_name" name="name" placeholder="Name" required="required" title="" type="text" value="{{ item.name }}"></div>
               <div class="form-group"><label class="control-label" for="id_identifier">Identifier</label><input class="form-control" id="id_identifier" name="identifier" placeholder="Identifier" required="required" title="" type="text" value="{{ item.identifier }}"></div>
+              <h5>File details</h5>
+              <div class="well">
+ <div class="media-body">
+        <div class="col-md-4">
+          <h5><strong>Label</strong></h5>
+          <h5>{{ file.label }}</h5>
+        </div>
+        <div class="col-md-4">
+          <h5><strong>Name</strong></h5>
+           <h5>{{ file.original_filename|truncatechars:20 }}</h5>
+        </div>
+          <div class="col-md-4">
+          <h5><strong>Date uploaded</strong></h5>
+           <h5>{{ file.date_uploaded }}</h5>
+        </div>
+              </div>
+ </div> </br>
+
+              <h4><span class="label label-primary">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;New File&nbsp;</span></h4>
+              <hr/>
+             
               <div class="form-group"><label class="control-label" for="id_file_label">File Label</label><input class="form-control" id="id_file_label" name="file_label" title="" type="text"></div>
               <div class="form-group"><label class="control-label" for="id_file">File</label><div class="row bootstrap3-multi-input"><div class="col-xs-12"><input class="" id="id_file" name="file" title="" type="file"></div></div></div>
               <div class="input-group">
                   <br>
-                  <button class="btn btn-primary" type="submit" name="update" id="update"><i class="fa fa-cloud-upload">&nbsp;</i>Upload</button>
+                  <button class="btn btn-primary  btn-round-half" type="submit" name="update" id="update"><i class="fa fa-cloud-upload">&nbsp;</i>Upload</button>
               </div>
             </div>
           </div>

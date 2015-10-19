@@ -38,12 +38,13 @@
             </tr>
         </table>
       </div>
+      {% block page-buttons %} {% endblock %}
     </div>
 
     <div class="col-md-9 dash-center">
     </br>
       <div class="col-md-12 file-heading container-fluid" style="margin-top:-10px">
-          <h4>{% block page-title %} {% endblock %}</h4>
+          <h4>{% block page-title %} {% endblock %}{% block page-button %} {% endblock page-button %}</h4>
     </div>
 
       <div class="dash-container">
