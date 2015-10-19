@@ -171,6 +171,31 @@ def editor_review_round(request, submission_id, round_number):
 	return render(request, template, context)
 
 @is_book_editor
+def update_review_due_date(request, submission_id, round_id, review_id):
+	submission = get_object_or_404(models.Book, pk=submission_id)
+	review_assignment = get_object_or_404(models.ReviewAssignment, pk=review_id)
+
+	if request.POST:
+		print 1
+		due_date = request.POST.get('due_date', None)
+		if due_date:
+			print 2
+			review_assignment.due = due_date
+			review_assignment.save()
+			messages.add_message(request, messages.SUCCESS, 'Due date updated.')
+			return redirect(reverse('editor_review_round', kwargs={'submission_id': submission_id, 'round_number': submission.get_latest_review_round()}))
+
+	template = 'editor/update_review_due_date.html'
+	context = {
+		'submission': submission,
+		'review': review_assignment,
+		'active': 'review',
+		'round_id': round_id,
+	}
+
+	return render(request, template, context)
+
+@is_book_editor
 def request_revisions(request, submission_id, returner):
 	book = get_object_or_404(models.Book, pk=submission_id)
 	email_text = models.Setting.objects.get(group__name='email', name='request_revisions').value

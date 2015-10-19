@@ -1,0 +1,30 @@
+{% extends "secondary_page.html" %}
+{% load static from staticfiles %}
+
+{% block title %}Set Due Date{% endblock title %}
+
+{% block page-title %}Set Due Date{% endblock %}
+{% block page-content %}
+
+<h3>ROUND {{ review_round.round_number }} INTERNAL REVIEW #{{ review.id }}</h3>
+<h4>{{ review.user.profile.full_name }}</h4>
+<form method="POST">
+	{% csrf_token %}
+	<h5>Set Due Date</h5>
+	<p class="small">Set a due date for the reviews. Reviewers will be politely reminded to submit their review before the due date.</p>
+	<input type="text" name="due_date" id="due_date" required="required" class="form-control" value="{{ review.due|date:"Y-m-d" }}" />
+	<br />
+	<input type="submit" class="btn btn-primary" />
+</form>
+
+{% endblock page-content %}
+
+{% block js %}
+{{ block.super }}
+<script type="text/javascript" src="{% static "js/fancyfile.js" %}"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+      $('#due_date').datepicker({ dateFormat: 'yy-mm-dd' }).val();
+  });
+</script>
+{% endblock js %}
