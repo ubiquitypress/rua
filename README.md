@@ -61,4 +61,4 @@ Core developers:
 - Paige MacKay
 
 # Milestones
-We're currently working on the Alpha, which is the backend release, this will be followed by the initial front end release then others.
+Alpha 0.2 now complete.
