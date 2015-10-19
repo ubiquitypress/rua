@@ -556,15 +556,23 @@ def add_format(request, submission_id):
 				new_file.label = label
 			else:
 				new_file.label = None
+			new_file.save()
 			new_format.file = new_file
 			new_format.save()
 			log.add_log_entry(book=book, user=request.user, kind='production', message='%s %s loaded a new format, %s' % (request.user.first_name, request.user.last_name, new_format.identifier), short_name='New Format Loaded')
 			return redirect(reverse('editor_production', kwargs={'submission_id': book.id}))
 
-	template = 'editor/production/add_format.html'
+	template = 'editor/submission.html'
 	context = {
 		'submission': book,
 		'format_form': format_form,
+		'author_include': 'editor/production/view.html',
+		'submission_files': 'editor/production/add_format.html',
+		'active': 'production',
+		'submission': book,
+		'format_list': models.Format.objects.filter(book=book).select_related('file'),
+		'chapter_list': models.Chapter.objects.filter(book=book).select_related('file'),
+		'active_page': 'production',
 	}
 
 	return render(request, template, context)
@@ -591,10 +599,17 @@ def add_chapter(request, submission_id):
 			log.add_log_entry(book=book, user=request.user, kind='production', message='%s %s loaded a new chapter, %s' % (request.user.first_name, request.user.last_name, new_chapter.identifier), short_name='New Chapter Loaded')
 			return redirect(reverse('editor_production', kwargs={'submission_id': book.id}))
 
-	template = 'editor/production/add_chapter.html'
+	template = 'editor/submission.html'
 	context = {
 		'submission': book,
 		'chapter_form': chapter_form,
+		'author_include': 'editor/production/view.html',
+		'submission_files': 'editor/production/add_chapter.html',
+		'active': 'production',
+		'submission': book,
+		'format_list': models.Format.objects.filter(book=book).select_related('file'),
+		'chapter_list': models.Chapter.objects.filter(book=book).select_related('file'),
+		'active_page': 'production',
 	}
 
 	return render(request, template, context)
@@ -647,13 +662,19 @@ def update_format_or_chapter(request, submission_id, format_or_chapter, id):
 				handle_file_update(request.FILES.get('file'), file_update, book, item.file.kind, request.user)
 			return redirect(reverse('editor_production', kwargs={'submission_id': book.id}))
 
-	template = 'editor/production/update.html'
+	template = 'editor/submission.html'
 	context = {
-		'submission': book,
 		'item': item,
 		'form': form,
 		'type':type,
-		'file': file
+		'file': file,
+		'author_include': 'editor/production/view.html',
+		'submission_files': 'editor/production/update.html',
+		'active': 'production',
+		'submission': book,
+		'format_list': models.Format.objects.filter(book=book).select_related('file'),
+		'chapter_list': models.Chapter.objects.filter(book=book).select_related('file'),
+		'active_page': 'production',
 	}
 
 	return render(request, template, context)
