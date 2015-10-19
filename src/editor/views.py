@@ -544,14 +544,18 @@ def delete_contributor(request, submission_id, contributor_type, contributor_id)
 @is_book_editor
 def add_format(request, submission_id):
 	book = get_object_or_404(models.Book, pk=submission_id)
-	format_form = forms.FormatForm()
-
+	format_form = core_forms.FormatForm()
 	if request.POST:
 		format_form = forms.FormatForm(request.POST, request.FILES)
 		if format_form.is_valid():
 			new_file = handle_file(request.FILES.get('format_file'), book, 'format', request.user)
 			new_format = format_form.save(commit=False)
 			new_format.book = book
+			label = request.POST.get('file_label')
+			if label:
+				new_file.label = label
+			else:
+				new_file.label = None
 			new_format.file = new_file
 			new_format.save()
 			log.add_log_entry(book=book, user=request.user, kind='production', message='%s %s loaded a new format, %s' % (request.user.first_name, request.user.last_name, new_format.identifier), short_name='New Format Loaded')
@@ -568,7 +572,7 @@ def add_format(request, submission_id):
 @is_book_editor
 def add_chapter(request, submission_id):
 	book = get_object_or_404(models.Book, pk=submission_id)
-	chapter_form = forms.ChapterForm()
+	chapter_form = core_forms.ChapterForm()
 
 	if request.POST:
 		chapter_form = forms.ChapterForm(request.POST, request.FILES)
@@ -576,6 +580,12 @@ def add_chapter(request, submission_id):
 			new_file = handle_file(request.FILES.get('chapter_file'), book, 'chapter', request.user)
 			new_chapter = chapter_form.save(commit=False)
 			new_chapter.book = book
+			label = request.POST.get('file_label')
+			if label:
+				new_file.label = label
+			else:
+				new_file.label = None
+			new_file.save()
 			new_chapter.file = new_file
 			new_chapter.save()
 			log.add_log_entry(book=book, user=request.user, kind='production', message='%s %s loaded a new chapter, %s' % (request.user.first_name, request.user.last_name, new_chapter.identifier), short_name='New Chapter Loaded')
@@ -624,8 +634,15 @@ def update_format_or_chapter(request, submission_id, format_or_chapter, id):
 			item.name = request.POST.get('name')
 			item.identifier = request.POST.get('identifier')
 			item.save()
+			file_update= item.file 
+			label = request.POST.get('file_label')
+			if label:
+				file_update.label = label
+			else:
+				file_update.label = None
+			file_update.save()
 			if request.FILES:
-				handle_file_update(request.FILES.get('file'), item.file, book, item.file.kind, request.user)
+				handle_file_update(request.FILES.get('file'), file_update, book, item.file.kind, request.user)
 			return redirect(reverse('editor_production', kwargs={'submission_id': book.id}))
 
 	template = 'editor/production/update.html'

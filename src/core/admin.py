@@ -41,7 +41,7 @@ class ReviewAssAdmin(admin.ModelAdmin):
 	search_fields = ('user','book',)
 
 class FileAdmin(admin.ModelAdmin):
-	list_display = ('original_filename', 'uuid_filename', 'kind')
+	list_display = ('original_filename', 'uuid_filename', 'kind','date_uploaded')
 
 class ReviewRoundAdmin(admin.ModelAdmin):
 	list_display = ('book', 'round_number')
