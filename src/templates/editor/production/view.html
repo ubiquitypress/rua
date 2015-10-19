@@ -1,14 +1,14 @@
-   <h4>Typesetting{% if submission.stage.typesetting %} <a href="{% url 'assign_typesetter' submission.id %}" class="btn btn-sm btn-accept btn-round-half pull-right" style="margin-bottom:5px"><i class="fa fa-plus">&nbsp;</i>Add Typesetter</a>{% endif %}</h4>
+   <h4>Typesetting{% if submission.stage.typesetting %} <a href="{% url 'assign_typesetter' submission.id %}" class="btn btn-sm btn-primary btn-round-half pull-right" style="margin-bottom:5px"><i class="fa fa-plus">&nbsp;</i>Add Typesetter</a>{% endif %}</h4>
   {% include "editor/production/typesetting.html" %}
 
     <hr />
   <h4>Publication Formats</h4>
   {% include "editor/production/public_files.html" with format_data=format_list format_type='format' %}
 
-  <a href="{% url 'add_format' submission.id %}" class="btn btn-primary btn-round-half"><i class="fa fa-upload">&nbsp;</i>Add New Format</a>
+  <a href="{% url 'add_format' submission.id %}" class="btn btn-primary btn-round-half"><i class="fa fa-plus">&nbsp;</i>Add New Format</a>
   <hr />
   <h4>Publication Chapters</h4>
   {% include "editor/production/public_files.html" with format_data=chapter_list format_type='chapter' %}
 
-  <a href="{% url 'add_chapter' submission.id %}" class="btn btn-primary btn-round-half"><i class="fa fa-upload">&nbsp;</i>Add New Chapter</a>
+  <a href="{% url 'add_chapter' submission.id %}" class="btn btn-primary btn-round-half"><i class="fa fa-plus">&nbsp;</i>Add New Chapter</a>
 
