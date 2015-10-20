@@ -42,8 +42,8 @@ urlpatterns = patterns('',
     url(r'^user/task/(?P<task_id>[-\w./]+)/complete/$', 'core.views.task_complete', name='task_complete'),
 
     # Message AJAX
-    url(r'^book/(?P<book_id>\d+)/message/new/$', 'core.views.new_message', name='new_message'),
-    url(r'^book/(?P<book_id>\d+)/messages/$', 'core.views.get_messages', name='get_messages'),
+    url(r'^book/(?P<submission_id>\d+)/message/new/$', 'core.views.new_message', name='new_message'),
+    url(r'^book/(?P<submission_id>\d+)/messages/$', 'core.views.get_messages', name='get_messages'),
 
 
     # User submission
