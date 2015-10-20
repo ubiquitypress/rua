@@ -302,13 +302,13 @@ def task_new(request):
 
 @csrf_exempt
 @is_book_editor_or_author
-def new_message(request, book_id):
+def new_message(request, submission_id):
 
 	new_message_form = forms.MessageForm(request.POST)
 	if new_message_form.is_valid():
 		new_message = new_message_form.save(commit=False)
 		new_message.sender = request.user
-		new_message.book = get_object_or_404(models.Book, pk=book_id)
+		new_message.book = get_object_or_404(models.Book, pk=submission_id)
 		new_message.save()
 
 		response_dict = {
@@ -325,10 +325,10 @@ def new_message(request, book_id):
 
 @csrf_exempt
 @is_book_editor_or_author
-def get_messages(request, book_id):
+def get_messages(request, submission_id):
 	try:
 		last_message = int(request.GET.get('last_message', 0))
-		messages = models.Message.objects.filter(book__pk=book_id, pk__gt=last_message).exclude(sender=request.user).order_by('-id')
+		messages = models.Message.objects.filter(book__pk=submission_id, pk__gt=last_message).exclude(sender=request.user).order_by('-id')
 
 		message_list = [{
 				'message': message.message,
