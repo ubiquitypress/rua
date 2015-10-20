@@ -1,0 +1,37 @@
+[
+{
+    "fields": {
+        "github": "ajrbyers",
+        "middle_name": "",
+        "roles": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+        ],
+        "confirmation_code": "",
+        "date_confirmed": null,
+        "country": "GB",
+        "twitter": "ajrbyers",
+        "linkedin": "ajrbyers",
+        "email_sent": null,
+        "orcid": "0000-0002-4669-4330",
+        "department": "Technical",
+        "facebook": "ajrbyers",
+        "user": 1,
+        "impactstory": "sdfsdfds",
+        "signature": "Tech @ UP.",
+        "salutation": "Mr",
+        "activation_code": "",
+        "institution": "Ubiquity Press",
+        "biography": "Technical Account for Ubiquity Press."
+    },
+    "model": "core.profile",
+    "pk": 1
+}
+]
