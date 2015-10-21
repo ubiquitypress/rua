@@ -385,6 +385,7 @@ def editor_production(request, submission_id):
 		'submission': book,
 		'format_list': models.Format.objects.filter(book=book).select_related('file'),
 		'chapter_list': models.Chapter.objects.filter(book=book).select_related('file'),
+		'physical_list': models.PhysicalFormat.objects.filter(book=book),
 		'active_page': 'production',
 	}
 
@@ -630,6 +631,34 @@ def add_chapter(request, submission_id):
 		'chapter_form': chapter_form,
 		'author_include': 'editor/production/view.html',
 		'submission_files': 'editor/production/add_chapter.html',
+		'active': 'production',
+		'submission': book,
+		'format_list': models.Format.objects.filter(book=book).select_related('file'),
+		'chapter_list': models.Chapter.objects.filter(book=book).select_related('file'),
+		'active_page': 'production',
+	}
+
+	return render(request, template, context)
+
+@is_book_editor
+def add_physical(request, submission_id):
+	book = get_object_or_404(models.Book, pk=submission_id)
+	format_form = forms.PhysicalFormatForm()
+	if request.POST:
+		format_form = forms.PhysicalFormatForm(request.POST, request.FILES)
+		if format_form.is_valid():
+			new_format = format_form.save(commit=False)
+			new_format.book = book
+			new_format.save()
+			log.add_log_entry(book=book, user=request.user, kind='production', message='%s %s loaded a new format, %s' % (request.user.first_name, request.user.last_name, new_format.name), short_name='New Format Loaded')
+			return redirect(reverse('editor_production', kwargs={'submission_id': book.id}))
+
+	template = 'editor/submission.html'
+	context = {
+		'submission': book,
+		'physical_form': format_form,
+		'author_include': 'editor/production/view.html',
+		'submission_files': 'editor/production/physical_format.html',
 		'active': 'production',
 		'submission': book,
 		'format_list': models.Format.objects.filter(book=book).select_related('file'),

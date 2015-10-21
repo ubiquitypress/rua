@@ -751,12 +751,33 @@ class Setting(models.Model):
 	def __repr__(self):
 		return u'%s' % self.name
 
+HTML, XML, PDF, EPUB, MOBI, KINDLE = 'html', 'xml', 'pdf', 'epub', 'mobi', 'kindle'
+HBACK, PBACK = 'hardback', 'paperback'
+DOWNLOADABLE_FORMATS = [HTML, XML, PDF, EPUB, MOBI]
+
+def pysical_file_type():
+	return (
+		(HBACK, 'Hardback'),
+		(PBACK, 'Paperback')
+	)
+
+def digital_file_type():
+	return (
+		(EPUB, 'EPUB'),
+		(HTML, 'HTML'),
+		(KINDLE, 'Kindle'),
+		(MOBI, 'MOBI'),
+		(PDF, 'PDF'),
+		(XML, 'XML'),
+	)
+
 class Format(models.Model):
 	book = models.ForeignKey(Book)
 	file = models.ForeignKey(File)
 	name = models.CharField(max_length=200)
 	identifier = models.CharField(max_length=200, unique=True)
 	sequence = models.IntegerField(default=9999)
+	file_type = models.CharField(max_length=100, choices=digital_file_type())
 
 	class Meta:
 		ordering = ('sequence', 'name')
@@ -773,6 +794,22 @@ class Chapter(models.Model):
 	name = models.CharField(max_length=200)
 	identifier = models.CharField(max_length=200, unique=True)
 	sequence = models.IntegerField(default=999)
+	file_type = models.CharField(max_length=100, choices=digital_file_type())
+
+	class Meta:
+		ordering = ('sequence', 'name')
+
+	def __unicode__(self):
+		return u'%s - %s' % (self.book, self.identifier)
+
+	def __repr__(self):
+		return u'%s - %s' % (self.book, self.indentifier)
+
+class PhysicalFormat(models.Model):
+	book = models.ForeignKey(Book)
+	name = models.CharField(max_length=200)
+	sequence = models.IntegerField(default=999)
+	file_type = models.CharField(max_length=100, choices=pysical_file_type())
 
 	class Meta:
 		ordering = ('sequence', 'name')

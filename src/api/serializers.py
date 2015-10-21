@@ -78,6 +78,33 @@ class FormatSerializer(serializers.HyperlinkedModelSerializer):
             'file',
             'name',
             'identifier',
+            'file_type',
+            'sequence',
+        )
+
+
+class ChapterSerializer(serializers.HyperlinkedModelSerializer):
+
+    file = FileSerializer(many=False)
+
+    class Meta:
+        model = models.Format
+        fields = (
+            'file',
+            'name',
+            'identifier',
+            'file_type',
+            'sequence',
+        )
+
+
+class PhysicalFormatSerializer(serializers.HyperlinkedModelSerializer):
+
+    class Meta:
+        model = models.Format
+        fields = (
+            'name',
+            'file_type',
             'sequence',
         )
 
@@ -148,6 +175,8 @@ class JuraBookSerializer(serializers.HyperlinkedModelSerializer):
     keywords = KeywordSerializer(many=True)
     subject = SubjectSerializer(many=True)
     formats = FormatSerializer(many=True)
+    chapters = ChapterSerializer(many=True, source='chapter_set')
+    physical_formats = PhysicalFormatSerializer(many=True,  source='physicalformat_set')
     stage = StageSerializer(many=False)
     identifier = IdentiferSerializer(many=True, source='identifier_set')
 
@@ -171,6 +200,8 @@ class JuraBookSerializer(serializers.HyperlinkedModelSerializer):
             'subject',
             'review_type',
             'formats',
+            'chapters',
+            'physical_formats',
             'stage',
             'identifier',
             )

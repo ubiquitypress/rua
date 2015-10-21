@@ -26,6 +26,12 @@ class ChapterForm(forms.ModelForm):
 		model = core_models.Chapter
 		exclude = ('book', 'file')
 
+class PhysicalFormatForm(forms.ModelForm):
+
+	class Meta:
+		model = core_models.PhysicalFormat
+		exclude = ('book',)
+
 class UpdateChapterFormat(forms.Form):
 
 	file = forms.FileField(required=False)
