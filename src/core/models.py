@@ -261,10 +261,28 @@ def identifier_choices():
 	)
 
 class Identifier(models.Model):
-	book = models.ForeignKey(Book)
+	book = models.ForeignKey(Book, null=True, blank=True)
+	digital_format = models.ForeignKey('Format', related_name='digital_format', null=True, blank=True)
+	physical_format = models.ForeignKey('PhysicalFormat', null=True, blank=True)
 	identifier = models.CharField(max_length=20, choices=identifier_choices())
 	value = models.CharField(max_length=300)
 	displayed = models.BooleanField(default=True)
+
+	def object_type(self):
+		if self.digital_format:
+			return 'digital_format'
+		elif self.physical_format:
+			return 'physical_format'
+		else:
+			return 'book'
+
+	def object_id(self):
+		if self.digital_format:
+			return self.digital_format.id
+		elif self.physical_format:
+			return self.physical_format.id
+		else:
+			return self.book.id
 
 def physical_book_types():
 	return (
@@ -815,10 +833,10 @@ class PhysicalFormat(models.Model):
 		ordering = ('sequence', 'name')
 
 	def __unicode__(self):
-		return u'%s - %s' % (self.book, self.identifier)
+		return u'%s - %s' % (self.book, self.name)
 
 	def __repr__(self):
-		return u'%s - %s' % (self.book, self.indentifier)
+		return u'%s - %s' % (self.book, self.name)
 
 class ProposalForm(models.Model):
 	name = models.CharField(max_length=100)

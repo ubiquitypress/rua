@@ -14,7 +14,10 @@
       <div class="form-group">
           <div class="row">
             <div class="col-md-6">
+            <span>This form allows you to assign idetifiers to the book, digital formats and physical formats. To assigned an identifier to the whole book, select neither Digital or Physical formats.</span><br /><br />
             {% bootstrap_field form.identifier %}
+            {% bootstrap_field form.digital_format %}
+            {% bootstrap_field form.physical_format %}
             {% bootstrap_field form.value %}
             {% bootstrap_field form.displayed %}
             <div class="input-group">
@@ -27,6 +30,7 @@
               <table class="table table-bordered">
                 <tr>
                   <th>Identifier</th>
+                  <th>Object</th>
                   <th>Value</th>
                   <th>Displayed?</th>
                   <th>Action</th>
@@ -34,6 +38,7 @@
                 {% for ident in submission.identifier_set.all %}
                 <tr>
                   <td>{{ ident.get_identifier_display }}</td>
+                  <td>{% if ident.digital_format %}{{ident.digital_format}}{% elif ident.physical_format %}{{ident.physical_format}}{% elif ident.book %}Book{% else %}--{% endif %}</td>
                   <td>{{ ident.value }}</td>
                   <td>{% if ident.displayed %}<i style="color:green;" class="fa fa-check-circle"></i>{% else %}<i style="color:red;" class="fa fa-times-circle"></i>{% endif %}</td>
                   <td>
@@ -42,7 +47,7 @@
                   </td>
                 {% empty %}
                 <tr>
-                  <td colspan="4">Use the form to add a new identifier.</td>
+                  <td colspan="5">Use the form to add a new identifier.</td>
                 </tr>
                 {% endfor %}
               </table>

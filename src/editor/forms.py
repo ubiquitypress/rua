@@ -76,9 +76,25 @@ class EditMetadata(forms.ModelForm):
 
 class IdentifierForm(forms.ModelForm):
 
+	def __init__(self, *args, **kwargs):
+		digital_format_choices = kwargs.pop('digital_format_choices', None)
+		physical_format_choices = kwargs.pop('physical_format_choices', None)
+		super(IdentifierForm, self).__init__(*args, **kwargs)
+		if digital_format_choices and physical_format_choices:
+			self.fields['digital_format'] = forms.ChoiceField(widget=forms.Select(), choices=digital_format_choices, required=False)
+			self.fields['physical_format'] = forms.ChoiceField(widget=forms.Select(), choices=physical_format_choices, required=False)
+
+
 	class Meta:
 		model = core_models.Identifier
-		fields = ('identifier', 'value', 'displayed')
+		fields = ('identifier', 'value', 'displayed', 'digital_format', 'physical_format',)
+
+	def clean(self):
+		digital_format = self.cleaned_data.get('digital_format')
+		physical_format = self.cleaned_data.get('physical_format')
+
+		if digital_format and physical_format:
+			raise forms.ValidationError('You must select either a Digital Format, a Physical Format or Neither.')
 
 class CoverForm(forms.ModelForm):
 

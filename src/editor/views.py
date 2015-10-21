@@ -473,6 +473,8 @@ def catalog(request, submission_id):
 @is_book_editor
 def identifiers(request, submission_id, identifier_id=None):
 	book = get_object_or_404(models.Book, pk=submission_id)
+	digital_format_choices = logic.generate_digital_choices(book.format_set.all())
+	physical_format_choices = logic.generate_physical_choices(book.physicalformat_set.all())
 
 	if identifier_id:
 		identifier = get_object_or_404(models.Identifier, pk=identifier_id)
@@ -481,10 +483,10 @@ def identifiers(request, submission_id, identifier_id=None):
 			identifier.delete()
 			return redirect(reverse('identifiers', kwargs={'submission_id': submission_id}))
 
-		form = forms.IdentifierForm(instance=identifier)
+		form = forms.IdentifierForm(instance=identifier, digital_format_choices=digital_format_choices, physical_format_choices=physical_format_choices)
 	else:
 		identifier = None
-		form = forms.IdentifierForm()
+		form = forms.IdentifierForm(digital_format_choices=digital_format_choices, physical_format_choices=physical_format_choices)
 
 	if request.POST:
 		if identifier_id:

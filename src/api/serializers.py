@@ -133,6 +133,8 @@ class IdentiferSerializer(serializers.HyperlinkedModelSerializer):
             'identifier',
             'value',
             'displayed',
+            'object_type',
+            'object_id',
         )
 
 class BookSerializer(serializers.HyperlinkedModelSerializer):

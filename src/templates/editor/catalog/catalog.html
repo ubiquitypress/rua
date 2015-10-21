@@ -180,12 +180,11 @@
                       {% bootstrap_field metadata_form.languages %}
                     </div>
                     <div class="col-md-6">
-                    <div class="aside"><strong>Keywords</strong> Hit Enter to add a new keyword.</div>
+                      <div class="aside"><strong>Keywords</strong> Hit Enter to add a new keyword.</div>
                       <input type="text" id="tags" name="tags" value="{% for keyword in submission.keywords.all %}{{ keyword }}{% if not forloop.last %},{% endif %}{% endfor %}"/>
                       <div class="aside"><strong>Subjects</strong> Hit Enter to add a new subject.</div>
                         <input type="text" id="stags" name="stags" value="{% for subject in submission.subject.all %}{{ subject }}{% if not forloop.last %},{% endif %}{% endfor %}"/>
                       </div>
-                    </div>
                   </div>
 
                   <div class="row">
@@ -326,7 +325,6 @@ function popitup(url,title) {
 
 // -->
 </script>
-<script type="text/javascript" src="{% static "js/messages.js" %}"></script>
 <script type="text/javascript" src="{% static "js/fancyfile.js" %}"></script>
 <script type="text/javascript">$("textarea").jqte();</script>
 <script type="text/javascript">

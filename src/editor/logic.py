@@ -9,6 +9,13 @@ from submission import logic as submission_logic
 
 import json
 
+
+def generate_digital_choices(digital_formats):
+    return [('', '------')] + [(frmt.id, "%s - %s" % (frmt.name,  frmt.get_file_type_display())) for frmt in digital_formats]
+
+def generate_physical_choices(physical_formats):
+    return [('', '------')] + [(frmt.id, "%s - %s" % (frmt.name,  frmt.get_file_type_display())) for frmt in physical_formats]
+
 def send_author_invite(submission, copyedit, email_text, sender, attachment=None):
     from_email = models.Setting.objects.get(group__name='email', name='from_address')
 
