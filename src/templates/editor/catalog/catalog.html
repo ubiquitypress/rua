@@ -180,10 +180,11 @@
                       {% bootstrap_field metadata_form.languages %}
                     </div>
                     <div class="col-md-6">
-                      <div class="aside"><strong>Keywords</strong> Hit Enter to add a new keyword.</div>
-                      <ul id="tags">
-                        {% for keyword in submission.keywords.all %}<li>{{ keyword }}</li>{% endfor %}
-                      </ul>
+                    <div class="aside"><strong>Keywords</strong> Hit Enter to add a new keyword.</div>
+                      <input type="text" id="tags" name="tags" value="{% for keyword in submission.keywords.all %}{{ keyword }}{% if not forloop.last %},{% endif %}{% endfor %}"/>
+                      <div class="aside"><strong>Subjects</strong> Hit Enter to add a new subject.</div>
+                        <input type="text" id="stags" name="stags" value="{% for subject in submission.subject.all %}{{ subject }}{% if not forloop.last %},{% endif %}{% endfor %}"/>
+                      </div>
                     </div>
                   </div>
 
@@ -351,6 +352,12 @@ $(function() {
 <script type="text/javascript">
   $(document).ready(function() {
       $("#tags").tagit(
+        {allowSpaces: true});
+  });
+</script>
+<script type="text/javascript">
+  $(document).ready(function() {
+      $("#stags").tagit(
         {allowSpaces: true});
   });
 </script>

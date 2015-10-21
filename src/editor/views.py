@@ -428,9 +428,17 @@ def catalog(request, submission_id):
 				for keyword in book.keywords.all():
 					book.keywords.remove(keyword)
 
-				for keyword in request.POST.getlist('tags'):
+				for keyword in request.POST.get('tags').split(','):
 					new_keyword, c = models.Keyword.objects.get_or_create(name=keyword)
 					book.keywords.add(new_keyword)
+
+				for subject in book.subject.all():
+					book.subject.remove(subject)
+
+				for subject in request.POST.get('stags').split(','):
+					new_subject, c = models.Subject.objects.get_or_create(name=subject)
+					book.subject.add(new_subject)
+
 				book.save()
 				return redirect(reverse('catalog', kwargs={'submission_id': submission_id}))
 
