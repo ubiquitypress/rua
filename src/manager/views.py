@@ -390,7 +390,12 @@ def create_elements(request,form_id):
 	form =  review_models.Form.objects.get(id=form_id)
 	elements = review_models.FormElement.objects.all()
 	new_form = forms.FormElementForm()
-	if request.POST and 'continue' in request.POST:
+	if request.POST and "delete" in request.POST:
+		index = int(request.POST.get("delete"))
+		field = elements[index]
+		field.delete()
+		return redirect(reverse('manager_create_elements',kwargs={'form_id': form_id}))
+	elif request.POST and 'continue' in request.POST:
 		print 'Continue'
 		form_element_form=forms.FormElementForm(request.POST)
 		if form_element_form.is_valid():
