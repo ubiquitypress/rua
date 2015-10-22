@@ -10,6 +10,7 @@ from django.core.cache import cache
 from django.core.exceptions import ObjectDoesNotExist
 
 from manager import models
+from review import models as review_models
 from manager import forms
 from manager import logic
 from django.conf import settings
@@ -258,6 +259,162 @@ def proposal_forms(request):
 
 	return render(request, template, context)
 
+@staff_member_required
+def review_forms(request):
+
+	forms = review_models.Form.objects.all()
+
+	template = 'manager/review/review_forms.html'
+
+	context = {
+		'forms': forms,
+	}
+
+	return render(request, template, context)
+
+@staff_member_required
+def view_review_form(request,form_id):
+
+	form = review_models.Form.objects.get(id=form_id)
+
+	fields = review_models.FormElementsRelationship.objects.filter(form=form)
+	if request.POST and "delete" in request.POST:
+		index = int(request.POST.get("delete"))
+		field = fields[index]
+		field.delete()
+		return redirect(reverse('manager_view_review_form',kwargs={'form_id': form_id}))
+	template = 'manager/review/view_form.html'
+
+	context = {
+		'form': form,
+		'fields':fields,
+	}
+
+	return render(request, template, context)
+@staff_member_required
+def review_form_elements(request):
+
+	elements = review_models.FormElement.objects.all()
+
+	new_form = forms.FormElementForm()
+
+	if request.POST and "delete" in request.POST:
+		index = int(request.POST.get("delete"))
+		field = elements[index]
+		field.delete()
+		return redirect(reverse('manager_review_form_elements'))
+	elif request.POST:
+		form_element_form=forms.FormElementForm(request.POST)
+		if form_element_form.is_valid():
+			form_element_form.save()
+			return redirect(reverse('manager_review_form_elements'))
+
+
+	template = 'manager/review/elements.html'
+
+	context = {
+		'elements': elements,
+		'new_form':new_form
+	}
+
+	return render(request, template, context)
+
+@staff_member_required
+def add_field(request,form_id):
+
+	form = review_models.Form.objects.get(id=form_id)
+	fields = review_models.FormElementsRelationship.objects.filter(form=form)
+	elements = review_models.FormElement.objects.all()
+	new_form = forms.FormElementsRelationshipForm()
+	if request.POST and 'finish' in request.POST:
+		print 'Finish'
+		return redirect(reverse('manager_view_review_form',kwargs={'form_id': form_id}))
+	elif request.POST and "delete" in request.POST:
+		index = int(request.POST.get("delete"))
+		field = fields[index]
+		field.delete()
+		return redirect(reverse('manager_add_review_form_field',kwargs={'form_id': form_id}))
+	elif request.POST:
+		field_form = forms.FormElementsRelationshipForm(request.POST)
+		element_class = request.POST.get("element_class")
+		element_index = request.POST.get("element")
+		help_text = request.POST.get("help_text")
+		order = int(request.POST.get("order"))
+		element = elements[int(element_index)-1]
+		relationship=review_models.FormElementsRelationship(form=form,element=element,element_class=element_class,order=order,help_text=help_text)
+		relationship.save()
+		fields = review_models.FormElementsRelationship.objects.filter(form=form)
+		form.form_fields=fields
+		form.save()
+		return redirect(reverse('manager_add_review_form_field',kwargs={'form_id': form_id}))
+	template = 'manager/review/add_field.html'
+
+	context = {
+		'form': form,
+		'new_form':new_form,
+		'fields': fields,
+	}
+
+	return render(request, template, context)
+@staff_member_required
+def add_form(request):
+
+	form = forms.ReviewForm()
+	if request.POST:
+		review_form = forms.ReviewForm(request.POST)
+		if review_form.is_valid():
+			review_form.save()
+			print request.POST
+			saved_form = review_models.Form.objects.get(name= review_form.cleaned_data['name'])
+			return redirect(reverse('manager_create_elements',kwargs={'form_id': saved_form.id}))
+	
+		else:
+			print form.errors
+		print review_form
+		return redirect(reverse('manager_review_forms'))
+	template = 'manager/review/add_form.html'
+
+	context = {
+		'new_form': form,
+	}
+
+	return render(request, template, context)
+@staff_member_required
+def create_elements(request,form_id):
+
+	form =  review_models.Form.objects.get(id=form_id)
+	elements = review_models.FormElement.objects.all()
+	new_form = forms.FormElementForm()
+	if request.POST and "delete" in request.POST:
+		index = int(request.POST.get("delete"))
+		field = elements[index]
+		field.delete()
+		return redirect(reverse('manager_create_elements',kwargs={'form_id': form_id}))
+	elif request.POST and 'continue' in request.POST:
+		print 'Continue'
+		form_element_form=forms.FormElementForm(request.POST)
+		if form_element_form.is_valid():
+			form_element_form.save()
+		return redirect(reverse('manager_add_review_form_field',kwargs={'form_id': form_id}))
+	elif request.POST:
+		print 'Save and stay'
+		form_element_form=forms.FormElementForm(request.POST)
+		if form_element_form.is_valid():
+			form_element_form.save()
+			return redirect(reverse('manager_create_elements',kwargs={'form_id': form_id}))
+
+
+		
+
+	template = 'manager/review/create_elements.html'
+
+	context = {
+		'form': form,
+		'new_form':new_form,
+		'elements' : elements,
+	}
+
+	return render(request, template, context)
 @staff_member_required
 def users(request):
 

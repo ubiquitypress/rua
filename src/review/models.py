@@ -6,7 +6,7 @@ class Form(models.Model):
 	ref = models.CharField(max_length=20, help_text='for proposals: press_code-proposal eg. sup-proposal')
 	intro_text = models.TextField(max_length=1000, help_text='Accepts HTML. Para elements should be wrapped in paragraph tags or they will not have fonts.')
 	completion_text = models.TextField(max_length=1000, help_text='Accepts HTML. Para elements should be wrapped in paragraph tags or they will not have fonts.')
-	fields = models.ManyToManyField('FormElement', through='FormElementsRelationship')
+	form_fields = models.ManyToManyField('FormElementsRelationship', blank=True,related_name='form_fields')
 
 	def __unicode__(self):
 		return u'%s' % self.name
