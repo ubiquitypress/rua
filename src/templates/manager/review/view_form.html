@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% load static from staticfiles %}
+{% load bootstrap3 %}
+
+{% block breadcrumbs %}
+  <ol class="breadcrumb">
+    <li><a href="{% url 'manager_index' %}">Manager</a></li>
+    <li><a href="{% url 'manager_review_forms' %}">Review Forms</a></li>
+    <li>View Form</li>
+	</ol>
+{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/plug-ins/1.10.7/integration/bootstrap/3/dataTables.bootstrap.css">
+{% endblock css %}
+
+{% block body %}
+<div class="col-md-12 file-sub-heading container-fluid" style="margin-top:-20px">
+      <h3>Form: {{form.name}} <a href="{% url 'manager_review_forms'%}" class="btn  btn-trasnparent-white" style="position: absolute;right:20;margin-top:-8px">Go back</a></h3>
+</div>
+</br></br>
+  <table id="reviewforms" class="table table-bordered">
+    <thead>
+    <tr>
+        <th width="25%">ID</th>
+        <th width="25%">Name</th>
+        <th width="25%"> Intro Text</th>
+         <th width="25%">Completion Text</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td>{{ form.id }}</td>
+        <td>{{ form.name }}</td>
+        <td>{{ form.intro_text }}</td>
+        <td>{{ form.completion_text }}</td>
+      </tr>
+    </tbody>
+    </table>
+    <hr />
+<div class="col-md-12 file-heading container-fluid" style="margin-top:-20px">
+      <h4>Fields <a href="{% url 'manager_add_review_form_field' form.id  %}" class="btn  btn-trasnparent-white" style="position: absolute;right:20;margin-top:-8px">+ Add field</a></h4>
+</div>
+     <table id="reviewforms" class="table table-bordered">
+    <thead>
+    <tr>
+        <th width="25%">Name</th>
+         <th width="25%">Choices</th>
+        <th width="25%">Type</th>
+         <th width="25%">Required</th>
+         <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for form_element in form.fields.all %}
+      <tr>
+        <td>{{ form_element.name }}</td>
+        <td>{% if form_element.choices %}{{ form_element.choices }}{%else%}None{%endif%}</td>
+        <td>{{ form_element.field_type }}</td>
+        <td>{{ form_element.required }}</td>
+        <td><a class="btn btn-danger button-round">Delete</a></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+    </table>
+{% endblock body %}
+
+
+{% block js %}
+<script type="text/javascript" language="javascript" src="//cdn.datatables.net/1.10.7/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" language="javascript" src="//cdn.datatables.net/plug-ins/1.10.7/integration/bootstrap/3/dataTables.bootstrap.js"></script>
+<script>
+  $(document).ready(function() {
+      $('#users-without').DataTable({
+        "lengthMenu": [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]]
+      });
+  } );
+
+  $(document).ready(function() {
+      $('#users-with').DataTable({
+        "lengthMenu": [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]]
+      });
+  } );
+</script>
+
+
+{% endblock js %}

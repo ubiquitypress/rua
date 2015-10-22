@@ -10,6 +10,7 @@ from django.core.cache import cache
 from django.core.exceptions import ObjectDoesNotExist
 
 from manager import models
+from review import models as review_models
 from manager import forms
 from manager import logic
 from django.conf import settings
@@ -258,6 +259,91 @@ def proposal_forms(request):
 
 	return render(request, template, context)
 
+@staff_member_required
+def review_forms(request):
+
+	forms = review_models.Form.objects.all()
+
+	template = 'manager/review/review_forms.html'
+
+	context = {
+		'forms': forms,
+	}
+
+	return render(request, template, context)
+
+@staff_member_required
+def view_review_form(request,form_id):
+
+	form = review_models.Form.objects.get(id=form_id)
+
+	template = 'manager/review/view_form.html'
+
+	context = {
+		'form': form,
+	}
+
+	return render(request, template, context)
+@staff_member_required
+def review_form_elements(request):
+
+	forms = review_models.FormElement.objects.all()
+
+	template = 'manager/review/review_forms.html'
+
+	context = {
+		'forms': forms,
+	}
+
+	return render(request, template, context)
+@staff_member_required
+def add_form_element(request):
+
+	forms = review_models.Form.objects.all()
+
+	template = 'manager/review/add_element.html'
+
+	context = {
+		'forms': forms,
+	}
+
+	return render(request, template, context)
+@staff_member_required
+def view_form_element(request,element_id):
+
+	forms = review_models.Form.objects.all()
+
+	template = 'manager/review/view_element.html'
+
+	context = {
+		'forms': forms,
+	}
+
+	return render(request, template, context)
+@staff_member_required
+def add_field(request,form_id):
+
+	form = review_models.Form.objects.get(id=form_id)
+
+	template = 'manager/review/add_field.html'
+
+	context = {
+		'form': form,
+	}
+
+	return render(request, template, context)
+@staff_member_required
+def add_form(request):
+
+	forms = review_models.Form.objects.all()
+
+	template = 'manager/review/add_form.html'
+
+	context = {
+		'forms': forms,
+	}
+
+	return render(request, template, context)
 @staff_member_required
 def users(request):
 

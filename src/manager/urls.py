@@ -37,6 +37,15 @@ urlpatterns = patterns('',
     # Cache
     url(r'^cache/flush/$', 'manager.views.flush_cache', name='manager_flush_cache'),
 
+    #Review Form Management
+    url(r'^review-forms/$', 'manager.views.review_forms', name='manager_review_forms'),
+    url(r'^review-forms/view/form/(?P<form_id>\d+)/$', 'manager.views.view_review_form', name='manager_view_review_form'),
+    url(r'^review-forms/form/elements/$', 'manager.views.review_form_elements', name='manager_review_form_elements'),
+    url(r'^review-forms/form/elements/view/(?P<element_id>\d+)/$', 'manager.views.view_form_element', name='manager_view_form_element'),
+    url(r'^review-forms/new/form-element/$', 'manager.views.add_form_element', name='manager_add_form_element'),
+    url(r'^review-forms/form/(?P<form_id>\d+)/add/field/$', 'manager.views.add_field', name='manager_add_review_form_field'),
+    url(r'^review-forms/new/form/$', 'manager.views.add_form', name='manager_add_form'),
+
     # Users
     url(r'^user/$', 'manager.views.users', name='manager_users'),
     url(r'^user/add/$', 'manager.views.add_user', name='add_user'),

@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% load static from staticfiles %}
+{% load bootstrap3 %}
+
+{% block breadcrumbs %}
+  <ol class="breadcrumb">
+    <li><a href="{% url 'manager_index' %}">Manager</a></li>
+    <li><a href="{% url 'manager_review_forms' %}">Review Forms</a></li>
+	</ol>
+{% endblock %}
+
+
+{% block css %}
+<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/plug-ins/1.10.7/integration/bootstrap/3/dataTables.bootstrap.css">
+{% endblock css %}
+
+{% block body %}
+<div class="col-md-12 file-heading container-fluid" style="margin-top:-20px">
+      <h3>Add Field <a href="{% url 'manager_view_review_form' form.id  %}" class="btn  btn-trasnparent-white" style="position: absolute;right:20;margin-top:-8px">Go back</a></h3>
+</div>
+	<div class="col-md-12">
+		
+  </div>
+{% endblock body %}
+
+
+{% block js %}
+<script type="text/javascript" language="javascript" src="//cdn.datatables.net/1.10.7/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" language="javascript" src="//cdn.datatables.net/plug-ins/1.10.7/integration/bootstrap/3/dataTables.bootstrap.js"></script>
+<script>
+  $(document).ready(function() {
+      $('#users-without').DataTable({
+        "lengthMenu": [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]]
+      });
+  } );
+
+  $(document).ready(function() {
+      $('#users-with').DataTable({
+        "lengthMenu": [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]]
+      });
+  } );
+</script>
+
+
+{% endblock js %}
