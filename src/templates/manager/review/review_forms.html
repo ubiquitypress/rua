@@ -12,7 +12,8 @@
       <h3>Manage: Review Forms</h3>
 
 </div>
-</br>
+</br></br>
+<div class="container-fluid">
 <h3>Forms</h3>
 <hr/>
   <table id="reviewforms" class="table table-bordered">
@@ -28,12 +29,12 @@
       <tr>
         <td>{{ form.id }}</td>
         <td>{{ form.name }}</td>
-        <td width="10%"><a class="btn btn-primary btn-round" href="{% url 'manager_view_review_form' form.id %}">View</a></td>
+        <td width="8%"><a style="width:80px"class="btn btn-primary btn-round" href="{% url 'manager_view_review_form' form.id %}">View</a></td>
       </tr>
       {% endfor %}
     </tbody>
     </table>
-    <hr />
+    </div>
     
 {% endblock body %}
 
@@ -46,7 +47,7 @@
       $('#reviewforms').DataTable({
         "lengthMenu": [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]]
       });
-       $('</br><a  href="{% url 'manager_add_form'%}" type="button" class=" btn btn-decline " > + Create form </a>').appendTo('div.dataTables_filter');
+       $('</br><a  href="{% url 'manager_add_form'%}" type="button" class=" btn btn-decline " > + Create form </a><a  href="{% url 'manager_review_form_elements'%}" type="button" class=" btn btn-info btn-round-half" > + Create form element</a>').appendTo('div.dataTables_filter');
 
 
   } );

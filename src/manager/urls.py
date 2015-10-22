@@ -40,9 +40,7 @@ urlpatterns = patterns('',
     #Review Form Management
     url(r'^review-forms/$', 'manager.views.review_forms', name='manager_review_forms'),
     url(r'^review-forms/view/form/(?P<form_id>\d+)/$', 'manager.views.view_review_form', name='manager_view_review_form'),
-    url(r'^review-forms/form/elements/$', 'manager.views.review_form_elements', name='manager_review_form_elements'),
-    url(r'^review-forms/form/elements/view/(?P<element_id>\d+)/$', 'manager.views.view_form_element', name='manager_view_form_element'),
-    url(r'^review-forms/new/form-element/$', 'manager.views.add_form_element', name='manager_add_form_element'),
+    url(r'^review-forms/form-elements/$', 'manager.views.review_form_elements', name='manager_review_form_elements'),
     #Form Creation
     url(r'^review-forms/new/form/$', 'manager.views.add_form', name='manager_add_form'),
     url(r'^review-forms/form/(?P<form_id>\d+)/create/elements/$', 'manager.views.create_elements', name='manager_create_elements'),

@@ -294,41 +294,31 @@ def view_review_form(request,form_id):
 @staff_member_required
 def review_form_elements(request):
 
-	forms = review_models.FormElement.objects.all()
+	elements = review_models.FormElement.objects.all()
 
-	template = 'manager/review/review_forms.html'
+	new_form = forms.FormElementForm()
+
+	if request.POST and "delete" in request.POST:
+		index = int(request.POST.get("delete"))
+		field = elements[index]
+		field.delete()
+		return redirect(reverse('manager_review_form_elements'))
+	elif request.POST:
+		form_element_form=forms.FormElementForm(request.POST)
+		if form_element_form.is_valid():
+			form_element_form.save()
+			return redirect(reverse('manager_review_form_elements'))
+
+
+	template = 'manager/review/elements.html'
 
 	context = {
-		'forms': forms,
+		'elements': elements,
+		'new_form':new_form
 	}
 
 	return render(request, template, context)
-@staff_member_required
-def add_form_element(request):
 
-	forms = review_models.Form.objects.all()
-
-
-
-	template = 'manager/review/add_element.html'
-
-	context = {
-		'forms': forms,
-	}
-
-	return render(request, template, context)
-@staff_member_required
-def view_form_element(request,element_id):
-
-	forms = review_models.Form.objects.all()
-
-	template = 'manager/review/view_element.html'
-
-	context = {
-		'forms': forms,
-	}
-
-	return render(request, template, context)
 @staff_member_required
 def add_field(request,form_id):
 
