@@ -19,8 +19,25 @@
       <h3>Add Field <a href="{% url 'manager_view_review_form' form.id  %}" class="btn  btn-trasnparent-white" style="position: absolute;right:20;margin-top:-8px">Go back</a></h3>
 </div>
 	<div class="col-md-12">
-		
-  </div>
+		{% if new_form %}
+    <div class="well" style="overflow: auto">
+      <div class="col-md-12">
+        {% bootstrap_form default_fields %}
+      </div>
+
+          {% for field in new_form %}
+            <div class="{% if field.field.widget.attrs.div_class %}{{ field.field.widget.attrs.div_class }}{% else %}col-md-12{% endif %}">
+            {% if field.field.widget.attrs.is_checkbox %}
+              {% if field.errors %}<span class="red">{{ field.errors|join:", " }}</span><br />{% endif %}
+              {{ field }} {% if field.field.help_text %}<span class="small">{{ field.field.help_text|safe }}</span>{% endif %}
+            {% else %}
+                 {% if field.errors %}<span class="red">{{ field.errors|join:", " }}</span>{% endif %}
+                 {% bootstrap_field field %}
+              {% endif %}
+              </div>
+          {% endfor %}
+           {% endif %}
+  </div>  </div>
 {% endblock body %}
 
 

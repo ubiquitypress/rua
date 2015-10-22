@@ -16,20 +16,42 @@
 
 {% block body %}
 <div class="col-md-12 file-heading container-fluid" style="margin-top:-20px">
-      <h3>Create Review Form: Stage 1 <a href="{% url 'manager_review_forms'   %}" class="btn  btn-trasnparent-white" style="position: absolute;right:20;margin-top:-8px">Go back</a></h3>
+      <h3>Create Review Form : Stage 2 </h3>
 </div>
 	<div class="col-md-12">
 		  {% if new_form %}
+            <p>Create any type of element that will be used to add a field to the form or continue to the next stage.</p>
+      <h4>Existing elements</h4>
+<div class="well" style="overflow: auto">
+<table class="table table-bordered">
+<thead>
+    <tr>
+        <th width="25%">Name</th>
+         <th width="25%">Choices</th>
+        <th width="25%">Type</th>
+         <th width="25%">Required</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for element in elements %}
+      <tr>
+        <td>{{ element.name }}</td>
+        <td>{% if element.choices %}{{ element.choices }}{%else%}None{%endif%}</td>
+        <td>{{ element.field_type }}</td>
+        <td>{{ element.required }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+    </table>
+</div>
 
+      <h4>Create a new element</h4>
     <form method="POST">
     {% csrf_token %}
     <div class="well" style="overflow: auto">
 
           {% for field in new_form %}
-
-       {% ifequal field.field.label 'Form fields' %}
-                 {%else%}
-      
+    
             <div class="{% if field.field.widget.attrs.div_class %}{{ field.field.widget.attrs.div_class }}{% else %}col-md-12{% endif %}">
           
             {% if field.field.widget.attrs.is_checkbox %}
@@ -40,11 +62,12 @@
                  {% bootstrap_field field %}
               {% endif %}
               </div>
-                  {% endifequal %}
           {% endfor %}
-             <button name="next_stage" type="submit" class="btn btn-task">     <!-- might need to change it to "fa-cloud-upload" -->
+             <button name="submit" id="submit" type="submit" class="btn btn-accept"> Create
+     </button>
+      <button name="continue" id="continue" type="submit" class="btn btn-decline pull-right">     <!-- might need to change it to "fa-cloud-upload" -->
 
- Submit
+ Continue
      </button>
         </form>
            {% endif %}
