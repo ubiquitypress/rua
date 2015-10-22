@@ -22,6 +22,7 @@
          <th width="25%">Choices</th>
         <th width="25%">Type</th>
          <th width="25%">Required</th>
+         <th width="8%"></th>
     </tr>
   </thead>
   <tbody>
@@ -31,6 +32,8 @@
         <td>{% if field.element.choices %}{{ field.element.choices }}{%else%}None{%endif%}</td>
         <td>{{ field.element.field_type }}</td>
         <td>{{ field.element.required }}</td>
+         <td>  <form method="POST">
+    {% csrf_token %}<button name="delete" value="{{forloop.counter0}}"class="btn btn-danger button-round">Delete</button></form></td>
       </tr>
       {% endfor %}
     </tbody>
@@ -89,13 +92,7 @@
 <script type="text/javascript" language="javascript" src="//cdn.datatables.net/plug-ins/1.10.7/integration/bootstrap/3/dataTables.bootstrap.js"></script>
 <script>
   $(document).ready(function() {
-      $('#users-without').DataTable({
-        "lengthMenu": [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]]
-      });
-  } );
-
-  $(document).ready(function() {
-      $('#users-with').DataTable({
+      $('.table').DataTable({
         "lengthMenu": [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]]
       });
   } );

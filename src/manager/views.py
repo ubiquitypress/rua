@@ -329,6 +329,11 @@ def add_field(request,form_id):
 	if request.POST and 'finish' in request.POST:
 		print 'Finish'
 		return redirect(reverse('manager_view_review_form',kwargs={'form_id': form_id}))
+	elif request.POST and "delete" in request.POST:
+		index = int(request.POST.get("delete"))
+		field = fields[index]
+		field.delete()
+		return redirect(reverse('manager_add_review_form_field',kwargs={'form_id': form_id}))
 	elif request.POST:
 		field_form = forms.FormElementsRelationshipForm(request.POST)
 		element_class = request.POST.get("element_class")

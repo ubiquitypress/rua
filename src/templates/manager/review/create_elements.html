@@ -82,13 +82,7 @@
 <script type="text/javascript" language="javascript" src="//cdn.datatables.net/plug-ins/1.10.7/integration/bootstrap/3/dataTables.bootstrap.js"></script>
 <script>
   $(document).ready(function() {
-      $('#users-without').DataTable({
-        "lengthMenu": [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]]
-      });
-  } );
-
-  $(document).ready(function() {
-      $('#users-with').DataTable({
+      $('.table').DataTable({
         "lengthMenu": [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]]
       });
   } );
