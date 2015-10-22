@@ -70,11 +70,11 @@
               </div>
                {% endifequal %}
           {% endfor %}
-             <button name="submit" id="submit" type="submit" class="btn btn-accept"> Add
+             <button style="width:120px"name="submit" id="submit" type="submit" class="btn btn-accept"> Add
      </button>    </form>
         <form method="POST">
     {% csrf_token %}
-      <button name="finish" id="continue" type="submit" class="btn btn-primary pull-right">     <!-- might need to change it to "fa-cloud-upload" -->
+      <button name="finish" style="width:120px" id="continue" type="submit" class="btn btn-danger btn-round pull-right">     <!-- might need to change it to "fa-cloud-upload" -->
 
  Finish
      </button>

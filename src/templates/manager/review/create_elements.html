@@ -60,12 +60,11 @@
               </div>
 
           {% endfor %}
-             <button name="submit" id="submit" type="submit" class="btn btn-accept"> Create
+             <button name="submit" style="width:120px" id="submit" type="submit" class="btn btn-accept"> Create
      </button>  </form>
        <form method="POST">
     {% csrf_token %}
-      <button name="continue" id="continue" type="submit" class="btn btn-decline pull-right">     <!-- might need to change it to "fa-cloud-upload" -->
-
+      <button name="continue" style="width:120px" id="continue" type="submit" class="btn btn-decline pull-right">     <!-- might need to change it to "fa-cloud-upload" -->
  Next
      </button>
         </form>
