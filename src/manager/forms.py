@@ -18,6 +18,11 @@ class FormElementForm(forms.ModelForm):
 	class Meta:
 		model = review_models.FormElement
 		exclude = ()
+class FormElementsRelationshipForm(forms.ModelForm):
+
+	class Meta:
+		model = review_models.FormElementsRelationship
+		exclude = ()
 class ReviewForm(forms.ModelForm):
 
 	class Meta:

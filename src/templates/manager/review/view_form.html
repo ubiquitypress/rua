@@ -52,12 +52,12 @@
     </tr>
   </thead>
   <tbody>
-    {% for form_element in form.form_fields.all %}
+    {% for field in fields %}
       <tr>
-        <td>{{ form_element.element.name }}</td>
-        <td>{% if form_element.element.choices %}{{ form_element.element.choices }}{%else%}None{%endif%}</td>
-        <td>{{ form_element.element.field_type }}</td>
-        <td>{{ form_element.element.required }}</td>
+        <td>{{ field.element.name }}</td>
+        <td>{% if field.element.choices %}{{ field.element.choices }}{%else%}None{%endif%}</td>
+        <td>{{ field.element.field_type }}</td>
+        <td>{{ field.element.required }}</td>
         <td><a class="btn btn-danger button-round">Delete</a></td>
       </tr>
       {% endfor %}

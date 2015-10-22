@@ -277,10 +277,13 @@ def view_review_form(request,form_id):
 
 	form = review_models.Form.objects.get(id=form_id)
 
+	fields = review_models.FormElementsRelationship.objects.filter(form=form)
+
 	template = 'manager/review/view_form.html'
 
 	context = {
 		'form': form,
+		'fields':fields,
 	}
 
 	return render(request, template, context)
@@ -326,17 +329,31 @@ def view_form_element(request,element_id):
 def add_field(request,form_id):
 
 	form = review_models.Form.objects.get(id=form_id)
-	new_form = forms.GeneratedReviewForm(form=review_models.Form.objects.get(pk=form.pk))
-
-	default_fields = forms.FormElementForm()
-
+	fields = review_models.FormElementsRelationship.objects.filter(form=form)
+	elements = review_models.FormElement.objects.all()
+	new_form = forms.FormElementsRelationshipForm()
+	if request.POST and 'finish' in request.POST:
+		print 'Finish'
+		return redirect(reverse('manager_view_review_form',kwargs={'form_id': form_id}))
+	elif request.POST:
+		field_form = forms.FormElementsRelationshipForm(request.POST)
+		element_class = request.POST.get("element_class")
+		element_index = request.POST.get("element")
+		help_text = request.POST.get("help_text")
+		order = int(request.POST.get("order"))
+		element = elements[int(element_index)-1]
+		relationship=review_models.FormElementsRelationship(form=form,element=element,element_class=element_class,order=order,help_text=help_text)
+		relationship.save()
+		fields = review_models.FormElementsRelationship.objects.filter(form=form)
+		form.form_fields=fields
+		form.save()
+		return redirect(reverse('manager_add_review_form_field',kwargs={'form_id': form_id}))
 	template = 'manager/review/add_field.html'
 
 	context = {
 		'form': form,
 		'new_form':new_form,
-
-		'default_fields': default_fields,
+		'fields': fields,
 	}
 
 	return render(request, template, context)
@@ -374,7 +391,7 @@ def create_elements(request,form_id):
 		form_element_form=forms.FormElementForm(request.POST)
 		if form_element_form.is_valid():
 			form_element_form.save()
-		return redirect(reverse('manager_add_field',kwargs={'form_id': form_id}))
+		return redirect(reverse('manager_add_review_form_field',kwargs={'form_id': form_id}))
 	elif request.POST:
 		print 'Save and stay'
 		form_element_form=forms.FormElementForm(request.POST)

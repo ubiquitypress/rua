@@ -16,17 +16,53 @@
 
 {% block body %}
 <div class="col-md-12 file-heading container-fluid" style="margin-top:-20px">
-      <h3>Add Field <a href="{% url 'manager_view_review_form' form.id  %}" class="btn  btn-trasnparent-white" style="position: absolute;right:20;margin-top:-8px">Go back</a></h3>
+      <h3>Create Review Form : Stage 3 </h3>
 </div>
 	<div class="col-md-12">
-		{% if new_form %}
+		  {% if new_form %}
+            <p>Create fields for this form.</p>
+      <h4>Existing fields</h4>
+<div class="well" style="overflow: auto">
+<table class="table table-bordered">
+<thead>
+    <tr>
+        <th width="25%">Name</th>
+         <th width="25%">Choices</th>
+        <th width="25%">Type</th>
+         <th width="25%">Required</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for field in fields %}
+      <tr>
+        <td>{{ field.element.name }}</td>
+        <td>{% if field.element.choices %}{{ field.element.choices }}{%else%}None{%endif%}</td>
+        <td>{{ field.element.field_type }}</td>
+        <td>{{ field.element.required }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+    </table>
+</div>
+
+      <h4>Add new field</h4>
+    <form method="POST">
+    {% csrf_token %}
     <div class="well" style="overflow: auto">
-      <div class="col-md-12">
-        {% bootstrap_form default_fields %}
-      </div>
 
           {% for field in new_form %}
+    {% ifequal field.label 'Form'%}
+
+                <div class="{% if field.field.widget.attrs.div_class %}{{ field.field.widget.attrs.div_class }}{% else %}col-md-12{% endif %}">
+                      <label class="control-label" for="id_form">Form</label>
+      <input type="text" class="form-control" id="id_{{ field.name }}" name="{{field.name}}" value="{{form.name}}" readonly/>
+{% if field.field.help_text %}<span class="small">{{ field.field.help_text|safe }}</span>{% endif %}
+           
+              </div>
+          {%else%}
+
             <div class="{% if field.field.widget.attrs.div_class %}{{ field.field.widget.attrs.div_class }}{% else %}col-md-12{% endif %}">
+          
             {% if field.field.widget.attrs.is_checkbox %}
               {% if field.errors %}<span class="red">{{ field.errors|join:", " }}</span><br />{% endif %}
               {{ field }} {% if field.field.help_text %}<span class="small">{{ field.field.help_text|safe }}</span>{% endif %}
@@ -35,9 +71,22 @@
                  {% bootstrap_field field %}
               {% endif %}
               </div>
+               {% endifequal %}
           {% endfor %}
+             <button name="submit" id="submit" type="submit" class="btn btn-accept"> Add
+     </button>    </form>
+        <form method="POST">
+    {% csrf_token %}
+      <button name="finish" id="continue" type="submit" class="btn btn-primary pull-right">     <!-- might need to change it to "fa-cloud-upload" -->
+
+ Finish
+     </button>
+        </form>
            {% endif %}
-  </div>  </div>
+
+  </div>
+
+  </div>
 {% endblock body %}
 
 

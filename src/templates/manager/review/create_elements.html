@@ -20,7 +20,7 @@
 </div>
 	<div class="col-md-12">
 		  {% if new_form %}
-            <p>Create any type of element that will be used to add a field to the form or continue to the next stage.</p>
+            <p>Create form elements that will be used to create fields for the form on the next stage. If you are happy with the existing elements, continue to the next stage.</p>
       <h4>Existing elements</h4>
 <div class="well" style="overflow: auto">
 <table class="table table-bordered">
@@ -51,7 +51,7 @@
     <div class="well" style="overflow: auto">
 
           {% for field in new_form %}
-    
+          
             <div class="{% if field.field.widget.attrs.div_class %}{{ field.field.widget.attrs.div_class }}{% else %}col-md-12{% endif %}">
           
             {% if field.field.widget.attrs.is_checkbox %}
@@ -62,9 +62,12 @@
                  {% bootstrap_field field %}
               {% endif %}
               </div>
+             
           {% endfor %}
              <button name="submit" id="submit" type="submit" class="btn btn-accept"> Create
-     </button>
+     </button>  </form>
+       <form method="POST">
+    {% csrf_token %}
       <button name="continue" id="continue" type="submit" class="btn btn-decline pull-right">     <!-- might need to change it to "fa-cloud-upload" -->
 
  Continue
