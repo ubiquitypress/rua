@@ -2,13 +2,6 @@
 {% load static from staticfiles %}
 {% load bootstrap3 %}
 
-{% block breadcrumbs %}
-  <ol class="breadcrumb">
-    <li><a href="{% url 'manager_index' %}">Manager</a></li>
-    <li><a href="{% url 'manager_review_forms' %}">Review Forms</a></li>
-    <li>View Form</li>
-	</ol>
-{% endblock %}
 
 {% block css %}
 <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/plug-ins/1.10.7/integration/bootstrap/3/dataTables.bootstrap.css">
@@ -39,15 +32,18 @@
     </table>
     <hr />
 <div class="col-md-12 file-heading container-fluid" style="margin-top:-20px">
-      <h4>Fields <a href="{% url 'manager_add_review_form_field' form.id  %}" class="btn  btn-trasnparent-white" style="position: absolute;right:20;margin-top:-8px">+ Add field</a></h4>
+      <h4>Fields <a href="{% url 'manager_add_review_form_field' form.id  %}" class="btn  btn-trasnparent-white" style="position: absolute;right:20;margin-top:-8px">+ Add field</a><a href="{% url 'manager_create_elements' form.id %}" class="btn  btn-trasnparent-white" style="position: absolute;right:115px;margin-top:-8px">+ Create Element</a></h4>
 </div>
      <table id="reviewforms" class="table table-bordered">
     <thead>
     <tr>
         <th width="25%">Name</th>
          <th width="25%">Choices</th>
-        <th width="25%">Type</th>
-         <th width="25%">Required</th>
+        <th width="10%">Type</th>
+         <th width="8%">Required</th>
+         <th width="10%"> Element Class</th>
+         <th> Order</th>
+         <th width="25%">Help Text</th>
          <th></th>
     </tr>
   </thead>
@@ -58,6 +54,9 @@
         <td>{% if field.element.choices %}{{ field.element.choices }}{%else%}None{%endif%}</td>
         <td>{{ field.element.field_type }}</td>
         <td>{{ field.element.required }}</td>
+        <td>{{ field.element_class }}</td>
+        <td>{{ field.order }}</td>
+        <td>{{ field.help_text }}</td>
         <td><a class="btn btn-danger button-round">Delete</a></td>
       </tr>
       {% endfor %}

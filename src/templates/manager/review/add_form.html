@@ -2,14 +2,6 @@
 {% load static from staticfiles %}
 {% load bootstrap3 %}
 
-{% block breadcrumbs %}
-  <ol class="breadcrumb">
-    <li><a href="{% url 'manager_index' %}">Manager</a></li>
-    <li><a href="{% url 'manager_review_forms' %}">Review Forms</a></li>
-	</ol>
-{% endblock %}
-
-
 {% block css %}
 <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/plug-ins/1.10.7/integration/bootstrap/3/dataTables.bootstrap.css">
 {% endblock css %}
