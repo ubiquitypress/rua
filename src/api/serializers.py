@@ -6,6 +6,7 @@ class AuthorSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = models.Author
         fields = (
+        'id',
         'salutation',
         'first_name',
         'middle_name',
@@ -27,6 +28,7 @@ class EditorSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = models.Editor
         fields = (
+        'id',
         'salutation',
         'first_name',
         'middle_name',
@@ -60,6 +62,7 @@ class FileSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = models.File
         fields = (
+            'id',
             'label',
             'original_filename',
             'uuid_filename',
@@ -75,6 +78,7 @@ class FormatSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = models.Format
         fields = (
+            'id',
             'file',
             'name',
             'identifier',
@@ -90,6 +94,7 @@ class ChapterSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = models.Format
         fields = (
+            'id',
             'file',
             'name',
             'identifier',
@@ -103,6 +108,7 @@ class PhysicalFormatSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = models.Format
         fields = (
+            'id',
             'name',
             'file_type',
             'sequence',
@@ -130,11 +136,21 @@ class IdentiferSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = models.Identifier
         fields = (
+            'id',
             'identifier',
             'value',
             'displayed',
             'object_type',
             'object_id',
+        )
+
+class LanguageSerializer(serializers.HyperlinkedModelSerializer):
+
+    class Meta:
+        model = models.Language
+        fields = (
+            'code',
+            'display',
         )
 
 class BookSerializer(serializers.HyperlinkedModelSerializer):
@@ -148,6 +164,7 @@ class BookSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = models.Book
         fields = (
+            'id',
             'slug',
             'prefix',
             'title',
@@ -171,7 +188,7 @@ class JuraBookSerializer(serializers.HyperlinkedModelSerializer):
     """
     This serializer is used only by Ubiquity press
     """
-    license = serializers.ReadOnlyField(source='license.short_name')
+    license = serializers.ReadOnlyField(source='license.code')
     author = AuthorSerializer(many=True)
     editor = EditorSerializer(many=True)
     keywords = KeywordSerializer(many=True)
@@ -181,14 +198,17 @@ class JuraBookSerializer(serializers.HyperlinkedModelSerializer):
     physical_formats = PhysicalFormatSerializer(many=True,  source='physicalformat_set')
     stage = StageSerializer(many=False)
     identifier = IdentiferSerializer(many=True, source='identifier_set')
+    languages = LanguageSerializer(many=True)
 
     class Meta:
         model = models.Book
         fields = (
+            'id',
             'slug',
             'prefix',
             'title',
             'subtitle',
+            'cover',
             'submission_date',
             'publication_date',
             #'series',
@@ -200,6 +220,7 @@ class JuraBookSerializer(serializers.HyperlinkedModelSerializer):
             'description',
             'keywords',
             'subject',
+            'languages',
             'review_type',
             'formats',
             'chapters',

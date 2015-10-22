@@ -507,6 +507,7 @@ class TypesetAssignment(models.Model):
 class License(models.Model):
 	name = models.CharField(max_length=1000)
 	short_name = models.CharField(max_length=100)
+	code = models.CharField(max_length=100, blank=True, null=True)
 	description = models.TextField(null=True, blank=True)
 	version = models.CharField(max_length=10)
 	url = models.URLField(null=True, blank=True)
