@@ -278,7 +278,11 @@ def view_review_form(request,form_id):
 	form = review_models.Form.objects.get(id=form_id)
 
 	fields = review_models.FormElementsRelationship.objects.filter(form=form)
-
+	if request.POST and "delete" in request.POST:
+		index = int(request.POST.get("delete"))
+		field = fields[index]
+		field.delete()
+		return redirect(reverse('manager_view_review_form',kwargs={'form_id': form_id}))
 	template = 'manager/review/view_form.html'
 
 	context = {

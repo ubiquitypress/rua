@@ -57,7 +57,8 @@
         <td>{{ field.element_class }}</td>
         <td>{{ field.order }}</td>
         <td>{{ field.help_text }}</td>
-        <td><a class="btn btn-danger button-round">Delete</a></td>
+        <td>  <form method="POST">
+    {% csrf_token %}<button name="delete" value="{{forloop.counter0}}"class="btn btn-danger button-round">Delete</button></form></td>
       </tr>
       {% endfor %}
     </tbody>
