@@ -363,10 +363,8 @@ def add_form(request):
 	if request.POST:
 		review_form = forms.ReviewForm(request.POST)
 		if review_form.is_valid():
-			review_form.save()
-			print request.POST
-			saved_form = review_models.Form.objects.get(name= review_form.cleaned_data['name'])
-			return redirect(reverse('manager_create_elements',kwargs={'form_id': saved_form.id}))
+			new_form = review_form.save()
+			return redirect(reverse('manager_create_elements',kwargs={'form_id': new_form.id}))
 	
 		else:
 			print form.errors
