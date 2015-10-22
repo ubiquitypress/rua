@@ -2,13 +2,6 @@
 {% load static from staticfiles %}
 {% load bootstrap3 %}
 
-{% block breadcrumbs %}
-  <ol class="breadcrumb">
-    <li><a href="{% url 'manager_index' %}">Manager</a></li>
-    <li><a href="{% url 'manager_review_forms' %}">Review Forms</a></li>
-	</ol>
-{% endblock %}
-
 {% block css %}
 <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/plug-ins/1.10.7/integration/bootstrap/3/dataTables.bootstrap.css">
 {% endblock css %}
@@ -19,7 +12,7 @@
       <h3>Manage: Review Forms</h3>
 
 </div>
-</br></br></br>
+</br>
 <h3>Forms</h3>
 <hr/>
   <table id="reviewforms" class="table table-bordered">
@@ -35,7 +28,7 @@
       <tr>
         <td>{{ form.id }}</td>
         <td>{{ form.name }}</td>
-        <td width="10%"><a class="btn btn-task btn-round" href="{% url 'manager_view_review_form' form.id %}">View</a></td>
+        <td width="10%"><a class="btn btn-primary btn-round" href="{% url 'manager_view_review_form' form.id %}">View</a></td>
       </tr>
       {% endfor %}
     </tbody>
@@ -53,7 +46,7 @@
       $('#reviewforms').DataTable({
         "lengthMenu": [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]]
       });
-       $('</br><a  href="{% url 'manager_add_form'%}" type="button" class=" btn btn-decline " >  <span class="glyphicon glyphicon-plus"></span> Add form </a>').appendTo('div.dataTables_filter');
+       $('</br><a  href="{% url 'manager_add_form'%}" type="button" class=" btn btn-decline " > + Create form </a>').appendTo('div.dataTables_filter');
 
 
   } );
