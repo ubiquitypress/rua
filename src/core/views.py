@@ -22,6 +22,7 @@ from core.decorators import is_editor, is_book_editor, is_book_editor_or_author,
 from pprint import pprint
 import json
 from time import strftime
+import time
 from uuid import uuid4
 import os
 import mimetypes
@@ -435,9 +436,8 @@ def email_users(request,group,submission_id=None,user_id=None):
 				send_email(subject=subject, context={}, from_email=request.user.email, to=to_list, bcc=bcc_list,cc=cc_list, html_template=body, book=submission, attachment=attachment)
 			else:
 				send_email(subject=subject, context={}, from_email=request.user.email, to=to_list,bcc=bcc_list,cc=cc_list, html_template=body, book=submission)
-			messages.add_message(request, messages.INFO, "E-mail with subject '%s' was sent." % subject)
-			
-			sent = True
+			message ="E-mail with subject '%s' was sent." % (subject)
+			return HttpResponse('<script type="text/javascript">window.alert("'+message+'")</script><script type="text/javascript">window.close()</script>') 
 
 	if not group == "all" and user_id:
 		
