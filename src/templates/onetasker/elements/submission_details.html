@@ -2,7 +2,7 @@
 {% if submission.book_type == 'monograph' %}
 	<h4 class="author-note">
 	{% for author in submission.author.all %}
-		{{ author.full_name }} <sup> <a href="{% url 'email_user' 'authors' submission.id author.pk %}"class="fa fa-envelope-o btn btn-xs btn-default"></a></sup>{% if not forloop.last %}, {% endif %}
+		{{ author.full_name }} <sup> <a href="core/email.html" onclick="return popitup('/email/authors/submission/{{submission.id}}/user/{{author.pk}}/','authors_{{author.pk}}')"class="fa fa-envelope-o btn btn-xs btn-default"></a></sup>{% if not forloop.last %}, {% endif %}
 	{% endfor %}
 	</h4>
 {% else %}
@@ -24,3 +24,16 @@
 
 <h3>COMPETING INTERESTS</h3>
 {{ submission.competing_interests|safe }}
+
+
+{% block js %}
+<script language="javascript" type="text/javascript">
+<!--
+function popitup(url,title) {
+    newwindow=window.open(url,title,'height=750,width=600');
+    if (window.focus) {newwindow.focus()}
+    return false;
+}
+
+// -->
+</script>{% endblock %}
