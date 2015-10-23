@@ -65,7 +65,8 @@
             {% for editor in submission.press_editors.all %}
              <tr>
                 <th>{{ editor.profile.full_name }}</th>
-                <td><a href="{% url 'email_user' 'authors' submission.id editor.pk %}"class="fa fa-envelope-o btn btn-xs btn-default">&nbsp;Email</a></td>
+
+                <td><a href="core/email.html" onclick="return popitup('/email/editors/submission/{{submission.id}}/user/{{editor.pk}}/','editors_{{editor.pk}}')"class="fa fa-envelope-o btn btn-xs btn-default">&nbsp;Email</a></td>
             </tr>
             {% empty %}
             {% if not submission.series %}
@@ -77,7 +78,7 @@
             {% if submission.series %}
             <tr>
                 <td>{{ submission.series.editor.profile.full_name }} (<i>Series</i>)</td>
-                <td><a href="{% url 'email_user' 'authors' submission.id submission.series.editor.pk %}"class="fa fa-envelope-o btn btn-xs btn-default">&nbsp;Email</a></td>
+                <td><a href="core/email.html" onclick="return popitup('/email/editors/submission/{{submission.id}}/user/{{submission.series.editor.pk}}/','editors_{{submission.series.editor.pk}}')"class="fa fa-envelope-o btn btn-xs btn-default">&nbsp;Email</a></td>
             </tr>
             {% endif %}
         </table>
