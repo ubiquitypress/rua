@@ -412,7 +412,9 @@ def email_users(request,group,submission_id=None,user_id=None):
 	authors = submission.author.all()
 	onetaskers = submission.onetaskers()
 	to_value=""
+	sent = False
 	if request.POST:
+		print "sS"
 		attachment = request.FILES.get('attachment')
 		subject = request.POST.get('subject')
 		body = request.POST.get('body')
@@ -434,6 +436,8 @@ def email_users(request,group,submission_id=None,user_id=None):
 			else:
 				send_email(subject=subject, context={}, from_email=request.user.email, to=to_list,bcc=bcc_list,cc=cc_list, html_template=body, book=submission)
 			messages.add_message(request, messages.INFO, "E-mail with subject '%s' was sent." % subject)
+			
+			sent = True
 
 	if not group == "all" and user_id:
 		
@@ -481,6 +485,7 @@ def email_users(request,group,submission_id=None,user_id=None):
 		'source': source,
 		'group': group_name,
 		'user_id':user_id,
+		'sent':sent,
 		
 	}
 	return render(request, template, context)
