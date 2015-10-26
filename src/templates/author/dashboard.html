@@ -31,8 +31,9 @@
 <div class="row">
 
     <div class="col-md-4 dash-left">
+     
         <div class="dash-container" style="background-color: rgb(230,230,230);">
-            <h4>MY SUBMISSIONS<a href="{% url 'submission_start' %}" class="btn  btn-round btn-primary btn-xs pull-right">&nbsp;&nbsp;&nbsp;Submit New&nbsp;&nbsp;&nbsp;</a></h4> 
+            <h4>MY SUBMISSIONS<a href="{% url 'proposal_start' %}" class="btn  btn-round btn-other btn-xs pull-right">&nbsp;&nbsp;&nbsp;Submit a Proposal&nbsp;&nbsp;&nbsp;</a><a href="{% url 'submission_start' %}" class="btn  btn-round btn-primary btn-xs pull-right">&nbsp;&nbsp;&nbsp;New Submission&nbsp;&nbsp;&nbsp;</a></h4> 
             {% for submission in user_submissions %}
                 <div class="notification author">
                     <div class="row">
@@ -63,11 +64,7 @@
                 </div>
             {% endfor %}
         </div>
-           <a href="{% url 'proposal_start'%}">
-        <div class="dash-menu other-heading">
-            <h5>Submit a Proposal <i class="fa fa-chevron-up pull-right" style="margin-right:20px"></i></h5>
-        </div>
-        </a>
+          
     </div>
 
     <div class="col-md-6 dash-center">

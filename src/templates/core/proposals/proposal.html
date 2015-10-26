@@ -4,27 +4,27 @@
 
 {% block title %}Book Proposals{% endblock %}
 
-{% block breadcrumbs %}
-    <ol class="breadcrumb">
-	  <li><a href="{% url 'user_dashboard' %}">Dashboard</a></li>
-	  <li class="">Workflow</li>
-    <li class="active"><a href="{% url 'proposals' %}">Proposals</a></li>
-	</ol>
-{% endblock %}
 
+{% block css %}
+<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/plug-ins/1.10.7/integration/bootstrap/3/dataTables.bootstrap.css">
+{% endblock css %}
 {% block body %}
+  <div class="col-md-12 other-heading container-fluid" style="margin-top:-20px">
+  <h3>Book Proposals  <a href="{% url 'editor_dashboard'%}" class="btn  btn-trasnparent-white" style="position: absolute;right:20;margin-top:-8px">Go back</a></h3>
+</div>
 <div class="col-md-12">
-  <h3>Book Proposals</h3>
+
   <hr />
   <table class="table table-bordered">
+    <thead>
   <tr>
     <th>Title</th>
     <th>Subtitle</th>
     <th>Author</th>
     <th>Date Submitted</th>
     <th>Status</th>
-    <th>View</th>
-  </tr>
+    <th></th>
+  </tr></thead><tbody>
   {% for proposal in proposal_list %}
   <tr>
     <td>{{ proposal.title }}</td>
@@ -32,13 +32,28 @@
     <td>{{ proposal.owner.first_name }} {{ proposal.owner.last_name }}</td>
     <td>{{ proposal.date_submitted }}</td>
     <td>{{ proposal.get_status_display }}</td>
-    <td><a href="{% url 'view_proposal' proposal.id %}">View</a></td>
+    <td width="8%"><a href="{% url 'view_proposal' proposal.id %}" class="btn btn-other" style="width:100px">View</a></td>
   </tr>
   {% empty %}
   <tr>
     <td colspan="6">No proposals</td>
   </tr>
   {% endfor %}
+  </tbody>
   </table>
 </div>
 {% endblock %}
+
+{% block js %}
+<script type="text/javascript" language="javascript" src="//cdn.datatables.net/1.10.7/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" language="javascript" src="//cdn.datatables.net/plug-ins/1.10.7/integration/bootstrap/3/dataTables.bootstrap.js"></script>
+<script>
+  $(document).ready(function() {
+      $('.table').DataTable({
+        "lengthMenu": [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]]
+      });
+  } );
+</script>
+
+
+{% endblock js %}

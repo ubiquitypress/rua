@@ -442,6 +442,7 @@ def proposal_revisions(request, proposal_id):
 		'proposal_form': proposal_form,
 		'default_fields': default_fields,
 		'data':data,
+		'revise':True,
 	}
 
 	return render(request, template, context)

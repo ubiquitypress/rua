@@ -24,6 +24,9 @@ import json
 from time import strftime
 import time
 from uuid import uuid4
+from manager import models as manager_models
+from submission import forms as submission_forms
+from django.db import IntegrityError
 import os
 import mimetypes
 import mimetypes as mime
