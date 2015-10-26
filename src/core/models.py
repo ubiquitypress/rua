@@ -679,7 +679,7 @@ class Task(models.Model):
 	creator = models.ForeignKey(User, related_name='creator')
 	assignee = models.ForeignKey(User, related_name='assignee')
 	text = models.CharField(max_length=200)
-	workflow = models.CharField(max_length=50, choices=task_choices())
+	workflow = models.CharField(max_length=50, choices=task_choices(), null=True, blank=True)
 	assigned = models.DateField(auto_now_add=True, null=True, blank=True)
 	accepted = models.DateTimeField(blank=True, null=True)
 	rejected = models.DateTimeField(blank=True, null=True)

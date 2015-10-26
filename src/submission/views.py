@@ -14,15 +14,16 @@ from django.db.models import Q
 from django.template.defaultfilters import slugify
 from django.views.decorators.http import require_POST
 from jfu.http import upload_receive, UploadResponse, JFUResponse
-
+from django.contrib.auth.models import User
 from submission import forms
 from core import models as core_models
 from core import log
+from core import task
 from core import logic as core_logic
 from submission import logic
 from submission import models as submission_models
 from manager import forms as manager_forms
-
+from  __builtin__ import any as string_any
 
 import mimetypes as mime
 from uuid import uuid4
@@ -424,9 +425,15 @@ def proposal_revisions(request, proposal_id):
 			proposal.title = defaults.get("title")
 			proposal.author = defaults.get("author")
 			proposal.subtitle = defaults.get("subtitle")
-
-
 			proposal.save()
+			users = User.objects.all()
+			print users 
+			for available_user in users:
+				roles=  available_user.profile.roles.all()
+				if string_any('Editor' for role in roles):
+					task.create_new_general_task(creator=request.user, assignee=available_user, text="Revisions for Proposal '%s' with id %s submitted" % (proposal.title,proposal.id))
+			
+
 			messages.add_message(request, messages.SUCCESS, 'Proposal %s submitted' % proposal.id)
 			return redirect(reverse('user_dashboard'))
 
