@@ -230,18 +230,7 @@ def submission_checklist(request):
 
 @staff_member_required
 def proposal_forms(request):
-	'''try:
-		selected_form_id = core_models.Setting.objects.get(name='proposal_form').value
-		selected_form = forms.GeneratedForm(form=core_models.ProposalForm.objects.get(pk=selected_form_id))
-	except (ObjectDoesNotExist, ValueError):
-		selected_form_id = None
-		selected_form = None
 	
-	choices_form = forms.ProposalForm()
-	default_fields = forms.DefaultForm()
-
-	'''
-
 	proposal_forms = core_models.ProposalForm.objects.all()
 	choices_form = forms.ProposalForm()
 	selected_form = core_models.Setting.objects.get(name='proposal_form').value
