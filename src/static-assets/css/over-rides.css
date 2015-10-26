@@ -274,6 +274,11 @@ body > div.container-fluid > div > div > div > a {
   color: #FFF;
   margin-bottom:5px;
 }
+.blank-heading {
+  background-color: transparent;
+  color: #000;
+  margin-bottom:5px;
+}
 .file-heading {
   background-color: #00A6A1;
   color: #FFF;

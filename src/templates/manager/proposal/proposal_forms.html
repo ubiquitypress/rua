@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "base_no_messages.html" %}
 {% load static from staticfiles %}
 {% load bootstrap3 %}
 
@@ -13,9 +13,19 @@
 
 </div>
 </br></br>   
-<div class="container-fluid">
-<hr/>
-    <h3> Forms</h3>
+<div class="container-fluid">    </br></br>
+
+    {% if messages %}<div class="row">{% endif %}
+    {% for message in messages %}
+      <div class="alert alert-{{ message.tags }} alert-dismissible" role="alert" style=>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        {{ message }}
+      </div>
+    {% endfor %}
+     {% if messages %}</br></br></div>{% endif %}
+         <div class="col-md-12 other-sub-heading container-fluid" style="margin-top:-20px">
+      <h4>Forms</h4>
+</div><hr/>
 <hr/>
   <table id="proposalforms" class="table table-bordered">
     <thead>
@@ -36,13 +46,18 @@
     </tbody>
     </table>
 
-    <hr/>
-  <h4>Select Proposal Form</h4><hr/>
+ </br></br> 
+      <div class="col-md-12 other-heading container-fluid" style="margin-top:-20px">
+      <h4>Select Proposal Form</h4>
+</div><hr/>
+
+
+
     <form method="POST">
     {% csrf_token %}
     <div class="form-group">
       <form method="POST">
-    <div class="form-group"><label class="control-label" for="id_selection">Selection</label><select class="form-control" id="id_selection" name="selection" required="required" title="">
+    <div class="form-group"><label class="control-label" for="id_selection"></label><select class="form-control" id="id_selection" name="selection" required="required" title="">
       {% for form in forms %}  
       {% ifequal form.id selected_form %}
 <option value="{{form.id}}" selected>{{form.name}}</option>
@@ -51,11 +66,10 @@
 {% endifequal %}
       {% endfor %}
 </select></div>
-    <button class="btn btn-success pull-right btn-round">Select</button></div>
+    <button class="btn btn-success pull-right btn-round" style="width:100px">Select</button></div>
     </form>
- 
-    </div>
-    
+  </div>
+
 {% endblock body %}
 
 
