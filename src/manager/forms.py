@@ -93,6 +93,9 @@ class DefaultForm(forms.Form):
 	subtitle = forms.CharField(widget=forms.TextInput, required=True)
 	author = forms.CharField(widget=forms.TextInput, required=True)
 
+	def clean(self):
+		cleaned_data = self.cleaned_data
+
 def render_choices(choices):
 	c_split = choices.split('|')
 	return [(choice.capitalize(), choice) for choice in c_split]

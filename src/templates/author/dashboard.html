@@ -82,6 +82,22 @@
 
 
             {% for note in author_tasks %}
+            {% ifequal note.type 'proposal'%}
+             <div class="notification">
+                    <div class="row">
+                     <div class="band" style="margin-left:10px;margin-right:10px">
+               <h5><span class="author-note">Revisions</span> requested for proposal <span class="author-note">{{ note.proposal.title }}</span></h5>
+                 
+                    </div>
+                
+                <br />
+                       <a href="{% url 'proposal_revisions' note.proposal.id %}"  style="margin-right:25px; margin-bottom:8px;" class=" pull-right  btn btn-sm btn-task read">&nbsp;&nbsp;&nbsp;View Task&nbsp;&nbsp;&nbsp;</a>
+</div>
+                
+                 
+       </br>      
+            </div>
+            {% else %}
             <div class="notification">
                     <div class="row">
                      <div class="band" style="margin-left:10px;margin-right:10px">
@@ -97,6 +113,7 @@
                  
        </br>      
             </div>
+            {% endifequal %}
             {% endfor %}
 
         </div>

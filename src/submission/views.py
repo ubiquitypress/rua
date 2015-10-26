@@ -386,20 +386,55 @@ def start_proposal(request):
 def proposal_revisions(request, proposal_id):
 
 	proposal = get_object_or_404(submission_models.Proposal, pk=proposal_id, owner=request.user, status='revisions_required')
-	proposal_form = forms.SubmitProposal(instance=proposal)
 
+	proposal_form = manager_forms.GeneratedForm(form=core_models.ProposalForm.objects.get(pk=proposal.form.id))
+	default_fields = manager_forms.DefaultForm(initial={'title': proposal.title,'author':proposal.author,'subtitle':proposal.subtitle})
+	data = json.loads(proposal.data)
+	intial_data={}
+	for k,v in data.items():
+		intial_data[k] = v[0]
+	print intial_data
+	proposal_form.initial=intial_data
 	if request.POST:
-		proposal_form = forms.SubmitProposal(request.POST, request.FILES, instance=proposal)
-		if proposal_form.is_valid():
-			proposal = proposal_form.save(commit=False)
-			proposal.status = 'revisions_submitted'
-			proposal.save()
+		proposal_form = manager_forms.GeneratedForm(request.POST, request.FILES, form=core_models.ProposalForm.objects.get(pk=proposal.form.id))
+		default_fields = manager_forms.DefaultForm(request.POST)
+		if proposal_form.is_valid() and default_fields.is_valid():
+
+			save_dict = {}
+			file_fields = core_models.ProposalFormElementsRelationship.objects.filter(form=core_models.ProposalForm.objects.get(pk=proposal.form.id), element__field_type='upload')
+			data_fields = core_models.ProposalFormElementsRelationship.objects.filter(~Q(element__field_type='upload'), form=core_models.ProposalForm.objects.get(pk=proposal.form.id))
+
+			for field in file_fields:
+				if field.element.name in request.FILES:
+					# TODO change value from string to list [value, value_type]
+					save_dict[field.element.name] = [handle_proposal_file(request.FILES[field.element.name], submission, review_assignment, 'reviewer')]
+
+			for field in data_fields:
+				if field.element.name in request.POST:
+					# TODO change value from string to list [value, value_type]
+					save_dict[field.element.name] = [request.POST.get(field.element.name), 'text']
+
 			messages.add_message(request, messages.SUCCESS, 'Revisions for Proposal %s submitted' % proposal.id)
+		
+			json_data = json.dumps(save_dict)
+			proposal = submission_models.Proposal.objects.get(form=core_models.ProposalForm.objects.get(pk=proposal.form.id), owner=request.user)
+			proposal.data=json_data
+			proposal.status = "revisions_submitted"
+			defaults=default_fields.cleaned_data
+			proposal.title = defaults.get("title")
+			proposal.author = defaults.get("author")
+			proposal.subtitle = defaults.get("subtitle")
+
+
+			proposal.save()
+			messages.add_message(request, messages.SUCCESS, 'Proposal %s submitted' % proposal.id)
 			return redirect(reverse('user_dashboard'))
 
 	template = "submission/start_proposal.html"
 	context = {
 		'proposal_form': proposal_form,
+		'default_fields': default_fields,
+		'data':data,
 	}
 
 	return render(request, template, context)

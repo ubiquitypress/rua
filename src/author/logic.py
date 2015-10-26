@@ -1,6 +1,7 @@
 from core import models
 from core.cache import cache_result
 from revisions import models as revisions_models
+from submission import models as submission_models
 from editor import models as editor_models
 
 def author_tasks(user):
@@ -10,6 +11,7 @@ def author_tasks(user):
 	copyedit_tasks = models.CopyeditAssignment.objects.filter(book__owner=user, author_invited__isnull=False, author_completed__isnull=True)
 	typeset_tasks = models.TypesetAssignment.objects.filter(book__owner=user, author_invited__isnull=False, author_completed__isnull=True)
 	proofing_tasks = editor_models.CoverImageProof.objects.filter(book__owner=user, completed__isnull=True)
+	proposal_tasks = submission_models.Proposal.objects.filter(owner=user,status='revisions_required')
 
 	for revision in revision_tasks:
 		task_list.append({'type': 'revisions', 'book': revision.book, 'task': 'Revisions', 'date': revision.due, 'title': revision.book.title, 'url': '/author/submission/%s/revisions/%s/' % (revision.book.id, revision.id)})
@@ -22,6 +24,10 @@ def author_tasks(user):
 
 	for proof in proofing_tasks:
 		task_list.append({'type': 'coverimage', 'book': proof.book, 'task': 'Cover Image Proof', 'date': proof.assigned, 'title': proof.book.title, 'url': 'http://%s/author/submission/%s/production/#%s' % (base_url, proof.book.id, proof.id)})
+	
+	for proposal in proposal_tasks:
+		task_list.append({'type': 'proposal', 'task': 'Proposal Revision', 'proposal': proposal})
+		
 
 	return task_list
 

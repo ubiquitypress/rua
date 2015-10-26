@@ -20,7 +20,9 @@
    <div class="well">
         {% bootstrap_form default_fields %}
         {% if proposal_form %}
-         {% bootstrap_form proposal_form %}
+        {%for field in proposal_form%}
+         {% bootstrap_field field %}
+         {% endfor %}
     {% endif %}
         </div>
 
