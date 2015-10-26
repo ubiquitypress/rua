@@ -887,7 +887,7 @@ def accept_proposal(request, proposal_id):
 def request_proposal_revisions(request, proposal_id):
 
 	proposal = get_object_or_404(submission_models.Proposal, pk=proposal_id)
-	email_text = models.Setting.objects.get(group__name='email', name='proposal_request_revisisons').value
+	email_text = models.Setting.objects.get(group__name='email', name='proposal_request_revisions').value
 
 	if request.POST:
 		proposal.status = 'revisions_required'

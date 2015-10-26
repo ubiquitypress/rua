@@ -10,6 +10,7 @@ from django.db.models import Q
 from revisions import models as revisions_models
 import json
 from pymarc import Record, Field
+from core import email
 from pymarc import *
 import re
 from django.shortcuts import redirect, render, get_object_or_404

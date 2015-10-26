@@ -383,7 +383,7 @@
     "fields": {
         "value": "<p>Dear someone,\r\n</p><p>\r\nSomething something,\r\n</p><p>\r\nRegards,\r\n</p><p>\r\n{{ sender.profile.signature }}</p>",
         "group": 3,
-        "name": "proposal_request_revisisons",
+        "name": "proposal_request_revisions",
         "types": "rich_text"
     },
     "model": "core.setting",
