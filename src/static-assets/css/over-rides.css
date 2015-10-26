@@ -269,6 +269,15 @@ body > div.container-fluid > div > div > div > a {
   color: #FFF;
   margin-bottom:5px;
 }
+.other-heading:hover, .other-heading:focus, .other-heading:active, .other-heading.active, .open > .dropdown-toggle.other-heading {
+    background: #5E2AFA;
+    color:#ffffff;
+}
+.other-heading:active, .other-heading.active {
+    background: #3C1F93;
+    color:#ffffff;
+    box-shadow: none;
+} 
 .other-sub-heading {
   background-color: #432892;
   color: #FFF;
@@ -602,7 +611,7 @@ body > div.container-fluid > div > div > div > a {
     background: #5E2AFA;
     color:#ffffff;
 }
- 
+
 .btn-other:active, .btn-other.active {
     background: #13004C;
     color:#ffffff;
