@@ -230,7 +230,7 @@ def submission_checklist(request):
 
 @staff_member_required
 def proposal_forms(request):
-	try:
+	'''try:
 		selected_form_id = core_models.Setting.objects.get(name='proposal_form').value
 		selected_form = forms.GeneratedForm(form=core_models.ProposalForm.objects.get(pk=selected_form_id))
 	except (ObjectDoesNotExist, ValueError):
@@ -240,6 +240,11 @@ def proposal_forms(request):
 	choices_form = forms.ProposalForm()
 	default_fields = forms.DefaultForm()
 
+	'''
+
+	proposal_forms = core_models.ProposalForm.objects.all()
+	choices_form = forms.ProposalForm()
+	selected_form = core_models.Setting.objects.get(name='proposal_form').value
 	if request.POST:
 		choices_form = forms.ProposalForm(request.POST)
 		if choices_form.is_valid:
@@ -249,16 +254,166 @@ def proposal_forms(request):
 			messages.add_message(request, messages.INFO, 'Proposal succesfully changed')
 			return redirect(reverse('proposal_forms'))
 
-	template = 'manager/submission/proposal_forms.html'
+	template = 'manager/proposal/proposal_forms.html'
+
 
 	context = {
-		'choices_form': choices_form,
-		'selected_form' : selected_form,
-		'default_fields': default_fields,
+		'forms':proposal_forms,
+		'choices_form':choices_form,
+		'selected_form':int(selected_form),
+	}
+
+	return render(request, template, context)
+@staff_member_required
+def view_proposal_form(request,form_id):
+
+	form = core_models.ProposalForm.objects.get(id=form_id)
+
+	try:
+		preview_form = forms.GeneratedForm(form=core_models.ProposalForm.objects.get(pk=form_id))
+	except (ObjectDoesNotExist, ValueError):
+		preview_form = None
+
+	fields = core_models.ProposalFormElementsRelationship.objects.filter(form=form)
+	if request.POST and "delete" in request.POST:
+		index = int(request.POST.get("delete"))
+		field = fields[index]
+		field.delete()
+		return redirect(reverse('manager_view_proposal_form',kwargs={'form_id': form_id}))
+	
+	default_fields = forms.DefaultForm()
+	template = 'manager/proposal/view_form.html'
+
+	context = {
+		'form': form,
+		'fields':fields,
+		'preview_form' : preview_form,
+		'default_fields' : default_fields,
+	}
+
+	return render(request, template, context)
+@staff_member_required
+def proposal_form_elements(request):
+
+	elements = core_models.ProposalFormElement.objects.all()
+
+	new_form = forms.StagesProposalFormElementForm()
+
+	if request.POST and "delete" in request.POST:
+		index = int(request.POST.get("delete"))
+		field = elements[index]
+		field.delete()
+		return redirect(reverse('manager_proposal_form_elements'))
+	elif request.POST:
+		form_element_form=forms.StagesProposalFormElementForm(request.POST)
+		if form_element_form.is_valid():
+			form_element_form.save()
+			return redirect(reverse('manager_proposal_form_elements'))
+
+
+	template = 'manager/proposal/elements.html'
+
+	context = {
+		'elements': elements,
+		'new_form':new_form
 	}
 
 	return render(request, template, context)
 
+@staff_member_required
+def add_proposal_field(request,form_id):
+
+	form = core_models.ProposalForm.objects.get(id=form_id)
+	fields = core_models.ProposalFormElementsRelationship.objects.filter(form=form)
+	elements = core_models.ProposalFormElement.objects.all()
+	new_form = forms.StagesProposalFormElementRelationshipForm()
+	if request.POST and 'finish' in request.POST:
+		print 'Finish'
+		return redirect(reverse('manager_view_proposal_form',kwargs={'form_id': form_id}))
+	elif request.POST and "delete" in request.POST:
+		index = int(request.POST.get("delete"))
+		field = fields[index]
+		field.delete()
+		return redirect(reverse('manager_add_proposal_form_field',kwargs={'form_id': form_id}))
+	elif request.POST:
+		field_form = forms.StagesProposalFormElementRelationshipForm(request.POST)
+		width = request.POST.get("width")
+		element_index = request.POST.get("element")
+		help_text = request.POST.get("help_text")
+		order = int(request.POST.get("order"))
+		element = elements[int(element_index)-1]
+		relationship=core_models.ProposalFormElementsRelationship(form=form,element=element,width=width,order=order,help_text=help_text)
+		relationship.save()
+		fields = core_models.ProposalFormElementsRelationship.objects.filter(form=form)
+		form.form_fields=fields
+		form.save()
+		return redirect(reverse('manager_add_proposal_form_field',kwargs={'form_id': form_id}))
+	template = 'manager/proposal/add_field.html'
+
+	context = {
+		'form': form,
+		'new_form':new_form,
+		'fields': fields,
+	}
+
+	return render(request, template, context)
+@staff_member_required
+def add_proposal_form(request):
+
+	form = forms.StagesProposalForm()
+	if request.POST:
+		proposal_form = forms.StagesProposalForm(request.POST)
+		if proposal_form.is_valid():
+			new_form = proposal_form.save()
+			return redirect(reverse('manager_create_proposal_elements',kwargs={'form_id': new_form.id}))
+	
+		else:
+			print form.errors
+		print review_form
+		return redirect(reverse('proposal_forms'))
+	template = 'manager/proposal/add_form.html'
+
+	context = {
+		'new_form': form,
+	}
+
+	return render(request, template, context)
+@staff_member_required
+def create_proposal_elements(request,form_id):
+
+	form =  core_models.ProposalForm.objects.get(id=form_id)
+	elements = core_models.ProposalFormElement.objects.all()
+	new_form = forms.StagesProposalFormElementForm()
+	if request.POST and "delete" in request.POST:
+		index = int(request.POST.get("delete"))
+		field = elements[index]
+		field.delete()
+		return redirect(reverse('manager_create_proposal_elements',kwargs={'form_id': form_id}))
+	elif request.POST and 'continue' in request.POST:
+		print 'Continue'
+		form_element_form=forms.StagesProposalFormElementForm(request.POST)
+		if form_element_form.is_valid():
+			form_element_form.save()
+		return redirect(reverse('manager_add_proposal_form_field',kwargs={'form_id': form_id}))
+	elif request.POST:
+		print 'Save and stay'
+		form_element_form=forms.StagesProposalFormElementForm(request.POST)
+		if form_element_form.is_valid():
+			form_element_form.save()
+			return redirect(reverse('manager_create_proposal_elements',kwargs={'form_id': form_id}))
+
+
+		
+
+	template = 'manager/proposal/create_elements.html'
+
+	context = {
+		'form': form,
+		'new_form':new_form,
+		'elements' : elements,
+	}
+
+	return render(request, template, context)
 @staff_member_required
 def review_forms(request):
 

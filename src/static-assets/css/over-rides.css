@@ -264,6 +264,16 @@ body > div.container-fluid > div > div > div > a {
   color: #FFF;
 
 }
+.other-heading {
+  background-color: #5832C9;
+  color: #FFF;
+  margin-bottom:5px;
+}
+.other-sub-heading {
+  background-color: #432892;
+  color: #FFF;
+  margin-bottom:5px;
+}
 .file-heading {
   background-color: #00A6A1;
   color: #FFF;

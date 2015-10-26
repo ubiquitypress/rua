@@ -8,11 +8,14 @@
 {% endblock css %}
 
 {% block body %}
-<div class="col-md-12 file-heading container-fluid" style="margin-top:-20px">
-      <h3>Review Form Elements <a href="{% url 'manager_review_forms'   %}" class="btn  btn-trasnparent-white" style="position: absolute;right:20;margin-top:-8px">Go back</a></h3>
+<div class="col-md-12 other-heading container-fluid" style="margin-top:-20px">
+      <h3>Create Proposal Form : Stage 2 </h3>
 </div>
 	<div class="col-md-12">
-		<div class="well" style="overflow: auto">
+		  {% if new_form %}
+            <p>Create form elements that will be used to create fields for the form on the next stage. If you are happy with the existing elements, continue to the next stage.</p>
+      <h4>Existing elements</h4>
+<div class="well" style="overflow: auto">
 <table class="table table-bordered">
 <thead>
     <tr>
@@ -37,7 +40,8 @@
     </tbody>
     </table>
 </div>
-    <h4>Create a new element</h4>
+
+      <h4>Create a new element</h4>
     <form method="POST">
     {% csrf_token %}
     <div class="well" style="overflow: auto">
@@ -56,11 +60,19 @@
               </div>
 
           {% endfor %}
-             <button name="submit" id="submit" type="submit" class="btn btn-accept pull-right"> Create
+             <button name="submit" style="width:120px" id="submit" type="submit" class="btn btn-accept"> Create
      </button>  </form>
-       
+       <form method="POST">
+    {% csrf_token %}
+      <button name="continue" style="width:120px" id="continue" type="submit" class="btn btn-decline pull-right">     <!-- might need to change it to "fa-cloud-upload" -->
+ Next
+     </button>
+        </form>
+           {% endif %}
+
   </div>
 
+  </div>
 {% endblock body %}
 
 

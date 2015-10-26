@@ -2,17 +2,19 @@
 {% load static from staticfiles %}
 {% load bootstrap3 %}
 
-
 {% block css %}
 <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/plug-ins/1.10.7/integration/bootstrap/3/dataTables.bootstrap.css">
 {% endblock css %}
 
 {% block body %}
-<div class="col-md-12 file-heading container-fluid" style="margin-top:-20px">
-      <h3>Review Form Elements <a href="{% url 'manager_review_forms'   %}" class="btn  btn-trasnparent-white" style="position: absolute;right:20;margin-top:-8px">Go back</a></h3>
+<div class="col-md-12 other-heading container-fluid" style="margin-top:-20px">
+      <h3>Create Proposal Form : Stage 3 <a href="{% url 'manager_create_proposal_elements' form.id %}" class="btn  btn-trasnparent-white" style="position: absolute;right:20;margin-top:-8px">+ Create Form Element</a></h3>
 </div>
 	<div class="col-md-12">
-		<div class="well" style="overflow: auto">
+		  {% if new_form %}
+            <p>Create fields for this form.</p>
+      <h4>Existing fields</h4>
+<div class="well" style="overflow: auto">
 <table class="table table-bordered">
 <thead>
     <tr>
@@ -20,32 +22,44 @@
          <th width="25%">Choices</th>
         <th width="25%">Type</th>
          <th width="25%">Required</th>
-         <th width="9%"></th>
+         <th width="8%"></th>
     </tr>
   </thead>
   <tbody>
-    {% for element in elements %}
+    {% for field in fields %}
       <tr>
-        <td>{{ element.name }}</td>
-        <td>{% if element.choices %}{{ element.choices }}{%else%}None{%endif%}</td>
-        <td>{{ element.field_type }}</td>
-        <td>{{ element.required }}</td>
-        <td><form method="POST">
+        <td>{{ field.element.name }}</td>
+        <td>{% if field.element.choices %}{{ field.element.choices }}{%else%}None{%endif%}</td>
+        <td>{{ field.element.field_type }}</td>
+        <td>{{ field.element.required }}</td>
+         <td>  <form method="POST">
     {% csrf_token %}<button name="delete" value="{{forloop.counter0}}"class="btn btn-danger button-round">Delete</button></form></td>
       </tr>
       {% endfor %}
     </tbody>
     </table>
 </div>
-    <h4>Create a new element</h4>
+
+      <h4>Add new field</h4>
     <form method="POST">
     {% csrf_token %}
     <div class="well" style="overflow: auto">
 
           {% for field in new_form %}
-          
+    {% ifequal field.label 'Form'%}
+
+                <div class="{% if field.field.widget.attrs.div_class %}{{ field.field.widget.attrs.div_class }}{% else %}col-md-12{% endif %}">
+                      <label class="control-label" for="id_form">Form name</label>
+      <input type="text" class="form-control" id="id_{{ field.name }}" name="{{field.name}}" value="{{form.name}}" readonly/>
+
+{% if field.field.help_text %}<span class="small">{{ field.field.help_text|safe }}</span>{% endif %}
+           
+            </br> 
+              </div>
+          {%else%}
+
             <div class="{% if field.field.widget.attrs.div_class %}{{ field.field.widget.attrs.div_class }}{% else %}col-md-12{% endif %}">
-          
+             
             {% if field.field.widget.attrs.is_checkbox %}
               {% if field.errors %}<span class="red">{{ field.errors|join:", " }}</span><br />{% endif %}
               {{ field }} {% if field.field.help_text %}<span class="small">{{ field.field.help_text|safe }}</span>{% endif %}
@@ -54,13 +68,22 @@
                  {% bootstrap_field field %}
               {% endif %}
               </div>
-
+               {% endifequal %}
           {% endfor %}
-             <button name="submit" id="submit" type="submit" class="btn btn-accept pull-right"> Create
-     </button>  </form>
-       
+             <button style="width:120px"name="submit" id="submit" type="submit" class="btn btn-accept"> Add
+     </button>    </form>
+        <form method="POST">
+    {% csrf_token %}
+      <button name="finish" style="width:120px" id="continue" type="submit" class="btn btn-danger btn-round pull-right">     <!-- might need to change it to "fa-cloud-upload" -->
+
+ Finish
+     </button>
+        </form>
+           {% endif %}
+
   </div>
 
+  </div>
 {% endblock body %}
 
 

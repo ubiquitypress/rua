@@ -46,15 +46,12 @@ class FileAdmin(admin.ModelAdmin):
 class ReviewRoundAdmin(admin.ModelAdmin):
 	list_display = ('book', 'round_number')
 
-class ProposalFormElementInline(admin.TabularInline):
-    model = ProposalForm.fields.through
-
 class ProposalFormAdmin(admin.ModelAdmin):
 	list_display = ('name', 'ref')
 	search_fields = ('name',)
-	exclude = ("fields", )
-	inlines = (ProposalFormElementInline,)
-
+	exclude = ()
+class ProposalFormElementRelationshipAdmin(admin.ModelAdmin):
+	list_display = ('form', 'element')
 class ProposalFormElementAdmin(admin.ModelAdmin):
 	list_display = ('name', 'field_type')
 
@@ -80,6 +77,7 @@ admin_list = [
 	(ReviewRound, ReviewRoundAdmin),
 	(ProposalForm, ProposalFormAdmin),
     (ProposalFormElement, ProposalFormElementAdmin),
+    (ProposalFormElementsRelationship,ProposalFormElementRelationshipAdmin),
     #(ProposalFormResult, ProposalFormResultAdmin),
 	(Contract,),
 	(Retailer,),

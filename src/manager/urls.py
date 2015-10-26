@@ -31,8 +31,16 @@ urlpatterns = patterns('',
 
     # Submission checklist
     url(r'^submission/checklist/$', 'manager.views.submission_checklist', name='submission_checklist'),
-    url(r'^submission/proposal_forms/$', 'manager.views.proposal_forms', name='proposal_forms'),
     url(r'^submission/checklist/order/$', 'manager.views.checklist_order', name='checklist_order'),
+ 
+    #Proposal Form Management
+    url(r'^submission/proposal_forms/$', 'manager.views.proposal_forms', name='proposal_forms'),
+    url(r'^submission/proposal_forms/view/form/(?P<form_id>\d+)/$', 'manager.views.view_proposal_form', name='manager_view_proposal_form'),
+    url(r'^submission/proposal_forms/form-elements/$', 'manager.views.proposal_form_elements', name='manager_proposal_form_elements'),
+    #Form Creation
+    url(r'^submission/proposal_forms/new/form/$', 'manager.views.add_proposal_form', name='manager_add_proposal_form'),
+    url(r'^submission/proposal_forms/form/(?P<form_id>\d+)/create/elements/$', 'manager.views.create_proposal_elements', name='manager_create_proposal_elements'),
+    url(r'^submission/proposal_forms/form/(?P<form_id>\d+)/add/field/$', 'manager.views.add_proposal_field', name='manager_add_proposal_form_field'), 
 
     # Cache
     url(r'^cache/flush/$', 'manager.views.flush_cache', name='manager_flush_cache'),

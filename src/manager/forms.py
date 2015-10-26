@@ -23,6 +23,22 @@ class FormElementsRelationshipForm(forms.ModelForm):
 	class Meta:
 		model = review_models.FormElementsRelationship
 		exclude = ()
+
+class StagesProposalForm(forms.ModelForm):
+
+	class Meta:
+		model = core_models.ProposalForm
+		exclude = ()
+class StagesProposalFormElementForm(forms.ModelForm):
+
+	class Meta:
+		model = core_models.ProposalFormElement
+		exclude = ()
+class StagesProposalFormElementRelationshipForm(forms.ModelForm):
+
+	class Meta:
+		model = core_models.ProposalFormElementsRelationship
+		exclude = ()
 class ReviewForm(forms.ModelForm):
 
 	class Meta:
@@ -87,7 +103,7 @@ class GeneratedForm(forms.Form):
 
 		form_obj = kwargs.pop('form', None)
 		super(GeneratedForm, self).__init__(*args, **kwargs)
-		relations = core_models.ProposalFormElementsRelationship.objects.filter(form=form_obj)
+		relations = core_models.ProposalFormElementsRelationship.objects.filter(form__id=form_obj.id)
 		for relation in relations:
 
 			if relation.element.field_type == 'text':
