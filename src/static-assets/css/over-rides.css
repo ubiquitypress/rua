@@ -620,6 +620,25 @@ body > div.container-fluid > div > div > div > a {
   background-color:#558381 !important;
   color:#ffffff  !important;
 }
+
+.btn-green{
+  background-color:#198683;
+  color:#ffffff;
+  border-color:#2B9B97;
+  border-radius: 24px;
+}
+ 
+.btn-green:hover, .btn-green:focus, .btn-green:active, .btn-green.active, .open > .dropdown-toggle.btn-green {
+    background: #2CB2AD;
+    color:#ffffff;
+}
+ 
+.btn-green:active, .btn-green.active {
+    background: #057572;
+    color:#ffffff;
+    box-shadow: none;
+}
+
 .btn-task{
   background-color:rgb(68, 86, 104);
   color:#ffffff;
