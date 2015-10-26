@@ -230,7 +230,7 @@ def submission_checklist(request):
 
 @staff_member_required
 def proposal_forms(request):
-	
+
 	proposal_forms = core_models.ProposalForm.objects.all()
 	choices_form = forms.ProposalForm()
 	selected_form = core_models.Setting.objects.get(name='proposal_form').value
@@ -315,6 +315,7 @@ def add_proposal_field(request,form_id):
 	form = core_models.ProposalForm.objects.get(id=form_id)
 	fields = core_models.ProposalFormElementsRelationship.objects.filter(form=form)
 	elements = core_models.ProposalFormElement.objects.all()
+
 	new_form = forms.StagesProposalFormElementRelationshipForm()
 	if request.POST and 'finish' in request.POST:
 		print 'Finish'
@@ -330,7 +331,8 @@ def add_proposal_field(request,form_id):
 		element_index = request.POST.get("element")
 		help_text = request.POST.get("help_text")
 		order = int(request.POST.get("order"))
-		element = elements[int(element_index)-1]
+		print len(elements)
+		element = core_models.ProposalFormElement.objects.get(id=int(element_index)-1)
 		relationship=core_models.ProposalFormElementsRelationship(form=form,element=element,width=width,order=order,help_text=help_text)
 		relationship.save()
 		fields = core_models.ProposalFormElementsRelationship.objects.filter(form=form)

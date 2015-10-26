@@ -352,25 +352,26 @@ def start_proposal(request):
 		default_fields = manager_forms.DefaultForm(request.POST)
 		if proposal_form.is_valid() and default_fields.is_valid():
 			save_dict = {}
-			file_fields = core_models.ProposalFormElement.objects.filter(proposalform=core_models.ProposalForm.objects.get(pk=proposal_form_id), field_type='upload')
-			data_fields = core_models.ProposalFormElement.objects.filter(~Q(field_type='upload'), proposalform=core_models.ProposalForm.objects.get(pk=proposal_form_id))
+			file_fields = core_models.ProposalFormElementsRelationship.objects.filter(form=core_models.ProposalForm.objects.get(pk=proposal_form_id), element__field_type='upload')
+			data_fields = core_models.ProposalFormElementsRelationship.objects.filter(~Q(element__field_type='upload'), form=core_models.ProposalForm.objects.get(pk=proposal_form_id))
 
 			for field in file_fields:
-				if field.name in request.FILES:
+				if field.element.name in request.FILES:
 					# TODO change value from string to list [value, value_type]
-					save_dict[field.name] = [handle_proposal_file(request.FILES[field.name], submission, review_assignment, 'reviewer')]
+					save_dict[field.element.name] = [handle_proposal_file(request.FILES[field.element.name], submission, review_assignment, 'reviewer')]
 
 			for field in data_fields:
-				if field.name in request.POST:
+				if field.element.name in request.POST:
 					# TODO change value from string to list [value, value_type]
-					save_dict[field.name] = [request.POST.get(field.name), 'text']
+					save_dict[field.element.name] = [request.POST.get(field.element.name), 'text']
 
 			defaults = {field.name: field.value() for field in default_fields}
 			json_data = json.dumps(save_dict)
 			proposal = submission_models.Proposal(form=core_models.ProposalForm.objects.get(pk=proposal_form_id), data=json_data, owner=request.user, **defaults)
 			proposal.save()
 			messages.add_message(request, messages.SUCCESS, 'Proposal %s submitted' % proposal.id)
-			return redirect(reverse('user_dashboard'))
+			
+			return redirect(reverse('user_dashboard',kwargs = {}))
 
 
 	template = "submission/start_proposal.html"

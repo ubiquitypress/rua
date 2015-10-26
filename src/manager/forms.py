@@ -111,7 +111,7 @@ class GeneratedForm(forms.Form):
 			elif relation.element.field_type == 'textarea':
 				self.fields[relation.element.name] = forms.CharField(widget=forms.Textarea(attrs={'div_class':relation.width}), required=relation.element.required)
 			elif relation.element.field_type == 'date':
-				self.fields[relation.element.name] = forms.CharField(widget=forms.DateInput(attrs={'class':'datepicker', 'div_class':relation.element_class}), required=relation.element.required)
+				self.fields[relation.element.name] = forms.CharField(widget=forms.DateInput(attrs={'class':'datepicker', 'div_class':relation.width}), required=relation.element.required)
 			elif relation.element.field_type == 'upload':
 				self.fields[relation.element.name] = forms.FileField(widget=forms.FileInput(attrs={'div_class':relation.width}), required=relation.element.required)
 			elif relation.element.field_type == 'select':
