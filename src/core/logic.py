@@ -12,6 +12,7 @@ import json
 from pymarc import Record, Field
 from core import email
 from pymarc import *
+from submission import logic as submission_logic
 import re
 from django.shortcuts import redirect, render, get_object_or_404
 from core.files import handle_file,handle_copyedit_file,handle_marc21_file
