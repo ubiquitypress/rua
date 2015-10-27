@@ -10,9 +10,9 @@
 {% block body %}
   <div class="col-md-12 other-heading container-fluid" style="margin-top:-20px">
   <h3>Book Proposal :  {{ proposal.title }} {% if proposal.subtitle%}, {{ proposal.subtitle }}{%endif%}<a href="{% url 'proposals'%}" class="btn  btn-trasnparent-white" style="position: absolute;right:20;margin-top:-8px">Go back</a></h3>
-</div>
+</div></br></br>
 <div class="col-md-12">
- 
+ </br>
   <table class="table table-bordered">
     <thead>
   <tr>
@@ -35,7 +35,9 @@
   </tr>
 </tbody>
 </table>
-<div class="container" style="width:80%;left:20%;right:20%;position:relative;">
+</hr>
+<div class="container" style="width:100%;left:0%;right:20%;position:relative;">
+  <hr>
   {% for field in relationships %}
 
   <div class="{{ field.width }}">
@@ -49,24 +51,23 @@
 {% endfor %}
 </div>
 <hr>
-<div class="container">
-<div class="col-md-12 container">
-  {% if not proposal.date_review_started %}<a href="{% url 'start_proposal_review' proposal.id %}" class="btn btn-other"><i class="fa fa-plus">&nbsp;</i>Start Review Process</a>{% else %}</div>
+  {% if not proposal.date_review_started %}<a href="{% url 'start_proposal_review' proposal.id %}" class="btn btn-primary btn-round"><i class="fa fa-plus">&nbsp;</i>Start Review Process</a>{% else %}
 
   <div class="col-md-12 other-sub-heading"><h4>Review</h4><a href="{% url 'add_proposal_reviewers' proposal.id %}" class="btn  btn-trasnparent-white" style="position: absolute;right:20;margin-top:-37px"><i class="fa fa-plus">&nbsp;</i>Add Reviewers</a></div>
 
   {% include "core/proposals/proposal_review_block.html" with review_data=proposal.review_assignments.all %}
 
-  </div>
-  {% endif %}
-<hr>
 
+  {% endif %}
+
+<hr>
   <h3>Action</h3>
   <p>Once you have compeleted the review process, you can accept, decline or as the author to submit revisions the proposal. Accepting the proposal will create a submission for the author to complete and allow you to send them some notes on the proposal. Declining will move the proposal to the archive. If revisions are requested, the author will be able to edit and resubmit their proposal.</p>
   <div class="container col-md-12" style="width:80%;left:10%;right:10%;position:absolute;">
   {% include "core/proposals/proposal_action_buttons.html" %}
-      </br></br>
+      </br></br><hr>
   </div>
+
 
 </div>
 

@@ -4,24 +4,19 @@
 
 {% block title %}Book Proposals{% endblock %}
 
-{% block breadcrumbs %}
-    <ol class="breadcrumb">
-	  <li><a href="{% url 'user_dashboard' %}">Dashboard</a></li>
-	  <li class="">Workflow</li>
-    <li class="active"><a href="{% url 'proposals' %}">Proposals</a></li>
-	</ol>
-{% endblock %}
-
 {% block body %}
-<div class="col-md-12">
-  <h3>Accept {{ proposal.title }}</h3>
-  <hr />
+  <div class="col-md-12 file-sub-heading-accept container-fluid" style="margin-top:-20px">
+  <h3>Accept : {{ proposal.title }}  {% if proposal.subtitle%}, {{ proposal.subtitle }}{%endif%}<a href="{% url 'view_proposal' proposal.id %}" class="btn  btn-trasnparent-white" style="position: absolute;right:20;margin-top:-8px">Go back</a></h3>
+</div>
+<div class="col-md-12"> 
   <p>You are accepting this proposal. You can add some notes to the email below detailing why. When you press submit this email will be sent to the proposer.</p>
+   <hr />
   <form method="POST" enctype="multipart/form-data">
     {% csrf_token %}
     <div class="form-group">
       <label for="comment">Email Proposal Owner:</label>
       <textarea name="accept-email" class="form-control" rows="15" id="comment">{{ email_text }}</textarea>
+       <hr />
       <label for="attachment_file">Email Attachment</label> 
       <input type="file" id="attachment_file" name="attachment_file" class="form-control" /><br />
       <label for="proposal-type">Proposal Type</label>
@@ -30,7 +25,7 @@
         <option value='edited_volume'>Edited Volume</option>
       </select>
     </div>
-    <button class="btn btn-success" type="submit">Send and Record Decision</button>
+    <button class="btn btn-accept pull-right" type="submit">Send and Record Decision</button>
   </form>
 </div>
 {% endblock %}

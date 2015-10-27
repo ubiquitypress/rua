@@ -1,12 +1,12 @@
 <div class="btn-group btn-group-justified" role="group">
   <div class="btn-group" role="group">
-    <a href="{% url 'accept_proposal' proposal.id %}" type="button" class="btn btn-success">Accept Proposal</a>
+    <a href="{% url 'accept_proposal' proposal.id %}" type="button" class="btn btn-success btn-browse">Accept Proposal</a>
   </div>
   <div class="btn-group" role="group">
     <a href="{% url 'request_proposal_revisions' proposal.id %}" type="button" class="btn btn-warning">Request Revisions</a>
   </div>
   <div class="btn-group" role="group">
-    <a href="{% url 'decline_proposal' proposal.id %}" type="button" class="btn btn-danger">Decline Proposal</a>
+    <a href="{% url 'decline_proposal' proposal.id %}" type="button" class="btn btn-danger btn-browse">Decline Proposal</a>
   </div>
 </div>
 <br />

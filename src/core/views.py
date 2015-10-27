@@ -867,7 +867,7 @@ def decline_proposal(request, proposal_id):
 def accept_proposal(request, proposal_id):
 	'Marks a proposal as accepted, creates a submission and emails the user'
 	proposal = get_object_or_404(submission_models.Proposal, pk=proposal_id)
-	email_text = models.Setting.objects.get(group__name='email', name='proposal_accept').value
+	email_text = models.Setting.objects.get(group__name='email', name='proposal_accept')
 
 	if request.POST:
 		proposal.status = 'accepted'
@@ -879,9 +879,10 @@ def accept_proposal(request, proposal_id):
 		return redirect(reverse('proposals'))
 
 	template = 'core/proposals/accept_proposal.html'
+	
 	context = {
 		'proposal': proposal,
-		'email_text': email_text,
+		'email_text': logic.setting_template_loader(setting=email_text,path="core/proposals/",pattern="email_template_",dictionary={'sender':request.user,'receiver':proposal.owner}),
 	}
 
 	return render(request, template, context)
