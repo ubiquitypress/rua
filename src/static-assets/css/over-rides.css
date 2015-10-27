@@ -298,6 +298,46 @@ body > div.container-fluid > div > div > div > a {
   color: #FFF;
   margin-bottom:5px;
 }
+.primary-heading {
+  background-color: #337ab7;
+  color: #FFF;
+  margin-bottom:5px;
+}
+.primary-heading-2 {
+  background-color: #1B6EB6;
+  color: #FFF;
+  margin-bottom:5px;
+}
+.success-heading {
+  background-color: #5cb85c;
+  color: #FFF;
+  margin-bottom:5px;
+}
+.success-heading-2 {
+  background-color: #31B231;
+  color: #FFF;
+  margin-bottom:5px;
+}
+.warning-heading {
+  background-color: #f0ad4e;
+  color: #FFF;
+  margin-bottom:5px;
+}
+.warning-heading-2 {
+  background-color: #E18607;
+  color: #FFF;
+  margin-bottom:5px;
+}
+.danger-heading {
+  background-color: #d9534f;
+  color: #FFF;
+  margin-bottom:5px;
+}
+.danger-heading-2 {
+  background-color: #D01D17;
+  color: #FFF;
+  margin-bottom:5px;
+}
 .file-sub-heading {
   background-color: #558381;
   color: #FFF;
