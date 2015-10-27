@@ -845,7 +845,7 @@ def add_proposal_reviewers(request, proposal_id):
 def decline_proposal(request, proposal_id):
 
 	proposal = get_object_or_404(submission_models.Proposal, pk=proposal_id)
-	email_text = models.Setting.objects.get(group__name='email', name='proposal_decline').value
+	email_text = models.Setting.objects.get(group__name='email', name='proposal_decline')
 
 	if request.POST:
 		proposal.status = 'declined'
@@ -857,7 +857,7 @@ def decline_proposal(request, proposal_id):
 	template = 'core/proposals/decline_proposal.html'
 	context = {
 		'proposal': proposal,
-		'email_text': email_text,
+		'email_text': logic.setting_template_loader(setting=email_text,path="core/proposals/",pattern="email_template_",dictionary={'sender':request.user,'receiver':proposal.owner}),
 	}
 
 	return render(request, template, context)
@@ -891,7 +891,7 @@ def accept_proposal(request, proposal_id):
 def request_proposal_revisions(request, proposal_id):
 
 	proposal = get_object_or_404(submission_models.Proposal, pk=proposal_id)
-	email_text = models.Setting.objects.get(group__name='email', name='proposal_request_revisions').value
+	email_text = models.Setting.objects.get(group__name='email', name='proposal_request_revisions')
 
 	if request.POST:
 		proposal.status = 'revisions_required'
@@ -903,7 +903,7 @@ def request_proposal_revisions(request, proposal_id):
 	template = 'core/proposals/revisions_proposal.html'
 	context = {
 		'proposal': proposal,
-		'email_text': email_text,
+		'email_text': logic.setting_template_loader(setting=email_text,path="core/proposals/",pattern="email_template_",dictionary={'sender':request.user,'receiver':proposal.owner}),
 	}
 
 	return render(request, template, context)

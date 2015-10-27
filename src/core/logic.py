@@ -41,10 +41,10 @@ def setting_template_loader(setting, path, dictionary,pattern = None):
 	html_file.close()
 	html_file= open(file_location)
 	template_location = file_location[10:]
-	email=render_to_string(template_location,dictionary)
+	text=render_to_string(template_location,dictionary)
 	html_file.close()
 	os.remove(file_location) 
-	return email
+	return text
 
 def record_field(tag,indicators,subfields):
 	return	Field( tag = tag, indicators = indicators, subfields = subfields)
