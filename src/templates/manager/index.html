@@ -1,38 +1,35 @@
 {% extends "base.html" %}
 {% load bootstrap3 %}
 
-{% block breadcrumbs %}
-  <ol class="breadcrumb">
-	  <li><a class="active" href="{% url 'manager_index' %}">Manager</a></li>
-		<li>Index</li>
-	</ol>
-{% endblock %}
 
 {% block body %}
+    <div class="col-md-12 primary-heading container-fluid"style="margin-top:-20px" >
+          	<h2>{{ press.general.press_name }} Manager</h2>
+        </div>
 	<div class="col-md-12">
-		<h2>{{ press.general.press_name }} Manager</h2>
+	
 		<div class="col-md-4  ">
 			<h3>Management Pages</h3>
 			<ul class="list-group">
-				<a class="list-group-item list-group-item-info" href="{% url 'settings_index' %}">Settings</a>
-				<a class="list-group-item list-group-item-info" href="{% url 'submission_checklist' %}">Submission Checklist</a>
-				<a class="list-group-item list-group-item-info" href="{% url 'proposal_forms' %}">Proposal Form</a>
-				<a class="list-group-item list-group-item-info" href="{% url 'manager_review_forms' %}">Review Form</a>
+				<a class="list-group-item list-group-item-primary" href="{% url 'settings_index' %}">Settings</a>
+				<a class="list-group-item list-group-item-primary" href="{% url 'submission_checklist' %}">Submission Checklist</a>
+				<a class="list-group-item list-group-item-other" href="{% url 'proposal_forms' %}">Proposal Form</a>
+				<a class="list-group-item list-group-item-file" href="{% url 'manager_review_forms' %}">Review Form</a>
 			</ul>
 		</div>
 
 		<div class="col-md-4">
 			<h3>Users</h3>
 			<ul class="list-group">
-        		<a class="list-group-item list-group-item-info" href="{% url 'manager_users' %}">Users</a>
-				<a class="list-group-item list-group-item-info" href="{% url 'manager_groups' %}">Groups</a>
-        		<a class="list-group-item list-group-item-info" href="{% url 'manager_roles' %}">Roles</a>
+        		<a class="list-group-item list-group-item-primary" href="{% url 'manager_users' %}">Users</a>
+				<a class="list-group-item list-group-item-primary" href="{% url 'manager_groups' %}">Groups</a>
+        		<a class="list-group-item list-group-item-primary" href="{% url 'manager_roles' %}">Roles</a>
      		 </ul>
 		</div>
 		<div class="col-md-4">
 			<h3>System</h3>
 			<ul class="list-group">
-        		<a class="list-group-item list-group-item-info" href="{% url 'manager_flush_cache' %}">Clear Cache</a>
+        		<a class="list-group-item list-group-item-primary" href="{% url 'manager_flush_cache' %}">Clear Cache</a>
      		 </ul>
 		</div>
 	</div>

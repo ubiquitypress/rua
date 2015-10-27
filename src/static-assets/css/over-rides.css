@@ -1087,3 +1087,92 @@ iframe {
   border-width: 1px;
   border-color: #B0B0B0 ;
 }
+
+.list-group-item-other {
+  color: #6B589F;
+  background-color: #D9CDFA;
+}
+a.list-group-item-other,
+button.list-group-item-other {
+  color: #6B589F;
+}
+a.list-group-item-other .list-group-item-heading,
+button.list-group-item-other .list-group-item-heading {
+  color: inherit;
+}
+a.list-group-item-other:hover,
+button.list-group-item-other:hover,
+a.list-group-item-other:focus,
+button.list-group-item-other:focus {
+  color: #6B589F;
+  background-color: #BEA8F9;
+}
+a.list-group-item-other.active,
+button.list-group-item-other.active,
+a.list-group-item-other.active:hover,
+button.list-group-item-other.active:hover,
+a.list-group-item-other.active:focus,
+button.list-group-item-other.active:focus {
+  color: #fff;
+  background-color: #441BB3;
+  border-color: #3B179E;
+}
+
+.list-group-item-primary {
+  color: #4D6A84;
+  background-color: #D1E8FB;
+}
+a.list-group-item-primary,
+button.list-group-item-primary {
+  color: #4D6A84;
+}
+a.list-group-item-primary .list-group-item-heading,
+button.list-group-item-primary .list-group-item-heading {
+  color: inherit;
+}
+a.list-group-item-primary:hover,
+button.list-group-item-primary:hover,
+a.list-group-item-primary:focus,
+button.list-group-item-primary:focus {
+  color: #4D6A84;
+  background-color: #B0D8F8;
+}
+a.list-group-item-primary.active,
+button.list-group-item-primary.active,
+a.list-group-item-primary.active:hover,
+button.list-group-item-primary.active:hover,
+a.list-group-item-primary.active:focus,
+button.list-group-item-primary.active:focus {
+  color: #fff;
+  background-color: #1168B0;
+  border-color: #0E62A8;
+}
+.list-group-item-file {
+  color: #447774;
+  background-color: #CBF2F0;
+}
+a.list-group-item-file,
+button.list-group-item-file {
+  color: #447774;
+}
+a.list-group-item-file .list-group-item-heading,
+button.list-group-item-file .list-group-item-heading {
+  color: inherit;
+}
+a.list-group-item-file:hover,
+button.list-group-item-file:hover,
+a.list-group-item-file:focus,
+button.list-group-item-file:focus {
+  color: #447774;
+  background-color: #A7DBD8;
+}
+a.list-group-item-file.active,
+button.list-group-item-file.active,
+a.list-group-item-file.active:hover,
+button.list-group-item-file.active:hover,
+a.list-group-item-file.active:focus,
+button.list-group-item-file.active:focus {
+  color: #fff;
+  background-color: #149690;
+  border-color: #128983;
+}
