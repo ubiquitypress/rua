@@ -2,23 +2,20 @@
 {% load static from staticfiles %}
 {% load bootstrap3 %}
 
-{% block breadcrumbs %}
-  <ol class="breadcrumb">
-    <li><a href="{% url 'manager_index' %}">Manager</a></li>
-    <li><a href="{% url 'manager_roles' %}">Roles</a></li>
-    <li><a href="{% url 'manager_role' role.slug %}" class="active">{{ role.name }}</a></li>
-	</ol>
-{% endblock %}
 
 {% block css %}
 <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/plug-ins/1.10.7/integration/bootstrap/3/dataTables.bootstrap.css">
 {% endblock css %}
 
 {% block body %}
-	<div class="col-md-12">
-		<h2>{{ role.name }}</h2>
+    <div class="col-md-12 primary-heading container-fluid"style="margin-top:-20px" >
+          <h2>{{ role.name }} <a href="{% url 'manager_roles' %}" class="btn  btn-trasnparent-white" style="position: absolute;right:30px;margin-top:-6.5px">Go back</a></h2>
+        </div>
+	<div class="col-md-12"></br>
+    <div class=" primary-heading-2 container-fluid" >
     <h4>Users without this role</h4>
-    <table class="table table-condensed" cellspacing="0" width="100%" id='users-without'>
+  </div>
+    <table class="table table-bordered" cellspacing="0" width="100%" id='users-without'>
       <thead>
       <tr>
         <th width="25%">First Name</th>
@@ -27,18 +24,21 @@
         <th width="20%"></th>
       </tr>
       </thead>
+      <tbody>
       {% for user in users %}
       <tr>
         <td>{{ user.first_name }}</td>
         <td>{{ user.last_name }}</td>
         <td>{{ user.email }}</td>
-        <td><a href="{% url 'manager_role_action' role.slug user.id 'add' %}">Add Role</a></td>
+        <td width="20%"><a class="btn btn-primary btn-round "href="{% url 'manager_role_action' role.slug user.id 'add' %}"><i class="fa fa-plus"></i>&nbsp;&nbsp; Add Role</a></td>
       </tr>
-      {% endfor %}
+      {% endfor %}</tbody>
     </table>
     <hr />
-    <h4>Users with this role</h4>
-    <table class="table table-condensed" cellspacing="0" width="100%" id='users-with'>
+
+     <div class=" primary-heading container-fluid" >
+    <h4>Users with this role</h4></div>
+    <table class="table table-bordered" cellspacing="0" width="100%" id='users-with'>
       <thead>
       <tr>
         <th width="25%">First Name</th>
@@ -46,15 +46,15 @@
         <th width="30%">Email</th>
         <th width="20%"></th>
       </tr>
-      </thead>
+      </thead>      <tbody>
       {% for user in users_with_role %}
       <tr>
         <td>{{ user.first_name }}</td>
         <td>{{ user.last_name }}</td>
         <td>{{ user.email }}</td>
-        <td><a href="{% url 'manager_role_action' role.slug user.id 'remove' %}">Remove Role</a></td>
+        <td width="20%"><a class="btn btn-decline "href="{% url 'manager_role_action' role.slug user.id 'remove' %}"><i class="fa fa-times"></i> &nbsp;&nbsp;Remove Role</a></td>
       </tr>
-      {% endfor %}
+      {% endfor %}</tbody>
     </table>
   </div>
 {% endblock body %}

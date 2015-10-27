@@ -2,20 +2,18 @@
 {% load static from staticfiles %}
 {% load bootstrap3 %}
 
-{% block breadcrumbs %}
-  <ol class="breadcrumb">
-	  <li><a class="active" href="{% url 'manager_index' %}">Manager</a></li>
-		<li>Submission</li>
-		<li>Checklist</li>
-	</ol>
-{% endblock %}
-
 {% block body %}
+<div class="col-md-12 primary-heading container-fluid" style="margin-top:-20px">
+  <h3>Submission Checklist <a href="{% url 'manager_index' %}" class="btn  btn-trasnparent-white" style="position: absolute;right:20px;margin-top:-8px">Go back</a></h3>
+</div>
 	<div class="col-md-12">
-		<h2>Submission Checklist</h2>
+		<h2></h2>
 		<p>A list of item an author/editor must agree to before their submission can be entered into the system.</p>
 		<div class="col-md-6">
-			<h3>Add new item</h3>
+			<div class="primary-heading-2 container-fluid" >
+ 			<h3>Add new item</h3>
+</div>
+</br>
 			<form method="post" class="form">
 			    {% csrf_token %}
 			    {% bootstrap_form checkitem_form %}
@@ -27,7 +25,10 @@
 			</form>
 		</div>
 		<div class="col-md-6">
-			<h3>Current Checklist Items</h3><br />
+			<div class="primary-heading-2 container-fluid" >
+ 			<h3>Current Checklist Items</h3>
+</div>
+</br>
 			<ul class="list-group" id="group_files_sort">
 				{% for item in checklist_items %}
 				<li id="check-{{ item.id }}" class="list-group-item ui-sortable-handle"><i class="fa fa-sort">&nbsp;&nbsp;</i>{{ item.text }} - {{ item.required }}</li>

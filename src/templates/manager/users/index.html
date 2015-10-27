@@ -2,20 +2,17 @@
 {% load static from staticfiles %}
 {% load bootstrap3 %}
 
-{% block breadcrumbs %}
-  <ol class="breadcrumb">
-    <li><a href="{% url 'manager_index' %}">Manager</a></li>
-    <li><a href="{% url 'manager_users' %}" class="active">Users</a></li>
-	</ol>
-{% endblock %}
-
 {% block css %}
 <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/plug-ins/1.10.7/integration/bootstrap/3/dataTables.bootstrap.css">
 {% endblock css %}
 
 {% block body %}
+<div class="col-md-12 primary-heading container-fluid" style="margin-top:-20px">
+  <h3>Press Users<span class="pull-right"><a href="{% url 'add_user' %}" class="btn btn-trasnparent-white" style="position: absolute;right:105px;margin-top:-8px"><i class="fa fa-plus">&nbsp;</i>Add New User</a><a href="{% url 'manager_index' %}" class="btn  btn-trasnparent-white" style="position: absolute;right:20px;margin-top:-8px">Go back</a></h3>
+</div>
+
 	<div class="col-md-12">
-		<h2>Press Users<span class="pull-right"><a href="{% url 'add_user' %}" class="btn btn-primary"><i class="fa fa-plus">&nbsp;</i>Add New User</a></h2>
+	<hr>
     <table class="table table-bordered" cellspacing="0" width="100%" id='users'>
       <thead>
       <tr>
@@ -32,7 +29,7 @@
         <td>{{ user.first_name }}</td>
         <td>{{ user.last_name }}</td>
         <td>{{ user.email }}</td>
-        <td><a href="{% url 'user_edit' user.id %}">Edit</a></td>
+        <td><a class="btn btn-primary btn-round-half"style="width:75px"href="{% url 'user_edit' user.id %}">Edit</a></td>
       </tr>
       {% endfor %}
     </table>

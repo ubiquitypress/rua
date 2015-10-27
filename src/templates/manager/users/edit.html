@@ -4,19 +4,15 @@
 
 {% block title %}Update Profile{% endblock %}
 
-{% block breadcrumbs %}
-    <ol class="breadcrumb">
-		<li><a href="{% url 'manager_index' %}">Manager</a></li>
-    	<li><a href="{% url 'manager_users' %}" class="active">Users</a></li>
-	  	<li class="active">{{ active|capfirst }}</li>
-	</ol>
-{% endblock %}
-
 {% block body %}
+<div class="col-md-12 primary-heading container-fluid" style="margin-top:-20px">
+ 		<h3>{{ active|capfirst }} Profile<span class="pull-right"><a href="{% url 'manager_users' %}" class="btn  btn-trasnparent-white" style="position: absolute;right:20px;margin-top:-8px">Go back</a></span></h3>
+</div>
+
 <div class="col-md-12">
 	<div class="row">
 		<div class="col-md-11">
-			<h1>{{ active|capfirst }} Profile</h1>
+	
 		</div>
     </div>
 	<br />
@@ -101,15 +97,16 @@
 		  </div>
 		  </div>
 			{% buttons %}
-		        <button name="register" id="register" type="submit" class="btn btn-primary" style="margin-left:15px;">
+		        <button name="register" id="register" type="submit" class="pull-right btn btn-primary" style="width:150px;margin-left:15px;">
 		            <i class="fa fa-user"></i> Update Profile
 		        </button>
+		    </br> </br>
 		    {% endbuttons %}
 		</form>
 
 	</form>
-
-</div>
+ </br> </br>
+</div> </br> </br> </br>
 {% endblock %}
 
 {% block js %}

@@ -1,23 +1,20 @@
 {% extends "base.html" %}
 {% load bootstrap3 %}
 
-{% block breadcrumbs %}
-  <ol class="breadcrumb">
-    <li><a href="{% url 'manager_index' %}">Manager</a></li>
-    <li><a class="active" href="{% url 'manager_groups' %}">Groups</a></li>
-		{% if group %}<li><a class="active" href="{% url 'manager_group_edit' group.id %}">{{ group.name }}</a></li>{% endif %}
-	</ol>
-{% endblock %}
 
 {% block body %}
 	<div class="col-md-12">
-		<h2>{% if group %}{{ group.name }}{% else %}Add New Group{% endif %}</h2>
-		<div class="col-md-6">
+
+    <div class="primary-heading container-fluid" style="margin-top:-20px">
+		<h3>{% if group %}Group: {{ group.name }}{% else %}Add New Group{% endif %}<a href="{% url 'manager_groups' %}" class="btn  btn-trasnparent-white" style="position: absolute;right:30px;margin-top:-8px">Go back</a></h3>
+  </div>
+  <hr>
+		<div class="col-md-12">
       <form method="post" class="form">
         {% csrf_token %}
         {% bootstrap_form form %}
         {% buttons %}
-            <button type="submit" class="btn btn-primary">
+            <button type="submit" class="btn btn-primary btn-round pull-right" style="width:100px">
                 Submit
             </button>
         {% endbuttons %}

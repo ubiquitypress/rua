@@ -2,42 +2,43 @@
 {% load static from staticfiles %}
 {% load bootstrap3 %}
 
-{% block breadcrumbs %}
-  <ol class="breadcrumb">
-    <li><a href="{% url 'manager_index' %}">Manager</a></li>
-		<li><a href="{% url 'manager_groups' %}">Groups</a></li>
-    <li><a class="active" href="{% url 'manager_group_members' group.id %}">{{ group.name }}</a></li>
-	</ol>
-{% endblock %}
+{% block css %}
+<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/plug-ins/1.10.7/integration/bootstrap/3/dataTables.bootstrap.css">
+{% endblock css %}
 
 {% block body %}
-	<div class="col-md-6">
-		<h2>{{ group.name }}</h2>
-    <h4>Current Users in Group</h4>
+    <div class="col-md-12 primary-heading container-fluid" style="margin-top:-20px">
+    <h3>Group : {{ group.name }}<a href="{% url 'manager_groups' %}" class="btn  btn-trasnparent-white" style="position: absolute;right:30px;margin-top:-8px">Go back</a></h3>
+  </div>
+	<div class="col-md-12">
+		 <div class="primary-heading-2 container-fluid" >
+    <h4>Current Users in Group</h4></div>
     <p class="small">Drag and drop members to re-order them</p>
     <ul class="list-group" id="member_files_sort">
       {% for member in members %}<li id="member-{{ member.id }}" class="list-group-item ui-sortable-handle"><i class="fa fa-sort">&nbsp;&nbsp;</i><i class="fa fa-user">&nbsp;&nbsp;</i>{{ member.user.first_name }} {{ member.user.last_name }}<span style="float: right;"><a href="{% url 'manager_membership_delete' group.id member.id %}"><i class="fa fa-trash-o"></i></a></span></li>{% endfor %}
     </ul>
   </div>
   <div class="col-md-12">
-    <h4>Select a User to Add</h4>
+     <div class="primary-heading container-fluid" >
+    <h4>Select a User to Add</h4></div>
     <table class="table table-striped">
+      <thead>
       <tr>
         <th>First Name</th>
         <th>Middle Name</th>
         <th>Last Name</th>
         <th>Email</th>
         <th></th>
-      </tr>
+      </tr> </thead><tbody>
       {% for user in users %}
       <tr>
         <td>{{ user.first_name }}</td>
         <td>{{ user.profile.middle_name }}</td>
         <td>{{ user.last_name }}</td>
         <td>{{ user.email }}</td>
-        <td><a href="{% url 'group_members_assign' group.id user.id %}">Add</a></td>
+        <td><a class="btn btn-primary btn-round "href="{% url 'group_members_assign' group.id user.id %}"><i class="fa fa-plus"></i>&nbsp;&nbsp;Add</a></td>
       </tr>
-      {% endfor %}
+      {% endfor %}</tbody>
     </table>
   </div>
 {% endblock body %}
@@ -66,4 +67,15 @@ $(function() {
   $( "#member_files_sort" ).disableSelection();
 });
 </script>
-{% endblock %}
+<script type="text/javascript" language="javascript" src="//cdn.datatables.net/1.10.7/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" language="javascript" src="//cdn.datatables.net/plug-ins/1.10.7/integration/bootstrap/3/dataTables.bootstrap.js"></script>
+<script>
+  $(document).ready(function() {
+      $('.table').DataTable({
+        "lengthMenu": [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]]
+      });
+  } );
+</script>
+
+
+{% endblock js %}

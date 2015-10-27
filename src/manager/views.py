@@ -118,6 +118,7 @@ def manager_membership_delete(request, group_id, member_id):
 	return redirect(reverse('manager_group_members', kwargs={'group_id': group.id}))
 
 @staff_member_required
+@csrf_exempt
 def roles(request):
 
 	template = 'manager/roles.html'
@@ -689,7 +690,6 @@ def group_members_order(request, group_id):
 		response = 'Nothing to process, post required'
 
 	return HttpResponse(response)
-
 @staff_member_required
 @csrf_exempt
 def checklist_order(request):

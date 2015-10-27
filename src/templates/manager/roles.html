@@ -2,19 +2,41 @@
 {% load static from staticfiles %}
 {% load bootstrap3 %}
 
-{% block breadcrumbs %}
-  <ol class="breadcrumb">
-    <li><a href="{% url 'manager_index' %}">Manager</a></li>
-		<li><a class="active" href="{% url 'manager_roles' %}">Roles</a></li>
-	</ol>
-{% endblock %}
-
 {% block body %}
-	<div class="col-md-6">
-		<h2>{{ press.general.press_name }} Roles</h2>
+    <div class="col-md-12 primary-heading container-fluid"style="margin-top:-20px" >
+         <h2>{{ press.general.press_name }} Roles <a href="{% url 'manager_index' %}" class="btn  btn-trasnparent-white" style="position: absolute;right:30px;margin-top:-6.5px">Go back</a></h2>
+        </div>
+	<div class="col-md-12">
+		
     <p class="small">Drag and drop groups to re-order them</p>
+    <hr>
     <ul class="list-group" id="group_files_sort">
       {% for role in roles %}<li id="group-{{ group.id }}" class="list-group-item ui-sortable-handle"><i class="fa fa-sliders">&nbsp;&nbsp;</i>{{ role.name }}<span style="float: right;"><a href="{% url 'manager_role' role.slug %}"><i class="fa fa-users">&nbsp;&nbsp;</i>Members</a></span></li>{% endfor %}
     </ul>
   </div>
 {% endblock body %}
+{% block js %}
+<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+<script type="text/javascript" src="{% static "js/fancyfile.js" %}"></script>
+<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+<script>
+$(function() {
+  $( "#group_files_sort" ).sortable({
+    placeholder: "ui-state-highlight",
+    update: function (event, ui) {
+        var data = $(this).sortable('serialize');
+        console.log(data);
+
+        // POST to server using $.post or $.ajax
+        $.ajax({
+            data: data,
+            type: 'POST',
+            url: '{% url 'checklist_order' %}'
+        });
+    }
+  });
+
+  $( "#group_files_sort" ).disableSelection();
+});
+</script>
+{% endblock %}
