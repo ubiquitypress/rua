@@ -4,22 +4,19 @@
 
 {% block title %}Book Proposals{% endblock %}
 
-{% block breadcrumbs %}
-    <ol class="breadcrumb">
-	  <li><a href="{% url 'user_dashboard' %}">Dashboard</a></li>
-	  <li class="">Workflow</li>
-    <li class="active">Proposals</li>
-	</ol>
-{% endblock %}
-
 {% block body %}
+<div class="col-md-12 primary-heading container-fluid" style="margin-top:-20px">
+  <h3>Start Proposal Review - {{ proposal.title }} <a href="{% url 'view_proposal' proposal.id %}" class="btn  btn-trasnparent-white" style="position: absolute;right:20px;margin-top:-8px">Go back</a></h3>
+</div>
 <div class="col-md-12">
   <form method="POST">
   {% csrf_token %}
-  <h3>Start Proposal Review - {{ proposal.title }}</h3>
-  <hr />
+
   <p>Select some reviewrs and a review form to start the review process.</p>
+    <hr />
+   <div class="col-md-12 primary-heading-2 container-fluid" >
   <h4>Individual Review</h4>
+</div>
   <p class="small">You can assign an individual reviewer. The reviewer will be asked to comment and make a recommendation.</p>
   <hr />
   <table class="table table-bordered small" cellspacing="0" width="100%" id='indv-reviewer'>
@@ -41,7 +38,10 @@
     {% endfor %}
   </table>
   <hr />
-  <h4>Committee Review</h4>
+    <div class="col-md-12 primary-heading-2 container-fluid" >
+ <h4>Committee Review</h4>
+</div>
+  
   <p class="small">You can assign a committee to review your submission. The committee will each be asked to comment and vote on a recommended decision.</p>
   <table class="table table-bordered small" cellspacing="0" width="100%" id='comm-reviewer'>
     <thead>
@@ -63,12 +63,15 @@
     </tr>
     {% endfor %}
   </table>
-  <h4>Set Due Date</h4>
-  <p class="small">Set a due date for the reviews. Reviewers will be politely reminded to submit their review before the due date.</p>
-  <input type="text" name="due_date" id="due_date" required="required" class="form-control" /><br/><br />
-  <button class="btn btn-success" type="submit">Submit</button>
-  </form>
+    <div class="col-md-12 primary-heading-2 container-fluid" >
+ <h4>Set Due Date</h4>
 </div>
+  
+  <p class="small">Set a due date for the reviews. Reviewers will be politely reminded to submit their review before the due date.</p>
+  <input type="text" name="due_date" id="due_date" required="required" class="form-control" /><br/>
+  <button class="btn btn-primary pull-right" type="submit" style="width:100px">Submit</button></br></br>
+  </form>
+</div></br></br>
 {% endblock %}
 
 {% block js %}
