@@ -14,7 +14,7 @@
 			<h3>{{ key|capfirst }}</h3>
 			<ul class="list-group">
 			{% for setting in value %}
-				<a class="list-group-item list-group-item-info" href="{% url 'edit_setting' setting.group.name setting.name %}">{{ setting.name }}</a>
+				<a class="list-group-item list-group-item-primary" href="{% url 'edit_setting' setting.group.name setting.name %}">{{ setting.name }}</a>
 			{% endfor %}
 			</ul>
 		</div>
