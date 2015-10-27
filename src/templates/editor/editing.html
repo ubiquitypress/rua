@@ -22,7 +22,7 @@
 		<td>{{ assignment.copyeditor.profile.full_name }} <sup> &nbsp;&nbsp;
 
 {% ifequal copyedit.id assignment.id %}
-	<a href="core/email.html" onclick="return popitup('/email/onetaskers/submission/{{submission.id}}/user/{{assignment.copyeditor.pk}}/','onetaskers_{{assignment.indexer.pk}}')"class="fa fa-envelope-o btn btn-xs btn-trasnparent"></a></sup>&nbsp;&nbsp;</td>
+	<a href="core/email.html" onclick="return popitup('/email/onetaskers/submission/{{submission.id}}/user/{{assignment.copyeditor.pk}}/','onetaskers_{{assignment.indexer.pk}}')"class="fa fa-envelope-o btn btn-xs btn-transparent"></a></sup>&nbsp;&nbsp;</td>
 	{% else %}
 	
 			<a href="core/email.html" onclick="return popitup('/email/onetaskers/submission/{{submission.id}}/user/{{assignment.copyeditor.pk}}/','onetaskers_{{assignment.indexer.pk}}')"class="fa fa-envelope-o btn btn-xs btn-default"></a></sup>&nbsp;&nbsp;</td>
@@ -69,7 +69,7 @@
 		<td>{{ assignment.indexer.profile.full_name }} <sup> 
 
 {% ifequal index.id assignment.id %}
-	<a href="core/email.html" onclick="return popitup('/email/onetaskers/submission/{{submission.id}}/user/{{assignment.indexer.pk}}/','onetaskers_{{assignment.indexer.pk}}')" class="fa fa-envelope-o btn btn-xs btn-trasnparent"></a></sup>&nbsp;&nbsp;</td>
+	<a href="core/email.html" onclick="return popitup('/email/onetaskers/submission/{{submission.id}}/user/{{assignment.indexer.pk}}/','onetaskers_{{assignment.indexer.pk}}')" class="fa fa-envelope-o btn btn-xs btn-transparent"></a></sup>&nbsp;&nbsp;</td>
 	{% else %}
 	
 			<a href="core/email.html" onclick="return popitup('/email/onetaskers/submission/{{submission.id}}/user/{{assignment.indexer.pk}}/','onetaskers_{{assignment.indexer.pk}}')" class="fa fa-envelope-o btn btn-xs btn-default"></a></sup>&nbsp;&nbsp;</td>

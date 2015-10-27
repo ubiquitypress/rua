@@ -343,6 +343,15 @@ body > div.container-fluid > div > div > div > a {
   color: #FFF;
   margin-bottom:5px;
 }
+.profile-heading {
+background-color: #DFC100;
+  color: #FFF;
+  margin-bottom:5px;
+   border-left: 6px solid #DF0098;
+      -webkit-box-shadow: 0 5px 8px -6px rgba(0,0,0,.2);
+       -moz-box-shadow: 0 5px 8px -6px rgba(0,0,0,.2);
+            box-shadow: 0 5px 8px -6px rgba(0,0,0,.2);
+}
 .file-sub-heading-grey {
   background-color: #AEAEAE;
   color: #FFF;
@@ -710,20 +719,20 @@ body > div.container-fluid > div > div > div > a {
     color:#ffffff;
     box-shadow: none;
 }
-.btn-trasnparent-white{
+.btn-transparent-white{
   background-color: transparent;
   color:#ffffff;
   border-radius: 24px;
   border-color: rgba(255,255,255,0.4);
 }
  
-.btn-trasnparent-white:hover, .btn-trasnparent-white:focus, .btn-trasnparent-white:active, .btn-trasnparent-white.active, .open > .dropdown-toggle.btn-trasnparent-white {
+.btn-transparent-white:hover, .btn-transparent-white:focus, .btn-transparent-white:active, .btn-transparent-white.active, .open > .dropdown-toggle.btn-transparent-white {
   color:#ffffff;
    background:rgba(255,255,255,0.3);
   border-color:white;
 }
  
-.btn-trasnparent-white:active, .btn-trasnparent-white.active {
+.btn-transparent-white:active, .btn-transparent-white.active {
     color:#000000;
      border-color:white;
 }

@@ -9,7 +9,7 @@
 
 {% block body %}
   <div class="col-md-12 other-heading container-fluid" style="margin-top:-20px">
-  <h3>Book Proposal :  {{ proposal.title }} {% if proposal.subtitle%}, {{ proposal.subtitle }}{%endif%}<a href="{% url 'proposals'%}" class="btn  btn-trasnparent-white" style="position: absolute;right:20;margin-top:-8px">Go back</a></h3>
+  <h3>Book Proposal :  {{ proposal.title }} {% if proposal.subtitle%}, {{ proposal.subtitle }}{%endif%}<a href="{% url 'proposals'%}" class="btn  btn-transparent-white" style="position: absolute;right:20;margin-top:-8px">Go back</a></h3>
 </div></br></br>
 <div class="col-md-12">
  </br>
@@ -53,7 +53,7 @@
 <hr>
   {% if not proposal.date_review_started %}<a href="{% url 'start_proposal_review' proposal.id %}" class="btn btn-primary btn-round"><i class="fa fa-plus">&nbsp;</i>Start Review Process</a>{% else %}
 
-  <div class="col-md-12 other-sub-heading"><h4>Review</h4><a href="{% url 'add_proposal_reviewers' proposal.id %}" class="btn  btn-trasnparent-white" style="position: absolute;right:20;margin-top:-37px"><i class="fa fa-plus">&nbsp;</i>Add Reviewers</a></div>
+  <div class="col-md-12 other-sub-heading"><h4>Review</h4><a href="{% url 'add_proposal_reviewers' proposal.id %}" class="btn  btn-transparent-white" style="position: absolute;right:20;margin-top:-37px"><i class="fa fa-plus">&nbsp;</i>Add Reviewers</a></div>
 
   {% include "core/proposals/proposal_review_block.html" with review_data=proposal.review_assignments.all %}
 
