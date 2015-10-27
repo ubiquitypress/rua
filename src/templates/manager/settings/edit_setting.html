@@ -21,12 +21,13 @@
 			{% endif %}
 
 			{% buttons %}
-			    <button type="submit" class="btn btn-primary">
-			        {% bootstrap_icon "ok" %} Submit
-			    </button>
-			    <button type="submit" class="btn btn-primary" onclick="return confirm_function()" name="delete" value="delete">
+			 <button type="submit" class="btn btn-primary pull-right" onclick="return confirm_function()" name="delete" value="delete">
 			        {% bootstrap_icon "remove" %} Delete
 			    </button>
+			    <button type="submit" class="btn btn-primary pull-right"style="margin-right:5px">
+			        {% bootstrap_icon "ok" %} Submit
+			    </button>
+			   
 		    {% endbuttons %}
 
 		</form>
