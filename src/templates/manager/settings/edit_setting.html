@@ -1,17 +1,13 @@
 {% extends "base.html" %}
 {% load bootstrap3 %}
 
-{% block breadcrumbs %}
-  <ol class="breadcrumb">
-	  <li><a href="{% url 'manager_index' %}">Manager</a></li>
-	  <li><a class="active" href="{% url 'settings_index' %}">Settings Index</a></li>
-	  <li>{{ setting.name }}</li>
-	</ol>
-{% endblock %}
 
 {% block body %}
+  <div class="col-md-12 primary-heading container-fluid"style="margin-top:-20px" >
+        	<h3>Setting : {{ setting.name }} <a href="{% url 'settings_index' %}" class="btn  btn-trasnparent-white" style="position: absolute;right:20px;margin-top:-8px">Go back</a></h3>
+        </div>
 	<div class="col-md-12">
-		<h2>{{ setting.name }}</h2>
+		<hr>
 
 		<form action="" method="POST" enctype="multipart/form-data">
 

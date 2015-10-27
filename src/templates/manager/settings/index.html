@@ -1,16 +1,12 @@
 {% extends "base.html" %}
 {% load bootstrap3 %}
 
-{% block breadcrumbs %}
-  <ol class="breadcrumb">
-	  <li><a class="active" href="{% url 'manager_index' %}">Manager</a></li>
-		<li>Settings</li>
-	</ol>
-{% endblock %}
-
 {% block body %}
+  <div class="col-md-12 primary-heading container-fluid"style="margin-top:-20px" >
+        	<h2>{{ press.general.press_name }} Settings <a href="{% url 'manager_index' %}" class="btn  btn-trasnparent-white" style="position: absolute;right:20px;margin-top:-8px">Go back</a></h2>
+        </div>
 	<div class="col-md-12">
-		<h2>{{ press.general.press_name }} Settings</h2>
+	
 
 		{% for setting_group in settings %}
 		{% for key, value in setting_group.items %}
