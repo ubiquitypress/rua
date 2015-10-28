@@ -57,7 +57,7 @@ INSTALLED_APPS = (
     # 3rd Party
     'bootstrap3',
     'pymarc',
-    #'debug_toolbar',
+    'debug_toolbar',
     'django_summernote',
     'rest_framework',
 

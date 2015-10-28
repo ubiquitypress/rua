@@ -39,15 +39,15 @@ def editor_dashboard(request):
 		query_list.append(Q(title__contains=search) | Q(subtitle__contains=search) | Q(prefix__contains=search))
 
 	if filterby:
-		book_list = models.Book.objects.filter(publication_date__isnull=True).filter(*query_list).exclude(stage__current_stage='declined').order_by(order)
+		book_list = models.Book.objects.filter(publication_date__isnull=True).filter(*query_list).exclude(stage__current_stage='declined').select_related('stage').select_related('owner__profile').order_by(order)
 	else:
-		book_list = models.Book.objects.filter(publication_date__isnull=True).exclude(stage__current_stage='declined').order_by(order)
+		book_list = models.Book.objects.filter(publication_date__isnull=True).exclude(stage__current_stage='declined').select_related('stage').select_related('owner__profile').order_by(order)
 
 	template = 'editor/dashboard.html'
 	context = {
 		'book_list': book_list,
 		'recent_activity': models.Log.objects.all().order_by('-date_logged')[:15],
-		'notifications': models.Task.objects.filter(assignee=request.user, completed__isnull=True).order_by('due'),
+		'notifications': models.Task.objects.filter(assignee=request.user, completed__isnull=True).select_related('book').order_by('due'),
 		'order': order,
 		'filterby': filterby,
 	}

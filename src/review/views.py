@@ -31,8 +31,8 @@ from submission import models as submission_models
 @is_reviewer
 def reviewer_dashboard(request):
 
-	pending_tasks = core_models.ReviewAssignment.objects.filter(user=request.user,completed__isnull=True,declined__isnull=True)
-	completed_tasks = core_models.ReviewAssignment.objects.filter(user=request.user,completed__isnull=False)
+	pending_tasks = core_models.ReviewAssignment.objects.filter(user=request.user,completed__isnull=True,declined__isnull=True).select_related('book')
+	completed_tasks = core_models.ReviewAssignment.objects.filter(user=request.user,completed__isnull=False).select_related('book')
 	
 	template = 'review/dashboard.html'
 	context = {	

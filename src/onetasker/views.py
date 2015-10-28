@@ -17,7 +17,6 @@ def dashboard(request):
 
 	onetasker_tasks = core_logic.onetasker_tasks(request.user)
 
-
 	template = 'onetasker/dashboard.html'
 	context = {
 		'completed_tasks': onetasker_tasks.get('completed'),

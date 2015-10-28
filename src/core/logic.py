@@ -293,9 +293,9 @@ def review_assignment_count(request):
 def author_tasks(user):
 	base_url = models.Setting.objects.get(group__name='general', name='base_url').value
 	task_list = []
-	revision_tasks = revisions_models.Revision.objects.filter(book__owner=user, requested__isnull=False, completed__isnull=True)
-	copyedit_tasks = models.CopyeditAssignment.objects.filter(book__owner=user, author_invited__isnull=False, author_completed__isnull=True)
-	typeset_tasks = models.TypesetAssignment.objects.filter(book__owner=user, author_invited__isnull=False, author_completed__isnull=True)
+	revision_tasks = revisions_models.Revision.objects.filter(book__owner=user, requested__isnull=False, completed__isnull=True).select_related('book')
+	copyedit_tasks = models.CopyeditAssignment.objects.filter(book__owner=user, author_invited__isnull=False, author_completed__isnull=True).select_related('book')
+	typeset_tasks = models.TypesetAssignment.objects.filter(book__owner=user, author_invited__isnull=False, author_completed__isnull=True).select_related('book')
 
 	for revision in revision_tasks:
 		task_list.append({'task': 'Revisions Requested', 'title': revision.book.title, 'url': 'http://%s/revisions/%s' % (base_url, revision.id)})
@@ -310,23 +310,23 @@ def author_tasks(user):
 
 def typesetter_tasks(user):
 
-	active = models.TypesetAssignment.objects.filter((Q(requested__isnull=False) & Q(completed__isnull=True)) | (Q(typesetter_invited__isnull=False) & Q(typesetter_completed__isnull=True)), typesetter=user).exclude(declined__isnull=False)
-	completed = models.TypesetAssignment.objects.filter((Q(completed__isnull=False) & Q(typesetter_completed__isnull=True)) | (Q(completed__isnull=False) & Q(typesetter_completed__isnull=False)), typesetter=user).order_by('-completed')[:5]
+	active = models.TypesetAssignment.objects.filter((Q(requested__isnull=False) & Q(completed__isnull=True)) | (Q(typesetter_invited__isnull=False) & Q(typesetter_completed__isnull=True)), typesetter=user).select_related('book').exclude(declined__isnull=False)
+	completed = models.TypesetAssignment.objects.filter((Q(completed__isnull=False) & Q(typesetter_completed__isnull=True)) | (Q(completed__isnull=False) & Q(typesetter_completed__isnull=False)), typesetter=user).select_related('book').order_by('-completed')[:5]
 
 	return { 'active':active, 'completed':completed}
 	
 	
 def copyeditor_tasks(user):
 
-	active = models.CopyeditAssignment.objects.filter(copyeditor=user, completed__isnull=True).exclude(declined__isnull=False)
-	completed = models.CopyeditAssignment.objects.filter(copyeditor=user, completed__isnull=False).order_by('-completed')[:5]
+	active = models.CopyeditAssignment.objects.filter(copyeditor=user, completed__isnull=True).exclude(declined__isnull=False).select_related('book')
+	completed = models.CopyeditAssignment.objects.filter(copyeditor=user, completed__isnull=False).select_related('book').order_by('-completed')[:5]
 
 	return { 'active':active, 'completed':completed}
 
 def indexer_tasks(user):
 
-	active = models.IndexAssignment.objects.filter(indexer=user, completed__isnull=True).exclude(declined__isnull=False)
-	completed = models.IndexAssignment.objects.filter(indexer=user, completed__isnull=False).order_by('-completed')[:5]
+	active = models.IndexAssignment.objects.filter(indexer=user, completed__isnull=True).exclude(declined__isnull=False).select_related('book')
+	completed = models.IndexAssignment.objects.filter(indexer=user, completed__isnull=False).select_related('book').order_by('-completed')[:5]
 
 	return { 'active':active, 'completed':completed}
 	
