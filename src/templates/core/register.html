@@ -4,16 +4,20 @@
 {% block title %}Create an account{% endblock %}
 
 {% block body %}
-<h1>Create an account</h1>
-<div class="col-md-6">
+
+<div class="col-md-6" style="width:80%;left:10%;right:10%">
+	
+	<h1>Create an account</h1><hr>
+	<div class="well">
   	<form method="post" class="form">
 	    {% csrf_token %}
-	    {% bootstrap_form form %}
+	    {% bootstrap_form form %}</div>
 	    {% buttons %}
-	        <button name="register" id="register" type="submit" class="btn btn-primary">
+	        <button name="register" id="register" style="right:10%;width:120px" type="submit" class="pull-right btn-round btn btn-primary">
 	            <i class="fa fa-user-plus"></i> Register
 	        </button>
 	    {% endbuttons %}
 	</form>
+</br><br/>
 </div>
 {% endblock %}
