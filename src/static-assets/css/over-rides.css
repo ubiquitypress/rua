@@ -344,10 +344,11 @@ body > div.container-fluid > div > div > div > a {
   margin-bottom:5px;
 }
 .profile-heading {
-background-color: #DFC100;
+  background-color: #DC5466;
   color: #FFF;
   margin-bottom:5px;
-   border-left: 6px solid #DF0098;
+  border-left: 6px solid  #E3596C;
+
       -webkit-box-shadow: 0 5px 8px -6px rgba(0,0,0,.2);
        -moz-box-shadow: 0 5px 8px -6px rgba(0,0,0,.2);
             box-shadow: 0 5px 8px -6px rgba(0,0,0,.2);
@@ -903,7 +904,18 @@ background-color: #DFC100;
 .bs-callout-info h4 {
     color: #5bc0de;
 }
-
+.bs-callout-profile {
+    border-left-color: #DB5264;
+}
+.bs-callout-profile h4 {
+    color: #AD2234;
+}
+.bs-callout-profile-2 {
+    border-left-color: #E99300;
+}
+.bs-callout-profile-2 h4 {
+    color: #E99300;
+}
 .form-signin {
   max-width: 330px;
   padding: 15px;

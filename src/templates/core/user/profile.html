@@ -1,12 +1,12 @@
 {% extends "base.html" %}
 {% load bootstrap3 %}
 
-{% block title %}Profile{% endblock %}
+{% block title %}My Profile{% endblock %}
 
 {% block body %}
   <div class="col-md-12 profile-heading container-fluid">
       <h1>My Profile   <div class="btn-group pull-right">
-                <a class="btn dropdown-toggle btn-transparent-white" data-toggle="dropdown" href="#">
+                <a class="btn dropdown-toggle btn-transparent-white" style="width:95px" data-toggle="dropdown" href="#">
                     Action
                     <span class="icon-cog icon-white"></span><span class="caret"></span>
                 </a>
@@ -25,17 +25,20 @@
   <div class="container-fluid well span6">
 	<div class="row-fluid">
         <div class="col-md-3" >
-                <div class="bs-callout bs-callout-submission" id="callout-helper-bg-specificity">
+                <div class="bs-callout bs-callout-profile" align="middle"id="callout-helper-bg-specificity">
     		      <img src="{% if user_profile.profile_image %}{{ MEDIA_URL }}{{ user_profile.profile_image }}{% else %}holder.js/150x150{% endif %}" class="img-circle img-responsive" style="max-width: 150px;">
-                    <h3>{{ request.user.first_name }} {{ request.user.last_name }}</h3>
+              <div class=" profile-heading container-fluid" style="height:25px;margin-top:10px;left:30px">
+                    <h5 style="margin-top:4px" >{{ request.user.first_name }} {{ request.user.last_name }}</h5></div>
+                    <div style="text-align:left;">
                     <h6><strong>Email:</strong> {{ request.user.email }}</h6>
                     <h6><strong>Institution:</strong> {{ user_profile.institution }}</h6>
                     <h6><strong>Department:</strong> {{ user_profile.department }}</h6>
                 </div>
+                 </div>
         </div>
 
         <div class="col-md-9">
-            <div class="bs-callout bs-callout-submission" id="callout-helper-bg-specificity">
+            <div class="bs-callout bs-callout-profile" id="callout-helper-bg-specificity">
                 <h4>Biography</h4>
                 {{ user_profile.biography|safe }}
             </div>
