@@ -355,7 +355,7 @@ def get_messages(request, submission_id):
 
 
 
-def get_authors(request,submission_id):
+def get_authors(request, submission_id):
     if request.is_ajax():
         q = request.GET.get('term', '')
         data = json.dumps(logic.get_author_emails(submission_id,q))
@@ -364,7 +364,7 @@ def get_authors(request,submission_id):
     mimetype = 'application/json'
     return HttpResponse(data, mimetype)
 
-def get_editors(request,submission_id):
+def get_editors(request, submission_id):
     if request.is_ajax():
 	    q = request.GET.get('term', '')
 	    results = []
@@ -375,7 +375,7 @@ def get_editors(request,submission_id):
     mimetype = 'application/json'
     return HttpResponse(data, mimetype)
 
-def get_onetaskers(request,submission_id):
+def get_onetaskers(request, submission_id):
     if request.is_ajax():
         q = request.GET.get('term', '')
         data = json.dumps(logic.get_onetasker_emails(submission_id,q))
@@ -384,7 +384,7 @@ def get_onetaskers(request,submission_id):
     mimetype = 'application/json'
     return HttpResponse(data, mimetype)
 
-def get_all(request,submission_id):
+def get_all(request, submission_id):
     submission = get_object_or_404(models.Book, pk=submission_id)
     if request.is_ajax():
         q = request.GET.get('term', '')
@@ -410,7 +410,7 @@ def get_all(request,submission_id):
     return HttpResponse(data, mimetype)
 
 @is_book_editor
-def email_users(request,group,submission_id=None,user_id=None):
+def email_users(request, group, submission_id=None, user_id=None):
 	submission = get_object_or_404(models.Book, pk=submission_id)
 	editors = logic.get_editors(submission)
 	authors = submission.author.all()
@@ -514,6 +514,7 @@ def upload_misc_file(request, submission_id):
 	}
 
 	return render(request, template, context)
+	
 @login_required
 def serve_marc21_file(request, submission_id,type):
 	book = get_object_or_404(models.Book, pk=submission_id)

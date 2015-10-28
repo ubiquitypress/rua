@@ -254,6 +254,7 @@ def proposal_forms(request):
 	}
 
 	return render(request, template, context)
+
 @staff_member_required
 def view_proposal_form(request,form_id):
 
@@ -282,6 +283,7 @@ def view_proposal_form(request,form_id):
 	}
 
 	return render(request, template, context)
+
 @staff_member_required
 def proposal_form_elements(request):
 
@@ -349,6 +351,7 @@ def add_proposal_field(request,form_id):
 	}
 
 	return render(request, template, context)
+
 @staff_member_required
 def add_proposal_form(request):
 
@@ -370,74 +373,68 @@ def add_proposal_form(request):
 	}
 
 	return render(request, template, context)
+
 @staff_member_required
 def create_proposal_elements(request,form_id):
 
-	form =  core_models.ProposalForm.objects.get(id=form_id)
+	form = core_models.ProposalForm.objects.get(id=form_id)
 	elements = core_models.ProposalFormElement.objects.all()
 	new_form = forms.StagesProposalFormElementForm()
+
 	if request.POST and "delete" in request.POST:
 		index = int(request.POST.get("delete"))
 		field = elements[index]
 		field.delete()
 		return redirect(reverse('manager_create_proposal_elements',kwargs={'form_id': form_id}))
 	elif request.POST and 'continue' in request.POST:
-		print 'Continue'
 		form_element_form=forms.StagesProposalFormElementForm(request.POST)
 		if form_element_form.is_valid():
 			form_element_form.save()
 		return redirect(reverse('manager_add_proposal_form_field',kwargs={'form_id': form_id}))
 	elif request.POST:
-		print 'Save and stay'
 		form_element_form=forms.StagesProposalFormElementForm(request.POST)
 		if form_element_form.is_valid():
 			form_element_form.save()
 			return redirect(reverse('manager_create_proposal_elements',kwargs={'form_id': form_id}))
 
-
-		
-
 	template = 'manager/proposal/create_elements.html'
-
 	context = {
 		'form': form,
 		'new_form':new_form,
 		'elements' : elements,
 	}
-
 	return render(request, template, context)
+
 @staff_member_required
 def review_forms(request):
 
 	forms = review_models.Form.objects.all()
 
 	template = 'manager/review/review_forms.html'
-
 	context = {
 		'forms': forms,
 	}
-
 	return render(request, template, context)
 
 @staff_member_required
 def view_review_form(request,form_id):
 
 	form = review_models.Form.objects.get(id=form_id)
-
 	fields = review_models.FormElementsRelationship.objects.filter(form=form)
+
 	if request.POST and "delete" in request.POST:
 		index = int(request.POST.get("delete"))
 		field = fields[index]
 		field.delete()
 		return redirect(reverse('manager_view_review_form',kwargs={'form_id': form_id}))
-	template = 'manager/review/view_form.html'
 
+	template = 'manager/review/view_form.html'
 	context = {
 		'form': form,
 		'fields':fields,
 	}
-
 	return render(request, template, context)
+
 @staff_member_required
 def review_form_elements(request):
 
@@ -458,12 +455,10 @@ def review_form_elements(request):
 
 
 	template = 'manager/review/elements.html'
-
 	context = {
 		'elements': elements,
 		'new_form':new_form
 	}
-
 	return render(request, template, context)
 
 @staff_member_required
@@ -474,7 +469,6 @@ def add_field(request,form_id):
 	elements = review_models.FormElement.objects.all()
 	new_form = forms.FormElementsRelationshipForm()
 	if request.POST and 'finish' in request.POST:
-		print 'Finish'
 		return redirect(reverse('manager_view_review_form',kwargs={'form_id': form_id}))
 	elif request.POST and "delete" in request.POST:
 		index = int(request.POST.get("delete"))
@@ -494,15 +488,15 @@ def add_field(request,form_id):
 		form.form_fields=fields
 		form.save()
 		return redirect(reverse('manager_add_review_form_field',kwargs={'form_id': form_id}))
+	
 	template = 'manager/review/add_field.html'
-
 	context = {
 		'form': form,
 		'new_form':new_form,
 		'fields': fields,
 	}
-
 	return render(request, template, context)
+
 @staff_member_required
 def add_form(request):
 
@@ -515,15 +509,14 @@ def add_form(request):
 	
 		else:
 			print form.errors
-		print review_form
 		return redirect(reverse('manager_review_forms'))
-	template = 'manager/review/add_form.html'
 
+	template = 'manager/review/add_form.html'
 	context = {
 		'new_form': form,
 	}
-
 	return render(request, template, context)
+
 @staff_member_required
 def create_elements(request,form_id):
 
@@ -536,30 +529,24 @@ def create_elements(request,form_id):
 		field.delete()
 		return redirect(reverse('manager_create_elements',kwargs={'form_id': form_id}))
 	elif request.POST and 'continue' in request.POST:
-		print 'Continue'
 		form_element_form=forms.FormElementForm(request.POST)
 		if form_element_form.is_valid():
 			form_element_form.save()
 		return redirect(reverse('manager_add_review_form_field',kwargs={'form_id': form_id}))
 	elif request.POST:
-		print 'Save and stay'
 		form_element_form=forms.FormElementForm(request.POST)
 		if form_element_form.is_valid():
 			form_element_form.save()
 			return redirect(reverse('manager_create_elements',kwargs={'form_id': form_id}))
 
-
-		
-
 	template = 'manager/review/create_elements.html'
-
 	context = {
 		'form': form,
 		'new_form':new_form,
 		'elements' : elements,
 	}
-
 	return render(request, template, context)
+
 @staff_member_required
 def users(request):
 
@@ -567,7 +554,6 @@ def users(request):
 	context = {
 		'users': User.objects.all(),
 	}
-
 	return render(request, template, context)
 
 @staff_member_required
@@ -597,7 +583,6 @@ def add_user(request):
 		'user_form': user_form,
 		'active': 'add',
 	}
-
 	return render(request, template, context)
 
 @staff_member_required
@@ -621,7 +606,6 @@ def user_edit(request, user_id):
 		'user_form': user_form,
 		'active': 'update',
 	}
-
 	return render(request, template, context)
 
 

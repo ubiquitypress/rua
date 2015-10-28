@@ -176,10 +176,8 @@ def update_review_due_date(request, submission_id, round_id, review_id):
 	review_assignment = get_object_or_404(models.ReviewAssignment, pk=review_id)
 
 	if request.POST:
-		print 1
 		due_date = request.POST.get('due_date', None)
 		if due_date:
-			print 2
 			review_assignment.due = due_date
 			review_assignment.save()
 			messages.add_message(request, messages.SUCCESS, 'Due date updated.')

@@ -23,7 +23,6 @@ from django.template.loader import render_to_string
 def setting_template_loader(setting, path, dictionary,pattern = None):
 	file_location = "templates"
 	
-
 	if not path[0] =='/':
 		file_location = file_location+"/"
 	
@@ -177,6 +176,7 @@ def book_to_mark21_file(book,owner, xml = False):
 		file=handle_marc21_file(content,filename, book, owner)
 	return file.pk
 	#add handle_file ?
+
 def get_author_emails(submission_id,term):
     submission = get_object_or_404(models.Book, pk=submission_id)
     authors = submission.author.all()
@@ -245,6 +245,7 @@ def get_editors(book):
 		press_editor_list = [ editor for editor in press_editors]
 	
 	return (press_editor_list + series_editor_list)
+	
 def clean_email_list(addresses):
 	list_of_email_addresses=[]
 	for address in addresses:

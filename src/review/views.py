@@ -303,8 +303,6 @@ def handle_review_file(file, book, review_assignment, kind):
 
 	file_mime = mime.guess_type(filename)
 
-	
-
 	try:
 		file_mime = file_mime[0]
 		if not file_mime:

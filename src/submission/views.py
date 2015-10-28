@@ -1,6 +1,4 @@
-from django.contrib.auth import authenticate
-from django.contrib.auth import logout as logout_user
-from django.contrib.auth import login as login_user
+from django.contrib.auth import authenticate, logout as logout_user, login as login_user
 from django.shortcuts import redirect, render, get_object_or_404
 from django.contrib import messages
 from django.core.urlresolvers import reverse
@@ -16,12 +14,8 @@ from django.views.decorators.http import require_POST
 from jfu.http import upload_receive, UploadResponse, JFUResponse
 from django.contrib.auth.models import User
 from submission import forms
-from core import models as core_models
-from core import log
-from core import task
-from core import logic as core_logic
-from submission import logic
-from submission import models as submission_models
+from core import models as core_models, log, task, logic as core_logic
+from submission import logic, models as submission_models
 from manager import forms as manager_forms
 from  __builtin__ import any as string_any
 
@@ -394,7 +388,7 @@ def proposal_revisions(request, proposal_id):
 	intial_data={}
 	for k,v in data.items():
 		intial_data[k] = v[0]
-	print intial_data
+
 	proposal_form.initial=intial_data
 	if request.POST:
 		proposal_form = manager_forms.GeneratedForm(request.POST, request.FILES, form=core_models.ProposalForm.objects.get(pk=proposal.form.id))
@@ -427,7 +421,7 @@ def proposal_revisions(request, proposal_id):
 			proposal.subtitle = defaults.get("subtitle")
 			proposal.save()
 			users = User.objects.all()
-			print users 
+
 			for available_user in users:
 				roles=  available_user.profile.roles.all()
 				if string_any('Editor' for role in roles):
