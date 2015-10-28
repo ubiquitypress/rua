@@ -510,6 +510,7 @@ def upload_misc_file(request, submission_id):
 	context = {
 		'submission': submission,
 		'file_form': file_form,
+		'active_page':'editor_submission'
 	}
 
 	return render(request, template, context)
