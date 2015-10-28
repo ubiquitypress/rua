@@ -5,7 +5,7 @@
 {% block title %}Update Profile{% endblock %}
 
 {% block body %}
-  <div class="col-md-12 profile-heading container-fluid">
+  <div class="col-md-12 profile-heading container-fluid" >
       <h1>Update Profile   <div class="btn-group pull-right">
                 <a class="btn dropdown-toggle btn-transparent-white" style="width:95px" data-toggle="dropdown" href="#">
                     Action
@@ -17,8 +17,6 @@
             </div></h1>
     </div>
 <div class="col-md-12">
-    </div>
-	<br />
 	  <div class="container-fluid well span6">
   	<form method="post" class="form" enctype="multipart/form-data">
 	    {% csrf_token %}
