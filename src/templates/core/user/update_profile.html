@@ -4,34 +4,22 @@
 
 {% block title %}Update Profile{% endblock %}
 
-{% block breadcrumbs %}
-    <ol class="breadcrumb">
-	  <li><a href="/">Home</a></li>
-	  <li><a href="{% url 'user_dashboard' %}">Dashboard</a></li>
-	  <li><a href="{% url 'view_profile' %}">Profile</a></li>
-	  <li class="active">Update</li>
-	</ol>
-{% endblock %}
-
 {% block body %}
-<div class="col-md-12">
-	<div class="row">
-		<div class="col-md-11">
-			<h1>Update Profile</h1>
-		</div>
-		<div class="col-md-1">
-            <div class="btn-group">
-                <a class="btn dropdown-toggle btn-primary" data-toggle="dropdown" href="#">
+  <div class="col-md-12 profile-heading container-fluid">
+      <h1>Update Profile   <div class="btn-group pull-right">
+                <a class="btn dropdown-toggle btn-transparent-white" style="width:95px" data-toggle="dropdown" href="#">
                     Action
                     <span class="icon-cog icon-white"></span><span class="caret"></span>
                 </a>
                 <ul class="dropdown-menu">
-                	{% include "core/user/action_bar.html" %}
+                  {% include "core/user/action_bar.html" %}
                 </ul>
-            </div>
-        </div>
+            </div></h1>
+    </div>
+<div class="col-md-12">
     </div>
 	<br />
+	  <div class="container-fluid well span6">
   	<form method="post" class="form" enctype="multipart/form-data">
 	    {% csrf_token %}
 		  <div class="form-group">
@@ -82,7 +70,7 @@
 		  			<label class="control-label" for="id_profile_image">Profile Image</label><br />
 					       <div class="input-group">
 		                <span class="input-group-btn">
-		                    <span class="btn btn-primary btn-file">
+		                    <span class="btn btn-decline btn-browse btn-file">
 		                        Browse&hellip; <input type="file" id="id_profile_image" name="profile_image">
 		                    </span>
 		                </span>
@@ -93,15 +81,15 @@
 		  	</div>
 		  </div>
 			{% buttons %}
-		        <button name="register" id="register" type="submit" class="btn btn-primary" style="margin-left:15px;">
-		            <i class="fa fa-user"></i> Update Profile
+		        <button name="register" id="register" type="submit" class="btn btn-decline pull-right" style="width:150px;margin-left:15px;">
+		            <i class="fa fa-user"></i>&nbsp;&nbsp;Update Profile
 		        </button>
 		    {% endbuttons %}
 		</form>
 
 	</form>
-
-</div>
+    </div> </br><br/>
+</div> </br><br/>
 {% endblock %}
 
 {% block js %}
