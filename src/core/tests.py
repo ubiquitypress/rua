@@ -120,3 +120,86 @@ class CoreTests(TestCase):
 		number_of_langs = len(models.Language.objects.all())
 		self.assertEqual(number_of_langs==147, True)
 		self.assertEqual(langs_exist, True)
+
+	def test_author_model(self):
+		"""
+		test author model
+		"""
+		self.author = models.Author(
+			first_name = "rua_first_name",
+			last_name = "rua_last_name",
+			salutation = "Mr",
+			institution = "Testing",
+			department = "test",
+			country = "GB",
+			author_email = "fake@fakeaddress.com"
+			)
+		self.author.save()
+		#model functions
+		fullname="%s %s" % ("rua_first_name","rua_last_name")
+		unicode_text=u'%s - %s %s' % (str(1), "rua_first_name", "rua_last_name")
+		self.assertEqual(self.author.__repr__()==unicode_text,True)
+		self.assertEqual(self.author.__unicode__()==unicode_text,True)
+		self.assertEqual(self.author.full_name()==fullname, True)
+		
+		#check that it exists in the database
+		test_author=models.Author.objects.get(first_name="rua_first_name",last_name="rua_last_name",institution="Testing")
+		self.assertEqual(test_author.first_name=="rua_first_name", True)
+		self.assertEqual(test_author.last_name=="rua_last_name", True)
+		self.assertEqual(test_author.salutation=="Mr", True)
+		self.assertEqual(test_author.institution=="Testing", True)
+		self.assertEqual(test_author.country=="GB", True)
+		self.assertEqual(test_author.author_email=="fake@fakeaddress.com", True)
+		self.assertEqual(test_author.department=="test", True)
+		self.assertEqual(test_author.full_name()==fullname, True)
+		
+		#alter field
+		self.author.first_name="rua_changed_first_name"
+		self.author.save()
+
+		self.assertEqual(self.author.first_name=="rua_changed_first_name", True)
+		#check number of created objects
+		self.assertEqual(len(models.Author.objects.all())==1, True)
+	'''def test_book_model(self):
+		"""
+		test book model
+		"""
+		self.author = models.Author(
+			first_name = "rua_first_name",
+			last_name = "rua_last_name",
+			salutation = "Mr",
+			institution = "Testing",
+			department = "test",
+			country = "GB",
+			author_email = "fake@fakeaddress.com"
+			)
+		self.author.save()
+		self.keyword=models.Keyword(name="test")
+		self.keyword.save()
+		self.subject=models.Subject(name="test")
+		self.subject.save()
+		user=self.user
+		self.book= models.Book(
+				prefix = "Project",
+				title = "Test Book",
+				author = [self.author,],
+				press_editors = [self.user,],
+				description = "description",
+				keywords = [self.keyword,],
+				subject = [self.subject,],
+				license = models.License.objects.get(code="cc-4-by-nd"),
+				pages = "50",
+				slug = "test_book",
+				cover_letter = "cover letter text",
+				reviewer_suggestions = "suggestions",
+				competing_interests = "interests",
+				book_type = 'monograph',
+				review_type = 'open-with',
+				languages = models.Language.objects.get(code="eng"),
+				owner = user
+			)
+		self.book.save()
+		#check that it exists in the database
+		
+		self.assertEqual(len(models.Book.objects.all())==1, True)	'''
+		
