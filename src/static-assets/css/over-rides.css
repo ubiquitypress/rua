@@ -584,18 +584,23 @@ body > div.container-fluid > div > div > div > a {
 }
 
 .btn-back {
-  background-color:#97ccf1;
+  background-color:transparent;
   color:#ffffff;
-  border-color:rgb(190,217,140);
+  border-color:rgba(255,255,255,0.3);
   border-radius: 12px;
   margin-bottom: 10px;
 }
 
 .btn-back:hover, .btn-back:focus, .btn-back:active, .btn-back.active, .open > .dropdown-toggle.btn-back {
-    background: #bedff6;
-    color:#000000;
+    background-color: rgba(255,255,255,0.3);;
+    color:white;
 }
- 
+ .btn-back:active, .btn-back.active {
+    color:#ffffff;
+    background-color: rgba(0,0,0,0.3);
+    border-color:rgba(0,0,0,0.3);
+    box-shadow: none;
+}
 .btn-accept:hover, .btn-accept:focus, .btn-accept:active, .btn-accept.active, .open > .dropdown-toggle.btn-accept {
     background: #AAE440;
     color:#ffffff;
