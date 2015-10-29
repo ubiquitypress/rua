@@ -3,7 +3,7 @@ from core import models
 from django.utils import timezone
 import time
 import datetime
-
+from django.test import SimpleTestCase
 from django.db.models import Q
 from core import views
 from django.http import HttpRequest
@@ -25,7 +25,7 @@ class CoreTests(TestCase):
 	]
 
 	def setUp(self):
-		self.client = Client()
+		self.client = Client(HTTP_HOST="testing")
 		self.username = 'rua_user'
 		self.email = 'fake.emaill@fakeaddress.com'
 		self.password = 'rua_tester'
@@ -52,6 +52,8 @@ class CoreTests(TestCase):
 		self.assertEqual(self.user.profile.institution=="Testing", True)
 		self.assertEqual(self.user.profile.country=="GB", True)
 		self.assertEqual(self.user.profile.department=="test", True)
+
+##############################################	Fixture Tests	 ##############################################		
 
 	def test_roles_fixture(self):
 		"""
@@ -128,6 +130,8 @@ class CoreTests(TestCase):
 		self.assertEqual(number_of_langs==147, True)
 		self.assertEqual(langs_exist, True)
 
+##############################################	Model Tests	 ##############################################		
+
 	def test_author_model(self):
 		"""
 		test author model
@@ -181,8 +185,12 @@ class CoreTests(TestCase):
 				if cmp(role,saved_role)==0:
 					found=True 
 			self.assertEqual(found, True)
-	
-	def test_editor_login(self):
+
+##############################################	View Tests	 ##############################################		
+
+################### Dashboards ##################
+
+	def test_editor_access(self):
 		roles = models.Role.objects.filter(name__icontains="Editor")
 		for role in roles:
 			self.user.profile.roles.add(role)
@@ -194,14 +202,23 @@ class CoreTests(TestCase):
 		self.assertEqual(resp.status_code, 200)
 		self.assertEqual("403" in content, False)
 	
-	def test_not_editor_login(self):
+	def test_not_editor_access(self):
 		resp = self.client.get(reverse('editor_dashboard'))
 		content =resp.content
 		
 		self.assertEqual(resp.status_code, 200)
 		self.assertEqual("403" in content, True)
+
+	def test_editor_redirect(self):
+		roles = models.Role.objects.filter(name__icontains="Editor")
+		for role in roles:
+			self.user.profile.roles.add(role)
+		self.user.save()
+		self.user.profile.save()
+		response = self.client.get(reverse('user_dashboard'))
+		self.assertRedirects(response, "http://testing/editor/dashboard/", status_code=302, target_status_code=200, host=None, msg_prefix='', fetch_redirect_response=True)
 	
-	def test_author_login(self):
+	def test_author_access(self):
 		roles = models.Role.objects.filter(name__icontains="Author")
 		for role in roles:
 			self.user.profile.roles.add(role)
@@ -209,14 +226,13 @@ class CoreTests(TestCase):
 		self.user.save()
 		self.user.profile.save()
 
-
 		resp = self.client.get(reverse('author_dashboard'))
 		content =resp.content
 		
 		self.assertEqual(resp.status_code, 200)
 		self.assertEqual("403" in content, False)
 
-	def test_not_author_login(self):
+	def test_not_author_access(self):
 		resp = self.client.get(reverse('author_dashboard'))
 		content =resp.content
 		self.user.last_login=timezone.now()
@@ -225,7 +241,17 @@ class CoreTests(TestCase):
 		self.assertEqual(resp.status_code, 200)
 		self.assertEqual("403" in content, True)
 
-	def test_onetasker_login(self):
+	def test_author_redirect(self):
+		roles = models.Role.objects.filter(name__icontains="Author")
+		for role in roles:
+			self.user.profile.roles.add(role)
+		self.user.last_login=timezone.now()	
+		self.user.save()
+		self.user.profile.save()
+		response = self.client.get(reverse('user_dashboard'))
+		self.assertRedirects(response, "http://testing/author/dashboard/", status_code=302, target_status_code=200, host=None, msg_prefix='', fetch_redirect_response=True)
+
+	def test_onetasker_access(self):
 		roles = models.Role.objects.filter(Q(name__icontains="Typesetter") | Q(name__icontains="Copyeditor") | Q(name__icontains="Indexer"))
 		for role in roles:
 			self.user.profile.roles.add(role)
@@ -237,14 +263,23 @@ class CoreTests(TestCase):
 		self.assertEqual(resp.status_code, 200)
 		self.assertEqual("403" in content, False)
 
-	def test_not_onetasker_login(self):
+	def test_not_onetasker_access(self):
 		resp = self.client.get(reverse('onetasker_dashboard'))
 		content =resp.content
 		
 		self.assertEqual(resp.status_code, 200)
 		self.assertEqual("403" in content, True)
+
+	def test_onetasker_redirect(self):
+		roles = models.Role.objects.filter(Q(name__icontains="Typesetter") | Q(name__icontains="Copyeditor") | Q(name__icontains="Indexer"))
+		for role in roles:
+			self.user.profile.roles.add(role)
+		self.user.save()
+		self.user.profile.save()
+		response = self.client.get(reverse('user_dashboard'))
+		self.assertRedirects(response, "http://testing/tasks/", status_code=302, target_status_code=200, host=None, msg_prefix='', fetch_redirect_response=True)
 	
-	def test_reviewer_login(self):
+	def test_reviewer_access(self):
 		roles = models.Role.objects.filter(name__icontains="Reviewer")
 		for role in roles:
 			self.user.profile.roles.add(role)
@@ -256,15 +291,34 @@ class CoreTests(TestCase):
 		self.assertEqual(resp.status_code, 200)
 		self.assertEqual("403" in content, False)
 
-	def test_not_reviewer_login(self):
+	def test_not_reviewer_access(self):
 		resp = self.client.get(reverse('reviewer_dashboard'))
 		content =resp.content
 		
 		self.assertEqual(resp.status_code, 200)
 		self.assertEqual("403" in content, True)
 
+	def test_reviewer_redirect(self):
+		roles = models.Role.objects.filter(name__icontains="Reviewer")
+		for role in roles:
+			self.user.profile.roles.add(role)
+		self.user.save()
+		self.user.profile.save()
+		response = self.client.get(reverse('user_dashboard'))
+		self.assertRedirects(response, "http://testing/review/dashboard/", status_code=302, target_status_code=200, host=None, msg_prefix='', fetch_redirect_response=True)
+
+	def test_view_profile(self):
+		resp = self.client.get(reverse('view_profile'))
+		content =resp.content
+		
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
+		self.assertEqual("500" in content, False)
 
 
+
+
+##############################################	Form Tests	 ##############################################		
 
 	'''def test_book_model(self):
 		"""

@@ -124,6 +124,7 @@ def is_reviewer(function):
 	wrap.__doc__=function.__doc__
 	wrap.__name__=function.__name__
 	return wrap
+
 def has_reviewer_role(function):
 	def wrap(request, *args, **kwargs):
 

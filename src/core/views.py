@@ -49,11 +49,11 @@ def dashboard(request):
 		roles=  request.user.profile.roles.all()
 		if request.GET.get('next'):
 			return redirect(request.GET.get('next'))
-		elif string_any('Editor' for role in roles):
+		elif string_any('Editor' in role.name for role in roles):
 			return redirect(reverse('editor_dashboard'))
-		elif string_any('Author' for role in roles):
+		elif string_any('Author' in role.name for role in roles):
 			return redirect(reverse('author_dashboard'))
-		elif string_any('Reviewer' for role in roles):
+		elif string_any('Reviewer' in role.name for role in roles):
 			return redirect(reverse('reviewer_dashboard'))
 		else:
 			return redirect(reverse('onetasker_dashboard'))
