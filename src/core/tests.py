@@ -186,6 +186,52 @@ class CoreTests(TestCase):
 					found=True 
 			self.assertEqual(found, True)
 
+	def test_book_model(self):
+		"""
+		test book model
+		"""
+		self.author = models.Author(
+			first_name = "rua_first_name",
+			last_name = "rua_last_name",
+			salutation = "Mr",
+			institution = "Testing",
+			department = "test",
+			country = "GB",
+			author_email = "fake@fakeaddress.com"
+			)
+		self.author.save()
+		self.keyword=models.Keyword(name="test")
+		self.keyword.save()
+		self.subject=models.Subject(name="test")
+		self.subject.save()
+		user=self.user
+		self.book= models.Book(
+				prefix = "Project",
+				title = "Test Book",
+				description = "description",
+				license = models.License.objects.get(code="cc-4-by-nd"),
+				pages = "50",
+				slug = "test_book",
+				cover_letter = "cover letter text",
+				reviewer_suggestions = "suggestions",
+				competing_interests = "interests",
+				book_type = 'monograph',
+				review_type = 'open-with',
+				owner = user
+			)
+		self.book.save()
+
+		self.book.author.add(self.author)
+		self.book.press_editors.add(self.user)
+		self.book.keywords.add(self.keyword)
+		self.book.languages.add(models.Language.objects.get(code="eng"))
+		self.book.subject.add(self.subject)
+
+		self.book.save()
+		#check that it exists in the database
+		
+		self.assertEqual(len(models.Book.objects.all())==1, True)
+
 ##############################################	View Tests	 ##############################################		
 
 ################### Dashboards ##################
@@ -358,46 +404,5 @@ class CoreTests(TestCase):
 
 		#### Problematic ###
 
-	'''def test_book_model(self):
-		"""
-		test book model
-		"""
-		self.author = models.Author(
-			first_name = "rua_first_name",
-			last_name = "rua_last_name",
-			salutation = "Mr",
-			institution = "Testing",
-			department = "test",
-			country = "GB",
-			author_email = "fake@fakeaddress.com"
-			)
-		self.author.save()
-		self.keyword=models.Keyword(name="test")
-		self.keyword.save()
-		self.subject=models.Subject(name="test")
-		self.subject.save()
-		user=self.user
-		self.book= models.Book(
-				prefix = "Project",
-				title = "Test Book",
-				author = [self.author,],
-				press_editors = [self.user,],
-				description = "description",
-				keywords = [self.keyword,],
-				subject = [self.subject,],
-				license = models.License.objects.get(code="cc-4-by-nd"),
-				pages = "50",
-				slug = "test_book",
-				cover_letter = "cover letter text",
-				reviewer_suggestions = "suggestions",
-				competing_interests = "interests",
-				book_type = 'monograph',
-				review_type = 'open-with',
-				languages = models.Language.objects.get(code="eng"),
-				owner = user
-			)
-		self.book.save()
-		#check that it exists in the database
-		
-		self.assertEqual(len(models.Book.objects.all())==1, True)	'''
+
 		
