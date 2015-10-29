@@ -327,6 +327,11 @@ class CoreTests(TestCase):
 		self.assertEqual(resp.status_code, 302)
 		self.assertEqual(resp['Location'], "http://testing/user/profile/")
 
+	def test_register(self):
+		resp = self.client.post(reverse('register'), {'first_name': 'new','last_name':'last','username':'user1','email':'fake@faked.com','password1': 'password1','password2':"password1"})
+		self.assertEqual(resp.status_code, 302)
+		self.assertEqual(resp['Location'], "http://testing/login/")
+
 	def test_reset_password(self):
 		resp = self.client.post(reverse('reset_password'), {'password_1': 'password1','password_2':"password1"})
 		self.assertEqual(resp.status_code, 302)
