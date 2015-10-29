@@ -318,7 +318,23 @@ class CoreTests(TestCase):
 
 
 
+
 ##############################################	Form Tests	 ##############################################		
+
+
+	def test_update_profile(self):
+		resp = self.client.post(reverse('update_profile'), {'first_name': 'new','institution':"Testing",'country':"GB"})
+		self.assertEqual(resp.status_code, 302)
+		self.assertEqual(resp['Location'], "http://testing/user/profile/")
+
+	def test_reset_password(self):
+		resp = self.client.post(reverse('reset_password'), {'password_1': 'password1','password_2':"password1"})
+		self.assertEqual(resp.status_code, 302)
+		self.assertEqual(resp['Location'], "http://testing/login/")
+
+
+
+		#### Problematic ###
 
 	'''def test_book_model(self):
 		"""
