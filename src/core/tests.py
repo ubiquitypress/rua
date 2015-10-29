@@ -3,12 +3,14 @@ from core import models
 from django.utils import timezone
 import time
 import datetime
+
+from django.db.models import Q
 from core import views
 from django.http import HttpRequest
 from django.test.client import Client
 from django.contrib.auth.models import User
 from django.core.urlresolvers import resolve, reverse
-
+from  __builtin__ import any as string_any
 # Create your tests here.
 
 class CoreTests(TestCase):
@@ -29,6 +31,10 @@ class CoreTests(TestCase):
 		self.password = 'rua_tester'
 		self.user = User.objects.create_user(username=self.username, email=self.email,first_name="Rua",last_name="Testing", password=self.password)
 		self.profile=models.Profile(user=self.user,institution="Testing",country="GB",department="test")
+		self.profile.save()
+		self.user.profile=self.profile
+		self.user.save()
+
 		login = self.client.login(username='rua_user', password='rua_tester')
 		self.assertEqual(login, True)
 
@@ -61,6 +67,7 @@ class CoreTests(TestCase):
 		number_of_roles = len(models.Role.objects.all())
 		self.assertEqual(number_of_roles==9, True)
 		self.assertEqual(roles_exist, True)
+	
 	def test_settings_fixture(self):
 		"""
 		testing settings fixture
@@ -160,6 +167,85 @@ class CoreTests(TestCase):
 		self.assertEqual(self.author.first_name=="rua_changed_first_name", True)
 		#check number of created objects
 		self.assertEqual(len(models.Author.objects.all())==1, True)
+	
+
+	def test_add_role_to_user(self):
+		roles = models.Role.objects.filter(name__icontains="Editor")
+		for role in roles:
+			self.user.profile.roles.add(role)
+		self.user.save()
+		self.user.profile.save()
+		for role in roles:
+			found = False
+			for saved_role in self.user.profile.roles.all():
+				if cmp(role,saved_role)==0:
+					found=True 
+			self.assertEqual(found, True)
+	
+	def test_editor_login(self):
+		roles = models.Role.objects.filter(name__icontains="Editor")
+		for role in roles:
+			self.user.profile.roles.add(role)
+		self.user.save()
+		self.user.profile.save()
+		resp = self.client.get(reverse('editor_dashboard'))
+	
+		content =resp.content
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
+	
+	def test_not_editor_login(self):
+		resp = self.client.get(reverse('editor_dashboard'))
+		content =resp.content
+		
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, True)
+	
+	def test_author_login(self):
+		roles = models.Role.objects.filter(name__icontains="Author")
+		for role in roles:
+			self.user.profile.roles.add(role)
+		self.user.last_login=timezone.now()
+		self.user.save()
+		self.user.profile.save()
+
+
+		resp = self.client.get(reverse('author_dashboard'))
+		content =resp.content
+		
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
+
+	def test_not_author_login(self):
+		resp = self.client.get(reverse('author_dashboard'))
+		content =resp.content
+		self.user.last_login=timezone.now()
+		self.user.save()
+
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, True)
+
+	def test_onetasker_login(self):
+		roles = models.Role.objects.filter(Q(name__icontains="Reviewer") | Q(name__icontains="Typesetter") | Q(name__icontains="Copyeditor") | Q(name__icontains="Indexer"))
+		for role in roles:
+			self.user.profile.roles.add(role)
+		self.user.save()
+		self.user.profile.save()
+		resp = self.client.get(reverse('onetasker_dashboard'))
+		content =resp.content
+		
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
+
+	def test_not_onetasker_login(self):
+		resp = self.client.get(reverse('onetasker_dashboard'))
+		content =resp.content
+		
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, True)
+
+
+
 	'''def test_book_model(self):
 		"""
 		test book model

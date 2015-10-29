@@ -7,6 +7,24 @@ from core import models
 from pprint import pprint
 from itertools import chain
 
+def is_author(function):
+	def wrap(request, *args, **kwargs):
+
+		user_roles = [role.slug for role in request.user.profile.roles.all()]
+		submission_id = False
+		
+		if kwargs.get('submission_id'):
+			submission_id = kwargs.get('submission_id')
+
+		if 'author' in user_roles:
+			return function(request, *args, **kwargs)
+		else:
+			messages.add_message(request, messages.ERROR, 'You need to have Author level permission to view this page.')
+			raise exceptions.PermissionDenied 
+
+	wrap.__doc__=function.__doc__
+	wrap.__name__=function.__name__
+	return wrap
 def is_editor(function):
 	def wrap(request, *args, **kwargs):
 

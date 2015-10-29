@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 from django.core.urlresolvers import reverse
 from django.contrib import messages
-
+from core.decorators import is_author
 from core import models, log, task, logic as core_logic, forms as core_forms
 from editor import models as editor_models
 from author import forms
@@ -14,7 +14,7 @@ from revisions import models as revision_models
 from review import models as review_models
 from core.files import handle_file_update, handle_attachment,handle_file,handle_copyedit_file,handle_typeset_file
 
-@login_required
+@is_author
 def author_dashboard(request):
 
 	template = 'author/dashboard.html'
