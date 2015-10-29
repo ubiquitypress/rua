@@ -6,6 +6,7 @@ import datetime
 from django.test import SimpleTestCase
 from django.db.models import Q
 from core import views
+import json
 from django.http import HttpRequest
 from django.test.client import Client
 from django.contrib.auth.models import User
@@ -371,6 +372,53 @@ class CoreTests(TestCase):
 		self.assertEqual(resp.status_code, 302)
 		self.assertEqual(resp['Location'], "http://testing/login/")
 
+	def test_ajax_email_calls(self):
+		self.author = models.Author(
+			first_name = "rua_first_name",
+			last_name = "rua_last_name",
+			salutation = "Mr",
+			institution = "Testing",
+			department = "test",
+			country = "GB",
+			author_email = "fake@fakeaddress.com"
+			)
+		self.author.save()
+		self.keyword=models.Keyword(name="test")
+		self.keyword.save()
+		self.subject=models.Subject(name="test")
+		self.subject.save()
+		user=self.user
+		self.book= models.Book(
+				prefix = "Project",
+				title = "Test Book",
+				description = "description",
+				license = models.License.objects.get(code="cc-4-by-nd"),
+				pages = "50",
+				slug = "test_book",
+				cover_letter = "cover letter text",
+				reviewer_suggestions = "suggestions",
+				competing_interests = "interests",
+				book_type = 'monograph',
+				review_type = 'open-with',
+				owner = user
+			)
+		self.book.save()
+
+		self.book.author.add(self.author)
+		self.book.press_editors.add(self.user)
+		self.book.keywords.add(self.keyword)
+		self.book.languages.add(models.Language.objects.get(code="eng"))
+		self.book.subject.add(self.subject)
+
+		self.book.save()
+		#check that it exists in the database
+		
+		self.assertEqual(len(models.Book.objects.all())==1, True)
+
+		resp =  self.client.get(reverse('get_authors',kwargs= {'submission_id':self.book.id}),{'term': 'rua',},content_type="application/json",HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+		json_data =  json.loads(resp.content)
+		self.assertEqual(self.author.author_email==json_data[0]["value"],True)
+
 
 
 
@@ -404,6 +452,8 @@ class CoreTests(TestCase):
 		user.profile.save()
 		resp = self.client.post(reverse('login'),{'username': 'user1','password':"password1"})
 		self.assertEqual(resp['Location'], "http://testing/dashboard/")
+
+############# Email
 
 	def test_email(self):
 		self.author = models.Author(
@@ -454,7 +504,8 @@ class CoreTests(TestCase):
 		self.assertEqual(resp.status_code, 200)
 		self.assertEqual( "was sent" in resp.content,True)
 
-		
+
+
 
 
 		#### Problematic ###
