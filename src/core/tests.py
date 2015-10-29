@@ -226,7 +226,7 @@ class CoreTests(TestCase):
 		self.assertEqual("403" in content, True)
 
 	def test_onetasker_login(self):
-		roles = models.Role.objects.filter(Q(name__icontains="Reviewer") | Q(name__icontains="Typesetter") | Q(name__icontains="Copyeditor") | Q(name__icontains="Indexer"))
+		roles = models.Role.objects.filter(Q(name__icontains="Typesetter") | Q(name__icontains="Copyeditor") | Q(name__icontains="Indexer"))
 		for role in roles:
 			self.user.profile.roles.add(role)
 		self.user.save()
@@ -243,6 +243,26 @@ class CoreTests(TestCase):
 		
 		self.assertEqual(resp.status_code, 200)
 		self.assertEqual("403" in content, True)
+	
+	def test_reviewer_login(self):
+		roles = models.Role.objects.filter(name__icontains="Reviewer")
+		for role in roles:
+			self.user.profile.roles.add(role)
+		self.user.save()
+		self.user.profile.save()
+		resp = self.client.get(reverse('reviewer_dashboard'))
+		content =resp.content
+		
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
+
+	def test_not_reviewer_login(self):
+		resp = self.client.get(reverse('reviewer_dashboard'))
+		content =resp.content
+		
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, True)
+
 
 
 

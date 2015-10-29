@@ -20,7 +20,7 @@ from core import logic as core_logic
 from core import models as core_models
 from core import views as core_views
 from core import forms as core_forms
-from core.decorators import is_reviewer
+from core.decorators import is_reviewer,has_reviewer_role
 from core import log
 from core import models as core_models
 from review import forms
@@ -28,7 +28,7 @@ from review import models
 from review import logic
 from submission import models as submission_models
 
-@is_reviewer
+@has_reviewer_role
 def reviewer_dashboard(request):
 
 	pending_tasks = core_models.ReviewAssignment.objects.filter(user=request.user,completed__isnull=True,declined__isnull=True).select_related('book')

@@ -124,6 +124,24 @@ def is_reviewer(function):
 	wrap.__doc__=function.__doc__
 	wrap.__name__=function.__name__
 	return wrap
+def has_reviewer_role(function):
+	def wrap(request, *args, **kwargs):
+
+		user_roles = [role.slug for role in request.user.profile.roles.all()]
+		submission_id = False
+		
+		if kwargs.get('submission_id'):
+			submission_id = kwargs.get('submission_id')
+
+		if 'reviewer' in user_roles:
+			return function(request, *args, **kwargs)
+		else:
+			messages.add_message(request, messages.ERROR, 'You need to have Reviewer level permission to view this page.')
+			raise exceptions.PermissionDenied 
+
+	wrap.__doc__=function.__doc__
+	wrap.__name__=function.__name__
+	return wrap
 
 def is_indexer(function):
 	def wrap(request, *args, **kwargs):
