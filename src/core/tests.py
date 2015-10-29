@@ -365,6 +365,11 @@ class CoreTests(TestCase):
 		resp = self.client.get(reverse('logout'))
 		self.assertEqual(resp.status_code, 302)
 		self.assertEqual(resp['Location'], "http://testing/")
+	
+	def test_index(self):
+		resp =  self.client.get(reverse('index'))
+		self.assertEqual(resp.status_code, 302)
+		self.assertEqual(resp['Location'], "http://testing/login/")
 
 
 
@@ -399,6 +404,56 @@ class CoreTests(TestCase):
 		user.profile.save()
 		resp = self.client.post(reverse('login'),{'username': 'user1','password':"password1"})
 		self.assertEqual(resp['Location'], "http://testing/dashboard/")
+
+	def test_email(self):
+		self.author = models.Author(
+			first_name = "rua_first_name",
+			last_name = "rua_last_name",
+			salutation = "Mr",
+			institution = "Testing",
+			department = "test",
+			country = "GB",
+			author_email = "fake@fakeaddress.com"
+			)
+		self.author.save()
+		self.keyword=models.Keyword(name="test")
+		self.keyword.save()
+		self.subject=models.Subject(name="test")
+		self.subject.save()
+		user=self.user
+		self.book= models.Book(
+				prefix = "Project",
+				title = "Test Book",
+				description = "description",
+				license = models.License.objects.get(code="cc-4-by-nd"),
+				pages = "50",
+				slug = "test_book",
+				cover_letter = "cover letter text",
+				reviewer_suggestions = "suggestions",
+				competing_interests = "interests",
+				book_type = 'monograph',
+				review_type = 'open-with',
+				owner = user
+			)
+		self.book.save()
+
+		self.book.author.add(self.author)
+		self.book.press_editors.add(self.user)
+		self.book.keywords.add(self.keyword)
+		self.book.languages.add(models.Language.objects.get(code="eng"))
+		self.book.subject.add(self.subject)
+
+		self.book.save()
+		#check that it exists in the database
+		
+		self.assertEqual(len(models.Book.objects.all())==1, True)
+		resp = self.client.post(reverse('email_users', kwargs= {'group': 'all','submission_id':str(self.book.id)}),  {'subject': 'all','to_values':self.author.author_email,"cc_values":"","bcc_values":"","body":'text'})
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual( "was sent" in resp.content,True)
+		resp = self.client.post(reverse('email_user', kwargs= {'group': 'editors','submission_id':str(self.book.id),'user_id':self.user.id}),  {'subject': 'all','to_values':self.user.email,"cc_values":"","bcc_values":"","body":'text'})
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual( "was sent" in resp.content,True)
+
 		
 
 
