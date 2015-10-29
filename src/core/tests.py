@@ -315,6 +315,11 @@ class CoreTests(TestCase):
 		self.assertEqual("403" in content, False)
 		self.assertEqual("500" in content, False)
 
+	def test_logout(self):
+		resp = self.client.get(reverse('logout'))
+		self.assertEqual(resp.status_code, 302)
+		self.assertEqual(resp['Location'], "http://testing/")
+
 
 
 
@@ -337,6 +342,18 @@ class CoreTests(TestCase):
 		self.assertEqual(resp.status_code, 302)
 		self.assertEqual(resp['Location'], "http://testing/login/")
 
+	def test_register_login(self):
+		resp = self.client.post(reverse('register'), {'first_name': 'new','last_name':'last','username':'user1','email':'fake@faked.com','password1': 'password1','password2':"password1"})
+		user = User.objects.get(username="user1")
+		roles = models.Role.objects.filter(name__icontains="Editor")
+		for role in roles:
+			user.profile.roles.add(role)
+		user.active=True
+		user.save()
+		user.profile.save()
+		resp = self.client.post(reverse('login'),{'username': 'user1','password':"password1"})
+		self.assertEqual(resp['Location'], "http://testing/dashboard/")
+		
 
 
 		#### Problematic ###
