@@ -1,0 +1,18 @@
+[
+{
+    "fields": {
+        "workflow": "review",
+        "text": "Review Assignment request for 'Title' has been accepted by UP Tech.",
+        "completed": null,
+        "creator": 1,
+        "due": null,
+        "rejected": null,
+        "assigned": "2015-10-29",
+        "assignee": 1,
+        "book": 42,
+        "accepted": null
+    },
+    "model": "core.task",
+    "pk": 1
+}
+]
