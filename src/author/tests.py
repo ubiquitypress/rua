@@ -13,6 +13,7 @@ from django.test.client import Client
 from django.contrib.auth.models import User
 from django.core.urlresolvers import resolve, reverse
 from  __builtin__ import any as string_any
+from django.core import management
 # Create your tests here.
 
 class CoreTests(TestCase):
@@ -27,6 +28,7 @@ class CoreTests(TestCase):
 		'test_auth_data',
 		'test_core_data',
 		'test_review_data',
+
 	]
 
 	def setUp(self):
@@ -141,6 +143,27 @@ class CoreTests(TestCase):
 		self.assertEqual("COPYEDITING" in content, True)
 		self.assertEqual("INDEXING" in content, True)
 		self.assertEqual("Stage has not been initialised." in content, False)
+
+
+		management.call_command('loaddata', 'test_copyedit_assignment_data.json', verbosity=0)
+		management.call_command('loaddata', 'test_index_assignment_data.json', verbosity=0)
+	
+		resp =  self.client.get(reverse('author_view_copyedit',kwargs={'copyedit_id':1,'submission_id':self.book.id}))
+		content =resp.content
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
+		self.assertEqual("COPYEDITING" in content, True)
+		self.assertEqual("INDEXING" in content, True)
+		self.assertEqual("Stage has not been initialised." in content, False)
+		self.assertEqual("COPYEDIT ASSIGNMENT: 1" in content, True)
+		resp =  self.client.get(reverse('author_view_index',kwargs={'index_id':1,'submission_id':self.book.id}))
+		content =resp.content
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
+		self.assertEqual("COPYEDITING" in content, True)
+		self.assertEqual("INDEXING" in content, True)
+		self.assertEqual("Stage has not been initialised." in content, False)
+		self.assertEqual("INDEX ASSIGNMENT: 1" in content, True)
 
 	def test_author_production(self):
 		self.book.stage.current_stage='production'

@@ -1,0 +1,1 @@
+[{"fields": {"files": [], "requested": "2015-10-30", "note_from_indexer": "", "index_files": [], "completed": null, "due": "2015-10-31", "indexer": 5, "requestor": 2, "book": 1, "accepted": null, "declined": null}, "model": "core.indexassignment", "pk": 1}]
