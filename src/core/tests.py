@@ -338,6 +338,16 @@ class CoreTests(TestCase):
 		json_data =  json.loads(resp.content)
 		editors= self.book.press_editors.all()
 		self.assertEqual(editors[0].email==json_data[0]["value"],True)
+		resp =  self.client.get(reverse('get_onetaskers',kwargs= {'submission_id':self.book.id}),{'term': 'rua',},content_type="application/json",HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+		json_data =  json.loads(resp.content)
+		onetasker= User.objects.get(pk=5)
+		self.assertEqual(onetasker.email==json_data[0]["value"],True)
+		resp =  self.client.get(reverse('get_all',kwargs= {'submission_id':self.book.id}),{'term': 'rua',},content_type="application/json",HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+		json_data =  json.loads(resp.content)
+		self.assertEqual(len(json_data)==3,True)
+		resp =  self.client.get(reverse('get_all',kwargs= {'submission_id':self.book.id}),{'term': 'none_term',},content_type="application/json",HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+		json_data =  json.loads(resp.content)
+		self.assertEqual(len(json_data)==0,True)
 
 
 

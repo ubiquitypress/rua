@@ -393,15 +393,15 @@ def get_all(request, submission_id):
         author_results = logic.get_author_emails(submission_id,q)
         results = []
         for user in onetasker_results:
-        	if not string_any(user['value'] for result in results):
+        	if not string_any(user['value'] in result['value'] for result in results):
 
         	   results.append(user)
         for author in author_results:
-        	if not string_any(author['value'] for result in results):
+        	if not string_any(author['value'] in result['value'] for result in results):
         	    results.append(author)
         	    
         for editor in editor_results:
-        	if not string_any(editor['value'] for result in results):
+        	if not string_any(editor['value'] in result['value'] for result in results):
         	    results.append(editor)
         data = json.dumps(results)
     else:
