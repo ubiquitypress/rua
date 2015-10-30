@@ -118,6 +118,50 @@ class CoreTests(TestCase):
 		self.assertEqual("403" in content, False)
 		self.assertEqual("btn-success" in content, True)
 		self.assertEqual("ROUND 1" in content, True)
+	def test_author_editing(self):
+		self.book.stage.current_stage='editing'
+		self.book.stage.editing=timezone.now()
+		self.book.stage.save()
+		self.book.save()
+		resp =  self.client.get(reverse('editing',kwargs={'submission_id':self.book.id}))
+		content =resp.content
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
+		self.assertEqual("COPYEDITING" in content, True)
+		self.assertEqual("INDEXING" in content, True)
+		self.assertEqual("Stage has not been initialised." in content, True)
+		self.book.stage.copyediting=timezone.now()
+		self.book.stage.indexing=timezone.now()
+		self.book.stage.save()
+		self.book.save()
+		resp =  self.client.get(reverse('editing',kwargs={'submission_id':self.book.id}))
+		content =resp.content
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
+		self.assertEqual("COPYEDITING" in content, True)
+		self.assertEqual("INDEXING" in content, True)
+		self.assertEqual("Stage has not been initialised." in content, False)
+
+	def test_author_production(self):
+		self.book.stage.current_stage='production'
+		self.book.stage.production=timezone.now()
+		self.book.stage.save()
+		self.book.save()
+		resp =  self.client.get(reverse('author_production',kwargs={'submission_id':self.book.id}))
+		content =resp.content
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
+		self.assertEqual("Typesetting" in content, True)
+		self.assertEqual("Stage has not been initialised." in content, True)
+		self.book.stage.typesetting=timezone.now()
+		self.book.stage.save()
+		self.book.save()
+		resp =  self.client.get(reverse('author_production',kwargs={'submission_id':self.book.id}))
+		content =resp.content
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
+		self.assertEqual("Typesetting" in content, True)
+		self.assertEqual("Stage has not been initialised." in content, False)
 
 
 
