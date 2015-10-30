@@ -207,7 +207,7 @@ class CoreTests(TestCase):
 		self.assertEqual(self.book.keywords.filter(pk=1).exists(), True)
 		self.assertEqual(self.book.press_editors.filter(pk=2).exists(), True)
 		self.assertEqual(self.book.license==models.License.objects.get(pk=4), True)
-		self.assertEqual(self.book.owner==models.User.objects.get(pk=1), True)
+		self.assertEqual(self.book.owner==models.User.objects.get(pk=3), True)
 		self.assertEqual(self.book.languages.filter(pk=124).exists(), True)
 
 

@@ -127,7 +127,7 @@ def get_submission_tasks(book, user):
 		task_list.append({'type': 'copyedit', 'book': copyedit.book, 'task': 'Copyedit Review', 'date': copyedit.completed, 'title': copyedit.book.title, 'url': 'http://%s/editor/submission/%s/editing/view/copyeditor/%s/' % (base_url, copyedit.book.id, copyedit.id)})
 
 	for typeset in typeset_tasks:
-		task_list.append({'type': 'typeset', 'book': typeset.book, 'task': 'Typsetting Review', 'date': typeset.completed, 'title': typeset.book.title, 'url': 'http://%s/editor/submission/%s/production/view/typesetter/%s' % (base_url, typeset.book.id, typeset.id)})
+		task_list.append({'type': 'typeset', 'book': typeset.book, 'task': 'Typesetting Review', 'date': typeset.completed, 'title': typeset.book.title, 'url': 'http://%s/editor/submission/%s/production/view/typesetter/%s' % (base_url, typeset.book.id, typeset.id)})
 
 	return task_list
 

@@ -20,7 +20,7 @@ def author_tasks(user):
 		task_list.append({'type': 'copyedit', 'book': copyedit.book, 'task': 'Copyedit Review', 'date': copyedit.author_invited, 'title': copyedit.book.title, 'url': '/author/submission/%s/editing/copyedit/%s/' % (copyedit.book.id, copyedit.id)})
 
 	for typeset in typeset_tasks:
-		task_list.append({'type': 'typeset', 'book': typeset.book, 'task': 'Typsetting Review', 'date': typeset.author_invited, 'title': typeset.book.title, 'url': '/author/submission/%s/editing/typeset/%s/' % (typeset.book.id, typeset.id)})
+		task_list.append({'type': 'typeset', 'book': typeset.book, 'task': 'Typesetting Review', 'date': typeset.author_invited, 'title': typeset.book.title, 'url': '/author/submission/%s/editing/typeset/%s/' % (typeset.book.id, typeset.id)})
 
 	for proof in proofing_tasks:
 		task_list.append({'type': 'coverimage', 'book': proof.book, 'task': 'Cover Image Proof', 'date': proof.assigned, 'title': proof.book.title, 'url': 'http://%s/author/submission/%s/production/#%s' % (base_url, proof.book.id, proof.id)})
@@ -48,7 +48,7 @@ def submission_tasks(book, user):
 		task_list.append({'type': 'copyedit', 'book': copyedit.book, 'task': 'Copyedit Review', 'date': copyedit.author_invited, 'title': copyedit.book.title, 'url': '/author/submission/%s/editing/copyedit/%s/' % (copyedit.book.id, copyedit.id)})
 
 	for typeset in typeset_tasks:
-		task_list.append({'type': 'typeset', 'book': typeset.book, 'task': 'Typsetting Review', 'date': typeset.author_invited, 'title': typeset.book.title, 'url': 'uthor/submission/%s/editing/typeset/%s/' % (typeset.book.id, typeset.id)})
+		task_list.append({'type': 'typeset', 'book': typeset.book, 'task': 'Typesetting Review', 'date': typeset.author_invited, 'title': typeset.book.title, 'url': 'uthor/submission/%s/editing/typeset/%s/' % (typeset.book.id, typeset.id)})
 
 	for proof in proofing_tasks:
 		task_list.append({'type': 'coverimage', 'book': proof.book, 'task': 'Cover Image Proof', 'date': proof.assigned, 'title': proof.book.title, 'url': 'http://%s/author/submission/%s/production/#%s' % (base_url, proof.book.id, proof.id)})
