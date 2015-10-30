@@ -162,6 +162,15 @@ class CoreTests(TestCase):
 		self.assertEqual("403" in content, False)
 		self.assertEqual("Typesetting" in content, True)
 		self.assertEqual("Stage has not been initialised." in content, False)
+		
+		resp =  self.client.get(reverse('author_view_typesetter',kwargs={'typeset_id':1,'submission_id':self.book.id}))
+		content =resp.content
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
+		self.assertEqual("Typesetting" in content, True)
+		self.assertEqual("Stage has not been initialised." in content, False)
+		self.assertEqual("TYPESET ASSIGNMENT: 1" in content, True)
+		
 
 
 
