@@ -87,4 +87,31 @@ class CoreTests(TestCase):
 		message = self.getmessage(resp)
 		self.assertEqual(message.message, "Memcached has been flushed.")
 
+	def test_manager_users(self):
+		users = User.objects.all()
+		resp = self.client.get(reverse('manager_users'))
+		content =resp.content
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
+		self.assertEqual(len(users),5)
+		for user in users:
+			self.assertEqual(user.username in content, True)
+
+		resp = self.client.post(reverse('add_user'), {'username': 'rua_new_user', 'first_name': 'Usera', 'last_name': 'Lastly', 'middle_name': 'Middler', 'roles': '2', 'country': 'GB', 'email': 'fake_new_user@fakeaddress.com', 'department': 'test', 'signature': 'Hieee', 'salutation': 'Mrs', 'csrfmiddlewaretoken': 'jXlJzfs1jUP6Frl5fgID5zLfo049wW2E', 'institution': 'rua_testing', 'biography': 'bio'})
+		self.assertEqual(resp.status_code, 302)
+		self.assertEqual(resp['Location'], "http://testing/manager/user/")
+		found = False
+		try:
+			new_user = User.objects.get(username="rua_new_user")
+			found = True
+		except:
+			found = False
+		self.assertEqual(found, True)
+		users = User.objects.all()
+		self.assertEqual(len(users),6)
+
+
+
+		
+
 
