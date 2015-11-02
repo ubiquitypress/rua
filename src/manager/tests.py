@@ -122,6 +122,39 @@ class CoreTests(TestCase):
 		self.assertEqual(new_user.last_name, "changed")
 		self.assertEqual(new_user.profile.middle_name, "changed")
 
+	def test_manager_roles(self):
+		resp = self.client.get(reverse('manager_roles'))
+		roles = core_models.Role.objects.all()
+		content =resp.content
+		
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
+
+		for role in roles:
+			self.assertEqual(role.name in content, True)
+			role_resp = self.client.get(reverse('manager_role',kwargs={'slug':role.slug}))
+			role_content = role_resp.content
+			self.assertEqual(role_resp.status_code, 200)
+			self.assertEqual("403" in role_content, False)
+			have_role=[]
+			dont_have_role=[]
+			users=User.objects.all()
+			for user in users:
+				if user.profile.roles.filter(name=role.name).exists():
+					have_role.append(user)
+				else:
+					dont_have_role.append(user)
+			for user in have_role:
+				remove_button="/manager/roles/%s/user/%s/remove/" % (role.slug,user.id)
+				self.assertEqual(remove_button in role_content, True)
+			for user in dont_have_role:
+				add_button="/manager/roles/%s/user/%s/add/" % (role.slug,user.id)
+				self.assertEqual(add_button in role_content, True)
+
+
+	
+
+
 
 
 
