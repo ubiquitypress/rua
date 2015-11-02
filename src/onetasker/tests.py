@@ -7,6 +7,7 @@ from django.test import SimpleTestCase
 from django.db.models import Q
 from onetasker import views
 from core import models as core_models
+from core import logic as core_logic, task
 import json
 from django.http import HttpRequest
 from django.test.client import Client
@@ -56,3 +57,49 @@ class CoreTests(TestCase):
 		self.assertEqual(self.user.last_name=="rua_onetasker_last_name", True)
 		self.assertEqual(self.user.profile.institution=="rua_testing", True)
 		self.assertEqual(self.user.profile.country=="GB", True)
+
+	def test_onetasker_access(self):
+		resp = self.client.get(reverse('onetasker_dashboard'))
+		content =resp.content
+		
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
+
+	def test_not_onetasker_access(self):
+		login = self.client.login(username="rua_reviewer", password="tester")
+		resp = self.client.get(reverse('onetasker_dashboard'))
+		content =resp.content
+		
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, True)
+
+	def test_onetasker_dashboard(self):
+		response = self.client.get(reverse('user_dashboard'))
+		self.assertRedirects(response, "http://testing/tasks/", status_code=302, target_status_code=200, host=None, msg_prefix='', fetch_redirect_response=True)
+		onetasker_tasks = core_logic.onetasker_tasks(self.user)
+		active_count=len(onetasker_tasks.get('active'))
+		self.assertEqual(active_count, 3)
+		response = self.client.get(reverse('onetasker_dashboard'))
+		content =response.content
+		self.assertEqual(response.status_code, 200)
+		self.assertEqual("403" in content, False)
+		self.assertEqual("Copyedit" in content, True)
+		self.assertEqual("Indexing" in content, True)
+		self.assertEqual("Typesetting" in content, True)
+		self.assertEqual("rua_title" in content, True)
+
+	def test_onetasker_view_task(self):
+		onetasker_tasks = core_logic.onetasker_tasks(self.user)
+		active_tasks = onetasker_tasks.get('active')
+		for task in active_tasks:
+			response = self.client.get(reverse('onetasker_task_hub',kwargs={'assignment_type':task.get('type'),'assignment_id':task.get('assignment').id}))
+			content =response.content
+			self.assertEqual(response.status_code, 200)
+			self.assertEqual("403" in content, False)
+			self.assertEqual("You can accept or reject this task" in content, True)
+			self.assertEqual("I Accept" in content, True)
+			self.assertEqual("I Decline" in content, True)
+
+
+
+

@@ -351,7 +351,6 @@ def onetasker_tasks(user):
 		active.append({'assignment':assignment, 'type': 'typesetting'})
 	
 	for assignment in active_indexer_tasks:
-		print assignment
 		active.append({'assignment':assignment, 'type': 'indexing'})
 
 	for assignment in completed_copyeditor_tasks:

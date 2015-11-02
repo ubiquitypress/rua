@@ -34,8 +34,8 @@
               <div class="dash-container">
               <form method="post">
               {% csrf_token %}
-                 <button class="btn btn-decline" name="decision" value="decline">Decline</button>
-                 <button class="btn btn-accept" name="decision" value="accept">Accept</button>
+                 <button class="btn btn-decline btn-lg" name="decision" value="decline" style="width:120px; font-size: 14px;">I Decline</button>
+                 <button class="btn btn-accept btn-lg" name="decision" value="accept" style="width:120px; font-size: 14px;">I Accept</button>
                  </form>
                 </div> 
           {% endif %}
