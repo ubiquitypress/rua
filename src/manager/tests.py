@@ -132,24 +132,29 @@ class CoreTests(TestCase):
 
 		for role in roles:
 			self.assertEqual(role.name in content, True)
-			role_resp = self.client.get(reverse('manager_role',kwargs={'slug':role.slug}))
+			role_resp = self.client.get(reverse('manager_role',kwargs={'slug':role.slug})) #load role page
 			role_content = role_resp.content
 			self.assertEqual(role_resp.status_code, 200)
 			self.assertEqual("403" in role_content, False)
 			have_role=[]
 			dont_have_role=[]
 			users=User.objects.all()
+			#get all users and see who has this role and who doesn't
 			for user in users:
 				if user.profile.roles.filter(name=role.name).exists():
 					have_role.append(user)
 				else:
 					dont_have_role.append(user)
+			#check for the users that have the role that a button exists for removing the role
 			for user in have_role:
 				remove_button="/manager/roles/%s/user/%s/remove/" % (role.slug,user.id)
 				self.assertEqual(remove_button in role_content, True)
+			#check for the users that don't have the role that a button exists for adding the role
 			for user in dont_have_role:
 				add_button="/manager/roles/%s/user/%s/add/" % (role.slug,user.id)
 				self.assertEqual(add_button in role_content, True)
+
+			#either remove all users from a role or add them all
 			expected_size=len(have_role)+len(dont_have_role)
 			if len(have_role)>0:
 				for user in have_role:
@@ -164,20 +169,24 @@ class CoreTests(TestCase):
 			role_content = role_resp.content
 			self.assertEqual(role_resp.status_code, 200)
 			self.assertEqual("403" in role_content, False)
-			have_role_2=[]
-			dont_have_role_2=[]
+			have_role=[]
+			dont_have_role=[]
 			users=User.objects.all()
+			#recreate lists
 			for user in users:
 				if user.profile.roles.filter(name=role.name).exists():
-					have_role_2.append(user)
+					have_role.append(user)
 				else:
-					dont_have_role_2.append(user)
-			if len(dont_have_role_2)>0:
-				for user in dont_have_role_2:
+					dont_have_role.append(user)
+			# check which list has all the users and check that the buttons exist for removing or adding the roles 
+			if len(dont_have_role)>0:
+				self.assertEqual(len(dont_have_role),expected_size)
+				for user in dont_have_role:
 					add_button="/manager/roles/%s/user/%s/add/" % (role.slug,user.id)
 					self.assertEqual(add_button in role_content, True)
 			else:
-				for user in have_role_2:
+				self.assertEqual(len(have_role),expected_size)
+				for user in have_role:
 					remove_button="/manager/roles/%s/user/%s/remove/" % (role.slug,user.id)
 					self.assertEqual(remove_button in role_content, True)
 
