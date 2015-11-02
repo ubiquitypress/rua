@@ -147,18 +147,18 @@ def review(request, review_type, submission_id, access_key=None):
 		recommendation_form = core_forms.RecommendationForm(request.POST, ci_required=ci_required.value)
 		if form.is_valid() and recommendation_form.is_valid():
 			save_dict = {}
-			file_fields = models.FormElement.objects.filter(form=submission.review_form, field_type='upload')
-			data_fields = models.FormElement.objects.filter(~Q(field_type='upload'), form=submission.review_form)
+			file_fields = models.FormElementsRelationship.objects.filter(form=submission.review_form, element__field_type='upload')
+			data_fields = models.FormElementsRelationship.objects.filter(~Q(element__field_type='upload'), form=submission.review_form)
 
 			for field in file_fields:
-				if field.name in request.FILES:
+				if field.element.name in request.FILES:
 					# TODO change value from string to list [value, value_type]
-					save_dict[field.name] = [handle_review_file(request.FILES[field.name], submission, review_assignment, 'reviewer')]
+					save_dict[field.element.name] = [handle_review_file(request.FILES[field.element.name], submission, review_assignment, 'reviewer')]
 
 			for field in data_fields:
-				if field.name in request.POST:
+				if field.element.name in request.POST:
 					# TODO change value from string to list [value, value_type]
-					save_dict[field.name] = [request.POST.get(field.name), 'text']
+					save_dict[field.element.name] = [request.POST.get(field.element.name), 'text']
 
 			json_data = json.dumps(save_dict)
 			form_results = models.FormResult(form=submission.review_form, data=json_data)
