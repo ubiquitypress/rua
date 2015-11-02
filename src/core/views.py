@@ -409,7 +409,7 @@ def get_all(request, submission_id):
     mimetype = 'application/json'
     return HttpResponse(data, mimetype)
 
-@is_book_editor
+@login_required
 def email_users(request, group, submission_id=None, user_id=None):
 	submission = get_object_or_404(models.Book, pk=submission_id)
 	editors = logic.get_editors(submission)

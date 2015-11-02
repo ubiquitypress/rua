@@ -43,9 +43,12 @@
             <div class="dash-container">
             <h5>If you would like to contact the editor about this </br> project, please click the button below</h5>
             </br>
-            {% ifequal editors '' %}
-             <a class="btn btn-lg btn-task" disabled type="submit" >Contact Editor</a>
+            {% if submission.press_editors.all %}
+            {% for editor in submission.press_editors.all %}
+             <a  href="core/email.html" onclick="return popitup('/email/editors/submission/{{submission.id}}/user/{{editor.pk}}/','editors_{{editor.pk}}')"class="btn btn-task" type="submit" >Contact Editor</a>
+             {%endfor%}
             {% else %}
-             <a href='mailto:{{editors}}' class="btn btn-task" type="submit" >Contact Editor</a>
-           {% endifequal %}
+<a class="btn btn-lg btn-task" disabled type="submit" >Contact Editor</a>
+            
+           {% endif %}
             </div>

@@ -100,6 +100,23 @@ class CoreTests(TestCase):
 			self.assertEqual("I Accept" in content, True)
 			self.assertEqual("I Decline" in content, True)
 
+			assignment=task.get('assignment')
+			assignment.accepted=timezone.now()
+			assignment.save()
+			self.assignment= core_models.ReviewAssignment.objects.get(pk=1)
+			response = self.client.post(reverse('onetasker_task_hub',kwargs={'assignment_type':task.get('type'),'assignment_id':task.get('assignment').id}), {'accept': 'I Accept'})
+			content =response.content
+			self.assertEqual(response.status_code, 200)
+			self.assertEqual("403" in content, False)
+			month = time.strftime("%m")
+			day = int(time.strftime("%d"))
+			year = time.strftime("%Y")
+			month_name = calendar.month_name[int(month)]
+			month_name=month_name[:3]
+
+			message = "You accepted on %s %s %s" % (day,month_name,year)
+			self.assertEqual(message in content, True)
+
 
 
 
