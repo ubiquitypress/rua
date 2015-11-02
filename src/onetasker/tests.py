@@ -88,10 +88,11 @@ class CoreTests(TestCase):
 		self.assertEqual("Typesetting" in content, True)
 		self.assertEqual("rua_title" in content, True)
 
-	def test_onetasker_view_task(self):
+	def test_onetasker_tasks(self):
 		onetasker_tasks = core_logic.onetasker_tasks(self.user)
 		active_tasks = onetasker_tasks.get('active')
 		for task in active_tasks:
+			### decision page
 			response = self.client.get(reverse('onetasker_task_hub',kwargs={'assignment_type':task.get('type'),'assignment_id':task.get('assignment').id}))
 			content =response.content
 			self.assertEqual(response.status_code, 200)
@@ -99,16 +100,31 @@ class CoreTests(TestCase):
 			self.assertEqual("You can accept or reject this task" in content, True)
 			self.assertEqual("I Accept" in content, True)
 			self.assertEqual("I Decline" in content, True)
-
+			### about/submission details page
 			assignment=task.get('assignment')
-			self.assignment= core_models.ReviewAssignment.objects.get(pk=1)
+			book=assignment.book 
+			authors= book.author.all()
+			response = self.client.get(reverse('onetasker_task_about',kwargs={'assignment_type':task.get('type'),'assignment_id':task.get('assignment').id,'about':'about'}))
+			content =response.content
+			self.assertEqual("AUTHORS" in content, True)
+			for author in authors:
+				self.assertEqual( author.full_name() in content, True)
+			self.assertEqual("DESCRIPTION" in content, True)
+			self.assertEqual( book.description in content, True)
+			self.assertEqual("COVER LETTER" in content, True)
+			self.assertEqual( book.cover_letter in content, True)
+			self.assertEqual("REVIEWER SUGGESTIONS" in content, True)
+			self.assertEqual( book.reviewer_suggestions in content, True)
+			self.assertEqual("COMPETING INTERESTS" in content, True)
+			self.assertEqual( book.competing_interests in content, True)
+			### decision - accept
 			response = self.client.post(reverse('onetasker_task_hub',kwargs={'assignment_type':task.get('type'),'assignment_id':task.get('assignment').id}), {'decision': 'accept'})
 			self.assertEqual(response.status_code, 302)
 			self.assertEqual(response['Location'], "http://testing/tasks/%s/%s" % (task.get('type'),assignment.id))
-
+			### task page
 			response = self.client.get(reverse('onetasker_task_hub',kwargs={'assignment_type':task.get('type'),'assignment_id':task.get('assignment').id}))
 			content =response.content
-		#	print content
+		
 			self.assertEqual(response.status_code, 200)
 			self.assertEqual("403" in content, False)
 			month = time.strftime("%m")
@@ -119,6 +135,7 @@ class CoreTests(TestCase):
 
 			message = "You accepted on %s %s %s" % (day,month_name,year)
 			self.assertEqual(message in content, True)
+			### decision - decline
 			assignment.accepted=None
 			assignment.save()
 			response = self.client.post(reverse('onetasker_task_hub',kwargs={'assignment_type':task.get('type'),'assignment_id':task.get('assignment').id}), {'decision': 'decline'})
