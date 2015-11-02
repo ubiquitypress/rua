@@ -150,6 +150,40 @@ class CoreTests(TestCase):
 			for user in dont_have_role:
 				add_button="/manager/roles/%s/user/%s/add/" % (role.slug,user.id)
 				self.assertEqual(add_button in role_content, True)
+			expected_size=len(have_role)+len(dont_have_role)
+			if len(have_role)>0:
+				for user in have_role:
+					remove = self.client.post(reverse('manager_role_action',kwargs={'slug':role.slug,'user_id':user.id,'action':'remove'}))
+
+			elif len(dont_have_role)>0:				
+				for user in dont_have_role:
+					add = self.client.post(reverse('manager_role_action',kwargs={'slug':role.slug,'user_id':user.id,'action':'add'}))
+			
+			
+			role_resp = self.client.get(reverse('manager_role',kwargs={'slug':role.slug}))
+			role_content = role_resp.content
+			self.assertEqual(role_resp.status_code, 200)
+			self.assertEqual("403" in role_content, False)
+			have_role_2=[]
+			dont_have_role_2=[]
+			users=User.objects.all()
+			for user in users:
+				if user.profile.roles.filter(name=role.name).exists():
+					have_role_2.append(user)
+				else:
+					dont_have_role_2.append(user)
+			if len(dont_have_role_2)>0:
+				for user in dont_have_role_2:
+					add_button="/manager/roles/%s/user/%s/add/" % (role.slug,user.id)
+					self.assertEqual(add_button in role_content, True)
+			else:
+				for user in have_role_2:
+					remove_button="/manager/roles/%s/user/%s/remove/" % (role.slug,user.id)
+					self.assertEqual(remove_button in role_content, True)
+
+
+
+
 
 
 	
