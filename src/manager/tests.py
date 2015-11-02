@@ -33,6 +33,13 @@ class CoreTests(TestCase):
 		'test_copyedit_assignment_data',
 
 	]
+  # Helper Function
+	def getmessage(cls, response):
+		"""Helper method to return first message from response """
+		for c in response.context:
+			message = [m for m in c.get('messages')][0]
+			if message:
+				return message
 
 	def setUp(self):
 		self.client = Client(HTTP_HOST="testing")
@@ -71,3 +78,13 @@ class CoreTests(TestCase):
 		
 		self.assertEqual(resp.status_code, 302)
 		self.assertEqual(resp['Location'], "http://testing/admin/login/?next=/manager/")
+	
+	def test_clear_cache(self):
+		resp = self.client.get(reverse('manager_flush_cache'))
+		self.assertEqual(resp.status_code, 302)
+		self.assertEqual(resp['Location'], "http://testing/manager/")
+		resp = self.client.get(reverse('manager_index'))
+		message = self.getmessage(resp)
+		self.assertEqual(message.message, "Memcached has been flushed.")
+
+
