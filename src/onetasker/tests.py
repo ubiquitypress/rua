@@ -101,11 +101,14 @@ class CoreTests(TestCase):
 			self.assertEqual("I Decline" in content, True)
 
 			assignment=task.get('assignment')
-			assignment.accepted=timezone.now()
-			assignment.save()
 			self.assignment= core_models.ReviewAssignment.objects.get(pk=1)
-			response = self.client.post(reverse('onetasker_task_hub',kwargs={'assignment_type':task.get('type'),'assignment_id':task.get('assignment').id}), {'accept': 'I Accept'})
+			response = self.client.post(reverse('onetasker_task_hub',kwargs={'assignment_type':task.get('type'),'assignment_id':task.get('assignment').id}), {'decision': 'accept'})
+			self.assertEqual(response.status_code, 302)
+			self.assertEqual(response['Location'], "http://testing/tasks/%s/%s" % (task.get('type'),assignment.id))
+
+			response = self.client.get(reverse('onetasker_task_hub',kwargs={'assignment_type':task.get('type'),'assignment_id':task.get('assignment').id}))
 			content =response.content
+		#	print content
 			self.assertEqual(response.status_code, 200)
 			self.assertEqual("403" in content, False)
 			month = time.strftime("%m")
@@ -116,6 +119,11 @@ class CoreTests(TestCase):
 
 			message = "You accepted on %s %s %s" % (day,month_name,year)
 			self.assertEqual(message in content, True)
+			assignment.accepted=None
+			assignment.save()
+			response = self.client.post(reverse('onetasker_task_hub',kwargs={'assignment_type':task.get('type'),'assignment_id':task.get('assignment').id}), {'decision': 'decline'})
+			self.assertEqual(response.status_code, 302)
+			self.assertEqual(response['Location'], "http://testing/tasks/")
 
 
 

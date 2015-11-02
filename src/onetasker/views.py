@@ -40,7 +40,6 @@ def task_hub(request, assignment_type, assignment_id, about=None):
 	if request.POST:
 		#Handle decision
 		decision = request.POST.get('decision', None)
-		print decision
 		if decision == 'accept':
 			assignment.accepted = datetime.now()
 			assignment.save()
