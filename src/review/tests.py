@@ -189,6 +189,39 @@ class CoreTests(TestCase):
 		resp = self.client.post(reverse('review_without_access_key',kwargs={'review_type':self.assignment.review_type,'submission_id':1}), {'rua_name': 'example','recommendation':'accept','competing_interests':'nothing'})
 		self.assertEqual(resp.status_code, 302)
 		self.assertEqual(resp['Location'], "http://testing/review/external/1/complete/")
+
+	def test_access_key(self):
+		self.assignment= core_models.ReviewAssignment.objects.get(pk=1)
+		self.assignment.access_key="enter"
+		self.assignment.save()
+		resp = self.client.get(reverse('reviewer_decision_without',kwargs={'review_type':self.assignment.review_type,'submission_id':1,'review_assignment':1}))
+		self.assertEqual(resp.status_code, 404)
+		resp = self.client.get(reverse('reviewer_decision_without_access_key',kwargs={'review_type':self.assignment.review_type,'submission_id':1,'review_assignment':1,'access_key':"enter"}))
+		content =resp.content
+
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
+		self.assertEqual("You can accept or reject this task" in content, True)
+		self.assertEqual("I Accept" in content, True)
+		self.assertEqual("I Decline" in content, True)
+
+		resp = self.client.post(reverse('reviewer_decision_without_access_key',kwargs={'review_type':self.assignment.review_type,'submission_id':1,'review_assignment':1,'access_key':"enter"}), {'accept': 'I Accept'})
+		self.assertEqual(resp.status_code, 302)
+		self.assertEqual(resp['Location'], "http://testing/review/%s/%s/access_key/%s/" % (self.assignment.review_type,1,"enter"))
+		self.assignment.accepted = None
+		self.assignment.save()
+		resp = self.client.post(reverse('reviewer_decision_without_access_key',kwargs={'review_type':self.assignment.review_type,'submission_id':1,'review_assignment':1,'access_key':"enter"}), {'decline': 'I Decline'})
+		self.assertEqual(resp.status_code, 302)
+		self.assertEqual(resp['Location'], "http://testing/review/dashboard/")
+		self.assignment.declined = None
+		self.assignment.accepted = timezone.now()
+		self.assignment.save()
+		resp = self.client.post(reverse('review_with_access_key',kwargs={'review_type':self.assignment.review_type,'submission_id':1,'access_key':"enter"}), {'rua_name': 'example','recommendation':'accept','competing_interests':'nothing'})
+		self.assertEqual(resp.status_code, 302)
+		self.assertEqual(resp['Location'], "http://testing/review/external/1/access_key/enter/complete/")
+
+
+
 	
 
 

@@ -52,7 +52,7 @@ def reviewer_decision(request, review_type, submission_id, review_assignment, de
 	if access_key:
 		review_assignment = get_object_or_404(core_models.ReviewAssignment, pk=review_assignment, user=request.user, completed__isnull=True, declined__isnull=True, accepted__isnull=True,access_key=access_key)
 	else:
-		review_assignment = get_object_or_404(core_models.ReviewAssignment, pk=review_assignment, user=request.user, completed__isnull=True, declined__isnull=True, accepted__isnull=True)
+		review_assignment = get_object_or_404(core_models.ReviewAssignment, pk=review_assignment, user=request.user, completed__isnull=True, declined__isnull=True, accepted__isnull=True,access_key="")
 	
 	editors = logic.get_editors(review_assignment)
 
@@ -123,7 +123,7 @@ def review(request, review_type, submission_id, access_key=None):
 		review_assignment = get_object_or_404(submission_models.ProposalReview, user=request.user, proposal=submission, completed__isnull=True, declined__isnull=True)
 	else:
 		submission = get_object_or_404(core_models.Book, pk=submission_id)
-		review_assignment = get_object_or_404(core_models.ReviewAssignment, user=request.user, book=submission, declined__isnull=True, review_type=review_type)
+		review_assignment = get_object_or_404(core_models.ReviewAssignment, user=request.user, book=submission, declined__isnull=True, review_type=review_type,access_key="")
 		if review_assignment.completed:
 			return redirect(reverse('review_complete', kwargs={'review_type': review_type, 'submission_id': submission.pk}))
 	
@@ -180,8 +180,10 @@ def review(request, review_type, submission_id, access_key=None):
 				
 				message = "Reviewer %s %s has completed a review for '%s'."  % (submission.title,review_assignment.user.first_name, review_assignment.user.last_name)
 				logic.notify_editors(submission,message,editors,request.user,'review')
-
-			return redirect(reverse('review_complete', kwargs={'review_type': review_type, 'submission_id': submission.id}))
+			if access_key:
+				return redirect(reverse('review_complete_with_access_key', kwargs={'review_type': review_type, 'submission_id': submission.id,'access_key':access_key}))
+			else:
+				return redirect(reverse('review_complete', kwargs={'review_type': review_type, 'submission_id': submission.id}))
 
 
 	template = 'review/review.html'
