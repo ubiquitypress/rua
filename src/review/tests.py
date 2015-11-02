@@ -34,6 +34,8 @@ class CoreTests(TestCase):
 		self.client = Client(HTTP_HOST="testing")
 		self.user = User.objects.get(username="rua_reviewer")
 		self.user.save()
+		self.book = core_models.Book.objects.get(pk=1)
+
 
 		login = self.client.login(username="rua_reviewer", password="tester")
 		self.assertEqual(login, True)
@@ -137,6 +139,27 @@ class CoreTests(TestCase):
 		self.assertEqual(resp.status_code, 200)
 		self.assertEqual("403" in content, False)
 		self.assertEqual("0 COMPLETED TASKS" in content, True)
+
+	def test_reviewer_decision(self):
+		self.assignment= core_models.ReviewAssignment.objects.get(pk=1)
+		resp = self.client.get(reverse('reviewer_decision_without',kwargs={'review_type':self.assignment.review_type,'submission_id':1,'review_assignment':1}))
+		content =resp.content
+
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
+		self.assertEqual("You can accept or reject this task" in content, True)
+		self.assertEqual("I Accept" in content, True)
+		self.assertEqual("I Decline" in content, True)
+	def test_reviewer_decision_accept(self):
+		self.assignment= core_models.ReviewAssignment.objects.get(pk=1)
+		resp = self.client.post(reverse('reviewer_decision_without',kwargs={'review_type':self.assignment.review_type,'submission_id':1,'review_assignment':1}), {'accept': 'I Accept'})
+		self.assertEqual(resp.status_code, 302)
+		self.assertEqual(resp['Location'], "http://testing/review/%s/%s/" % (self.assignment.review_type,1))
+	def test_reviewer_decision_decline(self):
+		self.assignment= core_models.ReviewAssignment.objects.get(pk=1)
+		resp = self.client.post(reverse('reviewer_decision_without',kwargs={'review_type':self.assignment.review_type,'submission_id':1,'review_assignment':1}), {'decline': 'I Decline'})
+		self.assertEqual(resp.status_code, 302)
+		self.assertEqual(resp['Location'], "http://testing/review/dashboard/")
 
 
 
