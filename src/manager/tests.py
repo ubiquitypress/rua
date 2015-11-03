@@ -1,11 +1,11 @@
 from django.test import TestCase
-from onetasker import models
+from manager import models
 from django.utils import timezone
 import time
 import datetime
 from django.test import SimpleTestCase
 from django.db.models import Q
-from onetasker import views
+from manager import views
 from core import models as core_models
 from core import logic as core_logic, task
 import json
@@ -31,6 +31,7 @@ class CoreTests(TestCase):
 		'test_core_data',
 		'test_index_assignment_data',
 		'test_copyedit_assignment_data',
+		'test_manager_data'
 
 	]
   # Helper Function
@@ -189,6 +190,69 @@ class CoreTests(TestCase):
 				for user in have_role:
 					remove_button="/manager/roles/%s/user/%s/remove/" % (role.slug,user.id)
 					self.assertEqual(remove_button in role_content, True)
+
+	def test_manager_groups(self):
+		resp = self.client.get(reverse('manager_groups'))
+		groups = models.Group.objects.all()
+		content =resp.content
+		
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
+		for group in groups:
+			self.assertEqual(group.name in content, True)
+		found = False
+		resp = self.client.post(reverse('manager_group_add'),{'group_type': 'generic', 'name': 'rua_new_group', 'active': True, 'sequence': 4})
+		try:
+			new_group = models.Group.objects.get(name="rua_new_group")
+			found = True
+		except:
+			found = False
+		self.assertEqual(found, True)
+
+		found = False
+		resp = self.client.post(reverse('manager_group_edit',kwargs={'group_id':4}),{'group_type': 'generic', 'name': 'changed_name', 'active': True, 'sequence': 4})
+
+		try:
+			new_group = models.Group.objects.get(name="changed_name")
+			found = True
+		except:
+			found = False
+		self.assertEqual(found, True)
+		found = False
+		resp = self.client.post(reverse('manager_group_delete',kwargs={'group_id':4}))
+		try:
+			new_group = models.Group.objects.get(name="changed_name")
+			found = True
+		except:
+			found = False
+		self.assertEqual(found, False)
+		editorial_group = models.Group.objects.get(name="rua_editorial_group")
+		editorial_group_members = models.GroupMembership.objects.filter(group=editorial_group)
+		self.assertEqual(len(editorial_group_members),2)
+
+		resp = self.client.get(reverse('manager_group_members',kwargs={'group_id':editorial_group.id}))
+		content =resp.content
+		
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
+		for member in editorial_group_members:
+			self.assertEqual(member.user.first_name in content, True)
+			self.assertEqual(member.user.last_name in content, True)
+			remove_button = "/manager/groups/%s/members/%s/delete" % (editorial_group.id,member.id)
+			self.assertEqual(remove_button in content, True)
+		resp = self.client.post(reverse('manager_membership_delete',kwargs={'group_id':editorial_group.id,'member_id':1}))
+		editorial_group_members = models.GroupMembership.objects.filter(group=editorial_group)
+		self.assertEqual(len(editorial_group_members),1)
+		new_user=User.objects.get(username="rua_reviewer")
+		resp = self.client.post(reverse('group_members_assign',kwargs={'group_id':editorial_group.id,'user_id':new_user.id}))
+		editorial_group_members = models.GroupMembership.objects.filter(group=editorial_group)
+		self.assertEqual(len(editorial_group_members),2)
+
+
+
+
+
+
 
 
 
