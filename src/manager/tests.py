@@ -272,6 +272,12 @@ class CoreTests(TestCase):
 		self.client.post(reverse('edit_setting',kwargs={'setting_group':group.name,'setting_name':setting.name}),{'value':8})
 		setting=core_models.Setting.objects.get(name="remind_accepted_reviews")
 		self.assertEqual(setting.value,str(8))
+		self.client.post(reverse('edit_setting',kwargs={'setting_group':group.name,'setting_name':setting.name}),{'value':8,'delete':'delete'})
+		setting=core_models.Setting.objects.get(name="remind_accepted_reviews")
+		self.assertEqual(setting.value,"")
+
+
+
 
 
 
