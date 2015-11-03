@@ -31,7 +31,9 @@ class CoreTests(TestCase):
 		'test_core_data',
 		'test_index_assignment_data',
 		'test_copyedit_assignment_data',
-		'test_manager_data'
+		'test_manager_data',
+		'test_submission_checklist_item_data',
+		'test_proposal_form',
 
 	]
   # Helper Function

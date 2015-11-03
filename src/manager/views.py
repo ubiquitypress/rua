@@ -335,7 +335,8 @@ def add_proposal_field(request,form_id):
 		help_text = request.POST.get("help_text")
 		order = int(request.POST.get("order"))
 		print len(elements)
-		element = core_models.ProposalFormElement.objects.get(id=int(element_index)-1)
+		print element_index
+		element = core_models.ProposalFormElement.objects.get(id=int(element_index))
 		relationship=core_models.ProposalFormElementsRelationship(form=form,element=element,width=width,order=order,help_text=help_text)
 		relationship.save()
 		fields = core_models.ProposalFormElementsRelationship.objects.filter(form=form)

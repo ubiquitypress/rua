@@ -1,0 +1,1 @@
+[{"fields": {"text": "item", "required": true, "slug": "rua_item", "sequence": 2}, "model": "submission.submissionchecklistitem", "pk": 1}, {"fields": {"text": "item 2", "required": false, "slug": "rua_item_2", "sequence": 3}, "model": "submission.submissionchecklistitem", "pk": 2}]
