@@ -248,6 +248,31 @@ class CoreTests(TestCase):
 		editorial_group_members = models.GroupMembership.objects.filter(group=editorial_group)
 		self.assertEqual(len(editorial_group_members),2)
 
+	def test_manager_settings(self):
+		resp = self.client.get(reverse('settings_index'))
+		content =resp.content
+		
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
+		groups =core_models.SettingGroup.objects.all()
+		for group in groups:
+			self.assertEqual(group.name.title() in content, True)
+			settings = core_models.Setting.objects.filter(group=group)
+			for setting in settings:
+				self.assertEqual(setting.name in content, True)
+				setting_resp = self.client.get(reverse('edit_setting',kwargs={'setting_group':group.name,'setting_name':setting.name}))
+				self.assertEqual(setting_resp.status_code, 200)
+				setting_content=setting_resp.content
+				self.assertEqual("403" in setting_content, False)
+				self.assertEqual("Submit" in setting_content, True)
+				self.assertEqual('name="value"' in setting_content, True)
+				self.assertEqual("Delete" in setting_content, True)
+		setting=core_models.Setting.objects.get(name="remind_accepted_reviews")
+		self.assertEqual(setting.value,str(7))
+		self.client.post(reverse('edit_setting',kwargs={'setting_group':group.name,'setting_name':setting.name}),{'value':8})
+		setting=core_models.Setting.objects.get(name="remind_accepted_reviews")
+		self.assertEqual(setting.value,str(8))
+
 
 
 
