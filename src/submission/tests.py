@@ -91,6 +91,75 @@ class CoreTests(TestCase):
 		forms = models.Proposal.objects.all()
 		self.assertEqual(len(forms), 1)
 
+		resp = self.client.get(reverse('proposal_revisions',kwargs={"proposal_id":1}))
+		content =resp.content
+		self.assertEqual(resp.status_code, 404)
+
+		proposal_form_revise = models.Proposal.objects.get(pk=1)
+		proposal_form_revise.status='revisions_required'
+		proposal_form_revise.save()
+
+		resp = self.client.get(reverse('proposal_revisions',kwargs={"proposal_id":1}))
+		content =resp.content
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
+		resp=self.client.post(reverse('proposal_revisions',kwargs={"proposal_id":1}),{"title":"updated","subtitle":"rua_proposal_subtitle","author":"rua_user","rua_element":"changed","rua_element_2":"changed"})
+		forms = models.Proposal.objects.all()
+		proposal_form_updated = models.Proposal.objects.get(pk=1)
+		self.assertEqual("updated", proposal_form_updated.title)
+		self.assertEqual('revisions_submitted', proposal_form_updated.status)
+
+	def test_submission_book(self):
+		resp = self.client.get(reverse('submission_start'))
+		content =resp.content
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
+
+		resp=self.client.post(reverse('submission_start'),{"book_type":"monograph","license":"2","review_type":"open-with","cover_letter":"rua_cover_letter","reviewer_suggestions":"rua_suggestion","competing_interests":"rua_competing_interest","item":True,"item2":True})
+		self.assertEqual(resp.status_code, 302)
+		self.assertEqual("403" in content, False)
+		self.assertEqual(resp['Location'], "http://testing/submission/book/2/stage/2/")
+		resp=self.client.post(reverse('edit_start',kwargs={"book_id":2}),{"book_type":"monograph","license":"2","review_type":"open-with","cover_letter":"rua_cover_letter_updated","reviewer_suggestions":"rua_suggestion","competing_interests":"rua_competing_interest","item":True,"item2":True})
+		self.assertEqual(resp.status_code, 302)
+		self.assertEqual("403" in content, False)
+		self.assertEqual(resp['Location'], "http://testing/submission/book/2/stage/2/")
+		resp=self.client.post(reverse('submission_two',kwargs={"book_id":2}),{"title":"new_book_title","subtitle":"new_book_subtitle","prefix":"new_book_prefix","description":"rua_description"})
+		self.assertEqual(resp.status_code, 302)
+		self.assertEqual("403" in content, False)
+		self.assertEqual(resp['Location'], "http://testing/submission/book/2/stage/3/")
+		resp=self.client.post(reverse('submission_two',kwargs={"book_id":2}),{"title":"new_book_title","subtitle":"new_book_subtitle","prefix":"new_book_prefix","description":"rua_description_updated"})
+		self.assertEqual(resp.status_code, 302)
+		self.assertEqual("403" in content, False)
+		self.assertEqual(resp['Location'], "http://testing/submission/book/2/stage/3/")
+		new_book = core_models.Book.objects.get(pk=2)
+		resp = self.client.get(reverse('submission_three',kwargs={"book_id":2}))
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
+		new_book.submission_stage=4
+		new_book.save()
+		resp = self.client.get(reverse('submission_three_additional',kwargs={"book_id":2}))
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
+		new_book.submission_stage=5
+		new_book.save()
+		resp = self.client.get(reverse('submission_four',kwargs={"book_id":2}))
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
+		resp=self.client.post(reverse('submission_four',kwargs={"book_id":2}),{"next_stage":""})
+		self.assertEqual(resp.status_code, 302)
+		self.assertEqual("403" in content, False)
+		self.assertEqual(resp['Location'], "http://testing/submission/book/2/stage/6/")
+		resp=self.client.post(reverse('submission_five',kwargs={"book_id":2}),{"complete":""})
+		self.assertEqual(resp.status_code, 302)
+		self.assertEqual("403" in content, False)
+		self.assertEqual(resp['Location'], "http://testing/author/dashboard/")
+
+
+
+
+
+
+
 
 		
 		

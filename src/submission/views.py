@@ -109,6 +109,7 @@ def submission_three(request, book_id):
 	logic.check_stage(book, 3)
 
 	if request.method == 'POST':
+		print request.POST
 		if 'next_stage' in request.POST:
 			if manuscript_files.count() >= 1:
 				if not book.submission_stage > 4:
