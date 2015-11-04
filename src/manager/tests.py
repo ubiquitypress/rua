@@ -300,12 +300,97 @@ class CoreTests(TestCase):
 		for item in items:
 			list_item="%s - %s" % (item.text,item.required)
 			self.assertEqual(list_item in content, True)
+	
 	def test_manager_proposal_forms(self):
 		resp = self.client.get(reverse('proposal_forms'))
 		content =resp.content
+		proposal_forms = core_models.ProposalForm.objects.all()
 		
 		self.assertEqual(resp.status_code, 200)
 		self.assertEqual("403" in content, False)
+
+		for form in proposal_forms:
+			self.assertEqual(form.name in content, True)
+			view_button = "/manager/submission/proposal_forms/view/form/%s/" % form.id
+			self.assertEqual(view_button in content, True)
+			form_resp = self.client.get(reverse('manager_view_proposal_form',kwargs={'form_id':form.id}))
+			form_content = form_resp.content
+
+			self.assertEqual(form_resp.status_code, 200)
+			self.assertEqual("403" in form_content, False)
+			title = "Proposal Form: %s" % form.name
+			self.assertEqual(title in form_content, True)
+			self.assertEqual(form.intro_text in form_content, True)
+			self.assertEqual(form.completion_text in form_content, True)
+			self.assertEqual("Fields" in form_content, True)
+			form_element_relationships=core_models.ProposalFormElementsRelationship.objects.filter(form=form)
+			self.assertEqual(len(form_element_relationships), 2)
+			for field in form_element_relationships:
+				self.assertEqual(field.element.name in form_content, True)
+				self.assertEqual(field.element.field_type in form_content, True)
+				delete_button='name="delete" value="%s"' % form.id
+				self.assertEqual(delete_button in form_content, True)
+			deleted = form_element_relationships[0]
+			self.client.post(reverse('manager_view_proposal_form',kwargs={'form_id':form.id}),{'delete':deleted.id})
+			form_element_relationships=core_models.ProposalFormElementsRelationship.objects.filter(form=form)
+			self.assertEqual(len(form_element_relationships), 1)
+		
+		new_form_resp=self.client.post(reverse('manager_add_proposal_form'),{'name':'new_test_form','ref':'test-new_form','intro_text':'introduction','completion_text':'completed'})
+		found = False
+		try:
+			new_form = core_models.ProposalForm.objects.get(name="new_test_form")
+			found=True
+		except:
+			found=False
+		self.assertEqual(found,True)
+		self.assertEqual(new_form_resp.status_code, 302)
+		create_elements_url = "http://testing/manager/submission/proposal_forms/form/%s/create/elements/" % new_form.id
+		self.assertEqual(new_form_resp['Location'], create_elements_url)
+		form_elements=core_models.ProposalFormElement.objects.all()
+		self.assertEqual(len(form_elements), 2)
+		new_form_resp=self.client.post(reverse('manager_create_proposal_elements',kwargs={'form_id':new_form.id}),{'name':'new_test_element','choices':'','field_type':'textarea','required':True})
+		form_elements=core_models.ProposalFormElement.objects.all()
+		self.assertEqual(len(form_elements), 3)
+		self.client.post(reverse('manager_create_proposal_elements',kwargs={'form_id':new_form.id}),{'delete':"1"})
+		form_elements=core_models.ProposalFormElement.objects.all()
+		self.assertEqual(len(form_elements), 2)
+		
+		new_form_resp=self.client.post(reverse('manager_create_proposal_elements',kwargs={'form_id':new_form.id}),{'continue':""})
+		create_fields_url = "http://testing/manager/submission/proposal_forms/form/%s/add/field/" % new_form.id
+		self.assertEqual(new_form_resp.status_code, 302)
+		self.assertEqual(new_form_resp['Location'], create_fields_url)
+		form_element_relationships=core_models.ProposalFormElementsRelationship.objects.filter(form=new_form)
+		self.assertEqual(len(form_element_relationships), 0)
+		new_form_resp=self.client.post(reverse('manager_add_proposal_form_field',kwargs={'form_id':new_form.id}),{'form':"new_test_form","element":"1","order":5,"width":"col-md-4","help_text":"help"})
+		self.assertEqual(new_form_resp.status_code, 302)
+		self.assertEqual(new_form_resp['Location'], create_fields_url)
+		self.assertEqual("403" in new_form_resp.content, False)
+		form_element_relationships=core_models.ProposalFormElementsRelationship.objects.filter(form=new_form)
+		self.assertEqual(len(form_element_relationships), 1)
+
+		new_form_resp=self.client.post(reverse('manager_add_proposal_form_field',kwargs={'form_id':new_form.id}),{'finish':""})
+		finished_url = "http://testing/manager/submission/proposal_forms/view/form/%s/" % new_form.id
+		self.assertEqual(new_form_resp.status_code, 302)
+		self.assertEqual(new_form_resp['Location'], finished_url)
+	
+		
+
+	
+		
+
+		
+
+
+	
+
+
+
+
+
+
+
+
+
 	def test_manager_review_forms(self):
 		resp = self.client.get(reverse('manager_review_forms'))
 		content =resp.content

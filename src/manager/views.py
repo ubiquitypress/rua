@@ -334,8 +334,6 @@ def add_proposal_field(request,form_id):
 		element_index = request.POST.get("element")
 		help_text = request.POST.get("help_text")
 		order = int(request.POST.get("order"))
-		print len(elements)
-		print element_index
 		element = core_models.ProposalFormElement.objects.get(id=int(element_index))
 		relationship=core_models.ProposalFormElementsRelationship(form=form,element=element,width=width,order=order,help_text=help_text)
 		relationship.save()
@@ -365,7 +363,6 @@ def add_proposal_form(request):
 	
 		else:
 			print form.errors
-		print review_form
 		return redirect(reverse('proposal_forms'))
 	template = 'manager/proposal/add_form.html'
 
