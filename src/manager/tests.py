@@ -7,6 +7,7 @@ from django.test import SimpleTestCase
 from django.db.models import Q
 from manager import views
 from core import models as core_models
+from review import models as review_models
 from submission import models as submission_models
 from core import logic as core_logic, task
 import json
@@ -372,56 +373,75 @@ class CoreTests(TestCase):
 		finished_url = "http://testing/manager/submission/proposal_forms/view/form/%s/" % new_form.id
 		self.assertEqual(new_form_resp.status_code, 302)
 		self.assertEqual(new_form_resp['Location'], finished_url)
-	
-		
-
-	
-		
-
-		
-
-
-	
-
-
-
-
-
-
-
-
 
 	def test_manager_review_forms(self):
 		resp = self.client.get(reverse('manager_review_forms'))
 		content =resp.content
+		review_forms = review_models.Form.objects.all()
 		
 		self.assertEqual(resp.status_code, 200)
 		self.assertEqual("403" in content, False)
+
+		for form in review_forms:
+			self.assertEqual(form.name in content, True)
+			view_button = "/manager/review-forms/view/form/%s/" % form.id
+			self.assertEqual(view_button in content, True)
+			form_resp = self.client.get(reverse('manager_view_review_form',kwargs={'form_id':form.id}))
+			form_content = form_resp.content
+
+			self.assertEqual(form_resp.status_code, 200)
+			self.assertEqual("403" in form_content, False)
+			title = "Review Form: %s" % form.name
+			self.assertEqual(title in form_content, True)
+			self.assertEqual(form.intro_text in form_content, True)
+			self.assertEqual(form.completion_text in form_content, True)
+			self.assertEqual("Fields" in form_content, True)
+			form_element_relationships=review_models.FormElementsRelationship.objects.filter(form=form)
+			self.assertEqual(len(form_element_relationships), 1)
+			t=0
+			for field in form_element_relationships:
+				self.assertEqual(field.element.name in form_content, True)
+				self.assertEqual(field.element.field_type in form_content, True)
+				delete_button='name="delete" value="%s"' % t
+				self.assertEqual(delete_button in form_content, True)
+				t=t+1
+			self.client.post(reverse('manager_view_review_form',kwargs={'form_id':form.id}),{'delete':0})
+			form_element_relationships=review_models.FormElementsRelationship.objects.filter(form=form)
+			self.assertEqual(len(form_element_relationships), 0)
+		new_form_resp=self.client.post(reverse('manager_add_form'),{'name':'new_test_form','ref':'test-new_form','intro_text':'introduction','completion_text':'completed'})
+		found = False
+		try:
+			new_form = review_models.Form.objects.get(name="new_test_form")
+			found=True
+		except:
+			found=False
+		self.assertEqual(found,True)
+		self.assertEqual(new_form_resp.status_code, 302)
+		create_elements_url = "http://testing/manager/review-forms/form/%s/create/elements/" % new_form.id
+		self.assertEqual(new_form_resp['Location'], create_elements_url)
+		form_elements=review_models.FormElement.objects.all()
+		self.assertEqual(len(form_elements), 1)
+		new_form_resp=self.client.post(reverse('manager_create_elements',kwargs={'form_id':new_form.id}),{'name':'new_test_element','choices':'','field_type':'textarea','required':True})
+		form_elements=review_models.FormElement.objects.all()
+		self.assertEqual(len(form_elements), 2)
+		self.client.post(reverse('manager_create_elements',kwargs={'form_id':new_form.id}),{'delete':"1"})
+		form_elements=review_models.FormElement.objects.all()
+		self.assertEqual(len(form_elements), 1)
 		
-		
+		new_form_resp=self.client.post(reverse('manager_create_elements',kwargs={'form_id':new_form.id}),{'continue':""})
+		create_fields_url = "http://testing/manager/review-forms/form/%s/add/field/" % new_form.id
+		self.assertEqual(new_form_resp.status_code, 302)
+		self.assertEqual(new_form_resp['Location'], create_fields_url)
+		form_element_relationships=review_models.FormElementsRelationship.objects.filter(form=new_form)
+		self.assertEqual(len(form_element_relationships), 0)
+		new_form_resp=self.client.post(reverse('manager_add_review_form_field',kwargs={'form_id':new_form.id}),{'form':"new_test_form","element":"1","order":5,"width":"col-md-4","help_text":"help"})
+		self.assertEqual(new_form_resp.status_code, 302)
+		self.assertEqual(new_form_resp['Location'], create_fields_url)
+		self.assertEqual("403" in new_form_resp.content, False)
+		form_element_relationships=review_models.FormElementsRelationship.objects.filter(form=new_form)
+		self.assertEqual(len(form_element_relationships), 1)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-	
-
-
-
-
-
-		
-
-
+		new_form_resp=self.client.post(reverse('manager_add_review_form_field',kwargs={'form_id':new_form.id}),{'finish':""})
+		finished_url = "http://testing/manager/review-forms/view/form/%s/" % new_form.id
+		self.assertEqual(new_form_resp.status_code, 302)
+		self.assertEqual(new_form_resp['Location'], finished_url)
