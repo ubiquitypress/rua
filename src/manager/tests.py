@@ -7,6 +7,7 @@ from django.test import SimpleTestCase
 from django.db.models import Q
 from manager import views
 from core import models as core_models
+from submission import models as submission_models
 from core import logic as core_logic, task
 import json
 from django.http import HttpRequest
@@ -277,6 +278,44 @@ class CoreTests(TestCase):
 		self.client.post(reverse('edit_setting',kwargs={'setting_group':group.name,'setting_name':setting.name}),{'value':8,'delete':'delete'})
 		setting=core_models.Setting.objects.get(name="remind_accepted_reviews")
 		self.assertEqual(setting.value,"")
+
+	def test_manager_submission_checklist(self):
+		resp = self.client.get(reverse('submission_checklist'))
+		content =resp.content
+		
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
+		self.assertEqual("Current Checklist Items" in content, True)
+		self.assertEqual("Add new item" in content, True)
+		items =submission_models.SubmissionChecklistItem.objects.all()
+		self.assertEqual(len(items), 2)
+		for item in items:
+			list_item="%s - %s" % (item.text,item.required)
+			self.assertEqual(list_item in content, True)
+		self.client.post(reverse('submission_checklist'),{'slug':'new_item','text':'item 3','required':True,'sequence':10})
+		items =submission_models.SubmissionChecklistItem.objects.all()
+		self.assertEqual(len(items), 3)
+		resp = self.client.get(reverse('submission_checklist'))
+		content =resp.content
+		for item in items:
+			list_item="%s - %s" % (item.text,item.required)
+			self.assertEqual(list_item in content, True)
+	def test_manager_proposal_forms(self):
+		resp = self.client.get(reverse('proposal_forms'))
+		content =resp.content
+		
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
+	def test_manager_review_forms(self):
+		resp = self.client.get(reverse('manager_review_forms'))
+		content =resp.content
+		
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
+		
+		
+
+
 
 
 
