@@ -44,7 +44,7 @@ class EditorTests(TestCase):
 				return message
 
 	def setUp(self):
-		self.client = Client()
+		self.client = Client(HTTP_HOST="testing")
 		self.user = User.objects.get(username="rua_editor")
 		self.book = core_models.Book.objects.get(pk=1)
 		login = self.client.login(username='rua_editor', password='tester')
@@ -227,6 +227,19 @@ class EditorTests(TestCase):
 		onetasker= User.objects.get(username="rua_onetasker")
 		title = "TYPESETTING: %s %s" % (onetasker.first_name.upper(), onetasker.last_name.upper()) 
 		self.assertEqual(title in content, True)
+	
+	def test_editor_publish(self):
+		resp =  self.client.post(reverse('editor_review',kwargs={'submission_id':self.book.id}),{'move_to_editing':''})
+		self.book.stage.current_stage='production'
+		self.book.stage.production=timezone.now()
+		self.book.stage.save()
+		self.book.save()
+		resp =  self.client.post(reverse('editor_publish',kwargs={'submission_id':self.book.id}))
+		self.assertEqual(resp.status_code, 302)
+		self.assertEqual(resp['Location'], "http://testing/editor/submission/1/")
+
+		book = core_models.Book.objects.get(pk=1)
+		self.assertEqual(book.stage.current_stage=='published',True)
 
 
 
