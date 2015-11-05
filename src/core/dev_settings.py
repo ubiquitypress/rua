@@ -216,14 +216,18 @@ SILENCED_SYSTEM_CHECKS = (
 TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
 
 NOSE_ARGS = [
-       '--with-coverage',  # activate coverage report
+        '--with-coverage',  # activate coverage report
         '--with-doctest',  # activate doctest: find and run docstests
         '--verbosity=2',   # verbose output 
-        '--with-xunit',    # enable XUnit plugin
-        '--xunit-file=xunittest.xml',  # the XUnit report file
-        '--cover-xml',     # produle XML coverage info
-        '--cover-xml-file=coverage.xml',  # the coverage info file
-        '--cover-package=core,author,editor,manager,onetasker,review,submission'
-        # You may also specify the packages to be covered here
-        # '--cover-package=blog,examples'
+   
+    # Run test: python manage.py test --cover-package=(app)
+    
+     #  '--cover-package=core,author,editor,manager,onetasker,review,submission',  #uncomment to run all tests with 'python manage.py test'
+   
+    #    '--with-xunit',    # enable XUnit plugin
+    #   '--xunit-file=xunittest.xml',  # the XUnit report file
+    #    '--cover-xml',     # produle XML coverage info
+    #    '--cover-xml-file=coverage.xml',  # the coverage info file
+
+
 ]
