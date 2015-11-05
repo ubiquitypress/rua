@@ -346,7 +346,7 @@ def editor_editing(request, submission_id):
 
 	if request.POST and request.GET.get('start', None):
 		action = request.GET.get('start')
-
+		
 		if action == 'copyediting':
 			book.stage.copyediting = timezone.now()
 			log.add_log_entry(book=book, user=request.user, kind='editing', message='Copyediting has commenced.', short_name='Copyediting Started')

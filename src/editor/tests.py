@@ -17,7 +17,7 @@ import json
 from django.http import HttpRequest
 from  __builtin__ import any as string_any
 import calendar
-
+from django.core import management
 class EditorTests(TestCase):
 
 	# Dummy DBs
@@ -30,8 +30,6 @@ class EditorTests(TestCase):
 		'test_auth_data',
 		'test_review_data',
 		'test_core_data',
-		'test_index_assignment_data',
-		'test_copyedit_assignment_data',
 		'test_manager_data',
 		'test_submission_checklist_item_data',
 		'test_proposal_form',
@@ -151,15 +149,13 @@ class EditorTests(TestCase):
 		self.assertEqual("403" in content, False)
 		self.assertEqual("btn-task" in content, True)
 		self.assertEqual("ROUND 1" in content, True)
+		
+	def test_editor_editing(self):
 		resp =  self.client.post(reverse('editor_review',kwargs={'submission_id':self.book.id}),{'move_to_editing':''})
 		book = core_models.Book.objects.get(pk=1)
 		self.assertEqual(book.stage.current_stage=='editing',True)
-'''	def test_author_editing(self):
-		self.book.stage.current_stage='editing'
-		self.book.stage.editing=timezone.now()
-		self.book.stage.save()
-		self.book.save()
-		resp =  self.client.get(reverse('editing',kwargs={'submission_id':self.book.id}))
+
+		resp =  self.client.get(reverse('editor_editing',kwargs={'submission_id':self.book.id}))
 		content =resp.content
 		self.assertEqual(resp.status_code, 200)
 		self.assertEqual("403" in content, False)
@@ -170,7 +166,7 @@ class EditorTests(TestCase):
 		self.book.stage.indexing=timezone.now()
 		self.book.stage.save()
 		self.book.save()
-		resp =  self.client.get(reverse('editing',kwargs={'submission_id':self.book.id}))
+		resp =  self.client.get(reverse('editor_editing',kwargs={'submission_id':self.book.id}))
 		content =resp.content
 		self.assertEqual(resp.status_code, 200)
 		self.assertEqual("403" in content, False)
@@ -181,30 +177,32 @@ class EditorTests(TestCase):
 
 		management.call_command('loaddata', 'test_copyedit_assignment_data.json', verbosity=0)
 		management.call_command('loaddata', 'test_index_assignment_data.json', verbosity=0)
-	
-		resp =  self.client.get(reverse('author_view_copyedit',kwargs={'copyedit_id':1,'submission_id':self.book.id}))
+		onetasker= User.objects.get(username="rua_onetasker")
+		resp =  self.client.get(reverse('view_copyedit',kwargs={'copyedit_id':1,'submission_id':self.book.id}))
 		content =resp.content
 		self.assertEqual(resp.status_code, 200)
 		self.assertEqual("403" in content, False)
 		self.assertEqual("COPYEDITING" in content, True)
 		self.assertEqual("INDEXING" in content, True)
 		self.assertEqual("Stage has not been initialised." in content, False)
-		self.assertEqual("COPYEDIT ASSIGNMENT: 1" in content, True)
-		resp =  self.client.get(reverse('author_view_index',kwargs={'index_id':1,'submission_id':self.book.id}))
+		title = "COPYEDITING: %s %s" % (onetasker.first_name.upper(), onetasker.last_name.upper()) 
+		self.assertEqual(title in content, True)
+		resp =  self.client.get(reverse('view_index',kwargs={'index_id':1,'submission_id':self.book.id}))
 		content =resp.content
 		self.assertEqual(resp.status_code, 200)
 		self.assertEqual("403" in content, False)
 		self.assertEqual("COPYEDITING" in content, True)
 		self.assertEqual("INDEXING" in content, True)
 		self.assertEqual("Stage has not been initialised." in content, False)
-		self.assertEqual("INDEX ASSIGNMENT: 1" in content, True)
+		title = "INDEXING: %s %s" % (onetasker.first_name.upper(), onetasker.last_name.upper()) 
+		self.assertEqual(title in content, True)
 
-	def test_author_production(self):
+	def test_editor_production(self):
 		self.book.stage.current_stage='production'
 		self.book.stage.production=timezone.now()
 		self.book.stage.save()
 		self.book.save()
-		resp =  self.client.get(reverse('author_production',kwargs={'submission_id':self.book.id}))
+		resp =  self.client.get(reverse('editor_production',kwargs={'submission_id':self.book.id}))
 		content =resp.content
 		self.assertEqual(resp.status_code, 200)
 		self.assertEqual("403" in content, False)
@@ -213,20 +211,22 @@ class EditorTests(TestCase):
 		self.book.stage.typesetting=timezone.now()
 		self.book.stage.save()
 		self.book.save()
-		resp =  self.client.get(reverse('author_production',kwargs={'submission_id':self.book.id}))
+		resp =  self.client.get(reverse('editor_production',kwargs={'submission_id':self.book.id}))
 		content =resp.content
 		self.assertEqual(resp.status_code, 200)
 		self.assertEqual("403" in content, False)
 		self.assertEqual("Typesetting" in content, True)
 		self.assertEqual("Stage has not been initialised." in content, False)
 		
-		resp =  self.client.get(reverse('author_view_typesetter',kwargs={'typeset_id':1,'submission_id':self.book.id}))
+		resp =  self.client.get(reverse('view_typesetter',kwargs={'typeset_id':1,'submission_id':self.book.id}))
 		content =resp.content
 		self.assertEqual(resp.status_code, 200)
 		self.assertEqual("403" in content, False)
 		self.assertEqual("Typesetting" in content, True)
 		self.assertEqual("Stage has not been initialised." in content, False)
-		self.assertEqual("TYPESET ASSIGNMENT: 1" in content, True)
-		'''
+		onetasker= User.objects.get(username="rua_onetasker")
+		title = "TYPESETTING: %s %s" % (onetasker.first_name.upper(), onetasker.last_name.upper()) 
+		self.assertEqual(title in content, True)
+
 
 
