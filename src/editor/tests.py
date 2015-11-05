@@ -69,9 +69,164 @@ class EditorTests(TestCase):
 		self.book.stage.review=None
 		self.book.stage.save()
 		self.book.save()
-		resp = self.client.post(reverse('editor_dashboard'), {'filter': 'review', 'order': 'title'})
+		resp = self.client.post(reverse('editor_dashboard'), {'filter': 'review', 'order': 'title','search':'rua'})
 		content = resp.content
 		self.assertTrue(resp.status_code, 200)
 		self.assertEqual("Book %s: %s %s %s" % (self.book.id,self.book.prefix,self.book.title,self.book.subtitle) in content,False)
+	def test_submission(self):
+		self.book.stage.current_stage='submission'
+		self.book.stage.review=None
+		self.book.stage.save()
+		self.book.save()
+		book = core_models.Book.objects.get(pk=1)
+		self.assertEqual(book.stage.current_stage=='submission',True)
+		resp =  self.client.get(reverse('editor_submission',kwargs={'submission_id':self.book.id}))
+		content =resp.content
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
+		self.assertEqual("AUTHORS" in content, True)
+		authors = self.book.author.all()
+		for author in authors:
+			self.assertEqual( author.full_name() in content, True)
+		self.assertEqual("DESCRIPTION" in content, True)
+		self.assertEqual( self.book.description in content, True)
+		self.assertEqual("COVER LETTER" in content, True)
+		self.assertEqual( self.book.cover_letter in content, True)
+		self.assertEqual("REVIEWER SUGGESTIONS" in content, True)
+		self.assertEqual( self.book.reviewer_suggestions in content, True)
+		self.assertEqual("COMPETING INTERESTS" in content, True)
+		self.assertEqual( self.book.competing_interests in content, True)
+		resp =  self.client.post(reverse('editor_submission',kwargs={'submission_id':self.book.id}),{'review':''})
+		book = core_models.Book.objects.get(pk=1)
+		self.assertEqual(book.stage.current_stage=='review',True)
+	
+	def test_submission_status(self):
+		resp =  self.client.get(reverse('editor_status',kwargs={'submission_id':self.book.id}))
+		content =resp.content
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
+		self.assertEqual("Current Status" in content, True)
+		self.assertEqual( "Submission Progress" in content, True)
+		self.assertEqual( "Review" in content, True)
+		self.assertEqual( "Submission" in content, True)
+	
+	def test_submission_tasks(self):
+		resp =  self.client.get(reverse('editor_tasks',kwargs={'submission_id':self.book.id}))
+		content =resp.content
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
+		self.assertEqual("My Tasks" in content, True)
+		self.assertEqual("No outstanding tasks" in content, True)
+		self.typeset_assignment= core_models.TypesetAssignment.objects.get(pk=1)
+		self.typeset_assignment.accepted=timezone.now()
+		self.typeset_assignment.requestor=self.user
+		self.typeset_assignment.author_invited=timezone.now()
+		self.typeset_assignment.author_completed=timezone.now()
+		self.typeset_assignment.save()
+		resp =  self.client.get(reverse('editor_tasks',kwargs={'submission_id':self.book.id}))
+		content =resp.content
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
+		self.assertEqual("My Tasks" in content, True)
+		self.assertEqual("No outstanding tasks" in content, False)
+		self.assertEqual("Typesetting Review" in content, True)
+
+	def test_editor_review_review_round(self):
+		book = core_models.Book.objects.get(pk=1)
+		self.assertEqual(book.stage.current_stage=='review',True)
+		resp =  self.client.get(reverse('editor_review',kwargs={'submission_id':self.book.id}))
+		content =resp.content
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
+		self.assertEqual("btn-task" in content, False)
+		resp =  self.client.post(reverse('editor_review',kwargs={'submission_id':self.book.id}),{'new_round':''})
+		resp =  self.client.get(reverse('editor_review',kwargs={'submission_id':self.book.id}))
+		content =resp.content
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
+		self.assertEqual("btn-task" in content, True)
+		resp =  self.client.get(reverse('editor_review_round',kwargs={'round_number':1,'submission_id':self.book.id}))
+		content =resp.content
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
+		self.assertEqual("btn-task" in content, True)
+		self.assertEqual("ROUND 1" in content, True)
+		resp =  self.client.post(reverse('editor_review',kwargs={'submission_id':self.book.id}),{'move_to_editing':''})
+		book = core_models.Book.objects.get(pk=1)
+		self.assertEqual(book.stage.current_stage=='editing',True)
+'''	def test_author_editing(self):
+		self.book.stage.current_stage='editing'
+		self.book.stage.editing=timezone.now()
+		self.book.stage.save()
+		self.book.save()
+		resp =  self.client.get(reverse('editing',kwargs={'submission_id':self.book.id}))
+		content =resp.content
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
+		self.assertEqual("COPYEDITING" in content, True)
+		self.assertEqual("INDEXING" in content, True)
+		self.assertEqual("Stage has not been initialised." in content, True)
+		self.book.stage.copyediting=timezone.now()
+		self.book.stage.indexing=timezone.now()
+		self.book.stage.save()
+		self.book.save()
+		resp =  self.client.get(reverse('editing',kwargs={'submission_id':self.book.id}))
+		content =resp.content
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
+		self.assertEqual("COPYEDITING" in content, True)
+		self.assertEqual("INDEXING" in content, True)
+		self.assertEqual("Stage has not been initialised." in content, False)
+
+
+		management.call_command('loaddata', 'test_copyedit_assignment_data.json', verbosity=0)
+		management.call_command('loaddata', 'test_index_assignment_data.json', verbosity=0)
+	
+		resp =  self.client.get(reverse('author_view_copyedit',kwargs={'copyedit_id':1,'submission_id':self.book.id}))
+		content =resp.content
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
+		self.assertEqual("COPYEDITING" in content, True)
+		self.assertEqual("INDEXING" in content, True)
+		self.assertEqual("Stage has not been initialised." in content, False)
+		self.assertEqual("COPYEDIT ASSIGNMENT: 1" in content, True)
+		resp =  self.client.get(reverse('author_view_index',kwargs={'index_id':1,'submission_id':self.book.id}))
+		content =resp.content
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
+		self.assertEqual("COPYEDITING" in content, True)
+		self.assertEqual("INDEXING" in content, True)
+		self.assertEqual("Stage has not been initialised." in content, False)
+		self.assertEqual("INDEX ASSIGNMENT: 1" in content, True)
+
+	def test_author_production(self):
+		self.book.stage.current_stage='production'
+		self.book.stage.production=timezone.now()
+		self.book.stage.save()
+		self.book.save()
+		resp =  self.client.get(reverse('author_production',kwargs={'submission_id':self.book.id}))
+		content =resp.content
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
+		self.assertEqual("Typesetting" in content, True)
+		self.assertEqual("Stage has not been initialised." in content, True)
+		self.book.stage.typesetting=timezone.now()
+		self.book.stage.save()
+		self.book.save()
+		resp =  self.client.get(reverse('author_production',kwargs={'submission_id':self.book.id}))
+		content =resp.content
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
+		self.assertEqual("Typesetting" in content, True)
+		self.assertEqual("Stage has not been initialised." in content, False)
+		
+		resp =  self.client.get(reverse('author_view_typesetter',kwargs={'typeset_id':1,'submission_id':self.book.id}))
+		content =resp.content
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
+		self.assertEqual("Typesetting" in content, True)
+		self.assertEqual("Stage has not been initialised." in content, False)
+		self.assertEqual("TYPESET ASSIGNMENT: 1" in content, True)
+		'''
 
 
