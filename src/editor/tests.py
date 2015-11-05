@@ -18,6 +18,7 @@ from django.http import HttpRequest
 from  __builtin__ import any as string_any
 import calendar
 from django.core import management
+from revisions import models as revision_models
 class EditorTests(TestCase):
 
 	# Dummy DBs
@@ -240,6 +241,25 @@ class EditorTests(TestCase):
 
 		book = core_models.Book.objects.get(pk=1)
 		self.assertEqual(book.stage.current_stage=='published',True)
+
+	def test_request_revisions(self):
+		resp =  self.client.get(reverse('request_revisions',kwargs={'submission_id':self.book.id,'returner':'review'}))
+		content =resp.content
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
+		resp =  self.client.post(reverse('request_revisions',kwargs={'submission_id':self.book.id,'returner':'review'}),{'notes_from_editor':'notes','due':'2015-11-30','id_email_text':'Hi User'})
+		self.assertEqual(resp.status_code, 302)
+		self.assertEqual(resp['Location'], "http://testing/editor/submission/1/review/")
+		self.client.login(username="rua_author", password="tester")
+		revision = revision_models.Revision.objects.get(book=self.book)
+		resp =  self.client.post(reverse('author_revision',kwargs={'submission_id':self.book.id,'revision_id':revision.id}),{'cover_letter':'updated cover letter'})
+		self.client.login(username="rua_editor", password="tester")
+		resp = self.client.get(reverse('editor_dashboard'))
+		content = resp.content
+		self.assertTrue(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
+		notification = "Revisions submitted for %s" % self.book.title
+		self.assertEqual(notification in content, True)
 
 
 

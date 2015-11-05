@@ -16,7 +16,7 @@ from  __builtin__ import any as string_any
 from django.core import management
 # Create your tests here.
 
-class CoreTests(TestCase):
+class AuthorTests(TestCase):
 
 	# Dummy DBs
 	fixtures = [

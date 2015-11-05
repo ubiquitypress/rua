@@ -19,7 +19,7 @@ from  __builtin__ import any as string_any
 import calendar
 # Create your tests here.
 
-class CoreTests(TestCase):
+class SubmissionTests(TestCase):
 
 	# Dummy DBs
 	fixtures = [
