@@ -261,5 +261,64 @@ class EditorTests(TestCase):
 		notification = "Revisions submitted for %s" % self.book.title
 		self.assertEqual(notification in content, True)
 
+	def test_catalog(self):
+		resp =  self.client.get(reverse('catalog',kwargs={'submission_id':self.book.id}))
+		content =resp.content
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
+		self.assertEqual("Prefix" in content, True)
+		self.assertEqual("Title" in content, True)
+		self.assertEqual("Subtitle" in content, True)
+		self.assertEqual("Series" in content, True)
+		self.assertEqual("License" in content, True)
+		self.assertEqual("Pages" in content, True)
+		self.assertEqual("Slug" in content, True)
+		self.assertEqual("Review type" in content, True)
+		self.assertEqual("Publication date" in content, True)
+		self.assertEqual("Languages" in content, True)
+		self.assertEqual("Abstract" in content, True)
+		self.assertEqual("Keywords" in content, True)
+		resp =  self.client.get(reverse('identifiers',kwargs={'submission_id':self.book.id}))
+		content =resp.content
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
+		self.assertEqual("Identifier" in content, True)
+		self.assertEqual("Digital format" in content, True)
+		self.assertEqual("Physical format" in content, True)
+		self.assertEqual("Value" in content, True)
+		self.assertEqual("Use the form to add a new identifier." in content, True)
+		resp =  self.client.post(reverse('identifiers',kwargs={'submission_id':self.book.id}),{'identifier':'doi','digital_format':'','physical_format':'','value':1,'displayed':True})
+		identifiers = core_models.Identifier.objects.all()
+		self.assertEqual(len(identifiers), 1)
+		resp =  self.client.get(reverse('identifiers',kwargs={'submission_id':self.book.id}))
+		content =resp.content
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
+		self.assertEqual("Use the form to add a new identifier." in content, False)
+		self.assertEqual("/editor/submission/1/catalog/identifiers/1/" in content, True)
+		self.assertEqual("/editor/submission/1/catalog/identifiers/1/?delete=true" in content, True)
+		identifier = core_models.Identifier.objects.get(pk=1)
+		self.assertEqual(int(identifier.value), 1)
+		resp =  self.client.get(reverse('identifiers_with_id',kwargs={'submission_id':self.book.id,'identifier_id':1}))
+		content =resp.content
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
+		resp =  self.client.post(reverse('identifiers_with_id',kwargs={'submission_id':self.book.id,'identifier_id':1}),{'identifier':'doi','digital_format':'','update':'','physical_format':'','value':5,'displayed':True})
+		identifier = core_models.Identifier.objects.get(pk=1)
+		self.assertEqual(int(identifier.value), 5)
+
+		'''
+		self.client.post(reverse('catalog',kwargs={'submission_id':self.book.id}),
+		 	{'prefix':'prefix',
+			'title':'title',
+			'subtitle':'subtitle',
+			'series':None,
+			'description':'descirption',
+			'license':'2',
+			'pages':'15',
+			'slug':'slug',
+			'review_type':'open-with',
+			'languages':'124',
+			'publication_date':None}) '''
 
 

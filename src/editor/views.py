@@ -422,6 +422,14 @@ def catalog(request, submission_id):
 	cover_form = forms.CoverForm(instance=book)
 
 	if request.POST:
+		print "---------------"
+		print "---------------"
+		print "---------------"
+		print "---------------"
+		print "---------------"
+		print request.GET
+		print "---------------"
+		print request.POST
 		if request.GET.get('metadata', None):
 			metadata_form = forms.EditMetadata(request.POST, instance=book)
 
@@ -444,6 +452,8 @@ def catalog(request, submission_id):
 
 				book.save()
 				return redirect(reverse('catalog', kwargs={'submission_id': submission_id}))
+			else:
+				print metadata_form.errors
 
 		if request.GET.get('cover', None):
 			cover_form = forms.CoverForm(request.POST, request.FILES, instance=book)
@@ -501,6 +511,8 @@ def identifiers(request, submission_id, identifier_id=None):
 			new_identifier = form.save(commit=False)
 			new_identifier.book = book
 			new_identifier.save()
+		else:
+			print form.errors
 
 			return redirect(reverse('identifiers', kwargs={'submission_id': submission_id}))
 
