@@ -136,6 +136,7 @@ def editor_view_revisions(request, submission_id, revision_id):
 	context = {
 		'submission': book,
 		'revision': revision,
+		'revision_id':revision.id,
 		'author_include': 'editor/review_revisions.html',
 		'submission_files': 'editor/revisions/view_revisions.html',
 		'review_rounds': models.ReviewRound.objects.filter(book=book).order_by('-round_number'),
@@ -210,6 +211,7 @@ def request_revisions(request, submission_id, returner):
 			new_revision_request.revision_type = returner
 			new_revision_request.requestor = request.user
 			new_revision_request.save()
+			print new_revision_request.revision_type 
 
 			email_text = request.POST.get('id_email_text')
 			logic.send_requests_revisions(book, new_revision_request, email_text)
@@ -217,6 +219,9 @@ def request_revisions(request, submission_id, returner):
 
 			if returner == 'review':
 				return redirect(reverse('editor_review', kwargs={'submission_id': submission_id}))
+			else:
+				messages.add_message(request, messages.INFO, 'Revision request submitted')
+				return redirect(reverse('editor_submission', kwargs={'submission_id': submission_id}))
 
 	template = 'editor/revisions/request_revisions.html'
 	context = {

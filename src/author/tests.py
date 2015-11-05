@@ -106,19 +106,19 @@ class CoreTests(TestCase):
 		content =resp.content
 		self.assertEqual(resp.status_code, 200)
 		self.assertEqual("403" in content, False)
-		self.assertEqual("btn-success" in content, False)
+		self.assertEqual("btn-task" in content, False)
 		self.review_round=core_models.ReviewRound(book=self.book,round_number=1)
 		self.review_round.save()
 		resp =  self.client.get(reverse('review',kwargs={'submission_id':self.book.id}))
 		content =resp.content
 		self.assertEqual(resp.status_code, 200)
 		self.assertEqual("403" in content, False)
-		self.assertEqual("btn-success" in content, True)
+		self.assertEqual("btn-task" in content, True)
 		resp =  self.client.get(reverse('view_review_round',kwargs={'round_id':1,'submission_id':self.book.id}))
 		content =resp.content
 		self.assertEqual(resp.status_code, 200)
 		self.assertEqual("403" in content, False)
-		self.assertEqual("btn-success" in content, True)
+		self.assertEqual("btn-task" in content, True)
 		self.assertEqual("ROUND 1" in content, True)
 	def test_author_editing(self):
 		self.book.stage.current_stage='editing'

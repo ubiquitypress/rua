@@ -146,6 +146,7 @@ def view_revisions(request, submission_id, revision_id):
 	template = 'author/submission.html'
 	context = {
 		'revision': revision,
+		'revision_id':revision.id,
 		'submission': book,
 		'author_include': 'author/review_revision.html',
 		'submission_files': 'author/view_revision.html',

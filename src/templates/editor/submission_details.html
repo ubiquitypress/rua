@@ -26,11 +26,11 @@
       <th>Requested</th>
       <th></th>
     </tr>
-    {% for revision in submission.revsision_set.all %}
+    {% for revision in submission.revision_set.all %}
     <tr>
     	<td>Revision {{ forloop.counter }} </td>
     	<td>{{ revision.requested }}</td>
-    	<td width="25%">{% if revision.completed %}<a class="btn btn-success" href="{% url 'view_revisions' submission.id revision.id %}">View</a>{% else %}<small>Due on {{ revision.due }}</small>{% endif %}</td>
+    	<td width="25%">{% if revision.completed %}<a class="btn btn-task" href="{% url 'editor_view_revisions' submission.id revision.id %}">View</a>{% else %}<small>Due on {{ revision.due }}</small>{% endif %}</td>
     </tr>
     {% empty %}
     <tr>

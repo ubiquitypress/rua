@@ -6,10 +6,14 @@
 		<th></th>
 	</tr>
 	{% for round in review_rounds %}
-	<tr>
+  {% ifequal review_round round %}
+  <tr class="selected-row-table">
+  {% else %}
+  <tr>
+    {% endifequal %}
 		<td>{{ round.round_number }}</td>
 		<td>{{ round.date_started }}</td>
-		<td><a href="{% url 'view_review_round' submission.id round.round_number %}" class="btn btn-success">View</a></td>
+		<td><a href="{% url 'view_review_round' submission.id round.round_number %}" class="btn btn-task">View</a></td>
 	</tr>
 	{% endfor %}
 </table>
@@ -18,16 +22,20 @@
   <hr />
   <h2>Revisions Requests</h2>
   <table class="table table-bordered">
-    <tr>
+  <tr>
       <th>Requested</th>
       <th>Requested</th>
       <th></th>
     </tr>
     {% for revision in revision_requests %}
-    <tr>
+       {% ifequal revision.id revision_id %}
+  <tr class="selected-row-table">
+  {% else %}
+  <tr>
+    {% endifequal %}
     	<td>Revision {{ forloop.counter }} </td>
     	<td>{{ revision.requested }}</td>
-    	<td width="25%">{% if revision.completed %}<a class="btn btn-success" href="{% url 'view_revisions' submission.id revision.id %}">View</a>{% else %}<small>Due on {{ revision.due }}</small>{% endif %}</td>
+    	<td width="25%">{% if revision.completed %}<a class="btn btn-task" href="{% url 'view_revisions' submission.id revision.id %}">View</a>{% else %}<small>Due on {{ revision.due }}</small>{% endif %}</td>
     </tr>
     {% endfor %}
   </table>
