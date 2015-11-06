@@ -422,14 +422,6 @@ def catalog(request, submission_id):
 	cover_form = forms.CoverForm(instance=book)
 
 	if request.POST:
-		print "---------------"
-		print "---------------"
-		print "---------------"
-		print "---------------"
-		print "---------------"
-		print request.GET
-		print "---------------"
-		print request.POST
 		if request.GET.get('metadata', None):
 			metadata_form = forms.EditMetadata(request.POST, instance=book)
 

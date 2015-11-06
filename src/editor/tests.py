@@ -110,6 +110,15 @@ class EditorTests(TestCase):
 		self.assertEqual( "Review" in content, True)
 		self.assertEqual( "Submission" in content, True)
 	
+	def test_submission_decline(self):
+		resp =  self.client.post(reverse('editor_decline_submission',kwargs={'submission_id':self.book.id}),{'decline':''})
+		book = core_models.Book.objects.get(pk=1)
+		self.assertEqual(resp.status_code, 302)
+		self.assertEqual(resp['Location'], "http://testing/editor/dashboard/")
+		self.assertEqual(book.stage.current_stage, 'declined')
+
+		
+	
 	def test_submission_tasks(self):
 		resp =  self.client.get(reverse('editor_tasks',kwargs={'submission_id':self.book.id}))
 		content =resp.content
