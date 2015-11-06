@@ -1105,20 +1105,23 @@ def contract_manager(request, submission_id, contract_id=None):
 			new_contract_form = forms.UploadContract(request.POST, request.FILES)
 			if new_contract_form.is_valid():
 				new_contract = new_contract_form.save(commit=False)
+				if 'contract_file' in request.FILES:
+					author_file = request.FILES.get('contract_file')
+					new_file = handle_file(author_file, submission, 'contract', request.user)
 
-				author_file = request.FILES.get('contract_file')
-				new_file = handle_file(author_file, submission, 'contract', request.user)
+					new_contract.editor_file = new_file
+					new_contract.save()
+					submission.contract = new_contract
+					submission.save()
 
-				new_contract.editor_file = new_file
-				new_contract.save()
-				submission.contract = new_contract
-				submission.save()
+					if not new_contract.author_signed_off:
+						email_text = models.Setting.objects.get(group__name='email', name='contract_author_sign_off').value
+						logic.send_author_sign_off(submission, email_text, sender=request.user)
 
-				if not new_contract.author_signed_off:
-					email_text = models.Setting.objects.get(group__name='email', name='contract_author_sign_off').value
-					logic.send_author_sign_off(submission, email_text, sender=request.user)
-
-				return redirect(reverse('contract_manager', kwargs={'submission_id': submission.id}))
+					return redirect(reverse('contract_manager', kwargs={'submission_id': submission.id}))
+				else:
+					messages.add_message(request, messages.ERROR, 'You must upload a contract file.')
+		
 
 	template = 'editor/contract/contract_manager.html'
 	context = {
