@@ -1078,31 +1078,47 @@ def contract_manager(request, submission_id, contract_id=None):
 		new_contract_form = forms.UploadContract()
 
 	if request.POST:
+
 		if contract_id:
-			new_contract_form = forms.UploadContract(request.POST, request.FILE, instance=submission.contract)
+			submission.contract.title = request.POST.get('title')
+			submission.contract.notes = request.POST.get('notes')	
+			date = request.POST.get('editor_signed_off')
+			if '/' in str(date):
+				editor_date = date[6:] +'-'+ date[3:5]+'-'+ date[:2]
+				submission.contract.editor_signed_off = editor_date
+			else:
+				submission.contract.editor_signed_off = date
+			date = str(request.POST.get('author_signed_off'))
+			if '/' in str(date):
+				author_date = date[6:] +'-'+ date[3:5]+'-'+ date[:2]
+				submission.contract.author_signed_off = author_date
+			else:
+				submission.contract.author_signed_off = date
+			if 'contract_file' in request.FILES:
+				author_file = request.FILES.get('contract_file')
+				new_file = handle_file(author_file, submission, 'contract', request.user)
+				submission.contract.editor_file = new_file
+			submission.contract.save()		
+			submission.save()
+			return redirect(reverse('contract_manager', kwargs={'submission_id': submission.id}))					
 		else:
 			new_contract_form = forms.UploadContract(request.POST, request.FILES)
-		if new_contract_form.is_valid():
-			new_contract = new_contract_form.save(commit=False)
+			if new_contract_form.is_valid():
+				new_contract = new_contract_form.save(commit=False)
 
-			author_file = request.FILES.get('contract_file')
-			new_file = handle_file(author_file, submission, 'contract', request.user)
+				author_file = request.FILES.get('contract_file')
+				new_file = handle_file(author_file, submission, 'contract', request.user)
 
-			new_contract.editor_file = new_file
-			new_contract.save()
-			submission.contract = new_contract
-			submission.save()
+				new_contract.editor_file = new_file
+				new_contract.save()
+				submission.contract = new_contract
+				submission.save()
 
-			if not new_contract.author_signed_off:
-				email_text = models.Setting.objects.get(group__name='email', name='contract_author_sign_off').value
-				logic.send_author_sign_off(submission, email_text, sender=request.user)
+				if not new_contract.author_signed_off:
+					email_text = models.Setting.objects.get(group__name='email', name='contract_author_sign_off').value
+					logic.send_author_sign_off(submission, email_text, sender=request.user)
 
-			if contract_id:
-				_kwargs = {'submission_id': submission.id, 'contract_id': contract_id}
-			else:
-				_kwargs = {'submission_id': submission.id}
-
-			return redirect(reverse('contract_manager', kwargs=_kwargs))
+				return redirect(reverse('contract_manager', kwargs={'submission_id': submission.id}))
 
 	template = 'editor/contract/contract_manager.html'
 	context = {

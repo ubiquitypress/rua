@@ -43,7 +43,7 @@
       </tr>
       <tr>
          <td>Author File</td>
-      <td>{% if submission.contract.author_file %}<a href="{% url 'serve_file' submission.id submission.contract.author_file.id %}" class="btn btn-task" ><i class="fa fa-cloud-download"> &nbsp; Download</i></i>Download</a>{% else %}No file uploaded{% endif %}</td>
+      <td>{% if submission.contract.author_file %}<a href="{% url 'serve_file' submission.id submission.contract.author_file.id %}" class="btn btn-task" ><i class="fa fa-cloud-download"> &nbsp; Download</i></a>{% else %}No file uploaded{% endif %}</td>
     </tr>
   </table>
   {% else %}

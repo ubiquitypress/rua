@@ -144,6 +144,9 @@ class EditorTests(TestCase):
 		self.assertEqual("403" in content, False)
 		self.assertEqual( "Update Contract" in content, True)
 		self.assertEqual( "test_contract" in content, True)
+		resp =  self.client.post(reverse('contract_manager_edit',kwargs={'submission_id':self.book.id,'contract_id':1}),{'title':'updated_title','notes':'notes','editor_signed_off':'2015-11-11','author_signed_off':'2015-11-23'})
+		contract = core_models.Contract.objects.get(pk=1)
+		self.assertEqual( contract.title=="updated_title", True)
 	
 
 		
