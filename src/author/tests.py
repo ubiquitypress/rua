@@ -230,6 +230,26 @@ class AuthorTests(TestCase):
 		self.assertEqual("Typesetting" in content, True)
 		self.assertEqual("Stage has not been initialised." in content, False)
 		self.assertEqual("TYPESET ASSIGNMENT: 1" in content, True)
+		typeset=core_models.TypesetAssignment.objects.get(pk=1)
+		typeset.author_completed=None
+		typeset.completed = None
+		typeset.author_invited=timezone.now()
+		typeset.save()
+		self.client.login(username="rua_onetasker", password="tester")
+		self.client.post(reverse('onetasker_task_hub',kwargs={'assignment_type':'typesetting','assignment_id':1}), {'decision': 'accept'})
+		file_test,_ = tempfile.mkstemp()
+		self.client.post(reverse('onetasker_task_hub',kwargs={'assignment_type':'typesetting','assignment_id':1}), {'task': '','note_from_typesetter':'notes','file_upload':file_test})
+		self.client.login(username="rua_author", password="tester")
+		resp =  self.client.get(reverse('author_dashboard'))
+		content =resp.content
+		
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
+		self.assertEqual("Typesetting Review" in content, True)
+
+		resp =  self.client.post(reverse('typeset_review',kwargs={'typeset_id':1,'submission_id':self.book.id}),{'notes_from_author':'notes'})
+		typeset=core_models.TypesetAssignment.objects.get(pk=1)
+		self.assertEqual(typeset.completed == None,False)
 		
 
 
