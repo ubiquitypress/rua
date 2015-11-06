@@ -1,4 +1,4 @@
-from django.test import TestCase
+from django.test import TestCase, RequestFactory
 from django.core.urlresolvers import resolve, reverse
 from django.test.client import Client
 from django.contrib.auth.models import User
@@ -48,6 +48,7 @@ class EditorTests(TestCase):
 		self.client = Client(HTTP_HOST="testing")
 		self.user = User.objects.get(username="rua_editor")
 		self.book = core_models.Book.objects.get(pk=1)
+		self.factory= RequestFactory()
 		login = self.client.login(username='rua_editor', password='tester')
 		self.assertEqual(login, True)
 
@@ -290,9 +291,9 @@ class EditorTests(TestCase):
 		resp =  self.client.post(reverse('identifiers',kwargs={'submission_id':self.book.id}),{'identifier':'doi','digital_format':'','physical_format':'','value':1,'displayed':True})
 		identifiers = core_models.Identifier.objects.all()
 		self.assertEqual(len(identifiers), 1)
-		resp =  self.client.get(reverse('identifiers',kwargs={'submission_id':self.book.id}))
-		content =resp.content
-		self.assertEqual(resp.status_code, 200)
+		resp_get =  self.client.get(reverse('identifiers',kwargs={'submission_id':self.book.id}))
+		content =resp_get.content
+		self.assertEqual(resp_get.status_code, 200)
 		self.assertEqual("403" in content, False)
 		self.assertEqual("Use the form to add a new identifier." in content, False)
 		self.assertEqual("/editor/submission/1/catalog/identifiers/1/" in content, True)
@@ -306,10 +307,36 @@ class EditorTests(TestCase):
 		resp =  self.client.post(reverse('identifiers_with_id',kwargs={'submission_id':self.book.id,'identifier_id':1}),{'identifier':'doi','digital_format':'','update':'','physical_format':'','value':5,'displayed':True})
 		identifier = core_models.Identifier.objects.get(pk=1)
 		self.assertEqual(int(identifier.value), 5)
+		resp =  self.client.get(reverse('update_contributor',kwargs={'submission_id':self.book.id,'contributor_type':'author','contributor_id':1}))
+		content =resp.content
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
+		self.assertEqual("rua_author_first_name" in content, True)
+		resp =  self.client.post(reverse('update_contributor',kwargs={'submission_id':self.book.id,'contributor_type':'author','contributor_id':1}),{'salutation':'Mr','first_name':'rua_first_name','last_name':'rua_last_name','middle_name':'','biography':'updated bio','institution':'rua_testing','department':'','country':'GB','orcid':'','twitter':'','facebook':'','linkedin':'','author_email':'fake_changed@fakeaddress.com'})
+		found= False
+		try:
+			author = core_models.Author.objects.get(author_email='fake_changed@fakeaddress.com')
+			found=True
+		except:
+			found = False
+		self.assertEqual(found, True)
+		resp =  self.client.post(reverse('add_contributor',kwargs={'submission_id':self.book.id,'contributor_type':'author'}),{'salutation':'Mr','first_name':'rua_first_new_name','last_name':'rua_last_new_name','middle_name':'','biography':'updated bio','institution':'rua_testing','department':'','country':'GB','orcid':'','twitter':'','facebook':'','linkedin':'','author_email':'fake_changed@fakeaddress.com'})
+		found= False
+		try:
+			author = core_models.Author.objects.get(pk=2)
+			found=True
+		except:
+			found = False
+		self.assertEqual(found, True)
+		self.assertEqual(author.first_name,'rua_first_new_name')
+		self.assertEqual(author.last_name,'rua_last_new_name')
+		
+
+		
 
 		'''
 		self.client.post(reverse('catalog',kwargs={'submission_id':self.book.id}),
-		 	{'prefix':'prefix',
+			{'prefix':'prefix',
 			'title':'title',
 			'subtitle':'subtitle',
 			'series':None,
