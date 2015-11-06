@@ -117,6 +117,35 @@ class EditorTests(TestCase):
 		self.assertEqual(resp['Location'], "http://testing/editor/dashboard/")
 		self.assertEqual(book.stage.current_stage, 'declined')
 
+	def test_submission_contract(self):
+		resp =  self.client.get(reverse('contract_manager',kwargs={'submission_id':self.book.id}))
+		content =resp.content
+		book = core_models.Book.objects.get(pk=1)
+		contracts = core_models.Contract.objects.all()
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
+		self.assertEqual(len(contracts), 0)
+		self.assertEqual(book.contract, None)
+		self.assertEqual( "Upload Contract" in content, True)
+		self.assertEqual( "Contract Info" in content, False)
+		management.call_command('loaddata', 'test_contract_data.json', verbosity=0)
+		self.book.contract=core_models.Contract.objects.get(pk=1)
+		self.book.save()
+		resp =  self.client.get(reverse('contract_manager',kwargs={'submission_id':self.book.id}))
+		content =resp.content
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
+		self.assertEqual( "Contract Info" in content, True)
+		self.assertEqual( "test_contract" in content, True)
+
+		resp =  self.client.get(reverse('contract_manager_edit',kwargs={'submission_id':self.book.id,'contract_id':1}))
+		content =resp.content
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
+		self.assertEqual( "Update Contract" in content, True)
+		self.assertEqual( "test_contract" in content, True)
+	
+
 		
 	
 	def test_submission_tasks(self):
