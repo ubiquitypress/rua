@@ -14,6 +14,7 @@ from django.contrib.auth.models import User
 from django.core.urlresolvers import resolve, reverse
 from  __builtin__ import any as string_any
 import calendar
+import tempfile
 # Create your tests here.
 
 class ReviewTests(TestCase):
@@ -247,6 +248,19 @@ class ReviewTests(TestCase):
 
 		self.assertEqual(resp.status_code, 200)
 		self.assertEqual("403" in content, False)
+
+	def test_files_reviewer(self):
+		self.assignment= core_models.ReviewAssignment.objects.get(pk=1)
+		self.assignment.access_key="enter"
+		self.assignment.save()
+		resp = self.client.post(reverse('reviewer_decision_without_access_key',kwargs={'review_type':self.assignment.review_type,'submission_id':1,'review_assignment':1,'access_key':"enter"}), {'accept': 'I Accept'})
+		path = views.create_review_form(self.book)
+		self.assertEqual("/files/forms/" in path, True)
+		self.assertEqual(".docx" in path, True)
+		review_file = tempfile.NamedTemporaryFile(delete=False)
+		resp = self.client.post(reverse('review_with_access_key',kwargs={'review_type':self.assignment.review_type,'submission_id':1,'access_key':"enter"}), {'rua_name': 'example','recommendation':'accept','competing_interests':'nothing','review_file_upload':review_file})
+		self.assertEqual(resp.status_code, 302)
+		self.assertEqual(resp['Location'], "http://testing/review/external/1/access_key/enter/complete/")
 
 
 

@@ -141,7 +141,6 @@ def review(request, review_type, submission_id, access_key=None):
 	
 	if not request.POST and request.GET.get('download') == 'docx':
 		path = create_review_form(submission)
-		print path
 		return serve_file(request, path)
 	elif request.POST:
 		form = forms.GeneratedForm(request.POST, request.FILES, form=submission.review_form)
