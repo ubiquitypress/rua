@@ -377,11 +377,6 @@ class CoreTests(TestCase):
 		resp = self.client.post(reverse('activate',kwargs={'code':'activate'}))
 		self.assertEqual(resp.status_code, 302)
 		self.assertEqual(resp['Location'], "http://testing/login/")
-
-
-
-
-
 	
 	def test_index(self):
 		resp =  self.client.get(reverse('index'))
@@ -398,7 +393,19 @@ class CoreTests(TestCase):
 		self.assertEqual("Your email address" in content, True)
 		self.assertEqual("Your name" in content, True)
 		self.assertEqual("Your message" in content, True)
-
+	
+	def test_user_submission(self):
+		login = self.client.login(username="rua_author", password="tester")
+		resp = self.client.get(reverse('user_submission',kwargs={'submission_id':1}))
+		content =resp.content
+		
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
+		self.assertEqual("rua_title" in content, True)
+		self.assertEqual("Submission Progress" in content, True)
+		self.assertEqual("Summary" in content, True)
+		self.assertEqual("Files" in content, True)
+		self.assertEqual("Authors" in content, True)
 
 
 	def test_ajax_email_calls(self):
@@ -435,6 +442,11 @@ class CoreTests(TestCase):
 
 
 	def test_update_profile(self):
+		resp = self.client.post(reverse('update_profile'))
+		content =resp.content
+		
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
 		resp = self.client.post(reverse('update_profile'), {'first_name': 'new','institution':"Testing",'country':"GB"})
 		self.assertEqual(resp.status_code, 302)
 		self.assertEqual(resp['Location'], "http://testing/user/profile/")
