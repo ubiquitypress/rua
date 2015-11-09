@@ -5,6 +5,7 @@ import time
 import datetime
 from django.test import SimpleTestCase
 from django.db.models import Q
+from submission import models as submission_models
 from core import views
 import json
 from django.http import HttpRequest
@@ -14,7 +15,7 @@ from django.core.urlresolvers import resolve, reverse
 from  __builtin__ import any as string_any
 import tempfile
 from django.test.utils import setup_test_environment
-
+from django.core import management
 # Create your tests here.
 
 class CoreTests(TestCase):
@@ -418,6 +419,61 @@ class CoreTests(TestCase):
 		self.assertEqual("In Editing" in content, True)
 		self.assertEqual("In Production" in content, True)
 
+	def test_proposals(self):
+		management.call_command('loaddata', 'test_proposal_form.json', verbosity=0)
+		management.call_command('loaddata', 'test_submission_proposal.json', verbosity=0)
+		proposal = submission_models.Proposal.objects.get(pk=1)
+		login = self.client.login(username="rua_editor", password="tester")
+		resp = self.client.get(reverse('proposals'))
+		content =resp.content
+		
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
+		self.assertEqual("Book Proposals" in content, True)
+		self.assertEqual(proposal.title in content, True)
+		view_button = "/proposals/%s/" % proposal.id
+		self.assertEqual(view_button in content, True)
+
+		resp = self.client.get(reverse('view_proposal',kwargs={'proposal_id':proposal.id}))
+		content =resp.content
+		
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
+		page_title = "Book Proposal :  %s , %s" % (proposal.title,proposal.subtitle)
+		self.assertEqual(page_title in content, True)
+
+		proposal_reviews=submission_models.ProposalReview.objects.all()
+		self.assertEqual(0,len(proposal_reviews))
+		resp = self.client.get(reverse('start_proposal_review',kwargs={'proposal_id':proposal.id}))
+		content =resp.content
+		
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
+		resp = self.client.post(reverse('start_proposal_review',kwargs={'proposal_id':proposal.id}),{'due_date': '2015-11-11', 'review_form': 1, 'committee': 2, 'reviewer': 1})
+		self.assertEqual(resp.status_code, 302)
+		self.assertEqual(resp['Location'], "http://testing/proposals/1/")
+		proposal_reviews=submission_models.ProposalReview.objects.all()
+		self.assertEqual(len(proposal_reviews)==0,False)
+
+	def test_proposals_exists_in_committee(self):
+		management.call_command('loaddata', 'test_proposal_form.json', verbosity=0)
+		management.call_command('loaddata', 'test_submission_proposal.json', verbosity=0)
+		proposal = submission_models.Proposal.objects.get(pk=1)
+		login = self.client.login(username="rua_editor", password="tester")
+		proposal_reviews=submission_models.ProposalReview.objects.all()
+		self.assertEqual(0,len(proposal_reviews))
+		resp = self.client.get(reverse('start_proposal_review',kwargs={'proposal_id':proposal.id}))
+		content =resp.content
+		
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
+		resp = self.client.post(reverse('start_proposal_review',kwargs={'proposal_id':proposal.id}),{'due_date': '2015-11-11', 'review_form': 1, 'committee': 2, 'reviewer': 4})
+		self.assertEqual(resp.status_code, 302)
+		self.assertEqual(resp['Location'], "http://testing/proposals/1/")
+		proposal_reviews=submission_models.ProposalReview.objects.all()
+
+		
+
 	def test_ajax_email_calls(self):
 		
 		self.assertEqual(len(models.Book.objects.all())==1, True)
@@ -443,7 +499,6 @@ class CoreTests(TestCase):
 		resp =  self.client.get(reverse('get_all',kwargs= {'submission_id':self.book.id}),{'term': 'none_term',},content_type="application/json",HTTP_X_REQUESTED_WITH='XMLHttpRequest')
 		json_data =  json.loads(resp.content)
 		self.assertEqual(len(json_data)==0,True)
-
 
 
 
