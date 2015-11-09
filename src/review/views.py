@@ -64,7 +64,7 @@ def reviewer_decision(request, review_type, submission_id, review_assignment, de
 		logic.notify_editors(submission,message,editors,request.user,'review')
 		
 	elif decision and decision == 'decline':
-		review_assignment.declined = timzeone.now()
+		review_assignment.declined = timezone.now()
 		message = "Review Assignment request for '%s' has been declined by %s %s."  % (submission.title,review_assignment.user.first_name, review_assignment.user.last_name)
 		logic.notify_editors(submission,message,editors,request.user,'review')
 			
