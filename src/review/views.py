@@ -141,6 +141,7 @@ def review(request, review_type, submission_id, access_key=None):
 	
 	if not request.POST and request.GET.get('download') == 'docx':
 		path = create_review_form(submission)
+		print path
 		return serve_file(request, path)
 	elif request.POST:
 		form = forms.GeneratedForm(request.POST, request.FILES, form=submission.review_form)
@@ -270,6 +271,8 @@ def create_review_form(submission):
 			table.style = 'TableGrid'
 
 	document.add_page_break()
+	if not os.path.exists(os.path.join(settings.BASE_DIR, 'files', 'forms')):
+		os.makedirs(os.path.join(settings.BASE_DIR, 'files', 'forms'))
 	path = os.path.join(settings.BASE_DIR, 'files', 'forms', '%s.docx' % str(uuid4()))
 
 	document.save(path)
@@ -289,6 +292,8 @@ def serve_file(request, file_path):
 		return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 def handle_review_file(file, book, review_assignment, kind):
+
+
 
 	original_filename = str(file._get_name())
 	filename = str(uuid4()) + str(os.path.splitext(original_filename)[1])

@@ -117,6 +117,8 @@ def is_reviewer(function):
 			else:
 				messages.add_message(request, messages.ERROR, 'You need to have Press Editor, Book Editor or Series Editor level permission to view this page.')
 				raise exceptions.PermissionDenied 
+		elif not submission_id and 'reviewer' in user_roles:
+			return function(request, *args, **kwargs)
 		else:
 			messages.add_message(request, messages.ERROR, 'You need to have Press Editor, Book Editor or Series Editor level permission to view this page.')
 			raise exceptions.PermissionDenied 
