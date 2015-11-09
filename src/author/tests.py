@@ -189,7 +189,10 @@ class AuthorTests(TestCase):
 		self.assertEqual(resp.status_code, 200)
 		self.assertEqual("403" in content, False)
 		self.assertEqual("Copyedit Review" in content, True)
-
+		resp =  self.client.get(reverse('copyedit_review',kwargs={'copyedit_id':1,'submission_id':self.book.id}))
+		content =resp.content
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
 		resp =  self.client.post(reverse('copyedit_review',kwargs={'copyedit_id':1,'submission_id':self.book.id}),{'notes_from_author':'notes'})
 		copyedit=core_models.CopyeditAssignment.objects.get(pk=1)
 		self.assertEqual(copyedit.completed == None,False)
@@ -201,7 +204,6 @@ class AuthorTests(TestCase):
 		self.assertEqual("INDEXING" in content, True)
 		self.assertEqual("Stage has not been initialised." in content, False)
 		self.assertEqual("INDEX ASSIGNMENT: 1" in content, True)
-
 	def test_author_production(self):
 		self.book.stage.current_stage='production'
 		self.book.stage.production=timezone.now()
@@ -246,11 +248,41 @@ class AuthorTests(TestCase):
 		self.assertEqual(resp.status_code, 200)
 		self.assertEqual("403" in content, False)
 		self.assertEqual("Typesetting Review" in content, True)
-
+		resp =  self.client.get(reverse('typeset_review',kwargs={'typeset_id':1,'submission_id':self.book.id}))
+		content =resp.content
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
 		resp =  self.client.post(reverse('typeset_review',kwargs={'typeset_id':1,'submission_id':self.book.id}),{'notes_from_author':'notes'})
 		typeset=core_models.TypesetAssignment.objects.get(pk=1)
 		self.assertEqual(typeset.completed == None,False)
 		
+
+	def test_contract_sign_off(self):
+		management.call_command('loaddata', 'test_contract_data.json', verbosity=0)
+		self.book.contract=core_models.Contract.objects.get(pk=1)
+		self.book.save()
+		resp =  self.client.get(reverse('author_submission',kwargs={'submission_id':self.book.id}))
+		content =resp.content
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
+		self.assertEqual("Sign Off" in content, False)
+		self.book.contract.author_signed_off=None
+		self.book.contract.save()
+		resp =  self.client.get(reverse('author_submission',kwargs={'submission_id':self.book.id}))
+		content =resp.content
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
+		self.assertEqual("Sign Off" in content, True)
+		resp =  self.client.get(reverse('author_contract_signoff',kwargs={'submission_id':self.book.id,'contract_id':self.book.contract.id}))
+		content =resp.content
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
+		contract_file = tempfile.NamedTemporaryFile(delete=False)
+		self.client.post(reverse('author_contract_signoff',kwargs={'submission_id':self.book.id,'contract_id':self.book.contract.id}), {'next_stage': '','author_file':contract_file})
+		contract= core_models.Contract.objects.get(pk=1)
+		self.assertEqual(contract.author_signed_off==None,False)
+	
+
 
 
 

@@ -449,9 +449,10 @@ def author_contract_signoff(request, submission_id, contract_id):
 	if request.POST:
 		author_signoff_form = forms.AuthorContractSignoff(request.POST, request.FILES)
 		if author_signoff_form.is_valid():
+			print "VALID"
 			if request.FILES.get('author_file'):
 				author_file = request.FILES.get('author_file')
-				new_file = handle_file(author_file, submission, 'contract')
+				new_file = handle_file(author_file, submission, 'contract',request.user)
 				contract.author_file = new_file
 
 			contract.author_signed_off = timezone.now()
