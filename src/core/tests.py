@@ -461,6 +461,17 @@ class CoreTests(TestCase):
 		self.assertEqual(resp.status_code, 302)
 		self.assertEqual(resp['Location'], "http://testing/login/")
 
+	def test_reset_password_no_match(self):
+		resp = self.client.post(reverse('reset_password'), {'password_1': 'password1','password_2':"password12"})
+		self.assertEqual(resp.status_code, 200)
+		message = self.get_specific_message(resp,0)
+		self.assertEqual(str(message), 'Your passwords do not match.')
+		resp = self.client.post(reverse('reset_password'), {'password_1': 'pass','password_2':"pass"})
+		self.assertEqual(resp.status_code, 200)
+		message = self.get_specific_message(resp,0)
+		self.assertEqual(str(message), 'Password is not long enough, must be greater than 8 characters.')
+
+
 	def test_register_login(self):
 		resp = self.client.post(reverse('register'), {'first_name': 'new','last_name':'last','username':'user1','email':'fake@faked.com','password1': 'password1','password2':"password1"})
 		user = User.objects.get(username="user1")
