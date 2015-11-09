@@ -407,6 +407,16 @@ class CoreTests(TestCase):
 		self.assertEqual("Files" in content, True)
 		self.assertEqual("Authors" in content, True)
 
+	def test_overview(self):
+		resp = self.client.get(reverse('overview'))
+		content =resp.content
+		
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
+		self.assertEqual("New Submissions" in content, True)
+		self.assertEqual("In Review" in content, True)
+		self.assertEqual("In Editing" in content, True)
+		self.assertEqual("In Production" in content, True)
 
 	def test_ajax_email_calls(self):
 		
@@ -484,12 +494,31 @@ class CoreTests(TestCase):
 		resp = self.client.post(reverse('login'),{'user_name': 'user1','user_pass':"password1"})
 		self.assertEqual(resp['Location'], "http://testing/dashboard/")
 
+	def test_upload_misc_file(self):
+
+		self.book = models.Book.objects.get(pk=1)
+		self.book.save()
+		resp = self.client.get(reverse('upload_misc_file',kwargs={'submission_id':self.book.id}))
+		content =resp.content
+		
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
+		self.assertEqual("Upload Misc File" in content, True)
+
+		misc_file = tempfile.NamedTemporaryFile(delete=False)
+		resp = self.client.post(reverse('upload_misc_file',kwargs={'submission_id':self.book.id}),{'file_type':'other','label':'test','misc_file':misc_file})
+		self.assertEqual(resp.status_code, 302)
+		self.assertEqual(resp['Location'], "http://testing/editor/submission/1/")
+
 ############# Email
 
 	def test_email(self):
 		self.author = models.Author.objects.get(pk=1)
 		self.book = models.Book.objects.get(pk=1)
 		self.book.save()
+		onetaskers = self.book.onetaskers()
+		print "-------"
+		print onetaskers
 		#check that it exists in the database
 		
 		self.assertEqual(len(models.Book.objects.all())==1, True)
@@ -499,6 +528,29 @@ class CoreTests(TestCase):
 		resp = self.client.post(reverse('email_user', kwargs= {'group': 'editors','submission_id':str(self.book.id),'user_id':self.user.id}),  {'subject': 'all','to_values':self.user.email,"cc_values":"","bcc_values":"","body":'text'})
 		self.assertEqual(resp.status_code, 200)
 		self.assertEqual( "was sent" in resp.content,True)
+		resp = self.client.get(reverse('email_user', kwargs= {'group': 'editors','submission_id':str(self.book.id),'user_id':self.user.id}))
+		self.assertEqual(resp.status_code, 200)
+		content = resp.content
+		self.assertEqual("403" in content, False)
+		resp = self.client.get(reverse('email_user', kwargs= {'group': 'authors','submission_id':str(self.book.id),'user_id':self.author.id}))
+		self.assertEqual(resp.status_code, 200)
+		content = resp.content
+		self.assertEqual("403" in content, False)
+		resp = self.client.get(reverse('email_user', kwargs= {'group': 'onetaskers','submission_id':str(self.book.id),'user_id':onetaskers[0].id}))
+		self.assertEqual(resp.status_code, 200)
+		content = resp.content
+		self.assertEqual("403" in content, False)
+		resp = self.client.get(reverse('email_user', kwargs= {'group': 'onetaskers','submission_id':str(self.book.id),'user_id':15}))
+		self.assertEqual(resp.status_code, 404)
+		resp = self.client.get(reverse('email_user', kwargs= {'group': 'editors','submission_id':str(self.book.id),'user_id':15}))
+		self.assertEqual(resp.status_code, 200)
+		content = resp.content
+		self.assertEqual("403" in content, False)
+		message = self.get_specific_message(resp,0)
+		self.assertEqual(str(message), 'This editor was not found')
+		resp = self.client.get(reverse('email_users', kwargs= {'group': 'unknown','submission_id':str(self.book.id)}))
+		self.assertEqual(resp.status_code, 302)	
+		self.assertEqual(resp['Location'], "http://testing/email/all/submission/1/")
 
 
 
