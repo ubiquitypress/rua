@@ -12,6 +12,9 @@ from django.test.client import Client
 from django.contrib.auth.models import User
 from django.core.urlresolvers import resolve, reverse
 from  __builtin__ import any as string_any
+import tempfile
+from django.test.utils import setup_test_environment
+
 # Create your tests here.
 
 class CoreTests(TestCase):
@@ -27,12 +30,24 @@ class CoreTests(TestCase):
 		'test_core_data',
 		'test_review_data',
 	]
-
+	# Helper Function
+	def getmessage(cls, response):
+		"""Helper method to return first message from response """
+		for c in response.context:
+			message = [m for m in c.get('messages')][0]
+			if message:
+				return message
+	def get_specific_message(cls, response,number):
+		"""Helper method to return first message from response """
+		for c in response.context:
+			message = [m for m in c.get('messages')][number]
+			if message:
+				return message
 	def setUp(self):
 		self.client = Client(HTTP_HOST="testing")
 		self.user = User.objects.get(pk=1)
 		self.user.save()
-
+		setup_test_environment()
 		login = self.client.login(username=self.user.username, password="root")
 		self.assertEqual(login, True)
 
@@ -317,11 +332,55 @@ class CoreTests(TestCase):
 		resp = self.client.get(reverse('logout'))
 		self.assertEqual(resp.status_code, 302)
 		self.assertEqual(resp['Location'], "http://testing/")
+
+	def test_login(self):
+		resp = self.client.get(reverse('logout'))
+		self.assertEqual(resp.status_code, 302)
+		self.assertEqual(resp['Location'], "http://testing/")
+
+		resp = self.client.post(reverse('login'),{'user_name': 'rua_user','user_pass':"root"})
+		self.assertEqual(resp['Location'], "http://testing/dashboard/")
+		resp = self.client.get(reverse('logout'))
+	def test_login_invalid(self):
+		resp = self.client.get(reverse('logout'))
+		resp = self.client.post(reverse('login'),{'user_name': 'unknown','user_pass':"unknown"})
+	#	resp = self.client.get(reverse('login'))
+		message = self.get_specific_message(resp,1)
+		self.assertEqual(str(message), 'Account not found with those details.')
+	
+	def test_login_not_active(self):
+		resp = self.client.get(reverse('logout'))	
+		resp = self.client.post(reverse('register'), {'first_name': 'new','last_name':'last','username':'user1','email':'fake@faked.com','password1': 'password1','password2':"password1"})
+		user = User.objects.get(username="user1")
+		roles = models.Role.objects.filter(name__icontains="Editor")
+		for role in roles:
+			user.profile.roles.add(role)
+		user.profile.save()
+		user.save()
+		resp = self.client.post(reverse('login'),{'user_name': 'user1','user_pass':"password1"})
+		message = self.get_specific_message(resp,1)
+		self.assertEqual(str(message), 'User account is not active.')
+
+
+
 	
 	def test_index(self):
 		resp =  self.client.get(reverse('index'))
 		self.assertEqual(resp.status_code, 302)
 		self.assertEqual(resp['Location'], "http://testing/login/")
+	def test_contact(self):
+		resp = self.client.get(reverse('contact'))
+		content =resp.content
+		
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
+		self.assertEqual("Get in touch" in content, True)
+		self.assertEqual("Reason" in content, True)
+		self.assertEqual("Your email address" in content, True)
+		self.assertEqual("Your name" in content, True)
+		self.assertEqual("Your message" in content, True)
+
+
 
 	def test_ajax_email_calls(self):
 		
@@ -380,7 +439,7 @@ class CoreTests(TestCase):
 		user.active=True
 		user.save()
 		user.profile.save()
-		resp = self.client.post(reverse('login'),{'username': 'user1','password':"password1"})
+		resp = self.client.post(reverse('login'),{'user_name': 'user1','user_pass':"password1"})
 		self.assertEqual(resp['Location'], "http://testing/dashboard/")
 
 ############# Email
