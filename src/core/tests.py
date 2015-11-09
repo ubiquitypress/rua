@@ -349,7 +349,12 @@ class CoreTests(TestCase):
 		self.assertEqual(str(message), 'Account not found with those details.')
 	
 	def test_login_not_active(self):
-		resp = self.client.get(reverse('logout'))	
+		resp = self.client.get(reverse('logout'))
+		resp = self.client.get(reverse('register'))
+		content =resp.content
+		
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)	
 		resp = self.client.post(reverse('register'), {'first_name': 'new','last_name':'last','username':'user1','email':'fake@faked.com','password1': 'password1','password2':"password1"})
 		user = User.objects.get(username="user1")
 		roles = models.Role.objects.filter(name__icontains="Editor")
@@ -358,8 +363,22 @@ class CoreTests(TestCase):
 		user.profile.save()
 		user.save()
 		resp = self.client.post(reverse('login'),{'user_name': 'user1','user_pass':"password1"})
-		message = self.get_specific_message(resp,1)
+		message = self.get_specific_message(resp,0)
 		self.assertEqual(str(message), 'User account is not active.')
+	def test_activate_user(self):
+		resp = self.client.post(reverse('register'), {'first_name': 'new','last_name':'last','username':'user1','email':'fake@faked.com','password1': 'password1','password2':"password1"})
+		user = User.objects.get(username="user1")
+		roles = models.Role.objects.filter(name__icontains="Editor")
+		for role in roles:
+			user.profile.roles.add(role)
+		user.profile.activation_code='activate'
+		user.profile.save()
+		user.save()
+		resp = self.client.post(reverse('activate',kwargs={'code':'activate'}))
+		self.assertEqual(resp.status_code, 302)
+		self.assertEqual(resp['Location'], "http://testing/login/")
+
+
 
 
 
