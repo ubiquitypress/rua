@@ -220,6 +220,28 @@ class EditorTests(TestCase):
 		assignment = core_models.ReviewAssignment.objects.get(pk=assignment.id)
 		self.assertEqual('2015-11-24',assignment.due.strftime("%Y-%m-%d"))
 
+		resp =  self.client.get(reverse('add_review_files',kwargs={'submission_id':self.book.id,'review_type':'internal'}))
+		content =resp.content
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
+
+		resp =  self.client.post(reverse('add_review_files',kwargs={'submission_id':self.book.id,'review_type':'internal'}),{'file':2})
+		self.assertEqual(resp.status_code, 302)
+		self.assertEqual(resp['Location'], "http://testing/editor/submission/1/review/round/1/")
+
+		resp =  self.client.post(reverse('add_review_files',kwargs={'submission_id':self.book.id,'review_type':'external'}),{'file':2})
+		self.assertEqual(resp.status_code, 302)
+		self.assertEqual(resp['Location'], "http://testing/editor/submission/1/review/round/1/")
+
+		resp =  self.client.post(reverse('delete_review_files',kwargs={'submission_id':self.book.id,'review_type':'external','file_id':2}))
+		self.assertEqual(resp.status_code, 302)
+		self.assertEqual(resp['Location'], "http://testing/editor/submission/1/review/round/1/")
+		resp =  self.client.post(reverse('delete_review_files',kwargs={'submission_id':self.book.id,'review_type':'internal','file_id':2}))
+		self.assertEqual(resp.status_code, 302)
+		self.assertEqual(resp['Location'], "http://testing/editor/submission/1/review/round/1/")
+
+
+
 
 	
 
