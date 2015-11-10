@@ -455,6 +455,53 @@ class CoreTests(TestCase):
 		proposal_reviews=submission_models.ProposalReview.objects.all()
 		self.assertEqual(len(proposal_reviews)==0,False)
 
+		resp = self.client.get(reverse('accept_proposal',kwargs={'proposal_id':proposal.id}))
+		content =resp.content
+		
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
+		proposal_file = tempfile.NamedTemporaryFile(delete=False)
+		resp = self.client.post(reverse('accept_proposal',kwargs={'proposal_id':proposal.id}),{'proposal-type':'monograph','accept-email':'Dear user','attachment-file':proposal_file})
+		self.assertEqual(resp.status_code, 302)
+		self.assertEqual(resp['Location'], "http://testing/proposals/")
+		proposal = submission_models.Proposal.objects.get(pk=1)
+		self.assertEqual(proposal.status, 'accepted')
+		proposal.status='submission'
+		proposal.save()
+		resp = self.client.get(reverse('decline_proposal',kwargs={'proposal_id':proposal.id}))
+		content =resp.content
+		
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
+		resp = self.client.post(reverse('decline_proposal',kwargs={'proposal_id':proposal.id}),{'decline-email':'Dear user'})
+		self.assertEqual(resp.status_code, 302)
+		self.assertEqual(resp['Location'], "http://testing/proposals/")
+		proposal = submission_models.Proposal.objects.get(pk=1)
+		self.assertEqual(proposal.status, 'declined')
+		proposal.status='submission'
+		proposal.save()
+		resp = self.client.get(reverse('request_proposal_revisions',kwargs={'proposal_id':proposal.id}))
+		content =resp.content
+		
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
+		resp = self.client.post(reverse('request_proposal_revisions',kwargs={'proposal_id':proposal.id}),{'revisions-email':'Dear user'})
+		self.assertEqual(resp.status_code, 302)
+		self.assertEqual(resp['Location'], "http://testing/proposals/")
+		proposal = submission_models.Proposal.objects.get(pk=1)
+		self.assertEqual(proposal.status, 'revisions_required')
+		proposal.status='submission'
+		proposal.save()
+		resp = self.client.get(reverse('add_proposal_reviewers',kwargs={'proposal_id':proposal.id}))
+		content =resp.content
+		
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
+		resp =  self.client.post(reverse('add_proposal_reviewers',kwargs={'proposal_id':proposal.id}),{'due_date': '2015-11-11', 'committee': 2, 'reviewer': 4})
+		self.assertEqual(resp.status_code, 302)
+		self.assertEqual(resp['Location'], "http://testing/proposals/1/")
+	
+
 	def test_proposals_exists_in_committee(self):
 		management.call_command('loaddata', 'test_proposal_form.json', verbosity=0)
 		management.call_command('loaddata', 'test_submission_proposal.json', verbosity=0)
