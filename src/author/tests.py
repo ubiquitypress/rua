@@ -121,13 +121,14 @@ class AuthorTests(TestCase):
 		
 
 	def test_author_review_review_round(self):
+		review_assignment = core_models.ReviewAssignment.objects.get(pk=1)
+		review_assignment.review_round=None
+		review_assignment.save()
 		resp =  self.client.get(reverse('review',kwargs={'submission_id':self.book.id}))
 		content =resp.content
 		self.assertEqual(resp.status_code, 200)
 		self.assertEqual("403" in content, False)
-		self.assertEqual("btn-task" in content, False)
-		self.review_round=core_models.ReviewRound(book=self.book,round_number=1)
-		self.review_round.save()
+		self.review_round=core_models.ReviewRound.objects.get(book=self.book,round_number=1)
 		resp =  self.client.get(reverse('review',kwargs={'submission_id':self.book.id}))
 		content =resp.content
 		self.assertEqual(resp.status_code, 200)

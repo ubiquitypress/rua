@@ -5,6 +5,7 @@ import time
 import datetime
 from django.test import SimpleTestCase
 from django.db.models import Q
+from submission import models as submission_models
 from core import views
 import json
 from django.http import HttpRequest
@@ -12,6 +13,9 @@ from django.test.client import Client
 from django.contrib.auth.models import User
 from django.core.urlresolvers import resolve, reverse
 from  __builtin__ import any as string_any
+import tempfile
+from django.test.utils import setup_test_environment
+from django.core import management
 # Create your tests here.
 
 class CoreTests(TestCase):
@@ -27,12 +31,24 @@ class CoreTests(TestCase):
 		'test_core_data',
 		'test_review_data',
 	]
-
+	# Helper Function
+	def getmessage(cls, response):
+		"""Helper method to return first message from response """
+		for c in response.context:
+			message = [m for m in c.get('messages')][0]
+			if message:
+				return message
+	def get_specific_message(cls, response,number):
+		"""Helper method to return first message from response """
+		for c in response.context:
+			message = [m for m in c.get('messages')][number]
+			if message:
+				return message
 	def setUp(self):
 		self.client = Client(HTTP_HOST="testing")
 		self.user = User.objects.get(pk=1)
 		self.user.save()
-
+		setup_test_environment()
 		login = self.client.login(username=self.user.username, password="root")
 		self.assertEqual(login, True)
 
@@ -317,11 +333,193 @@ class CoreTests(TestCase):
 		resp = self.client.get(reverse('logout'))
 		self.assertEqual(resp.status_code, 302)
 		self.assertEqual(resp['Location'], "http://testing/")
+
+	def test_login(self):
+		resp = self.client.get(reverse('logout'))
+		self.assertEqual(resp.status_code, 302)
+		self.assertEqual(resp['Location'], "http://testing/")
+
+		resp = self.client.post(reverse('login'),{'user_name': 'rua_user','user_pass':"root"})
+		self.assertEqual(resp['Location'], "http://testing/dashboard/")
+		resp = self.client.get(reverse('logout'))
+	def test_login_invalid(self):
+		resp = self.client.get(reverse('logout'))
+		resp = self.client.post(reverse('login'),{'user_name': 'unknown','user_pass':"unknown"})
+	#	resp = self.client.get(reverse('login'))
+		message = self.get_specific_message(resp,1)
+		self.assertEqual(str(message), 'Account not found with those details.')
+	
+	def test_login_not_active(self):
+		resp = self.client.get(reverse('logout'))
+		resp = self.client.get(reverse('register'))
+		content =resp.content
+		
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)	
+		resp = self.client.post(reverse('register'), {'first_name': 'new','last_name':'last','username':'user1','email':'fake@faked.com','password1': 'password1','password2':"password1"})
+		user = User.objects.get(username="user1")
+		roles = models.Role.objects.filter(name__icontains="Editor")
+		for role in roles:
+			user.profile.roles.add(role)
+		user.profile.save()
+		user.save()
+		resp = self.client.post(reverse('login'),{'user_name': 'user1','user_pass':"password1"})
+		message = self.get_specific_message(resp,0)
+		self.assertEqual(str(message), 'User account is not active.')
+	def test_activate_user(self):
+		resp = self.client.post(reverse('register'), {'first_name': 'new','last_name':'last','username':'user1','email':'fake@faked.com','password1': 'password1','password2':"password1"})
+		user = User.objects.get(username="user1")
+		roles = models.Role.objects.filter(name__icontains="Editor")
+		for role in roles:
+			user.profile.roles.add(role)
+		user.profile.activation_code='activate'
+		user.profile.save()
+		user.save()
+		resp = self.client.post(reverse('activate',kwargs={'code':'activate'}))
+		self.assertEqual(resp.status_code, 302)
+		self.assertEqual(resp['Location'], "http://testing/login/")
 	
 	def test_index(self):
 		resp =  self.client.get(reverse('index'))
 		self.assertEqual(resp.status_code, 302)
 		self.assertEqual(resp['Location'], "http://testing/login/")
+	def test_contact(self):
+		resp = self.client.get(reverse('contact'))
+		content =resp.content
+		
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
+		self.assertEqual("Get in touch" in content, True)
+		self.assertEqual("Reason" in content, True)
+		self.assertEqual("Your email address" in content, True)
+		self.assertEqual("Your name" in content, True)
+		self.assertEqual("Your message" in content, True)
+	
+	def test_user_submission(self):
+		login = self.client.login(username="rua_author", password="tester")
+		resp = self.client.get(reverse('user_submission',kwargs={'submission_id':1}))
+		content =resp.content
+		
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
+		self.assertEqual("rua_title" in content, True)
+		self.assertEqual("Submission Progress" in content, True)
+		self.assertEqual("Summary" in content, True)
+		self.assertEqual("Files" in content, True)
+		self.assertEqual("Authors" in content, True)
+
+	def test_overview(self):
+		resp = self.client.get(reverse('overview'))
+		content =resp.content
+		
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
+		self.assertEqual("New Submissions" in content, True)
+		self.assertEqual("In Review" in content, True)
+		self.assertEqual("In Editing" in content, True)
+		self.assertEqual("In Production" in content, True)
+
+	def test_proposals(self):
+		management.call_command('loaddata', 'test_proposal_form.json', verbosity=0)
+		management.call_command('loaddata', 'test_submission_proposal.json', verbosity=0)
+		proposal = submission_models.Proposal.objects.get(pk=1)
+		login = self.client.login(username="rua_editor", password="tester")
+		resp = self.client.get(reverse('proposals'))
+		content =resp.content
+		
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
+		self.assertEqual("Book Proposals" in content, True)
+		self.assertEqual(proposal.title in content, True)
+		view_button = "/proposals/%s/" % proposal.id
+		self.assertEqual(view_button in content, True)
+
+		resp = self.client.get(reverse('view_proposal',kwargs={'proposal_id':proposal.id}))
+		content =resp.content
+		
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
+		page_title = "Book Proposal :  %s , %s" % (proposal.title,proposal.subtitle)
+		self.assertEqual(page_title in content, True)
+
+		proposal_reviews=submission_models.ProposalReview.objects.all()
+		self.assertEqual(0,len(proposal_reviews))
+		resp = self.client.get(reverse('start_proposal_review',kwargs={'proposal_id':proposal.id}))
+		content =resp.content
+		
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
+		resp = self.client.post(reverse('start_proposal_review',kwargs={'proposal_id':proposal.id}),{'due_date': '2015-11-11', 'review_form': 1, 'committee': 2, 'reviewer': 1})
+		self.assertEqual(resp.status_code, 302)
+		self.assertEqual(resp['Location'], "http://testing/proposals/1/")
+		proposal_reviews=submission_models.ProposalReview.objects.all()
+		self.assertEqual(len(proposal_reviews)==0,False)
+
+		resp = self.client.get(reverse('accept_proposal',kwargs={'proposal_id':proposal.id}))
+		content =resp.content
+		
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
+		proposal_file = tempfile.NamedTemporaryFile(delete=False)
+		resp = self.client.post(reverse('accept_proposal',kwargs={'proposal_id':proposal.id}),{'proposal-type':'monograph','accept-email':'Dear user','attachment-file':proposal_file})
+		self.assertEqual(resp.status_code, 302)
+		self.assertEqual(resp['Location'], "http://testing/proposals/")
+		proposal = submission_models.Proposal.objects.get(pk=1)
+		self.assertEqual(proposal.status, 'accepted')
+		proposal.status='submission'
+		proposal.save()
+		resp = self.client.get(reverse('decline_proposal',kwargs={'proposal_id':proposal.id}))
+		content =resp.content
+		
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
+		resp = self.client.post(reverse('decline_proposal',kwargs={'proposal_id':proposal.id}),{'decline-email':'Dear user'})
+		self.assertEqual(resp.status_code, 302)
+		self.assertEqual(resp['Location'], "http://testing/proposals/")
+		proposal = submission_models.Proposal.objects.get(pk=1)
+		self.assertEqual(proposal.status, 'declined')
+		proposal.status='submission'
+		proposal.save()
+		resp = self.client.get(reverse('request_proposal_revisions',kwargs={'proposal_id':proposal.id}))
+		content =resp.content
+		
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
+		resp = self.client.post(reverse('request_proposal_revisions',kwargs={'proposal_id':proposal.id}),{'revisions-email':'Dear user'})
+		self.assertEqual(resp.status_code, 302)
+		self.assertEqual(resp['Location'], "http://testing/proposals/")
+		proposal = submission_models.Proposal.objects.get(pk=1)
+		self.assertEqual(proposal.status, 'revisions_required')
+		proposal.status='submission'
+		proposal.save()
+		resp = self.client.get(reverse('add_proposal_reviewers',kwargs={'proposal_id':proposal.id}))
+		content =resp.content
+		
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
+		resp =  self.client.post(reverse('add_proposal_reviewers',kwargs={'proposal_id':proposal.id}),{'due_date': '2015-11-11', 'committee': 2, 'reviewer': 4})
+		self.assertEqual(resp.status_code, 302)
+		self.assertEqual(resp['Location'], "http://testing/proposals/1/")
+	
+
+	def test_proposals_exists_in_committee(self):
+		management.call_command('loaddata', 'test_proposal_form.json', verbosity=0)
+		management.call_command('loaddata', 'test_submission_proposal.json', verbosity=0)
+		proposal = submission_models.Proposal.objects.get(pk=1)
+		login = self.client.login(username="rua_editor", password="tester")
+		proposal_reviews=submission_models.ProposalReview.objects.all()
+		self.assertEqual(0,len(proposal_reviews))
+		resp = self.client.get(reverse('start_proposal_review',kwargs={'proposal_id':proposal.id}))
+		content =resp.content
+		
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
+		resp = self.client.post(reverse('start_proposal_review',kwargs={'proposal_id':proposal.id}),{'due_date': '2015-11-11', 'review_form': 1, 'committee': 2, 'reviewer': 4})
+		self.assertEqual(resp.status_code, 302)
+		self.assertEqual(resp['Location'], "http://testing/proposals/1/")
+		proposal_reviews=submission_models.ProposalReview.objects.all()
+
+		
 
 	def test_ajax_email_calls(self):
 		
@@ -352,11 +550,15 @@ class CoreTests(TestCase):
 
 
 
-
 ##############################################	Form Tests	 ##############################################		
 
 
 	def test_update_profile(self):
+		resp = self.client.post(reverse('update_profile'))
+		content =resp.content
+		
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
 		resp = self.client.post(reverse('update_profile'), {'first_name': 'new','institution':"Testing",'country':"GB"})
 		self.assertEqual(resp.status_code, 302)
 		self.assertEqual(resp['Location'], "http://testing/user/profile/")
@@ -371,6 +573,17 @@ class CoreTests(TestCase):
 		self.assertEqual(resp.status_code, 302)
 		self.assertEqual(resp['Location'], "http://testing/login/")
 
+	def test_reset_password_no_match(self):
+		resp = self.client.post(reverse('reset_password'), {'password_1': 'password1','password_2':"password12"})
+		self.assertEqual(resp.status_code, 200)
+		message = self.get_specific_message(resp,0)
+		self.assertEqual(str(message), 'Your passwords do not match.')
+		resp = self.client.post(reverse('reset_password'), {'password_1': 'pass','password_2':"pass"})
+		self.assertEqual(resp.status_code, 200)
+		message = self.get_specific_message(resp,0)
+		self.assertEqual(str(message), 'Password is not long enough, must be greater than 8 characters.')
+
+
 	def test_register_login(self):
 		resp = self.client.post(reverse('register'), {'first_name': 'new','last_name':'last','username':'user1','email':'fake@faked.com','password1': 'password1','password2':"password1"})
 		user = User.objects.get(username="user1")
@@ -380,8 +593,24 @@ class CoreTests(TestCase):
 		user.active=True
 		user.save()
 		user.profile.save()
-		resp = self.client.post(reverse('login'),{'username': 'user1','password':"password1"})
+		resp = self.client.post(reverse('login'),{'user_name': 'user1','user_pass':"password1"})
 		self.assertEqual(resp['Location'], "http://testing/dashboard/")
+
+	def test_upload_misc_file(self):
+
+		self.book = models.Book.objects.get(pk=1)
+		self.book.save()
+		resp = self.client.get(reverse('upload_misc_file',kwargs={'submission_id':self.book.id}))
+		content =resp.content
+		
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
+		self.assertEqual("Upload Misc File" in content, True)
+
+		misc_file = tempfile.NamedTemporaryFile(delete=False)
+		resp = self.client.post(reverse('upload_misc_file',kwargs={'submission_id':self.book.id}),{'file_type':'other','label':'test','misc_file':misc_file})
+		self.assertEqual(resp.status_code, 302)
+		self.assertEqual(resp['Location'], "http://testing/editor/submission/1/")
 
 ############# Email
 
@@ -389,6 +618,9 @@ class CoreTests(TestCase):
 		self.author = models.Author.objects.get(pk=1)
 		self.book = models.Book.objects.get(pk=1)
 		self.book.save()
+		onetaskers = self.book.onetaskers()
+		print "-------"
+		print onetaskers
 		#check that it exists in the database
 		
 		self.assertEqual(len(models.Book.objects.all())==1, True)
@@ -398,6 +630,29 @@ class CoreTests(TestCase):
 		resp = self.client.post(reverse('email_user', kwargs= {'group': 'editors','submission_id':str(self.book.id),'user_id':self.user.id}),  {'subject': 'all','to_values':self.user.email,"cc_values":"","bcc_values":"","body":'text'})
 		self.assertEqual(resp.status_code, 200)
 		self.assertEqual( "was sent" in resp.content,True)
+		resp = self.client.get(reverse('email_user', kwargs= {'group': 'editors','submission_id':str(self.book.id),'user_id':self.user.id}))
+		self.assertEqual(resp.status_code, 200)
+		content = resp.content
+		self.assertEqual("403" in content, False)
+		resp = self.client.get(reverse('email_user', kwargs= {'group': 'authors','submission_id':str(self.book.id),'user_id':self.author.id}))
+		self.assertEqual(resp.status_code, 200)
+		content = resp.content
+		self.assertEqual("403" in content, False)
+		resp = self.client.get(reverse('email_user', kwargs= {'group': 'onetaskers','submission_id':str(self.book.id),'user_id':onetaskers[0].id}))
+		self.assertEqual(resp.status_code, 200)
+		content = resp.content
+		self.assertEqual("403" in content, False)
+		resp = self.client.get(reverse('email_user', kwargs= {'group': 'onetaskers','submission_id':str(self.book.id),'user_id':15}))
+		self.assertEqual(resp.status_code, 404)
+		resp = self.client.get(reverse('email_user', kwargs= {'group': 'editors','submission_id':str(self.book.id),'user_id':15}))
+		self.assertEqual(resp.status_code, 200)
+		content = resp.content
+		self.assertEqual("403" in content, False)
+		message = self.get_specific_message(resp,0)
+		self.assertEqual(str(message), 'This editor was not found')
+		resp = self.client.get(reverse('email_users', kwargs= {'group': 'unknown','submission_id':str(self.book.id)}))
+		self.assertEqual(resp.status_code, 302)	
+		self.assertEqual(resp['Location'], "http://testing/email/all/submission/1/")
 
 
 

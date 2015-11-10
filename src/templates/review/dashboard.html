@@ -44,9 +44,9 @@
                         {% include "core/dashboard/activity.html" %}
                     </div>
                     {% if task.access_key %}
-  <a href="/review/{{task.review_type}}/{{task.book.pk}}/access_key/{{task.access_key}}/" class="btn btn-task pull-right" style="margin-right:20px; margin-bottom:20px;">&nbsp;&nbsp;&nbsp;View Task&nbsp;&nbsp;&nbsp;</a>
+  <a href="{% url 'review_complete_with_access_key' task.review_type task.book.pk task.review_round.round_number task.access_key %}" class="btn btn-task pull-right" style="margin-right:20px; margin-bottom:20px;">&nbsp;&nbsp;&nbsp;View Task&nbsp;&nbsp;&nbsp;</a>
 {% else %}
- <a href="/review/{{task.review_type}}/{{task.book.pk}}/" class="btn btn-task pull-right" style="margin-right:10px;">&nbsp;&nbsp;&nbsp;View Task&nbsp;&nbsp;&nbsp;</a>
+ <a href="{% url 'review_complete' task.review_type task.book.pk task.review_round.round_number %}" class="btn btn-task pull-right" style="margin-right:10px;">&nbsp;&nbsp;&nbsp;View Task&nbsp;&nbsp;&nbsp;</a>
 
 {% endif%}
   </br>
@@ -80,9 +80,9 @@
                     </div>
 
                            {% if task.access_key %}
-                              <a href="/review/{{task.review_type}}/{{task.book.pk}}/access_key/{{task.access_key}}" class="btn btn-sm btn-task pull-right" style="margin-right:20px; margin-bottom:20px;">&nbsp;&nbsp;&nbsp;View Task&nbsp;&nbsp;&nbsp;</a>
+                              <a href="{% url 'review_with_access_key' task.review_type task.book.pk task.review_round.round_number task.access_key %}" class="btn btn-sm btn-task pull-right" style="margin-right:20px; margin-bottom:20px;">&nbsp;&nbsp;&nbsp;View Task&nbsp;&nbsp;&nbsp;</a>
                             {% else %}
-                             <a href="/review/{{task.review_type}}/{{task.book.pk}}/" class="btn btn-task btn-sm pull-right" style="margin-right:22px; margin-bottom:20px;">&nbsp;&nbsp;&nbsp;View Task&nbsp;&nbsp;&nbsp;</a>
+                             <a href="{% url 'review_without_access_key' task.review_type task.book.pk task.review_round.round_number %}" class="btn btn-task btn-sm pull-right" style="margin-right:22px; margin-bottom:20px;">&nbsp;&nbsp;&nbsp;View Task&nbsp;&nbsp;&nbsp;</a>
 
                             {% endif %} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:grey">{{task.assigned}}</span></br>
                     </br>

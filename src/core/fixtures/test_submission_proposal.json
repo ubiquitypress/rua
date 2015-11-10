@@ -1,0 +1,19 @@
+[
+{
+  "fields": {
+    "status": "submission",
+    "review_form": 1,
+    "subtitle": "subtitle",
+    "form": 1,
+    "author": "rua_author",
+    "title": "submitted_proposal",
+    "date_submitted": "2015-11-09T15:38:38.675Z",
+    "review_assignments": [],
+    "date_review_started": null,
+    "owner": 3,
+    "data": "{\"rua_element\": [\"example\", \"text\"], \"rua_element_2\": [\"example\", \"text\"]}"
+  },
+  "model": "submission.proposal",
+  "pk": 1
+}
+]
