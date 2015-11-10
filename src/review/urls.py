@@ -16,9 +16,9 @@ urlpatterns = patterns('',
 
 	
 	# Review
-	url(r'^(?P<review_type>[-\w]+)/(?P<submission_id>\d+)/access_key/(?P<access_key>[-\w+]+)/$', 'review.views.review', name='review_with_access_key'),
-	url(r'^(?P<review_type>[-\w]+)/(?P<submission_id>\d+)/$', 'review.views.review', name='review_without_access_key'),
-	url(r'^(?P<review_type>[-\w]+)/(?P<submission_id>\d+)/complete/$', 'review.views.review_complete', name='review_complete'),
-	url(r'^(?P<review_type>[-\w]+)/(?P<submission_id>\d+)/access_key/(?P<access_key>[-\w+]+)/complete/$', 'review.views.review_complete', name='review_complete_with_access_key'),
+	url(r'^(?P<review_type>[-\w]+)/(?P<submission_id>\d+)/review-round/(?P<review_round>\d+)/access_key/(?P<access_key>[-\w+]+)/$', 'review.views.review', name='review_with_access_key'),
+	url(r'^(?P<review_type>[-\w]+)/(?P<submission_id>\d+)/review-round/(?P<review_round>\d+)/$', 'review.views.review', name='review_without_access_key'),
+	url(r'^(?P<review_type>[-\w]+)/(?P<submission_id>\d+)/review-round/(?P<review_round>\d+)/complete/$', 'review.views.review_complete', name='review_complete'),
+	url(r'^(?P<review_type>[-\w]+)/(?P<submission_id>\d+)/review-round/(?P<review_round>\d+)/access_key/(?P<access_key>[-\w+]+)/complete/$', 'review.views.review_complete', name='review_complete_with_access_key'),
 
 )

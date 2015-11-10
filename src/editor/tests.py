@@ -182,7 +182,6 @@ class EditorTests(TestCase):
 		content =resp.content
 		self.assertEqual(resp.status_code, 200)
 		self.assertEqual("403" in content, False)
-		self.assertEqual("btn-task" in content, False)
 		resp =  self.client.post(reverse('editor_review',kwargs={'submission_id':self.book.id}),{'new_round':''})
 		resp =  self.client.get(reverse('editor_review',kwargs={'submission_id':self.book.id}))
 		content =resp.content
@@ -206,10 +205,10 @@ class EditorTests(TestCase):
 		self.assertEqual("403" in content, False)
 		resp =  self.client.post(reverse('editor_add_reviewers',kwargs={'round_number':1,'submission_id':self.book.id,'review_type':'internal'}),{'message':'Dear reviewer','due_date': '2015-11-11', 'review_form': 'rua_test_form', 'committee': 2, 'reviewer': 4,'attachment':review_file})
 		self.assertEqual(resp.status_code, 302)
-		self.assertEqual(resp['Location'], "http://testing/editor/submission/1/review/round/1/")
+		self.assertEqual(resp['Location'], "http://testing/editor/submission/1/review/round/2/")
 		resp =  self.client.post(reverse('editor_add_reviewers',kwargs={'round_number':1,'submission_id':self.book.id,'review_type':'external'}),{'message':'Dear reviewer','due_date': '2015-11-11', 'review_form': 'rua_test_form', 'committee': 2, 'reviewer': 4,'attachment':review_file})
 		self.assertEqual(resp.status_code, 302)
-		self.assertEqual(resp['Location'], "http://testing/editor/submission/1/review/round/1/")
+		self.assertEqual(resp['Location'], "http://testing/editor/submission/1/review/round/2/")
 	
 		assignment = core_models.ReviewAssignment.objects.filter(book=book,review_round=1,review_type='external')[0]
 		resp =  self.client.get(reverse('update_review_due_date',kwargs={'round_id':1,'submission_id':self.book.id,'review_id':assignment.id}))
@@ -227,18 +226,18 @@ class EditorTests(TestCase):
 
 		resp =  self.client.post(reverse('add_review_files',kwargs={'submission_id':self.book.id,'review_type':'internal'}),{'file':2})
 		self.assertEqual(resp.status_code, 302)
-		self.assertEqual(resp['Location'], "http://testing/editor/submission/1/review/round/1/")
+		self.assertEqual(resp['Location'], "http://testing/editor/submission/1/review/round/2/")
 
 		resp =  self.client.post(reverse('add_review_files',kwargs={'submission_id':self.book.id,'review_type':'external'}),{'file':2})
 		self.assertEqual(resp.status_code, 302)
-		self.assertEqual(resp['Location'], "http://testing/editor/submission/1/review/round/1/")
+		self.assertEqual(resp['Location'], "http://testing/editor/submission/1/review/round/2/")
 
 		resp =  self.client.post(reverse('delete_review_files',kwargs={'submission_id':self.book.id,'review_type':'external','file_id':2}))
 		self.assertEqual(resp.status_code, 302)
-		self.assertEqual(resp['Location'], "http://testing/editor/submission/1/review/round/1/")
+		self.assertEqual(resp['Location'], "http://testing/editor/submission/1/review/round/2/")
 		resp =  self.client.post(reverse('delete_review_files',kwargs={'submission_id':self.book.id,'review_type':'internal','file_id':2}))
 		self.assertEqual(resp.status_code, 302)
-		self.assertEqual(resp['Location'], "http://testing/editor/submission/1/review/round/1/")
+		self.assertEqual(resp['Location'], "http://testing/editor/submission/1/review/round/2/")
 
 
 

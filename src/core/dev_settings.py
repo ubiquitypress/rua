@@ -225,7 +225,7 @@ NOSE_ARGS = [
    
     # Run test: python manage.py test --cover-package=(app)
     
-    #   '--cover-package=core,author,editor,manager,onetasker,review,submission',  #uncomment to run all tests with 'python manage.py test'
+       '--cover-package=core,author,editor,manager,onetasker,review,submission',  #uncomment to run all tests with 'python manage.py test'
    
     #    '--with-xunit',    # enable XUnit plugin
     #   '--xunit-file=xunittest.xml',  # the XUnit report file
