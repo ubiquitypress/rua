@@ -17,8 +17,11 @@ import json
 from django.http import HttpRequest
 from  __builtin__ import any as string_any
 import calendar
+import tempfile
 from django.core import management
 from revisions import models as revision_models
+from django.db import transaction
+from django.db import IntegrityError
 class EditorTests(TestCase):
 
 	# Dummy DBs
@@ -192,6 +195,34 @@ class EditorTests(TestCase):
 		self.assertEqual("403" in content, False)
 		self.assertEqual("btn-task" in content, True)
 		self.assertEqual("ROUND 1" in content, True)
+		review_file = tempfile.NamedTemporaryFile(delete=False)
+		resp =  self.client.get(reverse('editor_add_reviewers',kwargs={'round_number':1,'submission_id':self.book.id,'review_type':'external'}))
+		content =resp.content
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
+		resp =  self.client.get(reverse('editor_add_reviewers',kwargs={'round_number':1,'submission_id':self.book.id,'review_type':'internal'}))
+		content =resp.content
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
+		resp =  self.client.post(reverse('editor_add_reviewers',kwargs={'round_number':1,'submission_id':self.book.id,'review_type':'internal'}),{'message':'Dear reviewer','due_date': '2015-11-11', 'review_form': 'rua_test_form', 'committee': 2, 'reviewer': 4,'attachment':review_file})
+		self.assertEqual(resp.status_code, 302)
+		self.assertEqual(resp['Location'], "http://testing/editor/submission/1/review/round/1/")
+		resp =  self.client.post(reverse('editor_add_reviewers',kwargs={'round_number':1,'submission_id':self.book.id,'review_type':'external'}),{'message':'Dear reviewer','due_date': '2015-11-11', 'review_form': 'rua_test_form', 'committee': 2, 'reviewer': 4,'attachment':review_file})
+		self.assertEqual(resp.status_code, 302)
+		self.assertEqual(resp['Location'], "http://testing/editor/submission/1/review/round/1/")
+	
+		assignment = core_models.ReviewAssignment.objects.filter(book=book,review_round=1,review_type='external')[0]
+		resp =  self.client.get(reverse('update_review_due_date',kwargs={'round_id':1,'submission_id':self.book.id,'review_id':assignment.id}))
+		content =resp.content
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
+		resp =  self.client.post(reverse('update_review_due_date',kwargs={'round_id':1,'submission_id':self.book.id,'review_id':assignment.id}),{'due_date':'2015-11-24'})
+		assignment = core_models.ReviewAssignment.objects.get(pk=assignment.id)
+		self.assertEqual('2015-11-24',assignment.due.strftime("%Y-%m-%d"))
+
+
+	
+
 		
 	def test_editor_editing(self):
 		resp =  self.client.post(reverse('editor_review',kwargs={'submission_id':self.book.id}),{'move_to_editing':''})
@@ -302,6 +333,11 @@ class EditorTests(TestCase):
 		self.assertEqual("403" in content, False)
 		notification = "Revisions submitted for %s" % self.book.title
 		self.assertEqual(notification in content, True)
+		resp = self.client.get(reverse('editor_view_revisions',kwargs={'submission_id':self.book.id,'revision_id':revision.id}))
+		content = resp.content
+		self.assertTrue(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
+
 
 	def test_catalog(self):
 		resp =  self.client.get(reverse('catalog',kwargs={'submission_id':self.book.id}))

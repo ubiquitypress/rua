@@ -278,13 +278,13 @@ def editor_add_reviewers(request, submission_id, review_type, round_number):
 
 		# Handle reviewers
 		for reviewer in reviewers:
-			logic.handle_review_assignment(submission, reviewer, review_type, due_date, review_round, request.user, email_text, attachment)
+			logic.handle_review_assignment(request,submission, reviewer, review_type, due_date, review_round, request.user, email_text, attachment)
 
 		# Handle committees
 		for committee in committees:
 			members = manager_models.GroupMembership.objects.filter(group=committee)
 			for member in members:
-				logic.handle_review_assignment(submission, member.user, review_type, due_date, review_round, request.user, email_text, attachment)
+				logic.handle_review_assignment(request,submission, member.user, review_type, due_date, review_round, request.user, email_text, attachment)
 
 		# Tidy up and save
 		if review_type == 'internal' and not submission.stage.internal_review:
@@ -764,7 +764,7 @@ def assign_typesetter(request, submission_id):
 		attachment = handle_attachment(request, book)
 
 		for typesetter in typesetter_list:
-			logic.handle_typeset_assignment(book, typesetter, file_list, due_date, email_text, requestor=request.user, attachment=attachment)
+			logic.handle_typeset_assignment(request,book, typesetter, file_list, due_date, email_text, requestor=request.user, attachment=attachment)
 
 		return redirect(reverse('editor_production', kwargs={'submission_id': submission_id}))
 
@@ -952,7 +952,7 @@ def assign_copyeditor(request, submission_id):
 		attachment = handle_attachment(request, book)
 
 		for copyeditor in copyeditor_list:
-			logic.handle_copyeditor_assignment(book, copyeditor, file_list, due_date, email_text, requestor=request.user, attachment=attachment)
+			logic.handle_copyeditor_assignment(request,book, copyeditor, file_list, due_date, email_text, requestor=request.user, attachment=attachment)
 			log.add_log_entry(book=book, user=request.user, kind='editing', message='Copyeditor %s %s assigend to %s' % (copyeditor.first_name, copyeditor.last_name, book.title), short_name='Copyeditor Assigned')
 
 		return redirect(reverse('editor_editing', kwargs={'submission_id': submission_id}))
@@ -1029,7 +1029,7 @@ def assign_indexer(request, submission_id):
 		attachment = handle_attachment(request, book)
 
 		for indexer in indexer_list:
-			logic.handle_indexer_assignment(book, indexer, file_list, due_date, email_text, requestor=request.user, attachment=attachment)
+			logic.handle_indexer_assignment(request,book, indexer, file_list, due_date, email_text, requestor=request.user, attachment=attachment)
 			log.add_log_entry(book=book, user=request.user, kind='editing', message='Indexer %s %s assigend to %s' % (indexer.first_name, indexer.last_name, book.title), short_name='Indexer Assigned')
 
 		return redirect(reverse('editor_editing', kwargs={'submission_id': submission_id}))
