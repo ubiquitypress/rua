@@ -44,6 +44,7 @@ class ReviewForm(forms.ModelForm):
 	class Meta:
 		model = review_models.Form
 		exclude = ()
+		
 class EditKey(forms.Form):
 
 	def __init__(self, *args, **kwargs):

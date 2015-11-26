@@ -50,8 +50,10 @@ class ProposalFormAdmin(admin.ModelAdmin):
 	list_display = ('name', 'ref')
 	search_fields = ('name',)
 	exclude = ()
+
 class ProposalFormElementRelationshipAdmin(admin.ModelAdmin):
 	list_display = ('form', 'element')
+	
 class ProposalFormElementAdmin(admin.ModelAdmin):
 	list_display = ('name', 'field_type')
 

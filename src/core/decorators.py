@@ -25,6 +25,7 @@ def is_author(function):
 	wrap.__doc__=function.__doc__
 	wrap.__name__=function.__name__
 	return wrap
+	
 def is_editor(function):
 	def wrap(request, *args, **kwargs):
 
