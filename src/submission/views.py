@@ -186,16 +186,18 @@ def upload(request, book_id, type_to_handle):
 	file = upload_receive(request)
 	new_file = handle_file(file, book, type_to_handle, request.user)
 
-	file_dict = {
-		'name' : new_file.uuid_filename,
-		'size' : file.size,
-		'deleteUrl': reverse('jfu_delete', kwargs = { 'book_id': book_id, 'file_pk': new_file.pk }),
-		'url': reverse('serve_file', kwargs = {'submission_id': book_id, 'file_id': new_file.pk }),
-		'deleteType': 'POST',
-		'ruaId': new_file.pk,
-	}
+	if new_file:
 
-	return UploadResponse( request, file_dict )
+		file_dict = {
+			'name' : new_file.uuid_filename,
+			'size' : file.size,
+			'deleteUrl': reverse('jfu_delete', kwargs = { 'book_id': book_id, 'file_pk': new_file.pk }),
+			'url': reverse('serve_file', kwargs = {'submission_id': book_id, 'file_id': new_file.pk }),
+			'deleteType': 'POST',
+			'ruaId': new_file.pk,
+		}
+
+		return UploadResponse( request, file_dict )
 
 @csrf_exempt
 def upload_delete(request, book_id, file_pk):
