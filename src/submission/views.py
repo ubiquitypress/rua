@@ -199,6 +199,8 @@ def upload(request, book_id, type_to_handle):
 
 		return UploadResponse( request, file_dict )
 
+	return HttpResponse('No file')
+
 @csrf_exempt
 def upload_delete(request, book_id, file_pk):
 	success = True
