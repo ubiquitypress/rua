@@ -183,7 +183,7 @@ def submission_additional_files(request, book_id, file_type):
 def upload(request, book_id, type_to_handle):
 
 	book = get_object_or_404(core_models.Book, pk=book_id, owner=request.user)
-	file = upload_receive( request )
+	file = upload_receive(request)
 	new_file = handle_file(file, book, type_to_handle, request.user)
 
 	file_dict = {
@@ -446,42 +446,44 @@ def proposal_revisions(request, proposal_id):
 ## File helpers
 def handle_file(file, book, kind, user):
 
-	original_filename = str(file._get_name())
-	filename = str(uuid4()) + str(os.path.splitext(file._get_name())[1])
-	folder_structure = os.path.join(settings.BASE_DIR, 'files', 'books', str(book.id))
+	if file:
 
-	if not os.path.exists(folder_structure):
-		os.makedirs(folder_structure)
+		original_filename = str(file._get_name())
+		filename = str(uuid4()) + str(os.path.splitext(file._get_name())[1])
+		folder_structure = os.path.join(settings.BASE_DIR, 'files', 'books', str(book.id))
 
-	path = os.path.join(folder_structure, str(filename))
-	fd = open(path, 'wb')
-	for chunk in file.chunks():
-		fd.write(chunk)
-	fd.close()
+		if not os.path.exists(folder_structure):
+			os.makedirs(folder_structure)
 
-	file_mime = mime.guess_type(filename)
+		path = os.path.join(folder_structure, str(filename))
+		fd = open(path, 'wb')
+		for chunk in file.chunks():
+			fd.write(chunk)
+		fd.close()
 
-	try:
-		file_mime = file_mime[0]
-	except IndexError:
-		file_mime = 'unknown'
+		file_mime = mime.guess_type(filename)
 
-	if not file_mime:
-		file_mime = 'unknown'
+		try:
+			file_mime = file_mime[0]
+		except IndexError:
+			file_mime = 'unknown'
 
-	new_file = core_models.File(
-		mime_type=file_mime,
-		original_filename=original_filename,
-		uuid_filename=filename,
-		stage_uploaded=1,
-		kind=kind,
-		owner=user,
-	)
-	new_file.save()
-	book.files.add(new_file)
-	book.save()
+		if not file_mime:
+			file_mime = 'unknown'
 
-	return new_file
+		new_file = core_models.File(
+			mime_type=file_mime,
+			original_filename=original_filename,
+			uuid_filename=filename,
+			stage_uploaded=1,
+			kind=kind,
+			owner=user,
+		)
+		new_file.save()
+		book.files.add(new_file)
+		book.save()
+
+		return new_file
 
 # AJAX handler
 @csrf_exempt
