@@ -3,7 +3,7 @@
 	<a href="{% url 'editor_publish' submission.id %}" class="btn btn-accept">Publish Book</a>
 
 	{% elif submission.stage.current_stage == 'submission' %}
-	<form method="POST">
+	<form method="POST" action="{% url 'editor_submission' submission.id %}">
 	{% csrf_token %}
 	<button name="review" type="submit" class="btn btn-sm btn-accept btn-action">Move to<br />Review</button>
 	<a href="{% url 'request_revisions' submission.pk 'submission' %}" class="btn btn-sm btn-read btn-action">Request<br />Revisions</a>
