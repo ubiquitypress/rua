@@ -20,6 +20,7 @@ from email import send_email
 from files import handle_file_update,handle_attachment,handle_file
 from submission import models as submission_models
 from core.decorators import is_editor, is_book_editor, is_book_editor_or_author, is_onetasker,is_author
+from review import forms as review_forms
 
 from pprint import pprint
 import json
@@ -769,11 +770,15 @@ def start_proposal_review(request, proposal_id):
 	return render(request, template, context)
 
 @is_editor
-def view_proposal_review(request, submission_id, assignment_id):
+def view_proposal_review(request, proposal_id, assignment_id):
 
-	submission = get_object_or_404(submission_models.Proposal, pk=submission_id)
+	proposal = get_object_or_404(submission_models.Proposal, pk=proposal_id)
 	review_assignment = get_object_or_404(submission_models.ProposalReview, pk=assignment_id)
 	result = review_assignment.results
+	form = review_forms.GeneratedForm(form=proposal.review_form)
+
+	ci_required = models.Setting.objects.get(group__name='general', name='ci_required')
+	recommendation_form = forms.RecommendationForm(ci_required=ci_required.value)
 	if result:
 		relations = review_models.FormElementsRelationship.objects.filter(form=result.form)
 		data_ordered = logic.order_data(logic.decode_json(result.data), relations)
@@ -781,12 +786,14 @@ def view_proposal_review(request, submission_id, assignment_id):
 		relations = None
 		data_ordered = None
 
-	template = 'core/review/review_assignment.html'
+	template = 'core/proposals/review_assignment.html'
 	context = {
-		'submission': submission,
+		'proposal': proposal,
 		'review': review_assignment,
 		'data_ordered': data_ordered,
 		'result': result,
+		'form':form,
+		'recommendation_form':recommendation_form,
 		'active': 'proposal_review',
 	}
 
