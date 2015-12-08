@@ -274,7 +274,7 @@ body > div.container-fluid > div > div > div > a {
   color: #FFF;
   margin-bottom:5px;
 }
-.other-heading-btn:hover, .other-heading-btn:focus, .other-heading-btn:active, .other-heading-btn.active, .open > .dropdown-toggle.other-heading-btn {
+.other-heading-btn:hover, .other-heading-btn:focus, .other-heading-btn:active, .other-heading-btn.active, .open > .dropdown-toggle.other-heading-btn  {
     background: #5E2AFA;
     color:#ffffff;
 }
@@ -1202,3 +1202,13 @@ button.list-group-item-file.active:focus {
   background-color: #149690;
   border-color: #128983;
 }
+    .hover-proposal:focus, 
+    .hover-proposal:hover{
+      background-color:#5E2AFA   !important;
+      color:white !important;
+    }
+    .hover-submission:focus, 
+    .hover-submission:hover{
+      background-color:#239B56 !important;
+      color:white !important;
+    }

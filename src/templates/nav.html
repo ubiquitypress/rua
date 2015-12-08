@@ -20,6 +20,7 @@
                   <li><a href="{% url 'author_dashboard' %}">Author Dashboard <span class="badge circle"> {{author_task_count}}</span></a></li>
                   {% if request.user.is_staff %}
                   <li><a href="{% url 'editor_dashboard' %}">Editor Dashboard <span class="badge circle"><label id="editor_notifications_nav" style="height:7px">{{task_count}}</label></span></a></li>
+                     <li><a class="hover-proposal " href="{% url 'proposals' %}">Proposals Dashboard</a></li>
                   <li><a href="{% url 'overview' %}">Overview</a></li>
                   {% endif %}
                   <li class="dropdown">
