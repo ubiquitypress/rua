@@ -1,4 +1,8 @@
-@import url(https://fonts.googleapis.com/css?family=Lato);
+@font-face {
+    font-family: Lato;
+    src: url(/static/fonts/Lato-Regular.ttf);
+}
+
 
 h1, h2, h3, h4, h5, h6 {
     font-family: 'Lato' Helvetica;
