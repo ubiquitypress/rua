@@ -102,6 +102,12 @@ class Profile(models.Model):
 		else:
 			return u"%s %s" % (self.user.first_name, self.user.last_name)
 
+	def salutation_name(self):
+		if self.salutation:
+			return u"%s %s" % (self.salutation, self.user.last_name)
+		else:
+			return u"%s %s" % (self.user.first_name, self.user.last_name)
+
 	def initials(self):
 		if self.middle_name:
 			return u"%s%s%s" % (self.user.first_name[:1], self.middle_name[:1], self.user.last_name[:1])
