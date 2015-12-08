@@ -1,12 +1,13 @@
 {% load bootstrap3 %}
-<h2>Update Book Editors</h2>
+<h2>{% if submission.book_editors.all %}
+               Update {% else %} Add {% endif %} Book Editors</h2>
 <br>
      <form method="post" class="form">
         {% csrf_token %}
         {% bootstrap_form form %}
         <h6>Hold down "Control", or "Command" on a Mac, in order to select more than one or remove existing selection</h6>
         {% buttons %}
-            <button name="submit" id="submit" type="submit" class="btn btn-info pull-right" style="width:150px">
+            <button name="submit" id="submit" type="submit" class="btn   {% if submission.book_editors.all %}btn-accept{% else %}btn-info{% endif %}  pull-right" style="width:150px">
               {% if submission.book_editors.all %}
                Update {% else %} Add {% endif %} Editors
             </button>

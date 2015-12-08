@@ -93,9 +93,9 @@ def editor_add_editors(request, submission_id):
 		if form.is_valid():
 			new_revision_request = form.save(commit=True)
 
-		messages.add_message(request, messages.SUCCESS, 'Submission editors have been added.')
+		messages.add_message(request, messages.SUCCESS, 'Book editors have been updated.')
 
-		return redirect(reverse('editor_review', kwargs={'submission_id': book.id}))
+		return redirect(reverse('editor_submission', kwargs={'submission_id': book.id}))
 
 	template = 'editor/submission.html'
 	context = {
