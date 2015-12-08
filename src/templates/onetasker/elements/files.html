@@ -2,7 +2,7 @@
 
         <h4>INSTRUCTIONS FOR TASK</h4>
         </br>
-        <p>{{ assignment.note }}</p>
+        <p>{{ assignment.note|safe }}</p>
      
          <h5> Task Due <span class="author-due">{{ assignment.due }} ({{assignment.due|timeuntil}} left)</span></h5>
 
