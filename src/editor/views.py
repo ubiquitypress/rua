@@ -5,10 +5,10 @@ from django.contrib import messages
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
 
-from core.files import handle_attachment,handle_file_update,handle_attachment,handle_file
+from core.files import handle_attachment, handle_file_update, handle_attachment, handle_file
 from core import models, log, logic as core_logic
 from core import forms as core_forms
-from core.decorators import is_editor, is_book_editor, is_book_editor_or_author
+from core.decorators import is_editor, is_book_editor, is_book_editor_or_author, is_press_editor
 from editor import logic
 from revisions import models as revision_models
 from review import models as review_models
@@ -83,7 +83,7 @@ def editor_submission(request, submission_id):
 
 	return render(request, template, context)
 
-@is_book_editor
+@is_press_editor
 def editor_add_editors(request, submission_id):
 	book = get_object_or_404(models.Book, pk=submission_id)
 	form = forms.EditorForm(instance=book)
@@ -93,7 +93,7 @@ def editor_add_editors(request, submission_id):
 	if request.POST:
 		form = forms.EditorForm(request.POST, instance=book)
 		if form.is_valid():
-			new_revision_request = form.save(commit=True)
+			new_book_editor_request = form.save(commit=True)
 
 		messages.add_message(request, messages.SUCCESS, 'Book editors have been updated.')
 		logic.send_book_editors(book, email_text)
