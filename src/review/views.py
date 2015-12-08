@@ -33,13 +33,17 @@ def reviewer_dashboard(request):
 
 	pending_tasks = core_models.ReviewAssignment.objects.filter(user=request.user,completed__isnull=True,declined__isnull=True).select_related('book')
 	completed_tasks = core_models.ReviewAssignment.objects.filter(user=request.user,completed__isnull=False).select_related('book')
-	
+	pending_proposal_tasks = submission_models.ProposalReview.objects.filter(user=request.user,completed__isnull=True,declined__isnull=True)
+	completed_proposal_tasks = submission_models.ProposalReview.objects.filter(user=request.user,completed__isnull=False)
+
 	template = 'review/dashboard.html'
 	context = {	
 		'pending_tasks': pending_tasks,
-		'pending_count': len(pending_tasks),
+		'pending_proposal_tasks': pending_proposal_tasks,
+		'pending_count': len(pending_tasks)+len(pending_proposal_tasks),
 		'completed_tasks': completed_tasks,
-		'completed_count':len(completed_tasks),
+		'completed_proposal_tasks': completed_proposal_tasks,
+		'completed_count':len(completed_tasks)+len(completed_proposal_tasks),
 	}
 
 	return render(request, template, context)
