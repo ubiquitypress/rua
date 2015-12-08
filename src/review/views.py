@@ -211,7 +211,7 @@ def review_complete(request, review_type, submission_id,review_round,access_key=
 		review_assignment = get_object_or_404(submission_models.ProposalReview, user=request.user, proposal=submission)
 	else:
 		submission = get_object_or_404(core_models.Book, pk=submission_id)
-	 	review_assignment = get_object_or_404(core_models.ReviewAssignment, user=request.user, book=submission, review_type=review_type, access_key="")
+	 	review_assignment = get_object_or_404(core_models.ReviewAssignment, Q(user=request.user), Q(book=submission), Q(review_type=review_type), Q(access_key__isnull=True) | Q(access_key__exact=''))
 
 	
 	result = review_assignment.results
