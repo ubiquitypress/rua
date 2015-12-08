@@ -9,7 +9,7 @@
 
 {% block body %}
   <div class="col-md-12 other-heading container-fluid" style="margin-top:-20px">
-  <h3>Book Proposal :  {{ proposal.title }} {% if proposal.subtitle%}, {{ proposal.subtitle }}{%endif%}<a href="{% url 'proposals'%}" class="btn  btn-transparent-white" style="position: absolute;right:20;margin-top:-8px">Go back</a></h3>
+  <h3>Book Proposal :  {{ proposal.title }} {% if proposal.subtitle%}: {{ proposal.subtitle }}{%endif%}<a href="{% url 'proposals'%}" class="btn  btn-transparent-white" style="position: absolute;right:20;margin-top:-8px">Go back</a></h3>
 </div></br></br>
 <div class="col-md-12">
  </br>

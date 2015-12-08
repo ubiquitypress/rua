@@ -91,7 +91,7 @@ class DefaultReviewForm(forms.Form):
 class DefaultForm(forms.Form):
 
 	title = forms.CharField(widget=forms.TextInput, required=True)
-	subtitle = forms.CharField(widget=forms.TextInput, required=True)
+	subtitle = forms.CharField(widget=forms.TextInput, required=False)
 	author = forms.CharField(widget=forms.TextInput, required=True)
 
 	def clean(self):

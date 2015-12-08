@@ -6,7 +6,7 @@
 
 {% block body %}
 <div class="col-md-12 warning-heading container-fluid" style="margin-top:-20px">
-  <h3>Request Revisions - {{ proposal.title }} <a href="{% url 'view_proposal' proposal.id %}" class="btn  btn-transparent-white" style="position: absolute;right:20px;margin-top:-8px">Go back</a></h3>
+  <h3>Request Revisions - {{ proposal.title }}{% if proposal.subtitle%}: {{ proposal.subtitle }}{%endif%} <a href="{% url 'view_proposal' proposal.id %}" class="btn  btn-transparent-white" style="position: absolute;right:20px;margin-top:-8px">Go back</a></h3>
 </div>
 <div class="col-md-12 ">
  
