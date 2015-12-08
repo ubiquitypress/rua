@@ -431,14 +431,8 @@ def proposal_revisions(request, proposal_id):
 			proposal.author = defaults.get("author")
 			proposal.subtitle = defaults.get("subtitle")
 			proposal.save()
-			users = User.objects.all()
-
-			for available_user in users:
-				roles=  available_user.profile.roles.all()
-				if string_any('Editor' for role in roles):
-					notification = core_models.Task(assignee=available_user,creator=request.user,text="Revisions for Proposal '%s' with id %s submitted" % (proposal.title,proposal.id),workflow='proposal')
-					notification.save()
-			
+			notification = core_models.Task(assignee=proposal.requestor,creator=request.user,text="Revisions for Proposal '%s' with id %s submitted" % (proposal.title,proposal.id),workflow='proposal')
+			notification.save()
 
 			messages.add_message(request, messages.SUCCESS, 'Proposal %s submitted' % proposal.id)
 			return redirect(reverse('user_dashboard'))

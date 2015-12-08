@@ -670,11 +670,16 @@ def view_log(request, submission_id):
 
 @is_editor
 def proposal(request):
-	proposal_list = submission_models.Proposal.objects.filter((~Q(status='declined') & ~Q(status='accepted'))).exclude(~Q(requestor=request.user))
-
+	proposal_list = submission_models.Proposal.objects.filter((~Q(status='declined') & ~Q(status='accepted')))
+	proposals = []
+	for proposal in proposal_list:
+		if not proposal.requestor:
+			proposals.append(proposal)
+		elif proposal.requestor==request.user:
+			proposals.append(proposal)
 	template = 'core/proposals/proposal.html'
 	context = {
-		'proposal_list': proposal_list,
+		'proposal_list': proposals,
 	}
 
 	return render(request, template, context)
