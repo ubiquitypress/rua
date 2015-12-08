@@ -1254,3 +1254,6 @@ button.list-group-item-file.active:focus {
       background-color:#4F4F4F!important;
       color:white !important;
     }
+.proposal {
+  background-color:#7c50ff !important;
+}

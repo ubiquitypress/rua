@@ -445,7 +445,30 @@ def proposal_revisions(request, proposal_id):
 	}
 
 	return render(request, template, context)
+@login_required
+def proposal_view(request, proposal_id):
 
+	proposal = get_object_or_404(submission_models.Proposal, pk=proposal_id, owner=request.user)
+
+	proposal_form = manager_forms.GeneratedForm(form=core_models.ProposalForm.objects.get(pk=proposal.form.id))
+	default_fields = manager_forms.DefaultForm(initial={'title': proposal.title,'author':proposal.author,'subtitle':proposal.subtitle})
+	data = json.loads(proposal.data)
+	intial_data={}
+	for k,v in data.items():
+		intial_data[k] = v[0]
+
+	proposal_form.initial=intial_data
+
+	template = "submission/view_proposal.html"
+	context = {
+		'proposal_form': proposal_form,
+		'default_fields': default_fields,
+		'proposal':proposal,
+		'data':data,
+		'revise':True,
+	}
+
+	return render(request, template, context)
 
 ## File helpers
 def handle_file(file, book, kind, user):
