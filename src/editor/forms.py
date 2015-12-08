@@ -4,6 +4,16 @@ from core import models as core_models
 from revisions import models as revision_models
 from editor import models
 
+from django.contrib.auth.models import User
+
+class EditorForm(ModelForm):
+
+	class Meta:
+		model = core_models.Book
+		fields = ('book_editors',)
+	def __init__(self, *args, **kwargs):
+		super(EditorForm, self).__init__(*args, **kwargs)
+		self.fields['book_editors'].queryset = User.objects.filter(profile__roles__slug='book-editor')
 class RevisionForm(ModelForm):
 
 	class Meta:
@@ -71,8 +81,8 @@ class EditMetadata(forms.ModelForm):
 		)
 
 		widgets = {
-            'languages': forms.CheckboxSelectMultiple(),
-        }
+			'languages': forms.CheckboxSelectMultiple(),
+		}
 
 class IdentifierForm(forms.ModelForm):
 

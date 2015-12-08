@@ -22,6 +22,7 @@
     .timeline:before {
         left: 92% !important;
     }
+
     </style>
     <link href="{% static "css/timeline.css" %}" rel="stylesheet">
 {% endblock %}
@@ -33,7 +34,16 @@
     <div class="col-md-4 dash-left">
      
         <div class="dash-container" style="background-color: rgb(230,230,230);">
-            <h4>MY SUBMISSIONS<a href="{% url 'proposal_start' %}" class="btn  btn-round btn-other btn-xs pull-right">&nbsp;&nbsp;&nbsp;Submit a Proposal&nbsp;&nbsp;&nbsp;</a><a href="{% url 'submission_start' %}" class="btn  btn-round btn-primary btn-xs pull-right">&nbsp;&nbsp;&nbsp;New Submission&nbsp;&nbsp;&nbsp;</a></h4> 
+            <h4>MY SUBMISSIONS<div class="dropdown pull-right">
+    <button class="btn btn-primary btn-round dropdown-toggle" type="button" data-toggle="dropdown">&nbsp;&nbsp;&nbsp;Submit&nbsp;&nbsp;&nbsp;
+    <span class="caret"></span></button>
+    <ul class="dropdown-menu">
+      <li><a href="{% url 'proposal_start' %}" class="hover-proposal">&nbsp;&nbsp;&nbsp;Proposal&nbsp;&nbsp;&nbsp;</a></li>
+      <li><a href="{% url 'submission_start' %}"class="hover-submission" >&nbsp;&nbsp;&nbsp;Submission&nbsp;&nbsp;&nbsp;</a></li>
+
+    </ul>
+  </div></h4> 
+  <br>
             {% for submission in user_submissions %}
                 <div class="notification author">
                     <div class="row">

@@ -274,7 +274,7 @@ body > div.container-fluid > div > div > div > a {
   color: #FFF;
   margin-bottom:5px;
 }
-.other-heading-btn:hover, .other-heading-btn:focus, .other-heading-btn:active, .other-heading-btn.active, .open > .dropdown-toggle.other-heading-btn {
+.other-heading-btn:hover, .other-heading-btn:focus, .other-heading-btn:active, .other-heading-btn.active, .open > .dropdown-toggle.other-heading-btn  {
     background: #5E2AFA;
     color:#ffffff;
 }
@@ -623,7 +623,18 @@ body > div.container-fluid > div > div > div > a {
   .btn-round-half{
   border-radius: 12px !important;
  }
-
+ .btn-round-third{
+  border-radius: 8px !important;
+ }
+ .btn-round-quarter{
+  border-radius: 6px !important;
+ }
+   .btn-round-sm{
+  border-radius: 4px !important;
+ }
+  .btn-round-xs{
+  border-radius: 2px !important;
+ }
 .btn-decline{
   background-color:rgb(171, 30, 59);
   color:#ffffff;
@@ -1202,3 +1213,40 @@ button.list-group-item-file.active:focus {
   background-color: #149690;
   border-color: #128983;
 }
+    .hover-proposal:focus, 
+    .hover-proposal:hover{
+      background-color:#5E2AFA   !important;
+      color:white !important;
+    }
+    .hover-dropdown:focus, 
+    .hover-dropdown:hover{
+      background-color:#9a9a9a  !important;
+      color:white !important;
+    }
+    .hover-proposal:active{
+      background-color:#7c50ff   !important;
+      color:white !important;
+    }
+    .hover-submission:focus, 
+    .hover-submission:hover{
+      background-color:#239B56 !important;
+      color:white !important;
+    }
+     .hover-submission:active{
+      background-color:#1ec364 !important;
+      color:white !important;
+    }
+    .hover-primary:focus, 
+    .hover-primary:hover{
+      background-color:#337ab7 !important;
+      color:white !important;
+    }
+    .hover-nav:focus, 
+    .hover-nav:hover{
+      background-color:black!important;
+      color:white !important;
+    }
+    .hover-nav:active{
+      background-color:#4F4F4F!important;
+      color:white !important;
+    }

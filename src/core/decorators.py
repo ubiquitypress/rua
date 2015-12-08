@@ -25,7 +25,22 @@ def is_author(function):
 	wrap.__doc__=function.__doc__
 	wrap.__name__=function.__name__
 	return wrap
-	
+
+def is_press_editor(function):
+	def wrap(request, *args, **kwargs):
+
+		user_roles = [role.slug for role in request.user.profile.roles.all()]
+
+		if 'press-editor' in user_roles:
+			return function(request, *args, **kwargs)
+		else:
+			messages.add_message(request, messages.ERROR, 'You need to have Press Editor level permission to view this page.')
+			raise exceptions.PermissionDenied 
+
+	wrap.__doc__=function.__doc__
+	wrap.__name__=function.__name__
+	return wrap	
+
 def is_editor(function):
 	def wrap(request, *args, **kwargs):
 

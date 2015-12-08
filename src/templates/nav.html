@@ -15,21 +15,22 @@
               <div id="navbar" class="navbar-collapse collapse" >
                 <ul class="nav navbar-nav navbar-right">
                   {% if user.is_authenticated %}
-                  <li><a href="{% url 'onetasker_dashboard' %}">Task Dashboard <span class="badge circle"> {{onetasker_task_count}}</span></a></li>
-                  <li><a href="{% url 'reviewer_dashboard' %}">Reviewer Dashboard <span class="badge circle"> {{review_assignment_count}}</span></a></li>
-                  <li><a href="{% url 'author_dashboard' %}">Author Dashboard <span class="badge circle"> {{author_task_count}}</span></a></li>
+                  <li><a class="hover-nav" href="{% url 'onetasker_dashboard' %}">Task Dashboard <span class="badge circle"> {{onetasker_task_count}}</span></a></li>
+                  <li><a class="hover-nav" href="{% url 'reviewer_dashboard' %}">Reviewer Dashboard <span class="badge circle"> {{review_assignment_count}}</span></a></li>
+                  <li><a class="hover-nav" href="{% url 'author_dashboard' %}">Author Dashboard <span class="badge circle"> {{author_task_count}}</span></a></li>
                   {% if request.user.is_staff %}
-                  <li><a href="{% url 'editor_dashboard' %}">Editor Dashboard <span class="badge circle"><label id="editor_notifications_nav" style="height:7px">{{task_count}}</label></span></a></li>
-                  <li><a href="{% url 'overview' %}">Overview</a></li>
+                  <li><a class="hover-nav" href="{% url 'editor_dashboard' %}">Editor Dashboard <span class="badge circle"><label id="editor_notifications_nav" style="height:7px">{{task_count}}</label></span></a></li>
+                     <li><a class="hover-nav " href="{% url 'proposals' %}">Proposals Dashboard</a></li>
+                  <li><a class="hover-nav" href="{% url 'overview' %}">Overview</a></li>
                   {% endif %}
                   <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Hi, {{ request.user.first_name }} <span class="caret"></span></a>
                     <ul class="dropdown-menu" role="menu">
-                      <li><a href="{% url 'view_profile' %}">Profile</a></li>
+                      <li><a class="hover-dropdown "  href="{% url 'view_profile' %}">Profile</a></li>
                       <li class="divider"></li>
-                      <li><a href="{% url 'manager_index' %}">Manager</a></li>
-                      <li><a href="/admin/">Admin</a></li>
-                      <li><a href="{% url 'logout' %}">Logout</a></li>
+                      <li><a class="hover-dropdown "  href="{% url 'manager_index' %}">Manager</a></li>
+                      <li><a class="hover-dropdown "  href="/admin/">Admin</a></li>
+                      <li><a class="hover-dropdown "  href="{% url 'logout' %}">Logout</a></li>
                     </ul>
                   </li>
                   {% else %}

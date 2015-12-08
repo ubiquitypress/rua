@@ -102,6 +102,12 @@ class Profile(models.Model):
 		else:
 			return u"%s %s" % (self.user.first_name, self.user.last_name)
 
+	def salutation_name(self):
+		if self.salutation:
+			return u"%s %s" % (self.salutation, self.user.last_name)
+		else:
+			return u"%s %s" % (self.user.first_name, self.user.last_name)
+
 	def initials(self):
 		if self.middle_name:
 			return u"%s%s%s" % (self.user.first_name[:1], self.middle_name[:1], self.user.last_name[:1])
@@ -146,6 +152,7 @@ class Book(models.Model):
 	series = models.ForeignKey('Series', null=True, blank=True, help_text="If you are submitting this work to an existing Series please selected it.")
 	author = models.ManyToManyField('Author', null=True, blank=True)
 	editor = models.ManyToManyField('Editor', null=True, blank=True)
+	book_editors = models.ManyToManyField(User, null=True, blank=True, related_name='book_editors')
 	press_editors = models.ManyToManyField(User, null=True, blank=True, related_name='press_editors')
 	description = models.TextField(max_length=5000, null=True, blank=True, verbose_name="Abstract")
 	keywords = models.ManyToManyField('Keyword', null=True, blank=True)
