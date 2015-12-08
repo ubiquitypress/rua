@@ -1,0 +1,14 @@
+{% load bootstrap3 %}
+<h2>Update Book Editors</h2>
+<br>
+     <form method="post" class="form">
+        {% csrf_token %}
+        {% bootstrap_form form %}
+        <h6>Hold down "Control", or "Command" on a Mac, in order to select more than one or remove existing selection</h6>
+        {% buttons %}
+            <button name="submit" id="submit" type="submit" class="btn btn-info pull-right" style="width:150px">
+              {% if submission.book_editors.all %}
+               Update {% else %} Add {% endif %} Editors
+            </button>
+        {% endbuttons %}
+        </form>

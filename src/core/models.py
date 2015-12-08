@@ -146,6 +146,7 @@ class Book(models.Model):
 	series = models.ForeignKey('Series', null=True, blank=True, help_text="If you are submitting this work to an existing Series please selected it.")
 	author = models.ManyToManyField('Author', null=True, blank=True)
 	editor = models.ManyToManyField('Editor', null=True, blank=True)
+	book_editors = models.ManyToManyField(User, null=True, blank=True, related_name='book_editors')
 	press_editors = models.ManyToManyField(User, null=True, blank=True, related_name='press_editors')
 	description = models.TextField(max_length=5000, null=True, blank=True, verbose_name="Abstract")
 	keywords = models.ManyToManyField('Keyword', null=True, blank=True)

@@ -84,6 +84,31 @@ def editor_submission(request, submission_id):
 	return render(request, template, context)
 
 @is_book_editor
+def editor_add_editors(request, submission_id):
+	book = get_object_or_404(models.Book, pk=submission_id)
+	form = forms.EditorForm(instance=book)
+	
+	if request.POST:
+		form = forms.EditorForm(request.POST, instance=book)
+		if form.is_valid():
+			new_revision_request = form.save(commit=True)
+
+		messages.add_message(request, messages.SUCCESS, 'Submission editors have been added.')
+
+		return redirect(reverse('editor_review', kwargs={'submission_id': book.id}))
+
+	template = 'editor/submission.html'
+	context = {
+		'submission': book,
+		'form':form,
+		'active': 'user_submission',
+		'author_include': 'editor/submission_details.html',
+		'submission_files': 'editor/add_editors.html',
+		'active_page': 'editor_submission',
+	}
+
+	return render(request, template, context)
+@is_book_editor
 def editor_tasks(request, submission_id):
 	book = get_object_or_404(models.Book, pk=submission_id)
 

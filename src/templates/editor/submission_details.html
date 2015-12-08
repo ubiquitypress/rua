@@ -1,3 +1,20 @@
+<h3>EDITORS <a href="{% url 'editor_add_editors' submission.id %}" class="btn btn-xs btn-info">+ Add editors</a></h3>
+    <h5 class="author-note">
+    {% for editor in submission.editor.all %}
+
+        {{ editor.full_name }}<sup> <a href="core/email.html" onclick="return popitup('/email/editors/submission/{{submission.id}}/user/{{editor.pk}}/','editors_{{editor.pk}}')"class="fa fa-envelope-o btn btn-xs btn-default"></a></sup>{% if not forloop.last %}, {% endif %}
+
+    {% endfor %}
+        {% for editor in submission.press_editors.all %}
+        {{editor.first_name}} {% if editor.middle_name %}{{editor.middle_name}} {% endif %}{{editor.last_name}}<sup> <a href="core/email.html" onclick="return popitup('/email/editors/submission/{{submission.id}}/user/{{editor.pk}}/','editors_{{editor.pk}}')"class="fa fa-envelope-o btn btn-xs btn-default"></a></sup>{% if not forloop.last %}, {% endif %}
+
+    {% endfor %}
+       {% for editor in submission.book_editors.all %}
+        {{editor.first_name}} {% if editor.middle_name %}{{editor.middle_name}} {% endif %}{{editor.last_name}}<sup> <a href="core/email.html" onclick="return popitup('/email/editors/submission/{{submission.id}}/user/{{editor.pk}}/','editors_{{editor.pk}}')"class="fa fa-envelope-o btn btn-xs btn-default"></a></sup>{% if not forloop.last %}, {% endif %}
+
+    {% endfor %}
+    </h4>
+
 <h3>AUTHORS</h3>
 {% if submission.book_type == 'monograph' %}
 	<h4 class="author-note">
