@@ -6,7 +6,7 @@
 
 {% block body %}
 <div class="col-md-12 primary-heading container-fluid" style="margin-top:-20px">
-  <h3>Start Proposal Review - {{ proposal.title }}{% if proposal.subtitle%}: {{ proposal.subtitle }}{%endif%} <a href="{% url 'view_proposal' proposal.id %}" class="btn  btn-transparent-white" style="position: absolute;right:20px;margin-top:-8px">Go back</a></h3>
+  <h3>Start Proposal Review - {{ proposal.title }}{% if proposal.subtitle%}: {{ proposal.subtitle }}{%endif%}<a href="{% url 'add_user' %}" class="btn  btn-transparent-white" style="position: absolute;right:110px;margin-top:-8px">+ Add New User</a> <a href="{% url 'view_proposal' proposal.id %}" class="btn  btn-transparent-white" style="position: absolute;right:20px;margin-top:-8px">Go back</a></h3>
 </div>
 <div class="col-md-12">
   <form method="POST">
