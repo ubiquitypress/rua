@@ -704,6 +704,7 @@ def start_proposal_review(request, proposal_id):
 	proposal = get_object_or_404(submission_models.Proposal, pk=proposal_id, date_review_started__isnull=True)
 	reviewers = models.User.objects.filter(profile__roles__slug='reviewer')
 	committees = manager_models.Group.objects.filter(group_type='review_committee')
+	email_text = models.Setting.objects.get(group__name='email', name='proposal_review_request').value
 	start_form = submission_forms.ProposalStart()
 
 	if request.POST:
@@ -712,7 +713,8 @@ def start_proposal_review(request, proposal_id):
 			proposal = start_form.save(commit=False)
 			proposal.date_review_started = timezone.now()
 			due_date = request.POST.get('due_date')
-			email_text = models.Setting.objects.get(group__name='email', name='proposal_review_request').value
+			email_text = request.POST.get('email_text')
+			print email_text
 			reviewers = User.objects.filter(pk__in=request.POST.getlist('reviewer'))
 			committees = manager_models.Group.objects.filter(pk__in=request.POST.getlist('committee'))
 
@@ -761,6 +763,7 @@ def start_proposal_review(request, proposal_id):
 		'start_form': start_form,
 		'reviewers': reviewers,
 		'committees': committees,
+		'email_text':email_text,
 	}
 
 	return render(request, template, context)
@@ -795,12 +798,14 @@ def add_proposal_reviewers(request, proposal_id):
 	proposal = get_object_or_404(submission_models.Proposal, pk=proposal_id)
 	reviewers = models.User.objects.filter(profile__roles__slug='reviewer')
 	committees = manager_models.Group.objects.filter(group_type='review_committee')
+	email_text = models.Setting.objects.get(group__name='email', name='proposal_review_request').value
 
 	if request.POST:
 		due_date = request.POST.get('due_date')
-		email_text = models.Setting.objects.get(group__name='email', name='proposal_review_request').value
 		reviewers = User.objects.filter(pk__in=request.POST.getlist('reviewer'))
 		committees = manager_models.Group.objects.filter(pk__in=request.POST.getlist('committee'))
+		email_text = request.POST.get('email_text')
+		print email_text
 
 		# Handle reviewers
 		for reviewer in reviewers:
@@ -846,6 +851,7 @@ def add_proposal_reviewers(request, proposal_id):
 		'proposal': proposal,
 		'reviewers': reviewers,
 		'committees': committees,
+		'email_text':email_text,
 	}
 
 	return render(request, template, context)

@@ -70,6 +70,11 @@
   <p class="small">Set a due date for the reviews. Reviewers will be politely reminded to submit their review before the due date.</p>
   <input type="text" name="due_date" id="due_date" required="required" class="form-control"/><br/><br />
   {% bootstrap_form start_form %}
+<br />
+ <div class="col-md-12 primary-heading-1 container-fluid" >
+        <h4>Email Invite</h4>
+        </div>
+  <textarea class="form-control" id="email_text" name="email_text" required="required" cols="100" rows="10">{{ email_text }}</textarea><br/>
   <button class="btn btn-primary pull-right" type="submit" style="width:100px">Submit</button>
   </form>
 </br></br>
