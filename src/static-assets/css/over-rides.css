@@ -1207,8 +1207,35 @@ button.list-group-item-file.active:focus {
       background-color:#5E2AFA   !important;
       color:white !important;
     }
+    .hover-dropdown:focus, 
+    .hover-dropdown:hover{
+      background-color:#9a9a9a  !important;
+      color:white !important;
+    }
+    .hover-proposal:active{
+      background-color:#7c50ff   !important;
+      color:white !important;
+    }
     .hover-submission:focus, 
     .hover-submission:hover{
       background-color:#239B56 !important;
+      color:white !important;
+    }
+     .hover-submission:active{
+      background-color:#1ec364 !important;
+      color:white !important;
+    }
+    .hover-primary:focus, 
+    .hover-primary:hover{
+      background-color:#337ab7 !important;
+      color:white !important;
+    }
+    .hover-nav:focus, 
+    .hover-nav:hover{
+      background-color:black!important;
+      color:white !important;
+    }
+    .hover-nav:active{
+      background-color:#4F4F4F!important;
       color:white !important;
     }
