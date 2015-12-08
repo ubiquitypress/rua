@@ -1,4 +1,6 @@
-<h3>EDITORS <a href="{% url 'editor_add_editors' submission.id %}" class="btn btn-xs btn-info">+ Add editors</a></h3>
+<h3>EDITORS 
+    <a href="{% url 'editor_add_editors' submission.id %}" class="btn btn-xs  {% if submission.book_editors.all %}btn-accept btn-round-sm{% else %}btn-info{% endif %} ">  +{% if submission.book_editors.all %}
+               Update {% else %} Add {% endif %} editors</a></h3>
     <h5 class="author-note">
     {% for editor in submission.editor.all %}
 

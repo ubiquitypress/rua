@@ -623,7 +623,18 @@ body > div.container-fluid > div > div > div > a {
   .btn-round-half{
   border-radius: 12px !important;
  }
-
+ .btn-round-third{
+  border-radius: 8px !important;
+ }
+ .btn-round-quarter{
+  border-radius: 6px !important;
+ }
+   .btn-round-sm{
+  border-radius: 4px !important;
+ }
+  .btn-round-xs{
+  border-radius: 2px !important;
+ }
 .btn-decline{
   background-color:rgb(171, 30, 59);
   color:#ffffff;
