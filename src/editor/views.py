@@ -87,6 +87,8 @@ def editor_submission(request, submission_id):
 def editor_add_editors(request, submission_id):
 	book = get_object_or_404(models.Book, pk=submission_id)
 	form = forms.EditorForm(instance=book)
+
+	email_text = models.Setting.objects.get(group__name='email', name='book_editor_ack').value
 	
 	if request.POST:
 		form = forms.EditorForm(request.POST, instance=book)
@@ -94,7 +96,7 @@ def editor_add_editors(request, submission_id):
 			new_revision_request = form.save(commit=True)
 
 		messages.add_message(request, messages.SUCCESS, 'Book editors have been updated.')
-
+		logic.send_book_editors(book, email_text)
 		return redirect(reverse('editor_submission', kwargs={'submission_id': book.id}))
 
 	template = 'editor/submission.html'

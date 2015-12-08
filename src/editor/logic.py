@@ -276,6 +276,19 @@ def send_invite_typesetter(book, typeset, email_text, sender, attachment=None):
 
 	email.send_email('Typesetting', context, from_email.value, typeset.typesetter.email, email_text, book=book, attachment=attachment)
 
+def send_book_editors(book, email_text):
+	from_email = models.Setting.objects.get(group__name='email', name='from_address')
+	base_url = models.Setting.objects.get(group__name='general', name='base_url').value
+
+	context = {
+		'base_url':base_url,
+		'submission': book,
+		'editors': book.book_editors.all(),
+		'submission_page': "http://%s/editor/submission/%s/" % (base_url, book.id)
+	}
+
+	email.send_email('Book Editors have been updated', context, from_email.value, book.owner.email, email_text, book=book)
+
 def send_requests_revisions(book, revision, email_text):
 	from_email = models.Setting.objects.get(group__name='email', name='from_address')
 	base_url = models.Setting.objects.get(group__name='general', name='base_url').value
