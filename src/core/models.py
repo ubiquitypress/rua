@@ -47,6 +47,7 @@ def task_choices():
 		('editing', 'Editing'),
 		('production', 'Production'),
 		('personal', 'Personal'),
+		('proposal', 'Proposal'),
 	)
 	return choices
 

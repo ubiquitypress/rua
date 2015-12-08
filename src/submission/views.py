@@ -342,7 +342,7 @@ def editor(request, book_id, editor_id=None):
 
 @login_required
 def start_proposal(request):
-
+	print request.META
 	proposal_form_id = core_models.Setting.objects.get(name='proposal_form').value
 	proposal_form = manager_forms.GeneratedForm(form=core_models.ProposalForm.objects.get(pk=proposal_form_id))
 	default_fields = manager_forms.DefaultForm()
@@ -369,6 +369,12 @@ def start_proposal(request):
 			json_data = json.dumps(save_dict)
 			proposal = submission_models.Proposal(form=core_models.ProposalForm.objects.get(pk=proposal_form_id), data=json_data, owner=request.user, **defaults)
 			proposal.save()
+			editors = User.objects.filter(profile__roles__slug='press-editor')
+			message = "A new proposal has been submitted by %s ."  % (request.user.username())
+			for editor in editors:
+				notification = core_models.Task(assignee=editor,creator=request.user,text=message,workflow='proposal')
+				notification.save()
+
 			messages.add_message(request, messages.SUCCESS, 'Proposal %s submitted' % proposal.id)
 			
 			return redirect(reverse('user_dashboard',kwargs = {}))
