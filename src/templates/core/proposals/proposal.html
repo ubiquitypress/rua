@@ -34,10 +34,7 @@
     <td>{{ proposal.get_status_display }}</td>
     <td width="8%"><a href="{% url 'view_proposal' proposal.id %}" class="btn btn-other" style="width:100px">View</a></td>
   </tr>
-  {% empty %}
-  <tr>
-    <td colspan="6">No proposals</td>
-  </tr>
+
   {% endfor %}
   </tbody>
   </table>

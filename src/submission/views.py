@@ -370,7 +370,7 @@ def start_proposal(request):
 			proposal = submission_models.Proposal(form=core_models.ProposalForm.objects.get(pk=proposal_form_id), data=json_data, owner=request.user, **defaults)
 			proposal.save()
 			editors = User.objects.filter(profile__roles__slug='press-editor')
-			message = "A new proposal has been submitted by %s ."  % (request.user.username())
+			message = "A new  Proposal '%s' with id %s has been submitted by %s ."  % (proposal.title,proposal.pk,request.user.username)
 			for editor in editors:
 				notification = core_models.Task(assignee=editor,creator=request.user,text=message,workflow='proposal')
 				notification.save()
@@ -423,7 +423,7 @@ def proposal_revisions(request, proposal_id):
 			messages.add_message(request, messages.SUCCESS, 'Revisions for Proposal %s submitted' % proposal.id)
 		
 			json_data = json.dumps(save_dict)
-			proposal = submission_models.Proposal.objects.get(form=core_models.ProposalForm.objects.get(pk=proposal.form.id), owner=request.user)
+			proposal = submission_models.Proposal.objects.get(form=core_models.ProposalForm.objects.get(pk=proposal.form.id), owner=request.user,pk=proposal_id)
 			proposal.data=json_data
 			proposal.status = "revisions_submitted"
 			defaults=default_fields.cleaned_data
@@ -436,7 +436,8 @@ def proposal_revisions(request, proposal_id):
 			for available_user in users:
 				roles=  available_user.profile.roles.all()
 				if string_any('Editor' for role in roles):
-					task.create_new_general_task(creator=request.user, assignee=available_user, text="Revisions for Proposal '%s' with id %s submitted" % (proposal.title,proposal.id))
+					notification = core_models.Task(assignee=available_user,creator=request.user,text="Revisions for Proposal '%s' with id %s submitted" % (proposal.title,proposal.id),workflow='proposal')
+					notification.save()
 			
 
 			messages.add_message(request, messages.SUCCESS, 'Proposal %s submitted' % proposal.id)

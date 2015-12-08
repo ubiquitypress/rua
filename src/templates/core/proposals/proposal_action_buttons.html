@@ -1,5 +1,6 @@
 <div class="btn-group btn-group-justified" role="group">
-  <div class="btn-group" role="group">
+{% if proposal.status = 'revisions_submitted' or proposal.status = 'submission'%}
+	  <div class="btn-group" role="group">
     <a href="{% url 'accept_proposal' proposal.id %}" type="button" class="btn btn-success btn-browse">Accept Proposal</a>
   </div>
   <div class="btn-group" role="group">
@@ -8,5 +9,18 @@
   <div class="btn-group" role="group">
     <a href="{% url 'decline_proposal' proposal.id %}" type="button" class="btn btn-danger btn-browse">Decline Proposal</a>
   </div>
+	{%else%}
+  <div class="btn-group" role="group">
+    <a href="{% url 'accept_proposal' proposal.id %}" type="button" class="btn btn-success btn-browse" disabled>Accept Proposal</a>
+  </div>
+  <div class="btn-group" role="group">
+    <a href="{% url 'request_proposal_revisions' proposal.id %}" type="button" class="btn btn-warning" disabled>Request Revisions</a>
+  </div>
+  <div class="btn-group" role="group">
+    <a href="{% url 'decline_proposal' proposal.id %}" type="button" class="btn btn-danger btn-browse" disabled>Decline Proposal</a>
+  </div>
+  {% endif %}
 </div>
 <br />
+
+

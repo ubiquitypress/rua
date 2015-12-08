@@ -670,7 +670,7 @@ def view_log(request, submission_id):
 
 @is_editor
 def proposal(request):
-	proposal_list = submission_models.Proposal.objects.exclude(status='declined').exclude(status='accepted')
+	proposal_list = submission_models.Proposal.objects.filter((~Q(status='declined') & ~Q(status='accepted'))).exclude(~Q(requestor=request.user))
 
 	template = 'core/proposals/proposal.html'
 	context = {
@@ -854,6 +854,7 @@ def decline_proposal(request, proposal_id):
 	if request.POST:
 		proposal.status = 'declined'
 		logic.close_active_reviews(proposal)
+		proposal.requestor=request.user
 		proposal.save()
 		logic.send_proposal_decline(proposal, email_text=request.POST.get('decline-email'), sender=request.user)
 		return redirect(reverse('proposals'))
@@ -876,6 +877,7 @@ def accept_proposal(request, proposal_id):
 	if request.POST:
 		proposal.status = 'accepted'
 		logic.close_active_reviews(proposal)
+		proposal.requestor=request.user
 		submission = logic.create_submission_from_proposal(proposal, proposal_type=request.POST.get('proposal-type'))
 		attachment = handle_attachment(request, submission)
 		logic.send_proposal_accept(proposal, email_text=request.POST.get('accept-email'), submission=submission, sender=request.user, attachment=attachment)
@@ -900,6 +902,7 @@ def request_proposal_revisions(request, proposal_id):
 	if request.POST:
 		proposal.status = 'revisions_required'
 		logic.close_active_reviews(proposal)
+		proposal.requestor=request.user
 		logic.send_proposal_revisions(proposal, email_text=request.POST.get('revisions-email'), sender=request.user)
 		proposal.save()
 		return redirect(reverse('proposals'))

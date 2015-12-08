@@ -23,6 +23,7 @@ class Proposal(models.Model):
 	date_review_started = models.DateTimeField(blank=True, null=True)
 	review_assignments = models.ManyToManyField('ProposalReview', related_name='review', null=True, blank=True)
 	review_form = models.ForeignKey('review.Form', null=True, blank=True)
+	requestor = models.ForeignKey(User, null=True,blank=True,related_name="editor_requestor")
 
 	status = models.CharField(max_length=20, choices=proposal_status(), default='submission')
 
