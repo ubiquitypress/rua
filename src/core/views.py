@@ -130,11 +130,13 @@ def view_profile(request):
 	except:
 		user_profile = models.Profile(user=request.user)
 		user_profile.save()
-
+ 	name_len=len(request.user.first_name)+len(request.user.last_name)
+ 	print name_len
 
 	template = 'core/user/profile.html'
 	context = {
 		'user_profile': user_profile,
+		'name_width':name_len*9,
 	}
 
 	return render(request, template, context)
