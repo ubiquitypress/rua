@@ -172,6 +172,7 @@ def revision(request, revision_id, submission_id):
 			revision.save()
 			task = models.Task(book=revision.book, creator=request.user, assignee=revision.requestor, text='Revisions submitted for %s' % revision.book.title, workflow=revision.revision_type, )
 			task.save()
+			log.add_log_entry(book=book, user=request.user, kind='revisions', message='%s submitted revisions for %s' % (request.user.profile.full_name(),revision.book.title), short_name='Revisions submitted')
 			messages.add_message(request, messages.SUCCESS, 'Revisions recorded, thanks.')
 			return redirect(reverse('author_dashboard'))
 
