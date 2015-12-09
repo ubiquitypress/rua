@@ -769,6 +769,47 @@ def start_proposal_review(request, proposal_id):
 
 	return render(request, template, context)
 
+	template = 'core/proposals/start_proposal_review.html'
+	context = {
+		'proposal': proposal,
+		'start_form': start_form,
+		'reviewers': reviewers,
+		'committees': committees,
+		'email_text':email_text,
+	}
+
+	return render(request, template, context)
+
+@is_editor
+def view_proposal_review_decision(request, proposal_id, assignment_id):
+
+	proposal = get_object_or_404(submission_models.Proposal, pk=proposal_id)
+	review_assignment = get_object_or_404(submission_models.ProposalReview, pk=assignment_id)
+	
+	if request.POST:
+		if 'accept' in request.POST:
+			review_assignment.accepted = timezone.now()
+			message = "Review Assignment request for '%s' has been accepted by %s %s."  % (submission.title,review_assignment.user.first_name, review_assignment.user.last_name)
+			log.add_log_entry(book=submission, user=request.user, kind='review', message=message, short_name='Assignment accepted')
+			logic.notify_editors(submission,message,editors,request.user,'review')
+				
+		elif 'decline' in request.POST:
+			review_assignment.declined = timezone.now()
+			message = "Review Assignment request for '%s' has been declined by %s %s."  % (submission.title,review_assignment.user.first_name, review_assignment.user.last_name)
+			logic.notify_editors(submission,message,editors,request.user,'review')
+			log.add_log_entry(book=submission, user=request.user, kind='review', message=message, short_name='Assignment declined')
+	
+	
+	template = 'core/proposals/decision_review_assignment.html'
+	context = {
+		'proposal': proposal,
+		'review': review_assignment,
+		'result': result,
+		'active': 'proposal_review',
+	}
+
+	return render(request, template, context)
+
 @is_editor
 def view_proposal_review(request, proposal_id, assignment_id):
 

@@ -86,6 +86,11 @@ def editor_submission(request, submission_id):
 @is_press_editor
 def editor_add_editors(request, submission_id):
 	book = get_object_or_404(models.Book, pk=submission_id)
+	book_editors = book.book_editors.all()
+	previous_editors=[]
+	for book_editor in book_editors:
+		previous_editors.append(book_editor)
+
 	form = forms.EditorForm(instance=book)
 
 	email_text = models.Setting.objects.get(group__name='email', name='book_editor_ack').value
@@ -94,9 +99,22 @@ def editor_add_editors(request, submission_id):
 		form = forms.EditorForm(request.POST, instance=book)
 		if form.is_valid():
 			new_book_editor_request = form.save(commit=True)
-
-		messages.add_message(request, messages.SUCCESS, 'Book editors have been updated.')
-		logic.send_book_editors(book, email_text)
+			added_editors = []
+			removed_editors = []
+			existing_editors = []
+			new_editors = book.book_editors.all()
+			for editor in new_editors:
+				if not editor in previous_editors:
+					added_editors.append(editor)
+					print editor.username
+				else:
+					existing_editors.append(editor)
+					print "Already exists"
+			for editor in previous_editors:
+				if not editor in existing_editors:
+					removed_editors.append(editor)
+			messages.add_message(request, messages.SUCCESS, 'Book editors have been updated.')
+			logic.send_book_editors(book,added_editors,removed_editors, email_text)
 		return redirect(reverse('editor_submission', kwargs={'submission_id': book.id}))
 
 	template = 'editor/submission.html'

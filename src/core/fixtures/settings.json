@@ -431,7 +431,7 @@
 },
 {
   "fields": {
-    "value": "<p><span style=\"line-height: 1.42857;\">Book editors have been updated.</p>\r\n<p> Book editors : </p>\r\n--------\r\n  {% for editor in submission.book_editors.all %}\r\n        {{editor.first_name}} {% if editor.middle_name %}{{editor.middle_name}} {% endif %}{{editor.last_name}}>{% if not forloop.last %}, {% endif %}\r\n\r\n    {% endfor %}\r\n----------\r\n<p> \r\nView the submission: http://{{base_url}}/editor/submission/{{submission.id}}/\r\n<br></span></p><p><span style=\"line-height: 1.42857;\">Regards,\r\n<br><br>RUA Bot</span><br></p>",
+    "value": "<p><span style=\"line-height: 1.42857;\">Book editors of {{submission.title}}<Submission id:{{submission.id}}> have been updated.</p>\r\n{% if added_editors %}\r\n<p>These book editors have been added: </p>\r\n--------\r\n  {% for editor in added_editors %}\r\n        {{editor.first_name}} {% if editor.middle_name %}{{editor.middle_name}} {% endif %}{{editor.last_name}}>{% if not forloop.last %}, {% endif %}\r\n\r\n    {% endfor %}\r\n----------\r\n\r\n{% endif %}\r\n{% if removed_editors %}\r\n<p>These book editors have been removed: </p>\r\n--------\r\n  {% for editor in removed_editors %}\r\n        {{editor.first_name}} {% if editor.middle_name %}{{editor.middle_name}} {% endif %}{{editor.last_name}}>{% if not forloop.last %}, {% endif %}\r\n\r\n    {% endfor %}\r\n----------\r\n{% endif %}\r\n<p> \r\nView the submission: http://{{base_url}}/editor/submission/{{submission.id}}/\r\n<br></span></p><p><span style=\"line-height: 1.42857;\">Regards,\r\n<br><br>RUA Bot</span><br></p>",
     "group": 3,
     "name": "book_editor_ack",
     "types": "rich_text"
