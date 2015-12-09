@@ -18,9 +18,14 @@
 		  	</div>
       </div>
       <hr />
+
 		  <div class="form-group">
 		  	<div class="row">
-		  		<div class="col-md-12">{% bootstrap_field book_form.description %}</div>
+		  		<div class="col-md-12">
+<label class="control-label" for="id_description">Abastract</label>
+<textarea class="form-control" cols="40" id="id_description" name="description" placeholder="Description" required="required" rows="10" title="" data-origin="textarea">{{book.description}}</textarea>
+
+		  		</div>
 		  	</div>
 		  </div>
         <br /><br />
@@ -32,3 +37,6 @@
 		</form>
 	</div>
 {% endblock body %}
+{% block js %}
+<script type="text/javascript">$("textarea").jqte();</script>
+{% endblock %}
