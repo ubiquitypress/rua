@@ -1,7 +1,5 @@
-from django.contrib.auth import authenticate
+from django.contrib.auth import authenticate, logout as logout_user, login as login_user
 from django.contrib.auth.models import User
-from django.contrib.auth import logout as logout_user
-from django.contrib.auth import login as login_user
 from django.shortcuts import redirect, render, get_object_or_404
 from django.http import HttpResponseRedirect, Http404, HttpResponse, StreamingHttpResponse
 from django.contrib import messages
@@ -16,7 +14,6 @@ from django.conf import settings
 from  __builtin__ import any as string_any
 
 from review import models as review_models
-
 from core import log, models, forms, logic
 from email import send_email
 from files import handle_file_update,handle_attachment,handle_file
@@ -24,16 +21,17 @@ from submission import models as submission_models
 from core.decorators import is_reviewer, is_editor, is_book_editor, is_book_editor_or_author, is_onetasker,is_author
 from review import forms as review_forms
 
-from pprint import pprint
-import json
-from time import strftime
-import time
-from uuid import uuid4
 from manager import models as manager_models
 from submission import forms as submission_forms
 from django.db import IntegrityError
 from docx import Document
 from docx.shared import Inches
+
+from pprint import pprint
+import json
+from time import strftime
+import time
+from uuid import uuid4
 import os
 import mimetypes
 import mimetypes as mime
@@ -200,6 +198,7 @@ def oai(request):
 	}
 
 	return render(request, template, context,content_type="application/xhtml+xml")
+
 @login_required
 def user_home(request):
 
@@ -224,7 +223,6 @@ def user_home(request):
 	}
 
 	return render(request, template, context)
-
 
 @login_required
 def user_submission(request, submission_id):
@@ -272,7 +270,6 @@ def permission_denied(request):
 
 	return render(request, template, context)
 
-
 # Dashboard
 @login_required
 def overview(request):
@@ -289,7 +286,6 @@ def overview(request):
 	return render(request, template, context)
 
 # AJAX Handlers
-
 @csrf_exempt
 @login_required
 def task_complete(request, task_id):
@@ -362,8 +358,6 @@ def get_messages(request, submission_id):
 	except Exception, e:
 		print e
 
-
-
 def get_authors(request, submission_id):
     if request.is_ajax():
         q = request.GET.get('term', '')
@@ -427,7 +421,7 @@ def email_users(request, group, submission_id=None, user_id=None):
 	to_value=""
 	sent = False
 	if request.POST:
-		print "sS"
+
 		attachment = request.FILES.get('attachment')
 		subject = request.POST.get('subject')
 		body = request.POST.get('body')
@@ -523,6 +517,7 @@ def upload_misc_file(request, submission_id):
 	}
 
 	return render(request, template, context)
+
 @is_book_editor
 def upload_additional(request, submission_id):
 
@@ -554,8 +549,6 @@ def serve_marc21_file(request, submission_id,type):
 		file_pk=logic.book_to_mark21_file(book,request.user)
 	_file = get_object_or_404(models.File, pk=file_pk)
 	file_path = os.path.join(settings.BOOK_DIR, submission_id, _file.uuid_filename)
-
-	print file_path
 
 	try:
 		fsock = open(file_path, 'r')
@@ -1092,5 +1085,6 @@ def serve_proposal_file(request, file_path):
 	except IOError:
 		messages.add_message(request, messages.ERROR, 'File not found.')
 		return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+		
 ## END PROPOSAL ##
 

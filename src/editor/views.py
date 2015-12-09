@@ -6,8 +6,7 @@ from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
 
 from core.files import handle_attachment, handle_file_update, handle_attachment, handle_file
-from core import models, log, logic as core_logic
-from core import forms as core_forms
+from core import models, log, logic as core_logic, forms as core_forms
 from core.decorators import is_editor, is_book_editor, is_book_editor_or_author, is_press_editor
 from editor import logic
 from revisions import models as revision_models
@@ -15,7 +14,6 @@ from review import models as review_models
 from manager import models as manager_models
 from submission import forms as submission_forms
 from editor import forms, models as editor_models
-from revisions import models as revision_models
 
 
 @is_editor
@@ -1195,21 +1193,26 @@ def contract_manager(request, submission_id, contract_id=None):
 			submission.contract.title = request.POST.get('title')
 			submission.contract.notes = request.POST.get('notes')	
 			date = request.POST.get('editor_signed_off')
+
 			if '/' in str(date):
 				editor_date = date[6:] +'-'+ date[3:5]+'-'+ date[:2]
 				submission.contract.editor_signed_off = editor_date
 			else:
 				submission.contract.editor_signed_off = date
+
 			date = str(request.POST.get('author_signed_off'))
+
 			if '/' in str(date):
 				author_date = date[6:] +'-'+ date[3:5]+'-'+ date[:2]
 				submission.contract.author_signed_off = author_date
 			else:
 				submission.contract.author_signed_off = date
+
 			if 'contract_file' in request.FILES:
 				author_file = request.FILES.get('contract_file')
 				new_file = handle_file(author_file, submission, 'contract', request.user)
 				submission.contract.editor_file = new_file
+
 			submission.contract.save()		
 			submission.save()
 			return redirect(reverse('contract_manager', kwargs={'submission_id': submission.id}))					

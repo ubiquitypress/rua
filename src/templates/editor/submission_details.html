@@ -1,39 +1,19 @@
 <h3>EDITORS 
     <a href="{% url 'editor_add_editors' submission.id %}" class="btn btn-xs  {% if submission.book_editors.all %}btn-accept btn-round-sm{% else %}btn-info{% endif %} ">  +{% if submission.book_editors.all %}
                Update {% else %} Add {% endif %} editors</a></h3>
-    <h5 class="author-note">
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    
-                </tr>
-            </thead>
-            <tbody>
-
-       {% for editor in submission.book_editors.all %}
-        <tr>
-            <td>
-        {{editor.first_name}} {% if editor.middle_name %}{{editor.middle_name}} {% endif %}{{editor.last_name}}<sup> <a href="core/email.html" onclick="return popitup('/email/editors/submission/{{submission.id}}/user/{{editor.pk}}/','editors_{{editor.pk}}')"class="fa fa-envelope-o btn btn-xs btn-default"></a></sup>{% if not forloop.last %}, {% endif %}
-   </td>
-  
-    </tr>
+    <h4 class="author-note">
+    {% for editor in submission.book_editors.all %}
+        {{ editor.profile.full_name }}<sup> <a href="core/email.html" onclick="return popitup('/email/editors/submission/{{submission.id}}/user/{{editor.pk}}/','editors_{{editor.pk}}')"class="fa fa-envelope-o btn btn-xs btn-default"></a></sup>{% if not forloop.last %}, {% endif %}
     {% empty %}
-     <td colspan="2">No book editors have been assigned yet.</td>
-
-
+     No book editors have been assigned yet.
     {% endfor %}
-    </tbody>
-</table>
     </h4>
 
 <h3>AUTHORS</h3>
 {% if submission.book_type == 'monograph' %}
 	<h4 class="author-note">
 	{% for author in submission.author.all %}
-
 		{{ author.full_name }}<sup> <a href="core/email.html" onclick="return popitup('/email/authors/submission/{{submission.id}}/user/{{author.pk}}/','authors_{{author.pk}}')"class="fa fa-envelope-o btn btn-xs btn-default"></a></sup>{% if not forloop.last %}, {% endif %}
-
 	{% endfor %}
 	</h4>
 {% else %}
