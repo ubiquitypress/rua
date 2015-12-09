@@ -232,6 +232,7 @@ def get_onetasker_emails(submission_id,term):
 	
 def get_editors(book):
 	press_editors = book.press_editors.all()
+	book_editors = book.book_editors.all()
 	if book.series:
 		series_editor = book.series.editor
 
@@ -245,8 +246,13 @@ def get_editors(book):
 	else:
 		series_editor_list = []
 		press_editor_list = [ editor for editor in press_editors]
-	
-	return (press_editor_list + series_editor_list)
+
+	if book_editors:
+		book_editor_list = [ editor for editor in book_editors]
+	else:
+		book_editor_list = []
+		
+	return (press_editor_list + series_editor_list + book_editor_list)
 	
 def clean_email_list(addresses):
 	list_of_email_addresses=[]
