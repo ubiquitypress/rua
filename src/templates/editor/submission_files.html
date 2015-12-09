@@ -38,8 +38,8 @@
    </li>
   {% endfor %}
 </ul>
-
-<h5><b>Additional Files:</b></h5>
+<br>
+<h5><b>Additional Files <sup><a href="{% url 'upload_additional' submission.id%}" class="pull-right btn btn-green btn-xs">&nbsp; + Upload &nbsp;</a></sup></b></h5>
 <ul class="media-list manuscript-upload-states">
   {% for file in submission.files.all %}
   {% if file.kind == 'additional' %}
@@ -74,8 +74,8 @@
    </li>
   {% endfor %}
 </ul>
-
-<h5><b>Misc Files:</b></h5>
+<br>
+<h5><b>Misc Files <sup><a href="{% url 'upload_misc_file' submission.id%}" class="pull-right btn btn-green btn-xs">&nbsp; + Upload &nbsp;</a></sup></b></h5>
 <ul class="media-list manuscript-upload-states">
   {% for file in submission.misc_files.all %}
 
@@ -109,7 +109,7 @@
    </li>
   {% endfor %}
 </ul>
-
+<br>
 <h5>Contract  {% if submission.contract %}(<a href="{% url 'contract_manager' submission.id %}">View</a>) {% endif %}:</h5>
 {% include "editor/contract/contract.html" %}
 

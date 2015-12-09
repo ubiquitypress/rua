@@ -1,0 +1,136 @@
+{% extends "base.html" %}
+{% load static from staticfiles %}
+{% load bootstrap3 %}
+
+{% block title %}New Submissions{% endblock %}
+
+
+{% block css %}
+	<link href="{% static "css/timeline.css" %}" rel="stylesheet">
+{% endblock %}
+
+{% block body %}
+<div class="row">
+<div class="col-md-12 book-heading container-fluid" style="margin-top:-20px">
+      <h3>  {% if submission.prefix %}{{ submission.prefix|title }}: {% endif %}{{ submission.title|title }}</h3>
+
+</div>
+	 <div class="col-md-3 dash-left grey-container">
+
+         <div class="dash-container" >
+            <h4 class="header-text">  {% if submission.prefix %}{{ submission.prefix }} {% endif %}{{ submission.title }}</h4> 
+            <h5 class="subtitle-text">{{submission.subtitle}}</h5>
+        </div>
+          <div class="book-info">
+        <table class="table table-bordered table-condensed small">
+            <tr>
+                <th>Series</th>
+                <td>{{ submission.series }}</td>
+            </tr>
+            <tr>
+                <th>Type</th>
+                <td>{{ submission.get_book_type_display }}</td>
+            </tr>
+            <tr>
+                <th>License</th>
+                <td>{{ submission.license.short_name }}</td>
+            </tr>
+            <tr>
+                <th>Review Type</th>
+                <td>{{ submission.get_review_type_display }}</td>
+            </tr>
+        </table>
+      </div>
+          <a href="{% url 'editor_tasks' submission.pk %}">
+        <div class="dash-menu {%ifequal active_page 'my_tasks' %}current{% endifequal %}">
+            <h5>My Tasks <i class="fa fa-chevron-right pull-right"></i></h5>
+        </div>
+        </a>
+
+        <a href="{% url 'editor_status' submission.pk %}">
+        <div class="dash-menu {%ifequal active_page 'status' %}current{% endifequal %}">
+            <h5>Current Status <i class="fa fa-chevron-right pull-right"></i></h5>
+        </div>
+        </a>
+        <a href="{% url 'editor_submission' submission.pk %}">
+        <div class="dash-menu {%ifequal active_page 'editor_submission' %}current{% endifequal %}">
+            <h5>Submission Details <i class="fa fa-chevron-right pull-right"></i></h5>
+        </div>
+        </a>
+        {% if submission.stage.review %}
+        <a href="{% url 'editor_review' submission.pk %}">
+        <div class="dash-menu {%ifequal active_page 'editor_review' %}current{% endifequal %}">
+            <h5>Review <i class="fa fa-chevron-right pull-right"></i></h5>
+        </div>
+        </a>
+        {% endif %}
+        {% if submission.stage.editing %}
+        <a href="{% url 'editor_editing' submission.pk %}">
+        <div class="dash-menu {%ifequal active_page 'editing' %}current{% endifequal %}">
+            <h5>Editing <i class="fa fa-chevron-right pull-right"></i></h5>
+        </div>
+        </a>
+        {% endif %}
+        {% if submission.stage.production %}
+        <a href="{% url 'editor_production' submission.id %}">
+        <div class="dash-menu {%ifequal active_page 'production' %}current{% endifequal %}">
+            <h5>Production <i class="fa fa-chevron-right pull-right"></i></h5>
+        </div>
+        </a>
+        {% endif %}
+        <a href="{% url 'catalog' submission.id %}">
+        <div class="dash-menu {%ifequal active_page 'catalog_view' %}current{% endifequal %}">
+            <h5>Catalog <i class="fa fa-chevron-right pull-right"></i></h5>
+        </div>
+        </a>
+         <a href="{% url 'view_log' submission.id %}">
+        <div class="dash-menu">
+            <h5>Logs <i class="fa fa-chevron-right pull-right"></i></h5>
+        </div>
+        </a>
+        {% include "editor/snippets/available_actions.html" %}
+    </div>
+    <div class="col-md-9 dash-center" style="margin-top:-10px">
+    </br>
+
+    	<div class="col-md-12 file-heading container-fluid">
+      <h4>File manager <a href="/editor/submission/{{ submission.pk }}/" class="btn btn-sm btn-back pull-right">Back</a></h4>
+      </div>
+<div class="col-md-12">
+
+	<div class="col-md-12 file-sub-heading container-fluid" style="margin-bottom:10px" >
+      <h4>Upload Additional File</h4></div>	</br>	<p>You can upload additional files below. These files can be anything related to the submission that aren't used for typesetting or contracts etc.</p><hr>	
+		<form method="post" enctype="multipart/form-data">
+			{% csrf_token %}
+
+			<div class="well">
+				
+        {% bootstrap_form file_form %}
+        <div class="form-group">
+			<div class="row">
+				<div class="col-md-6">
+             		 <label class="control-label" for="id_label">File</label>
+						 <div class="input-group">
+							<span class="input-group-btn">
+								<span class="btn btn-task btn-browse btn-file">
+									Browse&hellip; <input type="file" id="additional" name="additional">
+								</span>
+							</span>
+							<input type="text" class="form-control" readonly>
+						</div>
+						<div class="input-group pull-right">
+							<br />
+							<button class="btn btn-task " style="width:100px" type="submit" name="update" id="update"><i class="fa fa-cloud-upload">&nbsp;</i>Upload</button>
+						</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</form>
+</div>
+
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript" src="{% static "js/fancyfile.js" %}"></script>
+{% endblock %}
