@@ -5,6 +5,11 @@
 {% block title %}{{ submission.title }} - Log{% endblock %}
 
 {% block css %}
+<style type="text/css">
+body {
+    overflow:hidden;
+}
+</style>
   <link href="{% static "css/timeline.css" %}" rel="stylesheet">
 {% endblock %}
 
@@ -20,7 +25,7 @@
             <li role="presentation" class="active"><a href="#activity" aria-controls="home" role="tab" data-toggle="tab">Activity Log</a></li>
             <li role="presentation"><a href="#email" aria-controls="home" role="tab" data-toggle="tab">Email Log</a></li>
   </ul>
-  <div class="dash-center col-md-12">
+  <div class="dash-center col-md-12"  style="height:70%;">
   <!-- Tab panes -->
   <div class="tab-content">
     <div role="tabpanel"  class="tab-pane active" id="activity">
