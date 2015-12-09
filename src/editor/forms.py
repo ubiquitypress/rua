@@ -124,6 +124,13 @@ class Typeset(forms.ModelForm):
 		model = core_models.TypesetAssignment
 		fields = ('note',)
 
+
+class TypesetDate(forms.ModelForm):
+
+	class Meta:
+		model = core_models.TypesetAssignment
+		fields = ('due',)
+
 class TypesetAuthorInvite(forms.ModelForm):
 
 	class Meta:

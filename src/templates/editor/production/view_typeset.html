@@ -50,15 +50,28 @@
       </div>
     </li>
     {% endif %}
+       {% if typeset.due %}
+    <li>
+       <p class="timeline-dash-date">{{ typeset.due }}</p>
+      <div class="timeline-content-dash-closed">
+        <h5>Due</h5>
+      </div>
+    </li>
+    {% endif %}
     {% if typeset.typesetter_completed %}
     <li>
        <p class="timeline-dash-date">{{ typeset.typesetter_completed }}</p>
       <div class="timeline-content-dash-closed">
-        <h5>Assignment Completed</h5>
+        <h5>Completed</h5>
       </div>
     </li>
     {% endif %}
-  </ul>
+
+  </ul>  <hr />
+  <div class="container-fluid">
+  <h4>Due Date <sup><a href="{% url 'view_typesetter_alter_due_date' submission.id typeset.id%}" class="btn btn-accept btn-xs"> Alter Date </a></sup></h4>
+  <h5>{{typeset.due}}</h5>
+</div>
   <hr />
   <h4>Assigned Files</h4>
   {% include 'shared/review_files.html' with file_data=typeset.files.all %}

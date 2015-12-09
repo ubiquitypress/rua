@@ -1,0 +1,18 @@
+{% load bootstrap3 %}
+
+
+  <h3>TYPESETTING: {{ typeset.typesetter.profile.full_name|upper  }}</h3> <br>
+       <form method="post" class="form">
+        {% csrf_token %}
+<div class="form-group"><label class="control-label" for="id_due">Due Date</label><input class="form-control" id="id_due" name="due" placeholder="Due" title="" type="text" value="{{typeset.due}}"></div>
+
+     {% buttons %}
+      <button name="cancel" id="cancel" type="submit" class="btn btn-decline  pull-right" style="width:150px">
+             Cancel
+            </button>
+            <button name="submit" id="submit" type="submit" class="btn btn-accept  pull-right" style="width:150px">
+             Update Due Date
+            </button>
+           
+        {% endbuttons %}
+        </form>
