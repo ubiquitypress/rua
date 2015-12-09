@@ -317,6 +317,11 @@ body > div.container-fluid > div > div > div > a {
   color: #FFF;
    margin-bottom:-5px;
 }
+.review-sub-heading-2-margin {
+  background-color: #5BDBCE;
+  color: #FFF;
+   margin-bottom:15px; 
+}
 .primary-heading {
   background-color: #337ab7;
   color: #FFF;
