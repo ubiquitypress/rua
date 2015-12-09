@@ -1,18 +1,18 @@
 <h5>Manuscript Files:</h5>
-<ul class="manuscript-upload-states">
+<ul class="media-list manuscript-upload-states">
 	{% for file in submission.files.all %}
 	{% if file.kind == 'manuscript' %}
-	<li>
-		<div class="row">
-			<div class="col-md-2">
-			  <h1>
+	<li class="media grey-container ">
+			<div class="media-left">
+			  <h1 style="margin-top:10px">
 			  {% if file.mime_type == 'image/jpeg' or file.mime_type == 'image/png' %}
-			  	<i class="fa fa-file-image-o"></i>
+			     &nbsp; &nbsp;  	<i class="fa fa-file-image-o"></i>
 			  {% else %}
-			  	<i class="fa fa-file-text-o"></i>
+			     &nbsp; &nbsp;  	<i class="fa fa-file-text-o"></i>
 			  {% endif %}
 			  </h1>
 			</div>
+			 <div class="media-body">
 			<div class="col-md-6">
 			  <h5>{{ file.label }}</h5>
 			  <h5>{{ file.original_filename }}</h5>

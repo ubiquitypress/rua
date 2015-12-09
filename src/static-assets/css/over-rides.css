@@ -1264,13 +1264,24 @@ button.list-group-item-file.active:focus {
     }
     .hover-submission:focus, 
     .hover-submission:hover{
-      background-color:#239B56 !important;
+      background-color:rgb(233, 181, 69) !important;
       color:white !important;
     }
      .hover-submission:active{
+      background-color:#D19F33 !important;
+      color:white !important;
+    }
+
+    .hover-green:focus, 
+    .hover-green:hover{
+      background-color:#239B56 !important;
+      color:white !important;
+    }
+     .hover-green:active{
       background-color:#1ec364 !important;
       color:white !important;
     }
+
     .hover-primary:focus, 
     .hover-primary:hover{
       background-color:#337ab7 !important;
