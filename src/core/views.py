@@ -15,11 +15,13 @@ from django.core import serializers
 from django.conf import settings
 from  __builtin__ import any as string_any
 
+from review import models as review_models
+
 from core import log, models, forms, logic
 from email import send_email
 from files import handle_file_update,handle_attachment,handle_file
 from submission import models as submission_models
-from core.decorators import is_editor, is_book_editor, is_book_editor_or_author, is_onetasker,is_author
+from core.decorators import is_reviewer, is_editor, is_book_editor, is_book_editor_or_author, is_onetasker,is_author
 from review import forms as review_forms
 
 from pprint import pprint
@@ -30,6 +32,8 @@ from uuid import uuid4
 from manager import models as manager_models
 from submission import forms as submission_forms
 from django.db import IntegrityError
+from docx import Document
+from docx.shared import Inches
 import os
 import mimetypes
 import mimetypes as mime
@@ -769,16 +773,6 @@ def start_proposal_review(request, proposal_id):
 
 	return render(request, template, context)
 
-	template = 'core/proposals/start_proposal_review.html'
-	context = {
-		'proposal': proposal,
-		'start_form': start_form,
-		'reviewers': reviewers,
-		'committees': committees,
-		'email_text':email_text,
-	}
-
-	return render(request, template, context)
 
 @is_editor
 def view_proposal_review_decision(request, proposal_id, assignment_id):
@@ -789,22 +783,38 @@ def view_proposal_review_decision(request, proposal_id, assignment_id):
 	if request.POST:
 		if 'accept' in request.POST:
 			review_assignment.accepted = timezone.now()
-			message = "Review Assignment request for '%s' has been accepted by %s %s."  % (submission.title,review_assignment.user.first_name, review_assignment.user.last_name)
-			log.add_log_entry(book=submission, user=request.user, kind='review', message=message, short_name='Assignment accepted')
-			logic.notify_editors(submission,message,editors,request.user,'review')
+			review_assignment.save()
+			message = "Review Assignment request for proposal '%s' has been accepted by %s %s."  % (proposal.title,review_assignment.user.first_name, review_assignment.user.last_name)
+			if proposal.requestor:
+				notification = models.Task(assignee=proposal.requestor,creator=request.user,text=message,workflow='proposal')
+				notification.save()
+			else:
+				editors = User.objects.filter(profile__roles__slug='press-editor')
+				for editor in editors:
+					notification = models.Task(assignee=editor,creator=request.user,text=message,workflow='proposal')
+					notification.save()
+			return redirect(reverse('view_proposal_review', kwargs={'proposal_id': proposal.id,'assignment_id': assignment_id}))
 				
 		elif 'decline' in request.POST:
 			review_assignment.declined = timezone.now()
-			message = "Review Assignment request for '%s' has been declined by %s %s."  % (submission.title,review_assignment.user.first_name, review_assignment.user.last_name)
-			logic.notify_editors(submission,message,editors,request.user,'review')
-			log.add_log_entry(book=submission, user=request.user, kind='review', message=message, short_name='Assignment declined')
-	
+			review_assignment.save()
+			message = "Review Assignment request for proposal '%s' has been declined by %s %s."  % (proposal.title,review_assignment.user.first_name, review_assignment.user.last_name)
+			if proposal.requestor:
+				notification = models.Task(assignee=proposal.requestor,creator=request.user,text=message,workflow='proposal')
+				notification.save()
+			else:
+				editors = User.objects.filter(profile__roles__slug='press-editor')
+				for editor in editors:
+					notification = models.Task(assignee=editor,creator=request.user,text=message,workflow='proposal')
+					notification.save()
+			return redirect(reverse('view_proposal_review', kwargs={'proposal_id': proposal.id,'assignment_id': assignment_id}))
+
+
 	
 	template = 'core/proposals/decision_review_assignment.html'
 	context = {
 		'proposal': proposal,
 		'review': review_assignment,
-		'result': result,
 		'active': 'proposal_review',
 	}
 
@@ -827,10 +837,50 @@ def view_proposal_review(request, proposal_id, assignment_id):
 		relations = None
 		data_ordered = None
 
+	if not request.POST and request.GET.get('download') == 'docx':
+		path = create_proposal_review_form(review_assignment)
+		return serve_proposal_file(request, path)
+	elif request.POST:
+		form = review_forms.GeneratedForm(request.POST, request.FILES, form=proposal.review_form)
+		recommendation_form = forms.RecommendationForm(request.POST, ci_required=ci_required.value)
+		if form.is_valid() and recommendation_form.is_valid():
+			save_dict = {}
+			file_fields = review_models.FormElementsRelationship.objects.filter(form=proposal.review_form, element__field_type='upload')
+			data_fields = review_models.FormElementsRelationship.objects.filter(~Q(element__field_type='upload'), form=proposal.review_form)
+
+			for field in file_fields:
+				if field.element.name in request.FILES:
+					# TODO change value from string to list [value, value_type]
+					save_dict[field.element.name] = [handle_review_file(request.FILES[field.element.name], submission, review_assignment, 'reviewer')]
+
+			for field in data_fields:
+				if field.element.name in request.POST:
+					# TODO change value from string to list [value, value_type]
+					save_dict[field.element.name] = [request.POST.get(field.element.name), 'text']
+
+			json_data = json.dumps(save_dict)
+			form_results = review_models.FormResult(form=proposal.review_form, data=json_data)
+			form_results.save()
+
+			#if request.FILES.get('review_file_upload'):
+			#	handle_review_file(request.FILES.get('review_file_upload'), submission, review_assignment, 'reviewer')
+
+			review_assignment.completed = timezone.now()
+			if not review_assignment.accepted:
+				review_assignment.accepted = timezone.now()
+			review_assignment.recommendation = request.POST.get('recommendation')
+			review_assignment.competing_interests = request.POST.get('competing_interests')
+			review_assignment.results = form_results
+			review_assignment.save()
+
+			return redirect(reverse('user_dashboard'))
+
+
+
 	template = 'core/proposals/review_assignment.html'
 	context = {
 		'proposal': proposal,
-		'review': review_assignment,
+		'review_assignment': review_assignment,
 		'data_ordered': data_ordered,
 		'result': result,
 		'form':form,
@@ -974,7 +1024,52 @@ def request_proposal_revisions(request, proposal_id):
 
 	return render(request, template, context)
 
+@is_reviewer
+def create_proposal_review_form(proposal):
+	document = Document()
+	document.add_heading(proposal.proposal.title, 0)
+	p = document.add_paragraph('You should complete this form and then use the review page to upload it.')
+	relations = review_models.FormElementsRelationship.objects.filter(form=proposal.proposal.review_form)
+	for relation in relations:
 
+		if relation.element.field_type in ['text', 'textarea', 'date', 'email']:
+			document.add_heading(relation.element.name, level=1)
+			document.add_paragraph(relation.help_text).italic = True
 
+		if relation.element.field_type in ['select', 'check']:
+			document.add_heading(relation.element.name, level=1)
+			if relation.element.field_type == 'select':
+				choices = render_choices(relation.element.choices)
+			else:
+				choices = ['Y', 'N']
+
+			p = document.add_paragraph(relation.help_text)
+			p.add_run(' Mark your choice however you like, as long as it is clear.').italic = True
+			table = document.add_table(rows=2, cols=len(choices))
+			hdr_cells = table.rows[0].cells
+			for i, choice in enumerate(choices):
+				hdr_cells[i].text = choice[0]
+			table.style = 'TableGrid'
+
+	document.add_page_break()
+	if not os.path.exists(os.path.join(settings.BASE_DIR, 'files', 'forms')):
+		os.makedirs(os.path.join(settings.BASE_DIR, 'files', 'forms'))
+	path = os.path.join(settings.BASE_DIR, 'files', 'forms', '%s.docx' % str(uuid4()))
+
+	document.save(path)
+	return path
+
+@is_reviewer
+def serve_proposal_file(request, file_path):
+	try:
+		fsock = open(file_path, 'r')
+		mimetype = mimetypes.guess_type(file_path)
+		response = StreamingHttpResponse(fsock, content_type=mimetype)
+		response['Content-Disposition'] = "attachment; filename=review_form.docx"
+		
+		return response
+	except IOError:
+		messages.add_message(request, messages.ERROR, 'File not found.')
+		return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 ## END PROPOSAL ##
 

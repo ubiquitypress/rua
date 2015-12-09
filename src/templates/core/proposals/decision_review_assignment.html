@@ -15,21 +15,13 @@
 
  </br>
   <table class="table table-bordered">
-    <thead>
-  <tr>
  
-    <th></th>
-    <th></th>
-    
-  </tr>
-  </thead>
-  <tbody>
   <tr> <td> Title </td>  <td>{{ proposal.title }}</td>  </tr>
   <tr> <td> Subtitle </td>  <td>{{ proposal.subtitle }}</td>  </tr>
   <tr> <td> Author </td>  <td>{{ proposal.author }}</td>  </tr>
   <tr> <td>User </td>  <td>{{ proposal.owner.username }}</td>  </tr>
   <tr> <td> Date Submitted</td>  <td>{{ proposal.date_submitted }}</td>  </tr>
-</tbody>
+
 </table>
 </hr>
     </div>
@@ -46,15 +38,22 @@
 
         {% include "review/submission_files.html" %}
    
-        </div>
-              <div class="col-md-12  container-fluid decision-info-accept">                 
+           </div>
+
+              <div class="col-md-12 container-fluid decision-info-undecided">                 
   
-                     <p>You accepted on {{review_assignment.accepted}}</p>
+                     <p>You can accept or reject this task</p>
 
                     </div>
-                     </br>
-                      </br>
-                       </br>
+</br>
+</br>
+          <div class="dash-container col-md-12" >
+          <form method="post">
+          {% csrf_token %}
+             <input class="btn btn-lg btn-decline" type="submit" name="decline" value="I Decline"id="decline" style="width:120px; font-size: 14px;">
+             <input class="btn btn-lg btn-accept" type="submit"  name="accept" id="accept" value="I Accept" style="width:120px; font-size: 14px;" >
+             </form>
+            </div> 
       
         
           {% include "review/contact_editors.html"  %}
@@ -64,63 +63,7 @@
        <div class="col-md-4 dash-right">
            <div class="dash-container" >
        <div class="dash-container" >
-      <h4><b>COMPLETE REVIEW</b></h4>
-      <p class="subtitle-form-text"><em> {{ form_info.intro_text|safe }} </em></p>
-       <h4>1. Completed the Review Form</h4>
-    <h6>Alternatively you may <a href="?download=docx">download</a> the review form, complete it offline, and upload it.</h6>
-    
-
-
-      {% if form.errors %}
-      <div class="alert alert-info">
-          Please correct errors below. Note, you'll have to reselect any files you want uploaded.
-        </div>
-        {% endif %}
-      <form enctype="multipart/form-data" method="post">
-      {% for field in form %}
-            <div class="form-group">
-        <div class="{% if field.field.widget.attrs.div_class %}{{ field.field.widget.attrs.div_class }}{% else %}col-md-12{% endif %}">
-        {% if field.field.widget.attrs.is_checkbox %}
-          {% if field.errors %}<span class="red">{{ field.errors|join:", " }}</span><br />{% endif %}
-          {{ field }} {% if field.field.help_text %}<span class="small">{{ field.field.help_text|safe }}</span>{% endif %}
-        {% else %}
-             {% if field.errors %}<span class="red">{{ field.errors|join:", " }}</span>{% endif %}
-             {% bootstrap_field field %}
-          {% endif %}
-          </div>
-           </div>
-      {% endfor %}
-  
-      {% csrf_token %}
-</br> </br> 
-</br> </br> 
-</br> </br> 
-</br> </br>
-     <h4>2. Upload Review File</h4>
-      <div class="form-group">
-          <div class="row">
-            <div class="col-md-12">
-               <div class="input-group">
-                  <span class="input-group-btn">
-                      <span class="btn btn-primary btn-file">
-                          Browse&hellip; <input type="file" id="review_file_upload" name="review_file_upload" multiple>
-                      </span>
-                  </span>
-                  <input type="text" class="form-control" readonly>
-              </div>
-            </div>
-          </div>
-        </div>
-        <hr />
-        <h4>3. Make a recommendation</h4>
-        {% bootstrap_field recommendation_form.recommendation %}
-        <hr />
-        <h4>4. Competing interests</h4>
-        {% bootstrap_field recommendation_form.competing_interests %}
-      <input class="btn btn-success" type="submit" value="Submit your review" id="poster">
-      <br/><br/>
-
-      </form>
+      
 
 	</div>
   </div>

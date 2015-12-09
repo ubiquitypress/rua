@@ -13,6 +13,8 @@ from pymarc import Record, Field
 from core import email
 from pymarc import *
 from submission import logic as submission_logic
+
+from submission import models as submission_models
 import re
 from django.shortcuts import redirect, render, get_object_or_404
 from core.files import handle_file,handle_copyedit_file,handle_marc21_file
@@ -287,7 +289,7 @@ def task_count(request):
 def review_assignment_count(request):
 	# TODO: change this to be handled based on whether the user is logged in or not.
 	try:
-		return models.ReviewAssignment.objects.filter(user=request.user, completed__isnull=True,declined__isnull=True).count()
+		return models.ReviewAssignment.objects.filter(user=request.user, completed__isnull=True,declined__isnull=True).count()+submission_models.ProposalReview.objects.filter(user=request.user, completed__isnull=True,declined__isnull=True).count()
 	except TypeError:
 		return 0
 
