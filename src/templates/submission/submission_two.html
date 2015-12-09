@@ -23,14 +23,14 @@
 		  	<div class="row">
 		  		<div class="col-md-12">
 <label class="control-label" for="id_description">Abastract</label>
-<textarea class="form-control" cols="40" id="id_description" name="description" placeholder="Description" required="required" rows="10" title="" data-origin="textarea">{{book.description}}</textarea>
+<textarea class="form-control" cols="40" id="id_description" name="description" placeholder="Description" required="required" rows="10" title="" data-origin="textarea">{% if book.description %}{{ book.description }}%{% endif %}</textarea>
 
 		  		</div>
 		  	</div>
 		  </div>
         <br /><br />
 	    {% buttons %}
-	        <button name="book" type="submit" class="btn btn-primary">
+	        <button name="book" type="submit" class="btn-round btn btn-primary pull-right">
 	            <i class="fa fa-arrow-right"></i> Complete Step 2
 	        </button>
 	    {% endbuttons %}
