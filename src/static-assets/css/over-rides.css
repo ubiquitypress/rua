@@ -120,7 +120,7 @@ html, body {
 }
 .dash-left {
   padding: 0;
-  height: 92%;
+  height: 90% !important;
   border-right: 1px double #c7c7c7;
   border-left: 1px double #c7c7c7;
   overflow-y: auto;
@@ -136,7 +136,7 @@ html, body {
 }
 .dash-right {
   padding: 0;
-  height: 92%;
+  height: 90% !important;
   border-left: 1px double #c7c7c7;
   border-right: 1px double #c7c7c7;
   overflow-y: auto;
@@ -145,7 +145,7 @@ html, body {
 
 .dash-center {
   padding: 0;
-  height: 92%;
+  height: 90% !important;
   overflow-y: auto;
   overflow-x: hidden;
 }
