@@ -5,7 +5,11 @@
 {% block title %}Submission{% endblock %}
 
 {% block css %}
-
+<style type="text/css">
+body {
+    overflow:hidden;
+}
+</style>
     <style type="text/css">
     .navbar {
         margin-bottom: 0px !important;
@@ -34,7 +38,7 @@
     <div class="col-md-12 book-heading container-fluid">
         <h3>Book {{ submission.id }}: {{ submission.title }}</h3>
     </div>
-    <div class="col-md-3 dash-left" style="background-color: #EBEBEB;">
+    <div class="col-md-3 dash-left" style="background-color: #EBEBEB; height:80%">
          <div class="dash-container" >
             <h4 class="header-text">  {% if submission.prefix %}{{ submission.prefix }} {% endif %}{{ submission.title }}</h4> 
             <h5 class="subtitle-text">{{submission.subtitle}}</h5>
@@ -109,14 +113,14 @@
         {% include "editor/snippets/available_actions.html" %}
     </div>
 
-    <div class="col-md-5 dash-center">
+    <div class="col-md-5 dash-center" style="height:80%">
         <div class="dash-container">
         {% if author_include %}
             {% include author_include %}
         {% endif %}
         </div>
     </div>
-    <div class="col-md-4 dash-right">
+    <div class="col-md-4 dash-right" style="height:80%">
         <div class="dash-container">
         {% if submission_files %}
             {% include submission_files %}
