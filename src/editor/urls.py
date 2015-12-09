@@ -45,6 +45,7 @@ urlpatterns = patterns('',
     url(r'^submission/(?P<submission_id>\d+)/production/assign/typesetter/$', 'editor.views.assign_typesetter', name='assign_typesetter'),
     url(r'^submission/(?P<submission_id>\d+)/production/view/typesetter/(?P<typeset_id>\d+)/$', 'editor.views.view_typesetter', name='view_typesetter'),
     url(r'^submission/(?P<submission_id>\d+)/production/view/typesetter/(?P<typeset_id>\d+)/alter/due-date/$', 'editor.views.view_typesetter_alter_due_date', name='view_typesetter_alter_due_date'),
+    url(r'^submission/(?P<submission_id>\d+)/production/view/typesetter/(?P<typeset_id>\d+)/alter/author-due/$', 'editor.views.view_typesetter_alter_author_due', name='view_typesetter_alter_author_due'),
 
     # Contract
     url(r'^contract/(?P<submission_id>\d+)/manage/$', 'editor.views.contract_manager', name='contract_manager'),

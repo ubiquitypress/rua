@@ -922,6 +922,40 @@ def view_typesetter_alter_due_date(request, submission_id, typeset_id):
 
 	return render(request, template, context)
 
+@is_book_editor
+def view_typesetter_alter_author_due(request, submission_id, typeset_id):
+	book = get_object_or_404(models.Book, pk=submission_id)
+	typeset = get_object_or_404(models.TypesetAssignment, pk=typeset_id)
+	email_text = models.Setting.objects.get(group__name='email', name='author_typeset_request').value
+
+	date_form = forms.TypesetAuthorDate(instance=typeset)
+
+	if request.POST :
+		date_form = forms.TypesetAuthorDate(request.POST,instance=typeset)
+		if date_form.is_valid():
+			date_form.save()
+			typeset.save()
+		#	email_text = request.POST.get('email_text')
+		#	logic.send_invite_typesetter(book, typeset, email_text, request.user)
+		return redirect(reverse('view_typesetter', kwargs={'submission_id': submission_id, 'typeset_id': typeset_id}))
+
+	template = 'editor/submission.html'
+	context = {
+		'submission': book,
+		'author_date':True,
+		'author_include': 'editor/production/view.html',
+		'submission_files': 'editor/production/view_typeset_due_date.html',
+		'active': 'production',
+		'format_list': models.Format.objects.filter(book=book).select_related('file'),
+		'chapter_list': models.Chapter.objects.filter(book=book).select_related('file'),
+		'typeset': typeset,
+		'typeset_id': typeset.id,
+		'date_form': date_form,
+		'email_text': email_text,
+		'active_page': 'production',
+	}
+
+	return render(request, template, context)
 
 @is_book_editor
 def retailers(request, submission_id, retailer_id=None):

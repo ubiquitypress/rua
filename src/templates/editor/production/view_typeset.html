@@ -26,11 +26,27 @@
       </div>
     </li>
     {% endif %}
+           {% if typeset.due %}
+    <li>
+       <p class="timeline-dash-date">{{ typeset.due }}</p>
+      <div class="timeline-content-dash-closed">
+        <h5>Assignment Due</h5>
+      </div>
+    </li>
+    {% endif %}
     {% if typeset.editor_review %}
     <li>
        <p class="timeline-dash-date">{{ typeset.editor_review }}</p>
       <div class="timeline-content-dash-closed">
         <h5>Editor Review</h5>
+      </div>
+    </li>
+    {% endif %}
+       {% if typeset.author_invited %}
+    <li>
+       <p class="timeline-dash-date">{{ typeset.author_invited }}</p>
+      <div class="timeline-content-dash-closed">
+        <h5>Author Invited</h5>
       </div>
     </li>
     {% endif %}
@@ -42,6 +58,14 @@
       </div>
     </li>
     {% endif %}
+           {% if typeset.author_due %}
+    <li>
+       <p class="timeline-dash-date">{{ typeset.author_due }}</p>
+      <div class="timeline-content-dash-closed">
+        <h5>Author Review Due</h5>
+      </div>
+    </li>
+    {% endif %}
     {% if typeset.editor_second_review %}
     <li>
        <p class="timeline-dash-date">{{ typeset.editor_second_review }}</p>
@@ -50,14 +74,7 @@
       </div>
     </li>
     {% endif %}
-       {% if typeset.due %}
-    <li>
-       <p class="timeline-dash-date">{{ typeset.due }}</p>
-      <div class="timeline-content-dash-closed">
-        <h5>Due</h5>
-      </div>
-    </li>
-    {% endif %}
+
     {% if typeset.typesetter_completed %}
     <li>
        <p class="timeline-dash-date">{{ typeset.typesetter_completed }}</p>
@@ -69,7 +86,7 @@
 
   </ul>  <hr />
   <div class="container-fluid">
-  <h4>Due Date <sup><a href="{% url 'view_typesetter_alter_due_date' submission.id typeset.id%}" class="btn btn-accept btn-xs"> Alter Date </a></sup></h4>
+  <h4>Assignment Due Date <sup><a href="{% url 'view_typesetter_alter_due_date' submission.id typeset.id%}" class="btn btn-accept btn-xs"> Alter Date </a></sup></h4>
   <h5>{{typeset.due}}</h5>
 </div>
   <hr />
@@ -83,6 +100,7 @@
       {{ typeset.note|linebreaks }}
       <h4>Typesetter Files</h4>
       {% include 'shared/review_files.html' with file_data=typeset.typeset_files.all %}
+
       {% if typeset.completed and not typeset.editor_review %}
       <form method="POST">
         {% csrf_token %}
@@ -98,15 +116,20 @@
           <label class="control-label" for="id_note_to_author">Email to Author</label>
           <textarea class="form-control" cols="40" id="email_text" name="email_text" rows="10" title="">{{ email_text }}</textarea>
         </div>
+
         <button class="btn btn-success" name="send_invite_author" id="send_invite_author" type="submit">Send Request</button>
       </form>
       {% elif typeset.completed and typeset.editor_review and typeset.author_invited %}
       <hr />
-      <h4>Author Revision</h4>
-      <h5>Not to Author</h5>
-      {{ typeset.note_to_author|linebreaks }}
-      <h5>Note from Author</h5>
-      {{ typeset.note_from_author|linebreaks }}
+      <h3>Author Revision</h3>
+      <hr>
+      <h4>Due Date <sup><a href="{% url 'view_typesetter_alter_author_due' submission.id typeset.id%}" class="btn btn-accept btn-xs"> Alter Date </a></sup></h4>
+      <h5>{{typeset.author_due}}</h5><br>
+      <h4>Note to Author</h4>
+      {{ typeset.note_to_author|linebreaks }}<br>
+      <h4>Note from Author</h4>
+      {% if typeset.note_from_author %}
+      {{ typeset.note_from_author|linebreaks }}{% else %} Not available. <br>{%endif%}<br>
       <h4>Author Files</h4>
       {% include 'shared/review_files.html' with file_data=typeset.author_files.all %}
       </table>

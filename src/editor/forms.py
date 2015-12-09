@@ -130,12 +130,17 @@ class TypesetDate(forms.ModelForm):
 	class Meta:
 		model = core_models.TypesetAssignment
 		fields = ('due',)
+class TypesetAuthorDate(forms.ModelForm):
+
+	class Meta:
+		model = core_models.TypesetAssignment
+		fields = ('author_due',)
 
 class TypesetAuthorInvite(forms.ModelForm):
 
 	class Meta:
 		model = core_models.TypesetAssignment
-		fields = ('note_to_author',)
+		fields = ('note_to_author','author_due')
 
 class TypesetAuthor(forms.ModelForm):
 
