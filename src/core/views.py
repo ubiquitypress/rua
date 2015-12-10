@@ -519,17 +519,39 @@ def upload_misc_file(request, submission_id):
 	return render(request, template, context)
 
 @is_book_editor
+def upload_manuscript(request, submission_id):
+
+	submission = get_object_or_404(models.Book, pk=submission_id)
+	if request.POST:
+		file_form = forms.UploadFile(request.POST)
+		if file_form.is_valid():
+			new_file = handle_file(request.FILES.get('manuscript'), submission, 'manuscript', request.user, file_form.cleaned_data.get('label'))
+			submission.files.add(new_file)
+			return redirect(reverse('editor_submission', kwargs={'submission_id': submission.id}))
+	else:
+		file_form = forms.UploadFile()
+
+	template = 'core/misc_files/upload_manuscript.html'
+	context = {
+		'submission': submission,
+		'file_form': file_form,
+		'active_page':'editor_submission'
+	}
+
+	return render(request, template, context)
+
+@is_book_editor
 def upload_additional(request, submission_id):
 
 	submission = get_object_or_404(models.Book, pk=submission_id)
 	if request.POST:
-		file_form = forms.UploadAdditionalFile(request.POST)
+		file_form = forms.UploadFile(request.POST)
 		if file_form.is_valid():
 			new_file = handle_file(request.FILES.get('additional'), submission, 'additional', request.user, file_form.cleaned_data.get('label'))
 			submission.files.add(new_file)
 			return redirect(reverse('editor_submission', kwargs={'submission_id': submission.id}))
 	else:
-		file_form = forms.UploadAdditionalFile()
+		file_form = forms.UploadFile()
 
 	template = 'core/misc_files/upload_additional.html'
 	context = {

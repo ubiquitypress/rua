@@ -2,7 +2,7 @@
 
 
 
-<h5><b>Manuscript Files:</b></h5>
+<h5><b>Manuscript Files  <sup><a href="{% url 'upload_manuscript' submission.id%}" class="pull-right btn btn-green btn-xs">&nbsp; + Upload &nbsp;</a></sup></b></h5>
 <ul class="media-list manuscript-upload-states">
   {% for file in submission.files.all %}
   {% if file.kind == 'manuscript' %}
