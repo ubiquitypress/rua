@@ -1296,6 +1296,16 @@ button.list-group-item-file.active:focus {
       background-color:#4F4F4F!important;
       color:white !important;
     }
+    .hover-file:focus, 
+    .hover-file:hover{
+      background-color:#2CB2AD!important;
+      color:white !important;
+    }
+    .hover-file:active{
+      background-color:#057572!important;
+      color:white !important;
+    }
+    
 .proposal {
   background-color:#7c50ff !important;
 }

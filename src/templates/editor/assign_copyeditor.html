@@ -52,7 +52,16 @@
     {% endfor %}
   </table>
   <p class="small">Or you can upload a new file(s) and use it.</p>
+<div class="dropdown" style="margin-left:5px">
+    <button class="btn btn-green btn-round dropdown-toggle" type="button" data-toggle="dropdown">&nbsp;&nbsp;&nbsp;+ Upload&nbsp;&nbsp;&nbsp;
+    <span class="caret"></span></button>
+    <ul class="dropdown-menu">
+      <li><a href="{% url 'upload_manuscript' submission.id %}" class="hover-file">&nbsp;&nbsp;&nbsp;Manuscript&nbsp;&nbsp;&nbsp;</a></li>
+      <li><a href="{% url 'upload_additional' submission.id %}"class="hover-file" >&nbsp;&nbsp;&nbsp;Additional&nbsp;&nbsp;&nbsp;</a></li>
+      <li><a href="{% url 'upload_misc_file' submission.id %}"class="hover-file" >&nbsp;&nbsp;&nbsp;Misc&nbsp;&nbsp;&nbsp;</a></li>
 
+    </ul>
+  </div>
 
   <hr />
   <h3>3. Set Due Date</h3>
