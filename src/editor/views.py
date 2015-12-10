@@ -180,7 +180,8 @@ def editor_view_revisions(request, submission_id, revision_id):
 		'submission': book,
 		'revision': revision,
 		'revision_id':revision.id,
-		'author_include': 'editor/review_revisions.html',
+		'active': 'user_submission',
+		'author_include': 'editor/submission_details.html',
 		'submission_files': 'editor/revisions/view_revisions.html',
 		'review_rounds': models.ReviewRound.objects.filter(book=book).order_by('-round_number'),
 		'revision_requests': revision_models.Revision.objects.filter(book=book, revision_type='review')
