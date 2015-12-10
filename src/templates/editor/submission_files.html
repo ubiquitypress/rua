@@ -34,7 +34,7 @@
   {% endif %}
     {% empty %}
      <li style="background-color:rgb(230,230,230)">
-      <h5>&nbsp;&nbsp;&nbsp;No files</h5>
+      <h5>&nbsp;&nbsp;&nbsp;No files. <a href="{% url 'upload_manuscript' submission.id %}">Add one.</a></h5>
    </li>
   {% endfor %}
 </ul>
@@ -70,7 +70,7 @@
   {% endif %}
     {% empty %}
      <li style="background-color:rgb(230,230,230)">
-      <h5>&nbsp;&nbsp;&nbsp;No files</h5>
+      <h5>&nbsp;&nbsp;&nbsp;No files. <a href="{% url 'upload_additional' submission.id %}">Add one.</a></h5>
    </li>
   {% endfor %}
 </ul>
