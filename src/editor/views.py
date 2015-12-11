@@ -222,18 +222,19 @@ def update_review_due_date(request, submission_id, round_id, review_id):
 @is_book_editor
 def editor_decision(request, submission_id, decision):
 	book = get_object_or_404(models.Book, pk=submission_id)
-	email_text = models.Setting.objects.get(group__name='email', name='request_revisions').value
+	email_text = models.Setting.objects.get(group__name='email', name='decision_ack').value
 	
 	if request.POST:
-		if 'inform' in request.POST:
-			print "Notify Authors"
-		elif 'skip' in request.POST:
-			print "Skip"
+		
 		if decision == 'decline':
-			submission.stage.declined = timezone.now()
-			submission.stage.current_stage = 'declined'
-			submission.stage.save()
+			book.stage.declined = timezone.now()
+			book.stage.current_stage = 'declined'
+			book.stage.save()
 			messages.add_message(request, messages.SUCCESS, 'Submission declined.')	
+			if 'inform' in request.POST:
+				core_logic.send_decision_ack(book,decision,request.POST.get('id_email_text'))
+			elif 'skip' in request.POST:
+				print "Skip"
 			return redirect(reverse('editor_dashboard'))
 
 		elif decision == 'review':
@@ -246,6 +247,10 @@ def editor_decision(request, submission_id, decision):
 				log.add_log_entry(book=book, user=request.user, kind='review', message='Submission moved to Review', short_name='Submission in Review')
 
 			messages.add_message(request, messages.SUCCESS, 'Submission has been moved to the review stage.')
+			if 'inform' in request.POST:
+				core_logic.send_decision_ack(book,decision,request.POST.get('id_email_text'))
+			elif 'skip' in request.POST:
+				print "Skip"
 
 			return redirect(reverse('editor_review', kwargs={'submission_id': book.id}))
 
@@ -255,6 +260,10 @@ def editor_decision(request, submission_id, decision):
 			book.stage.editing = timezone.now()
 			book.stage.current_stage = 'editing'
 			book.stage.save()
+			if 'inform' in request.POST:
+				core_logic.send_decision_ack(book,decision,request.POST.get('id_email_text'))
+			elif 'skip' in request.POST:
+				print "Skip"
 			return redirect(reverse('editor_editing', kwargs={'submission_id': submission_id}))
 
 

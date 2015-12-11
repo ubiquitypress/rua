@@ -17,13 +17,14 @@
         <textarea class="form-control" id="id_email_text" name="id_email_text" required="required" cols="100" rows="10">{{ email_text }}</textarea>
         </div>
         {% buttons %}
-        <div class="col-md-8">
-              <button name="skip" id="skip" type="submit" style="width:125px" class=" pull-right btn btn-primary btn-round">
+        <div class="container-fluid pull-right">
+               <button name="inform" id="inform" type="submit" style="width:150px;margin-left:5px" class="  btn btn-accept">
+              Send
+            </button>
+              <button name="skip" id="skip" type="submit" style="width:125px" class=" btn btn-primary btn-round">
             Skip
             </button>
-            <button name="inform" id="inform" type="submit" style="width:150px;margin-right:5px" class=" pull-right btn {% ifequal decision 'decline'%}btn-decline{% else %}btn-accept{% endifequal %}">
-               {% ifequal decision 'decline'%} Reject Submission {% else %}Move to {{decision|title}} {% endifequal %}
-            </button>
+         
            
         </div>
         {% endbuttons %}
