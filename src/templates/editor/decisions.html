@@ -1,0 +1,52 @@
+{% extends "secondary_page.html" %}
+{% load static from staticfiles %}
+{% load bootstrap3 %}
+
+{% block title %}Decision: {% ifequal decision 'decline'%} Reject Submission {% else %}Move to {{decision|title}} {% endifequal %}{% endblock %}
+{% block page-title %}Decision: {% ifequal decision 'decline'%} Reject Submission {% else %}Move to {{decision|title}} {% endifequal %}{% endblock %}
+
+{% block page-content %}
+	<div class="col-md-12">
+		<h2>Decision for {{ submission.title }} : {% ifequal decision 'decline'%} Reject Submission {% else %}Move to {{decision|title}} {% endifequal %}</h2>
+        <p>Complete the form below in order to inform the author about your decision.</p>
+        <hr />
+        {% if permission %}
+        <form method="post" class="form">
+        {% csrf_token %}
+        <div class="form-group">
+        <label>Email</lable>
+        <textarea class="form-control" id="id_email_text" name="id_email_text" required="required" cols="100" rows="10">{{ email_text }}</textarea>
+        </div>
+        {% buttons %}
+        <div class="container-fluid pull-right">
+               <button name="inform" id="inform" type="submit" style="width:150px;margin-left:5px" class="  btn btn-accept">
+              Send
+            </button>
+              <button name="skip" id="skip" type="submit" style="width:125px" class=" btn btn-primary btn-round">
+            Skip
+            </button>
+         
+           
+        </div>
+        {% endbuttons %}
+        </form>
+        {% else %}
+        <div class="well">
+            You cannot make this decision.
+        </div>
+        {% endif %}
+	</div>
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript" src="{% static "js/fancyfile.js" %}"></script>
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css">
+<script src="http://code.jquery.com/ui/1.11.0/jquery-ui.js"></script>
+<script type="text/javascript">$("textarea").jqte();</script>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+      $('#id_due').datepicker({ dateFormat: 'yy-mm-dd' }).val();
+    });
+</script>
+{% endblock js %}

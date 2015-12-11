@@ -438,5 +438,25 @@
   },
   "model": "core.setting",
   "pk": 46
+},
+{
+  "fields": {
+    "value": "<p>Dear {{ author.full_name }} ,\r\n</p><p>\r\nWe think you should know a new decision has been made on the submission {{submission.title}}.\r\n</p><p>\r\nDecision: {% ifequal decision 'decline'%} Reject Submission {% else %}Move to {{decision|title}} {% endifequal %}\r\n</p><p>\r\nRegards,\r\n</p>",
+    "group": 3,
+    "name": "decision_ack",
+    "types": "rich_text"
+  },
+  "model": "core.setting",
+  "pk": 47
+},
+{
+  "fields": {
+    "value": "placeholder",
+    "group": 1,
+    "name": "oai_identifier",
+    "types": "char"
+  },
+  "model": "core.setting",
+  "pk": 48
 }
 ]
