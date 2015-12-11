@@ -54,7 +54,7 @@
 <hr />
 <h4>Copyeditor Files</h4>
 
-{% include 'shared/review_files.html' with file_data=copyedit.copyedit_files.all %}
+{% include 'shared/review_files.html' with file_data=copyedit.copyedit_files.all assignment='copyedit' %}
 
 {% if copyedit.completed and not copyedit.editor_review %}
 <form method="POST">

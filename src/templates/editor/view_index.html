@@ -54,7 +54,7 @@
 {% include 'shared/review_files.html' with file_data=index.files.all  %}
 <hr />
 <h4>Indexer Files</h4>
-{% include 'shared/review_files.html' with file_data=index.index_files.all  %}
+{% include 'shared/review_files.html' with file_data=index.index_files.all assignment='indexing' %}
 
 {% if copyedit.completed and not copyedit.editor_review %}
 <form method="POST">
