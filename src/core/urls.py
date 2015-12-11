@@ -27,6 +27,7 @@ urlpatterns = patterns('',
 
     # Login/Register
     url(r'^login/$', 'core.views.login', name='login'),
+    url(r'^login/orcid/$', 'core.views.login_orcid', name='orcid-login'),
     url(r'^logout/$', 'core.views.logout', name='logout'),
     url(r'^register/$', 'core.views.register', name='register'),
     url(r'^login/activate/(?P<code>[-\w./]+)/$', 'core.views.activate', name='activate'),

@@ -15,6 +15,7 @@ from  __builtin__ import any as string_any
 
 from review import models as review_models
 from core import log, models, forms, logic
+from author import orcid
 from email import send_email
 from files import handle_file_update,handle_attachment,handle_file
 from submission import models as submission_models
@@ -97,6 +98,34 @@ def login(request):
 	template = 'core/login.html'
 
 	return render(request, template, context)
+
+def login_orcid(request):
+
+	orcid_code = request.GET.get('code', None)
+
+	if orcid_code:
+		auth = orcid.retrieve_tokens(orcid_code, domain=request.get_host())
+		orcid_id = auth.get('orcid', None)
+
+		if orcid_id:
+			try:
+				user = User.objects.get(profile__orcid=orcid_id)
+				user.backend = 'django.contrib.auth.backends.ModelBackend'
+				login_user(request, user)
+
+				if request.GET.get('next'):
+					return redirect(request.GET.get('next'))
+				else:
+					return redirect(reverse('user_dashboard'))
+			except User.DoesNotExist:
+				messages.add_message(request, messages.WARNING, 'No user foud with the supplied ORCiD.')
+				return redirect(reverse('login'))
+		else:
+			messages.add_message(request, messages.WARNING, 'Valid ORCiD not returned, please try again, or login with your username and password.')
+			return redirect(reverse('login'))
+	else:
+		messages.add_message(request, messages.WARNING, 'No authorisation code provided, please try again or login with your username and password.')
+		return redirect(reverse('login'))
 
 @login_required
 def logout(request):
