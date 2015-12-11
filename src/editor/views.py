@@ -225,6 +225,10 @@ def editor_decision(request, submission_id, decision):
 	email_text = models.Setting.objects.get(group__name='email', name='request_revisions').value
 	
 	if request.POST:
+		if 'inform' in request.POST:
+			print "Notify Authors"
+		elif 'skip' in request.POST:
+			print "Skip"
 		if decision == 'decline':
 			submission.stage.declined = timezone.now()
 			submission.stage.current_stage = 'declined'
