@@ -12,6 +12,8 @@ urlpatterns = patterns('',
 
     url(r'^submission/(?P<submission_id>\d+)/review/$', 'editor.views.editor_review', name='editor_review'),
     url(r'^submission/(?P<submission_id>\d+)/review/round/(?P<round_number>\d+)/$', 'editor.views.editor_review_round', name='editor_review_round'),
+    url(r'^submission/(?P<submission_id>\d+)/review/round/(?P<round_number>\d+)/delete/(?P<review_id>\d+)/$', 'editor.views.editor_review_round_remove', name='editor_review_round_remove'),
+    
     url(r'^submission/(?P<submission_id>\d+)/review/round/(?P<round_id>\d+)/assignment/(?P<review_id>\d+)/$', 'editor.views.editor_review_assignment', name='editor_review_assignment'),
     url(r'^submission/(?P<submission_id>\d+)/review/round/(?P<round_id>\d+)/assignment/(?P<review_id>\d+)/set/due/$', 'editor.views.update_review_due_date', name='update_review_due_date'),
     url(r'^submission/(?P<submission_id>\d+)/files/(?P<review_type>[-\w]+)/add/$', 'editor.views.add_review_files', name='add_review_files'),

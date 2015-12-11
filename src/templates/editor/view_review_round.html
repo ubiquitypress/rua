@@ -10,7 +10,12 @@
   <li>
     <div class="row">
       <div class="col-md-7">
-        <p><br>
+        <p>
+   <a href="{% url 'editor_review_round_remove' submission.id round_id review.pk %}" class=" btn btn-danger btn-xs pull-left">
+          Deleter
+              </a>
+          <br>
+          <br>
         <strong>{{ review.user.profile.full_name }}<sup> <a style="height:17px;margin-top:6px" href="core/email.html" onclick="return popitup('/email/onetaskers/submission/{{submission.id}}/user/{{review.user.pk}}/','onetasker_{{review.user.pk}}')"class="fa fa-envelope-o btn btn-xs btn-default"></a></sup></strong>
         </p>
         {% if review.declined %}
@@ -60,6 +65,10 @@
     <div class="row">
       <div class="col-md-7">
         <p>
+           <a href="{% url 'editor_review_round_remove' submission.id round_id review.pk %}" class=" btn btn-danger btn-xs pull-left">
+          Delete
+              </a>
+          <br>
           <br>
         <strong>{{ review.user.profile.full_name }}<sup> <a style="height:17px;margin-top:6px" href="core/email.html" onclick="return popitup('/email/onetaskers/submission/{{submission.id}}/user/{{review.user.pk}}/','onetasker_{{review.user.pk}}')"class="fa fa-envelope-o btn btn-xs btn-default"></a></sup></strong>
         </p>
@@ -76,6 +85,7 @@
         	{% endif %}
         </p>
       </div>
+        
       <div class="col-md-4">
         {% if not review.completed %}<h5>Due: {{ review.due }}&nbsp;&nbsp;<a href="{% url 'update_review_due_date' submission.id review_round.round_number review.id %}"><i class="fa fa-edit"></i></a></h5>{% else %}<a href="{% url 'editor_review_assignment' submission.id review_round.round_number review.id %}" style="margin-top: 20px;margin-right:10px;" class="btn btn-xs btn-success">View Review</a>{% endif %}
       </div>
