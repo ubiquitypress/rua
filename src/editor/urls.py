@@ -7,6 +7,8 @@ urlpatterns = patterns('',
     url(r'^submission/(?P<submission_id>\d+)/add/editors/$', 'editor.views.editor_add_editors', name='editor_add_editors'),
     url(r'^submission/(?P<submission_id>\d+)/tasks/$', 'editor.views.editor_tasks', name='editor_tasks'),
     url(r'^submission/(?P<submission_id>\d+)/status/$', 'editor.views.editor_status', name='editor_status'),
+    url(r'^submission/(?P<submission_id>\d+)/decision/(?P<decision>[-\w]+)/$', 'editor.views.editor_decision', name='editor_decision'),
+
 
     url(r'^submission/(?P<submission_id>\d+)/review/$', 'editor.views.editor_review', name='editor_review'),
     url(r'^submission/(?P<submission_id>\d+)/review/round/(?P<round_number>\d+)/$', 'editor.views.editor_review_round', name='editor_review_round'),

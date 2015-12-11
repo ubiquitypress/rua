@@ -3,19 +3,17 @@
 	<a href="{% url 'editor_publish' submission.id %}" class="btn btn-accept">Publish Book</a>
 
 	{% elif submission.stage.current_stage == 'submission' %}
-	<form method="POST" action="{% url 'editor_submission' submission.id %}">
-	{% csrf_token %}
-	<button name="review" type="submit" class="btn btn-sm btn-accept btn-action">Move to<br />Review</button>
+
+	<a href="{% url 'editor_decision' submission.id 'review' %}" class="btn btn-sm btn-accept btn-action">Move to<br />Review</a>
 	<a href="{% url 'request_revisions' submission.pk 'submission' %}" class="btn btn-sm btn-read btn-action">Request<br />Revisions</a>
-	<a href="{% url 'editor_decline_submission' submission.id %}" class="btn btn-sm btn-decline btn-action">Reject<br />Submission</a>
-	</form>
+	<a href="{% url 'editor_decision' submission.id 'decline' %}" class="btn btn-sm btn-decline btn-action">Reject<br />Submission</a>
+	
 
 	{% elif submission.stage.current_stage == 'review' %}
-	<form method="POST" action="{% url 'editor_review' submission.id %}">{% csrf_token %}<button type="submit" name="move_to_editing" class="btn btn-sm btn-accept btn-action">Move to<br />Editing</button>
+	<a href="{% url 'editor_decision' submission.id 'editing' %}" class="btn btn-sm btn-accept btn-action">Move to<br />Editing</a>
 	<a href="{% url 'request_revisions' submission.pk 'review' %}" class="btn btn-sm btn-read btn-action">Request<br />Revisions</a>
-	<a href="{% url 'editor_decline_submission' submission.id %}" class="btn btn-sm btn-decline btn-action">Reject<br />Submission</a>
-	</form>
-
+	<a href="{% url 'editor_decision' submission.id 'decline' %}" class="btn btn-sm btn-decline btn-action">Reject<br />Submission</a>
+	
 	{% elif submission.stage.current_stage == 'editing' %}
 	<form method="POST" action="{% url 'editor_editing' submission.id %}?start=production">{% csrf_token %}
 		<button name="production" class="btn btn-sm btn-accept btn-action">Move to<br />Production</button>

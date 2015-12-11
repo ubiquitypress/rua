@@ -58,19 +58,6 @@ def editor_dashboard(request):
 def editor_submission(request, submission_id):
 	book = get_object_or_404(models.Book, pk=submission_id)
 
-	if request.POST and 'review' in request.POST:
-		core_logic.create_new_review_round(book)
-		book.stage.review = timezone.now()
-		book.stage.current_stage = 'review'
-		book.stage.save()
-
-		if book.stage.current_stage == 'review':
-			log.add_log_entry(book=book, user=request.user, kind='review', message='Submission moved to Review', short_name='Submission in Review')
-
-		messages.add_message(request, messages.SUCCESS, 'Submission has been moved to the review stage.')
-
-		return redirect(reverse('editor_review', kwargs={'submission_id': book.id}))
-
 	template = 'editor/submission.html'
 	context = {
 		'submission': book,
@@ -152,14 +139,7 @@ def editor_review(request, submission_id):
 	if request.POST and 'new_round' in request.POST:
 		new_round = logic.create_new_review_round(book)
 		return redirect(reverse('editor_review_round', kwargs={'submission_id': submission_id, 'round_number': new_round.round_number}))
-	elif request.POST and 'move_to_editing' in request.POST:
-		if not book.stage.editing:
-			log.add_log_entry(book=book, user=request.user, kind='editing', message='Submission moved to Editing.', short_name='Submission in Editing')
-		book.stage.editing = timezone.now()
-		book.stage.current_stage = 'editing'
-		book.stage.save()
-		return redirect(reverse('editor_editing', kwargs={'submission_id': submission_id}))
-
+	
 	template = 'editor/submission.html'
 	context = {
 		'submission': book,
@@ -235,6 +215,51 @@ def update_review_due_date(request, submission_id, round_id, review_id):
 		'review': review_assignment,
 		'active': 'review',
 		'round_id': round_id,
+	}
+
+	return render(request, template, context)
+
+@is_book_editor
+def editor_decision(request, submission_id, decision):
+	book = get_object_or_404(models.Book, pk=submission_id)
+	email_text = models.Setting.objects.get(group__name='email', name='request_revisions').value
+	
+	if request.POST:
+		if decision == 'decline':
+			submission.stage.declined = timezone.now()
+			submission.stage.current_stage = 'declined'
+			submission.stage.save()
+			messages.add_message(request, messages.SUCCESS, 'Submission declined.')	
+			return redirect(reverse('editor_dashboard'))
+
+		elif decision == 'review':
+			core_logic.create_new_review_round(book)
+			book.stage.review = timezone.now()
+			book.stage.current_stage = 'review'
+			book.stage.save()
+
+			if book.stage.current_stage == 'review':
+				log.add_log_entry(book=book, user=request.user, kind='review', message='Submission moved to Review', short_name='Submission in Review')
+
+			messages.add_message(request, messages.SUCCESS, 'Submission has been moved to the review stage.')
+
+			return redirect(reverse('editor_review', kwargs={'submission_id': book.id}))
+
+		elif decision == 'editing':
+			if not book.stage.editing:
+				log.add_log_entry(book=book, user=request.user, kind='editing', message='Submission moved to Editing.', short_name='Submission in Editing')
+			book.stage.editing = timezone.now()
+			book.stage.current_stage = 'editing'
+			book.stage.save()
+			return redirect(reverse('editor_editing', kwargs={'submission_id': submission_id}))
+
+
+
+	template = 'editor/decisions.html'
+	context = {
+		'submission': book,
+		'decision':decision,
+		'email_text': email_text,
 	}
 
 	return render(request, template, context)
