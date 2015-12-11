@@ -458,5 +458,15 @@
   },
   "model": "core.setting",
   "pk": 48
+},
+{
+  "fields": {
+    "value": "<p>Dear {{ review.user.first_name }} {{ review.user.last_name }},\r\n</p><p>\r\nWe think you should know that the due date of a review assignment that you assigned to has changed. </p>\r\n<p>\r\nReview id: {{review.id}}\r\nDue Date: {{review.due}}\r\n</p>\r\n<p>\r\nSincerely,</p><p>\r\nPress Team</p><p>{% if sender %}{{ sender.profile.signature|safe }}{% endif %}<br></p><p>\r\n</p>",
+    "group": 3,
+    "name": "review_due_ack",
+    "types": "rich_text"
+  },
+  "model": "core.setting",
+  "pk": 49
 }
 ]

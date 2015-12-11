@@ -200,13 +200,18 @@ def editor_review_round(request, submission_id, round_number):
 def update_review_due_date(request, submission_id, round_id, review_id):
 	submission = get_object_or_404(models.Book, pk=submission_id)
 	review_assignment = get_object_or_404(models.ReviewAssignment, pk=review_id)
-
+	previous_due_date = review_assignment.due
 	if request.POST:
+		email_text =  models.Setting.objects.get(group__name='email', name='review_due_ack').value
 		due_date = request.POST.get('due_date', None)
+		notify = request.POST.get('email', None)
 		if due_date:
-			review_assignment.due = due_date
-			review_assignment.save()
-			messages.add_message(request, messages.SUCCESS, 'Due date updated.')
+			if not str(due_date) == str(previous_due_date):
+				review_assignment.due = due_date
+				review_assignment.save()
+				if notify:
+					logic.send_review_update(submission, review_assignment, email_text, request.user, attachment=None)
+				messages.add_message(request, messages.SUCCESS, 'Due date updated.')
 			return redirect(reverse('editor_review_round', kwargs={'submission_id': submission_id, 'round_number': submission.get_latest_review_round()}))
 
 	template = 'editor/update_review_due_date.html'
