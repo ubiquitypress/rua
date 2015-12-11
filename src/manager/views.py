@@ -570,9 +570,20 @@ def add_user(request):
 				user.set_password(new_pass)
 				messages.add_message(request, messages.SUCCESS, 'New user %s, password set to %s.' % (user.username, new_pass))
 
+			user.save()
+
 			profile = profile_form.save(commit=False)
 			profile.user = user
 			profile.save()
+
+			roles = request.POST.getlist('roles')
+
+			for role in roles:
+				role_object = core_models.Role.objects.get(pk=role)
+				profile.roles.add(role_object)
+
+			profile.save()
+
 			return redirect(reverse('manager_users'))
 
 	template = 'manager/users/edit.html'
