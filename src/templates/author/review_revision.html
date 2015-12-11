@@ -13,7 +13,13 @@
     {% endifequal %}
 		<td>{{ round.round_number }}</td>
 		<td>{{ round.date_started }}</td>
-		<td><a href="{% url 'view_review_round' submission.id round.round_number %}" class="btn btn-task">View</a></td>
+		{% ifequal review_round round %}
+      <td class="selected-row-table-arrow">
+      {% else %}
+      <td>
+      {% endifequal %}
+
+      <a href="{% url 'view_review_round' submission.id round.round_number %}" class="btn btn-task">View</a></td>
 	</tr>
 	{% endfor %}
 </table>
@@ -35,7 +41,12 @@
     {% endifequal %}
     	<td>Revision {{ forloop.counter }} </td>
     	<td>{{ revision.requested }}</td>
-    	<td width="25%">{% if revision.completed %}<a class="btn btn-task" href="{% url 'view_revisions' submission.id revision.id %}">View</a>{% else %}<small>Due on {{ revision.due }}</small>{% endif %}</td>
+      {% ifequal revision.id revision_id %}
+      <td class="selected-row-table-arrow" 
+      {% else %}
+      <td 
+      {% endifequal %}
+    	 width="25%">{% if revision.completed %}<a class="btn btn-task" href="{% url 'view_revisions' submission.id revision.id %}">View</a>{% else %}<small>Due on {{ revision.due }}</small>{% endif %}</td>
     </tr>
     {% endfor %}
   </table>

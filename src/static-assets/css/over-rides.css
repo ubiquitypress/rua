@@ -62,12 +62,28 @@ html, body {
 }
 
 .selected-row-table{
-  background-color:#DDDDDD; 
-  right: -5px  ; 
-  left: -5px  ; 
-  border-top: 14px solid transparent;
-  border-left: 14px solid #fff;
-  border-right: 5px solid #DDDDDD;    
+  background-color:#DDDDDD;     
+}
+/* create an arrow that points right - source : http://html-tuts.com/css-arrows-up-down-left-right-triangle/; */
+.selected-row-table-arrow {
+  display: inline-block;
+  position: relative;
+  background: #DDDDDD;
+  padding: 15px;
+}
+.selected-row-table-arrow:after {
+  content: ' ';
+  display: block;  
+  position: absolute;
+  left: 100%;
+  top: 50%;
+  margin-top: -10px;
+  width: 0;
+  height: 0;
+  border-top: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-bottom: 10px solid transparent;
+  border-left: 10px solid #DDDDDD;
 }
 .message-container {
   padding: 10px;

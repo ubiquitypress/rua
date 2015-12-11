@@ -15,7 +15,11 @@
 	{% endifequal %}
 		<td align="center">{{ typeset.id}}</td>
 		<td><strong>{{ typeset.state.friendly }}</strong><br>{{ typeset.state.date }}</td>
-		<td><a href="{% url 'author_view_typesetter' submission.id typeset.id %}" class="btn  btn-task">View</a></td>
+		{% ifequal typeset.id typeset_id %}
+			<td class="selected-row-table-arrow">
+			{% else %}
+			<td>
+			{% endifequal %}<a href="{% url 'author_view_typesetter' submission.id typeset.id %}" class="btn  btn-task">View</a></td>
 	</tr>
 	{% empty %}
 	<tr>

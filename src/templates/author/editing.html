@@ -24,7 +24,12 @@
 		<td>
 			{{ assignment.due }}
 		</td>
-			<td>
+		{% ifequal copyedit.id assignment.id %}
+	<td class="selected-row-table-arrow">
+	{% else %}
+	<td>
+	{% endifequal %}
+			
 			<a href="{% url 'author_view_copyedit' submission.id assignment.id %}" class="btn btn-task"> View </a>
 		</td>
 	</tr>
@@ -60,7 +65,11 @@
 		<td>
 			{{ assignment.due }}
 		</td>
+			{% ifequal index.id assignment.id %}
+			<td class="selected-row-table-arrow">
+			{% else %}
 			<td>
+			{% endifequal %}
 			<a href="{% url 'author_view_index' submission.id assignment.id %}" class="btn btn-task"> View </a>
 		</td>
 	</tr>

@@ -148,7 +148,7 @@ def view_revisions(request, submission_id, revision_id):
 		'revision': revision,
 		'revision_id':revision.id,
 		'submission': book,
-		'author_include': 'author/review_revision.html',
+		'author_include': 'author/submission_details.html',
 		'submission_files': 'author/view_revision.html',
 		'update': False,
 		'review_rounds': review_rounds,
