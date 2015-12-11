@@ -223,7 +223,19 @@ def update_review_due_date(request, submission_id, round_id, review_id):
 def editor_decision(request, submission_id, decision):
 	book = get_object_or_404(models.Book, pk=submission_id)
 	email_text = models.Setting.objects.get(group__name='email', name='decision_ack').value
+	permission = True
 	
+	if book.stage.current_stage == 'declined':
+		permission = False
+	if decision == 'decline':
+		if book.stage.current_stage == 'editing':
+			permission = False
+	elif decision == 'review':
+		if book.stage.current_stage == 'review' or book.stage.current_stage == 'editing':
+			permission = False
+	elif decision == 'editing'and book.stage.current_stage == 'editing':
+		permission = False
+
 	if request.POST:
 		
 		if decision == 'decline':
@@ -273,6 +285,7 @@ def editor_decision(request, submission_id, decision):
 		'submission': book,
 		'decision':decision,
 		'email_text': email_text,
+		'permission':permission,
 	}
 
 	return render(request, template, context)

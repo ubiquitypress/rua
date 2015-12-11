@@ -10,6 +10,7 @@
 		<h2>Decision for {{ submission.title }} : {% ifequal decision 'decline'%} Reject Submission {% else %}Move to {{decision|title}} {% endifequal %}</h2>
         <p>Complete the form below in order to inform the author about your decision.</p>
         <hr />
+        {% if permission %}
         <form method="post" class="form">
         {% csrf_token %}
         <div class="form-group">
@@ -29,6 +30,11 @@
         </div>
         {% endbuttons %}
         </form>
+        {% else %}
+        <div class="well">
+            You cannot make this decision.
+        </div>
+        {% endif %}
 	</div>
 {% endblock %}
 
