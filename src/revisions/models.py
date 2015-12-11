@@ -9,7 +9,7 @@ def revision_choices():
 
 class Revision(models.Model):
 	book = models.ForeignKey('core.Book')
-	notes_from_editor = models.TextField(help_text='Enter some information to assist the author/editors with their revisions.')
+	notes_from_editor = models.TextField(help_text='Enter some information to assist the author/editors with their revisions. It is best that you use full sentences in your notes.')
 	cover_letter = models.TextField(blank=True, null=True)
 	revision_type = models.CharField(max_length=100, choices=revision_choices())
 	requestor = models.ForeignKey(User)
