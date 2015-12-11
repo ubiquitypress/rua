@@ -29,12 +29,13 @@ def send_author_invite(submission, copyedit, email_text, sender, attachment=None
 	email.send_email('Copyediting Completed', context, from_email.value, submission.owner.email, email_text, book=submission, attachment=attachment)
 
 
-def handle_copyeditor_assignment(request,book, copyedit, files, due_date, email_text, requestor, attachment=None):
+def handle_copyeditor_assignment(request,book, copyedit, files, due_date, note, email_text, requestor, attachment=None):
 	try:   
 		new_copyeditor = models.CopyeditAssignment(
 			book = book,
 			copyeditor = copyedit,
 			requestor = requestor,
+			note=note,
 			due = due_date,
 		)
 

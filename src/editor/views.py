@@ -1111,11 +1111,11 @@ def assign_copyeditor(request, submission_id):
 		file_list = models.File.objects.filter(pk__in=request.POST.getlist('file'))
 		due_date = request.POST.get('due_date')
 		email_text = request.POST.get('message')
-
+		note = request.POST.get('note')
 		attachment = handle_attachment(request, book)
 
 		for copyeditor in copyeditor_list:
-			logic.handle_copyeditor_assignment(request,book, copyeditor, file_list, due_date, email_text, requestor=request.user, attachment=attachment)
+			logic.handle_copyeditor_assignment(request,book, copyeditor, file_list, due_date, note, email_text, requestor=request.user, attachment=attachment)
 			log.add_log_entry(book=book, user=request.user, kind='editing', message='Copyeditor %s %s assigend to %s' % (copyeditor.first_name, copyeditor.last_name, book.title), short_name='Copyeditor Assigned')
 
 		return redirect(reverse('editor_editing', kwargs={'submission_id': submission_id}))
