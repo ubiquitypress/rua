@@ -10,8 +10,8 @@
   <li>
     <div class="row">
       <div class="col-md-7">
-        <p>
-        <strong>{{ review.user.profile.full_name }}</strong>
+        <p><br>
+        <strong>{{ review.user.profile.full_name }}<sup> <a style="height:17px;margin-top:6px" href="core/email.html" onclick="return popitup('/email/onetaskers/submission/{{submission.id}}/user/{{review.user.pk}}/','onetasker_{{review.user.pk}}')"class="fa fa-envelope-o btn btn-xs btn-default"></a></sup></strong>
         </p>
         {% if review.declined %}
         	<span class="declined">Review Declined on {{ review.declined }}</span>
@@ -60,7 +60,8 @@
     <div class="row">
       <div class="col-md-7">
         <p>
-        <strong>{{ review.user.profile.full_name }}</strong>
+          <br>
+        <strong>{{ review.user.profile.full_name }}<sup> <a style="height:17px;margin-top:6px" href="core/email.html" onclick="return popitup('/email/onetaskers/submission/{{submission.id}}/user/{{review.user.pk}}/','onetasker_{{review.user.pk}}')"class="fa fa-envelope-o btn btn-xs btn-default"></a></sup></strong>
         </p>
         <span class="{% if review.recommendation %}recommendation{% else %}no-recommendation{% endif %}">
         {% if review.recommendation %}Recommend to {{ review.get_recommendation_display }}{% else %}Awaiting recommendation{% endif %}
