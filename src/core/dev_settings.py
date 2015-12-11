@@ -29,6 +29,11 @@ ALLOWED_HOSTS = []
 
 BASE_URL = 'http://localhost:8000/'
 
+ORCID_API_URL = 'http://pub.orcid.org/v1.2_rc7/'
+ORCID_REDIRECT_URI = 'http://localhost:8002/login/orcid/'
+ORCID_TOKEN_URL = 'https://pub.orcid.org/oauth/token'
+ORCID_CLIENT_SECRET = '6d1677b8-25c6-4d42-8a8d-e77a0ced56c6'
+ORCID_CLIENT_ID = 'APP-VXH2IGZ6ZH7Q71L9'
 
 # Application definition
 
@@ -154,6 +159,7 @@ TEMPLATES = [
                 "core.context_processors.onetasker_task_count",
                 "core.context_processors.author_task_count",
                 "core.context_processors.roles",
+                "core.context_processors.domain",
             ],
         },
     },

@@ -41,3 +41,9 @@ def roles(request):
 	except:
 		return {'roles': ''}
 
+def domain(request):
+	try:
+		return {'domain': request.get_host()}
+	except:
+		pass
+
