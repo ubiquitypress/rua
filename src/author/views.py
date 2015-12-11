@@ -3,11 +3,11 @@ from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 from django.core.urlresolvers import reverse
 from django.contrib import messages
+
 from core.decorators import is_author
 from core import models, log, task, logic as core_logic, forms as core_forms
 from editor import models as editor_models
-from author import forms
-from author import logic
+from author import forms, logic
 from core.logic import order_data, decode_json
 from submission import models as submission_models
 from revisions import models as revision_models

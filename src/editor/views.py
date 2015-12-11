@@ -4,6 +4,7 @@ from django.utils import timezone
 from django.contrib import messages
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
 
 from core.files import handle_attachment, handle_file_update, handle_attachment, handle_file
 from core import models, log, logic as core_logic, forms as core_forms
@@ -15,7 +16,7 @@ from manager import models as manager_models
 from submission import forms as submission_forms
 from editor import forms, models as editor_models
 
-
+@login_required
 @is_editor
 def editor_dashboard(request):
 
