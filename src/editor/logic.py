@@ -52,12 +52,13 @@ def handle_copyeditor_assignment(request,book, copyedit, files, due_date, email_
   
 
 
-def handle_indexer_assignment(request,book, index, files, due_date, email_text, requestor, attachment):
+def handle_indexer_assignment(request,book, index, files, due_date, note, email_text, requestor, attachment):
 	try:
 		new_indexer = models.IndexAssignment(
 			book=book,
 			indexer=index,
 			requestor=requestor,
+			note=note,
 			due=due_date,
 		)
 
