@@ -168,17 +168,15 @@ def update_profile(request):
 	return render(request, template, context)
 
 def oai(request):
-	try:
-		base_url = models.Setting.objects.get(group__name='general', name='base_url').value
-	except:
-		base_url='localhost:8000'
+	
+	base_url = models.Setting.objects.get(group__name='general', name='base_url').value
 	oai_dc = 'http://%s/oai' % (base_url)
 	oai_identifier = models.Setting.objects.get(group__name='general', name='oai_identifier').value
 
 	books = models.Book.objects.all()
 	list_of_books =[[{}] for t in range(0,len(books)) ]	
-	t=0
-	for book in books:
+
+	for t,book in enumerate(books):
 		try:
 			isbns = models.Identifier.objects.filter(book=book).exclude(identifier='pub_id').exclude(identifier='urn').exclude(identifier='doi')
 		except:
@@ -188,7 +186,7 @@ def oai(request):
 		for format in formats:
 			list_format.append(format.file.mime_type)
 		list_of_books[t] = [{'book': book, 'isbns': isbns,'formats':list_format,}]
-		t=t+1  
+
 	template = 'core/oai.xml'
 	context = {
 		'books': list_of_books,
