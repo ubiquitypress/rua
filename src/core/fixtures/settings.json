@@ -448,5 +448,15 @@
   },
   "model": "core.setting",
   "pk": 47
+},
+{
+  "fields": {
+    "value": "placeholder",
+    "group": 1,
+    "name": "oai_identifier",
+    "types": "char"
+  },
+  "model": "core.setting",
+  "pk": 48
 }
 ]
