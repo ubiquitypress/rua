@@ -11,14 +11,28 @@
         <p>Complete the form below in order to inform the author about your decision.</p>
         <hr />
         {% if permission %}
-        <form method="post" class="form">
+        <form method="post" class="form" enctype="multipart/form-data">
         {% csrf_token %}
         <div class="form-group">
         <label>Email</lable>
         <textarea class="form-control" id="id_email_text" name="id_email_text" required="required" cols="100" rows="10">{{ email_text }}</textarea>
         </div>
+          <br />
+
+  <label class="control-label" for="id_label">Attachment</label>
+  <p class="small">Please add any additonal files here.</p>
+  <div class="input-group">
+      <span class="input-group-btn">
+        <span class="btn btn-green btn-file">
+          Browse&hellip; <input type="file" id="attachment" name="attachment">
+        </span>
+      </span>
+      <input type="text" class="form-control" readonly>
+    </div>
+        <br>
+
         {% buttons %}
-        <div class="container-fluid pull-right">
+        <div class="container-fluid pull-left">
                <button name="inform" id="inform" type="submit" style="width:150px;margin-left:5px" class="  btn btn-accept">
               Send
             </button>

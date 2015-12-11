@@ -237,14 +237,19 @@ def editor_decision(request, submission_id, decision):
 		permission = False
 
 	if request.POST:
-		
+		print request.FILES
+
+		if request.FILES.get('attachment'):
+			attachment = handle_file(request.FILES.get('attachment'), book, 'misc', request.user)
+		else:
+			attachment = None
 		if decision == 'decline':
 			book.stage.declined = timezone.now()
 			book.stage.current_stage = 'declined'
 			book.stage.save()
 			messages.add_message(request, messages.SUCCESS, 'Submission declined.')	
 			if 'inform' in request.POST:
-				core_logic.send_decision_ack(book,decision,request.POST.get('id_email_text'))
+				core_logic.send_decision_ack(book,decision,request.POST.get('id_email_text'), attachment)
 			elif 'skip' in request.POST:
 				print "Skip"
 			return redirect(reverse('editor_dashboard'))
@@ -260,7 +265,7 @@ def editor_decision(request, submission_id, decision):
 
 			messages.add_message(request, messages.SUCCESS, 'Submission has been moved to the review stage.')
 			if 'inform' in request.POST:
-				core_logic.send_decision_ack(book,decision,request.POST.get('id_email_text'))
+				core_logic.send_decision_ack(book,decision,request.POST.get('id_email_text'), attachment)
 			elif 'skip' in request.POST:
 				print "Skip"
 
@@ -273,12 +278,10 @@ def editor_decision(request, submission_id, decision):
 			book.stage.current_stage = 'editing'
 			book.stage.save()
 			if 'inform' in request.POST:
-				core_logic.send_decision_ack(book,decision,request.POST.get('id_email_text'))
+				core_logic.send_decision_ack(book,decision,request.POST.get('id_email_text'), attachment)
 			elif 'skip' in request.POST:
 				print "Skip"
 			return redirect(reverse('editor_editing', kwargs={'submission_id': submission_id}))
-
-
 
 	template = 'editor/decisions.html'
 	context = {
