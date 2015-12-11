@@ -6,7 +6,7 @@ class Copyedit(forms.ModelForm):
 
 	class Meta:
 		model = models.CopyeditAssignment
-		fields = ('note',)
+		fields = ('note_from_copyeditor',)
 
 class Typeset(forms.ModelForm):
 

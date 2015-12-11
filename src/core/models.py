@@ -392,6 +392,8 @@ class CopyeditAssignment(models.Model):
 	author_invited = models.DateField(blank=True, null=True)
 	author_completed = models.DateField(blank=True, null=True)
 	note = models.TextField(blank=True, null=True)
+	note_from_copyeditor = models.TextField(blank=True, null=True)
+	
 	note_to_author = models.TextField(blank=True, null=True)
 	note_from_author = models.TextField(blank=True, null=True)
 
@@ -431,7 +433,7 @@ class IndexAssignment(models.Model):
 	declined = models.DateField(blank=True, null=True)
 	due = models.DateField(blank=True, null=True)
 	completed = models.DateField(blank=True, null=True)
-	
+
 	note = models.TextField(blank=True, null=True)
 	note_from_indexer = models.TextField(blank=True, null=True)
 	note_to_indexer = models.TextField(blank=True, null=True)
