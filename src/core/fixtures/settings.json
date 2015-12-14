@@ -271,7 +271,7 @@
 },
 {
     "fields": {
-        "value": "Dear {% if index.indexer.profile.salutation %}{{index.indexer.profile.salutation}}{% else %}{{index.indexer.first_name}}{% endif %} {{index.indexer.last_name}},\r\n<br><br>This is a request that you undertake copyediting on {{submission.title}}. Please login to the BMS, you will be directed to undertake your copyedit from the user dashboard.<br><br>Your username is: {{index.indexer.username}}<br><br>Copyedits are requested to be completed by: {{index.due}}.\r\n<br><br>Regards",
+        "value": "Dear {% if index.indexer.profile.salutation %}{{index.indexer.profile.salutation}}{% else %}{{index.indexer.first_name}}{% endif %} {{index.indexer.last_name}},\r\n<br><br>This is a request that you undertake indexing on {{submission.title}}. Please login to the BMS, you will be directed to undertake your indexing from the user dashboard.<br><br>Your username is: {{index.indexer.username}}<br><br>Indexing assignments are requested to be completed by: {{index.due}}.\r\n<br><br>Regards",
         "group": 3,
         "name": "index_request",
         "types": "rich_text"
@@ -458,5 +458,15 @@
   },
   "model": "core.setting",
   "pk": 48
+},
+{
+  "fields": {
+    "value": "<p>Dear {{ review.user.first_name }} {{ review.user.last_name }},\r\n</p><p>\r\nWe think you should know that the due date of a review assignment that you assigned to has changed. </p>\r\n<p>\r\nReview id: {{review.id}}\r\nDue Date: {{review.due}}\r\n</p>\r\n<p>\r\nSincerely,</p><p>\r\nPress Team</p><p>{% if sender %}{{ sender.profile.signature|safe }}{% endif %}<br></p><p>\r\n</p>",
+    "group": 3,
+    "name": "review_due_ack",
+    "types": "rich_text"
+  },
+  "model": "core.setting",
+  "pk": 49
 }
 ]

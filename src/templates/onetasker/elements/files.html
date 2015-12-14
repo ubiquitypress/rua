@@ -1,11 +1,11 @@
  <div class="dash-container">
 
         <h4>INSTRUCTIONS FOR TASK</h4>
-        </br>
+       
         <p>{{ assignment.note|safe }}</p>
-     
+       </br>
          <h5> Task Due <span class="author-due">{{ assignment.due }} ({{assignment.due|timeuntil}} left)</span></h5>
-
+           </br>
             <h5><b>Files:</b></h5>
             <ul class="media-list manuscript-upload-states">
               {% for file in assignment.files.all %}

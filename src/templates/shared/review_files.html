@@ -25,6 +25,9 @@
         <a href="{% url 'delete_review_files' submission.id file.id 'external'  %}" type="button"  class="btn btn-sm btn-danger btn-round-half download-small" style="margin-right:0px!important" ><i class="fa fa-trash"></i></a>
        
        {% endif %}
+       {% if assignment == 'copyedit' or assignment == 'indexing' %}
+         <a href="{% url 'update_file' submission.id file.id 'user_submission' %}" type="button"  class="btn btn-sm btn-accept download-small" ><i class="fa fa-cloud-upload"></i></a>
+       {% endif %}
          <a href="{% url 'serve_file' submission.id file.id %}" type="button"  class="btn btn-sm btn-task download-small" ><i class="fa fa-cloud-download"></i></a>
     </div>    </div>
   

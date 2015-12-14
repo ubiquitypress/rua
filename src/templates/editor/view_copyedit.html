@@ -29,7 +29,7 @@
 <h4>Assignment</h4>
 <h5>Notes:</h5>
 <div class="well">
-{{copyedit.note_from_author}}</div>
+{{copyedit.note_from_copyeditor}}</div>
 <table class="table table-bordered">
 	<tr>
 		<th>Copyeditor</th>
@@ -54,7 +54,7 @@
 <hr />
 <h4>Copyeditor Files</h4>
 
-{% include 'shared/review_files.html' with file_data=copyedit.copyedit_files.all %}
+{% include 'shared/review_files.html' with file_data=copyedit.copyedit_files.all assignment='copyedit' %}
 
 {% if copyedit.completed and not copyedit.editor_review %}
 <form method="POST">

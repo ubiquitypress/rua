@@ -29,12 +29,13 @@ def send_author_invite(submission, copyedit, email_text, sender, attachment=None
 	email.send_email('Copyediting Completed', context, from_email.value, submission.owner.email, email_text, book=submission, attachment=attachment)
 
 
-def handle_copyeditor_assignment(request,book, copyedit, files, due_date, email_text, requestor, attachment=None):
+def handle_copyeditor_assignment(request,book, copyedit, files, due_date, note, email_text, requestor, attachment=None):
 	try:   
 		new_copyeditor = models.CopyeditAssignment(
 			book = book,
 			copyeditor = copyedit,
 			requestor = requestor,
+			note=note,
 			due = due_date,
 		)
 
@@ -52,12 +53,13 @@ def handle_copyeditor_assignment(request,book, copyedit, files, due_date, email_
   
 
 
-def handle_indexer_assignment(request,book, index, files, due_date, email_text, requestor, attachment):
+def handle_indexer_assignment(request,book, index, files, due_date, note, email_text, requestor, attachment):
 	try:
 		new_indexer = models.IndexAssignment(
 			book=book,
 			indexer=index,
 			requestor=requestor,
+			note=note,
 			due=due_date,
 		)
 
@@ -181,6 +183,19 @@ def send_review_request(book, review_assignment, email_text, sender, attachment=
 	}
 
 	email.send_email('Review Request', context, from_email.value, review_assignment.user.email, email_text, book=book, attachment=attachment)
+
+def send_review_update(book, review_assignment, email_text, sender, attachment=None):
+	from_email = models.Setting.objects.get(group__name='email', name='from_address')
+	base_url = models.Setting.objects.get(group__name='general', name='base_url')
+
+	print email_text
+	context = {
+		'book': book,
+		'review': review_assignment,
+		'sender': sender,
+	}
+
+	email.send_email('Review Assignment %s: Due Date Updated' % review_assignment.id, context, from_email.value, review_assignment.user.email, email_text, book=book, attachment=attachment)
 
 def send_proposal_decline(proposal, email_text, sender):
 	from_email = models.Setting.objects.get(group__name='email', name='from_address')

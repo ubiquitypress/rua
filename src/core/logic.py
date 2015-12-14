@@ -387,23 +387,20 @@ def build_time_line_editing_copyedit(copyedit):
 			overdue=True
 		timeline.append({'stage': 'Requested', 'date': copyedit.requested,'overdue':overdue   })
 		timeline.append({'stage': 'Accepted', 'date': copyedit.accepted,'overdue':overdue  })
-		timeline.append({'stage': 'Editor Review', 'date': copyedit.editor_review,'overdue':overdue  })
-		timeline.append({'stage': 'Author Invited', 'date': copyedit.author_invited,'overdue':overdue  })
-		timeline.append({'stage': 'Author completed', 'date': copyedit.author_completed,'overdue':overdue  })
 		if copyedit.completed:
 			if overdue:
-				timeline.append({'stage': 'Due', 'date': copyedit.due,'overdue':overdue  })
 				timeline.append({'stage': 'Completed', 'date': copyedit.completed,'overdue':overdue  })
 			else:
 				timeline.append({'stage': 'Completed', 'date': copyedit.completed,'overdue':overdue  })
-				timeline.append({'stage': 'Due', 'date': copyedit.due,'overdue':overdue  })
 		else:
 			timeline.append({'stage': 'Due', 'date': copyedit.due,'overdue':overdue  })
+		timeline.append({'stage': 'Editor Review', 'date': copyedit.editor_review,'overdue':overdue  })
+		timeline.append({'stage': 'Author Invited', 'date': copyedit.author_invited,'overdue':overdue  })
+		timeline.append({'stage': 'Author completed', 'date': copyedit.author_completed,'overdue':overdue  })
 	else:
 		timeline.append({'stage': 'Requested', 'date': copyedit.requested,'overdue':overdue   })
 		timeline.append({'stage': 'Declined', 'date': copyedit.declined,'declined': True })
-		timeline.append({'stage': 'Due', 'date': copyedit.due,'overdue':overdue   })
-
+		
 	return timeline
 
 def build_time_line_editing_indexer(index):

@@ -197,16 +197,30 @@ def editor_review_round(request, submission_id, round_number):
 	return render(request, template, context)
 
 @is_book_editor
+def editor_review_round_remove(request, submission_id, round_number,review_id):
+	submission = get_object_or_404(models.Book, pk=submission_id)
+	review_assignment = get_object_or_404(models.ReviewAssignment, pk=review_id)
+	review_assignment.delete()
+
+	return redirect(reverse('editor_review_round', kwargs={'submission_id': submission_id, 'round_number': submission.get_latest_review_round()}))
+
+
+@is_book_editor
 def update_review_due_date(request, submission_id, round_id, review_id):
 	submission = get_object_or_404(models.Book, pk=submission_id)
 	review_assignment = get_object_or_404(models.ReviewAssignment, pk=review_id)
-
+	previous_due_date = review_assignment.due
 	if request.POST:
+		email_text =  models.Setting.objects.get(group__name='email', name='review_due_ack').value
 		due_date = request.POST.get('due_date', None)
+		notify = request.POST.get('email', None)
 		if due_date:
-			review_assignment.due = due_date
-			review_assignment.save()
-			messages.add_message(request, messages.SUCCESS, 'Due date updated.')
+			if not str(due_date) == str(previous_due_date):
+				review_assignment.due = due_date
+				review_assignment.save()
+				if notify:
+					logic.send_review_update(submission, review_assignment, email_text, request.user, attachment=None)
+				messages.add_message(request, messages.SUCCESS, 'Due date updated.')
 			return redirect(reverse('editor_review_round', kwargs={'submission_id': submission_id, 'round_number': submission.get_latest_review_round()}))
 
 	template = 'editor/update_review_due_date.html'
@@ -237,14 +251,19 @@ def editor_decision(request, submission_id, decision):
 		permission = False
 
 	if request.POST:
-		
+		print request.FILES
+
+		if request.FILES.get('attachment'):
+			attachment = handle_file(request.FILES.get('attachment'), book, 'misc', request.user)
+		else:
+			attachment = None
 		if decision == 'decline':
 			book.stage.declined = timezone.now()
 			book.stage.current_stage = 'declined'
 			book.stage.save()
 			messages.add_message(request, messages.SUCCESS, 'Submission declined.')	
 			if 'inform' in request.POST:
-				core_logic.send_decision_ack(book,decision,request.POST.get('id_email_text'))
+				core_logic.send_decision_ack(book,decision,request.POST.get('id_email_text'), attachment)
 			elif 'skip' in request.POST:
 				print "Skip"
 			return redirect(reverse('editor_dashboard'))
@@ -260,7 +279,7 @@ def editor_decision(request, submission_id, decision):
 
 			messages.add_message(request, messages.SUCCESS, 'Submission has been moved to the review stage.')
 			if 'inform' in request.POST:
-				core_logic.send_decision_ack(book,decision,request.POST.get('id_email_text'))
+				core_logic.send_decision_ack(book,decision,request.POST.get('id_email_text'), attachment)
 			elif 'skip' in request.POST:
 				print "Skip"
 
@@ -273,12 +292,10 @@ def editor_decision(request, submission_id, decision):
 			book.stage.current_stage = 'editing'
 			book.stage.save()
 			if 'inform' in request.POST:
-				core_logic.send_decision_ack(book,decision,request.POST.get('id_email_text'))
+				core_logic.send_decision_ack(book,decision,request.POST.get('id_email_text'), attachment)
 			elif 'skip' in request.POST:
 				print "Skip"
 			return redirect(reverse('editor_editing', kwargs={'submission_id': submission_id}))
-
-
 
 	template = 'editor/decisions.html'
 	context = {
@@ -1111,11 +1128,11 @@ def assign_copyeditor(request, submission_id):
 		file_list = models.File.objects.filter(pk__in=request.POST.getlist('file'))
 		due_date = request.POST.get('due_date')
 		email_text = request.POST.get('message')
-
+		note = request.POST.get('note')
 		attachment = handle_attachment(request, book)
 
 		for copyeditor in copyeditor_list:
-			logic.handle_copyeditor_assignment(request,book, copyeditor, file_list, due_date, email_text, requestor=request.user, attachment=attachment)
+			logic.handle_copyeditor_assignment(request,book, copyeditor, file_list, due_date, note, email_text, requestor=request.user, attachment=attachment)
 			log.add_log_entry(book=book, user=request.user, kind='editing', message='Copyeditor %s %s assigend to %s' % (copyeditor.first_name, copyeditor.last_name, book.title), short_name='Copyeditor Assigned')
 
 		return redirect(reverse('editor_editing', kwargs={'submission_id': submission_id}))
@@ -1188,11 +1205,11 @@ def assign_indexer(request, submission_id):
 		file_list = models.File.objects.filter(pk__in=request.POST.getlist('file'))
 		due_date = request.POST.get('due_date')
 		email_text = request.POST.get('message')
-
+		note = request.POST.get('note')
 		attachment = handle_attachment(request, book)
 
 		for indexer in indexer_list:
-			logic.handle_indexer_assignment(request,book, indexer, file_list, due_date, email_text, requestor=request.user, attachment=attachment)
+			logic.handle_indexer_assignment(request,book, indexer, file_list, due_date, note, email_text, requestor=request.user, attachment=attachment)
 			log.add_log_entry(book=book, user=request.user, kind='editing', message='Indexer %s %s assigend to %s' % (indexer.first_name, indexer.last_name, book.title), short_name='Indexer Assigned')
 
 		return redirect(reverse('editor_editing', kwargs={'submission_id': submission_id}))
