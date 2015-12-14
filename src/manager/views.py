@@ -11,8 +11,7 @@ from django.core.exceptions import ObjectDoesNotExist
 
 from manager import models
 from review import models as review_models
-from manager import forms
-from manager import logic
+from manager import forms, logic
 from django.conf import settings
 from core import models as core_models, forms as core_forms
 from submission import forms as submission_forms
