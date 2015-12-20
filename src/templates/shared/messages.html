@@ -1,3 +1,6 @@
+{% load static from staticfiles %}
+<link href="{% static "css/chat.css" %}" rel="stylesheet">
+
 <input type="hidden" id="book_id" value="{{ submission.id }}">
 <form method="POST" id="message_form" action="{% url 'new_message' submission.id %}">
 	<div class="input-group">
@@ -7,22 +10,24 @@
 </form>
 <input type="hidden" name="initials" id="initials" value="{{ request.user.profile.initials }}">
 <br />
-<div id="message-list">
-{% for message in submission.message_set.all %}
-<div class="message {% if message.sender != request.user %}message-green{% endif %}">
-	<div class="row message-container">
-		{% if message.sender == request.user %}
-			<div class="col-md-2"><h3>{{ message.sender.profile.initials }}</h3></div>
-			<div class="col-md-10"><small>{{ message.message|linebreaks }}</small></div>
-		{% else %}
-			<div class="col-md-10"><small>{{ message.message|linebreaks }}</small></div>
-			<div class="col-md-2"><h3 style="margin-top: 15px;">{{ message.sender.profile.initials }}</h3></div>
-		{% endif %}
 
-		<div class="col-md-12 message-date"><small>{{ message.date_sent|date:"Y-m-d - H:i" }}</small></div>
-	</div>
-	<input class="last_message" type="hidden" value="{{ message.pk }}">
+
+<div class="panel-body">
+    <ul class="chat" id="message-list">
+    	{% for message in submission.message_set.all %}
+        <li class="left clearfix">
+        	<span class="chat-img pull-left">
+                <img src="http://placehold.it/50/{% if message.sender == request.user %}55C1E7{% else %}FA6F57{% endif %}/fff&amp;text={{ message.sender.profile.initials }}" alt="User Avatar" class="img-circle" />
+            </span>
+            <div class="chat-body clearfix">
+                <div class="header">
+                    <strong class="primary-font">{{ message.sender.profile.full_name }}</strong> <small class="pull-right text-muted">
+                        <span class="glyphicon glyphicon-time"></span><small>{{ message.date_sent|date:"Y-m-d - H:i" }}</small></small>
+                </div>
+                {{ message.message }}
+            </div>
+        </li>
+        <input class="last_message" type="hidden" value="{{ message.pk }}">
+        {% endfor %}
+    </ul>
 </div>
-{% empty %}
-	<p>This book has no messages.</p>
-{% endfor %}

@@ -6,8 +6,7 @@ frm.submit(function () {
         data: frm.serialize(),
         success: function (data) {
             data = $.parseJSON(data);
-
-            $( "#message-list" ).prepend( '<div class="message "><div class="row message-container"><div class="col-md-2"><h3 style="margin-top: 15px;">' + $('#initials').val()  + '</h3></div><div class="col-md-10"><small>' + data.message + '</small></div><div class="col-md-12 message-date"><small>' + data.date_sent + '</small></div></div></div>' );
+            $( "#message-list" ).prepend( '<li class="left clearfix"><span class="chat-img pull-left"><img src="http://placehold.it/50/55C1E7/fff&amp;text=' + $('#initials').val() + '" alt="User Avatar" class="img-circle" /></span><div class="chat-body clearfix"><div class="header"><strong class="primary-font">' + data.sender + '</strong> <small class="pull-right text-muted"><span class="glyphicon glyphicon-time"></span><small>' + data.date_sent + '</small></small></div>' + data.message + '</div></li><input class="last_message" type="hidden" value="' + data.message_id + '">' );
             $('#id_message').val("");
         },
         error: function(data) {
@@ -17,6 +16,7 @@ frm.submit(function () {
     });
     return false;
 });
+
 var book_id = document.getElementById("book_id").value;
 
 window.setInterval(function(){
@@ -25,7 +25,7 @@ window.setInterval(function(){
         data = $.parseJSON(data);
         for (i = 0; i < data.messages.length; i++) { 
 
-            $( "#message-list" ).prepend( '<div class="message message-green message-new"><div class="row message-container"><div class="col-md-10"><small>' + data.messages[i].message + '</small></div><div class="col-md-2"><h3>' + data.messages[i].initials  + '</h3></div><div class="col-md-12 message-date"><small>' + data.messages[i].date_sent + '</small></div></div><input class="last_message" type="hidden" value="'+ data.messages[i].message_id+'"></div>' );
+            $( "#message-list" ).prepend( '<li class="left clearfix"><span class="chat-img pull-left"><img src="http://placehold.it/50/FA6F57/fff&amp;text=' + data.messages[i].initials + '" alt="User Avatar" class="img-circle" /></span><div class="chat-body clearfix"><div class="header"><strong class="primary-font">' + data.messages[i].sender + '</strong> <small class="pull-right text-muted"><span class="glyphicon glyphicon-time"></span><small>' + data.messages[i].date_sent + '</small></small></div>' + data.messages[i].message + '</div></li><input class="last_message" type="hidden" value="' + data.messages[i].message_id + '">' );
             $('#id_message').val("");
             $('.message-new').fadeOut(1000);
             $('.message-new').fadeIn(1000);

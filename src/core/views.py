@@ -350,7 +350,7 @@ def new_message(request, submission_id):
 		response_dict = {
 			'status_code': 200, 
 			'message_id': new_message.pk,
-			'sender': '%s %s' % (new_message.sender.first_name, new_message.sender.last_name),
+			'sender': new_message.sender.profile.full_name(),
 			'message': new_message.message,
 			'date_sent': new_message.date_sent.strftime("%-d %b %Y, %H:%M"),
 		}
@@ -369,7 +369,7 @@ def get_messages(request, submission_id):
 		message_list = [{
 				'message': message.message,
 				'message_id': message.pk,
-				'sender': '%s %s' % (message.sender.first_name, message.sender.last_name),
+				'sender': message.sender.profile.full_name(),
 				'initials': message.sender.profile.initials(),
 				'message': message.message,
 				'date_sent': message.date_sent.strftime("%-d %b %Y, %H:%M"),
@@ -383,7 +383,7 @@ def get_messages(request, submission_id):
 
 		return HttpResponse(json.dumps(response_dict))
 	except Exception, e:
-		print e
+		return HttpResponse(e)
 
 def get_authors(request, submission_id):
     if request.is_ajax():
