@@ -37,7 +37,7 @@
     <div class="col-md-12 book-heading container-fluid">
         <h3>Book {{ submission.id }}: {{ submission.title }}</h3>
     </div>
-    <div class="col-md-3 dash-left" style="background-color: #EBEBEB;height:80%;">
+    <div class="col-md-3 dash-left bottom-space" style="background-color: #EBEBEB;height:80%;">
               <div class="dash-container" >
             <h4 class="header-text">  {% if submission.prefix %}{{ submission.prefix }} {% endif %}{{ submission.title }}</h4> 
             <h5 class="subtitle-text">{{submission.subtitle}}</h5>
@@ -110,15 +110,9 @@
         </div>
         </a>
         {% include "editor/snippets/available_actions.html" %}
-  <br>
-  <br>
-  <br>
-  <br>
-  <br>
-
     </div>
 
-    <div class="col-md-9 dash-center" style="height:80%">
+    <div class="col-md-9 dash-center bottom-space" style="height:80%">
         <div class="dash-container">
         <h4>{{ submission.title }} Catalog</h4>
 
@@ -316,12 +310,6 @@
 
           <hr />
         </div>
-          <br>
-  <br>
-  <br>
-  <br>
-  <br>
-
     </div>
 </div>
 
