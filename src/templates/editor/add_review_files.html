@@ -86,10 +86,12 @@
 					    {% endfor %}
 					    </table>
 
-					    <button name="submit" type="submit" class="btn btn-primary">Add Files</button>
+					    <button name="submit" type="submit" class="btn btn-primary pull-right" style="width:100px">Add Files</button>
 					</form>
 				</div>
 			</div>
+
+    	<div class="dash-container" style="margin-top:-20px">
 			  <p class="small">Or you can upload a new file(s) and use it.</p>
 <div class="dropdown" style="margin-left:5px">
     <button class="btn btn-green btn-round dropdown-toggle" type="button" data-toggle="dropdown">&nbsp;&nbsp;&nbsp;+ Upload&nbsp;&nbsp;&nbsp;
@@ -100,6 +102,7 @@
       <li><a href="{% url 'upload_misc_file' submission.id %}"class="hover-file" >&nbsp;&nbsp;&nbsp;Misc&nbsp;&nbsp;&nbsp;</a></li>
 
     </ul>
+  </div>
   </div>
 		</div>
 	</div>

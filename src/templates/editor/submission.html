@@ -8,7 +8,7 @@
     <style type="text/css">
     body {
         overflow:hidden;
-    }   
+    }
     .navbar {
         margin-bottom: 0px !important;
     }
@@ -32,11 +32,11 @@
 
 {% block body %}
 
-<div class="row">
-    <div class="col-md-12 book-heading container-fluid">
+<div class="row ">
+    <div class="col-md-12 book-heading container-fluid ">
         <h3>Book {{ submission.id }}: {{ submission.title }}</h3>
     </div>
-    <div class="col-md-3 dash-left" style="background-color: #EBEBEB;">
+    <div class="col-md-3 dash-left " style="background-color: #EBEBEB;">
          <div class="dash-container" >
             <h4 class="header-text">  {% if submission.prefix %}{{ submission.prefix }} {% endif %}{{ submission.title }}</h4> 
             <h5 class="subtitle-text">{{submission.subtitle}}</h5>
@@ -109,6 +109,11 @@
         </div>
         </a>
         {% include "editor/snippets/available_actions.html" %}
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
     </div>
 
     <div class="col-md-5 dash-center">
@@ -117,6 +122,11 @@
             {% include author_include %}
         {% endif %}
         </div>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
     </div>
     <div class="col-md-4 dash-right">
         <div class="dash-container">
@@ -124,6 +134,11 @@
             {% include submission_files %}
         {% endif %}
         </div>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
     </div>
 </div>
 
