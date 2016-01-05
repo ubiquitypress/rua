@@ -27,6 +27,10 @@ import json
 
 @login_required
 def start_submission(request, book_id=None):
+	
+	direct_submissions =  core_models.Setting.objects.get(group__name='general', name='direct_submissions').value
+	if not direct_submissions:
+		return redirect(reverse('proposal_start'))
 
 	ci_required = core_models.Setting.objects.get(group__name='general', name='ci_required')
 	checklist_items = submission_models.SubmissionChecklistItem.objects.all()

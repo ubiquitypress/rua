@@ -39,8 +39,9 @@
     <span class="caret"></span></button>
     <ul class="dropdown-menu">
       <li><a href="{% url 'proposal_start' %}" class="hover-proposal">&nbsp;&nbsp;&nbsp;Proposal&nbsp;&nbsp;&nbsp;</a></li>
+      {% if direct_submissions %}
       <li><a href="{% url 'submission_start' %}"class="hover-submission" >&nbsp;&nbsp;&nbsp;Submission&nbsp;&nbsp;&nbsp;</a></li>
-
+      {% endif %}
     </ul>
   </div></h4> 
   <br>
