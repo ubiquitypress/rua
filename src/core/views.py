@@ -648,8 +648,11 @@ def serve_versioned_file(request, submission_id, revision_id):
 @is_book_editor_or_author
 def delete_file(request, submission_id, file_id, returner):
 	book = get_object_or_404(models.Book, pk=submission_id)
+	print book
 	_file = get_object_or_404(models.File, pk=file_id)
 	file_id = _file.id
+	print _file
+	print file_id
 	_file.delete()
 
 	if returner == 'new':
@@ -658,6 +661,8 @@ def delete_file(request, submission_id, file_id, returner):
 		return redirect(reverse('editor_review', kwargs={'submission_id': book.id}))
 	elif returner == 'production':
 		return redirect(reverse('editor_production', kwargs={'submission_id': book.id}))
+	elif returner == 'editor':
+		return redirect(reverse('editor_submission', kwargs={'submission_id': book.id}))
 
 @is_book_editor_or_author
 def update_file(request, submission_id, file_id, returner):
@@ -679,6 +684,8 @@ def update_file(request, submission_id, file_id, returner):
 			return redirect(reverse('editor_review', kwargs={'submission_id': book.id}))
 		elif returner == 'production':
 			return redirect(reverse('editor_production', kwargs={'submission_id': book.id}))
+		elif returner == 'editor':
+			return redirect(reverse('editor_submission', kwargs={'submission_id': book.id}))
 
 	template = 'core/update_file.html'
 	context = {

@@ -57,10 +57,19 @@ def editor_dashboard(request):
 @is_book_editor
 def editor_submission(request, submission_id):
 	book = get_object_or_404(models.Book, pk=submission_id)
-
+	not_manuscript = True
+	not_additional = True
+	files = book.files.all()
+	for file_check in files:
+		if file_check.kind == 'manuscript':
+			not_manuscript = False
+		elif file_check.kind == 'additional':
+			not_additional = False
 	template = 'editor/submission.html'
 	context = {
 		'submission': book,
+		'no_additional':not_additional,
+		'no_manuscript':not_manuscript,
 		'active': 'user_submission',
 		'author_include': 'editor/submission_details.html',
 		'submission_files': 'editor/submission_files.html',
