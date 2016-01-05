@@ -892,11 +892,96 @@ def view_proposal_review_decision(request, proposal_id, assignment_id):
 	}
 
 	return render(request, template, context)
+@is_editor
+def view_completed_proposal_review(request, proposal_id, assignment_id):
 
+	proposal = get_object_or_404(submission_models.Proposal, pk=proposal_id)
+	proposal_form = manager_forms.GeneratedForm(form=models.ProposalForm.objects.get(pk=proposal.form.id))
+	default_fields = manager_forms.DefaultForm(initial={'title': proposal.title,'author':proposal.author,'subtitle':proposal.subtitle})
+	data = json.loads(proposal.data)
+	intial_data={}
+	for k,v in data.items():
+		intial_data[k] = v[0]
+
+	proposal_form.initial=intial_data
+	review_assignment = get_object_or_404(submission_models.ProposalReview, pk=assignment_id)
+	result = review_assignment.results
+	form = review_forms.GeneratedForm(form=proposal.review_form)
+
+	ci_required = models.Setting.objects.get(group__name='general', name='ci_required')
+	recommendation_form = forms.RecommendationForm(ci_required=ci_required.value)
+	if result:
+		relations = review_models.FormElementsRelationship.objects.filter(form=result.form)
+		data_ordered = logic.order_data(logic.decode_json(result.data), relations)
+	else:
+		relations = None
+		data_ordered = None
+
+	if not request.POST and request.GET.get('download') == 'docx':
+		path = create_proposal_review_form(review_assignment)
+		return serve_proposal_file(request, path)
+	elif request.POST:
+		form = review_forms.GeneratedForm(request.POST, request.FILES, form=proposal.review_form)
+		recommendation_form = forms.RecommendationForm(request.POST, ci_required=ci_required.value)
+		if form.is_valid() and recommendation_form.is_valid():
+			save_dict = {}
+			file_fields = review_models.FormElementsRelationship.objects.filter(form=proposal.review_form, element__field_type='upload')
+			data_fields = review_models.FormElementsRelationship.objects.filter(~Q(element__field_type='upload'), form=proposal.review_form)
+
+			for field in file_fields:
+				if field.element.name in request.FILES:
+					# TODO change value from string to list [value, value_type]
+					save_dict[field.element.name] = [handle_review_file(request.FILES[field.element.name], submission, review_assignment, 'reviewer')]
+
+			for field in data_fields:
+				if field.element.name in request.POST:
+					# TODO change value from string to list [value, value_type]
+					save_dict[field.element.name] = [request.POST.get(field.element.name), 'text']
+
+			json_data = json.dumps(save_dict)
+			form_results = review_models.FormResult(form=proposal.review_form, data=json_data)
+			form_results.save()
+
+			#if request.FILES.get('review_file_upload'):
+			#	handle_review_file(request.FILES.get('review_file_upload'), submission, review_assignment, 'reviewer')
+
+			review_assignment.completed = timezone.now()
+			if not review_assignment.accepted:
+				review_assignment.accepted = timezone.now()
+			review_assignment.recommendation = request.POST.get('recommendation')
+			review_assignment.competing_interests = request.POST.get('competing_interests')
+			review_assignment.results = form_results
+			review_assignment.save()
+
+			return redirect(reverse('user_dashboard'))
+
+
+
+	template = 'core/proposals/completed_review_assignment.html'
+	context = {
+		'proposal': proposal,
+		'proposal_form':proposal_form,
+		'review_assignment': review_assignment,
+		'data_ordered': data_ordered,
+		'result': result,
+		'form':form,
+		'recommendation_form':recommendation_form,
+		'active': 'proposal_review',
+	}
+
+	return render(request, template, context)
 @is_editor
 def view_proposal_review(request, proposal_id, assignment_id):
 
 	proposal = get_object_or_404(submission_models.Proposal, pk=proposal_id)
+	proposal_form = manager_forms.GeneratedForm(form=models.ProposalForm.objects.get(pk=proposal.form.id))
+	default_fields = manager_forms.DefaultForm(initial={'title': proposal.title,'author':proposal.author,'subtitle':proposal.subtitle})
+	data = json.loads(proposal.data)
+	intial_data={}
+	for k,v in data.items():
+		intial_data[k] = v[0]
+
+	proposal_form.initial=intial_data
 	review_assignment = get_object_or_404(submission_models.ProposalReview, pk=assignment_id)
 	result = review_assignment.results
 	form = review_forms.GeneratedForm(form=proposal.review_form)
@@ -953,6 +1038,7 @@ def view_proposal_review(request, proposal_id, assignment_id):
 	template = 'core/proposals/review_assignment.html'
 	context = {
 		'proposal': proposal,
+		'proposal_form':proposal_form,
 		'review_assignment': review_assignment,
 		'data_ordered': data_ordered,
 		'result': result,

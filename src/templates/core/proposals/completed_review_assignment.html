@@ -1,0 +1,153 @@
+{% extends "base.html" %}
+{% load static from staticfiles %}
+{% load bootstrap3 %}
+{% load dict_lookup %}
+
+{% block title %}Reviewing #{{ submission.id }}{% endblock %}
+
+{% block body %}
+<div class="row">
+<div class="col-md-12 other-heading container-fluid" style="margin-top:-20px">
+      <h3>Book Proposal :  {{ proposal.title }} {% if proposal.subtitle%}: {{ proposal.subtitle }}{%endif%}</h3>
+
+</div>
+	 <div class="col-md-3 dash-left grey-container">
+
+
+  </br>
+   <div class="dash-container" >
+            <h4 class="header-text">Proposal details</h4> 
+        </div>
+  <table class="table table-bordered">
+ 
+  <tr> <td> Title </td>  <td>{{ proposal.title }}</td>  </tr>
+  <tr> <td> Subtitle </td>  <td>{{ proposal.subtitle }}</td>  </tr>
+  <tr> <td> Author </td>  <td>{{ proposal.author }}</td>  </tr>
+  <tr> <td>User </td>  <td>{{ proposal.owner.username }}</td>  </tr>
+   {%for field in proposal_form%}
+        <tr> <td>{{field.label}}</td>  <td>{{field.value}}</td>  </tr>
+
+   {% endfor %}
+
+  <tr> <td> Date Submitted</td>  <td>{{ proposal.date_submitted }}</td>  </tr>
+
+</table>
+</hr>
+    </div>
+    <div class="col-md-5 dash-center" >
+    <div class="dash-container" >
+                       
+        <div class="dash-container">
+
+        <h4><b>INSTRUCTIONS FOR TASK</b></h4>
+        </br>
+        <p class="task-info-text">You've been asked to undertake a review on behalf of the Press and Author.</p>
+     
+         <h5> Task Due <span class="subtitle-text">{{ review_assignment.due }}</span></h5>
+
+        {% include "review/submission_files.html" %}
+   
+        </div>
+              <div class="col-md-12  container-fluid decision-info-accept">                 
+  
+                     <p>You accepted on {{review_assignment.accepted}}</p>
+
+                    </div>
+                     </br>
+                      </br>
+                       </br>
+      
+        
+          {% include "review/contact_editors.html"  %}
+</div>
+</div>
+
+         <div class="col-md-4 dash-right">
+       <div class="dash-container" >
+       <div class="dash-container" >
+        {% if review_assignment.accepted %}
+      
+       <h4 style="color:green;"><b> <i class="fa fa-check-circle-o">&nbsp;</i>Many thanks, you completed this review on {{review_assignment.completed}} </b></h4>
+  <h5 class="subtitle-form-completed-text"><em> Details of your review are below </em></h5>
+</br>
+
+
+  <div style="clear:both"></div>
+      {% for item in data_ordered %}
+      <div class="{% cycle 'left-float' 'right-float' %}">
+        
+        <h4> <b>{{ item.0 }}:</b></h4>
+        <h5> {% lookup result.data item.0 %} </h5>
+      </div>
+      <div {% cycle '' 'style="clear:both"' %}></div>
+      {% endfor %}
+</br>
+      <h5><b>Supporting Files:</b></h5>
+      <ul class="media-list manuscript-upload-states">
+  {% for file in review_assignment.files.all %}
+  
+  {% if file.kind == 'reviewer' %}
+  <li class="media grey-container">
+    <div class="media-left">
+      <span > <h1>
+        {% if file.mime_type == 'image/jpeg' or file.mime_type == 'image/png' %}
+       &nbsp; &nbsp;    <i class="fa fa-file-image-o"></i>
+        {% else %}
+        &nbsp; &nbsp;   <i class="fa fa-file-text-o"></i>
+        {% endif %}
+      </span></h1>
+    </div>
+    <div class="media-body">
+             <div class="col-md-4">
+        <h5><b>{{ file.label }}</b></h5>
+        <h5><b>{{ file.kind|capfirst }}</b></h5>
+        <h5>{{ file.original_filename }}</h5>
+      </div>
+    </div>
+         <div class="media-right">
+      <a href="{% url 'serve_file' submission.id file.id %}" class="btn btn-sm btn-task pull-right download-small"><i class="fa fa-cloud-download"> &nbsp; Download</i></a>
+    </div>
+    </li>
+    {% endif %}
+    {% empty %}
+     <li class="grey-container">
+      <h5>&nbsp;&nbsp;&nbsp;No files</h5>
+   </li>
+  {% endfor %}
+</ul>
+
+        <hr />
+        <h5><b> Your Recommendation: </b></h5>
+        {% ifequal review_assignment.recommendation 'reject' %}
+        <p class="submission-reject"> <b> {{review_assignment.recommendation|title}} Submission </b></p>
+        {% endifequal %}
+         {% ifequal review_assignment.recommendation 'accept' %}
+        <p class="submission-accept"> <b> {{review_assignment.recommendation|title}} Submission </b></p>
+        {% endifequal %}
+        {% ifequal review_assignment.recommendation 'revisions' %}
+        <p class="submission-revisions"> <b> Revisions Required</b></p>
+        {% endifequal %}
+  <hr />
+        <h5><b>Competing interests:</b> {{review_assignment.competing_interests}}</h5>
+      <br/><br/>
+
+      </form>
+ {% endif %}
+  </div>
+  </div>
+  </div>
+{% endblock body %}
+
+{% block js %}
+<script language="javascript" type="text/javascript">
+<!--
+function popitup(url,title) {
+    newwindow=window.open(url,title,'height=750,width=600');
+    if (window.focus) {newwindow.focus()}
+    return false;
+}
+
+// -->
+</script>
+<script type="text/javascript" src="{% static "js/fancyfile.js" %}"></script>
+{% endblock js %}

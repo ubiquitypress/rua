@@ -13,23 +13,23 @@
 	 <div class="col-md-3 dash-left grey-container">
 
 
- </br>
+  </br>
+   <div class="dash-container" >
+            <h4 class="header-text">Proposal details</h4> 
+        </div>
   <table class="table table-bordered">
-    <thead>
-  <tr>
  
-    <th></th>
-    <th></th>
-    
-  </tr>
-  </thead>
-  <tbody>
   <tr> <td> Title </td>  <td>{{ proposal.title }}</td>  </tr>
   <tr> <td> Subtitle </td>  <td>{{ proposal.subtitle }}</td>  </tr>
   <tr> <td> Author </td>  <td>{{ proposal.author }}</td>  </tr>
   <tr> <td>User </td>  <td>{{ proposal.owner.username }}</td>  </tr>
+   {%for field in proposal_form%}
+        <tr> <td>{{field.label}}</td>  <td>{{field.value}}</td>  </tr>
+
+   {% endfor %}
+
   <tr> <td> Date Submitted</td>  <td>{{ proposal.date_submitted }}</td>  </tr>
-</tbody>
+
 </table>
 </hr>
     </div>
@@ -61,7 +61,7 @@
 </div>
 </div>
 
-       <div class="col-md-4 dash-right">
+       <div class="col-md-4 dash-right bottom-space">
            <div class="dash-container" >
        <div class="dash-container" >
       <h4><b>COMPLETE REVIEW</b></h4>
