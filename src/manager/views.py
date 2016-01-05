@@ -11,6 +11,7 @@ from django.core.exceptions import ObjectDoesNotExist
 
 from manager import models
 from review import models as review_models
+from review import forms as review_f
 from manager import forms, logic
 from django.conf import settings
 from core import models as core_models, forms as core_forms
@@ -418,6 +419,10 @@ def view_review_form(request,form_id):
 
 	form = review_models.Form.objects.get(id=form_id)
 	fields = review_models.FormElementsRelationship.objects.filter(form=form)
+	try:
+		preview_form = review_f.GeneratedForm(form=form)
+	except (ObjectDoesNotExist, ValueError):
+		preview_form = None
 
 	if request.POST and "delete" in request.POST:
 		index = int(request.POST.get("delete"))
@@ -428,6 +433,7 @@ def view_review_form(request,form_id):
 	template = 'manager/review/view_form.html'
 	context = {
 		'form': form,
+		'preview_form':preview_form,
 		'fields':fields,
 	}
 	return render(request, template, context)
