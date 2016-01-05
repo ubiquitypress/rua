@@ -1,5 +1,7 @@
 {% load bootstrap3 %}
-
+<a href="{% url 'remove_assignment_editor' submission.id 'copyediting' copyedit.id %}" class=" btn btn-danger btn-sm pull-right">
+          Delete
+              </a>
 <h3>COPYEDITING: {{ copyedit.copyeditor.profile.full_name|upper  }}</h3>
 
 <ul class="timeline-dash">

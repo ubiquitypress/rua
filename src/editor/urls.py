@@ -25,6 +25,7 @@ urlpatterns = patterns('',
     url(r'^submission/(?P<submission_id>\d+)/editing/$', 'editor.views.editor_editing', name='editor_editing'),
     url(r'^submission/(?P<submission_id>\d+)/editing/assign/copyeditor/$', 'editor.views.assign_copyeditor', name='assign_copyeditor'),
     url(r'^submission/(?P<submission_id>\d+)/editing/view/copyeditor/(?P<copyedit_id>\d+)/$', 'editor.views.view_copyedit', name='view_copyedit'),
+    url(r'^submission/(?P<submission_id>\d+)/remove/(?P<assignment_type>[-\w]+)/(?P<assignment_id>\d+)/$', 'editor.views.remove_assignment_editor', name='remove_assignment_editor'),
     url(r'^submission/(?P<submission_id>\d+)/editing/assign/indexer/$', 'editor.views.assign_indexer', name='assign_indexer'),
     url(r'^submission/(?P<submission_id>\d+)/editing/view/indexer/(?P<index_id>\d+)/$', 'editor.views.view_index', name='view_index'),
 

@@ -206,12 +206,32 @@ def editor_review_round(request, submission_id, round_number):
 	return render(request, template, context)
 
 @is_book_editor
+def remove_assignment_editor(request, submission_id, assignment_type, assignment_id):
+	submission = get_object_or_404(models.Book, pk=submission_id)
+	if assignment_type == 'indexing':
+		review_assignment = get_object_or_404(models.IndexAssignment, pk=assignment_id)
+	elif assignment_type == 'copyediting':
+		review_assignment = get_object_or_404(models.CopyeditAssignment, pk=assignment_id)
+	elif assignment_type == 'typesetting':
+		review_assignment = get_object_or_404(models.TypesetAssignment, pk=assignment_id)
+	else:
+		review_assignment = None
+	
+	if review_assignment:
+		review_assignment.delete()
+	if assignment_type == 'typesetting':
+		return redirect(reverse('editor_production', kwargs={'submission_id': submission_id, }))
+	else:
+		return redirect(reverse('editor_editing', kwargs={'submission_id': submission_id, }))
+
+@is_book_editor
 def editor_review_round_remove(request, submission_id, round_number,review_id):
 	submission = get_object_or_404(models.Book, pk=submission_id)
 	review_assignment = get_object_or_404(models.ReviewAssignment, pk=review_id)
 	review_assignment.delete()
 
 	return redirect(reverse('editor_review_round', kwargs={'submission_id': submission_id, 'round_number': submission.get_latest_review_round()}))
+
 
 
 @is_book_editor
