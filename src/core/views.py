@@ -23,6 +23,7 @@ from core.decorators import is_reviewer, is_editor, is_book_editor, is_book_edit
 from review import forms as review_forms
 
 from manager import models as manager_models
+from manager import forms as manager_forms
 from submission import forms as submission_forms
 from django.db import IntegrityError
 from docx import Document
@@ -841,6 +842,14 @@ def start_proposal_review(request, proposal_id):
 def view_proposal_review_decision(request, proposal_id, assignment_id):
 
 	proposal = get_object_or_404(submission_models.Proposal, pk=proposal_id)
+	proposal_form = manager_forms.GeneratedForm(form=models.ProposalForm.objects.get(pk=proposal.form.id))
+	default_fields = manager_forms.DefaultForm(initial={'title': proposal.title,'author':proposal.author,'subtitle':proposal.subtitle})
+	data = json.loads(proposal.data)
+	intial_data={}
+	for k,v in data.items():
+		intial_data[k] = v[0]
+
+	proposal_form.initial=intial_data
 	review_assignment = get_object_or_404(submission_models.ProposalReview, pk=assignment_id)
 	
 	if request.POST:
@@ -877,6 +886,7 @@ def view_proposal_review_decision(request, proposal_id, assignment_id):
 	template = 'core/proposals/decision_review_assignment.html'
 	context = {
 		'proposal': proposal,
+		'proposal_form':proposal_form,
 		'review': review_assignment,
 		'active': 'proposal_review',
 	}
