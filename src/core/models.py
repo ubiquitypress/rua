@@ -9,6 +9,8 @@ import os
 from autoslug import AutoSlugField
 from datetime import datetime, timedelta, date
 
+from submission import models as submission_models
+
 fs = FileSystemStorage(location=settings.MEDIA_ROOT)
 
 SALUTATION_CHOICES = (
@@ -727,10 +729,12 @@ log_choices = (
 	('revisions', 'Revisions'),
 	('editing', 'Editing'),
 	('production', 'Production'),
+	('proposal', 'Proposal'),
 )
 
 class Log(models.Model):
-	book = models.ForeignKey(Book)
+	book = models.ForeignKey(Book, null=True, blank=True)
+	proposal = models.ForeignKey(submission_models.Proposal, null=True, blank=True,related_name='proposal_log')
 	user = models.ForeignKey(User)
 	kind = models.CharField(max_length=100, choices=log_choices)
 	short_name = models.CharField(max_length=100)

@@ -1131,6 +1131,7 @@ def decline_proposal(request, proposal_id):
 		logic.close_active_reviews(proposal)
 		proposal.requestor=request.user
 		proposal.save()
+		log.add_proposal_log_entry(proposal=proposal,user=request.user, kind='proposal', message='Proposal "%s %s" was declined.'%(proposal.title,proposal.subtitle), short_name='Proposal Declined')
 		logic.send_proposal_decline(proposal, email_text=request.POST.get('decline-email'), sender=request.user)
 		return redirect(reverse('proposals'))
 
@@ -1157,6 +1158,8 @@ def accept_proposal(request, proposal_id):
 		attachment = handle_attachment(request, submission)
 		logic.send_proposal_accept(proposal, email_text=request.POST.get('accept-email'), submission=submission, sender=request.user, attachment=attachment)
 		proposal.save()
+		log.add_proposal_log_entry(proposal=proposal,user=request.user, kind='proposal',  message='Proposal "%s %s" was accepted.'%(proposal.title,proposal.subtitle), short_name='Proposal Accepted')
+	
 		return redirect(reverse('proposals'))
 
 	template = 'core/proposals/accept_proposal.html'
@@ -1180,6 +1183,8 @@ def request_proposal_revisions(request, proposal_id):
 		proposal.requestor=request.user
 		logic.send_proposal_revisions(proposal, email_text=request.POST.get('revisions-email'), sender=request.user)
 		proposal.save()
+		log.add_proposal_log_entry(proposal=proposal,user=request.user, kind='proposal', message='Revisions request for proposal %s %s.'%(proposal.title,proposal.subtitle), short_name='Proposal Revisions Requested')
+	
 		return redirect(reverse('proposals'))
 
 	template = 'core/proposals/revisions_proposal.html'

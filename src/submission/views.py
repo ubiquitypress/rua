@@ -380,7 +380,9 @@ def start_proposal(request):
 				notification.save()
 
 			messages.add_message(request, messages.SUCCESS, 'Proposal %s submitted' % proposal.id)
-			
+	
+			log.add_proposal_log_entry(proposal=proposal,user=request.user, kind='proposal', message='Proposal has been submitted by %s.' % request.user.profile.full_name(), short_name='Proposal Submitted')
+	
 			return redirect(reverse('user_dashboard',kwargs = {}))
 
 

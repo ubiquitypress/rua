@@ -5,6 +5,11 @@ def add_log_entry(book, user, kind, message, short_name):
 	new_log_entry.save()
 	return new_log_entry
 
+def add_proposal_log_entry(proposal, user, kind, message, short_name):
+    new_log_entry = models.Log(proposal=proposal, user=user, kind=kind, message=message, short_name=short_name)
+    new_log_entry.save()
+    return new_log_entry
+    
 def add_email_log_entry(book, subject, from_address, to, bcc, cc, content):
 	log_dict = {
         'book': book,
