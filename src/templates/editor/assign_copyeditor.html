@@ -4,23 +4,21 @@
 	{% csrf_token %}
   <h3>1. Select a Copyeditor(s)</h3>
   <p class="small">You can assign more than one copyeditor, or, after completing this one, start another to assign different files.</p>
-  <table class="table table-bordered small" cellspacing="0" width="100%" id='indv-reviewer'>
+  <table class="table table-bordered small table-responsive" cellspacing="0" width="100%" id='indv-reviewer'>
     <thead>
     <tr>
-      <th>First Name</th>
-      <th>Last Name</th>
-      <th>Email</th>
+      <th>Name</th>
       <th>Select</th>
     </tr>
     </thead>
+    <tbody>
     {% for copyeditor in copyeditors %}
     <tr>
-      <td>{{ copyeditor.first_name }}</td>
-      <td>{{ copyeditor.last_name }}</td>
-      <td>{{ copyeditor.email }}</td>
+      <td>{{ copyeditor.first_name }} &nbsp; {{ copyeditor.last_name }}<sup> <span class="fa fa-envelope" style="font-size:10.5px" data-toggle="tooltip" title="{{ copyeditor.email }}"></span></sup></td>
       <td><input type="checkbox" name="copyeditor" value="{{ copyeditor.id }}"/></td>
     </tr>
     {% endfor %}
+  </tbody>
   </table>
   <hr />
   <h3>2. Select Files for Copyeditor(s)</h3>
@@ -92,5 +90,3 @@
 </div>
 </form>
  <br /> <br />
-
-
