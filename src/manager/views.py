@@ -23,7 +23,6 @@ import os
 
 @staff_member_required
 def index(request):
-
 	template = 'manager/index.html'
 	context = {}
 

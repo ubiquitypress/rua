@@ -10,6 +10,7 @@
 	<link href="{% static "css/jquery-te-1.4.0.css" %}" rel="stylesheet">
 	<link href="{% static "css/over-rides.css" %}" rel="stylesheet">
 	<link href="{% static "css/jq-ui.css" %}" rel="stylesheet">
+	<link href="{% static "css/toastr.css" %}" rel="stylesheet"/>
 
     {% block css %}{% endblock %}
 	</head>
@@ -19,12 +20,6 @@
 	<div class="container">
 		{% block breadcrumbs %}
 		{% endblock %}
-		{% for message in messages %}
-			<div class="alert alert-{{ message.tags }} alert-dismissible" role="alert">
-				<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-				{{ message }}
-			</div>
-		{% endfor %}
 		{% block body %}{% endblock body %}
 	</div>
 	</body>
@@ -34,10 +29,43 @@
 	<script type="text/javascript" src="{% static "js/jquery-te-1.4.0.min.js" %}"></script>
 	<script src="{% static "js/holder.js" %}"></script>
 	<script src="{% static "js/jq-ui.js" %}"></script>
+	<script src="{% static "js/toastr.js" %}"></script>
 	<script type="text/javascript">
 		$('input[id=lefile]').change(function() {
 		$('#id_profile_image').val($(this).val());
 		});
 	</script>
+	<script>
+	toastr.options = {
+	  "closeButton": false,
+	  "debug": false,
+	  "newestOnTop": false,
+	  "progressBar": true,
+	  "positionClass": "toast-bottom-right",
+	  "preventDuplicates": false,
+	  "onclick": null,
+	  "showDuration": "300",
+	  "hideDuration": "1000",
+	  "timeOut": "5000",
+	  "extendedTimeOut": "1000",
+	  "showEasing": "swing",
+	  "hideEasing": "linear",
+	  "showMethod": "fadeIn",
+	  "hideMethod": "fadeOut"
+	}
+		{% for message in messages %}
+		{% ifequal message.tags "warning" %}
+				toastr.warning("{{ message }}");
+		{% endifequal%}
+		{% ifequal message.tags "info" %}
+				toastr.info("{{ message }}");
+		{% endifequal%}
+		{% ifequal message.tags "danger" %}
+				toastr.error("{{ message }}");
+		{% endifequal%}
+		{% ifequal message.tags "success" %}
+				toastr.success("{{ message }}")
+		{% endifequal%}
+		{% endfor %}</script>
 	{% block js %}{% endblock %}
 </html>
