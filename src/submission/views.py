@@ -453,7 +453,7 @@ def proposal_revisions(request, proposal_id):
 
 	return render(request, template, context)
 @login_required
-def proposal_view(request, proposal_id):
+def proposal_view(request, proposal_id,editor=None):
 
 	proposal = get_object_or_404(submission_models.Proposal, pk=proposal_id, owner=request.user)
 
@@ -493,6 +493,8 @@ def proposal_view(request, proposal_id):
 			proposal.title = defaults.get("title")
 			proposal.author = defaults.get("author")
 			proposal.subtitle = defaults.get("subtitle")
+			if editor:			
+				proposal.requestor=request.user
 			proposal.save()
 	
 			messages.add_message(request, messages.SUCCESS, 'Proposal %s updated' % proposal.id)

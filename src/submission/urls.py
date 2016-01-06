@@ -24,8 +24,8 @@ urlpatterns = patterns('',
 
 
 	url(r'^proposal/$', 'submission.views.start_proposal', name='proposal_start'),
-
 	url(r'^proposal/(?P<proposal_id>\d+)/view/$', 'submission.views.proposal_view', name='proposal_view_submitted'),
+	url(r'^proposal/(?P<proposal_id>\d+)/view/(?P<editor>[-\w./]+)/$', 'submission.views.proposal_view', name='proposal_view_submitted_editor'),
 	url(r'^proposal/(?P<proposal_id>\d+)/revisions/$', 'submission.views.proposal_revisions', name='proposal_revisions'),
 
 
