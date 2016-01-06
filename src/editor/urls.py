@@ -35,7 +35,10 @@ urlpatterns = patterns('',
 
     url(r'^submission/(?P<submission_id>\d+)/production/add/format/$', 'editor.views.add_format', name='add_format'),
     url(r'^submission/(?P<submission_id>\d+)/production/add/chapter/$', 'editor.views.add_chapter', name='add_chapter'),
-     url(r'^submission/(?P<submission_id>\d+)/production/add/physical/$', 'editor.views.add_physical', name='add_physical'),
+    url(r'^submission/(?P<submission_id>\d+)/production/add/physical/$', 'editor.views.add_physical', name='add_physical'),
+    url(r'^submission/(?P<submission_id>\d+)/production/add/format/(?P<file_id>\d+)/$', 'editor.views.add_format', name='add_format_existing'),
+    url(r'^submission/(?P<submission_id>\d+)/production/add/chapter/(?P<file_id>\d+)/$', 'editor.views.add_chapter', name='add_chapter_existing'),
+
     url(r'^submission/(?P<submission_id>\d+)/production/delete/(?P<format_or_chapter>[-\w]+)/(?P<id>\d+)/$', 'editor.views.delete_format_or_chapter', name='delete_format_or_chapter'),
     url(r'^submission/(?P<submission_id>\d+)/production/update/(?P<format_or_chapter>[-\w]+)/(?P<id>\d+)/$', 'editor.views.update_format_or_chapter', name='update_format_or_chapter'),
    
