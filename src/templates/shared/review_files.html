@@ -16,9 +16,14 @@
         <div class="col-md-6">
         <h5>{{ file.truncated_label }}</h5>
         <h5>{{ file.truncated_filename }}</h5>
+   
       </div>
     </div>
         <div class="media-right">
+                {% if assignment == 'typeset'%}
+
+        <h6 style="position:absolute;margin-bottom:5px;margin-top:4px;right:8px">Create Publication</h6>
+         {% endif %}
            <div class="button-group" role="group">
          {% if file_type == 'internal' or file_type == 'external' %}
                   
@@ -29,6 +34,11 @@
          <a href="{% url 'update_file' submission.id file.id 'user_submission' %}" type="button"  class="btn btn-sm btn-accept download-small" ><i class="fa fa-cloud-upload"></i></a>
        {% endif %}
          <a href="{% url 'serve_file' submission.id file.id %}" type="button"  class="btn btn-sm btn-task download-small" ><i class="fa fa-cloud-download"></i></a>
+        {% if assignment == 'typeset'%}
+
+         <a href="{% url 'add_format_existing' submission.id file.id  %}" type="button" class="btn btn-xs btn-green download-small" style="margin-left:-20px;height:23px;align:center"> Format </a>
+         <a href="{% url 'add_chapter_existing' submission.id file.id %}" type="button"  class="btn btn-xs btn-green download-small" style="margin-left:-28px;height:23px"> Chapter </a>
+       {% endif %}
     </div>    </div>
   
    
