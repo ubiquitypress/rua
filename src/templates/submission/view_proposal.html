@@ -8,34 +8,39 @@
 
  <div class="col-md-12">
   <div class="col-md-12 other-heading container-fluid" style="margin-top:-20px">
-         <h2>{% if revise%} Revise {%else%}Submit a{%endif%} Proposal</h2>
+         <h2>{% if revise%} Update {%else%}Submit a{%endif%} Proposal</h2>
 
 </div>
 
    <hr />
    <p>Please complete the form below. Your proposal will then be scruitinised by our committe and if approved, you will be invited to complete a full submission.</p>
   
-      <div class="col-md-12">
+    <form method="post" class="form" enctype="multipart/form-data">
+      {% csrf_token %}     
+      <div class="col-md-12 bottom-space">
    <div class="well">
-    <div class="form-group"><label class="control-label" for="id_title">Title</label><input class="form-control" id="id_title" name="title" placeholder="Title" required="required" title="" type="text" value="{{proposal.title}}" readonly></div>
-    <div class="form-group"><label class="control-label" for="id_subtitle">Subtitle</label><input class="form-control" id="id_subtitle" name="subtitle" placeholder="Subtitle" required="required" title="" type="text" value="{{proposal.subtitle}}" readonly></div>
-    <div class="form-group"><label class="control-label" for="id_author">Author</label><input class="form-control" id="id_author" name="author" placeholder="Author" required="required" title="" type="text" value="test" readonly></div>
-
+        {% bootstrap_form default_fields %}
         {% if proposal_form %}
         {%for field in proposal_form%}
-          <div class="form-group"><label class="control-label" for="id_{{field.name}}">{{field.label}}</label><input class="form-control" div_class="col-md-12" id="id_{{field.name}}" name="{{field.name}}" placeholder="{{field.label}}" title="help" type="text" value="{{field.value}}" readonly></div>
-      
+         {% bootstrap_field field %}
          {% endfor %}
     {% endif %}
         </div>
-  
-	    {% buttons %}
+
+        
+      {% buttons %}
+ 
       <div class="col-md-12">
-	        <a href="{% url 'user_dashboard'%}"class="btn btn-primary pull-left" style="width:120px">
-	           Go Back
-	        </a>
+       <a href="{% url 'user_dashboard'%}"class="btn btn-primary pull-left" style="width:120px">
+             Go Back
+          </a>
+          <button name="book" type="submit" class="btn btn-accept pull-right" style="width:120px">
+             Save
+          </button>
       </div>
 	    {% endbuttons %}
+    </form>
+   
 	</div>
 {% endblock body %}
 
