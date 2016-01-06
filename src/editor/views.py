@@ -758,7 +758,11 @@ def add_format(request, submission_id, file_id=None):
 				new_file.save()
 				new_format.file = new_file
 			else:
-				new_format.file = exist_file				
+				new_file = exist_file
+				new_file.pk = None
+				new_file.label = label
+				new_file.save()
+				new_format.file = new_file				
 			new_format.save()
 			log.add_log_entry(book=book, user=request.user, kind='production', message='%s %s loaded a new format, %s' % (request.user.first_name, request.user.last_name, new_format.identifier), short_name='New Format Loaded')
 			return redirect(reverse('editor_production', kwargs={'submission_id': book.id}))
@@ -791,9 +795,9 @@ def add_chapter(request, submission_id, file_id=None):
 
 	if request.POST:
 		if file_id:
-			chapter_form = forms.ChapterFormInitial(request.POST)
+			chapter_form = core_forms.ChapterFormInitial(request.POST)
 		else:
-			chapter_form = forms.ChapterForm(request.POST, request.FILES)
+			chapter_form = core_forms.ChapterForm(request.POST, request.FILES)
 		
 		if chapter_form.is_valid():
 			if file_id:
@@ -811,7 +815,11 @@ def add_chapter(request, submission_id, file_id=None):
 				new_file.save()
 				new_chapter.file = new_file
 			else:
-				new_chapter.file = exist_file		
+				new_file = exist_file
+				new_file.pk = None
+				new_file.label = label
+				new_file.save()
+				new_chapter.file = new_file		
 			new_chapter.save()
 			log.add_log_entry(book=book, user=request.user, kind='production', message='%s %s loaded a new chapter, %s' % (request.user.first_name, request.user.last_name, new_chapter.identifier), short_name='New Chapter Loaded')
 			return redirect(reverse('editor_production', kwargs={'submission_id': book.id}))
