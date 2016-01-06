@@ -211,6 +211,32 @@ def edit_setting(request, setting_group, setting_name):
 
 	return render(request, template, context)
 
+def edit_submission_checklist(request,item_id):
+	item = get_object_or_404(submission_models.SubmissionChecklistItem, pk=item_id)
+	checkitem_form = submission_forms.CreateSubmissionChecklistItem(instance=item)
+
+	if request.POST:
+		checkitem_form = submission_forms.CreateSubmissionChecklistItem(request.POST,instance=item)
+		if checkitem_form.is_valid():
+			new_check_item = checkitem_form.save()
+			return redirect(reverse('submission_checklist'))
+
+	template = 'manager/submission/checklist.html'
+	context = {
+		'checkitem_form': checkitem_form,
+		'editing':True,
+		'item':item,
+		'checklist_items': submission_models.SubmissionChecklistItem.objects.all()
+	}
+
+	return render(request, template, context)
+
+def delete_submission_checklist(request,item_id):
+	item = get_object_or_404(submission_models.SubmissionChecklistItem, pk=item_id)
+	item.delete()
+	
+	return redirect(reverse('submission_checklist'))
+
 def submission_checklist(request):
 
 	checkitem_form = submission_forms.CreateSubmissionChecklistItem()
