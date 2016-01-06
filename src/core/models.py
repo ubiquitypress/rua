@@ -741,19 +741,6 @@ class Log(models.Model):
 	message = models.TextField()
 	date_logged = models.DateTimeField(auto_now_add=True, null=True, blank=True)
 
-class EmailLog(models.Model):
-	book = models.ForeignKey(Book)
-	to = models.EmailField(max_length=1000)
-	cc = models.EmailField(max_length=1000, null=True,blank=True)
-	bcc = models.EmailField(max_length=1000, null=True,blank=True)
-	from_address = models.EmailField(max_length=1000)
-	subject = models.CharField(max_length=1000)
-	content = models.TextField()
-	sent = models.DateTimeField(auto_now_add=True)
-
-	def __unicode__(self):
-		return u"From: %s To: %s, CC: %s BCC: %s : Subject: %s" % (self.from_address, self.to,self.cc,self.bcc, self.subject)
-
 setting_types = (
 	('rich_text', 'Rich Text'),
 	('text', 'Text'),
@@ -927,3 +914,16 @@ class Message(models.Model):
 		ordering = ('-date_sent',) 
 
 
+class EmailLog(models.Model):
+	book = models.ForeignKey(Book)
+	to = models.EmailField(max_length=1000)
+	cc = models.EmailField(max_length=1000, null=True,blank=True)
+	bcc = models.EmailField(max_length=1000, null=True,blank=True)
+	from_address = models.EmailField(max_length=1000)
+	subject = models.CharField(max_length=1000)
+	content = models.TextField()
+	attachment = models.ManyToManyField('File', null=True, blank=True,related_name="email_attachment")
+	sent = models.DateTimeField(auto_now_add=True)
+
+	def __unicode__(self):
+		return u"From: %s To: %s, CC: %s BCC: %s : Subject: %s" % (self.from_address, self.to,self.cc,self.bcc, self.subject)

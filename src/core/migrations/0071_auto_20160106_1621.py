@@ -7,14 +7,25 @@ from django.db import models, migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('core', '0071_auto_20160105_1651'),
+        ('submission', '0003_proposal_requestor'),
+        ('core', '0070_copyeditassignment_note_from_copyeditor'),
     ]
 
     operations = [
+        migrations.AlterField(
+            model_name='log',
+            name='book',
+            field=models.ForeignKey(blank=True, to='core.Book', null=True),
+        ),
+        migrations.AddField(
+            model_name='emaillog',
+            name='attachment',
+            field=models.ManyToManyField(related_name='email_attachment', null=True, to='core.File', blank=True),
+        ),
         migrations.AddField(
             model_name='log',
             name='proposal',
-            field=models.ForeignKey(related_name='proposal_log', blank=True, to='core.Book', null=True),
+            field=models.ForeignKey(related_name='proposal_log', blank=True, to='submission.Proposal', null=True),
         ),
         migrations.AlterField(
             model_name='log',

@@ -25,7 +25,7 @@ def send_email(subject, context, from_email, to, html_template, bcc=None, cc=Non
 	msg = EmailMultiAlternatives(subject, html_content, from_email, to, bcc=bcc, cc=cc)
 	
 	if book:
-		log.add_email_log_entry(book, subject, from_email, to,bcc,cc, html_content)
+		log.add_email_log_entry(book = book, subject = subject, from_address = from_email, to = to, bcc = bcc, cc = cc, content = html_content, attachment = attachment)
 		
 	msg.content_subtype = "html"
 

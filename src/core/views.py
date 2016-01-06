@@ -615,14 +615,14 @@ def serve_marc21_file(request, submission_id,type):
 def serve_file(request, submission_id, file_id):
 	book = get_object_or_404(models.Book, pk=submission_id)
 	_file = get_object_or_404(models.File, pk=file_id)
-	file_path = os.path.join(settings.BOOK_DIR, submission_id, _file.uuid_filename)
+	file_path = os.path.join(settings.BOOK_DIR, submission_id, _file.original_filename)
 
 	try:
 		fsock = open(file_path, 'r')
 		mimetype = mimetypes.guess_type(file_path)
 		response = StreamingHttpResponse(fsock, content_type=mimetype)
 		response['Content-Disposition'] = "attachment; filename=%s" % (_file.original_filename)
-		log.add_log_entry(book=book, user=request.user, kind='file', message='File %s downloaded.' % _file.uuid_filename, short_name='Download')
+		log.add_log_entry(book=book, user=request.user, kind='file', message='File %s downloaded.' % _file.original_filename, short_name='Download')
 		return response
 	except IOError:
 		messages.add_message(request, messages.ERROR, 'File not found. %s' % (file_path))
@@ -632,13 +632,13 @@ def serve_file(request, submission_id, file_id):
 def serve_versioned_file(request, submission_id, revision_id):
 	book = get_object_or_404(models.Book, pk=submission_id)
 	versions_file = get_object_or_404(models.FileVersion, pk=revision_id)
-	file_path = os.path.join(settings.BOOK_DIR, submission_id, versions_file.uuid_filename)
+	file_path = os.path.join(settings.BOOK_DIR, submission_id, versions_file.original_filename)
 
 	try:
 		fsock = open(file_path, 'r')
 		mimetype = mimetypes.guess_type(file_path)
 		response = StreamingHttpResponse(fsock, content_type=mimetype)
-		response['Content-Disposition'] = "attachment; filename=%s" % (versions_file.uuid_filename)
+		response['Content-Disposition'] = "attachment; filename=%s" % (versions_file.original_filename)
 		log.add_log_entry(book=book, user=request.user, kind='file', message='File %s downloaded.' % versions_file.uuid_filename, short_name='Download')
 		return response
 	except IOError:
