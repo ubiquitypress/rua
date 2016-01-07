@@ -160,6 +160,8 @@ def submission_three_additional(request, book_id):
 		'book': book,
 		'active': 4,
 		'additional_files': additional_files,
+		'additional_guidelines': core_models.Setting.objects.get(name='additional_files_guidelines').value,
+
 	}
 
 	return render(request, template, context)
