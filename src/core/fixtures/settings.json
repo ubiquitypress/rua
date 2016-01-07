@@ -478,5 +478,25 @@
   },
   "model": "core.setting",
   "pk": 50
+},
+{
+  "fields": {
+    "value": "on",
+    "group": 1,
+    "name": "suggested_reviewers",
+    "types": "boolean"
+  },
+  "model": "core.setting",
+  "pk": 51
+},
+{
+  "fields": {
+    "value": "If you have any suggestions about who could review this book, please add them here. Please ensure you include a current, active, email address.",
+    "group": 1,
+    "name": "suggested_reviewers_guide",
+    "types": "rich_text"
+  },
+  "model": "core.setting",
+  "pk": 52
 }
 ]

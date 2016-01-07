@@ -27,15 +27,17 @@
 		  		<div class="col-md-12">{% bootstrap_field book_form.cover_letter %}</div>
 		  	</div>
 		  </div>
+		  {% if suggested_reviewers %}
 	  <hr />
 		  <div class="form-group">
 		  	<div class="row">
 		  		<div class="col-md-12">
 		  			{% bootstrap_field book_form.reviewer_suggestions %}
-		  			<span class="help-block">{{ press.general.review_suggestions }}</span>
+		  			<span class="help-block">{{ suggested_reviewers_guide }}</span>
 		  		</div>
 		  	</div>
 		  </div>
+		  {% endif %}
 	  <hr />
 		  <div class="form-group">
 		  	<div class="row">

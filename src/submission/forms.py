@@ -30,6 +30,7 @@ class SubmitBookStageOne(forms.ModelForm):
 		if ci_required == 'on':
 			self.fields['competing_interests'] = forms.CharField(widget=forms.Textarea, required=True)
 		self.fields['license'].empty_label = None
+		self.fields['reviewer_suggestions'].label = "Suggested Reviewers"
 
 class SubmissionChecklist(forms.Form):
 
