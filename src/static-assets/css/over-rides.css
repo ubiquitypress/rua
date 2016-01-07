@@ -341,6 +341,10 @@ body > div.container-fluid > div > div > div > a {
 .border-profile {
   border-bottom: 16px #E3596C solid
 }
+
+.border-primary-author {
+  border-bottom: 12px #AB9F44 solid
+}
 .border-review {
   border-bottom: 15px #D1EAE7 solid
 }
