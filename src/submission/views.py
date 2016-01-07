@@ -205,6 +205,7 @@ def upload(request, book_id, type_to_handle):
 			'url': reverse('serve_file', kwargs = {'submission_id': book_id, 'file_id': new_file.pk }),
 			'deleteType': 'POST',
 			'ruaId': new_file.pk,
+			'original_name': new_file.original_filename,
 		}
 
 		return UploadResponse( request, file_dict )
