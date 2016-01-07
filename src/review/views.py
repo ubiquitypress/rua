@@ -105,7 +105,9 @@ def reviewer_decision(request, review_type, submission_id, review_assignment, de
 		'submission': submission,
 		'review_assignment': review_assignment,
 		'has_additional_files': logic.has_additional_files(submission),
-		'editors': editors
+		'editors': editors,
+		'file_preview':core_models.Setting.objects.get(group__name='general', name='preview_review_files').value
+
 	}
 
 	return render(request, template, context)
