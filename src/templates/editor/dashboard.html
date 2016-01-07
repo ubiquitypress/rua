@@ -102,7 +102,7 @@
                 <h5>{{ note.text|capfirst }}</h5>
                 {% ifequal note.workflow 'proposal' %}
                 {% else %}
-                <p><em>Book {{ note.book.id }}: {{ note.book.full_title }}</em></p>
+                <p><em>Book {{ note.book}}{{ note.book.id }}: {{ note.book.full_title }}</em></p>
                 {% endifequal %}
                 <span class="pull-right" style="padding-right: 10px;margin-bottom:10px" >
                 <br />

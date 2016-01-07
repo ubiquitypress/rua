@@ -3,7 +3,13 @@
 {% load bootstrap3 %}
 
 {% block title %}Reviewing #{{ submission.id }}{% endblock %}
-
+{% block css %}
+    <style type="text/css">
+    body {
+        overflow:hidden;
+    }
+    </style>
+{% endblock %}
 {% block body %}
 <div class="row">
 <div class="col-md-12 book-heading container-fluid" style="margin-top:-20px">
