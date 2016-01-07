@@ -135,6 +135,8 @@ def submission_three(request, book_id):
 		'active': 3,
 		'manuscript_files': manuscript_files,
 		'additional_files': additional_files,
+		'manuscript_guidelines': core_models.Setting.objects.get(name='manuscript_guidelines').value,
+	
 	}
 
 	return render(request, template, context)

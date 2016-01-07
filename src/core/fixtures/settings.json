@@ -498,5 +498,15 @@
   },
   "model": "core.setting",
   "pk": 52
+},
+{
+  "fields": {
+    "value": "You can supply additional info about your files to help the editors and reviewers. Your label will be displayed for the editors to see.",
+    "group": 1,
+    "name": "manuscript_guidelines",
+    "types": "rich_text"
+  },
+  "model": "core.setting",
+  "pk": 53
 }
 ]
