@@ -695,6 +695,23 @@ def serve_file(request, submission_id, file_id):
         messages.add_message(request, messages.ERROR, 'File not found. %s' % (file_path))
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
+@is_editor
+def serve_proposal_file(request, proposal_id, file_id):
+    proposal = get_object_or_404(submission_models.Proposal, pk=proposal_id)
+    _file = get_object_or_404(models.File, pk=file_id)
+    file_path = os.path.join(settings.PROPOSAL_DIR, proposal_id, _file.original_filename)
+
+    try:
+        fsock = open(file_path, 'r')
+        mimetype = mimetypes.guess_type(file_path)
+        response = StreamingHttpResponse(fsock, content_type=mimetype)
+        response['Content-Disposition'] = "attachment; filename=%s" % (_file.original_filename)
+        log.add_proposal_log_entry(proposal=proposal, user=request.user, kind='file', message='File %s downloaded.' % _file.original_filename, short_name='Download')
+        return response
+    except IOError:
+        messages.add_message(request, messages.ERROR, 'File not found. %s' % (file_path))
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
 @is_book_editor_or_author
 def serve_versioned_file(request, submission_id, revision_id):
     book = get_object_or_404(models.Book, pk=submission_id)
@@ -832,6 +849,10 @@ def view_proposal(request, proposal_id):
     proposal = get_object_or_404(submission_models.Proposal, pk=proposal_id)
     relationships = models.ProposalFormElementsRelationship.objects.filter(form=proposal.form)
     data = json.loads(proposal.data)
+    
+    if not request.POST and request.GET.get('download') == 'docx':
+        path = create_proposal_form(proposal)
+        return serve_proposal_file(request, path)
 
     template = 'core/proposals/view_proposal.html'
     context = {
@@ -841,6 +862,32 @@ def view_proposal(request, proposal_id):
     }
 
     return render(request, template, context)
+
+def create_proposal_form(proposal):
+    document = Document()
+    document.add_heading(proposal.title, 0)
+    p = document.add_paragraph('You should complete this form and then use the proposal page to upload it.')
+    relations = models.ProposalFormElementsRelationship.objects.filter(form=proposal.review_form)
+    document.add_heading("Title", level=1)
+    document.add_paragraph(proposal.title).italic = True
+    document.add_heading("Subtitle", level=1)
+    document.add_paragraph(proposal.subtitle).italic = True
+    document.add_heading("Author", level=1)
+    document.add_paragraph(proposal.author).italic = True
+
+    data = json.loads(proposal.data)
+    for k,v in data.items():
+        document.add_heading(k, level=1)
+        document.add_paragraph(v[0]).italic = True  
+
+    document.add_page_break()
+    if not os.path.exists(os.path.join(settings.BASE_DIR, 'files', 'forms')):
+        os.makedirs(os.path.join(settings.BASE_DIR, 'files', 'forms'))
+    path = os.path.join(settings.BASE_DIR, 'files', 'forms', '%s.docx' % str(uuid4()))
+
+    document.save(path)
+    return path
+
 
 @is_editor
 def start_proposal_review(request, proposal_id):
@@ -1303,7 +1350,7 @@ def serve_proposal_file(request, file_path):
         fsock = open(file_path, 'r')
         mimetype = mimetypes.guess_type(file_path)
         response = StreamingHttpResponse(fsock, content_type=mimetype)
-        response['Content-Disposition'] = "attachment; filename=review_form.docx"
+        response['Content-Disposition'] = "attachment; filename=proposal_form.docx"
         
         return response
     except IOError:

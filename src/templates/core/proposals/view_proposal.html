@@ -11,12 +11,13 @@
   <div class="col-md-12 other-heading container-fluid" style="margin-top:-20px">
   <h3>Book Proposal :  {{ proposal.title }} {% if proposal.subtitle%}: {{ proposal.subtitle }}{%endif%}
 
+  <a class="btn  btn-transparent-white" href="?download=docx" style="margin-left:5px"> <i class="fa fa-cloud-download"> &nbsp; Download Proposal</i></a>
 
 <a href="{% url 'proposal_view_submitted' proposal.id %}" class="btn  btn-transparent-white" style="position: absolute;right:100px;margin-top:-8px">Edit</a>
     <a href="{% url 'proposals'%}" class="btn  btn-transparent-white" style="position: absolute;right:20;margin-top:-8px">Go back</a></h3>
 </div></br></br>
 <div class="col-md-12">
- </br>
+   </br>
   <table class="table table-bordered">
     <thead>
   <tr>
