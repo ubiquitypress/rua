@@ -184,7 +184,7 @@
                     <div class="col-md-6">
                       <div class="aside"><strong>Keywords</strong> Hit Enter to add a new keyword.</div>
                       <input type="text" id="tags" name="tags" value="{% for keyword in submission.keywords.all %}{{ keyword }}{% if not forloop.last %},{% endif %}{% endfor %}"/>
-                      <div class="aside"><strong>Subjects</strong> Hit Enter to add a new subject.</div>
+                      <div class="aside"><strong>Disciplines</strong> Hit Enter to add a new discipline.</div>
                         <input type="text" id="stags" name="stags" value="{% for subject in submission.subject.all %}{{ subject }}{% if not forloop.last %},{% endif %}{% endfor %}"/>
                       </div>
                   </div>
