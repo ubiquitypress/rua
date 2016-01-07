@@ -6,17 +6,13 @@
   <table class="table table-bordered small" cellspacing="0" width="100%" id='indv-reviewer'>
     <thead>
     <tr>
-      <th>First Name</th>
-      <th>Last Name</th>
-      <th>Email</th>
+      <th>Name</th>
       <th>Select</th>
     </tr>
     </thead>
     {% for indexer in indexers %}
     <tr>
-      <td>{{ indexer.first_name }}</td>
-      <td>{{ indexer.last_name }}</td>
-      <td>{{ indexer.email }}</td>
+      <td>{{ indexer.first_name }}  &nbsp;  {{ indexer.last_name }}<sup> <span class="fa fa-envelope" style="font-size:10.5px" data-toggle="tooltip" title="{{ indexer.email }}"></span></sup></td>
       <td><input type="checkbox" name="indexer" value="{{ indexer.id }}"/></td>
     </tr>
     {% endfor %}
@@ -97,7 +93,7 @@
       <input type="text" class="form-control" readonly>
     </div>
   </div>
-<div class="modal-footer">
+<div class="modal-footer bottom-space">
   <button id="#ext-review" type="submit" class="btn btn-primary">Submit</button>
 </div>
 </form>

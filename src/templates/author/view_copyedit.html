@@ -25,7 +25,7 @@
   {% endfor %}
     
 </ul>
-<div class="dash-container">
+<div class="dash-container bottom-space">
 <h4>Assignment</h4>
 <table class="table table-bordered">
 	<tr>
@@ -49,7 +49,7 @@
 <h4>Assigned Files</h4>
 {% include 'shared/review_files.html' with file_data=copyedit.files.all %}
 <hr />
-<h4>Copyeditor Files</h4>
+<h4>Copyedited Files</h4>
 
 {% include 'shared/review_files.html' with file_data=copyedit.copyedit_files.all %}
 
@@ -79,4 +79,5 @@
 {% include 'shared/review_files.html' with file_data=copyedit.author_files.all %}
 
 {% endif %}
+
   </div>

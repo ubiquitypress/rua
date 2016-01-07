@@ -26,17 +26,19 @@
     <div class="button-block-center">
       <hr />
       <a href="{% url 'serve_file' submission.id file.id %}" class="btn btn-sm btn-task"><i class="fa fa-cloud-download">&nbsp;</i>Download</a>
-      <td><a href="{% url 'update_file' submission.id file.id active %}"  class="btn btn-sm btn-accept">&nbsp;<i class="fa fa-cloud-upload">&nbsp;</i>Update&nbsp;</a>
+      <td><a href="{% url 'update_file' submission.id file.id 'editor'  %}"  class="btn btn-sm btn-accept">&nbsp;<i class="fa fa-cloud-upload">&nbsp;</i>Update&nbsp;</a>
       <a href="{% url 'versions_file' submission.id file.id %}" class="btn btn-sm btn-view btn-round"><i class="fa fa-files-o">&nbsp;</i>Versions</a>
-      <a href="{% url 'delete_file' submission.id file.id active %}" class="btn btn-sm btn-decline"><i class="fa fa-trash-o">&nbsp;</i>Delete</a>
+      <a href="{% url 'delete_file' submission.id file.id 'editor' %}" class="btn btn-sm btn-decline"><i class="fa fa-trash-o">&nbsp;</i>Delete</a>
     </div>
     </li>
   {% endif %}
-    {% empty %}
+
+  {% endfor %}
+      {% if no_manuscript %}
      <li style="background-color:rgb(230,230,230)">
       <h5>&nbsp;&nbsp;&nbsp;No files. <a href="{% url 'upload_manuscript' submission.id %}">Add one.</a></h5>
    </li>
-  {% endfor %}
+   {% endif %}
 </ul>
 <br>
 <h5><b>Additional Files <sup><a href="{% url 'upload_additional' submission.id%}" class="pull-right btn btn-green btn-xs">&nbsp; + Upload &nbsp;</a></sup></b></h5>
@@ -62,17 +64,19 @@
     <div class="button-block-center">
       <hr />
       <a href="{% url 'serve_file' submission.id file.id %}" class="btn btn-sm btn-task"><i class="fa fa-cloud-download">&nbsp;</i>Download</a>
-      <td><a href="{% url 'update_file' submission.id file.id active %}" class="btn btn-sm btn-accept">&nbsp;<i class="fa fa-cloud-upload">&nbsp;</i>Update&nbsp;</a>
+      <td><a href="{% url 'update_file' submission.id file.id  'editor'  %}" class="btn btn-sm btn-accept">&nbsp;<i class="fa fa-cloud-upload">&nbsp;</i>Update&nbsp;</a>
       <a href="{% url 'versions_file' submission.id file.id %}" class="btn btn-sm btn-view btn-round"><i class="fa fa-files-o">&nbsp;</i>Versions</a>
-      <a href="{% url 'delete_file' submission.id file.id active %}" class="btn btn-sm btn-decline"><i class="fa fa-trash-o">&nbsp;</i>Delete</a>
+      <a href="{% url 'delete_file' submission.id file.id 'editor' %}" class="btn btn-sm btn-decline"><i class="fa fa-trash-o">&nbsp;</i>Delete</a>
     </div>
     </li>
   {% endif %}
-    {% empty %}
+
+  {% endfor %}
+       {% if no_additional %}
      <li style="background-color:rgb(230,230,230)">
       <h5>&nbsp;&nbsp;&nbsp;No files. <a href="{% url 'upload_additional' submission.id %}">Add one.</a></h5>
    </li>
-  {% endfor %}
+   {% endif %}
 </ul>
 <br>
 <h5><b>Misc Files <sup><a href="{% url 'upload_misc_file' submission.id%}" class="pull-right btn btn-green btn-xs">&nbsp; + Upload &nbsp;</a></sup></b></h5>
@@ -99,9 +103,9 @@
     <div class="button-block-center">
       <hr />
       <a href="{% url 'serve_file' submission.id file.id %}" class="btn btn-sm btn-task"><i class="fa fa-cloud-download">&nbsp;</i>Download</a>
-      <td><a href="{% url 'update_file' submission.id file.id active %}" class="btn btn-sm btn-accept">&nbsp;<i class="fa fa-cloud-upload">&nbsp;</i>Update&nbsp;</a>
+      <td><a href="{% url 'update_file' submission.id file.id 'editor'  %}" class="btn btn-sm btn-accept">&nbsp;<i class="fa fa-cloud-upload">&nbsp;</i>Update&nbsp;</a>
       <a href="{% url 'versions_file' submission.id file.id %}" class="btn btn-sm btn-view btn-round"><i class="fa fa-files-o">&nbsp;</i>Versions</a>
-      <a href="{% url 'delete_file' submission.id file.id active %}" class="btn btn-sm btn-decline"><i class="fa fa-trash-o">&nbsp;</i>Delete</a>
+      <a href="{% url 'delete_file' submission.id file.id 'editor' %}" class="btn btn-sm btn-decline"><i class="fa fa-trash-o">&nbsp;</i>Delete</a>
     </div>    </li>
     {% empty %}
      <li style="background-color:rgb(230,230,230)">
@@ -112,4 +116,3 @@
 <br>
 <h5>Contract  {% if submission.contract %}(<a href="{% url 'contract_manager' submission.id %}">View</a>) {% endif %}:</h5>
 {% include "editor/contract/contract.html" %}
-

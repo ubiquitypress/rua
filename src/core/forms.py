@@ -180,10 +180,22 @@ class FormatForm(forms.ModelForm):
 	class Meta:
 		model = models.Format
 		exclude = ('book', 'file')
+		
+class FormatFormInitial(forms.ModelForm):
+
+	class Meta:
+		model = models.Format
+		exclude = ('book', 'file')
 
 class ChapterForm(forms.ModelForm):
 
 	chapter_file = forms.FileField(required=True)
+
+	class Meta:
+		model = models.Chapter
+		exclude = ('book', 'file')
+
+class ChapterFormInitial(forms.ModelForm):
 
 	class Meta:
 		model = models.Chapter
@@ -226,8 +238,8 @@ class EditMetadata(forms.ModelForm):
 		)
 
 		widgets = {
-            'languages': forms.CheckboxSelectMultiple(),
-        }
+			'languages': forms.CheckboxSelectMultiple(),
+		}
 
 class IdentifierForm(forms.ModelForm):
 
@@ -247,5 +259,4 @@ class RetailerForm(forms.ModelForm):
 		model = models.Retailer
 		fields = ('name', 'link', 'price', 'enabled')
 
-		
 		

@@ -468,5 +468,15 @@
   },
   "model": "core.setting",
   "pk": 49
+},
+{
+  "fields": {
+    "value": "on",
+    "group": 1,
+    "name": "direct_submissions",
+    "types": "boolean"
+  },
+  "model": "core.setting",
+  "pk": 50
 }
 ]

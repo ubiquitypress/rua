@@ -31,6 +31,8 @@ urlpatterns = patterns('',
 
     # Submission checklist
     url(r'^submission/checklist/$', 'manager.views.submission_checklist', name='submission_checklist'),
+    url(r'^submission/checklist/edit/(?P<item_id>\d+)/$', 'manager.views.edit_submission_checklist', name='edit_submission_checklist'),
+    url(r'^submission/checklist/delete/(?P<item_id>\d+)/$', 'manager.views.delete_submission_checklist', name='delete_submission_checklist'),
     url(r'^submission/checklist/order/$', 'manager.views.checklist_order', name='checklist_order'),
  
     #Proposal Form Management

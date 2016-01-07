@@ -3,32 +3,36 @@
 {% load bootstrap3 %}
 {% load dict_lookup %}
 
+{% block title %}Reviewing #{{ submission.id }}{% endblock %}
+
 {% block body %}
 <div class="row">
-<div class="col-md-12 book-heading  container-fluid" style="margin-top:-20px">
-      <h3>{% if submission.prefix %}{{ submission.prefix|title }}: {% endif %}{{ submission.title|title }}</h3>
+<div class="col-md-12 other-heading container-fluid" style="margin-top:-20px">
+      <h3>Book Proposal :  {{ proposal.title }} {% if proposal.subtitle%}: {{ proposal.subtitle }}{%endif%}</h3>
 
 </div>
 	 <div class="col-md-3 dash-left grey-container bottom-space">
 
-        <div class="dash-container" >
-            <h4 class="header-text">  {% if submission.prefix %}{{ submission.prefix }} {% endif %}{{ submission.title }}</h4> 
-            <h5 class="subtitle-text">{{submission.subtitle}}</h5>
-        </div>
-        <div class="book-info">
-    <b>Series: </b>{{submission.series}} </br>
-    <b>Type: </b>{{submission.book_type}} </br>
-    <b>License: </b>{{submission.license}} </br>
-    <b>Review Type: </b>{{submission.get_review_type_display}} </br>
-    </div> </br>
-             <div class="band {{ submission.stage.current_stage }}">
-                        {{ submission.stage.get_current_stage_display }}
-                    </div>
-             <div class="band" class="task-left-text">
-                      <h4>  My Task </h4>
-                    </div>
 
-   
+  </br>
+   <div class="dash-container" >
+            <h4 class="header-text">Proposal details</h4> 
+        </div>
+  <table class="table table-bordered">
+ 
+  <tr> <td> Title </td>  <td>{{ proposal.title }}</td>  </tr>
+  <tr> <td> Subtitle </td>  <td>{{ proposal.subtitle }}</td>  </tr>
+  <tr> <td> Author </td>  <td>{{ proposal.author }}</td>  </tr>
+  <tr> <td>User </td>  <td>{{ proposal.owner.username }}</td>  </tr>
+   {%for field in proposal_form%}
+        <tr> <td>{{field.label}}</td>  <td>{{field.value}}</td>  </tr>
+
+   {% endfor %}
+
+  <tr> <td> Date Submitted</td>  <td>{{ proposal.date_submitted }}</td>  </tr>
+
+</table>
+</hr>
     </div>
     <div class="col-md-5 dash-center bottom-space" >
     <div class="dash-container" >
@@ -41,10 +45,10 @@
      
          <h5> Task Due <span class="subtitle-text">{{ review_assignment.due }}</span></h5>
 
-        {% include "review/submission_files.html" %}
+     <!--   {% include "review/submission_files.html" %}-->
    
         </div>
-              <div class="col-md-12 container-fluid decision-info-accept">                 
+              <div class="col-md-12  container-fluid decision-info-accept">                 
   
                      <p>You accepted on {{review_assignment.accepted}}</p>
 
@@ -52,14 +56,13 @@
                      </br>
                       </br>
                        </br>
-
-    
+      
         
-         {% include "review/contact_editors.html" %}
+          {% include "review/contact_editors.html"  %}
 </div>
 </div>
 
-       <div class="col-md-4 dash-right bottom-space">
+         <div class="col-md-4 dash-right bottom-space">
        <div class="dash-container" >
        <div class="dash-container" >
         {% if review_assignment.accepted %}
@@ -130,7 +133,7 @@
 
       </form>
  {% endif %}
-	</div>
+  </div>
   </div>
   </div>
 {% endblock body %}
@@ -146,6 +149,5 @@ function popitup(url,title) {
 
 // -->
 </script>
-
 <script type="text/javascript" src="{% static "js/fancyfile.js" %}"></script>
 {% endblock js %}

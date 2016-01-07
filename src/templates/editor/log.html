@@ -41,6 +41,7 @@ body {
                   </div>
                   <div class="timeline-body">
                       <p>{{ item.message }}</p>
+                   
                   </div>
               </div>
           </li>
@@ -60,6 +61,9 @@ body {
                   </div>
                   <div class="timeline-body">
                       <p><small>{{ item.content|safe }}</small></p>
+                         <hr>
+                         <p>
+       Attachment: {% for attachment in item.attachment.all %}<a  href="{% url 'serve_file' submission.id attachment.id %}">{{ attachment }}</a>{% empty %} None. {% endfor %}</p>
                   </div>
               </div>
           </li>

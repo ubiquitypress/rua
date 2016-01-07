@@ -12,7 +12,7 @@
 		<hr>
 		<div class="col-md-6">
 			<div class="primary-heading-2 container-fluid" >
- 			<h3>Add new item</h3>
+ 			<h3>{% if editing %} Editing item '{{item.slug}}'' {% else %} Add new item {% endif %}</h3>
 </div>
 </br>
 			<form method="post" class="form">
@@ -20,7 +20,7 @@
 			    {% bootstrap_form checkitem_form %}
 			    {% buttons %}
 			        <button type="submit" class="btn btn-primary">
-			            Submit
+			           {% if editing %} Save {% else %}  Submit {% endif %}
 			        </button>
 			    {% endbuttons %}
 			</form>
@@ -32,7 +32,7 @@
 </br>
 			<ul class="list-group" id="group_files_sort">
 				{% for item in checklist_items %}
-				<li id="check-{{ item.id }}" class="list-group-item ui-sortable-handle"><i class="fa fa-sort">&nbsp;&nbsp;</i>{{ item.text }} - {{ item.required }}</li>
+				<li id="check-{{ item.id }}" class="list-group-item ui-sortable-handle"><i class="fa fa-sort">&nbsp;&nbsp;</i>{{ item.text }} - {{ item.required }} <a class="btn btn-sm btn-danger pull-right" style="margin-left:6px;margin-top:-4px" href="{% url 'delete_submission_checklist' item.id %}">Delete</a><a class="btn btn-sm btn-default pull-right" style="margin-top:-4px" href="{% url 'edit_submission_checklist' item.id %}">Edit</a></li>
 				{% endfor %}
 			</ul>
 		</div>

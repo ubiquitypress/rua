@@ -57,10 +57,19 @@ def editor_dashboard(request):
 @is_book_editor
 def editor_submission(request, submission_id):
 	book = get_object_or_404(models.Book, pk=submission_id)
-
+	not_manuscript = True
+	not_additional = True
+	files = book.files.all()
+	for file_check in files:
+		if file_check.kind == 'manuscript':
+			not_manuscript = False
+		elif file_check.kind == 'additional':
+			not_additional = False
 	template = 'editor/submission.html'
 	context = {
 		'submission': book,
+		'no_additional':not_additional,
+		'no_manuscript':not_manuscript,
 		'active': 'user_submission',
 		'author_include': 'editor/submission_details.html',
 		'submission_files': 'editor/submission_files.html',
@@ -197,12 +206,32 @@ def editor_review_round(request, submission_id, round_number):
 	return render(request, template, context)
 
 @is_book_editor
+def remove_assignment_editor(request, submission_id, assignment_type, assignment_id):
+	submission = get_object_or_404(models.Book, pk=submission_id)
+	if assignment_type == 'indexing':
+		review_assignment = get_object_or_404(models.IndexAssignment, pk=assignment_id)
+	elif assignment_type == 'copyediting':
+		review_assignment = get_object_or_404(models.CopyeditAssignment, pk=assignment_id)
+	elif assignment_type == 'typesetting':
+		review_assignment = get_object_or_404(models.TypesetAssignment, pk=assignment_id)
+	else:
+		review_assignment = None
+	
+	if review_assignment:
+		review_assignment.delete()
+	if assignment_type == 'typesetting':
+		return redirect(reverse('editor_production', kwargs={'submission_id': submission_id, }))
+	else:
+		return redirect(reverse('editor_editing', kwargs={'submission_id': submission_id, }))
+
+@is_book_editor
 def editor_review_round_remove(request, submission_id, round_number,review_id):
 	submission = get_object_or_404(models.Book, pk=submission_id)
 	review_assignment = get_object_or_404(models.ReviewAssignment, pk=review_id)
 	review_assignment.delete()
 
 	return redirect(reverse('editor_review_round', kwargs={'submission_id': submission_id, 'round_number': submission.get_latest_review_round()}))
+
 
 
 @is_book_editor
@@ -698,22 +727,42 @@ def delete_contributor(request, submission_id, contributor_type, contributor_id)
 		return redirect(reverse('catalog', kwargs={'submission_id': submission_id}))
 
 @is_book_editor
-def add_format(request, submission_id):
+def add_format(request, submission_id, file_id=None):
 	book = get_object_or_404(models.Book, pk=submission_id)
-	format_form = core_forms.FormatForm()
+	if file_id:
+		exist_file = get_object_or_404(models.File, pk=file_id)
+		format_form = core_forms.FormatFormInitial()
+	else:
+		exist_file = None
+		format_form = core_forms.FormatForm()
+
 	if request.POST:
-		format_form = forms.FormatForm(request.POST, request.FILES)
+		if file_id:
+			format_form = core_forms.FormatFormInitial(request.POST)
+		else:
+			format_form = core_forms.FormatForm(request.POST, request.FILES)
+		
 		if format_form.is_valid():
-			new_file = handle_file(request.FILES.get('format_file'), book, 'format', request.user)
+			if file_id:
+				new_file = None
+			else: 
+				new_file = handle_file(request.FILES.get('format_file'), book, 'format', request.user)
 			new_format = format_form.save(commit=False)
 			new_format.book = book
 			label = request.POST.get('file_label')
-			if label:
-				new_file.label = label
+			if new_file:
+				if label:
+					new_file.label = label
+				else:
+					new_file.label = None
+				new_file.save()
+				new_format.file = new_file
 			else:
-				new_file.label = None
-			new_file.save()
-			new_format.file = new_file
+				new_file = exist_file
+				new_file.pk = None
+				new_file.label = label
+				new_file.save()
+				new_format.file = new_file				
 			new_format.save()
 			log.add_log_entry(book=book, user=request.user, kind='production', message='%s %s loaded a new format, %s' % (request.user.first_name, request.user.last_name, new_format.identifier), short_name='New Format Loaded')
 			return redirect(reverse('editor_production', kwargs={'submission_id': book.id}))
@@ -726,6 +775,7 @@ def add_format(request, submission_id):
 		'submission_files': 'editor/production/add_format.html',
 		'active': 'production',
 		'submission': book,
+		'existing_file':exist_file,
 		'format_list': models.Format.objects.filter(book=book).select_related('file'),
 		'chapter_list': models.Chapter.objects.filter(book=book).select_related('file'),
 		'active_page': 'production',
@@ -734,23 +784,42 @@ def add_format(request, submission_id):
 	return render(request, template, context)
 
 @is_book_editor
-def add_chapter(request, submission_id):
+def add_chapter(request, submission_id, file_id=None):
 	book = get_object_or_404(models.Book, pk=submission_id)
-	chapter_form = core_forms.ChapterForm()
+	if file_id:
+		exist_file = get_object_or_404(models.File, pk=file_id)
+		chapter_form = core_forms.ChapterFormInitial()
+	else:
+		exist_file = None
+		chapter_form = core_forms.ChapterForm()
 
 	if request.POST:
-		chapter_form = forms.ChapterForm(request.POST, request.FILES)
+		if file_id:
+			chapter_form = core_forms.ChapterFormInitial(request.POST)
+		else:
+			chapter_form = core_forms.ChapterForm(request.POST, request.FILES)
+		
 		if chapter_form.is_valid():
-			new_file = handle_file(request.FILES.get('chapter_file'), book, 'chapter', request.user)
+			if file_id:
+				new_file = None
+			else :
+				new_file = handle_file(request.FILES.get('chapter_file'), book, 'chapter', request.user)
 			new_chapter = chapter_form.save(commit=False)
 			new_chapter.book = book
 			label = request.POST.get('file_label')
-			if label:
-				new_file.label = label
+			if new_file:
+				if label:
+					new_file.label = label
+				else:
+					new_file.label = None
+				new_file.save()
+				new_chapter.file = new_file
 			else:
-				new_file.label = None
-			new_file.save()
-			new_chapter.file = new_file
+				new_file = exist_file
+				new_file.pk = None
+				new_file.label = label
+				new_file.save()
+				new_chapter.file = new_file		
 			new_chapter.save()
 			log.add_log_entry(book=book, user=request.user, kind='production', message='%s %s loaded a new chapter, %s' % (request.user.first_name, request.user.last_name, new_chapter.identifier), short_name='New Chapter Loaded')
 			return redirect(reverse('editor_production', kwargs={'submission_id': book.id}))
@@ -763,6 +832,7 @@ def add_chapter(request, submission_id):
 		'submission_files': 'editor/production/add_chapter.html',
 		'active': 'production',
 		'submission': book,
+		'existing_file':exist_file,
 		'format_list': models.Format.objects.filter(book=book).select_related('file'),
 		'chapter_list': models.Chapter.objects.filter(book=book).select_related('file'),
 		'active_page': 'production',

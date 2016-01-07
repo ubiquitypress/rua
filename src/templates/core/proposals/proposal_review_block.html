@@ -16,7 +16,7 @@
     <td>{{ reviewer.due }}</td>
     <td>{% if reviewer.completed %}{{ reviewer.completed }}{% else %}--{% endif %}</td>
     <td>{% if reviewer.completed %}{{ reviewer.get_recommendation_display }}{% else %}--{% endif %}</td>
-    <td>{% if reviewer.completed %}<a href="{% url 'view_proposal_review' proposal.id reviewer.id %}">View Review</a>{% endif %}</td>
+    <td>{% if reviewer.completed %}<a href="{% url 'view_completed_proposal_review' proposal.id reviewer.id %}">View Review</a>{% endif %}</td>
   </tr>
 
 {% empty %}

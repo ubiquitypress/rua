@@ -16,14 +16,16 @@ from core.files import handle_file_update, handle_attachment,handle_file,handle_
 
 @is_author
 def author_dashboard(request):
-
+	direct_submissions =  models.Setting.objects.get(group__name='general', name='direct_submissions').value
+	
 	template = 'author/dashboard.html'
 	context = {
 		'user_submissions': models.Book.objects.filter(owner=request.user).select_related('stage'),
-		'user_proposals': submission_models.Proposal.objects.filter(owner=request.user),
+		'user_proposals': submission_models.Proposal.objects.filter(owner=request.user).order_by("-pk"),
 		'author_tasks': logic.author_tasks(request.user),
 		'author_task_number': len(logic.author_tasks(request.user)),
 		'new_messages': logic.check_for_new_messages(request.user),
+		'direct_submissions':direct_submissions,
 	}
 
 	return render(request, template, context)

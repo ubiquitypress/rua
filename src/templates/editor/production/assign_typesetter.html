@@ -9,17 +9,13 @@
   <table class="table table-bordered small" cellspacing="0" width="100%" id='indv-reviewer'>
     <thead>
     <tr>
-      <th>First Name</th>
-      <th>Last Name</th>
-      <th>Email</th>
+      <th>Name</th>
       <th>Select</th>
     </tr>
     </thead>
     {% for typesetter in typesetters %}
     <tr>
-      <td>{{ typesetter.first_name }}</td>
-      <td>{{ typesetter.last_name }}</td>
-      <td>{{ typesetter.email }}</td>
+      <td>{{ typesetter.first_name }}  &nbsp;  {{ typesetter.last_name }}<sup> <span class="fa fa-envelope" style="font-size:10.5px" data-toggle="tooltip" title="{{ typesetter.email }}"></span></sup></td>
       <td><input type="checkbox" name="typesetter" value="{{ typesetter.id }}"/></td>
     </tr>
     {% endfor %}

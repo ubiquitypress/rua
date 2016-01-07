@@ -11,6 +11,7 @@ from django.core.exceptions import ObjectDoesNotExist
 
 from manager import models
 from review import models as review_models
+from review import forms as review_f
 from manager import forms, logic
 from django.conf import settings
 from core import models as core_models, forms as core_forms
@@ -22,7 +23,6 @@ import os
 
 @staff_member_required
 def index(request):
-
 	template = 'manager/index.html'
 	context = {}
 
@@ -209,6 +209,32 @@ def edit_setting(request, setting_group, setting_name):
 	}
 
 	return render(request, template, context)
+
+def edit_submission_checklist(request,item_id):
+	item = get_object_or_404(submission_models.SubmissionChecklistItem, pk=item_id)
+	checkitem_form = submission_forms.CreateSubmissionChecklistItem(instance=item)
+
+	if request.POST:
+		checkitem_form = submission_forms.CreateSubmissionChecklistItem(request.POST,instance=item)
+		if checkitem_form.is_valid():
+			new_check_item = checkitem_form.save()
+			return redirect(reverse('submission_checklist'))
+
+	template = 'manager/submission/checklist.html'
+	context = {
+		'checkitem_form': checkitem_form,
+		'editing':True,
+		'item':item,
+		'checklist_items': submission_models.SubmissionChecklistItem.objects.all()
+	}
+
+	return render(request, template, context)
+
+def delete_submission_checklist(request,item_id):
+	item = get_object_or_404(submission_models.SubmissionChecklistItem, pk=item_id)
+	item.delete()
+	
+	return redirect(reverse('submission_checklist'))
 
 def submission_checklist(request):
 
@@ -418,6 +444,10 @@ def view_review_form(request,form_id):
 
 	form = review_models.Form.objects.get(id=form_id)
 	fields = review_models.FormElementsRelationship.objects.filter(form=form)
+	try:
+		preview_form = review_f.GeneratedForm(form=form)
+	except (ObjectDoesNotExist, ValueError):
+		preview_form = None
 
 	if request.POST and "delete" in request.POST:
 		index = int(request.POST.get("delete"))
@@ -428,6 +458,7 @@ def view_review_form(request,form_id):
 	template = 'manager/review/view_form.html'
 	context = {
 		'form': form,
+		'preview_form':preview_form,
 		'fields':fields,
 	}
 	return render(request, template, context)

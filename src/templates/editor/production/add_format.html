@@ -9,7 +9,7 @@
 <div class="col-md-12 file-heading container-fluid" style="margin-top:-10px">
           <h4>Add Formats</h4>
     </div>
- <div class="col-md-12 dash-container">
+ <div class="col-md-12 dash-container bottom-space">
 
   {{ form.errors }}
         <div class="media-body">
@@ -24,7 +24,11 @@
                     {% bootstrap_field format_form.identifier %}
                     {% bootstrap_field format_form.file_type %}
                     {% bootstrap_field format_form.sequence %}
-                       <div class="form-group"><label class="control-label" for="id_file_label">File Label</label><input class="form-control" id="id_file_label" maxlength="100" name="file_label" placeholder="File Label" title="" type="text"></div>
+                       <div class="form-group"><label class="control-label" for="id_file_label">File Label</label><input class="form-control" id="id_file_label" maxlength="100" name="file_label" placeholder="File Label" title="" type="text" value="{{existing_file.label}}"></div>
+                       {% if existing_file %}
+                        <div class="form-group"><label class="control-label" for="id_file">File</label><input class="form-control" maxlength="100" id="id_file"
+                       title="" type="text" value="{{existing_file.original_filename}}" readonly></div>
+                       {% else %}
                        <div class="input-group">
                           <span class="input-group-btn">
                               <span class="btn btn-task btn-browse btn-file">
@@ -33,6 +37,7 @@
                           </span>
                           <input type="text" class="form-control" readonly>
                       </div>
+                      {% endif %}
                       <div class="input-group pull-right ">
                           <br />
                           <button class="btn btn-task btn-round-half" type="submit" name="update" id="update">Submit</button>
@@ -42,6 +47,7 @@
                 </div>
           </form>
         </div>
+
       </div>
 
 

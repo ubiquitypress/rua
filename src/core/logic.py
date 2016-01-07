@@ -229,7 +229,32 @@ def get_onetasker_emails(submission_id,term):
 		if not string_any(user_json['value'] for result in results) and term.lower() in name.lower():
 				results.append(user_json)
 	return results
+
+def get_proposal_emails(proposal_id,term):
+	proposal = get_object_or_404(submission_models.Proposal, pk=proposal_id)
+
+	results = []
+	user_json = {}
+	user = proposal.owner
+	name = user.first_name+' '+user.last_name
+	user_json['id'] = user.id
+	user_json['label'] = user.profile.full_name()
+	user_json['value'] = user.email
+	if not string_any(user_json['value'] for result in results) and term.lower() in name.lower():
+		results.append(user_json)
 	
+	if proposal.requestor:
+		user_json = {}
+		user = proposal.requestor
+		name = user.first_name+' '+user.last_name
+		user_json['id'] = user.id
+		user_json['label'] = user.profile.full_name()
+		user_json['value'] = user.email
+		if not string_any(user_json['value'] for result in results) and term.lower() in name.lower():
+			results.append(user_json)
+
+	return results	
+
 def get_editors(book):
 	press_editors = book.press_editors.all()
 	book_editors = book.book_editors.all()

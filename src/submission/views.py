@@ -27,6 +27,10 @@ import json
 
 @login_required
 def start_submission(request, book_id=None):
+	
+	direct_submissions =  core_models.Setting.objects.get(group__name='general', name='direct_submissions').value
+	if not direct_submissions:
+		return redirect(reverse('proposal_start'))
 
 	ci_required = core_models.Setting.objects.get(group__name='general', name='ci_required')
 	checklist_items = submission_models.SubmissionChecklistItem.objects.all()
@@ -376,7 +380,9 @@ def start_proposal(request):
 				notification.save()
 
 			messages.add_message(request, messages.SUCCESS, 'Proposal %s submitted' % proposal.id)
-			
+	
+			log.add_proposal_log_entry(proposal=proposal,user=request.user, kind='proposal', message='Proposal has been submitted by %s.' % request.user.profile.full_name(), short_name='Proposal Submitted')
+	
 			return redirect(reverse('user_dashboard',kwargs = {}))
 
 
@@ -449,7 +455,10 @@ def proposal_revisions(request, proposal_id):
 @login_required
 def proposal_view(request, proposal_id):
 
-	proposal = get_object_or_404(submission_models.Proposal, pk=proposal_id, owner=request.user)
+	proposal = submission_models.Proposal.objects.get(pk=proposal_id)
+
+	if proposal.owner == request.user:
+		viewable = True
 
 	proposal_form = manager_forms.GeneratedForm(form=core_models.ProposalForm.objects.get(pk=proposal.form.id))
 	default_fields = manager_forms.DefaultForm(initial={'title': proposal.title,'author':proposal.author,'subtitle':proposal.subtitle})
@@ -459,6 +468,51 @@ def proposal_view(request, proposal_id):
 		intial_data[k] = v[0]
 
 	proposal_form.initial=intial_data
+	
+	roles = request.user.profile.roles.all()
+
+	if string_any('Editor' in role.name for role in roles):
+		viewable = True
+		editor = True
+		if proposal.requestor and not proposal.requestor == request.user:
+			editor = False
+
+		print editor
+	else:
+		editor = False
+
+	if request.POST and editor:
+		proposal_form = manager_forms.GeneratedForm(request.POST, request.FILES, form=core_models.ProposalForm.objects.get(pk=proposal.form.id))
+		default_fields = manager_forms.DefaultForm(request.POST)
+		if proposal_form.is_valid() and default_fields.is_valid():
+
+			save_dict = {}
+			file_fields = core_models.ProposalFormElementsRelationship.objects.filter(form=core_models.ProposalForm.objects.get(pk=proposal.form.id), element__field_type='upload')
+			data_fields = core_models.ProposalFormElementsRelationship.objects.filter(~Q(element__field_type='upload'), form=core_models.ProposalForm.objects.get(pk=proposal.form.id))
+
+			for field in file_fields:
+				if field.element.name in request.FILES:
+					# TODO change value from string to list [value, value_type]
+					save_dict[field.element.name] = [handle_proposal_file(request.FILES[field.element.name], submission, review_assignment, 'reviewer')]
+
+			for field in data_fields:
+				if field.element.name in request.POST:
+					# TODO change value from string to list [value, value_type]
+					save_dict[field.element.name] = [request.POST.get(field.element.name), 'text']
+
+			json_data = json.dumps(save_dict)
+			proposal = submission_models.Proposal.objects.get(form=core_models.ProposalForm.objects.get(pk=proposal.form.id),pk=proposal_id)
+			proposal.data=json_data
+			proposal.status = "submission"
+			defaults=default_fields.cleaned_data
+			proposal.title = defaults.get("title")
+			proposal.author = defaults.get("author")
+			proposal.subtitle = defaults.get("subtitle")		
+			proposal.requestor=request.user
+			proposal.save()
+	
+			messages.add_message(request, messages.SUCCESS, 'Proposal %s updated' % proposal.id)
+			return redirect(reverse('user_dashboard'))
 
 	template = "submission/view_proposal.html"
 	context = {
@@ -467,6 +521,8 @@ def proposal_view(request, proposal_id):
 		'proposal':proposal,
 		'data':data,
 		'revise':True,
+		'editor': editor,
+		'viewable':viewable,
 	}
 
 	return render(request, template, context)

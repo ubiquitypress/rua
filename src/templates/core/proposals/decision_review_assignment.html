@@ -10,33 +10,42 @@
       <h3>Book Proposal :  {{ proposal.title }} {% if proposal.subtitle%}: {{ proposal.subtitle }}{%endif%}</h3>
 
 </div>
-	 <div class="col-md-3 dash-left grey-container">
+	 <div class="col-md-3 dash-left grey-container bottom-space">
 
 
  </br>
+   <div class="dash-container" >
+            <h4 class="header-text">Proposal details</h4> 
+        </div>
   <table class="table table-bordered">
  
   <tr> <td> Title </td>  <td>{{ proposal.title }}</td>  </tr>
   <tr> <td> Subtitle </td>  <td>{{ proposal.subtitle }}</td>  </tr>
   <tr> <td> Author </td>  <td>{{ proposal.author }}</td>  </tr>
   <tr> <td>User </td>  <td>{{ proposal.owner.username }}</td>  </tr>
+   {%for field in proposal_form%}
+        <tr> <td>{{field.label}}</td>  <td>{{field.value}}</td>  </tr>
+
+   {% endfor %}
+
   <tr> <td> Date Submitted</td>  <td>{{ proposal.date_submitted }}</td>  </tr>
 
 </table>
+     
 </hr>
     </div>
-    <div class="col-md-5 dash-center" >
+    <div class="col-md-5 dash-center bottom-space" >
     <div class="dash-container" >
                        
         <div class="dash-container">
 
         <h4><b>INSTRUCTIONS FOR TASK</b></h4>
         </br>
-        <p class="task-info-text">You've been asked to undertake a review on behalf of the Press and Author.</p>
+        <p class="task-info-text">You've been asked to undertake a review of a proposal on behalf of the Press and Author.</p>
      
-         <h5> Task Due <span class="subtitle-text">{{ review_assignment.due }}</span></h5>
+         <h5> Task Due <span class="subtitle-text">{{ review.due }}</span></h5>
 
-        {% include "review/submission_files.html" %}
+       <!-- {% include "review/submission_files.html" %} -->
    
            </div>
 
@@ -60,7 +69,7 @@
 </div>
 </div>
 
-       <div class="col-md-4 dash-right">
+       <div class="col-md-4 dash-right bottom-space">
            <div class="dash-container" >
        <div class="dash-container" >
       

@@ -1,6 +1,8 @@
 {% load bootstrap3 %}
 
-
+<a href="{% url 'remove_assignment_editor' submission.id 'typesetting' typeset.id %}" class=" btn btn-danger btn-sm pull-right ">
+          Delete
+              </a>
   <h3>TYPESETTING: {{ typeset.typesetter.profile.full_name|upper  }}</h3>
 
   <ul class="timeline-dash">
@@ -91,7 +93,7 @@
 </div>
   <hr />
   <h4>Assigned Files</h4>
-  {% include 'shared/review_files.html' with file_data=typeset.files.all %}
+  {% include 'shared/review_files.html' with file_data=typeset.files.all assignment='typeset'%}
 
   <!-- Tab panes -->
     <hr />
@@ -99,7 +101,7 @@
       <h5>Note</h5>
       {{ typeset.note|linebreaks }}
       <h4>Typesetter Files</h4>
-      {% include 'shared/review_files.html' with file_data=typeset.typeset_files.all %}
+      {% include 'shared/review_files.html' with file_data=typeset.typeset_files.all assignment='typeset' %}
 
       {% if typeset.completed and not typeset.editor_review %}
       <form method="POST">
@@ -131,7 +133,7 @@
       {% if typeset.note_from_author %}
       {{ typeset.note_from_author|linebreaks }}{% else %} Not available. <br>{%endif%}<br>
       <h4>Author Files</h4>
-      {% include 'shared/review_files.html' with file_data=typeset.author_files.all %}
+      {% include 'shared/review_files.html' with file_data=typeset.author_files.all assignment='typeset' %}
       </table>
       {% endif %}
       {% if typeset.author_completed and not typeset.editor_second_review %}
@@ -162,7 +164,7 @@
       <h5>Note from Typesetter</h5>
       {{ typeset.note_from_typesetter|linebreaks }}
       <h4>Typesetter Final Files</h4>
-      {% include 'shared/review_files.html' with file_data=typeset.typesetter_files.all %}
+      {% include 'shared/review_files.html' with file_data=typeset.typesetter_files.all assignment='typeset' %}
 
 {% endif %}
     </div>

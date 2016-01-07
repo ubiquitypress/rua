@@ -44,7 +44,7 @@
      </div>
    </div>
    <hr />
-   <div class="col-md-6">
+   <div class="col-md-6 bottom-space">
      <br />
       {% if new_contract_form.instance.pk %}
      <button name="next_stage" type="submit" class="btn btn-accept btn-round-half">
@@ -62,5 +62,7 @@
      <a href="{% url 'editor_submission' submission.id %}" class="btn btn-danger btn-round-half">Cancel</a>
      {% endif %}
    </div>
+
    </div>
    </form>
+
