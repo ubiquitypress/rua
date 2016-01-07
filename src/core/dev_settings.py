@@ -13,6 +13,7 @@ from django.contrib import messages
 import os
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 BOOK_DIR = os.path.join(BASE_DIR, 'files', 'books')
+PROPOSAL_DIR = os.path.join(BASE_DIR, 'files', 'proposals')
 
 SITE_ID = 1
 

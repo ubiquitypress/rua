@@ -915,7 +915,8 @@ class Message(models.Model):
 
 
 class EmailLog(models.Model):
-	book = models.ForeignKey(Book)
+	book = models.ForeignKey(Book, null=True,blank=True)
+	proposal = models.ForeignKey(submission_models.Proposal, null=True,blank=True)
 	to = models.EmailField(max_length=1000)
 	cc = models.EmailField(max_length=1000, null=True,blank=True)
 	bcc = models.EmailField(max_length=1000, null=True,blank=True)

@@ -14,7 +14,7 @@
 
    <hr />
    <p>Please complete the form below. Your proposal will then be scruitinised by our committe and if approved, you will be invited to complete a full submission.</p>
-  
+ 
     <form method="post" class="form" enctype="multipart/form-data">
       {% csrf_token %}     
       <div class="col-md-12 bottom-space">
@@ -40,11 +40,40 @@
       </div>
 	    {% endbuttons %}
     </form>
-   
+    {% if proposal.requestor %}
+    <br>
+    <br>
+    <br>
+   <table class="table table-bordered">
+    <thead>
+        <tr>
+          <th>Requestor</th>
+        </tr>
+    </thead>
+    <tbody>
+    <tr>
+      <td>{{ proposal.requestor.username }} <sup> <a href="core/email.html" onclick="return popitup('/email/proposal/{{proposal.id}}/user/{{proposal.requestor.id}}/','proposal_{{proposal.requestor.id}}')"class="fa fa-envelope-o btn btn-xs btn-default"></a></sup></td>
+    </tr>
+  </tbody>
+  </table>
+  <br>
+  <br>
+  {% endif %}
 	</div>
 {% endblock body %}
 
 {% block js %}
 <script type="text/javascript" src="{% static "js/fancyfile.js" %}"></script>
 <script type="text/javascript">$("textarea").jqte();</script>
-{% endblock %}
+<script language="javascript" type="text/javascript">
+<!--
+function popitup(url,title) {
+    newwindow=window.open(url,title,'height=750,width=600');
+    if (window.focus) {newwindow.focus()}
+    return false;
+}
+
+// -->
+</script>
+
+{% endblock js %}

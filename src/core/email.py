@@ -11,7 +11,10 @@ from pprint import pprint
 def filepath(book, attachment):
 	return '%s/%s/%s' % (settings.BOOK_DIR, book.id, attachment.uuid_filename)
 
-def send_email(subject, context, from_email, to, html_template, bcc=None, cc=None, book=None, attachment=None):
+def filepath_proposal(proposal, attachment):
+	return '%s/%s/%s' % (settings.PROPOSAL_DIR, proposal.id, attachment.uuid_filename)
+
+def send_email(subject, context, from_email, to, html_template, bcc=None, cc=None, book=None, attachment=None, proposal=None):
 
 	html_template.replace('\n', '<br />')
 
@@ -26,11 +29,16 @@ def send_email(subject, context, from_email, to, html_template, bcc=None, cc=Non
 	
 	if book:
 		log.add_email_log_entry(book = book, subject = subject, from_address = from_email, to = to, bcc = bcc, cc = cc, content = html_content, attachment = attachment)
+	if proposal:
+		log.add_email_log_entry(proposal = proposal, subject = subject, from_address = from_email, to = to, bcc = bcc, cc = cc, content = html_content, attachment = attachment)
 		
 	msg.content_subtype = "html"
 
 	if attachment:
-		msg.attach_file(filepath(book, attachment))
+		if book:
+			msg.attach_file(filepath(book, attachment))
+		else:
+			msg.attach_file(filepath_proposal(proposal, attachment))
 
 	msg.send()
 

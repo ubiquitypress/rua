@@ -34,7 +34,7 @@
     <td>{{ proposal.title }}</td>
     <td>{{ proposal.subtitle }}</td>
     <td>{{ proposal.author }}</td>
-    <td>{{ proposal.owner.username }}</td>
+    <td>{{ proposal.owner.username }} <sup> <a href="core/email.html" onclick="return popitup('/email/proposal/{{proposal.id}}/user/{{proposal.owner.id}}/','proposal_{{proposal.owner.id}}')"class="fa fa-envelope-o btn btn-xs btn-default"></a></sup></td>
     <td>{{ proposal.date_submitted }}</td>
   </tr>
 </tbody>
@@ -88,6 +88,15 @@
       });
   } );
 </script>
+<script language="javascript" type="text/javascript">
+<!--
+function popitup(url,title) {
+    newwindow=window.open(url,title,'height=750,width=600');
+    if (window.focus) {newwindow.focus()}
+    return false;
+}
 
+// -->
+</script>
 
 {% endblock js %}
