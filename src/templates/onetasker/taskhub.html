@@ -71,7 +71,7 @@
         </div></a>
     </div>
 
-    <div class="col-md-5 dash-center">
+    <div class="col-md-{% if send_email %}9{% else%} 5 {% endif %} dash-center bottom space">
         <div class="dash-container">
         {% if center_block %}
             {% include center_block %}

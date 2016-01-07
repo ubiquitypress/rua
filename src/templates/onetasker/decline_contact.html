@@ -1,0 +1,22 @@
+
+<div class="col-md-12 danger-heading container-fluid" style="margin-top:-20px">
+  <h3>Decline - {{ assignment.type |title }} Assignment</h3>
+</div>
+<div class="col-md-12">
+  
+  
+  <p>You are declining this  {{ assignment.type }} assignment. You can add some notes to the email below detailing why. When you press submit this email will be sent to the requestor.</p><hr />
+  <form method="POST">
+    {% csrf_token %}
+    <div class="form-group">
+      <label for="comment">Email Asiignment Requestor:</label>
+      <textarea name="decline-email" class="form-control" rows="8" id="comment">{{ email_text }}</textarea>
+    </div>
+    <button class="btn btn-danger pull-right" type="submit">Send and Record Decision</button>
+    <a href="{% url 'user_dashboard' %}" class="btn btn-default"> Skip</a>
+  </form>
+</div>
+
+{% block js %}
+<script type="text/javascript">$("textarea").jqte();</script>
+{% endblock %}
