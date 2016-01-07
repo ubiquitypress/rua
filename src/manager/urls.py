@@ -56,6 +56,7 @@ urlpatterns = patterns('',
 
     # Users
     url(r'^user/$', 'manager.views.users', name='manager_users'),
+    url(r'^user/inactive/$', 'manager.views.inactive_users', name='manager_inactive_users'),
     url(r'^user/add/$', 'manager.views.add_user', name='add_user'),
     url(r'^user/(?P<user_id>\d+)/edit/$', 'manager.views.user_edit', name='user_edit'),
 

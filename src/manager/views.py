@@ -616,6 +616,16 @@ def user_edit(request, user_id):
 	}
 	return render(request, template, context)
 
+@staff_member_required
+def inactive_users(request):
+
+	users = User.objects.filter(active=False)
+
+	template = 'manager/users/inactive.html'
+	context = {
+		'users': users,
+	}
+
 
 ## File handler
 
