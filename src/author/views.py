@@ -20,7 +20,7 @@ def author_dashboard(request):
 	
 	template = 'author/dashboard.html'
 	context = {
-		'user_submissions': models.Book.objects.filter(owner=request.user).select_related('stage'),
+		'user_submissions': models.Book.objects.filter(owner=request.user).order_by("-pk").select_related('stage'),
 		'user_proposals': submission_models.Proposal.objects.filter(owner=request.user).order_by("-pk"),
 		'author_tasks': logic.author_tasks(request.user),
 		'author_task_number': len(logic.author_tasks(request.user)),
