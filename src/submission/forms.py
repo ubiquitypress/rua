@@ -29,6 +29,7 @@ class SubmitBookStageOne(forms.ModelForm):
 		super(SubmitBookStageOne, self).__init__(*args, **kwargs)
 		if ci_required == 'on':
 			self.fields['competing_interests'] = forms.CharField(widget=forms.Textarea, required=True)
+		self.fields['license'].empty_label = None
 
 class SubmissionChecklist(forms.Form):
 
