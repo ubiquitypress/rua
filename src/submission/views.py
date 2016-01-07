@@ -453,9 +453,12 @@ def proposal_revisions(request, proposal_id):
 
 	return render(request, template, context)
 @login_required
-def proposal_view(request, proposal_id,editor=None):
+def proposal_view(request, proposal_id):
 
-	proposal = get_object_or_404(submission_models.Proposal, pk=proposal_id, owner=request.user)
+	proposal = submission_models.Proposal.objects.get(pk=proposal_id)
+
+	if proposal.owner == request.user:
+		viewable = True
 
 	proposal_form = manager_forms.GeneratedForm(form=core_models.ProposalForm.objects.get(pk=proposal.form.id))
 	default_fields = manager_forms.DefaultForm(initial={'title': proposal.title,'author':proposal.author,'subtitle':proposal.subtitle})
@@ -465,8 +468,20 @@ def proposal_view(request, proposal_id,editor=None):
 		intial_data[k] = v[0]
 
 	proposal_form.initial=intial_data
+	
+	roles = request.user.profile.roles.all()
 
-	if request.POST:
+	if string_any('Editor' in role.name for role in roles):
+		viewable = True
+		editor = True
+		if proposal.requestor and not proposal.requestor == request.user:
+			editor = False
+
+		print editor
+	else:
+		editor = False
+
+	if request.POST and editor:
 		proposal_form = manager_forms.GeneratedForm(request.POST, request.FILES, form=core_models.ProposalForm.objects.get(pk=proposal.form.id))
 		default_fields = manager_forms.DefaultForm(request.POST)
 		if proposal_form.is_valid() and default_fields.is_valid():
@@ -486,15 +501,14 @@ def proposal_view(request, proposal_id,editor=None):
 					save_dict[field.element.name] = [request.POST.get(field.element.name), 'text']
 
 			json_data = json.dumps(save_dict)
-			proposal = submission_models.Proposal.objects.get(form=core_models.ProposalForm.objects.get(pk=proposal.form.id), owner=request.user,pk=proposal_id)
+			proposal = submission_models.Proposal.objects.get(form=core_models.ProposalForm.objects.get(pk=proposal.form.id),pk=proposal_id)
 			proposal.data=json_data
 			proposal.status = "submission"
 			defaults=default_fields.cleaned_data
 			proposal.title = defaults.get("title")
 			proposal.author = defaults.get("author")
-			proposal.subtitle = defaults.get("subtitle")
-			if editor:			
-				proposal.requestor=request.user
+			proposal.subtitle = defaults.get("subtitle")		
+			proposal.requestor=request.user
 			proposal.save()
 	
 			messages.add_message(request, messages.SUCCESS, 'Proposal %s updated' % proposal.id)
@@ -507,6 +521,8 @@ def proposal_view(request, proposal_id,editor=None):
 		'proposal':proposal,
 		'data':data,
 		'revise':True,
+		'editor': editor,
+		'viewable':viewable,
 	}
 
 	return render(request, template, context)
