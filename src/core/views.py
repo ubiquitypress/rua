@@ -16,7 +16,7 @@ from  __builtin__ import any as string_any
 from review import models as review_models
 from core import log, models, forms, logic
 from author import orcid
-from email import send_email
+from email import send_email,send_reset_email
 from files import handle_file_update, handle_attachment, handle_file, handle_proposal_file
 from submission import models as submission_models
 from core.decorators import is_reviewer, is_editor, is_book_editor, is_book_editor_or_author, is_onetasker,is_author
@@ -289,7 +289,85 @@ def reset_password(request):
     return render(request, template, context)
 
 def unauth_reset(request):
-    pass
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        try:
+            user = User.objects.get(username=username)          
+            password = User.objects.make_random_password()
+            user.profile.reset_code=password
+            user.profile.save()
+            user.save()
+            email_text = models.Setting.objects.get(group__name='email', name='reset_password').value
+            send_reset_email(user=user, email_text=email_text, reset_code=password)
+            messages.add_message(request, messages.INFO, 'A reset code has been sent to your email account.')
+        except User.DoesNotExist:
+            messages.add_message(request, messages.ERROR, 'There is no account for that username.')
+
+    template = 'core/user/reset_username.html'
+    context = {}
+
+    return render(request, template, context)
+def unauth_reset_code(request, user_id):
+    valid_user = False  
+    try:
+        user = User.objects.get(pk=user_id)
+        valid_user = True          
+    except User.DoesNotExist:
+        messages.add_message(request, messages.ERROR, 'There is no account for that username.')
+
+    if request.method == 'POST':
+        code = request.POST.get('reset_code')
+        if code == user.profile.reset_code:
+            user.profile.reset_code_validated = True
+            user.profile.save()
+            user.save()
+            messages.add_message(request, messages.SUCCESS, 'Valid reset code')
+
+            return redirect(reverse('unauth_reset_password',kwargs={'user_id':user_id}))
+        else:
+            messages.add_message(request, messages.ERROR, 'Your reset_code is invalid.')
+
+    template = 'core/user/reset_code.html'
+    context = {
+    'valid_user':valid_user,
+    }
+
+    return render(request, template, context)
+def unauth_reset_password(request, user_id):
+    try:
+        user = User.objects.get(pk=user_id)          
+    except User.DoesNotExist:
+        messages.add_message(request, messages.ERROR, 'There is no account for that username.')
+    valid_reset = user.profile.reset_code_validated
+    if valid_reset:
+        if request.method == 'POST':
+            password_1 = request.POST.get('password_1')
+            password_2 = request.POST.get('password_2')
+
+            if password_1 == password_2:
+                if len(password_1) > 8:
+                    user = User.objects.get(username=user.username)
+                    user.set_password(password_1)
+                    user.save()
+                    user.profile.reset_code_validated = False
+                    user.profile.reset_code = None
+                    user.profile.save()
+                    user.save()
+                    messages.add_message(request, messages.SUCCESS, 'Password successfully changed.')
+                    return redirect(reverse('login'))
+                else:
+                    messages.add_message(request, messages.ERROR, 'Password is not long enough, must be greater than 8 characters.')
+            else:
+                messages.add_message(request, messages.ERROR, 'Your passwords do not match.')
+
+    template = 'core/user/reset_password_unauth.html'
+    context = {
+    'valid_reset':valid_reset,
+    'user':user,
+
+    }
+
+    return render(request, template, context)
 
 def permission_denied(request):
 

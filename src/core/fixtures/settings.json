@@ -508,5 +508,65 @@
   },
   "model": "core.setting",
   "pk": 53
+},
+{
+  "fields": {
+    "value": "You can supply additional info about your files to help the editors and reviewers. Your label will be displayed for the editors to see.",
+    "group": 1,
+    "name": "additional_files_guidelines",
+    "types": "rich_text"
+  },
+  "model": "core.setting",
+  "pk": 54
+},
+{
+  "fields": {
+    "value": "on",
+    "group": 1,
+    "name": "preview_review_files",
+    "types": "boolean"
+  },
+  "model": "core.setting",
+  "pk": 55
+},
+{
+  "fields": {
+    "value": "fake_user@fakeadress.com",
+    "group": 1,
+    "name": "primary_contact_email",
+    "types": "text"
+  },
+  "model": "core.setting",
+  "pk": 56
+},
+{
+  "fields": {
+    "value": "rua_user_first_name rua_user_last_name",
+    "group": 1,
+    "name": "primary_contact_name",
+    "types": "text"
+  },
+  "model": "core.setting",
+  "pk": 57
+},
+{
+  "fields": {
+    "value": "Declining task",
+    "group": 3,
+    "name": "task_decline",
+    "types": "rich_text"
+  },
+  "model": "core.setting",
+  "pk": 58
+},
+{
+  "fields": {
+    "value": " Dear {{user.profile.full_name}},\r\nPassword reset request has been made.\r\nYour reset code is : {{reset_code}}\r\n\r\nClick this link in order to continue the password reset process: {{reset_url}}",
+    "group": 3,
+    "name": "reset_password",
+    "types": "rich_text"
+  },
+  "model": "core.setting",
+  "pk": 59
 }
 ]
