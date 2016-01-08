@@ -34,8 +34,8 @@ urlpatterns = patterns('',
 
     # Unauthenticated password reset
     url(r'^login/reset/$', 'core.views.unauth_reset', name='unauth_reset'),
-    url(r'^login/reset/code/(?P<user_id>\d+)/$', 'core.views.unauth_reset_code', name='unauth_reset_code'),
-    url(r'^login/reset/password/(?P<user_id>\d+)/$', 'core.views.unauth_reset_password', name='unauth_reset_password'),
+    url(r'^login/reset/code/(?P<uuid>[^/]+)/$', 'core.views.unauth_reset_code', name='unauth_reset_code'),
+    url(r'^login/reset/password/(?P<uuid>[^/]+)/$', 'core.views.unauth_reset_password', name='unauth_reset_password'),
 
     # User profile
     url(r'^user/profile/$', 'core.views.view_profile', name='view_profile'),

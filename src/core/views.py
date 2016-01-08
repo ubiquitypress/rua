@@ -308,40 +308,33 @@ def unauth_reset(request):
 
     return render(request, template, context)
 
-def unauth_reset_code(request, user_id):
+def unauth_reset_code(request, uuid):
     valid_user = False  
     try:
-        user = User.objects.get(pk=user_id)
+        user = User.objects.get(profile__reset_code=uuid)
         if user.profile.reset_code:
-            valid_user = True     
+            valid_user = True
+        user.profile.reset_code_validated = True
+        user.profile.save()
+        user.save()
+        messages.add_message(request, messages.SUCCESS, 'Valid reset code')
+
+        return redirect(reverse('unauth_reset_password',kwargs={'uuid':uuid}))
+            
     except User.DoesNotExist:
-        messages.add_message(request, messages.ERROR, 'There is no account for that username.')
-    print valid_user
-    if request.method == 'POST':
-        code = request.POST.get('reset_code')
-        if code == user.profile.reset_code:
-            user.profile.reset_code_validated = True
-            user.profile.save()
-            user.save()
-            messages.add_message(request, messages.SUCCESS, 'Valid reset code')
-
-            return redirect(reverse('unauth_reset_password',kwargs={'user_id':user_id}))
-        else:
-            messages.add_message(request, messages.ERROR, 'Your reset_code is invalid.')
-
-    template = 'core/user/reset_code.html'
-    context = {
-    'valid_user':valid_user,
-    }
-
-    return render(request, template, context)
-
-def unauth_reset_password(request, user_id):
+        messages.add_message(request, messages.ERROR, 'There is no account associated with that reset code.')
+        return redirect(reverse('login'))
+  
+def unauth_reset_password(request, uuid):
     try:
-        user = User.objects.get(pk=user_id)          
+        user = User.objects.get(profile__reset_code=uuid)        
     except User.DoesNotExist:
-        messages.add_message(request, messages.ERROR, 'There is no account for that username.')
-    valid_reset = user.profile.reset_code_validated
+        user = None
+        messages.add_message(request, messages.ERROR, 'There is no account for that username or reset code is invalid.')
+    if user:
+        valid_reset = user.profile.reset_code_validated
+    else:
+        valid_reset = False
     if valid_reset:
         if request.method == 'POST':
             password_1 = request.POST.get('password_1')

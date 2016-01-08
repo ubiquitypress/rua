@@ -47,7 +47,7 @@ def send_reset_email(user, email_text, reset_code):
 	from_email = models.Setting.objects.get(group__name='email', name='from_address')
 	base_url = models.Setting.objects.get(group__name='general', name='base_url')
 
-	reset_url = 'http://%s/login/reset/code/%s/' % (base_url.value,user.pk)
+	reset_url = 'http://%s/login/reset/code/%s/' % (base_url.value,reset_code)
 
 	context = {
 		'reset_code': reset_code,
