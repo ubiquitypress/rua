@@ -22,11 +22,31 @@
          <th width="25%">Choices</th>
         <th width="25%">Type</th>
          <th width="25%">Required</th>
-         <th width="25%">Help Text</th>
          <th width="8%"></th>
     </tr>
   </thead>
   <tbody>
+     <tr>
+      <td>Title</td>
+        <td>None</td>
+        <td>text</td>
+        <td>True</td>
+        <td></td>
+     </tr>
+     <tr>
+      <td>Subtitle</td>
+        <td>None</td>
+        <td>text</td>
+        <td>True</td>
+        <td></td>
+     </tr>
+     <tr>
+      <td>Author</td>
+        <td>None</td>
+        <td>text</td>
+        <td>True</td>
+        <td></td>
+     </tr>
     {% for field in fields %}
       <tr>
         <td>{{ field.element.name }}</td>
@@ -35,7 +55,6 @@
         <td>{{ field.element.required }}</td>
          <td>  <form method="POST">
     {% csrf_token %}<button name="delete" value="{{forloop.counter0}}"class="btn btn-danger button-round">Delete</button></form></td>
-      <td>{{field.help_text}}</td>
       </tr>
       {% endfor %}
     </tbody>
@@ -84,7 +103,31 @@
            {% endif %}
 
   </div>
+  <br>
+    <div class="col-md-12 other-sub-heading container-fluid" style="margin-top:-20px">
+      <h4>Preview:</h4>
+</div>
+ {% if preview_form %}
+    <div class="well" style="overflow: auto">
+      <div class="col-md-12">
+        {% bootstrap_form default_fields %}
+      </div>
 
+          {% for field in preview_form %}
+            <div class="{% if field.field.widget.attrs.div_class %}{{ field.field.widget.attrs.div_class }}{% else %}col-md-12{% endif %}">
+            {% if field.field.widget.attrs.is_checkbox %}
+              {% if field.errors %}<span class="red">{{ field.errors|join:", " }}</span><br />{% endif %}
+              {{ field }} {% if field.field.help_text %}<span class="small">{{ field.field.help_text|safe }}</span>{% endif %}
+            {% else %}
+                 {% if field.errors %}<span class="red">{{ field.errors|join:", " }}</span>{% endif %}
+                 {% bootstrap_field field %}
+              {% endif %}
+              </div>
+          {% endfor %}
+         </div>
+    {% else %}
+    <h4>No field has been added yet</h4>
+    {% endif %}
   </div>
 {% endblock body %}
 

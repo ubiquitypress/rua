@@ -14,7 +14,7 @@
 </br></br>
 <div class="container-fluid">
   </br>
-  <table id="reviewforms" class="table table-bordered">
+  <table id="formdetails" class="table table-bordered">
     <thead>
     <tr>
         <th width="25%">ID</th>
@@ -38,7 +38,7 @@
       <h4>Fields <a href="{% url 'manager_add_proposal_form_field' form.id  %}" class="btn  btn-transparent-white" style="position: absolute;right:20;margin-top:-8px">+ Add field</a></h4>
 </div>
 </br></br>
-     <table id="reviewforms" class="table table-bordered">
+     <table id="fields" class="table table-bordered">
     <thead>
     <tr>
         <th width="25%">Name</th>
@@ -46,12 +46,42 @@
         <th width="10%">Type</th>
          <th width="8%">Required</th>
          <th width="10%"> Width</th>
-         <th> Order</th>
+         <th width="10%"> Order</th>
          <th width="25%">Help Text</th>
          <th></th>
     </tr>
   </thead>
   <tbody>
+    <tr>
+      <td>Title</td>
+        <td>None</td>
+        <td>text</td>
+        <td>True</td>
+        <td>col-md-12</td>
+        <td>0</td>
+        <td>default</td>
+        <td></td>
+     </tr>
+     <tr>
+      <td>Subtitle</td>
+        <td>None</td>
+        <td>text</td>
+        <td>True</td>
+        <td>col-md-12</td>
+        <td>0</td>
+        <td>default</td>
+        <td></td>
+     </tr>
+     <tr>
+      <td>Author</td>
+        <td>None</td>
+        <td>text</td>
+        <td>True</td>
+        <td>col-md-12</td>
+        <td>0</td>
+        <td>default</td>
+        <td></td>
+     </tr>
     {% for field in fields %}
       <tr>
         <td>{{ field.element.name }}</td>
@@ -102,8 +132,12 @@
 <script type="text/javascript" language="javascript" src="//cdn.datatables.net/plug-ins/1.10.7/integration/bootstrap/3/dataTables.bootstrap.js"></script>
 <script>
   $(document).ready(function() {
-      $('.table').DataTable({
+      $('#formdetails').DataTable({
         "lengthMenu": [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]]
+      });
+      $('#fields').DataTable({
+        "lengthMenu": [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]],
+         "order": [[ 5, "asc" ]]
       });
   } );
 </script>

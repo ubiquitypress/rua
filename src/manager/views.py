@@ -343,7 +343,11 @@ def add_proposal_field(request,form_id):
 	form = core_models.ProposalForm.objects.get(id=form_id)
 	fields = core_models.ProposalFormElementsRelationship.objects.filter(form=form)
 	elements = core_models.ProposalFormElement.objects.all()
-
+	try:
+		preview_form = forms.GeneratedForm(form=form)
+	except (ObjectDoesNotExist, ValueError):
+		preview_form = None
+	default_fields = forms.DefaultForm()
 	new_form = forms.StagesProposalFormElementRelationshipForm()
 	if request.POST and 'finish' in request.POST:
 		print 'Finish'
@@ -375,6 +379,8 @@ def add_proposal_field(request,form_id):
 		'form': form,
 		'new_form':new_form,
 		'fields': fields,
+		'preview_form':preview_form,
+		'default_fields':default_fields,
 	}
 
 	return render(request, template, context)
