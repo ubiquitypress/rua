@@ -7,10 +7,19 @@ from core.decorators import is_onetasker
 from onetasker import forms
 from core import log
 import logic
-
+from submission.logic import handle_book_labels
+from django.http import HttpResponse, HttpResponseForbidden
+from django.views.decorators.csrf import csrf_exempt
+from jfu.http import upload_receive, UploadResponse, JFUResponse
 from datetime import datetime
 
+import mimetypes as mime
+from uuid import uuid4
+import os
+from pprint import pprint
+import json
 
+from django.conf import settings
 
 @is_onetasker
 def dashboard(request):
@@ -55,10 +64,12 @@ def task_hub(request, assignment_type, assignment_id, about=None):
 			form = logic.get_assignemnt_form(request, assignment_type, assignment)
 			if form.is_valid():
 				assignment = form.save(commit=False)
-				files = request.FILES.getlist('file_upload')
-				assignment = logic.handle_files(assignment, files)
-				assignment.save()
 				logic.notify_editor(assignment, '%s task completed' % (assignment.type()))
+				logic.complete_task(assignment)
+				handle_book_labels(request.POST, assignment.book, kind='misc')
+				
+				assignment.save()
+
 				messages.add_message(request, messages.SUCCESS, 'Task completed. Thanks!')
 				return redirect(reverse('onetasker_task_hub', kwargs={'assignment_type': assignment_type, 'assignment_id': assignment_id}))
 			else:
@@ -118,4 +129,81 @@ def task_hub_decline(request, assignment_type, assignment_id,):
 	return render(request, template, context)
 
 
+@csrf_exempt
+def upload(request, assignment_type, assignment_id, type_to_handle):
 
+	assignment = logic.get_assignment(assignment_type, assignment_id)
+	book = assignment.book
+	file = upload_receive(request)
+	new_file = handle_file(file, book, type_to_handle, request.user)
+	if new_file:
+
+		file_dict = {
+			'name' : new_file.uuid_filename,
+			'size' : file.size,
+			'deleteUrl': reverse('assignment_jfu_delete', kwargs = { 'assignment_type':assignment_type,'assignment_id':assignment_id, 'file_pk': new_file.pk }),
+			'url': reverse('serve_file', kwargs = {'submission_id': book.id, 'file_id': new_file.pk }),
+			'deleteType': 'POST',
+			'ruaId': new_file.pk,
+			'original_name': new_file.original_filename,
+		}
+		assignment = logic.add_file(assignment, new_file)
+		return UploadResponse( request, file_dict )
+	return HttpResponse('No file')
+
+@csrf_exempt
+def upload_delete(request, assignment_type, assignment_id, file_pk):
+	assignment = logic.get_assignment(assignment_type, assignment_id)
+	book = assignment.book
+	success = True
+	try:
+		instance = models.File.objects.get(pk=file_pk)
+		os.unlink('%s/%s/%s' % (settings.BOOK_DIR, book.id, instance.uuid_filename))
+		instance.delete()
+	except models.File.DoesNotExist:
+		success = False
+
+	return JFUResponse( request, success )
+
+
+## File helpers
+def handle_file(file, book, kind, user):
+
+	if file:
+
+		original_filename = str(file._get_name())
+		filename = str(uuid4()) + str(os.path.splitext(file._get_name())[1])
+		folder_structure = os.path.join(settings.BASE_DIR, 'files', 'books', str(book.id))
+
+		if not os.path.exists(folder_structure):
+			os.makedirs(folder_structure)
+
+		path = os.path.join(folder_structure, str(filename))
+		fd = open(path, 'wb')
+		for chunk in file.chunks():
+			fd.write(chunk)
+		fd.close()
+
+		file_mime = mime.guess_type(filename)
+
+		try:
+			file_mime = file_mime[0]
+		except IndexError:
+			file_mime = 'unknown'
+
+		if not file_mime:
+			file_mime = 'unknown'
+
+		new_file = models.File(
+			mime_type=file_mime,
+			original_filename=original_filename,
+			uuid_filename=filename,
+			stage_uploaded=1,
+			kind=kind,
+			owner=user,
+		)
+		new_file.save()
+		book.files.add(new_file)
+		book.save()
+
+		return new_file
