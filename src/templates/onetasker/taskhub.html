@@ -5,7 +5,11 @@
 {% block title %}Dashboard{% endblock %}
 
 {% block css %}
+
     <style type="text/css">
+     body {
+        overflow:hidden;
+    }
     .navbar {
         margin-bottom: 0px !important;
     }
@@ -72,7 +76,7 @@
     </div>
 
     <div class="col-md-{% if send_email %}9{% else%}5 {% endif %} dash-center bottom space">
-        <div class="dash-container">
+        <div class="dash-container bottom-space">
         {% if center_block %}
             {% include center_block %}
         {% endif %}
