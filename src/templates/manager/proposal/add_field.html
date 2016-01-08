@@ -22,6 +22,8 @@
          <th width="25%">Choices</th>
         <th width="25%">Type</th>
          <th width="25%">Required</th>
+         <th width="8%">Order</th>
+         <th width="8%"></th>
          <th width="8%"></th>
     </tr>
   </thead>
@@ -32,12 +34,16 @@
         <td>text</td>
         <td>/</td>
         <td></td>
+        <td></td>
+        <td></td>
      </tr>
      <tr>
       <td>Subtitle</td>
         <td>None</td>
         <td>text</td>
         <td>/</td>
+        <td></td>
+        <td></td>
         <td></td>
      </tr>
      <tr>
@@ -46,6 +52,8 @@
         <td>text</td>
         <td>/</td>
         <td></td>
+        <td></td>
+        <td></td>
      </tr>
     {% for field in fields %}
       <tr>
@@ -53,15 +61,19 @@
         <td>{% if field.element.choices %}{{ field.element.choices }}{%else%}None{%endif%}</td>
         <td>{{ field.element.field_type }}</td>
         <td>{{ field.element.required }}</td>
+        <td>{{field.order}}<td>
          <td>  <form method="POST">
     {% csrf_token %}<button name="delete" value="{{forloop.counter0}}"class="btn btn-danger button-round">Delete</button></form></td>
+     <td><a href="{% url 'manager_edit_proposal_field' form.id field.id %}" class="btn btn-success button-round">Edit</a></td>
+
       </tr>
       {% endfor %}
     </tbody>
     </table>
 </div>
 
-      <h4>Add new field</h4>
+      <h4>
+          {% if update%} Edit field #{{current_field.id}} {% else %}Add new field {% endif %} </h4>
     <form method="POST">
     {% csrf_token %}
     <div class="well" style="overflow: auto">
@@ -91,8 +103,17 @@
               </div>
                {% endifequal %}
           {% endfor %}
-             <button style="width:120px"name="submit" id="submit" type="submit" class="btn btn-accept"> Add
-     </button>    </form>
+          {% if update%}
+            <button style="width:120px"name="submit" id="submit" type="submit" class="btn btn-success btn-round"> Save
+     </button>  
+          {% else %}
+              <button style="width:120px"name="submit" id="submit" type="submit" class="btn btn-accept"> Add
+     </button>  
+     {% endif %} 
+          
+
+
+       </form>
         <form method="POST">
     {% csrf_token %}
       <button name="finish" style="width:120px" id="continue" type="submit" class="btn btn-danger btn-round pull-right">     <!-- might need to change it to "fa-cloud-upload" -->

@@ -386,6 +386,65 @@ def add_proposal_field(request,form_id):
 	return render(request, template, context)
 
 @staff_member_required
+def edit_proposal_field(request,form_id,field_id):
+
+	form = core_models.ProposalForm.objects.get(id=form_id)
+	fields = core_models.ProposalFormElementsRelationship.objects.filter(form=form)
+	current_field = core_models.ProposalFormElementsRelationship.objects.get(pk=field_id)
+	elements = core_models.ProposalFormElement.objects.all()
+	
+	try:
+		preview_form = forms.GeneratedForm(form=form)
+	except (ObjectDoesNotExist, ValueError):
+		preview_form = None
+
+	default_fields = forms.DefaultForm()
+	new_form = forms.StagesProposalFormElementRelationshipForm(instance=current_field)
+	if request.POST and 'finish' in request.POST:
+		print 'Finish'
+		return redirect(reverse('manager_view_proposal_form',kwargs={'form_id': form_id}))
+	elif request.POST and "delete" in request.POST:
+		index = int(request.POST.get("delete"))
+		field = fields[index]
+		field.delete()
+		return redirect(reverse('manager_add_proposal_form_field',kwargs={'form_id': form_id}))
+	elif request.POST:
+		field_form = forms.StagesProposalFormElementRelationshipForm(request.POST,instance=current_field)
+
+		width = request.POST.get("width")
+		element_index = request.POST.get("element")
+		help_text = request.POST.get("help_text")
+		order = int(request.POST.get("order"))
+		index = int(element_index)-1
+		element_id = elements[int(element_index)-1].pk
+		element = core_models.ProposalFormElement.objects.get(pk=element_id)
+
+		current_field.element = element
+		current_field.width = width
+		current_field.help_text = help_text
+		current_field.order = order
+		current_field.save()
+
+		fields = core_models.ProposalFormElementsRelationship.objects.filter(form=form)
+		form.form_fields=fields
+		form.save()
+		return redirect(reverse('manager_add_proposal_form_field',kwargs={'form_id': form_id}))
+	
+	template = 'manager/proposal/add_field.html'
+
+	context = {
+		'form': form,
+		'new_form':new_form,
+		'fields': fields,
+		'current_field':current_field,
+		'update':True,
+		'preview_form':preview_form,
+		'default_fields':default_fields,
+	}
+
+	return render(request, template, context)
+
+@staff_member_required
 def add_proposal_form(request):
 
 	form = forms.StagesProposalForm()
