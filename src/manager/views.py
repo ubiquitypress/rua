@@ -359,7 +359,10 @@ def add_proposal_field(request,form_id):
 		element_index = request.POST.get("element")
 		help_text = request.POST.get("help_text")
 		order = int(request.POST.get("order"))
-		element = core_models.ProposalFormElement.objects.get(id=int(element_index))
+		index = int(element_index)-1
+		element_id = elements[int(element_index)-1].pk
+		element = core_models.ProposalFormElement.objects.get(pk=element_id)
+		print element.name
 		relationship=core_models.ProposalFormElementsRelationship(form=form,element=element,width=width,order=order,help_text=help_text)
 		relationship.save()
 		fields = core_models.ProposalFormElementsRelationship.objects.filter(form=form)
@@ -427,7 +430,44 @@ def create_proposal_elements(request,form_id):
 		'elements' : elements,
 	}
 	return render(request, template, context)
+@staff_member_required
+def edit_proposal_element(request,form_id,element_id):
 
+	form = core_models.ProposalForm.objects.get(id=form_id)
+	elements = core_models.ProposalFormElement.objects.all()
+	current_element = core_models.ProposalFormElement.objects.get(pk=element_id)
+	new_form = forms.StagesProposalFormElementForm(instance=current_element)
+
+	if request.POST and "delete" in request.POST:
+		index = int(request.POST.get("delete"))
+		field = elements[index]
+		field.delete()
+		return redirect(reverse('manager_create_proposal_elements',kwargs={'form_id': form_id}))
+	elif request.POST and 'continue' in request.POST:
+		form_element_form=forms.StagesProposalFormElementForm(request.POST,instance=current_element)
+		if form_element_form.is_valid():
+			form_element_form.save()
+		return redirect(reverse('manager_add_proposal_form_field',kwargs={'form_id': form_id}))
+	elif request.POST and 'update' in request.POST:
+		form_element_form=forms.StagesProposalFormElementForm(request.POST,instance=current_element)
+		if form_element_form.is_valid():
+			new_element=form_element_form.save(commit=False)
+			current_element.name = new_element.name
+			current_element.choices = new_element.choices
+			current_element.field_type = new_element.field_type
+			current_element.required = new_element.required
+			current_element.save()
+		return redirect(reverse('manager_create_proposal_elements',kwargs={'form_id': form_id}))
+
+	template = 'manager/proposal/create_elements.html'
+	context = {
+		'form': form,
+		'new_form':new_form,
+		'elements' : elements,
+		'update':True,
+		'element':current_element,
+	}
+	return render(request, template, context)
 @staff_member_required
 def review_forms(request):
 
@@ -494,7 +534,7 @@ def add_field(request,form_id):
 
 	form = review_models.Form.objects.get(id=form_id)
 	fields = review_models.FormElementsRelationship.objects.filter(form=form)
-	elements = review_models.FormElement.objects.all()
+	elements = review_models.FormElement.objects.all().order_by('pk')
 	new_form = forms.FormElementsRelationshipForm()
 	if request.POST and 'finish' in request.POST:
 		return redirect(reverse('manager_view_review_form',kwargs={'form_id': form_id}))

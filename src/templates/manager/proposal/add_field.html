@@ -22,6 +22,7 @@
          <th width="25%">Choices</th>
         <th width="25%">Type</th>
          <th width="25%">Required</th>
+         <th width="25%">Help Text</th>
          <th width="8%"></th>
     </tr>
   </thead>
@@ -34,6 +35,7 @@
         <td>{{ field.element.required }}</td>
          <td>  <form method="POST">
     {% csrf_token %}<button name="delete" value="{{forloop.counter0}}"class="btn btn-danger button-round">Delete</button></form></td>
+      <td>{{field.help_text}}</td>
       </tr>
       {% endfor %}
     </tbody>

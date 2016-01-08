@@ -24,6 +24,7 @@
         <th width="25%">Type</th>
          <th width="25%">Required</th>
          <th width="9%"></th>
+         <th width="9%"></th>
     </tr>
   </thead>
   <tbody>
@@ -35,13 +36,15 @@
         <td>{{ element.required }}</td>
         <td><form method="POST">
     {% csrf_token %}<button name="delete" value="{{forloop.counter0}}"class="btn btn-danger button-round">Delete</button></form></td>
+        <td><a href="{% url 'manager_edit_proposal_element' form.id element.id %}" class="btn btn-success button-round">Edit</a></td>
       </tr>
       {% endfor %}
     </tbody>
     </table>
 </div>
 
-      <h4>Create a new element</h4>
+      <h4>
+          {% if update %}Update '{{element.name}}'{% else %}Create a new{% endif %} element</h4>
     <form method="POST">
     {% csrf_token %}
     <div class="well" style="overflow: auto">
@@ -60,8 +63,14 @@
               </div>
 
           {% endfor %}
+
+          {% if update%}
+           <button name="update" style="width:120px" id="update" type="submit" class="btn btn-success btn-round"> Update
+     </button>
+          {% else %}
              <button name="submit" style="width:120px" id="submit" type="submit" class="btn btn-accept"> Create
-     </button>  </form>
+     </button>
+     {% endif %}  </form>
        <form method="POST">
     {% csrf_token %}
       <button name="continue" style="width:120px" id="continue" type="submit" class="btn btn-decline pull-right">     <!-- might need to change it to "fa-cloud-upload" -->
