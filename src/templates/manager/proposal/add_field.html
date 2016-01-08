@@ -30,21 +30,21 @@
       <td>Title</td>
         <td>None</td>
         <td>text</td>
-        <td>True</td>
+        <td>/</td>
         <td></td>
      </tr>
      <tr>
       <td>Subtitle</td>
         <td>None</td>
         <td>text</td>
-        <td>True</td>
+        <td>/</td>
         <td></td>
      </tr>
      <tr>
       <td>Author</td>
         <td>None</td>
         <td>text</td>
-        <td>True</td>
+        <td>/</td>
         <td></td>
      </tr>
     {% for field in fields %}
@@ -138,7 +138,8 @@
 <script>
   $(document).ready(function() {
       $('.table').DataTable({
-        "lengthMenu": [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]]
+        "lengthMenu": [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]],
+         "order": [[ 3, "asc" ]]
       });
   } );
 </script>
