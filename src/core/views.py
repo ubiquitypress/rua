@@ -293,7 +293,7 @@ def unauth_reset(request):
         username = request.POST.get('username')
         try:
             user = User.objects.get(username=username)          
-            password = User.objects.make_random_password()
+            password = uuid4()
             user.profile.reset_code=password
             user.profile.save()
             user.save()
