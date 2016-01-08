@@ -311,7 +311,7 @@ def unauth_reset(request):
 def unauth_reset_code(request, uuid):
     valid_user = False  
     try:
-        user = User.objects.get(profile__reset_code=uuid)
+        user = get_object_or_404(User,profile__reset_code=uuid)
         if user.profile.reset_code:
             valid_user = True
         user.profile.reset_code_validated = True
@@ -327,7 +327,7 @@ def unauth_reset_code(request, uuid):
   
 def unauth_reset_password(request, uuid):
     try:
-        user = User.objects.get(profile__reset_code=uuid)        
+        user = get_object_or_404(User,profile__reset_code=uuid)        
     except User.DoesNotExist:
         user = None
         messages.add_message(request, messages.ERROR, 'There is no account for that username or reset code is invalid.')
