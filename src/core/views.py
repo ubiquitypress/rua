@@ -307,14 +307,16 @@ def unauth_reset(request):
     context = {}
 
     return render(request, template, context)
+
 def unauth_reset_code(request, user_id):
     valid_user = False  
     try:
         user = User.objects.get(pk=user_id)
-        valid_user = True          
+        if user.profile.reset_code:
+            valid_user = True     
     except User.DoesNotExist:
         messages.add_message(request, messages.ERROR, 'There is no account for that username.')
-
+    print valid_user
     if request.method == 'POST':
         code = request.POST.get('reset_code')
         if code == user.profile.reset_code:
@@ -333,6 +335,7 @@ def unauth_reset_code(request, user_id):
     }
 
     return render(request, template, context)
+
 def unauth_reset_password(request, user_id):
     try:
         user = User.objects.get(pk=user_id)          

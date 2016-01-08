@@ -13,6 +13,7 @@
 	<hr>
 	<div class="container-fluid well span6">
 	</br>
+	{% if valid_user %}
 	  	<form method="post" class="form" enctype="multipart/form-data">
 	  		{% csrf_token %}
 	  		<div class="form-group">
@@ -35,6 +36,9 @@
 				</div>
 			</div>
 		</form>
+		{% else %}
+		This user either does not exist or a reset code has not been requested.
+		{% endif %}
 	</div>
 </div>
 {% endblock %}
