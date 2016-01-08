@@ -682,7 +682,7 @@ def serve_marc21_file(request, submission_id,type):
 def serve_file(request, submission_id, file_id):
     book = get_object_or_404(models.Book, pk=submission_id)
     _file = get_object_or_404(models.File, pk=file_id)
-    file_path = os.path.join(settings.BOOK_DIR, submission_id, _file.original_filename)
+    file_path = os.path.join(settings.BOOK_DIR, submission_id, _file.uuid_filename)
 
     try:
         fsock = open(file_path, 'r')

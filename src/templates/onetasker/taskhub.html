@@ -162,9 +162,9 @@ function popitup(url,title) {
         <td>
             <p class="name">
                 {% if (file.url) { %}
-                    <a href="{%=file.url%}" title="{%=file.name%}" download="{%=file.name%}" {%=file.thumbnailUrl?'data-gallery':''%}>{%=file.original_name%}</a>
+                    <a href="{%=file.url%}" title="{%=file.name%}" download="{%=file.name%}" {%=file.thumbnailUrl?'data-gallery':''%}>{%=file.name%}</a>
                 {% } else { %}
-                    <span>{%=file.original_name%}</span>
+                    <span>{%=file.name%}</span>
                 {% } %}</p>
                 <p><label>File Label &nbsp;</label><input type="text" name="{%=file.ruaId%}" id="{%=file.ruaId%}" />
             </p>
