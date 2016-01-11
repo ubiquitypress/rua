@@ -1331,3 +1331,32 @@ button.list-group-item-file.active:focus {
 .proposal {
   background-color:#7c50ff !important;
 }
+
+.border-overview-production {
+  border-bottom: 12px rgb(123, 195, 61) solid
+}
+.border-overview-submission {
+  border-bottom: 12px rgb(233, 181, 69) solid
+}
+.border-overview-review {
+  border-bottom: 12px rgb(233, 181, 69) solid
+}
+.border-overview-editing {
+  border-bottom: 12px rgb(170, 196, 61) solid
+}
+.border-overview-production-xs {
+  border-bottom: 5px rgb(123, 195, 61) solid;
+  margin-bottom: 15px;
+}
+.border-overview-submission-xs {
+  border-bottom: 5px rgb(233, 181, 69) solid;
+  margin-bottom: 15px;
+}
+.border-overview-review-xs {
+  border-bottom: 5px rgb(233, 181, 69) solid;
+  margin-bottom: 15px;
+}
+.border-overview-editing-xs {
+  border-bottom: 5px rgb(170, 196, 61) solid;
+  margin-bottom: 15px;
+}
