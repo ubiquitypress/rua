@@ -1057,6 +1057,7 @@ def view_proposal_review_decision(request, proposal_id, assignment_id):
     proposal = get_object_or_404(submission_models.Proposal, pk=proposal_id)
     proposal_form = manager_forms.GeneratedForm(form=models.ProposalForm.objects.get(pk=proposal.form.id))
     default_fields = manager_forms.DefaultForm(initial={'title': proposal.title,'author':proposal.author,'subtitle':proposal.subtitle})
+    relationships = models.ProposalFormElementsRelationship.objects.filter(form=proposal.form)
     data = json.loads(proposal.data)
     intial_data={}
     for k,v in data.items():
@@ -1102,6 +1103,7 @@ def view_proposal_review_decision(request, proposal_id, assignment_id):
         'proposal_form':proposal_form,
         'review': review_assignment,
         'active': 'proposal_review',
+        'relationships':relationships,
     }
 
     return render(request, template, context)
@@ -1112,6 +1114,7 @@ def view_completed_proposal_review(request, proposal_id, assignment_id):
     proposal = get_object_or_404(submission_models.Proposal, pk=proposal_id)
     proposal_form = manager_forms.GeneratedForm(form=models.ProposalForm.objects.get(pk=proposal.form.id))
     default_fields = manager_forms.DefaultForm(initial={'title': proposal.title,'author':proposal.author,'subtitle':proposal.subtitle})
+    relationships = models.ProposalFormElementsRelationship.objects.filter(form=proposal.form)
     data = json.loads(proposal.data)
     intial_data={}
     for k,v in data.items():
@@ -1181,6 +1184,7 @@ def view_completed_proposal_review(request, proposal_id, assignment_id):
         'form':form,
         'recommendation_form':recommendation_form,
         'active': 'proposal_review',
+        'relationships':relationships,
     }
 
     return render(request, template, context)
@@ -1191,6 +1195,7 @@ def view_proposal_review(request, proposal_id, assignment_id):
     proposal = get_object_or_404(submission_models.Proposal, pk=proposal_id)
     proposal_form = manager_forms.GeneratedForm(form=models.ProposalForm.objects.get(pk=proposal.form.id))
     default_fields = manager_forms.DefaultForm(initial={'title': proposal.title,'author':proposal.author,'subtitle':proposal.subtitle})
+    relationships = models.ProposalFormElementsRelationship.objects.filter(form=proposal.form)
     data = json.loads(proposal.data)
     intial_data={}
     for k,v in data.items():
@@ -1255,6 +1260,7 @@ def view_proposal_review(request, proposal_id, assignment_id):
         'proposal': proposal,
         'proposal_form':proposal_form,
         'review_assignment': review_assignment,
+        'relationships':relationships,
         'data_ordered': data_ordered,
         'result': result,
         'form':form,

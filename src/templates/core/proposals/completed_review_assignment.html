@@ -11,30 +11,8 @@
       <h3>Book Proposal :  {{ proposal.title }} {% if proposal.subtitle%}: {{ proposal.subtitle }}{%endif%}</h3>
 
 </div>
-	 <div class="col-md-3 dash-left grey-container bottom-space">
+	 <div class="col-md-8 dash-center  bottom-space">
 
-
-  </br>
-   <div class="dash-container" >
-            <h4 class="header-text">Proposal details</h4> 
-        </div>
-  <table class="table table-bordered">
- 
-  <tr> <td> Title </td>  <td>{{ proposal.title }}</td>  </tr>
-  <tr> <td> Subtitle </td>  <td>{{ proposal.subtitle }}</td>  </tr>
-  <tr> <td> Author </td>  <td>{{ proposal.author }}</td>  </tr>
-  <tr> <td>User </td>  <td>{{ proposal.owner.username }}</td>  </tr>
-   {%for field in proposal_form%}
-        <tr> <td>{{field.label}}</td>  <td>{{field.value|safe}}</td>  </tr>
-
-   {% endfor %}
-
-  <tr> <td> Date Submitted</td>  <td>{{ proposal.date_submitted }}</td>  </tr>
-
-</table>
-</hr>
-    </div>
-    <div class="col-md-5 dash-center bottom-space" >
     <div class="dash-container" >
                        
         <div class="dash-container">
@@ -45,7 +23,7 @@
      
          <h5> Task Due <span class="subtitle-text">{{ review_assignment.due }}</span></h5>
 
-     <!--   {% include "review/submission_files.html" %}-->
+        <!--{% include "review/submission_files.html" %}-->
    
         </div>
               <div class="col-md-12  container-fluid decision-info-accept">                 
@@ -54,12 +32,52 @@
 
                     </div>
                      </br>
-                      </br>
-                       </br>
-      
-        
-          {% include "review/contact_editors.html"  %}
+    
 </div>
+<hr>
+  </br>
+   <div class="dash-container" >
+            <h4 class="header-text">Proposal details</h4> 
+        </div>
+  <table class="table table-bordered">
+    <thead>
+  <tr>
+ 
+    <th>Title</th>
+    <th>Subtitle</th>
+    <th>Author</th>
+    <th>User</th>
+    <th>Status</th>
+    <th>Date Submitted</th>
+    
+  </tr>
+  </thead>
+  <tbody>
+  <tr>
+    <td>{{ proposal.title }}</td>
+    <td>{{ proposal.subtitle }}</td>
+    <td>{{ proposal.author }}</td>
+    <td>{{ proposal.owner.username }} <sup> <a href="core/email.html" onclick="return popitup('/email/proposal/{{proposal.id}}/user/{{proposal.owner.id}}/','proposal_{{proposal.owner.id}}')"class="fa fa-envelope-o btn btn-xs btn-default"></a></sup></td>
+    <td>{{ proposal.get_status_display }}</td>
+    <td>{{ proposal.date_submitted }}</td>
+  </tr>
+</tbody>
+</table>
+</hr>
+<div class="container" style="width:100%;left:0%;right:20%;position:relative;">
+  {% for field in relationships %}
+
+  <div class="{{ field.width }}">
+  <div class="row">
+    <div class="panel panel-default ">
+      <div class="panel-heading"><span class="panel-heading"><b>{{ field.element.name }}</b></span></div>
+      <div class="panel-body">{% for k,v in data.items %}{% if k == field.element.name %}{{ v.0|safe }}{% endif %}{% endfor %}</div>
+    </div>
+  </div>
+  </div>
+{% endfor %}
+</div>
+
 </div>
 
          <div class="col-md-4 dash-right bottom-space">
