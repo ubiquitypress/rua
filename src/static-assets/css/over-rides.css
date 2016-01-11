@@ -1333,16 +1333,28 @@ button.list-group-item-file.active:focus {
 }
 
 .border-overview-production {
-  border-bottom: 12px rgb(123, 195, 61) solid
+  border-bottom: 12px rgb(123, 195, 61) solid;
+  -webkit-box-shadow: 0px 7px 5px 1px rgba(232,232,232,1);
+-moz-box-shadow: 0px 7px 5px 1px rgba(232,232,232,1);
+box-shadow: 0px 7px 5px 1px rgba(232,232,232,1);
 }
 .border-overview-submission {
-  border-bottom: 12px rgb(233, 181, 69) solid
+  border-bottom: 12px rgb(233, 181, 69) solid;
+  -webkit-box-shadow: 0px 7px 5px 1px rgba(232,232,232,1);
+-moz-box-shadow: 0px 7px 5px 1px rgba(232,232,232,1);
+box-shadow: 0px 7px 5px 1px rgba(232,232,232,1);
 }
 .border-overview-review {
-  border-bottom: 12px rgb(233, 181, 69) solid
+  border-bottom: 12px rgb(233, 181, 69) solid;
+  -webkit-box-shadow: 0px 7px 5px 1px rgba(232,232,232,1);
+-moz-box-shadow: 0px 7px 5px 1px rgba(232,232,232,1);
+box-shadow: 0px 7px 5px 1px rgba(232,232,232,1);
 }
 .border-overview-editing {
-  border-bottom: 12px rgb(170, 196, 61) solid
+  border-bottom: 12px rgb(170, 196, 61) solid;
+  -webkit-box-shadow: 0px 7px 5px 1px rgba(232,232,232,1);
+-moz-box-shadow: 0px 7px 5px 1px rgba(232,232,232,1);
+box-shadow: 0px 7px 5px 1px rgba(232,232,232,1);
 }
 .border-overview-production-xs {
   border-bottom: 5px rgb(123, 195, 61) solid;
