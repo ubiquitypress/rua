@@ -446,6 +446,10 @@ def proposal_revisions(request, proposal_id):
 			proposal.save()
 			notification = core_models.Task(assignee=proposal.requestor,creator=request.user,text="Revisions for Proposal '%s' with id %s submitted" % (proposal.title,proposal.id),workflow='proposal')
 			notification.save()
+			
+			update_email_text = core_models.Setting.objects.get(group__name='email', name='proposal_update_ack').value
+			log.add_proposal_log_entry(proposal=proposal,user=request.user, kind='proposal', message='Revisions for Proposal "%s %s" with id %s have been submitted.'%(proposal.title,proposal.subtitle,proposal.pk), short_name='Proposal Revisions Submitted')
+			core_logic.send_proposal_update(proposal, email_text=update_email_text, sender=request.user, receiver=proposal.owner)
 
 			messages.add_message(request, messages.SUCCESS, 'Proposal %s submitted' % proposal.id)
 			return redirect(reverse('user_dashboard'))
