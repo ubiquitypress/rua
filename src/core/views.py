@@ -1051,7 +1051,7 @@ def start_proposal_review(request, proposal_id):
     return render(request, template, context)
 
 
-@is_editor
+@is_reviewer
 def view_proposal_review_decision(request, proposal_id, assignment_id):
 
     proposal = get_object_or_404(submission_models.Proposal, pk=proposal_id)
@@ -1105,7 +1105,8 @@ def view_proposal_review_decision(request, proposal_id, assignment_id):
     }
 
     return render(request, template, context)
-@is_editor
+    
+@is_reviewer
 def view_completed_proposal_review(request, proposal_id, assignment_id):
 
     proposal = get_object_or_404(submission_models.Proposal, pk=proposal_id)
@@ -1183,7 +1184,8 @@ def view_completed_proposal_review(request, proposal_id, assignment_id):
     }
 
     return render(request, template, context)
-@is_editor
+
+@is_reviewer
 def view_proposal_review(request, proposal_id, assignment_id):
 
     proposal = get_object_or_404(submission_models.Proposal, pk=proposal_id)
