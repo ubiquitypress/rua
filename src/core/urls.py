@@ -86,6 +86,7 @@ urlpatterns = patterns('',
 
     # Proposals
     url(r'^proposals/$', 'core.views.proposal', name='proposals'),
+    url(r'^proposals/history/$', 'core.views.proposal_history', name='proposals_history'),
     url(r'^proposals/(?P<proposal_id>\d+)/$', 'core.views.view_proposal', name='view_proposal'),
     url(r'^proposals/(?P<proposal_id>\d+)/review/start/$', 'core.views.start_proposal_review', name='start_proposal_review'),
     url(r'^proposals/(?P<proposal_id>\d+)/review/add/$', 'core.views.add_proposal_reviewers', name='add_proposal_reviewers'),

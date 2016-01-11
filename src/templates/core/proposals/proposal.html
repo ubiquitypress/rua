@@ -9,8 +9,8 @@
 <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/plug-ins/1.10.7/integration/bootstrap/3/dataTables.bootstrap.css">
 {% endblock css %}
 {% block body %}
-  <div class="col-md-12 other-heading container-fluid" style="margin-top:-20px">
-  <h3>Book Proposals  <a href="{% url 'editor_dashboard'%}" class="btn  btn-transparent-white" style="position: absolute;right:20;margin-top:-8px">Go back</a></h3>
+  <div class="col-md-12 {% if open %}other-heading{% else %}other-sub-heading{% endif %} container-fluid" style="margin-top:-20px">
+  <h3>{% if open %}Book Proposals  <a href="{% url 'editor_dashboard'%}" class="btn  btn-transparent-white" style="position: absolute;right:20;margin-top:-8px">Go back</a> <a href="{% url 'proposals_history'%}" class="btn  btn-transparent-white" style="position: absolute;left:185;margin-top:-8px">History</a>{% else %}History of Book Proposals  <a href="{% url 'proposals'%}" class="btn  btn-transparent-white" style="position: absolute;right:20;margin-top:-8px">Go back</a>{% endif %}</h3>
 </div>
 <div class="col-md-12">
 

@@ -13,6 +13,7 @@ from django.core import serializers
 from django.conf import settings
 from  __builtin__ import any as string_any
 
+from django.template import Context, Template
 from review import models as review_models
 from core import log, models, forms, logic
 from author import orcid
@@ -37,7 +38,7 @@ from uuid import uuid4
 import os
 import mimetypes
 import mimetypes as mime
-
+from bs4 import BeautifulSoup
 # Website Views
 
 def index(request):
@@ -914,10 +915,26 @@ def proposal(request):
     template = 'core/proposals/proposal.html'
     context = {
         'proposal_list': proposals,
+        'open': True,
     }
 
     return render(request, template, context)
 
+@is_editor
+def proposal_history(request):
+    proposal_list = submission_models.Proposal.objects.all()
+    proposals = []
+    for proposal in proposal_list:
+        if not proposal.requestor:
+            proposals.append(proposal)
+        elif proposal.requestor==request.user:
+            proposals.append(proposal)
+    template = 'core/proposals/proposal.html'
+    context = {
+        'proposal_list': proposals,
+    }
+
+    return render(request, template, context)
 @is_editor
 def view_proposal(request, proposal_id):
     proposal = get_object_or_404(submission_models.Proposal, pk=proposal_id)
@@ -951,8 +968,9 @@ def create_proposal_form(proposal):
 
     data = json.loads(proposal.data)
     for k,v in data.items():
-        document.add_heading(k, level=1)
-        document.add_paragraph(v[0]).italic = True  
+        document.add_heading(k, level=1)        
+        text = BeautifulSoup(v[0],"html.parser").get_text()
+        document.add_paragraph(text).bold = True  
 
     document.add_page_break()
     if not os.path.exists(os.path.join(settings.BASE_DIR, 'files', 'forms')):

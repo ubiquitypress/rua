@@ -13,7 +13,8 @@
 
   <a class="btn  btn-transparent-white" href="?download=docx" style="margin-left:5px"> <i class="fa fa-cloud-download"> &nbsp; Download Proposal</i></a>
 
-<a href="{% url 'proposal_view_submitted' proposal.id %}" class="btn  btn-transparent-white" style="position: absolute;right:100px;margin-top:-8px">Edit</a>
+{% if proposal.status = 'accepted' or proposal.status = 'declined'%} 
+{% else %}<a href="{% url 'proposal_view_submitted' proposal.id %}" class="btn  btn-transparent-white" style="position: absolute;right:100px;margin-top:-8px">Edit</a>{% endif %}
     <a href="{% url 'proposals'%}" class="btn  btn-transparent-white" style="position: absolute;right:20;margin-top:-8px">Go back</a></h3>
 </div></br></br>
 <div class="col-md-12">
@@ -26,6 +27,7 @@
     <th>Subtitle</th>
     <th>Author</th>
     <th>User</th>
+    <th>Status</th>
     <th>Date Submitted</th>
     
   </tr>
@@ -36,6 +38,7 @@
     <td>{{ proposal.subtitle }}</td>
     <td>{{ proposal.author }}</td>
     <td>{{ proposal.owner.username }} <sup> <a href="core/email.html" onclick="return popitup('/email/proposal/{{proposal.id}}/user/{{proposal.owner.id}}/','proposal_{{proposal.owner.id}}')"class="fa fa-envelope-o btn btn-xs btn-default"></a></sup></td>
+    <td>{{ proposal.get_status_display }}</td>
     <td>{{ proposal.date_submitted }}</td>
   </tr>
 </tbody>
@@ -49,22 +52,24 @@
   <div class="row">
     <div class="panel panel-default ">
       <div class="panel-heading"><span class="panel-heading"><b>{{ field.element.name }}</b></span></div>
-      <div class="panel-body">{% for k,v in data.items %}{% if k == field.element.name %}{{ v.0 }}{% endif %}{% endfor %}</div>
+      <div class="panel-body">{% for k,v in data.items %}{% if k == field.element.name %}{{ v.0|safe }}{% endif %}{% endfor %}</div>
     </div>
   </div>
   </div>
 {% endfor %}
 </div>
 <hr>
-  {% if not proposal.date_review_started %}<a href="{% url 'start_proposal_review' proposal.id %}" class="btn btn-primary btn-round"><i class="fa fa-plus">&nbsp;</i>Start Review Process</a>{% else %}
+  {% if not proposal.date_review_started %} 
+{% if proposal.status = 'accepted' or proposal.status = 'declined'%} {% else %}<a href="{% url 'start_proposal_review' proposal.id %}" class="btn btn-primary btn-round"><i class="fa fa-plus">&nbsp;</i>Start Review Process</a>{% endif %}{% else %}
 
-  <div class="col-md-12 other-sub-heading"><h4>Review</h4><a href="{% url 'add_proposal_reviewers' proposal.id %}" class="btn  btn-transparent-white" style="position: absolute;right:20;margin-top:-37px"><i class="fa fa-plus">&nbsp;</i>Add Reviewers</a></div>
+  <div class="col-md-12 other-sub-heading"><h4>Review</h4>{% if proposal.status = 'accepted' or proposal.status = 'declined'%} {% else %}<a href="{% url 'add_proposal_reviewers' proposal.id %}" class="btn  btn-transparent-white" style="position: absolute;right:20;margin-top:-37px"><i class="fa fa-plus">&nbsp;</i>Add Reviewers</a>{% endif %}</div>
 
   {% include "core/proposals/proposal_review_block.html" with review_data=proposal.review_assignments.all %}
 
 
   {% endif %}
-
+{% if proposal.status = 'accepted' or proposal.status = 'declined'%} 
+{% else %}
 <hr>
   <h3>Action</h3>
   <p>Once you have compeleted the review process, you can accept, decline or as the author to submit revisions the proposal. Accepting the proposal will create a submission for the author to complete and allow you to send them some notes on the proposal. Declining will move the proposal to the archive. If revisions are requested, the author will be able to edit and resubmit their proposal.</p>
@@ -73,6 +78,7 @@
   {% include "core/proposals/proposal_action_buttons.html" %}
       </br></br><hr>
   </div>
+  {% endif %}
 
 
 </div>
