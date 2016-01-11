@@ -264,7 +264,7 @@ def create_review_form(submission):
 	for relation in relations:
 
 		if relation.element.field_type in ['text', 'textarea', 'date', 'email']:
-			document.add_heading(relation.element.name, level=1)
+			document.add_heading(relation.element.name+": _______________________________", level=1)
 			document.add_paragraph(relation.help_text).italic = True
 
 		if relation.element.field_type in ['select', 'check']:

@@ -1105,7 +1105,7 @@ def view_proposal_review_decision(request, proposal_id, assignment_id):
     }
 
     return render(request, template, context)
-    
+
 @is_reviewer
 def view_completed_proposal_review(request, proposal_id, assignment_id):
 
@@ -1412,7 +1412,7 @@ def create_proposal_review_form(proposal):
     for relation in relations:
 
         if relation.element.field_type in ['text', 'textarea', 'date', 'email']:
-            document.add_heading(relation.element.name, level=1)
+            document.add_heading(relation.element.name+": _______________________________", level=1)
             document.add_paragraph(relation.help_text).italic = True
 
         if relation.element.field_type in ['select', 'check']:
