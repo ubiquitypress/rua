@@ -569,6 +569,17 @@ def send_proposal_decline(proposal, email_text, sender):
 
 	email.send_email('[abp] Proposal Declined', context, from_email.value, proposal.owner.email, email_text)
 
+def send_proposal_update(proposal, email_text, sender,receiver):
+	from_email = models.Setting.objects.get(group__name='email', name='from_address')
+
+	context = {
+		'proposal': proposal,
+		'sender': sender,
+		'receiver':receiver,
+	}
+
+	email.send_email('[abp] Proposal Declined', context, from_email.value, proposal.owner.email, email_text)
+
 def send_task_decline(assignment,type, email_text, sender):
 	from_email = models.Setting.objects.get(group__name='email', name='from_address')
 

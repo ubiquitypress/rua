@@ -514,10 +514,13 @@ def proposal_view(request, proposal_id):
 			defaults=default_fields.cleaned_data
 			proposal.title = defaults.get("title")
 			proposal.author = defaults.get("author")
-			proposal.subtitle = defaults.get("subtitle")		
+			proposal.subtitle = defaults.get("subtitle")	
 			proposal.requestor=request.user
 			proposal.save()
-	
+
+			update_email_text = core_models.Setting.objects.get(group__name='email', name='proposal_update_ack').value
+			log.add_proposal_log_entry(proposal=proposal,user=request.user, kind='proposal', message='Proposal "%s %s" has been updated.'%(proposal.title,proposal.subtitle), short_name='Proposal Updated')
+			core_logic.send_proposal_update(proposal, email_text=update_email_text, sender=request.user, receiver=proposal.owner)
 			messages.add_message(request, messages.SUCCESS, 'Proposal %s updated' % proposal.id)
 			return redirect(reverse('user_dashboard'))
 

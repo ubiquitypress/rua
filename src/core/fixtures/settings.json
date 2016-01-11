@@ -568,5 +568,15 @@
   },
   "model": "core.setting",
   "pk": 59
+},
+{
+  "fields": {
+    "value": "<p>Dear {{receiver.profile.full_name}},\r\n</p><p>\r\nProposal {{proposal.title}}<{{proposal.id}}> has been updated by {{sender.profile.full_name}}\r\n</p><p>\r\nRegards,\r\n</p><p>\r\n{{ sender.profile.signature }}</p>",
+    "group": 3,
+    "name": "proposal_update_ack",
+    "types": "rich_text"
+  },
+  "model": "core.setting",
+  "pk": 60
 }
 ]
