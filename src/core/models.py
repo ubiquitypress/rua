@@ -99,6 +99,7 @@ class Profile(models.Model):
 	reset_code = models.TextField(null=True, blank=True)
 	reset_code_validated = models.BooleanField(default=False)
 	roles = models.ManyToManyField('Role')
+	interest = models.ManyToManyField('Interest', null=True, blank=True)
 
 	def full_name(self):
 		if self.middle_name:
@@ -637,6 +638,15 @@ class FileVersion(models.Model):
 		ordering = ('-date_uploaded',)
 
 class Subject(models.Model):
+	name = models.CharField(max_length=250)
+
+	def __unicode__(self):
+		return u'%s' % self.name
+
+	def __repr__(self):
+		return u'%s' % self.name
+
+class Interest(models.Model):
 	name = models.CharField(max_length=250)
 
 	def __unicode__(self):
