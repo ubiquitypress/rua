@@ -49,7 +49,7 @@
   <div class="row">
     <div class="panel panel-default ">
       <div class="panel-heading"><span class="panel-heading"><b>{{ field.element.name }}</b></span></div>
-      <div class="panel-body">{% for k,v in data.items %}{% if k == field.element.name %}{{ v.0 }}{% endif %}{% endfor %}</div>
+      <div class="panel-body">{% for k,v in data.items %}{% if k == field.element.name %}{{ v.0|safe }}{% endif %}{% endfor %}</div>
     </div>
   </div>
   </div>
