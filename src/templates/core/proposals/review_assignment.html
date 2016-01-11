@@ -24,7 +24,7 @@
   <tr> <td> Author </td>  <td>{{ proposal.author }}</td>  </tr>
   <tr> <td>User </td>  <td>{{ proposal.owner.username }}</td>  </tr>
    {%for field in proposal_form%}
-        <tr> <td>{{field.label}}</td>  <td>{{field.value}}</td>  </tr>
+        <tr> <td>{{field.label}}</td>  <td>{{field.value|safe}}</td>  </tr>
 
    {% endfor %}
 
