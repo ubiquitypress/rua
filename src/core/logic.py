@@ -14,6 +14,7 @@ from core import email
 from pymarc import *
 from submission import logic as submission_logic
 
+from uuid import uuid4
 from submission import models as submission_models
 import re
 from django.shortcuts import redirect, render, get_object_or_404
@@ -34,9 +35,9 @@ def setting_template_loader(setting, path, dictionary,pattern = None):
 		file_location = file_location+"/"
 	if pattern:
 		file_location=file_location+pattern
-
-	file_location=file_location+setting.name+".html"
-
+	unique_code = str(uuid4())
+	file_location=file_location+setting.name+unique_code+".html"
+	print file_location
 	html_file= open(file_location,"w")
 	html_file.write(setting.value)
 	html_file.close()
