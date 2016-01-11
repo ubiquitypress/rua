@@ -1033,7 +1033,7 @@ def start_proposal_review(request, proposal_id):
                         messages.add_message(request, messages.WARNING, '%s %s is already a reviewer' % (member.user.first_name, member.user.last_name))
 
             # Tidy up and save
-
+            proposal.requestor = request.user
             proposal.date_review_started = timezone.now()
             proposal.save()
 

@@ -45,7 +45,7 @@
     <th>Title</th>
     <th>Subtitle</th>
     <th>Author</th>
-    <th>User</th>
+    <th>Requestor</th>
     <th>Status</th>
     <th>Date Submitted</th>
     
@@ -56,7 +56,7 @@
     <td>{{ proposal.title }}</td>
     <td>{{ proposal.subtitle }}</td>
     <td>{{ proposal.author }}</td>
-    <td>{{ proposal.owner.username }} <sup> <a href="core/email.html" onclick="return popitup('/email/proposal/{{proposal.id}}/user/{{proposal.owner.id}}/','proposal_{{proposal.owner.id}}')"class="fa fa-envelope-o btn btn-xs btn-default"></a></sup></td>
+     <td>{{ proposal.requestor.username }} <sup> <a href="core/email.html" onclick="return popitup('/email/proposal/{{proposal.id}}/user/{{proposal.requestor.id}}/','proposal_{{proposal.requestor.id}}')"class="fa fa-envelope-o btn btn-xs btn-default"></a></sup></td>
     <td>{{ proposal.get_status_display }}</td>
     <td>{{ proposal.date_submitted }}</td>
   </tr>
@@ -76,7 +76,7 @@
   </div>
 {% endfor %}
 </div>
-
+<hr>
 </div>
 
        <div class="col-md-4 dash-right bottom-space">

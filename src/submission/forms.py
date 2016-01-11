@@ -10,6 +10,10 @@ from core import logic
 
 
 class ProposalStart(forms.ModelForm):
+	
+	def __init__(self, *args, **kwargs):
+		super(ProposalStart, self).__init__(*args, **kwargs)
+		self.fields['review_form'].required = True
 
 	class Meta:
 		model = models.Proposal
