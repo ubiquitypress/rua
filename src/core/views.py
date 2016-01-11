@@ -941,7 +941,7 @@ def create_proposal_form(proposal):
     document = Document()
     document.add_heading(proposal.title, 0)
     p = document.add_paragraph('You should complete this form and then use the proposal page to upload it.')
-    relations = models.ProposalFormElementsRelationship.objects.filter(form=proposal.review_form)
+    relations = models.ProposalFormElementsRelationship.objects.filter(form=proposal.form)
     document.add_heading("Title", level=1)
     document.add_paragraph(proposal.title).italic = True
     document.add_heading("Subtitle", level=1)
