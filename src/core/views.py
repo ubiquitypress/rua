@@ -188,12 +188,21 @@ def update_profile(request):
         if profile_form.is_valid() and user_form.is_valid():
             user = user_form.save()
             profile = profile_form.save()
+            for interest in profile.interest.all():
+                profile.interest.remove(interest)
+
+            for interest in request.POST.get('interests').split(','):
+                new_keyword, c = models.Interest.objects.get_or_create(name=interest)
+                profile.interest.add(new_keyword)
+            profile.save()
+
             return redirect(reverse('view_profile'))
 
     template = 'core/user/update_profile.html'
     context = {
         'profile_form' : profile_form,
         'user_form': user_form,
+        'user':request.user,
     }
 
     return render(request, template, context)
