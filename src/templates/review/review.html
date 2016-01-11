@@ -3,7 +3,13 @@
 {% load bootstrap3 %}
 
 {% block title %}Reviewing #{{ submission.id }}{% endblock %}
-
+{% block css %}
+    <style type="text/css">
+    body {
+        overflow:hidden;
+    }
+    </style>
+{% endblock %}
 {% block body %}
 <div class="row">
 <div class="col-md-12 book-heading container-fluid" style="margin-top:-20px">
@@ -129,7 +135,7 @@
         <hr />
         <h4>4. Competing interests</h4>
         {% bootstrap_field recommendation_form.competing_interests %}
-      <input class="btn btn-success" type="submit" value="Submit your review" id="poster">
+      <input class="btn btn-success" type="submit" value="Submit your review" id="poster" required>
       <br/><br/>
 
       </form>

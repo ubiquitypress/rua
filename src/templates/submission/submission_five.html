@@ -100,7 +100,7 @@
       <h4>Manuscript Files</h4>
       <ul class="list-group" id="man_files_sort">
       {% for file in manuscript_files %}
-        <li id="man-{{ file.id }}" class="list-group-item"><i class="fa fa-file">&nbsp;&nbsp;</i>{{ file.original_filename }}<i style="float: right;" class="fa fa-trash-o"></i></li>
+        <li id="man-{{ file.id }}" class="list-group-item"><i class="fa fa-file">&nbsp;&nbsp;</i>{% if file.label %} {{file.label}} {% else %}{{ file.original_filename }} {% endif %}<i style="float: right;" class="fa fa-trash-o"></i></li>
       {% endfor %}
       </ul>
       {% endif %}
@@ -108,7 +108,7 @@
       <h4>Additional Files</h4>
       <ul class="list-group" id="add_files_sort">
       {% for file in additional_files %}
-        <li id="add-{{ file.id }}" class="list-group-item"><i class="fa fa-file">&nbsp;&nbsp;</i>{{ file.original_filename }}<i style="float: right;" class="fa fa-trash-o"></i></li>
+        <li id="add-{{ file.id }}" class="list-group-item"><i class="fa fa-file">&nbsp;&nbsp;</i>{% if file.label %} {{file.label}} {% else %}{{ file.original_filename }} {% endif %}<i style="float: right;" class="fa fa-trash-o"></i></li>
       {% endfor %}
       </ul>
       {% endif %}

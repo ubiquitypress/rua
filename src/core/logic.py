@@ -13,39 +13,26 @@ from pymarc import Record, Field
 from core import email
 from pymarc import *
 from submission import logic as submission_logic
-
+import os
+from uuid import uuid4
 from submission import models as submission_models
 import re
 from django.shortcuts import redirect, render, get_object_or_404
 from core.files import handle_file,handle_copyedit_file,handle_marc21_file
 from  __builtin__ import any as string_any
 from django.template.loader import render_to_string
+from django.template import Context, Template
 
 
 def setting_template_loader(setting, path, dictionary,pattern = None):
-	file_location = "templates"
-	
-	if not path[0] =='/':
-		file_location = file_location+"/"
-	
-	file_location = file_location + path
-	
-	if not path[len(path)-1] == '/':
-		file_location = file_location+"/"
-	if pattern:
-		file_location=file_location+pattern
+	html_template = setting.value
+	html_template.replace('\n', '<br />')
 
-	file_location=file_location+setting.name+".html"
+	htmly = Template(html_template)
+	con = Context(dictionary)
+	html_content = htmly.render(con)
 
-	html_file= open(file_location,"w")
-	html_file.write(setting.value)
-	html_file.close()
-	html_file= open(file_location)
-	template_location = file_location[10:]
-	text=render_to_string(template_location,dictionary)
-	html_file.close()
-	os.remove(file_location) 
-	return text
+	return html_content
 
 def record_field(tag,indicators,subfields):
 	return	Field( tag = tag, indicators = indicators, subfields = subfields)
@@ -581,6 +568,16 @@ def send_proposal_decline(proposal, email_text, sender):
 	}
 
 	email.send_email('[abp] Proposal Declined', context, from_email.value, proposal.owner.email, email_text)
+
+def send_task_decline(assignment,type, email_text, sender):
+	from_email = models.Setting.objects.get(group__name='email', name='from_address')
+
+	context = {
+		'assignment': assignment,
+		'sender': sender,
+	}
+
+	email.send_email('[abp] %s Assignment [id<%s>] Declined' % (type.title(),assignment.id), context, from_email.value, assignment.requestor.email, email_text)
 
 def send_proposal_accept(proposal, email_text, submission, sender, attachment=None):
 	from_email = models.Setting.objects.get(group__name='email', name='from_address')

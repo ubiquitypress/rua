@@ -96,7 +96,8 @@ class Profile(models.Model):
 	date_confirmed = models.DateTimeField(blank=True, null=True)
 	confirmation_code = models.CharField(max_length=200, blank=True, null=True)
 	signature = models.TextField(null=True, blank=True)
-
+	reset_code = models.TextField(null=True, blank=True)
+	reset_code_validated = models.BooleanField(default=False)
 	roles = models.ManyToManyField('Role')
 
 	def full_name(self):

@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% load bootstrap3 %}
+
+{% block title %}Reset Password{% endblock %}
+
+
+{% block body %}
+  <div class="col-md-12 primary-heading container-fluid" >
+      <h1>Reset Password</h1>
+    </div>
+
+<div class="col-md-12">
+	<hr>
+	<div class="container-fluid well span6">
+	</br>
+	{% if valid_user %}
+	  	<form method="post" class="form" enctype="multipart/form-data">
+	  		{% csrf_token %}
+	  		<div class="form-group">
+	  			<div class="row">
+	  				<div class="col-md-12">
+			    <label for="reset_code">Enter reset code</label>
+		  				<input class="form-control" type="text" name="reset_code" id="reset_code" placeholder="Enter reset code">
+		  				<p class="small">NB. You will be redireted to a reset password page.</p>
+		  			</div>
+
+	        			
+
+	        		</div>
+	        	</br></br>
+	        			<button name="reset" id="reset" type="submit" class="btn btn-primary btn-round pull-right" style="margin-right:15px">
+					        <i class="fa fa-shield"></i> Submit
+					    </button>
+	        			
+			   
+				</div>
+			</div>
+		</form>
+		{% else %}
+		This user either does not exist or a reset code has not been requested.
+		{% endif %}
+	</div>
+</div>
+{% endblock %}

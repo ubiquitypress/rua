@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% load bootstrap3 %}
+
+{% block title %}Reset Password{% endblock %}
+
+
+{% block body %}
+  <div class="col-md-12 primary-heading container-fluid" >
+      <h1>Reset Password</h1>
+    </div>
+
+<div class="col-md-12">
+	<hr>
+	<div class="container-fluid well span6">
+	</br>
+	  	<form method="post" class="form" enctype="multipart/form-data">
+	  		{% csrf_token %}
+	  		<div class="form-group">
+	  			<div class="row">
+	  				<div class="col-md-12">
+			    <label for="username">Username</label>
+		  				<input class="form-control" type="username" name="username" id="username" placeholder="Enter username">
+		  				<p class="small">NB. You will receive a code in an email.</p>
+		  			</div>
+
+	        			
+
+	        		</div>
+	        	</br></br>
+	        			<button name="reset" id="reset" type="submit" class="btn btn-primary btn-round pull-right" style="margin-right:15px">
+					        <i class="fa fa-user"></i> Submit
+					    </button>
+	        			
+			   
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+{% endblock %}

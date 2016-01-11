@@ -29,8 +29,9 @@
 		  		<div class="col-md-12">
             {% if book.book_type == 'monograph' %}
             <h3>Current Authors</h3>
+            <p>The first author will be the corresponding author. You can change the order below.</p>
             {% for author in book.author.all %}
-            <div class="well">
+            <div class="well  {% if forloop.first %} border-primary-author {% endif %}">
               <h3 class="author_header">{{ author.first_name }} {{ author.last_name }}<span style="float:right"><a href="{% url 'author_edit' book.id author.id %}" class="btn btn-primary">Edit Author</a></span></h3>
               <hr />
               <div class="row">

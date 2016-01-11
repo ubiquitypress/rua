@@ -9,17 +9,28 @@ def add_proposal_log_entry(proposal, user, kind, message, short_name):
 	new_log_entry = models.Log(proposal=proposal, user=user, kind=kind, message=message, short_name=short_name)
 	new_log_entry.save()
 	return new_log_entry
-	
+
+def list_to_text(email_list):
+	emails=""
+
+	last = len(email_list) - 1
+	for index,email in enumerate(email_list):
+		emails=emails+email
+		if not index == last :
+			emails=emails+", "
+	return emails
+
+
 def add_email_log_entry(subject, from_address, to, bcc, cc, content,attachment = None, proposal = None, book = None):
-	
+
 	if proposal:
 		log_dict = {
 			'proposal': proposal,
 			'subject': subject,
 			'from_address':from_address,
-			'to': to if to else '',
-			'cc': cc if cc else '',
-			'bcc': bcc if bcc else '',
+			'to': list_to_text(to) if to else '',
+			'cc': list_to_text(cc) if cc else '',
+			'bcc': list_to_text(bcc) if bcc else '',
 			'content': content,
 		}
 	
@@ -28,9 +39,9 @@ def add_email_log_entry(subject, from_address, to, bcc, cc, content,attachment =
 			'book': book,
 			'subject': subject,
 			'from_address':from_address,
-			'to': to if to else '',
-			'cc': cc if cc else '',
-			'bcc': bcc if bcc else '',
+			'to': list_to_text(to) if to else '',
+			'cc': list_to_text(cc) if cc else '',
+			'bcc': list_to_text(bcc) if bcc else '',
 			'content': content,
 		}
 	new_log_entry = models.EmailLog(**log_dict)

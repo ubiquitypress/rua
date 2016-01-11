@@ -160,6 +160,8 @@ def submission_three_additional(request, book_id):
 		'book': book,
 		'active': 4,
 		'additional_files': additional_files,
+		'additional_guidelines': core_models.Setting.objects.get(name='additional_files_guidelines').value,
+
 	}
 
 	return render(request, template, context)
@@ -203,6 +205,7 @@ def upload(request, book_id, type_to_handle):
 			'url': reverse('serve_file', kwargs = {'submission_id': book_id, 'file_id': new_file.pk }),
 			'deleteType': 'POST',
 			'ruaId': new_file.pk,
+			'original_name': new_file.original_filename,
 		}
 
 		return UploadResponse( request, file_dict )

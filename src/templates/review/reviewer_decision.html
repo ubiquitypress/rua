@@ -39,11 +39,13 @@
         <h4><b>INSTRUCTIONS FOR TASK</b></h4>
         </br>
         <p class="task-info-text">You've been asked to undertake a review on behalf of the Press and Author.</p>
-     
+          
          <h5> Task Due <span class="subtitle-text">{{ review_assignment.due }}</span></h5>
-
+        <p> <h4>Abstract</h4>
+         {{ submission.description|safe }}</p>
+         {% if file_preview %}
         {% include "review/submission_files.html" %}
-   
+        {% endif %}
         </div>
 
               <div class="col-md-12 container-fluid decision-info-undecided">                 

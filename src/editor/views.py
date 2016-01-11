@@ -405,8 +405,11 @@ def editor_add_reviewers(request, submission_id, review_type, round_number):
 	review_forms = review_models.Form.objects.all()
 	committees = manager_models.Group.objects.filter(group_type='review_committee')
 	review_round = get_object_or_404(models.ReviewRound, book=submission, round_number=round_number)
+	if request.POST and "add_user" in request.POST:
+		messages.add_message(request, messages.WARNING, 'Select the "Reviewer" role in order to be able to add this user')
+		return redirect(reverse('add_user'))
 
-	if request.POST:
+	elif request.POST:
 		reviewers = User.objects.filter(pk__in=request.POST.getlist('reviewer'))
 		committees = manager_models.Group.objects.filter(pk__in=request.POST.getlist('committee'))
 		review_form = review_models.Form.objects.get(ref=request.POST.get('review_form'))

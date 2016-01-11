@@ -7,6 +7,7 @@ from docx.shared import Inches
 from pprint import pprint
 import mimetypes
 
+from django.contrib.auth.models import User
 from django.shortcuts import redirect, render, get_object_or_404
 from django.db.models import Q
 from django.conf import settings
@@ -105,7 +106,9 @@ def reviewer_decision(request, review_type, submission_id, review_assignment, de
 		'submission': submission,
 		'review_assignment': review_assignment,
 		'has_additional_files': logic.has_additional_files(submission),
-		'editors': editors
+		'editors': editors,
+		'file_preview':core_models.Setting.objects.get(group__name='general', name='preview_review_files').value
+
 	}
 
 	return render(request, template, context)
@@ -178,7 +181,12 @@ def review(request, review_type, submission_id,review_round, access_key=None):
 			review_assignment.competing_interests = request.POST.get('competing_interests')
 			review_assignment.results = form_results
 			review_assignment.save()
-
+			message = "%s Review assignment with id %s has been completed by %s ."  % (review_assignment.review_type.title(),review_assignment.id,review_assignment.user.profile.full_name())
+			press_editors = User.objects.filter(profile__roles__slug='press-editor')
+			for editor in press_editors:
+				notification = core_models.Task(assignee=editor,creator=request.user,text=message,workflow='review', book = submission)
+				notification.save()
+				print "notify"
 			if not review_type == 'proposal':
 				log.add_log_entry(book=submission, user=request.user, kind='review', message='Reviewer %s %s completed review for %s.' % (review_assignment.user.first_name, review_assignment.user.last_name, submission.title), short_name='Assignment Completed')
 				
@@ -208,14 +216,14 @@ def review(request, review_type, submission_id,review_round, access_key=None):
 def review_complete(request, review_type, submission_id,review_round,access_key=None):
 
 	if access_key:
-		review_assignment = get_object_or_404(core_models.ReviewAssignment, access_key=access_key, declined__isnull=True, review_type=review_type)
+		review_assignment = get_object_or_404(core_models.ReviewAssignment, access_key=access_key, declined__isnull=True, review_type=review_type, review_round=review_round)
 		submission = get_object_or_404(core_models.Book, pk=submission_id)
 	elif review_type == 'proposal':
 		submission = get_object_or_404(submission_models.Proposal, pk=submission_id)
 		review_assignment = get_object_or_404(submission_models.ProposalReview, user=request.user, proposal=submission)
 	else:
 		submission = get_object_or_404(core_models.Book, pk=submission_id)
-	 	review_assignment = get_object_or_404(core_models.ReviewAssignment, Q(user=request.user), Q(book=submission), Q(review_type=review_type), Q(access_key__isnull=True) | Q(access_key__exact=''))
+	 	review_assignment = get_object_or_404(core_models.ReviewAssignment, Q(user=request.user), Q(review_round__round_number=review_round), Q(book=submission), Q(review_type=review_type), Q(access_key__isnull=True) | Q(access_key__exact=''))
 
 	
 	result = review_assignment.results

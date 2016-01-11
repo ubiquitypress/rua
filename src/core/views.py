@@ -16,7 +16,7 @@ from  __builtin__ import any as string_any
 from review import models as review_models
 from core import log, models, forms, logic
 from author import orcid
-from email import send_email
+from email import send_email,send_reset_email
 from files import handle_file_update, handle_attachment, handle_file, handle_proposal_file
 from submission import models as submission_models
 from core.decorators import is_reviewer, is_editor, is_book_editor, is_book_editor_or_author, is_onetasker,is_author
@@ -289,7 +289,81 @@ def reset_password(request):
     return render(request, template, context)
 
 def unauth_reset(request):
-    pass
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        try:
+            user = User.objects.get(username=username)          
+            password = uuid4()
+            user.profile.reset_code=password
+            user.profile.save()
+            user.save()
+            email_text = models.Setting.objects.get(group__name='email', name='reset_password').value
+            send_reset_email(user=user, email_text=email_text, reset_code=password)
+            messages.add_message(request, messages.INFO, 'A reset code has been sent to your email account.')
+        except User.DoesNotExist:
+            messages.add_message(request, messages.ERROR, 'There is no account for that username.')
+
+    template = 'core/user/reset_username.html'
+    context = {}
+
+    return render(request, template, context)
+
+def unauth_reset_code(request, uuid):
+    valid_user = False  
+    try:
+        user = get_object_or_404(User,profile__reset_code=uuid)
+        if user.profile.reset_code:
+            valid_user = True
+        user.profile.reset_code_validated = True
+        user.profile.save()
+        user.save()
+        messages.add_message(request, messages.SUCCESS, 'Valid reset code')
+
+        return redirect(reverse('unauth_reset_password',kwargs={'uuid':uuid}))
+            
+    except User.DoesNotExist:
+        messages.add_message(request, messages.ERROR, 'There is no account associated with that reset code.')
+        return redirect(reverse('login'))
+  
+def unauth_reset_password(request, uuid):
+    try:
+        user = get_object_or_404(User,profile__reset_code=uuid)        
+    except User.DoesNotExist:
+        user = None
+        messages.add_message(request, messages.ERROR, 'There is no account for that username or reset code is invalid.')
+    if user:
+        valid_reset = user.profile.reset_code_validated
+    else:
+        valid_reset = False
+    if valid_reset:
+        if request.method == 'POST':
+            password_1 = request.POST.get('password_1')
+            password_2 = request.POST.get('password_2')
+
+            if password_1 == password_2:
+                if len(password_1) > 8:
+                    user = User.objects.get(username=user.username)
+                    user.set_password(password_1)
+                    user.save()
+                    user.profile.reset_code_validated = False
+                    user.profile.reset_code = None
+                    user.profile.save()
+                    user.save()
+                    messages.add_message(request, messages.SUCCESS, 'Password successfully changed.')
+                    return redirect(reverse('login'))
+                else:
+                    messages.add_message(request, messages.ERROR, 'Password is not long enough, must be greater than 8 characters.')
+            else:
+                messages.add_message(request, messages.ERROR, 'Your passwords do not match.')
+
+    template = 'core/user/reset_password_unauth.html'
+    context = {
+    'valid_reset':valid_reset,
+    'user':user,
+
+    }
+
+    return render(request, template, context)
 
 def permission_denied(request):
 
@@ -682,7 +756,7 @@ def serve_marc21_file(request, submission_id,type):
 def serve_file(request, submission_id, file_id):
     book = get_object_or_404(models.Book, pk=submission_id)
     _file = get_object_or_404(models.File, pk=file_id)
-    file_path = os.path.join(settings.BOOK_DIR, submission_id, _file.original_filename)
+    file_path = os.path.join(settings.BOOK_DIR, submission_id, _file.uuid_filename)
 
     try:
         fsock = open(file_path, 'r')
@@ -867,7 +941,7 @@ def create_proposal_form(proposal):
     document = Document()
     document.add_heading(proposal.title, 0)
     p = document.add_paragraph('You should complete this form and then use the proposal page to upload it.')
-    relations = models.ProposalFormElementsRelationship.objects.filter(form=proposal.review_form)
+    relations = models.ProposalFormElementsRelationship.objects.filter(form=proposal.form)
     document.add_heading("Title", level=1)
     document.add_paragraph(proposal.title).italic = True
     document.add_heading("Subtitle", level=1)
