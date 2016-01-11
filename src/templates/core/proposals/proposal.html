@@ -18,6 +18,8 @@
   <table class="table table-bordered">
     <thead>
   <tr>
+    {% if open %}{% else %}
+    <th></th>{% endif %}
     <th>Title</th>
     <th>Subtitle</th>
     <th>Author</th>
@@ -27,6 +29,9 @@
   </tr></thead><tbody>
   {% for proposal in proposal_list %}
   <tr>
+    {% if open %}{% else %}
+   
+    <td>{{ proposal.pk }}</td>{% endif %}
     <td>{{ proposal.title }}</td>
     <td>{{ proposal.subtitle }}</td>
     <td>{{ proposal.owner.first_name }} {{ proposal.owner.last_name }}</td>
@@ -47,7 +52,10 @@
 <script>
   $(document).ready(function() {
       $('.table').DataTable({
-        "lengthMenu": [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]]
+        "lengthMenu": [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]],
+
+         "order": [[  {% if open %}3{% else %}0{% endif %}, "desc" ]]
+
       });
   } );
 </script>
