@@ -9,6 +9,10 @@ from itertools import chain
 
 def is_author(function):
 	def wrap(request, *args, **kwargs):
+		
+		if not request.user.is_authenticated():
+			messages.add_message(request, messages.ERROR, 'You need to log in to view this page.')
+			raise exceptions.PermissionDenied 
 
 		user_roles = [role.slug for role in request.user.profile.roles.all()]
 		submission_id = False
@@ -28,6 +32,10 @@ def is_author(function):
 
 def is_press_editor(function):
 	def wrap(request, *args, **kwargs):
+		
+		if not request.user.is_authenticated():
+			messages.add_message(request, messages.ERROR, 'You need to log in to view this page.')
+			raise exceptions.PermissionDenied 
 
 		user_roles = [role.slug for role in request.user.profile.roles.all()]
 
@@ -43,6 +51,10 @@ def is_press_editor(function):
 
 def is_editor(function):
 	def wrap(request, *args, **kwargs):
+		
+		if not request.user.is_authenticated():
+			messages.add_message(request, messages.ERROR, 'You need to log in to view this page.')
+			raise exceptions.PermissionDenied 
 
 		user_roles = [role.slug for role in request.user.profile.roles.all()]
 		submission_id = False
@@ -62,6 +74,10 @@ def is_editor(function):
 
 def is_book_editor(function):
 	def wrap(request, *args, **kwargs):
+		
+		if not request.user.is_authenticated():
+			messages.add_message(request, messages.ERROR, 'You need to log in to view this page.')
+			raise exceptions.PermissionDenied 
 
 		user_roles = [role.slug for role in request.user.profile.roles.all()]
 		submission_id = False
@@ -89,6 +105,10 @@ def is_book_editor(function):
 
 def is_book_editor_or_author(function):
 	def wrap(request, *args, **kwargs):
+		
+		if not request.user.is_authenticated():
+			messages.add_message(request, messages.ERROR, 'You need to log in to view this page.')
+			raise exceptions.PermissionDenied 
 
 		user_roles = [role.slug for role in request.user.profile.roles.all()]
 		submission_id = False
@@ -116,6 +136,10 @@ def is_book_editor_or_author(function):
 
 def is_reviewer(function):
 	def wrap(request, *args, **kwargs):
+		
+		if not request.user.is_authenticated():
+			messages.add_message(request, messages.ERROR, 'You need to log in to view this page.')
+			raise exceptions.PermissionDenied 
 
 		user_roles = [role.slug for role in request.user.profile.roles.all()]
 		submission_id = False
@@ -145,6 +169,10 @@ def is_reviewer(function):
 
 def has_reviewer_role(function):
 	def wrap(request, *args, **kwargs):
+		
+		if not request.user.is_authenticated():
+			messages.add_message(request, messages.ERROR, 'You need to log in to view this page.')
+			raise exceptions.PermissionDenied 
 
 		user_roles = [role.slug for role in request.user.profile.roles.all()]
 		submission_id = False
@@ -164,6 +192,10 @@ def has_reviewer_role(function):
 
 def is_indexer(function):
 	def wrap(request, *args, **kwargs):
+		
+		if not request.user.is_authenticated():
+			messages.add_message(request, messages.ERROR, 'You need to log in to view this page.')
+			raise exceptions.PermissionDenied 
 
 		user_roles = [role.slug for role in request.user.profile.roles.all()]
 		submission_id = False
@@ -194,6 +226,10 @@ def is_indexer(function):
 
 def is_copyeditor(function):
 	def wrap(request, *args, **kwargs):
+		
+		if not request.user.is_authenticated():
+			messages.add_message(request, messages.ERROR, 'You need to log in to view this page.')
+			raise exceptions.PermissionDenied 
 
 		user_roles = [role.slug for role in request.user.profile.roles.all()]
 		submission_id = False
@@ -223,6 +259,10 @@ def is_copyeditor(function):
 
 def is_typesetter(function):
 	def wrap(request, *args, **kwargs):
+		
+		if not request.user.is_authenticated():
+			messages.add_message(request, messages.ERROR, 'You need to log in to view this page.')
+			raise exceptions.PermissionDenied 
 
 		user_roles = [role.slug for role in request.user.profile.roles.all()]
 		submission_id = False
@@ -252,6 +292,11 @@ def is_typesetter(function):
 
 def is_onetasker(function):
 		def wrap(request, *args, **kwargs):
+			
+		
+			if not request.user.is_authenticated():
+				messages.add_message(request, messages.ERROR, 'You need to log in to view this page.')
+				raise exceptions.PermissionDenied 
 
 			user_roles = [role.slug for role in request.user.profile.roles.all()]
 			submission_id = False
