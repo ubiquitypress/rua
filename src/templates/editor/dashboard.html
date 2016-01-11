@@ -107,7 +107,7 @@
                 <span class="pull-right" style="padding-right: 10px;margin-bottom:10px" >
                 <br />
                       {% ifequal note.workflow 'proposal' %}
-                   <a class="btn btn-xs btn-other" href="{% url 'proposals' %}">&nbsp;&nbsp;Got to Proposals&nbsp;&nbsp;</a> {% endifequal %}
+                   <a class="btn btn-xs btn-other" href="{% url 'proposals' %}">&nbsp;&nbsp;Go to Proposals&nbsp;&nbsp;</a> {% endifequal %}
                        <button class="btn btn-xs btn-read" id="{{ note.id }}" value="{{ note.id }}">&nbsp;&nbsp;Mark as Read&nbsp;&nbsp;</button>
                 </span>
                 <p><em>Posted {{ note.assigned }}</em></p> </br>
