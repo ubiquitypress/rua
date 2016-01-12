@@ -192,8 +192,8 @@ def update_profile(request):
                 profile.interest.remove(interest)
 
             for interest in request.POST.get('interests').split(','):
-                new_keyword, c = models.Interest.objects.get_or_create(name=interest)
-                profile.interest.add(new_keyword)
+                new_interest, c = models.Interest.objects.get_or_create(name=interest)
+                profile.interest.add(new_interest)
             profile.save()
 
             return redirect(reverse('view_profile'))

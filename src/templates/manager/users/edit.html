@@ -2,7 +2,12 @@
 {% load static from staticfiles %}
 {% load bootstrap3 %}
 
-{% block title %}Update Profile{% endblock %}
+{% block title %}{{ active|capfirst }} Profile{% endblock %}
+
+{% block css %}
+    <link type='text/css' href="{% static "css/jq-ui.css" %}" rel="stylesheet">
+    <link type='text/css' href="{% static "css/jquery.tagit.css" %}" rel="stylesheet">
+{% endblock %}
 
 {% block body %}
 <div class="col-md-12 primary-heading container-fluid" style="margin-top:-20px">
@@ -46,6 +51,10 @@
 		  		<div class="col-md-4">{% bootstrap_field profile_form.institution %}</div>
 		  		<div class="col-md-4">{% bootstrap_field profile_form.department %}</div>
 		  		<div class="col-md-4">{% bootstrap_field profile_form.country %}</div>
+		  		<div class="col-md-12">
+                      <div class="aside "><strong>Interests</strong></div>
+                        <input type="text" id="interests" name="interests" value="{% for interest in user.profile.interest.all %}{{ interest }}{% if not forloop.last %},{% endif %}{% endfor %}"/> Hit Enter to add a new interest.
+		  		</div>
 		  	</div>
 		  </div>
 		  <hr />
@@ -112,4 +121,15 @@
 {% block js %}
 <script type="text/javascript" src="{% static "js/fancyfile.js" %}"></script>
 <script type="text/javascript">$("textarea").jqte();</script>
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css">
+<script src="http://code.jquery.com/ui/1.11.0/jquery-ui.js"></script>
+<script src="{% static "js/tag-it.min.js" %}"></script>
+
+<script type="text/javascript">
+  $(document).ready(function() {
+      $("#interests").tagit(
+        {allowSpaces: true});
+  });
+</script>
+<script type="text/javascript">
 {% endblock %}

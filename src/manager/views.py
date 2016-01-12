@@ -717,6 +717,13 @@ def add_user(request):
 				role_object = core_models.Role.objects.get(pk=role)
 				profile.roles.add(role_object)
 
+			for interest in profile.interest.all():
+				profile.interest.remove(interest)
+
+			for interest in request.POST.get('interests').split(','):
+				new_interest, c = core_models.Interest.objects.get_or_create(name=interest)
+				profile.interest.add(new_interest)
+
 			profile.save()
 
 			return redirect(reverse('manager_users'))
@@ -741,6 +748,14 @@ def user_edit(request, user_id):
 		if profile_form.is_valid() and user_form.is_valid():
 			user = user_form.save()
 			profile = profile_form.save()
+			for interest in profile.interest.all():
+				profile.interest.remove(interest)
+
+			for interest in request.POST.get('interests').split(','):
+				new_interest, c = core_models.Interest.objects.get_or_create(name=interest)
+				profile.interest.add(new_interest)
+			profile.save()
+			
 			return redirect(reverse('manager_users'))
 
 	template = 'manager/users/edit.html'
