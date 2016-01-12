@@ -56,10 +56,13 @@ def send_acknowldgement_email(book, press_editors):
     from_email = core_models.Setting.objects.get(group__name='email', name='from_address').value
     author_text = core_models.Setting.objects.get(group__name='email', name='author_submission_ack').value
     editor_text = core_models.Setting.objects.get(group__name='email', name='editor_submission_ack').value
+    press_name = core_models.Setting.objects.get(group__name='general', name='press_name').value
 
     context = {
         'base_url': core_models.Setting.objects.get(group__name='general', name='base_url').value,
         'submission': book,
+        'press_name':press_name,
+        'principal_contact_name':'principal_contact_name',
     }
 
     email.send_email('Submission Acknowledgement', context, from_email, book.owner.email, author_text, book=book)

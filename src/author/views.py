@@ -277,7 +277,7 @@ def author_view_typesetter(request, submission_id, typeset_id):
 			typeset.typesetter_invited = timezone.now()
 			typeset.save()
 			email_text = request.POST.get('email_text')
-			logic.send_invite_typesetter(book, typeset, email_text, request.user)
+			core_logic.send_invite_typesetter(book, typeset, email_text, request.user)
 		return redirect(reverse('author_view_typesetter', kwargs={'submission_id': submission_id, 'typeset_id': typeset_id}))
 
 	elif request.POST and 'send_invite_author' in request.POST:
@@ -287,7 +287,7 @@ def author_view_typesetter(request, submission_id, typeset_id):
 			typeset.author_invited = timezone.now()
 			typeset.save()
 			email_text = request.POST.get('email_text')
-			logic.send_invite_typesetter(book, typeset, email_text, request.user)
+			core_logic.send_invite_typesetter(book, typeset, email_text, request.user)
 		return redirect(reverse('author_view_typesetter', kwargs={'submission_id': submission_id, 'typeset_id': typeset_id}))
 
 	template = 'author/submission.html'

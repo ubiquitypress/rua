@@ -387,7 +387,9 @@ def start_proposal(request):
 				notification.save()
 
 			messages.add_message(request, messages.SUCCESS, 'Proposal %s submitted' % proposal.id)
-	
+			email_text = core_models.Setting.objects.get(group__name='email', name='proposal_submission_ack').value
+			core_logic.send_proposal_submission_ack(proposal, email_text=update_email_text, owner=request.user)
+
 			log.add_proposal_log_entry(proposal=proposal,user=request.user, kind='proposal', message='Proposal has been submitted by %s.' % request.user.profile.full_name(), short_name='Proposal Submitted')
 	
 			return redirect(reverse('user_dashboard',kwargs = {}))

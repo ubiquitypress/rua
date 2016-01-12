@@ -78,11 +78,14 @@ def reminder_overdue_revisions(task):
 
 def send_reminder_email(book, subject, review, email_text):
     from_email = models.Setting.objects.get(group__name='email', name='from_address')
+    press_name = core_models.Setting.objects.get(group__name='general', name='press_name').value
 
     context = {
         'book': book,
         'review': review,
+        'press_name':press_name,
+        'base_url': models.Setting.objects.get(group__name='general', name='base_url').value,	
     }
 
     email.send_email(subject, context, from_email.value, review.user.email, email_text, book=book)
-	
+

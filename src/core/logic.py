@@ -459,12 +459,16 @@ def build_time_line(book):
 def send_proposal_review_request(proposal, review_assignment, email_text):
 	from_email = models.Setting.objects.get(group__name='email', name='from_address')
 	base_url = models.Setting.objects.get(group__name='general', name='base_url')
+	press_name = models.Setting.objects.get(group__name='general', name='press_name').value
+
 
 	review_url = 'http://%s/review/%s/%s/' % (base_url.value, 'proposal', proposal.id)
 
 	context = {
 		'review': review_assignment,
 		'review_url': review_url,
+		'proposal': proposal,
+		'press_name': press_name,
 	}
 
 	email.send_email('Proposal Review Request', context, from_email.value, review_assignment.user.email, email_text)
@@ -580,6 +584,32 @@ def send_proposal_update(proposal, email_text, sender,receiver):
 
 	email.send_email('[abp] Proposal Update', context, from_email.value, proposal.owner.email, email_text)
 
+def send_proposal_update(proposal, email_text, sender,receiver):
+	from_email = models.Setting.objects.get(group__name='email', name='from_address')
+
+	context = {
+		'proposal': proposal,
+		'sender': sender,
+		'receiver':receiver,
+	}
+
+	email.send_email('[abp] Proposal Update', context, from_email.value, proposal.owner.email, email_text)
+
+def send_proposal_submission_ack(proposal, email_text, owner):
+	from_email = models.Setting.objects.get(group__name='email', name='from_address')
+	press_name = models.Setting.objects.get(group__name='general', name='press_name').value
+
+	context = {
+		'proposal': proposal,
+		'owner': owner,
+		'press_name':press_name,
+		'principal_contact_name':'principal_contact_name',
+	}
+
+	email.send_email('[abp] Proposal Submission Ack', context, from_email.value, proposal.owner.email, email_text)
+
+
+
 
 def send_task_decline(assignment,type, email_text, sender):
 	from_email = models.Setting.objects.get(group__name='email', name='from_address')
@@ -605,11 +635,13 @@ def send_proposal_accept(proposal, email_text, submission, sender, attachment=No
 
 def send_proposal_revisions(proposal, email_text, sender):
 	from_email = models.Setting.objects.get(group__name='email', name='from_address')
+	press_name = models.Setting.objects.get(group__name='general', name='press_name').value
 
 	context = {
 		'base_url': models.Setting.objects.get(group__name='general', name='base_url').value,
 		'proposal': proposal,
 		'sender': sender,
+		'press_name':press_name,
 	}
 
 	email.send_email('[abp] Proposal Revisions Required', context, from_email.value, proposal.owner.email, email_text)

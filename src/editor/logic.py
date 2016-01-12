@@ -105,12 +105,14 @@ def handle_typeset_assignment(request,book, typesetter, files, due_date, email_t
 
 def send_copyedit_assignment(submission, copyedit, email_text, sender, attachment):
 	from_email = models.Setting.objects.get(group__name='email', name='from_address')
+	press_name = models.Setting.objects.get(group__name='general', name='press_name').value
 
 	context = {
 		'base_url': models.Setting.objects.get(group__name='general', name='base_url').value,
 		'submission': submission,
 		'copyedit': copyedit,
 		'sender': sender,
+		'press_name':press_name,
 	}
 
 	email.send_email('Copyedit Assignment', context, from_email.value, copyedit.copyeditor.email, email_text, book=submission, attachment=attachment)
@@ -172,6 +174,7 @@ def handle_review_assignment(request,book, reviewer, review_type, due_date, revi
 def send_review_request(book, review_assignment, email_text, sender, attachment=None):
 	from_email = models.Setting.objects.get(group__name='email', name='from_address')
 	base_url = models.Setting.objects.get(group__name='general', name='base_url')
+	press_name = models.Setting.objects.get(group__name='general', name='press_name').value
 
 	decision_url = 'http://%s/review/%s/%s/assignment/%s/decision/' % (base_url.value, review_assignment.review_type, book.id, review_assignment.id)
 
@@ -180,6 +183,8 @@ def send_review_request(book, review_assignment, email_text, sender, attachment=
 		'review': review_assignment,
 		'decision_url': decision_url,
 		'sender': sender,
+		'base_url':base_url.value,
+		'press_name':press_name,
 	}
 
 	email.send_email('Review Request', context, from_email.value, review_assignment.user.email, email_text, book=book, attachment=attachment)
@@ -268,12 +273,14 @@ def send_author_invite(submission, copyedit, email_text, sender, attachment=None
 
 def send_invite_indexer(book, index, email_text, sender, attachment=None):
 	from_email = models.Setting.objects.get(group__name='email', name='from_address')
+	press_name = models.Setting.objects.get(group__name='general', name='press_name').value
 
 	context = {
 		'base_url': models.Setting.objects.get(group__name='general', name='base_url').value,
 		'submission': book,
 		'index': index,
 		'sender': sender,
+		'press_name':press_name,
 	}
 
 	email.send_email('Indexing Request', context, from_email.value, index.indexer.email, email_text, book=book, attachment=attachment)
@@ -308,10 +315,13 @@ def send_book_editors(book, added_editors,removed_editors,email_text):
 def send_requests_revisions(book, revision, email_text):
 	from_email = models.Setting.objects.get(group__name='email', name='from_address')
 	base_url = models.Setting.objects.get(group__name='general', name='base_url').value
+	press_name = models.Setting.objects.get(group__name='general', name='press_name').value
+
 
 	context = {
 		'book': book,
 		'revision': revision,
+		'press_name': press_name,
 		'revision_url': "http://%s/revisions/%s" % (base_url, revision.id)
 	}
 
