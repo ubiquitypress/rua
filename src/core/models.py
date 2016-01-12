@@ -272,6 +272,20 @@ def identifier_choices():
 		('pub_id', 'Publisher ID'),
 	)
 
+class Note(models.Model):
+	book = models.ForeignKey(Book)
+	user = models.ForeignKey(User)
+	date_submitted = models.DateField(auto_now_add=True)
+	date_last_updated = models.DateField(auto_now=True)
+	text = models.TextField(null=True, blank=True, help_text="If any of the authors or editors have any competing interests please add them here. EG. 'This study was paid for by corp xyz.'")
+
+	def truncated_content(self):
+		content = str(self.text)
+		if len(content)>=22:
+			content = content[:22]+'...'
+		return content
+
+
 class Identifier(models.Model):
 	book = models.ForeignKey(Book, null=True, blank=True)
 	digital_format = models.ForeignKey('Format', related_name='digital_format', null=True, blank=True)

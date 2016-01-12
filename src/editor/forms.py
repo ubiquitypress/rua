@@ -20,6 +20,15 @@ class RevisionForm(ModelForm):
 		model = revision_models.Revision
 		fields = ('notes_from_editor', 'due')
 
+class NoteForm(ModelForm):
+
+	class Meta:
+		model = core_models.Note
+		fields = ('text',)
+	def __init__(self, *args, **kwargs):
+		super(NoteForm, self).__init__(*args, **kwargs)
+		self.fields['text'].required = True
+
 class FormatForm(forms.ModelForm):
 
 	format_file = forms.FileField(required=True)

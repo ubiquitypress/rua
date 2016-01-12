@@ -9,6 +9,10 @@ class ProfileAdmin(admin.ModelAdmin):
 	list_display = ('user', 'institution', 'date_confirmed')
 	search_fields = ('orcid', 'institution', 'biography', )
 
+class NoteAdmin(admin.ModelAdmin):
+	list_display = ('text', 'date_last_updated', 'date_submitted')
+	search_fields = ('text', )
+
 class BookAdmin(admin.ModelAdmin):
 	list_display = ('title', 'license')
 	search_fields = ('title', 'doi', 'publication_date')
@@ -59,6 +63,7 @@ class ProposalFormElementAdmin(admin.ModelAdmin):
 
 admin_list = [
 	(Author, AuthorAdmin),
+	(Note,NoteAdmin),
 	(Profile, ProfileAdmin),
 	(Book, BookAdmin),
 	(License, LicenseAdmin),

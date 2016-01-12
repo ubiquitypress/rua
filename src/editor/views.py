@@ -55,6 +55,59 @@ def editor_dashboard(request):
 
 
 @is_book_editor
+def editor_notes(request, submission_id, note_id = None):
+	book = get_object_or_404(models.Book, pk=submission_id)
+	notes = models.Note.objects.filter(book=book)
+	
+	if note_id:
+		note = get_object_or_404(models.Note, book=book, pk=note_id)
+	else:
+		note = None
+
+	template = 'editor/submission.html'
+	context = {
+		'submission': book,
+		'notes': notes,
+		'active': 'user_submission',
+		'author_include': 'editor/submission_notes.html',
+		'submission_files': 'editor/view_note.html',
+		'note_id': note_id,
+		'note': note,
+		'active_page': 'notes',
+	}
+
+	return render(request, template, context)
+
+@is_book_editor
+def editor_add_note(request, submission_id):
+	book = get_object_or_404(models.Book, pk=submission_id)
+	notes = models.Note.objects.filter(book=book)
+	note_form = forms.NoteForm()
+	if request.POST:
+		note_form = forms.NoteForm(request.POST)
+		if note_form.is_valid():
+			note_form = note_form.save(commit=False)
+			note_form.text = request.POST.get("text")
+			note_form.user = request.user
+			note_form.book = book
+			note_form.save()
+			return redirect(reverse('editor_notes', kwargs={'submission_id': book.id}))
+
+
+	template = 'editor/submission.html'
+	context = {
+		'submission': book,
+		'notes': notes,
+		'active': 'user_submission',
+		'author_include': 'editor/submission_notes.html',
+		'submission_files': 'editor/new_note.html',
+		'note_form': note_form,
+		'active_page': 'notes',
+	}
+
+	return render(request, template, context)
+
+@is_book_editor
 def editor_submission(request, submission_id):
 	book = get_object_or_404(models.Book, pk=submission_id)
 	not_manuscript = True

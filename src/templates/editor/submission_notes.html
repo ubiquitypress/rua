@@ -1,0 +1,40 @@
+<h3>Notes <sup><a href="{% url 'editor_notes_add' submission.id %}" class="btn btn-info">Add Note</a></sup></h3>
+
+<table class="table table-bordered">
+    <tr>
+      <th>Number</th>
+      <th>Date Submitted</th>
+      <th>Content</th>
+      <th></th>
+    </tr>
+    {% for note in notes %}
+    {% if note_id %}
+           {% ifequal note_id note.id %}
+           <tr class="selected-row-table">
+            {% else %}
+            <tr>
+            {% endifequal %}
+    {% else %}
+    <tr>
+    {% endif %}
+    	<td> {{ forloop.counter }} </td>
+    	<td>{{ note.date_last_updated }}</td>
+      <td>{{ note.truncated_content|safe }}</td>
+      {% if note_id %}
+           {% ifequal note_id note.id %}
+            <td class="selected-row-table-arrow"
+            {% else %}
+            <td
+            {% endifequal %}
+    {% else %}
+    <td
+    {% endif %}
+    	width="25%"><a class="btn btn-task" href="{% url 'editor_notes_view' submission.id note.id %}">View</a></td>
+    </tr>
+    {% empty %}
+    <tr>
+    	<td colspan="4">This book has no notes</td>
+    </tr>
+    {% endfor %}
+</table>
+
