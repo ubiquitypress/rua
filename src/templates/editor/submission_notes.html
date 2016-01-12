@@ -1,40 +1,31 @@
-<h3>Notes <sup><a href="{% url 'editor_notes_add' submission.id %}" class="btn btn-info">Add Note</a></sup></h3>
+{% load static from staticfiles %}
+<link href="{% static "css/chat.css" %}" rel="stylesheet">
 
-<table class="table table-bordered">
-    <tr>
-      <th>Number</th>
-      <th>Date Submitted</th>
-      <th>Content</th>
-      <th></th>
-    </tr>
-    {% for note in notes %}
-    {% if note_id %}
-           {% ifequal note_id note.id %}
-           <tr class="selected-row-table">
-            {% else %}
-            <tr>
-            {% endifequal %}
-    {% else %}
-    <tr>
-    {% endif %}
-    	<td> {{ forloop.counter }} </td>
-    	<td>{{ note.date_last_updated }}</td>
-      <td>{{ note.truncated_content|safe }}</td>
-      {% if note_id %}
-           {% ifequal note_id note.id %}
-            <td class="selected-row-table-arrow"
-            {% else %}
-            <td
-            {% endifequal %}
-    {% else %}
-    <td
-    {% endif %}
-    	width="25%"><a class="btn btn-task" href="{% url 'editor_notes_view' submission.id note.id %}">View</a></td>
-    </tr>
-    {% empty %}
-    <tr>
-    	<td colspan="4">This book has no notes</td>
-    </tr>
-    {% endfor %}
-</table>
+<div class="dash-container">
+<div class="dash-container">
+<h3> Notes <a href="{% url 'editor_notes_add' submission.id %}" class="btn btn-info btn-round pull-right"> + Add Note</a></h3>
+  </div>
+  </div>
 
+<div class="dash-container">
+ <ul class="chat" id="message-list">
+      {% for note in notes %}
+        <li class="left clearfix well">
+          <span class="chat-img pull-left" style="margin-right:10px">
+                <img src="http://placehold.it/65/CCE0FF/fff&amp;text=&#9998;" alt="Pencil Icon" class="img-circle" />
+            </span>
+            <div class="chat-body clearfix" style="margin-top:10px">
+                <div class="header">
+                    <strong class="primary-font">{{ note.user.profile.full_name}}</strong> <small class="pull-right text-muted" style="margin-top:-12px">
+                        <span class="glyphicon glyphicon-time" ></span>{{ note.date_submitted|date:"Y-m-d - H:i" }}</small>
+                </div>
+                {{ note.truncated_content }}
+            </div>
+            <div class="pull-right" style="margin-top:-15px">
+              <a href="{% url 'editor_notes_view' submission.id note.id %}" class="btn btn-task btn-sm pull-right">View Note</a>
+            </div>
+        </li>
+        <input class="last_message" type="hidden" value="{{ note.pk }}">
+        {% endfor %}
+    </ul>
+  </div>

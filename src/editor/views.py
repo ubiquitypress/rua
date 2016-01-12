@@ -72,7 +72,7 @@ def editor_notes(request, submission_id, note_id = None):
 		'author_include': 'editor/submission_notes.html',
 		'submission_files': 'editor/view_note.html',
 		'note_id': note_id,
-		'note': note,
+		'current_note': note,
 		'active_page': 'notes',
 	}
 
@@ -90,6 +90,8 @@ def editor_add_note(request, submission_id):
 			note_form.text = request.POST.get("text")
 			note_form.user = request.user
 			note_form.book = book
+			note_form.date_submitted = timezone.now()
+			note_form.date_last_updated = timezone.now()
 			note_form.save()
 			return redirect(reverse('editor_notes', kwargs={'submission_id': book.id}))
 
@@ -106,6 +108,39 @@ def editor_add_note(request, submission_id):
 	}
 
 	return render(request, template, context)
+
+@is_book_editor
+def editor_update_note(request, submission_id,note_id):
+	book = get_object_or_404(models.Book, pk=submission_id)
+	notes = models.Note.objects.filter(book=book)
+
+	note = get_object_or_404(models.Note, book=book, pk=note_id)
+	note_form = forms.NoteForm(instance = note)
+	if request.POST:
+		note_form = forms.NoteForm(request.POST, instance = note)
+		if note_form.is_valid():
+			note_form.save(commit=False)
+			note.text = request.POST.get("text")
+			note.user = request.user
+			note.date_last_updated = timezone.now()
+			note.save()
+			return redirect(reverse('editor_notes_view', kwargs={'submission_id': book.id,'note_id': note_id}))
+
+
+	template = 'editor/submission.html'
+	context = {
+		'submission': book,
+		'notes': notes,
+		'active': 'user_submission',
+		'author_include': 'editor/submission_notes.html',
+		'submission_files': 'editor/new_note.html',
+		'note_form': note_form,
+		'current_note':note,
+		'update': True,
+		'active_page': 'notes',
+	}
+
+	return render(request, template, context)	
 
 @is_book_editor
 def editor_submission(request, submission_id):

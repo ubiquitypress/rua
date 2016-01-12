@@ -1,13 +1,13 @@
 {% load bootstrap3 %}
 
-<h2> Add Note</h2>
+<h2> {% if update %} Update Note # {{current_note.pk}}{% else %} Add Note {% endif %} </h2>
 <br>
      <form method="post" class="form">
         {% csrf_token %}
         {% bootstrap_form note_form %}
         {% buttons %}
             <button name="submit" id="submit" type="submit" class="btn btn-info pull-right" style="width:150px">
-              Add Note
+              {% if update %} Update {% else %} Add {% endif %} Note
             </button>
         {% endbuttons %}
         </form>

@@ -11,6 +11,7 @@ urlpatterns = patterns('',
 
     url(r'^submission/(?P<submission_id>\d+)/notes/$', 'editor.views.editor_notes', name='editor_notes'),
     url(r'^submission/(?P<submission_id>\d+)/notes/(?P<note_id>\d+)/$', 'editor.views.editor_notes', name='editor_notes_view'),
+    url(r'^submission/(?P<submission_id>\d+)/notes/update/(?P<note_id>\d+)/$', 'editor.views.editor_update_note', name='editor_notes_update'),
     url(r'^submission/(?P<submission_id>\d+)/notes/add$', 'editor.views.editor_add_note', name='editor_notes_add'),
     url(r'^submission/(?P<submission_id>\d+)/review/$', 'editor.views.editor_review', name='editor_review'),
     url(r'^submission/(?P<submission_id>\d+)/review/round/(?P<round_number>\d+)/$', 'editor.views.editor_review_round', name='editor_review_round'),

@@ -1,17 +1,21 @@
-{% if note %}
-<h3>Note {{note_id}}</h3>
+{% if current_note %}
 
-<table class="table table-bordered">
+<div class="dash-container"><h3>Note #{{note_id}} <sup><a href="{% url 'editor_notes_update' submission.id current_note.id %}" class="btn btn-primary btn-sm btn-round pull-right"> Edit Note</a></sup></h3></div>
+<div class="well border-note" style="overflow:auto;">
+   {{ current_note.text|safe }}
+</div>
+<div class="container-fluid">
+  <table class="table table-bordered table-condensed small">
+
     <tr>
-      <th>Number</th>
-      <th>Date Submitted</th>
-      <th>Content</th>
+      <td>Posted by:</td><td>{{current_note.user.profile.full_name}}</td>
+       </tr>
+        <tr>
+      <td>Date posted:</td><td>{{ current_note.date_submitted|date:"Y-m-d - H:i" }}</td>
+       </tr>
+       <tr>
+      <td>Last Updated:</td><td>{% ifequal note.date_submitted note.date_last_updated %} Never updated {% else %} {{ current_note.date_last_updated|date:"Y-m-d - H:i" }}{% endifequal %}</td>
     </tr>
-           
-    <tr>
-    	<td> {{ forloop.counter }} </td>
-    	<td>{{ note.date_last_updated }}</td>
-      <td>{{ note.text }}</td>
-    </tr>
-</table>
+  </table>
+</div>
 {% endif %}
