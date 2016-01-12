@@ -75,9 +75,9 @@ function popitup(url,title) {
 $(document).ready(function () {    
        {%for field in default_fields%}
 
-         var t=$('label[for="' + "id_{{field.name}}"+ '"]').html()+" *";
-         var a = $('label[for="' + "id_{{field.name}}"+ '"]');
-         a.text(t); 
+         var required_text=$('label[for="' + "id_{{field.name}}"+ '"]').html()+" *";
+         var current_field = $('label[for="' + "id_{{field.name}}"+ '"]');
+         current_field.text(required_text); 
          
        {% endfor %}
 
@@ -86,9 +86,9 @@ $(document).ready(function () {
         {%for field in proposal_form%}
     
           {% if field.field.required %} 
-            var t=$('label[for="' + "id_{{field.name}}"+ '"]').html()+" *";
-            var a = $('label[for="' + "id_{{field.name}}"+ '"]');
-            a.text(t); 
+            var required_text=$('label[for="' + "id_{{field.name}}"+ '"]').html()+" *";
+            var current_field = $('label[for="' + "id_{{field.name}}"+ '"]');
+            current_field.text(required_text); 
           {% endif %}
 
         {% endfor %}
