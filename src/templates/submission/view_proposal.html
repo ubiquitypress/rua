@@ -81,7 +81,7 @@
 <div class="form-group"><label class="control-label" for="id_author">Author</label><input class="form-control" id="id_author" name="author" placeholder="Author" required="required" title="" type="text" value="test" readonly></div>
   {% if proposal_form %}
           {%for field in proposal_form%}
-          <div class="form-group"><label class="control-label" for="id_{{field.name}}">{{field.label}}</label><input class="form-control" div_class="col-md-12" id="id_{{field.name}}" name="{{field.name}}" placeholder="{{field.label}}" title="help" type="text" value="{{field.value}}" readonly></div>
+          <div class="form-group"><label class="control-label" for="id_{{field.name}}">{{field.label}}{% if field.element.required %}*{% endif %}</label><input class="form-control" div_class="col-md-12" id="id_{{field.name}}" name="{{field.name}}" placeholder="{{field.label}}" title="help" type="text" value="{{field.value}}" readonly></div>
 
            {% endfor %}
       {% endif %}
@@ -137,6 +137,31 @@ function popitup(url,title) {
 }
 
 // -->
+</script>
+<script language="javascript" type="text/javascript">
+$(document).ready(function () {    
+       {%for field in default_fields%}
+
+         var t=$('label[for="' + "id_{{field.name}}"+ '"]').html()+" *";
+         var a = $('label[for="' + "id_{{field.name}}"+ '"]');
+         a.text(t); 
+         
+       {% endfor %}
+
+    {% if proposal_form %}
+        
+        {%for field in proposal_form%}
+    
+          {% if field.field.required %} 
+            var t=$('label[for="' + "id_{{field.name}}"+ '"]').html()+" *";
+            var a = $('label[for="' + "id_{{field.name}}"+ '"]');
+            a.text(t); 
+          {% endif %}
+
+        {% endfor %}
+
+    {% endif %}
+  });
 </script>
 
 {% endblock js %}
