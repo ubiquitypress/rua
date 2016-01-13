@@ -12,6 +12,7 @@
    <form method="post" class="form" enctype="multipart/form-data">
      {% csrf_token %}
      <div class="form-group">
+           <div class="row">
        <div class="col-md-4">
          {% bootstrap_field new_contract_form.title %}
       </div>
@@ -21,9 +22,18 @@
      <div class="col-md-4">
        {% bootstrap_field new_contract_form.author_signed_off %}
     </div>
-    <div class="col-md-12">
+   </div>
+     <div class="row">
+     <div class="col-md-4">
+      {% bootstrap_field new_contract_form.bpc %}
+         </div>
+        <div class="col-md-8">
       {% bootstrap_field new_contract_form.notes %}
    </div>
+
+
+     </div>
+  
     <div class="col-md-12">
      <div class="row">
        <div class="col-md-6">

@@ -4,11 +4,14 @@
 		<td></td>
 		<th>Signoff</th>
 		<th>File</th>
+		<th>BPC</th>
 	</tr>
   	<tr>
   		<th>Editor</th>
   		<td>{{ submission.contract.editor_signed_off }}</td>
   		<td><a href="{% url 'serve_file' submission.id submission.contract.editor_file.id %}" class="btn btn-xs btn-task">&nbsp;&nbsp;<i class="fa fa-cloud-download">&nbsp;</i>&nbsp;Download &nbsp;&nbsp;</a></td>
+  		
+  		<td rowspan="2">{% if submission.contract.bpc %}{{ submission.contract.bpc}}{% else %} None{% endif %}</td>
 	</tr>
 	<tr>
 		<th>Author</th>

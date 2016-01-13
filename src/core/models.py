@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 from django.utils import timezone
 import uuid
 import os
-
+from decimal import Decimal
 from autoslug import AutoSlugField
 from datetime import datetime, timedelta, date
 
@@ -331,6 +331,7 @@ class Contract(models.Model):
 	author_file = models.ForeignKey('File', related_name='author_file', blank=True, null=True)
 	editor_signed_off = models.DateField(blank=True, null=True)
 	author_signed_off = models.DateField(blank=True, null=True)
+	bpc = models.DecimalField(max_digits=25,decimal_places=2,default=Decimal('0.00'))
 
 	def __unicode__(self):
 		return u'%s' % self.title

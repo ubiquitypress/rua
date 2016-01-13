@@ -103,20 +103,25 @@
 	{% endfor %}
 </ul>
 
-
-<h5>Contract:</h5>
+  <br>
+<hr>
+<h5><b>Contract:<b></h5>
 {% if submission.contract %}
+<br>
 	<strong>Title: </strong>{{ submission.contract.title }}
+  <br>
 	<table class="table table-bordered table-condensed small">
 	<tr>
 		<td></td>
 		<th>Signoff</th>
 		<th>File</th>
+    <th>BPC</th>
 	</tr>
   	<tr>
   		<th>Editor</th>
   		<td>{{ submission.contract.editor_signed_off }}</td>
   		<td><a href="{% url 'serve_file' submission.id submission.contract.editor_file.id %}" class="btn btn-xs btn-primary"><i class="fa fa-download">&nbsp;</i>Download</a></td>
+        <td rowspan="2">{% if submission.contract.bpc %}{{ submission.contract.bpc}}{% else %} None{% endif %}</td>
 	</tr>
 	<tr>
 		<th>Author</th>
