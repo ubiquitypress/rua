@@ -91,7 +91,8 @@ def task_hub(request, assignment_type, assignment_id, about=None):
 		'center_block': center_block,
 		'right_block': right_block,
 		'files':submitted_files,
-		'about':about
+		'about':about,
+		'editors':core_logic.get_editors(assignment.book)
 	}
 
 	return render(request, template, context)

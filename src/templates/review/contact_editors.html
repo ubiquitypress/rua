@@ -1,11 +1,13 @@
 <div class="dash-container" style="margin-top:-25px;color:rgb(150,150,150)">
   <h5>If you would like to contact the editor about this </br> project, please click the button below</h5></br>
+
   {% for editor_dict in editors %}
     {% if editor_dict.isSeriesEditor == True %}
     <a href="core/email.html" onclick="return popitup('/email/editors/submission/{{submission.id}}/user/{{editor_dict.editor.pk}}/','editors_{{editor_dict.editor.pk}}')" class="btn btn-lg btn-other btn-contact"  type="submit" >Contact {{ editor_dict.editor.profile.full_name }}</a> 
     {% else %}
     <a href="core/email.html" onclick="return popitup('/email/editors/submission/{{submission.id}}/user/{{editor_dict.editor.pk}}/','editors_{{editor_dict.editor.pk}}')"class="btn btn-lg btn-task btn-contact"  type="submit" >Contact {{ editor_dict.editor.profile.full_name }}</a>
     {% endif %}
+    <br><br>
   {% empty %}
     <a disabled class="btn btn-lg btn-task btn-contact" type="submit"  >No Editors Assigned</a>
   {% endfor %}

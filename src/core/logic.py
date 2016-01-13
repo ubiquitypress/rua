@@ -260,7 +260,7 @@ def get_editors(book):
 		press_editor_list = [ editor for editor in press_editors]
 
 	if book_editors:
-		book_editor_list = [ editor for editor in book_editors]
+		book_editor_list = [ editor for editor in book_editors if not editor in press_editor_list]
 	else:
 		book_editor_list = []
 		

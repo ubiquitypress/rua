@@ -60,7 +60,7 @@ def reviewer_decision(request, review_type, submission_id, review_assignment, de
 		review_assignment = get_object_or_404(core_models.ReviewAssignment, Q(user=request.user), Q(book=submission),Q(pk=review_assignment), Q(declined__isnull=True), Q(review_type=review_type),Q(access_key__isnull=True) | Q(access_key__exact=''))
 	#
 	editors = logic.get_editors(review_assignment)
-
+	print editors
 
 	if decision and decision == 'accept':
 		review_assignment.accepted = timezone.now()

@@ -2,6 +2,8 @@ from core import models as core_models
 
 def get_editors(review_assignment):
 	press_editors = review_assignment.book.press_editors.all()
+	book_editors = review_assignment.book.book_editors.all()
+
 	if review_assignment.book.series:
 		series_editor = review_assignment.book.series.editor
 
@@ -15,8 +17,13 @@ def get_editors(review_assignment):
 	else:
 		series_editor_list = []
 		press_editor_list = [{'editor': editor, 'isSeriesEditor': False} for editor in press_editors]
+
+	if book_editors:
+		book_editor_list = [ {'editor': editor, 'isSeriesEditor': False} for editor in book_editors if not editor in press_editors]
+	else:
+		book_editor_list = []
 	
-	return (press_editor_list + series_editor_list)
+	return (press_editor_list + series_editor_list + book_editor_list)
 
 def notify_editors(book,message,editors,creator,workflow):
 
