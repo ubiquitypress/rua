@@ -389,6 +389,8 @@ def overview(request):
     template = 'core/dashboard/dashboard.html'
     context = {
         'proposals': submission_models.Proposal.objects.exclude(status='declined').exclude(status='accepted'),
+        'decline_proposals': submission_models.Proposal.objects.filter(status='declined'),
+        'acceptedproposals': submission_models.Proposal.objects.filter(status='accepted'),  
         'new_submissions': models.Book.objects.filter(stage__current_stage='submission'),
         'in_review': models.Book.objects.filter(stage__current_stage='review'),
         'in_editing': models.Book.objects.filter(stage__current_stage='editing'),

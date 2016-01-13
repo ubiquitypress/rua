@@ -1,0 +1,8 @@
+Status: {{proposal.status_verbose}}
+<br>
+{% if proposal.date_review_started %}
+<i class="fa fa-check-circle-o" style="color:green">&nbsp;</i>Review started {{ proposal.date_review_started }}
+{% else %}
+<i class="fa fa-circle-o">&nbsp;</i> Review did not start
+{% endif %}
+

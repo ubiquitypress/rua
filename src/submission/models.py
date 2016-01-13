@@ -27,6 +27,9 @@ class Proposal(models.Model):
 
 	status = models.CharField(max_length=20, choices=proposal_status(), default='submission')
 
+	def status_verbose(self):
+		return dict(proposal_status())[self.status]
+
 
 class SubmissionChecklistItem(models.Model):
 
