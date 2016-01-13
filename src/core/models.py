@@ -159,7 +159,7 @@ class Book(models.Model):
 	editor = models.ManyToManyField('Editor', null=True, blank=True)
 	book_editors = models.ManyToManyField(User, null=True, blank=True, related_name='book_editors')
 	press_editors = models.ManyToManyField(User, null=True, blank=True, related_name='press_editors')
-	description = models.TextField(max_length=5000, null=True, blank=True, verbose_name="Abstract")
+	description = models.TextField(max_length=5000, null=True, blank=True, verbose_name="Abstract",help_text="This is used for metadata, the website text and the back cover of the book")
 	keywords = models.ManyToManyField('Keyword', null=True, blank=True)
 	subject = models.ManyToManyField('Subject', null=True, blank=True)
 	license = models.ForeignKey('License', null=True, blank=True, help_text="The license you recommend for this work.")
