@@ -14,6 +14,8 @@ class EditorForm(ModelForm):
 	def __init__(self, *args, **kwargs):
 		super(EditorForm, self).__init__(*args, **kwargs)
 		self.fields['book_editors'].queryset = User.objects.filter(profile__roles__slug='book-editor')
+		self.fields['book_editors'].label_from_instance = lambda obj: "%s %s" % (obj.first_name, obj.last_name)
+
 class RevisionForm(ModelForm):
 
 	class Meta:
@@ -28,6 +30,7 @@ class NoteForm(ModelForm):
 	def __init__(self, *args, **kwargs):
 		super(NoteForm, self).__init__(*args, **kwargs)
 		self.fields['text'].required = True
+		self.fields['text'].label = "Content"
 
 class FormatForm(forms.ModelForm):
 
