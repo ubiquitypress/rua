@@ -16,7 +16,7 @@ href="core/email.html" onclick="return popitup('/email/authors/submission/{{subm
 {% endif %}
 
 <h3>DESCRIPTION</h3>
-{{ submission.description|linebreaks }}
+{{ submission.description|safe }}
 
 <h3>REVISIONS</h3>
 
