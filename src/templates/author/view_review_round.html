@@ -14,7 +14,7 @@
         <strong>{% if book.review_type == 'open-with' %}{{ review.user.profile.full_name }}{% else %}This review is anonymous.{% endif %}</strong>
         </p>
         <span class="{% if review.recommendation %}recommendation{% else %}no-recommendation{% endif %}">
-        {% if review.recommendation %}Recommend to {{ review.get_recommendation_display }}{% else %}Awaiting recommendation{% endif %}
+        {% if review.recommendation %}Recommend to {{ review.get_recommendation_display }}{% else %}{% if review.accepted %}Awaiting recommendation{% else %} Invitation Sent{% endif %}{% endif %}
         </span>
         <p>
         	{% if review.completed %}
@@ -59,7 +59,7 @@
         <strong>{% if book.review_type == 'open-with' %}{{ review.user.profile.full_name }}{% else %}This review is anonymous.{% endif %}</strong>
         </p>
         <span class="{% if review.recommendation %}recommendation{% else %}no-recommendation{% endif %}">
-        {% if review.recommendation %}Recommend to {{ review.get_recommendation_display }}{% else %}Awaiting recommendation{% endif %}
+        {% if review.recommendation %}Recommend to {{ review.get_recommendation_display }}{% else %}{% if review.accepted %}Awaiting recommendation{% else %} Invitation Sent{% endif %}{% endif %}
         </span>
         <p>
         	{% if review.completed %}
