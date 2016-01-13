@@ -58,9 +58,12 @@ def editor_dashboard(request):
 def editor_notes(request, submission_id, note_id = None):
 	book = get_object_or_404(models.Book, pk=submission_id)
 	notes = models.Note.objects.filter(book=book)
-	
+	updated = False
+
 	if note_id:
 		note = get_object_or_404(models.Note, book=book, pk=note_id)
+		if not note.date_submitted == note.date_last_updated:
+			updated = True
 	else:
 		note = None
 
@@ -74,6 +77,7 @@ def editor_notes(request, submission_id, note_id = None):
 		'note_id': note_id,
 		'current_note': note,
 		'active_page': 'notes',
+		'updated': updated,
 	}
 
 	return render(request, template, context)

@@ -6,8 +6,9 @@
         {% csrf_token %}
         {% bootstrap_form note_form %}
         {% buttons %}
-            <button name="submit" id="submit" type="submit" class="btn btn-info pull-right" style="width:150px">
-              {% if update %} Update {% else %} Add {% endif %} Note
+            <a href="{% url 'editor_notes' submission.id %}" class="btn btn-danger btn-round pull-right">Cancel</a>
+            <button name="submit" id="submit" type="submit" class="btn btn-{% if update %}success{% else %}info{% endif %} pull-left btn-round" style="width:100px;margin-right:20px">
+              {% if update %} Update {% else %} Submit {% endif %} 
             </button>
         {% endbuttons %}
         </form>

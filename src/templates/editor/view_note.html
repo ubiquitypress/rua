@@ -14,7 +14,7 @@
       <td>Date posted:</td><td>{{ current_note.date_submitted|date:"Y-m-d - H:i" }}</td>
        </tr>
        <tr>
-      <td>Last Updated:</td><td>{% ifequal note.date_submitted note.date_last_updated %} Never updated {% else %} {{ current_note.date_last_updated|date:"Y-m-d - H:i" }}{% endifequal %}</td>
+      <td>Last Updated:</td><td>{% if updated %}{{ current_note.date_last_updated|date:"Y-m-d - H:i" }}{% else %}Never updated {% endif %}</td>
     </tr>
   </table>
 </div>
