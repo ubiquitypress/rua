@@ -179,30 +179,29 @@ def editor_add_editors(request, submission_id):
 		previous_editors.append(book_editor)
 
 	form = forms.EditorForm(instance=book)
+	all_book_editors = User.objects.filter(profile__roles__slug='book-editor')
+	list_of_editors =[{} for t in range(0,len(all_book_editors)) ]	
+	for t,editor in enumerate(all_book_editors):
+		already_added = False
+		if editor in previous_editors:
+			already_added = True
+		list_of_editors[t] = {'editor': editor, 'already_added': already_added,}
 
 	email_text = models.Setting.objects.get(group__name='email', name='book_editor_ack').value
 	
-	if request.POST:
-		form = forms.EditorForm(request.POST, instance=book)
-		if form.is_valid():
-			new_book_editor_request = form.save(commit=True)
-			added_editors = []
-			removed_editors = []
-			existing_editors = []
-			new_editors = book.book_editors.all()
-			for editor in new_editors:
-				if not editor in previous_editors:
-					added_editors.append(editor)
-					print editor.username
-				else:
-					existing_editors.append(editor)
-					print "Already exists"
-			for editor in previous_editors:
-				if not editor in existing_editors:
-					removed_editors.append(editor)
-			messages.add_message(request, messages.SUCCESS, 'Book editors have been updated.')
-			logic.send_book_editors(book,added_editors,removed_editors, email_text)
-		return redirect(reverse('editor_submission', kwargs={'submission_id': book.id}))
+	if request.GET and "add" in request.GET:
+		user_id = request.GET.get("add")
+		user = User.objects.get(pk=user_id)
+		book.book_editors.add(user)
+		book.save()
+		print user.profile.full_name()
+	elif request.GET and "remove" in request.GET:
+		user_id = request.GET.get("remove")
+		user = User.objects.get(pk=user_id)
+		book.book_editors.remove(user)
+		book.save()
+		return redirect(reverse('editor_add_editors', kwargs={'submission_id': submission_id}))
+	
 
 	template = 'editor/submission.html'
 	context = {
@@ -212,6 +211,7 @@ def editor_add_editors(request, submission_id):
 		'author_include': 'editor/submission_details.html',
 		'submission_files': 'editor/add_editors.html',
 		'active_page': 'editor_submission',
+		'list_of_editors':list_of_editors,
 	}
 
 	return render(request, template, context)

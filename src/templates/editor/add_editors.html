@@ -1,15 +1,28 @@
 {% load bootstrap3 %}
-<h2>{% if submission.book_editors.all %}
-               Update {% else %} Add {% endif %} Book Editors</h2>
+<h3>{% if submission.book_editors.all %}
+               Update {% else %} Add {% endif %} Book Editors</h3>
 <br>
-     <form method="post" class="form">
-        {% csrf_token %}
-        {% bootstrap_form form %}
-        <h6>Hold down "Control", or "Command" on a Mac, in order to select more than one or remove existing selection</h6>
-        {% buttons %}
-            <button name="submit" id="submit" type="submit" class="btn   {% if submission.book_editors.all %}btn-accept{% else %}btn-info{% endif %}  pull-right" style="width:150px">
-              {% if submission.book_editors.all %}
-               Update {% else %} Add {% endif %} Editors
-            </button>
-        {% endbuttons %}
-        </form>
+
+<table id="bookeditors" class="table table-bordered small" >
+    <thead>
+    <tr>
+        <th width="25%">Name</th>
+        <th></th>
+    </tr>
+  </thead>
+  <tbody>
+      {% for editor_dict in list_of_editors  %}
+      <tr>
+        <td>{{ editor_dict.editor.profile.full_name }} <sup> <a href="core/email.html" onclick="return popitup('/email/editors/submission/{{submission.id}}/user/{{editor.pk}}/','editors_{{editor.pk}}')"class="fa fa-envelope-o btn btn-xs btn-default"></a></sup></td>
+
+            <td style="width:5%"> 
+      <form action="{% url 'editor_add_editors' submission.id %}" method="get" >
+      <span class="input-group-btn">
+          <button class="btn btn-{% if editor_dict.already_added %}danger{% else %}success{% endif%} btn-sm btn-round" id="remove" name="{% if editor_dict.already_added %}remove{% else %}add{% endif%}" value="{{ editor_dict.editor.pk }}" type="submit"  data-toggle="tooltip" data-placement="bottom" title="Remove editor from book" style="width:100px; height: 30px;"><span class="glyphicon glyphicon-{% if editor_dict.already_added %}remove{% else %}plus{% endif%}"style="position:absolute;right:70px;top:8px"></span> <b style="position:absolute;right:{% if editor_dict.already_added %}20{% else %}38{% endif%}px;top:5.5px">{% if editor_dict.already_added %}Remove{% else %}Add{% endif%}</b></button>
+        </span>
+ </form>
+       </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+    </table>
