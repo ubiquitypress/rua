@@ -245,6 +245,7 @@ def get_proposal_emails(proposal_id,term):
 def get_editors(book):
 	press_editors = book.press_editors.all()
 	book_editors = book.book_editors.all()
+	
 	if book.series:
 		series_editor = book.series.editor
 

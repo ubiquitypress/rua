@@ -253,6 +253,31 @@ class Book(models.Model):
 				users.append(user)
 		return users
 
+	def all_editors(self):
+		press_editors = self.press_editors.all()
+		book_editors = self.book_editors.all()
+		
+		if self.series:
+			series_editor = self.series.editor
+
+			if series_editor:
+				series_editor_list = [series_editor]
+				press_editor_list = [ editor for editor in press_editors if not editor == series_editor_list[0]]
+			else:
+				series_editor_list = []
+				press_editor_list = [ editor for editor in press_editors]
+
+		else:
+			series_editor_list = []
+			press_editor_list = [ editor for editor in press_editors]
+
+		if book_editors:
+			book_editor_list = [ editor for editor in book_editors if not editor in press_editor_list]
+		else:
+			book_editor_list = []
+			
+		return (press_editor_list + series_editor_list + book_editor_list)
+
 	def full_title(self):
 		if self.prefix and self.subtitle:
 			return '%s %s %s' % (self.prefix, self.title, self.subtitle)

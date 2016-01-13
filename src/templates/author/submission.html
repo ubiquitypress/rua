@@ -65,7 +65,7 @@
                 <th>Contact</th>
 
             </tr>
-            {% for editor in submission.press_editors.all %}
+            {% for editor in submission.all_editors %}
              <tr>
                 <th>{{ editor.profile.full_name }}</th>
 
