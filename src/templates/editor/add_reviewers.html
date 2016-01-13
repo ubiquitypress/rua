@@ -11,6 +11,7 @@
     } 
  </style>
 	<link href="{% static "css/timeline.css" %}" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/plug-ins/1.10.7/integration/bootstrap/3/dataTables.bootstrap.css">
 {% endblock %}
 
 {% block body %}
@@ -74,6 +75,7 @@
 					      <th>Select</th>
 					    </tr>
 					    </thead>
+					    <tbody>
 					    {% for reviewer in reviewers %}
 					    <tr>
 					      <td>{{ reviewer.first_name }}</td>
@@ -82,6 +84,7 @@
 					      <td><input type="checkbox" name="reviewer" value="{{ reviewer.id }}"/></td>
 					    </tr>
 					    {% endfor %}
+						</tbody>
 					  </table>
 					  <hr />
 					  <h4>1.2 Committee Review</h4>
@@ -94,6 +97,7 @@
 					      <th>Select</th>
 					    </tr>
 					    </thead>
+					    <tbody>
 					    {% for committee in committees %}
 					    <tr>
 					      <td>{{ committee.name }}</td>
@@ -105,6 +109,7 @@
 					      <td colspan="3">No committees established. <a href="{% url 'manager_group_add' %}">Add one.</a></td>
 					    </tr>
 					    {% endfor %}
+					    </tbody>
 					  </table>
 					  <hr />
 					  <h3>2. Set Due Date</h3>
@@ -145,7 +150,20 @@
 {% endblock %}
 
 {% block js %}
-{{ block.super }}
+<script type="text/javascript" language="javascript" src="//cdn.datatables.net/1.10.7/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" language="javascript" src="//cdn.datatables.net/plug-ins/1.10.7/integration/bootstrap/3/dataTables.bootstrap.js"></script>
+<script>
+  $(document).ready(function() {
+      $('#indv-reviewer').DataTable({
+        "lengthMenu": [[5], [5, 10, 25, 50, "All"]]
+      });
+      $('#comm-reviewer').DataTable({
+        "lengthMenu": [[5], [5, 10, 25, 50, "All"]]
+      });
+  } );
+
+</script>
+<script type=
 <script type="text/javascript" src="{% static "js/fancyfile.js" %}"></script>
 <script type="text/javascript">
 $(document).ready(function() {
