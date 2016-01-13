@@ -37,31 +37,6 @@
         {% include "core/dashboard/dashboard_modal.html" with submission=submission %}
         {% endfor %}
       </div>
-        <div class="well well-sm">
-        <h4>Proposals</h4>
-          <div class="border-overview-proposal-xs"></div>
-        {% for proposal in proposals %}
-          <a href="{% url 'view_proposal' proposal.id %}">
-          <div class="panel panel-default border-overview-proposal">
-            <div class="panel-heading clearfix even">
-              <h3 class="panel-title pull-left">{{ proposal.title }}{{ proposal.subtitle }}</h3>
-              <br /><br />
-              <div class="row">
-                <div class="col-md-6">
-                 <span class="small">By {{ proposal.owner.profile.full_name }}</span>
-                </div>
-                <div class="col-md-6">
-                <span class="small pull-right">Submitted {{ proposal.date_submitted }}</span>
-                </div>
-              </div>
-            </div>
-            <div class="panel-body small">
-            {% include "core/dashboard/proposal_activity.html" %}
-            </div>
-          </div>
-          </a>
-        {% endfor %}
-      </div>
     </div>
     <div class="col-md-3">
       <div class="well well-sm">
@@ -144,6 +119,88 @@
           </div>
           </a>
         {% include "core/dashboard/dashboard_modal.html" with submission=submission %}
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="col-md-4">
+            <div class="well well-sm">
+        <h4>Accepted Proposals</h4>
+          <div class="border-overview-proposal-accepted-xs"></div>
+        {% for proposal in accepted_proposals %}
+          <a href="{% url 'view_proposal' proposal.id %}">
+          <div class="panel panel-default border-overview-proposal-accepted">
+            <div class="panel-heading clearfix even">
+              <h3 class="panel-title pull-left">{{ proposal.title }}{{ proposal.subtitle }}</h3>
+              <br /><br />
+              <div class="row">
+                <div class="col-md-6">
+                 <span class="small">By {{ proposal.owner.profile.full_name }}</span>
+                </div>
+                <div class="col-md-6">
+                <span class="small pull-right">Submitted {{ proposal.date_submitted }}</span>
+                </div>
+              </div>
+            </div>
+            <div class="panel-body small">
+            {% include "core/dashboard/proposal_activity.html" %}
+            </div>
+          </div>
+          </a>
+        {% endfor %}
+      </div>
+    </div>
+    <div class="col-md-4">
+            <div class="well well-sm">
+        <h4>Proposals</h4>
+          <div class="border-overview-proposal-xs"></div>
+        {% for proposal in proposals %}
+          <a href="{% url 'view_proposal' proposal.id %}">
+          <div class="panel panel-default border-overview-proposal">
+            <div class="panel-heading clearfix even">
+              <h3 class="panel-title pull-left">{{ proposal.title }}{{ proposal.subtitle }}</h3>
+              <br /><br />
+              <div class="row">
+                <div class="col-md-6">
+                 <span class="small">By {{ proposal.owner.profile.full_name }}</span>
+                </div>
+                <div class="col-md-6">
+                <span class="small pull-right">Submitted {{ proposal.date_submitted }}</span>
+                </div>
+              </div>
+            </div>
+            <div class="panel-body small">
+            {% include "core/dashboard/proposal_activity.html" %}
+            </div>
+          </div>
+          </a>
+        {% endfor %}
+      </div>
+    </div>
+    <div class="col-md-4">
+            <div class="well well-sm">
+        <h4>Declined Proposals</h4>
+          <div class="border-overview-proposal-declined-xs"></div>
+        {% for proposal in declined_proposals %}
+          <a href="{% url 'view_proposal' proposal.id %}">
+          <div class="panel panel-default border-overview-proposal-declined">
+            <div class="panel-heading clearfix even">
+              <h3 class="panel-title pull-left">{{ proposal.title }}{{ proposal.subtitle }}</h3>
+              <br /><br />
+              <div class="row">
+                <div class="col-md-6">
+                 <span class="small">By {{ proposal.owner.profile.full_name }}</span>
+                </div>
+                <div class="col-md-6">
+                <span class="small pull-right">Submitted {{ proposal.date_submitted }}</span>
+                </div>
+              </div>
+            </div>
+            <div class="panel-body small">
+            {% include "core/dashboard/proposal_activity.html" %}
+            </div>
+          </div>
+          </a>
         {% endfor %}
       </div>
     </div>

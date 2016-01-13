@@ -25,8 +25,9 @@
 .well-sm {
 	overflow-Y: auto;
 	max-height:100%;
-    min-height: 125px;
+    min-height: 100px;
   border-bottom: 12px #E5E5E5 solid;
+  padding-bottom: 60%
 }
 .overview-set {
     margin-top: 33%;
