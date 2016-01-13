@@ -370,6 +370,9 @@ def editor_decision(request, submission_id, decision):
 			permission = False
 	elif decision == 'editing'and book.stage.current_stage == 'editing':
 		permission = False
+	elif decision == 'production':
+		if book.stage.current_stage == 'review' or book.stage.current_stage == 'production':
+			permission = False
 
 	if request.POST:
 		print request.FILES
@@ -417,6 +420,18 @@ def editor_decision(request, submission_id, decision):
 			elif 'skip' in request.POST:
 				print "Skip"
 			return redirect(reverse('editor_editing', kwargs={'submission_id': submission_id}))
+		elif decision == 'production':
+			if not book.stage.production:
+				log.add_log_entry(book=book, user=request.user, kind='production', message='Submission moved to Production', short_name='Submission in Production')
+			book.stage.production = timezone.now()
+			book.stage.current_stage = 'production'
+			book.stage.save()
+			if 'inform' in request.POST:
+				core_logic.send_decision_ack(book,decision,request.POST.get('id_email_text'), attachment)
+			elif 'skip' in request.POST:
+				print "Skip"
+			return redirect(reverse('editor_production', kwargs={'submission_id': submission_id}))
+
 
 	template = 'editor/decisions.html'
 	context = {
@@ -590,13 +605,6 @@ def editor_editing(request, submission_id):
 		elif action == 'indexing':
 			book.stage.indexing = timezone.now()
 			log.add_log_entry(book=book, user=request.user, kind='editing', message='Indexing has commenced.', short_name='Indexing Started')
-		elif action == 'production':
-			book.stage.production = timezone.now()
-			book.stage.current_stage = 'production'
-			log.add_log_entry(book=book, user=request.user, kind='production', message='Submission moved to Production', short_name='Submission in Production')
-			book.stage.save()
-			return redirect(reverse('editor_production', kwargs={'submission_id': submission_id}))
-
 		book.stage.save()
 		return redirect(reverse('editor_editing', kwargs={'submission_id': submission_id}))
 
