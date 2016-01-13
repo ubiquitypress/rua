@@ -170,22 +170,29 @@ def editor_submission(request, submission_id):
 
 	return render(request, template, context)
 
-@is_press_editor
-def editor_add_editors(request, submission_id):
-	book = get_object_or_404(models.Book, pk=submission_id)
+
+def get_list_of_editors(book):
 	book_editors = book.book_editors.all()
 	previous_editors=[]
 	for book_editor in book_editors:
 		previous_editors.append(book_editor)
-
-	form = forms.EditorForm(instance=book)
 	all_book_editors = User.objects.filter(profile__roles__slug='book-editor')
+	
 	list_of_editors =[{} for t in range(0,len(all_book_editors)) ]	
 	for t,editor in enumerate(all_book_editors):
 		already_added = False
 		if editor in previous_editors:
 			already_added = True
 		list_of_editors[t] = {'editor': editor, 'already_added': already_added,}
+	return list_of_editors
+
+
+@is_press_editor
+def editor_add_editors(request, submission_id):
+	
+	book = get_object_or_404(models.Book, pk=submission_id)
+	
+	list_of_editors = get_list_of_editors(book)
 
 	email_text = models.Setting.objects.get(group__name='email', name='book_editor_ack').value
 	
@@ -194,19 +201,21 @@ def editor_add_editors(request, submission_id):
 		user = User.objects.get(pk=user_id)
 		book.book_editors.add(user)
 		book.save()
-		print user.profile.full_name()
+		list_of_editors = get_list_of_editors(book)
+
 	elif request.GET and "remove" in request.GET:
 		user_id = request.GET.get("remove")
 		user = User.objects.get(pk=user_id)
 		book.book_editors.remove(user)
 		book.save()
-		return redirect(reverse('editor_add_editors', kwargs={'submission_id': submission_id}))
-	
+		list_of_editors = get_list_of_editors(book)
+
+
+
 
 	template = 'editor/submission.html'
 	context = {
 		'submission': book,
-		'form':form,
 		'active': 'user_submission',
 		'author_include': 'editor/submission_details.html',
 		'submission_files': 'editor/add_editors.html',
