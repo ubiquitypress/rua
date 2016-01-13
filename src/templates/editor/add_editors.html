@@ -18,7 +18,7 @@
             <td style="width:5%"> 
       <form action="{% url 'editor_add_editors' submission.id %}" method="get" >
       <span class="input-group-btn">
-          <button class="btn btn-{% if editor_dict.already_added %}danger{% else %}success{% endif%} btn-sm btn-round" id="remove" name="{% if editor_dict.already_added %}remove{% else %}add{% endif%}" value="{{ editor_dict.editor.pk }}" type="submit"  data-toggle="tooltip" data-placement="bottom" title="Remove editor from book" style="width:100px; height: 30px;"><span class="glyphicon glyphicon-{% if editor_dict.already_added %}remove{% else %}plus{% endif%}"style="position:absolute;right:70px;top:8px"></span> <b style="position:absolute;right:{% if editor_dict.already_added %}20{% else %}38{% endif%}px;top:5.5px">{% if editor_dict.already_added %}Remove{% else %}Add{% endif%}</b></button>
+          <button class="btn btn-{% if editor_dict.already_added %}danger{% else %}info{% endif%} btn-sm btn-round" id="remove" name="{% if editor_dict.already_added %}remove{% else %}add{% endif%}" value="{{ editor_dict.editor.pk }}" type="submit"  data-toggle="tooltip" data-placement="bottom" title="Remove editor from book" style="width:100px; height: 30px;"><span class="glyphicon glyphicon-{% if editor_dict.already_added %}remove{% else %}plus{% endif%}"style="position:absolute;right:70px;top:8px"></span> <b style="position:absolute;right:{% if editor_dict.already_added %}20{% else %}38{% endif%}px;top:5.5px">{% if editor_dict.already_added %}Remove{% else %}Add{% endif%}</b></button>
         </span>
  </form>
        </td>
