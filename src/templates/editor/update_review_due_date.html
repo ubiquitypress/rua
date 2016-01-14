@@ -16,7 +16,7 @@
 	<br>
 	<div class="form-group" style="margin-left:15px"><div class="checkbox"><label for="email"><input class="" id="email" name="email" type="checkbox"> Notify reviewer<br><span class="small">Email user with the updated due date.</span></label></div> </div>
 	<br />
-	<input type="submit" style="width:120px" class="btn btn-accept btn-round" /><a href="{% url 'editor_review_round' submission.id round_id %}" style="margin-left:5px;width:120px" class="btn btn-primary btn-round pull-right">Go Back</a>
+	<input type="submit" style="width:120px" class="btn btn-accept btn-round" value="Update"/><a href="{% url 'editor_review_round' submission.id round_id %}" style="margin-left:5px;width:120px" class="btn btn-primary btn-round pull-right">Go Back</a>
 </form>
 
 {% endblock page-content %}
