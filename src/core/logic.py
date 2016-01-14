@@ -550,6 +550,18 @@ def send_decision_ack(book, decision, email_text, attachment=None):
 
 		email.send_email('Submission decision update: %s'% decision_full, context, from_email.value, author.author_email, email_text, book=book, attachment=attachment)
 
+# Email Handlers - TODO: move to email.py?
+def send_production_editor_ack(book, editor, email_text, attachment=None):
+	from_email = models.Setting.objects.get(group__name='email', name='from_address')
+	base_url = models.Setting.objects.get(group__name='general', name='base_url')
+
+	context = {
+		'submission': book,
+		'editor': editor,
+	}
+
+	email.send_email('Production Editor for %s '% book.full_title, context, from_email.value, editor.email, email_text, book=book, attachment=attachment)
+
 def send_review_request(book, review_assignment, email_text, attachment=None):
 	from_email = models.Setting.objects.get(group__name='email', name='from_address')
 	base_url = models.Setting.objects.get(group__name='general', name='base_url')

@@ -598,5 +598,15 @@
   },
   "model": "core.setting",
   "pk": 62
+},
+{
+  "fields": {
+    "value": "<p>Dear {{ editor.profile.full_name }} ,\r\n</p><p>\r\nYou have been assigned as production editor of the submission {{submission.title}} that has moved to production\r\n</p><p>\r\nRegards,\r\n</p>",
+    "group": 3,
+    "name": "production_editor_ack",
+    "types": "rich_text"
+  },
+  "model": "core.setting",
+  "pk": 63
 }
 ]

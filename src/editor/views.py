@@ -367,8 +367,14 @@ def update_review_due_date(request, submission_id, round_id, review_id):
 def editor_decision(request, submission_id, decision):
 	book = get_object_or_404(models.Book, pk=submission_id)
 	email_text = models.Setting.objects.get(group__name='email', name='decision_ack').value
+	editor_email_text = models.Setting.objects.get(group__name='email', name='production_editor_ack').value
 	permission = True
-	
+
+	if book.stage.current_stage=='editing':
+		production_editors = User.objects.filter(profile__roles__slug='production-editor')
+	else:
+		production_editors = None
+
 	if book.stage.current_stage == 'declined':
 		permission = False
 	if decision == 'decline':
@@ -437,6 +443,11 @@ def editor_decision(request, submission_id, decision):
 			book.stage.save()
 			if 'inform' in request.POST:
 				core_logic.send_decision_ack(book,decision,request.POST.get('id_email_text'), attachment)
+				production_editor_list = User.objects.filter(pk__in=request.POST.getlist('production_editor'))
+				for editor in production_editor_list:
+					core_logic.send_production_editor_ack(book,editor,request.POST.get('id_editor_email_text'), attachment)
+					log.add_log_entry(book=book, user=request.user, kind='production', message='Production Editor %s %s assigend to %s' % (editor.first_name, editor.last_name, book.title), short_name='Production Editor Assigned')
+
 			elif 'skip' in request.POST:
 				print "Skip"
 			return redirect(reverse('editor_production', kwargs={'submission_id': submission_id}))
@@ -447,7 +458,9 @@ def editor_decision(request, submission_id, decision):
 		'submission': book,
 		'decision':decision,
 		'email_text': email_text,
+		'editor_email_text':editor_email_text,
 		'permission':permission,
+		'production_editors':production_editors,
 	}
 
 	return render(request, template, context)
