@@ -38,6 +38,7 @@
                    
                     <div class="band" style="margin-left:10px;margin-right:10px">
                         <p class="small"> <span style="color:rgb(101,117,132)"> {{task.assignment.type|capfirst }} - {{task.assignment.book.title}}</span> </p>
+                        {% ifequal task.assignment.type 'typesetting' %} <div class="border-review-production-xs"></div>{% else %}<div class="border-review-editing-xs"></div> {% endifequal %}
                           <h5> {% if task.assignment.accepted %}Accepted on {{ task.assignment.accepted|date:"d M Y"}}<br>{% endif %}{% if task.assignment.completed %}Completed on {{task.assignment.completed|date:"d M Y"}}{% endif %}</br></h5>
                     </div>
                     
