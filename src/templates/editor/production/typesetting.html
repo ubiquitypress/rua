@@ -5,12 +5,15 @@
 	<button class="btn btn-primary" type="submit">Start Typesetting</button>
 </form>
 {% else %}
-<table class="table table-bordered">
+<table class="table table-bordered" id="typeset-assignments">
+	<thead>
 	<tr>
 		<th>Typesetter</th>
 		<th>Status</th>
 		<th>View</th>
 	</tr>
+</thead>
+<tbody>
 	{% for typeset in submission.typesetassignment_set.all %}
 	{% ifequal typeset.id typeset_id %}
 		<tr class="selected-row-table">
@@ -35,10 +38,7 @@
 			{% endifequal %}
 			<a href="{% url 'view_typesetter' submission.id typeset.id %}" class="btn  btn-task">View</a></td>
 	</tr>
-	{% empty %}
-	<tr>
-		<td colspan="3">No typesetters have been assigned</td>
-	</tr>
 	{% endfor %}
+</tbody>
 </table>
 {% endif %}

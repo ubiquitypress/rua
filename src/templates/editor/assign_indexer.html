@@ -20,13 +20,16 @@
   <hr />
   <h3>2. Select Files for Indexer(s)</h3>
   <p class="small">You can select and existing file.</p>
-  <table class="table table-bordered small">
+  <table id="assignment-files" class="table table-bordered small">
+      <thead>
       <tr>
         <th>Label</th>
         <th>Original File Name</th>
         <th>File Type</th>
         <th>Select</th>
       </tr>
+    </thead>
+    <tbody>
     {% for file in submission.files.all %}
       <tr>
         <td>{{ file.label }}</td>
@@ -54,6 +57,7 @@
     </tr>
     {% endfor %}
     {% endfor %}
+  </tbody>
   </table>
   <p class="small">Or you can upload a new file(s) and use it.</p>
 <div class="dropdown" style="margin-left:5px">

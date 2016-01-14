@@ -9,10 +9,13 @@
 	<button class="btn btn-primary" type="submit">Start Copyediting</button>
 </form>
 {% else %}
-<table class="table table-condensed table-bordered table-responsive" style="font-size:14px">
+<table class="table table-condensed table-bordered table-responsive" style="font-size:14px" id="copyedit-assignments">
+	<thead>
 	<tr>
 		<th>Copyeditor</th><th>Status</th><th>Due</th><th></th>
 	</tr>
+</thead>
+<tbody>
 	{% for assignment in submission.copyeditassignment_set.all %}
 	{% ifequal copyedit.id assignment.id %}
 	<tr class="selected-row-table">
@@ -43,11 +46,8 @@
 			<a href="{% url 'view_copyedit' submission.id assignment.id %}" class="btn btn-task"> View </a>
 		</td>
 	</tr>
-	{% empty %}
-	<tr>
-		<td colspan="4">No assignments</td>
-	</tr>
 	{% endfor %}
+</tbody>
 </table>
 {% endif %}
 
@@ -60,10 +60,13 @@
 	<button class="btn btn-primary" type="submit">Start Indexing</button>
 </form>
 {% else %}
-<table class="table table-condensed table-bordered table-responsive" style="font-size:14px">
+<table class="table table-condensed table-bordered table-responsive" style="font-size:14px" id="index-assignments">
+	<thead>
 	<tr> 
 		<th>Indexer</th><th>Status</th><th>Due</th><th></th>
 	</tr>
+	</thead>
+	<tbody>
 	{% for assignment in submission.indexassignment_set.all %}
 	{% ifequal index.id assignment.id %}
 	<tr class="selected-row-table">
@@ -95,11 +98,8 @@
 			<a href="{% url 'view_index' submission.id assignment.id %}" class="btn btn-task"> View </a>
 		</td>
 	</tr>
-	{% empty %}
-	<tr>
-		<td colspan="4">No assignments</td>
-	</tr>
 	{% endfor %}
+</tbody>
 </table>
 {% endif %}
 </div>
