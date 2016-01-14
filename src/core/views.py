@@ -677,6 +677,20 @@ def email_users_proposal(request, proposal_id, user_id):
     }
     return render(request, template, context)
 
+@login_required
+def page(request, page_name):
+
+    page_content = get_object_or_404(models.Setting, group__name='page', name=page_name).value
+    title = page_name.replace('-', ' ')
+
+    template = 'core/page.html'
+    context = {
+        'page_content': page_content,
+        'title':title.replace('_', ' ')
+    }
+
+    return render(request, template, context)
+
 @is_book_editor
 def upload_misc_file(request, submission_id):
 

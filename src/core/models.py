@@ -8,6 +8,7 @@ import os
 from decimal import Decimal
 from autoslug import AutoSlugField
 from datetime import datetime, timedelta, date
+from django.utils.safestring import mark_safe
 
 from submission import models as submission_models
 
@@ -169,7 +170,7 @@ class Book(models.Model):
 	slug = models.CharField(max_length=1000, null=True, blank=True)
 	cover_letter = models.TextField(null=True, blank=True, help_text="A covering letter for the Editors.")
 	reviewer_suggestions = models.TextField(null=True, blank=True)
-	competing_interests = models.TextField(null=True, blank=True, help_text="If any of the authors or editors have any competing interests please add them here. EG. 'This study was paid for by corp xyz.'")
+	competing_interests = models.TextField(null=True, blank=True, help_text=mark_safe("If any of the authors or editors have any competing interests please add them here. EG. 'This study was paid for by corp xyz.'. <a href='/page/competing_interests/'>More info</a>"))
 	book_type = models.CharField(max_length=50, null=True, blank=True, choices=book_type_choices(), help_text="A monograph is a work authored, in its entirety, by one or more authors. An edited volume has different authors for each chapter.")
 	review_type = models.CharField(max_length=50, choices=review_type_choices(), default='closed')
 	languages = models.ManyToManyField('Language', null=True, blank=True)
@@ -409,7 +410,7 @@ class ReviewAssignment(models.Model):
 	access_key = models.CharField(max_length=200,null=True,blank=True)
 	results = models.ForeignKey('review.FormResult', null=True, blank=True)
 	recommendation = models.CharField(max_length=10, choices=review_recommendation(), null=True, blank=True)
-	competing_interests = models.TextField(blank=True, null=True, help_text="If any of the authors or editors have any competing interests please add them here. EG. 'This study was paid for by corp xyz.'")
+	competing_interests = models.TextField(blank=True, null=True, help_text=mark_safe("If any of the authors or editors have any competing interests please add them here. EG. 'This study was paid for by corp xyz.'. <a href='/page/competing_interests/'>More info</a>"))
 
 	# Used to ensure that an email is not sent more than once.
 	unaccepted_reminder = models.BooleanField(default=False)

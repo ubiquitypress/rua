@@ -24,6 +24,8 @@ urlpatterns = patterns('',
     # Public pages
     url(r'^$', 'core.views.index', name='index'),
     url(r'^contact/$', 'core.views.contact', name='contact'),
+    url(r'^page/(?P<page_name>[-\w]+)/$', 'core.views.page', name='page'),
+
 
     # Login/Register
     url(r'^login/$', 'core.views.login', name='login'),

@@ -1,0 +1,15 @@
+{% extends "fluid-base.html" %}
+{% load static from staticfiles %}
+{% load bootstrap3 %}
+
+{% block title %}Overview{% endblock %}
+
+{% block css %}
+<link href="{% static "css/dashboard.css" %}" rel="stylesheet">
+{% endblock %}
+
+{% block body %}
+<h3>{{title|title}}</h3>
+<div class="border-well-xs"></div>
+<div class="well border-well">{{page_content|safe}}</div>
+{% endblock %}
