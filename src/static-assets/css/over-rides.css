@@ -1410,3 +1410,17 @@ box-shadow: 0px 7px 5px 1px rgba(232,232,232,1);
 -moz-box-shadow: 0px 7px 5px 1px rgba(236,236,236,1);
 box-shadow: 0px 7px 5px 1px rgba(236,236,236,1);
 }
+.border-review-submission-xs {
+  border-bottom: 4px rgb(233, 181, 69) solid;
+  margin-bottom: 10px;
+  margin-top: -4px;
+  margin-left:-12.5px;
+  width:100%;
+}
+.border-review-proposal-xs {
+  border-bottom: 4px #6325FF solid;
+  margin-bottom: 10px;
+  margin-top: -4px;
+  margin-left:-12.5px;
+  width:100%;
+}
