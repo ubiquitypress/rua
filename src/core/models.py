@@ -180,6 +180,7 @@ class Book(models.Model):
 	# Dates
 	submission_date = models.DateField(auto_now_add=True, null=True, blank=True)
 	publication_date = models.DateField(null=True, blank=True)
+	expected_completion_date = models.DateField(null=True, blank=True)
 
 	# Stage
 	stage = models.ForeignKey('Stage', null=True, blank=True)

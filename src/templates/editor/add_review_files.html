@@ -37,6 +37,10 @@
 		            <th>Review Type</th>
 		            <td>{{ submission.get_review_type_display }}</td>
 		        </tr>
+		           <tr>
+                <th>Expected Completion Date</th>
+                <td>{% if submission.expected_completion_date %}{{ submission.expected_completion_date|date:"Y-m-d" }}{% else %} None {% endif %}</td>
+            </tr>
 		    </table>
 	    </div>
                

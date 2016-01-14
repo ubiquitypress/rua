@@ -26,6 +26,7 @@
     <b>Type: </b>{{submission.book_type}} </br>
     <b>License: </b>{{submission.license}} </br>
     <b>Review Type: </b>{{submission.get_review_type_display}} </br>
+    <b>Expected Completion Date</b>{% if submission.expected_completion_date %}{{ submission.expected_completion_date|date:"Y-m-d" }}{% else %} None {% endif %}</br>
     </div> </br>
              <div class="band {{ submission.stage.current_stage }}">
                         {{ submission.stage.get_current_stage_display }}
