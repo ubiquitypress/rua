@@ -17,7 +17,7 @@
     	{% for message in submission.message_set.all %}
         <li class="left clearfix">
         	<span class="chat-img pull-left">
-                <img src="http://placehold.it/50/{% if message.sender == request.user %}55C1E7{% else %}FA6F57{% endif %}/fff&amp;text={{ message.sender.profile.initials }}" alt="User Avatar" class="img-circle" />
+                <img src="http://placehold.it/50/{% if message.sender == request.user %}55C1E7{% else %}FA6F57{% endif %}/fff&amp;text={{ message.sender.profile.initials|upper }}" alt="User Avatar" class="img-circle" />
             </span>
             <div class="chat-body clearfix">
                 <div class="header">

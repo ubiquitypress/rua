@@ -26,6 +26,11 @@
             </div>
         </li>
         <input class="last_message" type="hidden" value="{{ note.pk }}">
+        {% empty %}
+             <li class="left clearfix well container-shadow-bottom">
+          No notes
+          <br><br>
+        </li>
         {% endfor %}
     </ul>
   </div>
