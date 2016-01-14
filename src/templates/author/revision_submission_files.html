@@ -18,8 +18,8 @@
 			  <h5>{{ file.original_filename }}</h5>
 			</div>
 			<div class="col-md-4">
-			  <a href="{% url 'serve_file' submission.id file.id %}" class="btn btn-sm btn-primary read pull-right" style="margin-top: 20px;margin-right:10px;"><i class="fa fa-download"></i></a>
-			  {% if not update == False %}<a href="{% url 'revise_file' submission.id revision.id file.id %}" class="btn btn-sm btn-primary read pull-right" style="margin-top: 20px;margin-right:10px;"><i class="fa fa-upload"></i></a>{% endif %}
+			  <a href="{% url 'serve_file' submission.id file.id %}" class="btn btn-sm btn-primary read pull-right" style="margin-top: 20px;margin-right:8px;"><i class="fa fa-download"></i></a>
+			  {% if not update == False %}<a href="{% url 'revise_file' submission.id revision.id file.id %}" class="btn btn-sm btn-primary read pull-right" style="margin-top: 20px;margin-right:8px;"><i class="fa fa-upload"></i></a>{% endif %}
 			</div>
 		</div>
 	</li>
@@ -28,27 +28,27 @@
 </ul>
 
 <h5>Additional Files:</h5>
-<ul class="manuscript-upload-states">
+<ul class="media-list manuscript-upload-states">
 	{% for file in submission.files.all %}
 	{% if file.kind == 'additional' %}
-	<li>
-		<div class="row">
-			<div class="col-md-2">
-			  <h1>
+	<li class="media grey-container ">
+		<div class="media-left">
+			  <h1 style="margin-top:10px">
 			  {% if file.mime_type == 'image/jpeg' or file.mime_type == 'image/png' %}
-			  	<i class="fa fa-file-image-o"></i>
+			     &nbsp; &nbsp;  	<i class="fa fa-file-image-o"></i>
 			  {% else %}
-			  	<i class="fa fa-file-text-o"></i>
+			     &nbsp; &nbsp;  	<i class="fa fa-file-text-o"></i>
 			  {% endif %}
 			  </h1>
 			</div>
+			 <div class="media-body">
 			<div class="col-md-6" style="margin-right:25px">
 			  <h5>{{ file.label }}</h5>
 			  <h5>{{ file.original_filename }}</h5>
 			</div>
 			<div class="col-md-4">
-			  <a href="{% url 'serve_file' submission.id file.id %}" class="btn btn-sm btn-primary read pull-right" style="margin-top: 20px;margin-right:10px;"><i class="fa fa-download"></i></a>
-			  {% if not update == False %}<a href="{% url 'revise_file' submission.id revision.id file.id %}" class="btn btn-sm btn-primary read pull-right" style="margin-top: 20px;margin-right:10px;"><i class="fa fa-upload"></i></a>{% endif %}
+			  <a href="{% url 'serve_file' submission.id file.id %}" class="btn btn-sm btn-primary read pull-right" style="margin-top: 20px;margin-right:8px;"><i class="fa fa-download"></i></a>
+			  {% if not update == False %}<a href="{% url 'revise_file' submission.id revision.id file.id %}" class="btn btn-sm btn-primary read pull-right" style="margin-top: 20px;margin-right:8px;"><i class="fa fa-upload"></i></a>{% endif %}
 			</div>
 		</div>
 	</li>
