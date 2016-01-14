@@ -49,6 +49,26 @@ def is_press_editor(function):
 	wrap.__name__=function.__name__
 	return wrap	
 
+def is_production_editor(function):
+	def wrap(request, *args, **kwargs):
+		
+		if not request.user.is_authenticated():
+			messages.add_message(request, messages.ERROR, 'You need to log in to view this page.')
+			raise exceptions.PermissionDenied 
+
+		user_roles = [role.slug for role in request.user.profile.roles.all()]
+
+		if 'production-editor' in user_roles:
+			return function(request, *args, **kwargs)
+		else:
+			messages.add_message(request, messages.ERROR, 'You need to have Production Editor level permission to view this page.')
+			raise exceptions.PermissionDenied 
+
+	wrap.__doc__=function.__doc__
+	wrap.__name__=function.__name__
+	return wrap	
+
+
 def is_editor(function):
 	def wrap(request, *args, **kwargs):
 		
@@ -62,7 +82,7 @@ def is_editor(function):
 		if kwargs.get('submission_id'):
 			submission_id = kwargs.get('submission_id')
 
-		if 'press-editor' in user_roles or 'book-editor' in user_roles:
+		if 'press-editor' in user_roles or 'book-editor' in user_roles or 'production-editor' in user_roles:
 			return function(request, *args, **kwargs)
 		else:
 			messages.add_message(request, messages.ERROR, 'You need to have Press Editor, Book Editor or Series Editor level permission to view this page.')

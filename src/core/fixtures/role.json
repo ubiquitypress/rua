@@ -70,5 +70,13 @@
     },
     "model": "core.role",
     "pk": 9
+},
+{
+  "fields": {
+    "name": "Production Editor",
+    "slug": "production-editor"
+  },
+  "model": "core.role",
+  "pk": 10
 }
 ]
