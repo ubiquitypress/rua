@@ -1,0 +1,32 @@
+{% load bootstrap3 %}
+<h3>Change Owner</h3>
+<br>
+<table id="bookeditors" class="table table-bordered small" >
+    <thead>
+    <tr>
+        <th width="25%">Name</th>
+        <th></th>
+    </tr>
+  </thead>
+  <tbody>
+      {% for author_dict in list_of_authors %}
+      <tr>
+        <td>{{ author_dict.author.profile.full_name }} <sup> <a href="core/email.html" onclick="return popitup('/email/authors/submission/{{submission.id}}/user/{{author.pk}}/','authors{{author.pk}}')"class="fa fa-envelope-o btn btn-xs btn-default"></a></sup></td>
+
+            <td style="width:5%"> 
+                 {% if author_dict.owner %}
+        Current owner {% else %}
+      <form action="{% url 'editor_change_owner' submission.id %}" method="get" >
+
+      <span class="input-group-btn">
+      
+       
+          <button class="btn btn-view btn-sm btn-round" id="remove" name="owner" value="{{ author_dict.author.pk }}" type="submit"  data-toggle="tooltip" data-placement="bottom" title="Remove author from book" style="width:100px; height: 30px;"><span class="glyphicon glyphicon-{% if author_dict.owner %}remove{% else %}plus{% endif%}"style="position:absolute;right:70px;top:8px"></span> <b style="position:absolute;right:25px;top:5.5px"> Owner </b></button>
+          {% endif%}
+        </span>
+ </form>
+       </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+    </table>

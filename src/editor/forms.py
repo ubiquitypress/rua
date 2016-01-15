@@ -16,6 +16,12 @@ class EditorForm(ModelForm):
 		self.fields['book_editors'].queryset = User.objects.filter(profile__roles__slug='book-editor')
 		self.fields['book_editors'].label_from_instance = lambda obj: "%s %s" % (obj.first_name, obj.last_name)
 
+class ChangeOwnerForm(ModelForm):
+
+	class Meta:
+		model = core_models.Book
+		fields = ('owner',)
+
 class RevisionForm(ModelForm):
 
 	class Meta:

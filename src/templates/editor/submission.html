@@ -42,6 +42,7 @@
             <h5 class="subtitle-text">{{submission.subtitle}}</h5>
         </div>
           <div class="book-info">
+              <a href="{% url 'editor_change_owner' submission.id %}" class="btn btn-xs btn-view pull-right "> Change owner</a> <br><br>
         <table class="table table-bordered table-condensed small">
             <tr>
                 <th>Series</th>

@@ -186,6 +186,45 @@ def get_list_of_editors(book):
 		list_of_editors[t] = {'editor': editor, 'already_added': already_added,}
 	return list_of_editors
 
+def get_list_of_authors(book):
+
+	all_authors = User.objects.filter(profile__roles__slug='author')
+	
+	list_of_authors =[{} for t in range(0,len(all_authors)) ]	
+	for t,author in enumerate(all_authors):
+		owner = False
+		if author == book.owner:
+			owner = True
+		list_of_authors[t] = {'author': author, 'owner': owner,}
+	return list_of_authors
+
+@is_press_editor
+def editor_change_owner(request, submission_id):
+	
+	book = get_object_or_404(models.Book, pk=submission_id)
+
+	email_text = models.Setting.objects.get(group__name='email', name='book_editor_ack').value
+
+	authors = get_list_of_authors(book)
+
+	if request.GET and "owner" in request.GET:
+		user_id = request.GET.get("owner")
+		user = User.objects.get(pk=user_id)
+		book.owner = user
+		book.save()
+		authors = get_list_of_authors(book)
+
+	template = 'editor/submission.html'
+	context = {
+		'submission': book,
+		'active': 'user_submission',
+		'author_include': 'editor/change_owner.html',
+		'submission_files': None,
+		'active_page': 'editor_submission',
+		'list_of_authors': authors,
+	}
+
+	return render(request, template, context)
 
 @is_press_editor
 def editor_add_editors(request, submission_id):
@@ -224,6 +263,7 @@ def editor_add_editors(request, submission_id):
 	}
 
 	return render(request, template, context)
+
 @is_book_editor
 def editor_tasks(request, submission_id):
 	book = get_object_or_404(models.Book, pk=submission_id)
