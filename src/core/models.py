@@ -178,6 +178,9 @@ class Book(models.Model):
 	# Book Owner
 	owner = models.ForeignKey(User, null=True, blank=True)
 
+	#Read only users
+	read_only_users = models.ManyToManyField(User, null=True, blank=True, related_name='read_only_users')
+
 	# Dates
 	submission_date = models.DateField(auto_now_add=True, null=True, blank=True)
 	publication_date = models.DateField(null=True, blank=True)
