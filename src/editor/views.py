@@ -254,26 +254,28 @@ def editor_change_owner(request, submission_id):
 			user = models.Editor.objects.get(pk=user_id)
 
 		book.read_only_users.add(book.owner)
-		new_pass = manager_logic.generate_password()
-		new_user = User.objects.create_user(username = user.author_email,
-                                 email= user.author_email,
-                                 password= new_pass, 
-                                 first_name = user.first_name, 
-                                 last_name = user.last_name)
-		messages.add_message(request, messages.SUCCESS, 'Profile created for %s %s, password set to %s.' % (type, new_user.username, new_pass))
-		new_profile = models.Profile(middle_name=user.middle_name, salutation=user.salutation, institution = user.institution,
-		 department = user.department, country = user.country, biography = user.biography, orcid = user.orcid, twitter = user.twitter, linkedin = user.linkedin, facebook = user.facebook, user = new_user )
-		new_profile.save()
-		book.owner = new_user
-		book.save()
-
-		author_role = get_object_or_404(models.Role, name="Author")
- 		new_profile.roles.add(author_role)
- 		new_profile.save()
-
-		email_text = models.Setting.objects.get(group__name='email', name='new_user_email').value
-
-		logic.send_new_user_ack(book, email_text, new_user, new_pass)
+		try:
+			new_user = User.objects.get(email=user.author_email)
+			book.owner = new_user
+			book.save()
+		except User.DoesNotExist:
+			new_pass = manager_logic.generate_password()
+			new_user = User.objects.create_user(username = user.author_email,
+	                                 email= user.author_email,
+	                                 password= new_pass, 
+	                                 first_name = user.first_name, 
+	                                 last_name = user.last_name)
+			messages.add_message(request, messages.SUCCESS, 'Profile created for %s %s, password set to %s.' % (type, new_user.username, new_pass))
+			new_profile = models.Profile(middle_name=user.middle_name, salutation=user.salutation, institution = user.institution,
+			 department = user.department, country = user.country, biography = user.biography, orcid = user.orcid, twitter = user.twitter, linkedin = user.linkedin, facebook = user.facebook, user = new_user )
+			new_profile.save()
+			author_role = get_object_or_404(models.Role, name="Author")
+	 		new_profile.roles.add(author_role)
+	 		new_profile.save()
+	 		book.owner = new_user
+			book.save()
+			email_text = models.Setting.objects.get(group__name='email', name='new_user_email').value
+			logic.send_new_user_ack(book, email_text, new_user, new_pass)
 
 		authors = get_list_of_authors(book)
 		book_authors = get_list_of_book_authors(book)
