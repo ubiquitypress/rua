@@ -1,7 +1,9 @@
 {% load bootstrap3 %}
 <h3>Change Owner</h3>
 <br>
-<table id="bookeditors" class="table table-bordered small" >
+<h4>All Authors</h4>
+<br>
+<table id="allauthors" class="table table-bordered small" >
     <thead>
     <tr>
         <th width="25%">Name</th>
@@ -11,17 +13,81 @@
   <tbody>
       {% for author_dict in list_of_authors %}
       <tr>
-        <td>{{ author_dict.author.profile.full_name }} <sup> <a href="core/email.html" onclick="return popitup('/email/authors/submission/{{submission.id}}/user/{{author.pk}}/','authors{{author.pk}}')"class="fa fa-envelope-o btn btn-xs btn-default"></a></sup></td>
+        <td><h5>{{ author_dict.author.profile.full_name }} <sup> <a href="core/email.html" onclick="return popitup('/email/authors/submission/{{submission.id}}/user/{{author.pk}}/','authors{{author.pk}}')"class="fa fa-envelope-o btn btn-xs btn-default"></a></sup></h5></td>
 
             <td style="width:5%"> 
                  {% if author_dict.owner %}
-        Current owner {% else %}
+       <h5> Current owner </h5>{% else %}
       <form action="{% url 'editor_change_owner' submission.id %}" method="get" >
 
       <span class="input-group-btn">
       
        
-          <button class="btn btn-view btn-sm btn-round" id="remove" name="owner" value="{{ author_dict.author.pk }}" type="submit"  data-toggle="tooltip" data-placement="bottom" title="Remove author from book" style="width:100px; height: 30px;"><span class="glyphicon glyphicon-{% if author_dict.owner %}remove{% else %}plus{% endif%}"style="position:absolute;right:70px;top:8px"></span> <b style="position:absolute;right:25px;top:5.5px"> Owner </b></button>
+          <button class="btn btn-view btn-sm btn-round" id="user" name="user" value="{{ author_dict.author.pk }}" type="submit"  data-toggle="tooltip" data-placement="bottom" title="Make owner" style="width:100px; height: 30px;"><span class="glyphicon glyphicon-{% if author_dict.owner %}remove{% else %}plus{% endif%}"style="position:absolute;right:70px;top:8px"></span> <b style="position:absolute;right:25px;top:5.5px"> Owner </b></button>
+          {% endif%}
+        </span>
+ </form>
+       </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+    </table>
+  <hr>
+<h4>Book's Authors</h4>
+<br>
+    <table id="book_editors" class="table table-bordered small" >
+    <thead>
+    <tr>
+        <th width="25%">Name</th>
+        <th></th>
+    </tr>
+  </thead>
+  <tbody>
+      {% for author_dict in book_authors %}
+      <tr>
+        <td><h5>{{ author_dict.author.full_name }} <sup> <a href="core/email.html" onclick="return popitup('/email/authors/submission/{{submission.id}}/user/{{author.pk}}/','authors{{author_dict.author.pk}}')"class="fa fa-envelope-o btn btn-xs btn-default"></a></sup></h5></td>
+
+            <td style="width:5%"> 
+                 {% if author_dict.owner %}
+       <h5>Current owner</h5> {% else %}
+      <form action="{% url 'editor_change_owner' submission.id %}" method="get" >
+
+      <span class="input-group-btn">
+      
+       
+          <button class="btn btn-view btn-sm btn-round" id="author" name="author" value="{{ author_dict.author.pk }}" type="submit"  data-toggle="tooltip" data-placement="bottom" title="Make owner" style="width:100px; height: 30px;"><span class="glyphicon glyphicon-{% if author_dict.owner %}remove{% else %}plus{% endif%}"style="position:absolute;right:70px;top:8px"></span> <b style="position:absolute;right:25px;top:5.5px"> Owner </b></button>
+          {% endif%}
+        </span>
+ </form>
+       </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+    </table>
+  <hr>
+<h4>Book's Editors</h4>
+<br>
+    <table id="bookauthors" class="table table-bordered small" >
+    <thead>
+    <tr>
+        <th width="25%">Name</th>
+        <th></th>
+    </tr>
+  </thead>
+  <tbody>
+      {% for author_dict in list_of_editors %}
+      <tr>
+        <td><h5>{{ author_dict.editor.full_name }} <sup> <a href="core/email.html" onclick="return popitup('/email/authors/submission/{{submission.id}}/user/{{author.pk}}/','authors{{author_dict.editor.pk}}')"class="fa fa-envelope-o btn btn-xs btn-default"></a></sup></h5></td>
+
+            <td style="width:5%"> 
+                 {% if author_dict.owner %}
+       <h5>Current owner</h5> {% else %}
+      <form action="{% url 'editor_change_owner' submission.id %}" method="get" >
+
+      <span class="input-group-btn">
+      
+       
+          <button class="btn btn-view btn-sm btn-round" id="editor" name="editor" value="{{ author_dict.editor.pk }}" type="submit"  data-toggle="tooltip" data-placement="bottom" title="Make owner" style="width:100px; height: 30px;"><span class="glyphicon glyphicon-{% if author_dict.owner %}remove{% else %}plus{% endif%}"style="position:absolute;right:70px;top:8px"></span> <b style="position:absolute;right:25px;top:5.5px"> Owner </b></button>
           {% endif%}
         </span>
  </form>

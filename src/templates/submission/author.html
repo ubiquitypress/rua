@@ -2,131 +2,77 @@
 {% load static from staticfiles %}
 {% load bootstrap3 %}
 
-{% block title %}{{ active|capfirst }} Profile{% endblock %}
-
-{% block css %}
-    <link type='text/css' href="{% static "css/jq-ui.css" %}" rel="stylesheet">
-    <link type='text/css' href="{% static "css/jquery.tagit.css" %}" rel="stylesheet">
-{% endblock %}
+{% block title %}Update Profile{% endblock %}
 
 {% block body %}
-<div class="col-md-12 primary-heading container-fluid" style="margin-top:-20px">
- 		<h3>{{ active|capfirst }} Author<span class="pull-right"><a href="{% url 'submission_four' book.id %}" class="btn  btn-transparent-white" style="position: absolute;right:20px;margin-top:-8px">Go back</a></span></h3>
-</div>
-
 <div class="col-md-12">
 	<div class="row">
-		<div class="col-md-11">
-	
+		<div class="col-md-10">
+			<h1>Add New Author</h1>
 		</div>
+		<div class="col-md-2">
+            <div class="btn-group">
+                <a class="btn  btn-primary" href="{% url 'submission_four' book.id %}">
+                    <span class="fa fa-arrow-left"></span> Back to Submission
+                </a>
+            </div>
+        </div>
     </div>
 	<br />
+    {{ author_form.errors }}
   	<form method="post" class="form" enctype="multipart/form-data">
 	    {% csrf_token %}
-	      {% if active == 'add' %}
-	      <div class="form-group">
-		  	<div class="row">
-		  		<div class="col-md-6">{% bootstrap_field user_form.username %}</div>
-		  	</div>
-		  </div>
-		  <hr />
-		  {% endif %}
 		  <div class="form-group">
 		  	<div class="row">
-		  		<div class="col-md-3">{% bootstrap_field profile_form.salutation %}</div>
-		  		<div class="col-md-3">{% bootstrap_field user_form.first_name %}</div>
-		  		<div class="col-md-3">{% bootstrap_field profile_form.middle_name %}</div>
-		  		<div class="col-md-3">{% bootstrap_field user_form.last_name %}</div>
+		  		<div class="col-md-3">{% bootstrap_field author_form.salutation %}</div>
+		  		<div class="col-md-3">{% bootstrap_field author_form.first_name %}</div>
+		  		<div class="col-md-3">{% bootstrap_field author_form.middle_name %}</div>
+		  		<div class="col-md-3">{% bootstrap_field author_form.last_name %}</div>
 		  	</div>
 		  </div>
 		  <hr />
 		  <div class="form-group">
 		  	<div class="row">
-		  		<div class="col-md-12">{% bootstrap_field profile_form.biography %}</div>
+		  		<div class="col-md-12">{% bootstrap_field author_form.biography %}</div>
 		  	</div>
 		  </div>
 		  <hr />
 		  <div class="form-group">
 		  	<div class="row">
-		  		<div class="col-md-4">{% bootstrap_field profile_form.institution %}</div>
-		  		<div class="col-md-4">{% bootstrap_field profile_form.department %}</div>
-		  		<div class="col-md-4">{% bootstrap_field profile_form.country %}</div>
-		  		<div class="col-md-12">
-                      <div class="aside "><strong>Interests</strong></div>
-                        <input type="text" id="interests" name="interests" value="{% for interest in user.profile.interest.all %}{{ interest }}{% if not forloop.last %},{% endif %}{% endfor %}"/> Hit Enter to add a new interest.
+		  		<div class="col-md-4">{% bootstrap_field author_form.institution %}</div>
+		  		<div class="col-md-4">{% bootstrap_field author_form.department %}</div>
+		  		<div class="col-md-4">{% bootstrap_field author_form.country %}</div>
+		  	</div>
+		  </div>
+		  <hr />
+		  <div class="form-group">
+		  	<div class="row">
+		  		<div class="col-md-3">{% bootstrap_field author_form.orcid %}</div>
+		  		<div class="col-md-3">{% bootstrap_field author_form.twitter %}</div>
+		  		<div class="col-md-3">{% bootstrap_field author_form.facebook %}</div>
+		  		<div class="col-md-3">{% bootstrap_field author_form.linkedin %}</div>
+		  	</div>
+		  </div>
+		  <hr />
+		  <div class="form-group">
+		  	<div class="row">
+		  		<div class="col-md-6">{% bootstrap_field author_form.author_email %}</div>
 		  		</div>
 		  	</div>
-		  </div>
-		  <hr />
-		  <div class="form-group">
-		  	<div class="row">
-		  		<div class="col-md-4">{% bootstrap_field profile_form.orcid %}</div>
-		  		<div class="col-md-4">{% bootstrap_field profile_form.twitter %}</div>
-		  		<div class="col-md-4">{% bootstrap_field profile_form.facebook %}</div>
-		  		<div class="col-md-4">{% bootstrap_field profile_form.linkedin %}</div>
-		  		<div class="col-md-4">{% bootstrap_field profile_form.impactstory %}</div>
-		  		<div class="col-md-4">{% bootstrap_field profile_form.github %}</div>
-		  	</div>
-		  </div>
-		  <hr />
-		  <div class="form-group">
-		  	<div class="row">
-		  		<div class="col-md-12">{% bootstrap_field profile_form.signature %}
-		  			<p class="small">This signature will be appended to the end of outgoing emails.</p>
-		  		</div>
-		  	</div>
-		  </div>
-		  <hr />
-		  <div class="form-group">
-		  	<div class="row">
-		  		<div class="col-md-6">{% bootstrap_field user_form.email %}</div>
-		  		<div class="col-md-6">
-		  			<label class="control-label" for="id_profile_image">Profile Image</label><br />
-					       <div class="input-group">
-		                <span class="input-group-btn">
-		                    <span class="btn btn-primary btn-file">
-		                        Browse&hellip; <input type="file" id="id_profile_image" name="profile_image">
-		                    </span>
-		                </span>
-		                <input type="text" class="form-control" readonly>
-		            </div>
-				</div>
-		  		</div>
-		  	</div>
-		  	<div class="form-group">
-		  	<div class="row">
-		  		<div class="col-md-6">
-					{% if active == 'add' %}
-						<label class="control-label" for="new_password">If you would like to generate a new password for the account, check this box.</label><br /><input type="checkbox" name="new_password" {% if new_password %}checked{% endif %} />
-					{% endif %}
-				</div>
-		  	</div>
-		  </div>
 		  </div>
 			{% buttons %}
-		        <button name="register" id="register" type="submit" class="pull-right btn btn-primary" style="width:150px;margin-left:15px;">
-		            {% if active == 'add' %} Add {% else %} Update {% endif %}
+		        <button name="register" id="register" type="submit" class="btn btn-primary" style="margin-left:15px;">
+		            <i class="fa fa-user"></i> Update Profile
 		        </button>
-		    </br> </br>
 		    {% endbuttons %}
 		</form>
 
 	</form>
- </br> </br>
-</div> </br> </br> </br>
+
+</div>
 {% endblock %}
 
 {% block js %}
 <script type="text/javascript" src="{% static "js/fancyfile.js" %}"></script>
 <script type="text/javascript">$("textarea").jqte();</script>
-<link rel="stylesheet" href="http://code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css">
-<script src="http://code.jquery.com/ui/1.11.0/jquery-ui.js"></script>
-<script src="{% static "js/tag-it.min.js" %}"></script>
-
-<script type="text/javascript">
-  $(document).ready(function() {
-      $("#interests").tagit(
-        {allowSpaces: true});
-  });
-</script>
 {% endblock %}

@@ -12,7 +12,7 @@
   </tr>
 {% for reviewer in review_data %}
   <tr>
-    <td>{{ reviewer.user.first_name }} {% if reviewer.user.profile.middle_name %}{{ reviewer.user.middle_name}} {% endif %}{{ reviewer.user.last_name }}</td>
+    <td>{{ reviewer.user.first_name }} {% if author.middle_name %}{{ reviewer.user.middle_name}} {% endif %}{{ reviewer.user.last_name }}</td>
     <td>{{ reviewer.assigned }}</td>
     <td>{% if reviewer.accepted %}{{ reviewer.accepted }}{% else %}--{% endif %}</td>
     <td>{{ reviewer.due }}</td>

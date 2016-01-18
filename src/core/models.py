@@ -156,7 +156,7 @@ class Book(models.Model):
 	title = models.CharField(max_length=1000, null=True, blank=True, help_text='The main title.')
 	subtitle = models.CharField(max_length=1000, null=True, blank=True, help_text='Subtitle of the book.')
 	series = models.ForeignKey('Series', null=True, blank=True, help_text="If you are submitting this work to an existing Series please selected it.")
-	author = models.ManyToManyField(User, null=True, blank=True, related_name='authors')
+	author = models.ManyToManyField('Author', null=True, blank=True)
 	editor = models.ManyToManyField('Editor', null=True, blank=True)
 	book_editors = models.ManyToManyField(User, null=True, blank=True, related_name='book_editors')
 	press_editors = models.ManyToManyField(User, null=True, blank=True, related_name='press_editors')
@@ -220,7 +220,7 @@ class Book(models.Model):
 		if self.book_type == 'monograph':
 			for author in self.author.all():
 				if author.middle_name:
-					authors_or_editors.append("%s %s %s" % (author.first_name, author.profile.middle_name, author.last_name))
+					authors_or_editors.append("%s %s %s" % (author.first_name, author.middle_name, author.last_name))
 				else:
 					authors_or_editors.append("%s %s" % (author.first_name, author.last_name))
 		elif self.book_type == 'edited_volume':

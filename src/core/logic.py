@@ -85,10 +85,10 @@ def book_to_mark21_file(book,owner, xml = False):
 	authors = book.author.all()
 	author_names=''
 	for author in authors:
-		auhtor_names=author_names+author.profile.full_name()+' '
+		auhtor_names=author_names+author.full_name()+' '
 		name=author.last_name+', '+author.first_name
-		if author.profile.middle_name:
-			name=name+' '+author.profile.middle_name[:1]+'.'
+		if author.middle_name:
+			name=name+' '+author.middle_name[:1]+'.'
 		record.add_field(record_field('100',['1','#'],['a', name]))
 
 	#Title statement
@@ -171,11 +171,11 @@ def get_author_emails(submission_id,term):
 	authors = submission.author.all()
 	results = []
 	for author in authors:
-		name=author.profile.full_name()
+		name=author.full_name()
 		author_json = {}
 		author_json['id'] = author.id
-		author_json['label'] = author.profile.full_name()
-		author_json['value'] = author.email
+		author_json['label'] = author.full_name()
+		author_json['value'] = author.author_email
 		if term:
 			if term.lower() in name.lower():
 				results.append(author_json)
@@ -548,7 +548,7 @@ def send_decision_ack(book, decision, email_text, attachment=None):
 			'decision':decision,
 		}
 
-		email.send_email('Submission decision update: %s'% decision_full, context, from_email.value, author.email, email_text, book=book, attachment=attachment)
+		email.send_email('Submission decision update: %s'% decision_full, context, from_email.value, author.author_email, email_text, book=book, attachment=attachment)
 
 # Email Handlers - TODO: move to email.py?
 def send_production_editor_ack(book, editor, email_text, attachment=None):

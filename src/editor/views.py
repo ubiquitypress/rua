@@ -198,21 +198,86 @@ def get_list_of_authors(book):
 		list_of_authors[t] = {'author': author, 'owner': owner,}
 	return list_of_authors
 
+def get_list_of_book_authors(book):
+
+	all_authors = book.author.all()
+	
+	list_of_authors =[{} for t in range(0,len(all_authors))]	
+	for t,author in enumerate(all_authors):
+		owner = False
+		if author.author_email == book.owner.email:
+			owner = True
+		list_of_authors[t] = {'author': author, 'owner': owner,}
+	return list_of_authors
+
+def get_list_of_book_editors(book):
+
+	all_editors = book.editor.all()
+	
+	list_of_editors =[{} for t in range(0,len(all_editors)) ]	
+	for t,editor in enumerate(all_editors):
+		owner = False
+		if editor.author_email == book.owner.email:
+			owner = True
+		list_of_editors[t] = {'editor': editor, 'owner': owner,}
+	return list_of_editors
+
 @is_press_editor
 def editor_change_owner(request, submission_id):
 	
 	book = get_object_or_404(models.Book, pk=submission_id)
 
 	email_text = models.Setting.objects.get(group__name='email', name='book_editor_ack').value
-
+	book_authors = get_list_of_book_authors(book)
+	editors = get_list_of_book_editors(book)
 	authors = get_list_of_authors(book)
 
-	if request.GET and "owner" in request.GET:
-		user_id = request.GET.get("owner")
+	if request.GET and "user" in request.GET:
+		user_id = request.GET.get("user")
 		user = User.objects.get(pk=user_id)
+		book.read_only_users.add(book.owner)
 		book.owner = user
 		book.save()
 		authors = get_list_of_authors(book)
+		book_authors = get_list_of_book_authors(book)
+		editors = get_list_of_book_editors(book)
+
+	elif request.GET:
+		type=""
+		if "author" in request.GET:
+			user_id = request.GET.get("author")
+			type="Author"
+			user = models.Author.objects.get(pk=user_id)
+		else:
+			user_id = request.GET.get("editor")
+			type="Editor"
+			user = models.Editor.objects.get(pk=user_id)
+
+		book.read_only_users.add(book.owner)
+		new_pass = manager_logic.generate_password()
+		new_user = User.objects.create_user(username = user.author_email,
+                                 email= user.author_email,
+                                 password= new_pass, 
+                                 first_name = user.first_name, 
+                                 last_name = user.last_name)
+		messages.add_message(request, messages.SUCCESS, 'Profile created for %s %s, password set to %s.' % (type, new_user.username, new_pass))
+		new_profile = models.Profile(middle_name=user.middle_name, salutation=user.salutation, institution = user.institution,
+		 department = user.department, country = user.country, biography = user.biography, orcid = user.orcid, twitter = user.twitter, linkedin = user.linkedin, facebook = user.facebook, user = new_user )
+		new_profile.save()
+		book.owner = new_user
+		book.save()
+
+		author_role = get_object_or_404(models.Role, name="Author")
+ 		new_profile.roles.add(author_role)
+ 		new_profile.save()
+
+		email_text = models.Setting.objects.get(group__name='email', name='new_user_email').value
+
+		logic.send_new_user_ack(book, email_text, new_user, new_pass)
+
+		authors = get_list_of_authors(book)
+		book_authors = get_list_of_book_authors(book)
+		editors = get_list_of_book_editors(book)
 
 	template = 'editor/submission.html'
 	context = {
@@ -222,6 +287,8 @@ def editor_change_owner(request, submission_id):
 		'submission_files': None,
 		'active_page': 'editor_submission',
 		'list_of_authors': authors,
+		'list_of_editors': editors,
+		'book_authors': book_authors,
 	}
 
 	return render(request, template, context)
@@ -832,96 +899,48 @@ def update_contributor(request, submission_id, contributor_type, contributor_id=
 	if contributor_id:
 		active = 'edit'
 		if contributor_type == 'author':
-			contributor = get_object_or_404(models.User, pk=contributor_id)
-			user_form = core_forms.UserProfileForm(instance = contributor)
-			form = core_forms.ProfileForm(instance=contributor.profile)
+			contributor = get_object_or_404(models.Author, pk=contributor_id)
+			form = submission_forms.AuthorForm(instance=contributor)
 		elif contributor_type == 'editor':
-			user_form = None
 			contributor = get_object_or_404(models.Editor, pk=contributor_id)
 			form = submission_forms.EditorForm(instance=contributor)
 	else:
 		active = 'add'
 		contributor = None
 		if contributor_type == 'author':
-			user_form = core_forms.FullUserProfileForm()
-			form = core_forms.ProfileForm()
+			form = submission_forms.AuthorForm()
 		elif contributor_type == 'editor':
-			user_form = None
 			form = submission_forms.EditorForm()
 
 
 	if request.POST:
 		if contributor:
 			if contributor_type == 'author':
-				form =  core_forms.ProfileForm(request.POST, request.FILES, instance=contributor.profile)		
-				user_form = core_forms.UserProfileForm(request.POST, instance=contributor)
+				form = submission_forms.AuthorForm(request.POST, instance=contributor)
 			elif contributor_type == 'editor':
 				form = submission_forms.EditorForm(request.POST, instance=contributor)
-				user_form = None
 		else:
 			if contributor_type == 'author':
-				form =  core_forms.ProfileForm(request.POST, request.FILES)		
-				user_form = core_forms.FullUserProfileForm(request.POST)
+				form = submission_forms.AuthorForm(request.POST)
 			elif contributor_type == 'editor':
 				form = submission_forms.EditorForm(request.POST)
-				user_form = None
+		
+		if form.is_valid():
+			
+			saved_contributor = form.save()
 
-		if user_form:
-			print "existing user form"
-			if user_form.is_valid() and form.is_valid():
-				user = user_form.save()
-
-				if 'new_password' in request.POST:
-					new_pass = manager_logic.generate_password()
-					user.set_password(new_pass)
-					messages.add_message(request, messages.SUCCESS, 'New user %s, password set to %s.' % (user.username, new_pass))
-
-				user.save()
-
-				profile = form.save(commit=False)
-				profile.user = user
-				profile.save()
-
-				author_role = get_object_or_404(models.Role, name="Author")
-				profile.roles.add(author_role)
-				profile.save()
-
-				for interest in profile.interest.all():
-					profile.interest.remove(interest)
-
-				for interest in request.POST.get('interests').split(','):
-					new_interest, c = models.Interest.objects.get_or_create(name=interest)
-					profile.interest.add(new_interest)
-
-				profile.save()
-
-				if not contributor:
-					if contributor_type == 'author':
-						book.author.add(user)
-						messages.add_message(request, messages.SUCCESS, 'New author %s added to %s.' % (user.username, new_pass))
-				else:
-					messages.add_message(request, messages.SUCCESS, 'User %s has been updated.' % (user.username))
-
-
-			else:
-				print user_form.errors
-				print form.errors
-		else:
-			print "no user form"
-			if form.is_valid():
-				saved_contributor = form.save()
-
-				if not contributor:
-					if contributor_type == 'editor':
-						book.editor.add(saved_contributor)
-
-		return redirect(reverse('catalog', kwargs={'submission_id': submission_id}))
+			if not contributor:
+ 				if contributor_type == 'author':
+ 					book.author.add(saved_contributor)
+ 				elif contributor_type == 'editor':
+ 					book.editor.add(saved_contributor)
+			
+			return redirect(reverse('catalog', kwargs={'submission_id': submission_id}))
 
 	template = 'editor/catalog/update_contributor.html'
 	context = {
 		'submission': book,
 		'form': form,
-		'user_form': user_form,
 		'contributor': contributor,
 		'type': contributor_type,
 		'active':active,

@@ -58,7 +58,7 @@ class AuthorTests(TestCase):
 		self.assertEqual("AUTHORS" in content, True)
 		authors = self.book.author.all()
 		for author in authors:
-			self.assertEqual( author.profile.full_name() in content, True)
+			self.assertEqual( author.full_name() in content, True)
 		self.assertEqual("DESCRIPTION" in content, True)
 		self.assertEqual( self.book.description in content, True)
 		self.assertEqual("COVER LETTER" in content, True)

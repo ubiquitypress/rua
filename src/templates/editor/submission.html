@@ -42,7 +42,6 @@
             <h5 class="subtitle-text">{{submission.subtitle}}</h5>
         </div>
           <div class="book-info">
-            
         <table class="table table-bordered table-condensed small">
             <tr>
                 <th>Series</th>
@@ -156,6 +155,15 @@ function popitup(url,title) {
 <script>
   $(document).ready(function() {
       $('#bookeditors').DataTable({
+        "lengthMenu": [[5], [5, 10, 25, 50, "All"]]
+      });
+       $('#allauthors').DataTable({
+        "lengthMenu": [[5], [5, 10, 25, 50, "All"]]
+      });
+        $('#bookauthors').DataTable({
+        "lengthMenu": [[5], [5, 10, 25, 50, "All"]]
+      });
+         $('#book_editors').DataTable({
         "lengthMenu": [[5], [5, 10, 25, 50, "All"]]
       });
       $('#indv-reviewer').DataTable({
