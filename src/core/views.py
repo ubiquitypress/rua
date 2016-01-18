@@ -1129,6 +1129,7 @@ def view_proposal_review_decision(request, proposal_id, assignment_id):
         'review': review_assignment,
         'active': 'proposal_review',
         'relationships':relationships,
+        'instructions': models.Setting.objects.get(group__name='general', name='instructions_for_task_proposal').value
     }
 
     return render(request, template, context)
@@ -1210,6 +1211,7 @@ def view_completed_proposal_review(request, proposal_id, assignment_id):
         'recommendation_form':recommendation_form,
         'active': 'proposal_review',
         'relationships':relationships,
+        'instructions': models.Setting.objects.get(group__name='general', name='instructions_for_task_proposal').value
     }
 
     return render(request, template, context)
@@ -1291,6 +1293,7 @@ def view_proposal_review(request, proposal_id, assignment_id):
         'form':form,
         'recommendation_form':recommendation_form,
         'active': 'proposal_review',
+        'instructions': models.Setting.objects.get(group__name='general', name='instructions_for_task_proposal').value
     }
 
     return render(request, template, context)

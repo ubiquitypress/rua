@@ -46,6 +46,15 @@ def task_hub(request, assignment_type, assignment_id, about=None):
 	right_block = logic.right_block(assignment)
 	submitted_files = logic.get_submitted_files(assignment)
 
+	if assignment_type == 'copyedit':
+		instructions = models.Setting.objects.get(group__name='general', name='instructions_for_task_copyedit').value
+	elif assignment_type == 'typesetting':
+		instructions = models.Setting.objects.get(group__name='general', name='instructions_for_task_typeset').value
+	elif assignment_type == 'indexing':
+		instructions = models.Setting.objects.get(group__name='general', name='instructions_for_task_index').value
+	else:
+		instructions = ""
+
 	if request.POST:
 		#Handle decision
 		decision = request.POST.get('decision', None)
@@ -92,7 +101,8 @@ def task_hub(request, assignment_type, assignment_id, about=None):
 		'right_block': right_block,
 		'files':submitted_files,
 		'about':about,
-		'editors':core_logic.get_editors(assignment.book)
+		'editors':core_logic.get_editors(assignment.book),
+		'instructions':instructions,
 	}
 
 	return render(request, template, context)

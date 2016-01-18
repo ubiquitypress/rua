@@ -107,7 +107,8 @@ def reviewer_decision(request, review_type, submission_id, review_assignment, de
 		'review_assignment': review_assignment,
 		'has_additional_files': logic.has_additional_files(submission),
 		'editors': editors,
-		'file_preview':core_models.Setting.objects.get(group__name='general', name='preview_review_files').value
+		'file_preview': core_models.Setting.objects.get(group__name='general', name='preview_review_files').value,
+		'instructions': core_models.Setting.objects.get(group__name='general', name='instructions_for_task_review').value
 
 	}
 
@@ -207,6 +208,7 @@ def review(request, review_type, submission_id,review_round, access_key=None):
 		'recommendation_form': recommendation_form,
 		'editors':editors,
 		'has_additional_files': logic.has_additional_files(submission),
+		'instructions': core_models.Setting.objects.get(group__name='general', name='instructions_for_task_review').value
 
 	}
 
@@ -247,7 +249,8 @@ def review_complete(request, review_type, submission_id,review_round,access_key=
 		'data_ordered': data_ordered,
 		'result': result,
 		'additional_files': logic.has_additional_files(submission),
-		'editors': logic.get_editors(review_assignment)
+		'editors': logic.get_editors(review_assignment),
+		'instructions': core_models.Setting.objects.get(group__name='general', name='instructions_for_task_review').value
 	}
 
 	return render(request,template, context)

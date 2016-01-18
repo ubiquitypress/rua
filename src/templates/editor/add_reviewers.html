@@ -54,12 +54,12 @@
 
     <div class="col-md-9 dash-center">
     </br>
-    	<div class="col-md-12 file-heading container-fluid">
+    	<div class="col-md-12 file-heading container-fluid ">
       		<h4>Add Reviewers 
     <form method="post" class="form" enctype="multipart/form-data">  {% csrf_token %}<button type="submit"  name="add_user" id="add_user"  class="btn btn-transparent-white" style="position: absolute;right:75px;margin-top:-22px"><i class="fa fa-plus">&nbsp;</i>Add New User</button></form></h4>
 		</div>
 
-    	<div class="dash-container">
+    	<div class="dash-container bottom-space">
     		<div class="media-body">
 				<div class="col-md-12">
           			<form method="post" enctype="multipart/form-data">
@@ -107,10 +107,6 @@
 					      <td>{{ committee.name }}</td>
 					      <td>{{ committee.groupmembership_set.all.count }}</td>
 					      <td><input type="checkbox" name="committee" value="{{ committee.id }}"/></td>
-					    </tr>
-					    {% empty %}
-					    <tr>
-					      <td colspan="3">No committees established. <a href="{% url 'manager_group_add' %}">Add one.</a></td>
 					    </tr>
 					    {% endfor %}
 					    </tbody>

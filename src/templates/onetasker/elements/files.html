@@ -1,7 +1,7 @@
  <div class="dash-container">
 
         <h4>INSTRUCTIONS FOR TASK</h4>
-       
+        <p>{{instructions|safe}}</p>
         <p>{{ assignment.note|safe }}</p>
        </br>
          <h5> Task Due <span class="author-due">{{ assignment.due }} ({{assignment.due|timeuntil}} left)</span></h5>

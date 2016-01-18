@@ -618,5 +618,55 @@
   },
   "model": "core.setting",
   "pk": 64
+},
+{
+  "fields": {
+    "value": "You've been asked to undertake a review on behalf of the Press and Author.",
+    "group": 1,
+    "name": "instructions_for_task_review",
+    "types": "rich_text"
+  },
+  "model": "core.setting",
+  "pk": 65
+},
+{
+  "fields": {
+    "value": "You've been asked to undertake a review of a proposal on behalf of the Press and Author.",
+    "group": 1,
+    "name": "instructions_for_task_proposal",
+    "types": "rich_text"
+  },
+  "model": "core.setting",
+  "pk": 66
+},
+{
+  "fields": {
+    "value": "You've been asked to undertake a typeset assignment on behalf of the Press and Author.",
+    "group": 1,
+    "name": "instructions_for_task_typeset",
+    "types": "rich_text"
+  },
+  "model": "core.setting",
+  "pk": 67
+},
+{
+  "fields": {
+    "value": "You've been asked to undertake an indexing assignment on behalf of the Press and Author.",
+    "group": 1,
+    "name": "instructions_for_task_index",
+    "types": "rich_text"
+  },
+  "model": "core.setting",
+  "pk": 68
+},
+{
+  "fields": {
+    "value": "You've been asked to undertake a copyedit assignment on behalf of the Press and Author.",
+    "group": 1,
+    "name": "instructions_for_task_copyedit",
+    "types": "rich_text"
+  },
+  "model": "core.setting",
+  "pk": 69
 }
 ]
