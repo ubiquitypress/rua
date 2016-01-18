@@ -145,6 +145,14 @@
                       {% bootstrap_form_errors metadata_form layout='inline' %}
                     </div>
                   </div>
+
+                  <div class="row">
+                     
+                    
+                    <div class="col-md-4 pull-left" style="margin-top:-25px;margin-bottom:18px">
+                       <b>Owner: </b>{{submission.owner.profile.full_name}}
+                    <a href="{% url 'editor_change_owner' submission.id %}" class="btn btn-xs btn-view" style="margin-left:2.5px"> Change</a> 
+                  </div></div>
                   <div class="row">
                     <div class="col-md-4">
                       {% bootstrap_field metadata_form.prefix %}
