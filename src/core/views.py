@@ -587,10 +587,10 @@ def email_users(request, group, submission_id=None, user_id=None):
                 messages.add_message(request, messages.ERROR, "This editor was not found")
 
         elif group == "authors":
-            author = get_object_or_404(models.Author, pk=user_id)
+            author = get_object_or_404(models.User, pk=user_id)
             authors = submission.author.all()
             if author in authors:
-                to_value="%s;" % (author.author_email)
+                to_value="%s;" % (author.email)
             else:
                 messages.add_message(request, messages.ERROR, "This author is not an author of this submission")
 

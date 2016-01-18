@@ -52,15 +52,15 @@
               <h3 class="author_header">{{ author.first_name }} {{ author.last_name }}</h3>
               <hr />
               <div class="row">
-                <div class="col-md-3"><p><strong>Email:</strong><br />{{ author.author_email }}</p></div>
-                <div class="col-md-3"><p><strong>Institution:</strong><br />{{ author.institution }}</p></div>
-                <div class="col-md-3"><p><strong>Department:</strong><br />{{ author.department }}</p></div>
-                <div class="col-md-3"><p><strong>Country:</strong><br />{{ author.country }}</p></div>
-                <div class="col-md-12"><p><strong>Biography:</strong><br /> <div class="container-fluid" style="margin-top:5px;margin-bottom:5px;background-color:rgba(0,0,0,0.05);">{{ author.biography|safe }}</div></p></div>
-                <div class="col-md-3"><p><i class="fa">iD&nbsp;</i><strong>ORCiD:</strong><br />{{ author.orcid }}</p></div>
-                <div class="col-md-3"><p><i class="fa fa-twitter">&nbsp;</i><strong>Twitter:</strong><br />{{ author.twitter }}</p></div>
-                <div class="col-md-3"><p><i class="fa fa-linkedin">&nbsp;</i><strong>Linkedin:</strong><br />{{ author.linkedin }}</p></div>
-                <div class="col-md-3"><p><i class="fa fa-facebook-official">&nbsp;</i><strong>Facebook:</strong><br />{{ author.faceboo }}</p></div>
+                <div class="col-md-3"><p><strong>Email:</strong><br />{{ author.email }}</p></div>
+                <div class="col-md-3"><p><strong>Institution:</strong><br />{{ author.profile.institution }}</p></div>
+                <div class="col-md-3"><p><strong>Department:</strong><br />{{ author.profile.department }}</p></div>
+                <div class="col-md-3"><p><strong>Country:</strong><br />{{ author.profile.country }}</p></div>
+                <div class="col-md-12"><p><strong>Biography:</strong><br /> <div class="container-fluid" style="margin-top:5px;margin-bottom:5px;background-color:rgba(0,0,0,0.05);">{{ author.profile.biography|safe }}</div></p></div>
+                <div class="col-md-3"><p><i class="fa">iD&nbsp;</i><strong>ORCiD:</strong><br />{{ author.profile.orcid }}</p></div>
+                <div class="col-md-3"><p><i class="fa fa-twitter">&nbsp;</i><strong>Twitter:</strong><br />{{ author.profile.twitter }}</p></div>
+                <div class="col-md-3"><p><i class="fa fa-linkedin">&nbsp;</i><strong>Linkedin:</strong><br />{{ author.profile.linkedin }}</p></div>
+                <div class="col-md-3"><p><i class="fa fa-facebook-official">&nbsp;</i><strong>Facebook:</strong><br />{{ author.profile.facebook }}</p></div>
 
               </div>
                <br>
@@ -76,7 +76,7 @@
               <h3 class="author_header">{{ author.first_name }} {{ author.last_name }}</h3>
               <hr />
               <div class="row">
-                <div class="col-md-3"><p><strong>Email:</strong><br />{{ author.author_email }}</p></div>
+                <div class="col-md-3"><p><strong>Email:</strong><br />{{ author.email }}</p></div>
                 <div class="col-md-3"><p><strong>Institution:</strong><br />{{ author.institution }}</p></div>
                 <div class="col-md-3"><p><strong>Department:</strong><br />{{ author.department }}</p></div>
                 <div class="col-md-3"><p><strong>Country:</strong><br />{{ author.country }}</p></div>

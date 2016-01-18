@@ -12,7 +12,7 @@ from core.decorators import is_editor, is_book_editor, is_book_editor_or_author,
 from editor import logic
 from revisions import models as revision_models
 from review import models as review_models
-from manager import models as manager_models
+from manager import models as manager_models,logic as manager_logic
 from submission import forms as submission_forms
 from editor import forms, models as editor_models
 
@@ -828,42 +828,92 @@ def identifiers(request, submission_id, identifier_id=None):
 @is_book_editor
 def update_contributor(request, submission_id, contributor_type, contributor_id=None):
 	book = get_object_or_404(models.Book, pk=submission_id)
-
+	active = 'add'
 	if contributor_id:
+		active = 'edit'
 		if contributor_type == 'author':
-			contributor = get_object_or_404(models.Author, pk=contributor_id)
-			form = submission_forms.AuthorForm(instance=contributor)
+			contributor = get_object_or_404(models.User, pk=contributor_id)
+			user_form = core_forms.UserProfileForm(instance = contributor)
+			form = core_forms.ProfileForm(instance=contributor.profile)
 		elif contributor_type == 'editor':
+			user_form = None
 			contributor = get_object_or_404(models.Editor, pk=contributor_id)
 			form = submission_forms.EditorForm(instance=contributor)
 	else:
+		active = 'add'
 		contributor = None
 		if contributor_type == 'author':
-			form = submission_forms.AuthorForm()
+			user_form = core_forms.FullUserProfileForm()
+			form = core_forms.ProfileForm()
 		elif contributor_type == 'editor':
+			user_form = None
 			form = submission_forms.EditorForm()
 
 
 	if request.POST:
 		if contributor:
 			if contributor_type == 'author':
-				form = submission_forms.AuthorForm(request.POST, instance=contributor)
+				form =  core_forms.ProfileForm(request.POST, request.FILES, instance=contributor.profile)		
+				user_form = core_forms.UserProfileForm(request.POST, instance=contributor)
 			elif contributor_type == 'editor':
 				form = submission_forms.EditorForm(request.POST, instance=contributor)
+				user_form = None
 		else:
 			if contributor_type == 'author':
-				form = submission_forms.AuthorForm(request.POST)
+				form =  core_forms.ProfileForm(request.POST, request.FILES)		
+				user_form = core_forms.FullUserProfileForm(request.POST)
 			elif contributor_type == 'editor':
 				form = submission_forms.EditorForm(request.POST)
+				user_form = None
 
-		if form.is_valid():
-			saved_contributor = form.save()
+		if user_form:
+			print "existing user form"
+			if user_form.is_valid() and form.is_valid():
+				user = user_form.save()
 
-			if not contributor:
-				if contributor_type == 'author':
-					book.author.add(saved_contributor)
-				elif contributor_type == 'editor':
-					book.editor.add(saved_contributor)
+				if 'new_password' in request.POST:
+					new_pass = manager_logic.generate_password()
+					user.set_password(new_pass)
+					messages.add_message(request, messages.SUCCESS, 'New user %s, password set to %s.' % (user.username, new_pass))
+
+				user.save()
+
+				profile = form.save(commit=False)
+				profile.user = user
+				profile.save()
+
+				author_role = get_object_or_404(models.Role, name="Author")
+				profile.roles.add(author_role)
+				profile.save()
+
+				for interest in profile.interest.all():
+					profile.interest.remove(interest)
+
+				for interest in request.POST.get('interests').split(','):
+					new_interest, c = models.Interest.objects.get_or_create(name=interest)
+					profile.interest.add(new_interest)
+
+				profile.save()
+
+				if not contributor:
+					if contributor_type == 'author':
+						book.author.add(user)
+						messages.add_message(request, messages.SUCCESS, 'New author %s added to %s.' % (user.username, new_pass))
+				else:
+					messages.add_message(request, messages.SUCCESS, 'User %s has been updated.' % (user.username))
+
+
+			else:
+				print user_form.errors
+				print form.errors
+		else:
+			print "no user form"
+			if form.is_valid():
+				saved_contributor = form.save()
+
+				if not contributor:
+					if contributor_type == 'editor':
+						book.editor.add(saved_contributor)
 
 		return redirect(reverse('catalog', kwargs={'submission_id': submission_id}))
 
@@ -871,7 +921,10 @@ def update_contributor(request, submission_id, contributor_type, contributor_id=
 	context = {
 		'submission': book,
 		'form': form,
+		'user_form': user_form,
 		'contributor': contributor,
+		'type': contributor_type,
+		'active':active,
 		'active_page': 'catalog_view',
 	}
 
@@ -883,7 +936,10 @@ def delete_contributor(request, submission_id, contributor_type, contributor_id)
 
 	if contributor_id:
 		if contributor_type == 'author':
-			contributor = get_object_or_404(models.Author, pk=contributor_id)
+			contributor = get_object_or_404(models.User, pk=contributor_id)
+			messages.add_message(request, messages.ERROR, 'User %s has been deleted.' % (contributor.username))
+			if contributor.profile:
+				contributor.profile.delete()
 		elif contributor_type == 'editor':
 			contributor = get_object_or_404(models.Editor, pk=contributor_id)
 

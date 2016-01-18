@@ -171,11 +171,11 @@ def get_author_emails(submission_id,term):
 	authors = submission.author.all()
 	results = []
 	for author in authors:
-		name=author.full_name()
+		name=author.profile.full_name()
 		author_json = {}
 		author_json['id'] = author.id
-		author_json['label'] = author.full_name()
-		author_json['value'] = author.author_email
+		author_json['label'] = author.profile.full_name()
+		author_json['value'] = author.email
 		if term:
 			if term.lower() in name.lower():
 				results.append(author_json)
@@ -548,7 +548,7 @@ def send_decision_ack(book, decision, email_text, attachment=None):
 			'decision':decision,
 		}
 
-		email.send_email('Submission decision update: %s'% decision_full, context, from_email.value, author.author_email, email_text, book=book, attachment=attachment)
+		email.send_email('Submission decision update: %s'% decision_full, context, from_email.value, author.email, email_text, book=book, attachment=attachment)
 
 # Email Handlers - TODO: move to email.py?
 def send_production_editor_ack(book, editor, email_text, attachment=None):

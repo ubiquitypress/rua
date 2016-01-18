@@ -14,9 +14,9 @@ from django.views.decorators.http import require_POST
 from jfu.http import upload_receive, UploadResponse, JFUResponse
 from django.contrib.auth.models import User
 from submission import forms
-from core import models as core_models, log, task, logic as core_logic
+from core import models as core_models, log, task, logic as core_logic, forms as core_forms
 from submission import logic, models as submission_models
-from manager import forms as manager_forms
+from manager import forms as manager_forms,logic as manager_logic
 from  __builtin__ import any as string_any
 
 import mimetypes as mime
@@ -63,7 +63,7 @@ def start_submission(request, book_id=None):
 
 			if not book_id and book:
 				if book.book_type == 'monograph':
-					logic.copy_author_to_submission(request.user, book)
+					book.author.add(request.user)
 				elif book.book_type == 'edited_volume':
 					logic.copy_editor_to_submission(request.user, book)
 			return redirect(reverse('submission_two', kwargs={'book_id': book.id}))
@@ -281,35 +281,68 @@ def submission_five(request, book_id):
 def author(request, book_id, author_id=None):
 	book = get_object_or_404(core_models.Book, pk=book_id, owner=request.user)
 
+	active = 'add'
+
 	if author_id:
 		if book.author.filter(pk=author_id).exists():
-			author = get_object_or_404(core_models.Author, pk=author_id)
-			author_form = forms.AuthorForm(instance=author)
+			active = 'edit'
+			author = get_object_or_404(User, pk=author_id)
+			user_form = core_forms.FullUserProfileForm(instance=author)
+			profile_form = core_forms.ProfileForm(instance=author.profile)
 		else:
 			return HttpResponseForbidden()
 	else:
+		active = 'add'
 		author = None
-		author_form = forms.AuthorForm()
+		user_form = core_forms.FullUserProfileForm()
+		profile_form = core_forms.ProfileForm()
+
 
 	if request.method == 'POST':
-		if author:
-			author_form = forms.AuthorForm(request.POST, instance=author)
-		else:
-			author_form = forms.AuthorForm(request.POST)
-		if author_form.is_valid():
-			author = author_form.save(commit=False)
-			if not author.sequence:
-				author.sequence = 1
-			author.save()
+		user_form = core_forms.FullUserProfileForm(request.POST)
+		profile_form = core_forms.ProfileForm(request.POST, request.FILES)
+		if profile_form.is_valid() and user_form.is_valid():
+			user = user_form.save()
+
+			if 'new_password' in request.POST:
+				new_pass = manager_logic.generate_password()
+				user.set_password(new_pass)
+				messages.add_message(request, messages.SUCCESS, 'New user %s, password set to %s.' % (user.username, new_pass))
+
+			user.save()
+
+			profile = profile_form.save(commit=False)
+			profile.user = user
+			profile.save()
+
+			author_role = get_object_or_404(core_models.Role, name="Author")
+			profile.roles.add(author_role)
+
+			for interest in profile.interest.all():
+				profile.interest.remove(interest)
+
+			for interest in request.POST.get('interests').split(','):
+				new_interest, c = core_models.Interest.objects.get_or_create(name=interest)
+				profile.interest.add(new_interest)
+
+			profile.save()
+			
 			if not author_id:
-				book.author.add(author)
+				print "Added user"
+				book.author.add(user)
+				book.save()
+			else:
+				print "Didn't add"
 
 			return redirect(reverse('submission_four', kwargs={'book_id': book.id}))
 
+
 	template = "submission/author.html"
 	context = {
-		'author_form': author_form,
+		'profile_form' : profile_form,
+		'user_form': user_form,
 		'book': book,
+		'active': active,
 	}
 
 	return render(request, template, context)

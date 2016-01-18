@@ -9,17 +9,17 @@
 		<th width="20%">Email</th>
 	</tr>
 	<tr>
-		<td>{{ author.first_name }} {% if author.middle_name %}{{ author.middle_name}} {% endif %}{{ author.last_name }}</td>
-		<td>{{ author.institution }}</td>
-		<td>{{ author.department }}</td>
-		<td>{{ author.country }}</td>
-		<td>{{ author.author_email }}</td>
+		<td>{{ author.first_name }} {% if author.profile.middle_name %}{{ author.profile.middle_name}} {% endif %}{{ author.last_name }}</td>
+		<td>{{ author.profile.institution }}</td>
+		<td>{{ author.profile.department }}</td>
+		<td>{{ author.profile.country }}</td>
+		<td>{{ author.email }}</td>
 	</tr>
 	<tr>
 		<th colspan="5">Biography</th>
 	</tr>
 	<tr>
-		<td colspan="5">{{ author.biography|safe }}</td>
+		<td colspan="5">{{ author.profile.biography|safe }}</td>
 	</tr>
 	<tr>
 		<th width="25%" colspan="2">ORCiD</th>
@@ -29,9 +29,9 @@
 	</tr>
 	<tr>
 		<td colspan="2">{{ author.orcid }}</td>
-		<td>{{ author.twitter }}</td>
-		<td>{{ author.facebook }}</td>
-		<td>{{ author.linkedin }}</td>
+		<td>{{ author.profile.twitter }}</td>
+		<td>{{ author.profile.facebook }}</td>
+		<td>{{ author.profile.linkedin }}</td>
 	</tr>
 	</table>
 </div>
