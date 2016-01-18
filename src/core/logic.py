@@ -85,10 +85,10 @@ def book_to_mark21_file(book,owner, xml = False):
 	authors = book.author.all()
 	author_names=''
 	for author in authors:
-		auhtor_names=author_names+author.full_name()+' '
+		auhtor_names=author_names+author.profile.full_name()+' '
 		name=author.last_name+', '+author.first_name
-		if author.middle_name:
-			name=name+' '+author.middle_name[:1]+'.'
+		if author.profile.middle_name:
+			name=name+' '+author.profile.middle_name[:1]+'.'
 		record.add_field(record_field('100',['1','#'],['a', name]))
 
 	#Title statement

@@ -220,7 +220,7 @@ class Book(models.Model):
 		if self.book_type == 'monograph':
 			for author in self.author.all():
 				if author.middle_name:
-					authors_or_editors.append("%s %s %s" % (author.first_name, author.middle_name, author.last_name))
+					authors_or_editors.append("%s %s %s" % (author.first_name, author.profile.middle_name, author.last_name))
 				else:
 					authors_or_editors.append("%s %s" % (author.first_name, author.last_name))
 		elif self.book_type == 'edited_volume':
