@@ -72,8 +72,6 @@ def start_submission(request, book_id=None):
 	context = {
 		'book_form': book_form,
 		'checklist_form': checklist_form,
-		'suggested_reviewers': core_models.Setting.objects.get(name='suggested_reviewers').value,
-		'suggested_reviewers_guide': core_models.Setting.objects.get(name='suggested_reviewers_guide').value,
 		'book': book,
 		'active': 1,
 	}
