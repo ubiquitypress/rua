@@ -5,6 +5,7 @@
 {% block title %}Contract Manager{% endblock %}
 {% block button %} <a href="{% url 'editor_submission' submission.id  %}" class="btn  btn-transparent-white" style="position: absolute;right:20;margin-top:-4px">Go back</a>{% endblock button %}
 
+  
 {% block page-title %} Contract Manager {% endblock %}
  {% block page-content %}
 
@@ -41,7 +42,7 @@
       <td colspan="4">{% if submission.contract.notes %}{{ submission.contract.notes }}{% else %}No notes entered{% endif %}</td>
     </tr>
   </table> </br>
-  <h3><span class="label label-task">&nbsp;&nbsp;&nbsp;&nbsp;Files&nbsp; &nbsp;&nbsp;   &nbsp;&nbsp; &nbsp;   </span></h3>
+  <h3><span class="label label-task">&nbsp;&nbsp;&nbsp;Files&nbsp; &nbsp;&nbsp;   &nbsp;&nbsp; &nbsp;   </span></h3>
   <table class="table table-condensed table-striped">
       <tr>
       <td>Editor File</td>
@@ -52,10 +53,10 @@
       <td>{% if submission.contract.author_file %}<a href="{% url 'serve_file' submission.id submission.contract.author_file.id %}" class="btn btn-task" ><i class="fa fa-cloud-download"> &nbsp; Download</i></a>{% else %}No file uploaded{% endif %}</td>
     </tr>
   </table>
+</div>
   {% else %}
   {% include "editor/contract/new_contract_form.html" %}
   {% endif %}
-  </div>
 {% endblock %}
 
 {% block js %}

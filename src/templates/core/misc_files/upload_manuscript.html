@@ -7,6 +7,11 @@
 
 {% block css %}
 	<link href="{% static "css/timeline.css" %}" rel="stylesheet">
+       <style type="text/css">
+    body {
+        overflow:hidden;
+    } 
+    </style>
 {% endblock %}
 
 {% block body %}
@@ -15,7 +20,7 @@
       <h3>  {% if submission.prefix %}{{ submission.prefix|title }}: {% endif %}{{ submission.title|title }}</h3>
 
 </div>
-	 <div class="col-md-3 dash-left grey-container">
+	 <div class="col-md-3 dash-left grey-container bottom-space">
 
          <div class="dash-container" >
             <h4 class="header-text">  {% if submission.prefix %}{{ submission.prefix }} {% endif %}{{ submission.title }}</h4> 
@@ -61,6 +66,11 @@
             <h5>Submission Details <i class="fa fa-chevron-right pull-right"></i></h5>
         </div>
         </a>
+          <a href="{% url 'editor_notes' submission.pk %}">
+        <div class="dash-menu {%ifequal active_page 'notes' %}current{% endifequal %}">
+            <h5>Notes <i class="fa fa-chevron-right pull-right"></i></h5>
+        </div>
+        </a>
         {% if submission.stage.review %}
         <a href="{% url 'editor_review' submission.pk %}">
         <div class="dash-menu {%ifequal active_page 'editor_review' %}current{% endifequal %}">
@@ -94,7 +104,7 @@
         </a>
         {% include "editor/snippets/available_actions.html" %}
     </div>
-    <div class="col-md-9 dash-center" style="margin-top:-10px">
+    <div class="col-md-9 dash-center bottom-space" style="margin-top:-10px">
     </br>
 
     	<div class="col-md-12 file-heading container-fluid">

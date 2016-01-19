@@ -82,6 +82,11 @@
             <h5>Submission Details <i class="fa fa-chevron-right pull-right"></i></h5>
         </div>
         </a>
+          <a href="{% url 'editor_notes' submission.pk %}">
+        <div class="dash-menu {%ifequal active_page 'notes' %}current{% endifequal %}">
+            <h5>Notes <i class="fa fa-chevron-right pull-right"></i></h5>
+        </div>
+        </a>
         {% if submission.stage.review %}
         <a href="{% url 'editor_review' submission.pk %}">
         <div class="dash-menu {%ifequal active_page 'editor_review' %}current{% endifequal %}">
