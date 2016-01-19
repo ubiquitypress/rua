@@ -4,7 +4,8 @@
     "value": "The Press!",
     "group": 1,
     "name": "press_name",
-    "types": "char"
+    "types": "char",
+    "description": null
   },
   "model": "core.setting",
   "pk": 1
@@ -14,7 +15,8 @@
     "value": "<p>Footer</p>",
     "group": 1,
     "name": "footer",
-    "types": "rich_text"
+    "types": "rich_text",
+    "description": null
   },
   "model": "core.setting",
   "pk": 2
@@ -24,7 +26,8 @@
     "value": "<h4>SUBMISSION PREPARATION CHECKLIST</h4><p>As part of the submission process, authors are required to check off their submission's compliance with all of the following items, and submissions may be returned to authors that do not adhere to these guidelines.</p><ul><li>The submission has not been previously published, nor is it before another press for consideration (or an explanation has been provided in Comments to the Editor).</li><li><span style=\"line-height: 1.42857;\">The submission file is in the Microsoft Word, RTF, OpenDocument, or WordPerfect file format.</span></li><li><span style=\"line-height: 1.42857;\">Where available, URLs for the references have been provided.</span></li><li><span style=\"line-height: 1.42857;\">The text is single-spaced; uses a 12-point font; employs italics, rather than underlining (except with URL addresses); and all illustrations, figures, and tables are placed within the text at the appropriate points, rather than at the end.</span></li><li><span style=\"line-height: 1.42857;\">The text adheres to the stylistic and bibliographic requirements outlined in the Author Guidelines, which is found in About the Press.</span></li></ul><h4>PRIVACY STATEMENT</h4><p>The names and email addresses entered in this press site will be used exclusively for the stated purposes of this press and will not be made available for any other purpose or to any other party.</p>",
     "group": 1,
     "name": "submission_guidelines",
-    "types": "rich_text"
+    "types": "rich_text",
+    "description": null
   },
   "model": "core.setting",
   "pk": 3
@@ -34,17 +37,19 @@
     "value": "<p>This is a description block where information about this press can be entered. This text block should be replace with text pulled from a database setting at some point, though for now I don't really need it to.</p>\r\n<p>This press has some specialities like publishing Alien Autopsy reports and April Fools reviews</p><p>BOOYA!</p>",
     "group": 1,
     "name": "description",
-    "types": "rich_text"
+    "types": "rich_text",
+    "description": null
   },
   "model": "core.setting",
   "pk": 4
 },
 {
   "fields": {
-    "value": "Dear {{review.user.profile.salutation_name}},\r\n\r\nAfter peer review, we have reached a decision regarding your book submission, \u2018{{book.title}}\u2019 to {{press_name}}. Our decision is to request some revisions of the book content prior to editorial acceptance.\r\n\r\nA summary of the requested edits from the editorial team can be found below. Comments regarding specific parts of the manuscript can also be found in the attached document [DELETE IF NOT APPROPRIATE].Please consider these points and revise the proposal details accordingly:\r\n\r\nEditorial Revision Requests:\r\nMajor revisions:\r\n[XXXX EDITOR TO INSERT LIST OF MAJOR REVISIONS HERE, IF ANY XXXX]\r\n\r\nMinor revisions:\r\n[XXXX EDITOR TO INSERT LIST OF MINOR REVISIONS HERE, IF ANY XXXX]\r\n\r\n\r\nYou can access the book details and submit your revisions via the book management system: {{base_url}}/author/submission/{{book.pk}}/revisions/{{review.pk}}/\r\n\r\nShould you disagree with any of these requests, or have any questions, then please get in touch and we can discuss the options available.\r\n\r\nPlease could you have the revisions submitted by {{review.due}}. If you cannot make this deadline, please let us know as early as possible.\r\n\r\nKind regards,\r\n\r\n{{sender.first_name}}\r\n{% if sender %}{{ sender.profile.signature|safe }}{% endif %}",
+    "value": "<p>Dear {{ review.user.first_name }} {{ review.user.last_name }},\r\n</p><p>\r\n__YOUR_MESSAGE_HERE__\r\n\r\nPlease log into the press web site to indicate whether you will undertake the review or not, as well as to access the submission and to record your review and recommendation.\r\n\r\nThe review itself is due {{ review.due }}.</p><p>\r\n\r\nThe Author has requested that this review be {{book.get_review_type_display}}.\r\n</p><p>\r\nPlease notify us if you intend to undertake the review by clicking this link: {{ decision_url }}\r\n</p><p>\r\nThank you for considering this request.\r\n</p><p>\r\nSincerely,</p><p>\r\nPress Team</p><p>{% if sender %}{{ sender.profile.signature|safe }}{% endif %}<br></p><p>\r\n</p>",
     "group": 3,
     "name": "review_request",
-    "types": "rich_text"
+    "types": "rich_text",
+    "description": null
   },
   "model": "core.setting",
   "pk": 5
@@ -54,7 +59,8 @@
     "value": "abp",
     "group": 1,
     "name": "accronym",
-    "types": "char"
+    "types": "char",
+    "description": null
   },
   "model": "core.setting",
   "pk": 6
@@ -64,7 +70,8 @@
     "value": "localhost:8000",
     "group": 1,
     "name": "base_url",
-    "types": "text"
+    "types": "text",
+    "description": null
   },
   "model": "core.setting",
   "pk": 7
@@ -74,17 +81,19 @@
     "value": "main@localhost.com",
     "group": 3,
     "name": "from_address",
-    "types": "rich_text"
+    "types": "rich_text",
+    "description": null
   },
   "model": "core.setting",
   "pk": 8
 },
 {
   "fields": {
-    "value": "Dear {{review.user.profile.salutation_name}},\r\n\r\nYou have been recommended as a potential peer reviewer for a book submitted to {{press_name}}. The book has been provisionally titled '{{book.title}}\u2019. The contents to review covers the below subject:\r\n\u2028{{book.description}}\r\n\u00a0\r\nAs part of the editorial process with all {{press_name}} publications, books are reviewed according to the following general principles: 1) conclusions are presented in an appropriate fashion and are supported by the data, 2) that the manuscript is presented in an intelligible fashion, and 3) that the Foreword and Epilogue tie in with the book contents well. We aim to publish books that are solid works of scholarship, irrespective of potential 'impact'.\r\n\u00a0\r\nThe text is available now for review / will be available from [add start date] [DELETE AS APPROPRIATE]. If you would like to accept or decline this invitation simply click the link below and select the appropriate option. If accepting the invitation you will then have full access to the review files and peer review details.\r\n\r\n{{decision_url}}\r\n\r\nWe are aiming to have the review completed by {{review.due}}, therefore\u00a0please\u00a0consider whether this would be possible if accepting the invitation. If you require a different schedule then please let me know.\r\n\u00a0\r\nThank you for considering this request. As always, the efforts of all peer reviewers are greatly appreciated. If you are unable to undertake this review, we would greatly appreciate any thoughts you might have on others who we might approach. \r\n\u00a0\r\nMany thanks for your time and consideration of this invitation,\r\n\u00a0\r\nKind regards,\r\n\r\n{{sender.first_name}}\r\n{% if sender %}{{ sender.profile.signature|safe }}{% endif %}",
+    "value": "Dear {{ review.user.first_name }} {{ review.user.last_name }},\r\n<br><br>__YOUR_MESSAGE_HERE__\r\n\r\nPlease log into the press web site to indicate whether you will undertake the review or not, as well as to access the submission and to record your review and recommendation.\r\n<br><br>The review itself is due {{ review.due }}.\r\n\r\nReview URL: {{ review_url }}\r\n<br><br>Thank you for considering this request.\r\n<br><br>Sincerely,\r\nPress Team\r\n",
     "group": 3,
     "name": "external_review_request",
-    "types": "rich_text"
+    "types": "rich_text",
+    "description": null
   },
   "model": "core.setting",
   "pk": 9
@@ -94,7 +103,8 @@
     "value": "If you have any suggestions about who could review this book, please add them here. Please ensure you include a current, active, email address.",
     "group": 1,
     "name": "review_suggestions",
-    "types": "rich_text"
+    "types": "rich_text",
+    "description": null
   },
   "model": "core.setting",
   "pk": 11
@@ -104,27 +114,30 @@
     "value": "on",
     "group": 1,
     "name": "ci_required",
-    "types": "boolean"
+    "types": "boolean",
+    "description": "Select to make Competing Interests a required field. Deselect to make it an optional field."
   },
   "model": "core.setting",
   "pk": 12
 },
 {
   "fields": {
-    "value": "Dear {{review.user.profile.salutation_name}},\r\n\r\nYou have been recommended as a potential reviewer for a book proposal submitted to {{press_name}}. The proposal has been provisionally titled '{{book.title}}\u2019. \r\n\u00a0\r\nAll books proposed to {{press_name}} are reviewed prior to full submission. We are therefore looking for an expert in this field to comment on the content of the proposal. In general, we are looking for a brief comment on the following principals: 1) are there any significant weaknesses/errors included in the book details?, 2) is there a need for such a book/would researchers find this useful?, and 3) are there suggestions on how the book content could be improved? We aim to publish books that are solid works of scholarship, irrespective of potential 'impact'.\r\n\u00a0\r\nThe proposal details are available now for review. Please accept or decline this invitation by clicking the link below and select the appropriate option. If accepting the invitation you will then have full access to the proposal details.\r\n\r\n{{review_url}}\r\n\r\nWe are aiming to have the proposal review completed by {{review.due}}, therefore\u00a0please\u00a0consider whether this would be possible if accepting the invitation. If you require a different schedule then please let me know.\r\n\u00a0\r\nThank you for considering this request. As always, the efforts of all reviewers are greatly appreciated. If you are unable to undertake this review, we would greatly appreciate any thoughts you might have on others who we might approach. \r\n\u00a0\r\nMany thanks for your time and consideration of this invitation,\r\n\u00a0\r\nKind regards,\r\n{% if proposal.requestor %}\r\n{{proposal.requestor.first_name}}\r\n{% else %}\r\n{{press_name}}\r\n{% endif %}",
+    "value": "Test",
     "group": 3,
     "name": "proposal_review_request",
-    "types": "rich_text"
+    "types": "rich_text",
+    "description": null
   },
   "model": "core.setting",
   "pk": 13
 },
 {
   "fields": {
-    "value": "Dear {{submission.owner.profile.salutation_name}},\r\n\r\nI have uploaded the most recent version of the contract to our editorial system. Please could you log into your account to review the details and sign off the document. If you would like to discuss any of the clauses prior to signing it off then please let me know.\r\n\r\nKind regards,\r\n\r\n{{sender.first_name}}\r\n{% if sender %}{{ sender.profile.signature|safe }}{% endif %}",
+    "value": "Dear {{submission.owner.first_name}} {{submission.owner.last_name}},\r\n<br><br>A contract has been uploaded by the Editor for you to review. Please login using the link below to review and sign off the contract.\r\n\r\n{{base_url}}/user/submission/{{submission.id}}\r\n\r\n<br><br>Regards<br>{% if sender %}{{ sender.profile.signature|safe }}{% endif %}<br>",
     "group": 3,
     "name": "contract_author_sign_off",
-    "types": "rich_text"
+    "types": "rich_text",
+    "description": null
   },
   "model": "core.setting",
   "pk": 14
@@ -134,17 +147,19 @@
     "value": "14",
     "group": 5,
     "name": "remind_unaccepted_reviews",
-    "types": "number"
+    "types": "number",
+    "description": null
   },
   "model": "core.setting",
   "pk": 15
 },
 {
   "fields": {
-    "value": "Dear {{review.user.profile.salutation_name}},\r\n\r\nJust a gentle reminder of our request for your review of the submission, \"\"{{book.title}},\"\" to {{press_name}}. This email has been sent because we have not had a response from our initial invitation, sent on /original sent date/.\r\n\r\nPlease could you use the below link to indicate whether you would are able to accept this invitation, or decline the offer\r\nSubmission URL: {{base_url}}/review/{{review.review_type}}/{{review.review_round.round_number}}/assignment/{{review.pk}}/decision/\r\n\r\nWe are aiming to have the review completed by {{review.due}}, therefore\u00a0please\u00a0consider whether this would be possible if accepting the invitation. If you require a different schedule then please let me know.\r\n\u00a0\r\nThank you for considering this request. As always, the efforts of all peer reviewers are greatly appreciated. If you are unable to undertake this review, we would greatly appreciate any thoughts you might have on others who we might approach. \r\n\u00a0\r\nMany thanks for your time and consideration of this invitation,\r\n\u00a0\r\nKind regards,\r\n\r\n{{sender.first_name}}\r\n{% if sender %}{{ sender.profile.signature|safe }}{% endif %}",
+    "value": "<p>Dear {{review.user.profile.salutation}} {{review.user.last_name}},\r\n</p><p>\r\nThis is a gentle reminder that we requested you review a book for us called {{book.title}}. </p><p>This review is due to be completed by {{review.due:date\"c\"}}. </p><p>If you are unable to undertake this review, please let us know.\r\n</p><p>\r\nRegards,</p>",
     "group": 3,
     "name": "unaccepted_reminder",
-    "types": "rich_text"
+    "types": "rich_text",
+    "description": null
   },
   "model": "core.setting",
   "pk": 16
@@ -154,17 +169,19 @@
     "value": "7",
     "group": 5,
     "name": "remind_accepted_reviews",
-    "types": "number"
+    "types": "number",
+    "description": null
   },
   "model": "core.setting",
   "pk": 17
 },
 {
   "fields": {
-    "value": "Dear {{review.user.profile.salutation_name}},\r\n\r\nThis is a quick email to see if the review for {{book.title}} is on target to meet the agreed deadline of  {{review.due|date:\"\"c\"\"}}. If getting the review back to us by this date is looking unlikely, please could you get in touch at your earliest convenience?\r\n\r\nMany thanks,\r\n\r\n{{sender.first_name}}\r\n{% if sender %}{{ sender.profile.signature|safe }}{% endif %}",
+    "value": "Dear {{review.user.profile.salutation}} {{review.user.last_name}},\r\n<br><br>This is a gentle reminder that you agreed to review a book for us called {{book.title}}. This review is due to be completed by {{review.due|date:\"c\"}}. If you are unable to undertake this review, please let us know.\r\n<br><br>Regards,<br>{% if sender %}{{ sender.profile.signature|safe }}{% endif %}<br>",
     "group": 3,
     "name": "accepted_reminder",
-    "types": "rich_text"
+    "types": "rich_text",
+    "description": null
   },
   "model": "core.setting",
   "pk": 18
@@ -174,17 +191,19 @@
     "value": "5",
     "group": 5,
     "name": "remind_overdue_reviews",
-    "types": "number"
+    "types": "number",
+    "description": null
   },
   "model": "core.setting",
   "pk": 19
 },
 {
   "fields": {
-    "value": "Dear {{review.user.profile.salutation_name}},\r\n\r\nWould you be able to provide an update of your peer review for the book submission \u2018{{book.title}}\u2019? The initial deadline of {{review.due}} has now passed. If there will be a delay in submitting this review, or you will not be able to complete the review, please could you contact me so that a new schedule can be confirmed.\r\n\r\nYou can access the review files and complete the review using the below link:\r\n\r\nReview URL: {{base_url}}/{{review.review_type}}/{{review.review_round.round_number}}/assignment/{{review.pk}}/decision/\r\n\r\nI look forward to hearing from you.\r\n\r\n{{press_name}}",
+    "value": "<p>Dear {{review.user.profile.salutation}} {{review.user.last_name}},</p><p><br></p><p>This is a gentle reminder that you agreed to review a book for us called {{book.title}}. </p><p>This review is overdue, we requested that the review be completed by {{review.due|date:\"c\"}}. </p><p>If you are unable to undertake this review, please let us know.\r\n</p><p><br></p><p>\r\nRegards,</p>",
     "group": 3,
     "name": "overdue_reminder",
-    "types": "rich_text"
+    "types": "rich_text",
+    "description": null
   },
   "model": "core.setting",
   "pk": 20
@@ -194,17 +213,19 @@
     "value": "1",
     "group": 1,
     "name": "proposal_form",
-    "types": "number"
+    "types": "number",
+    "description": null
   },
   "model": "core.setting",
   "pk": 21
 },
 {
   "fields": {
-    "value": "Dear {{book.owner.profile.salutation_name}},\r\n\r\nYou have been recommended as a potential peer reviewer for a book submitted to {{press_name}}. The book has been provisionally titled '{{book.title}}\u2019. The contents to review covers the below subject:\r\n\u2028{{book.description}}\r\n\u00a0\r\nAs part of the editorial process with all {{press_name}} publications, books are reviewed according to the following general principles: 1) conclusions are presented in an appropriate fashion and are supported by the data, 2) that the manuscript is presented in an intelligible fashion, and 3) that the Foreword and Epilogue tie in with the book contents well. We aim to publish books that are solid works of scholarship, irrespective of potential 'impact'.\r\n\u00a0\r\nThe text is available now for review / will be available from [add start date] [DELETE AS APPROPRIATE]. If you would like to accept or decline this invitation simply click the link below and select the appropriate option. If accepting the invitation you will then have full access to the review files and peer review details.\r\n\r\n{{revision_url}}\r\n\r\nWe are aiming to have the review completed by {{revision.due}}, therefore\u00a0please\u00a0consider whether this would be possible if accepting the invitation. If you require a different schedule then please let me know.\r\n\u00a0\r\nThank you for considering this request. As always, the efforts of all peer reviewers are greatly appreciated. If you are unable to undertake this review, we would greatly appreciate any thoughts you might have on others who we might approach. \r\n\u00a0\r\nMany thanks for your time and consideration of this invitation,\r\n\u00a0\r\nKind regards,\r\n\r\n{{sender.first_name}}\r\n{% if sender %}{{ sender.profile.signature|safe }}{% endif %}",
+    "value": "<p>Dear {{ revision.book.owner.first_name }} {{ revision.book.owner.last_name }},\r\n</p><p>\r\nWe think you should undertake some revisions to this article before it moves forward.\r\n</p><p>\r\nYou can submit revisions here: {{ revision_url }}\r\n</p><p>\r\nRegards,\r\n\r\n</p>",
     "group": 3,
     "name": "request_revisions",
-    "types": "rich_text"
+    "types": "rich_text",
+    "description": null
   },
   "model": "core.setting",
   "pk": 22
@@ -214,27 +235,30 @@
     "value": "14",
     "group": 5,
     "name": "revisions_reminder",
-    "types": "number"
+    "types": "number",
+    "description": null
   },
   "model": "core.setting",
   "pk": 23
 },
 {
   "fields": {
-    "value": "Dear {{review.user.profile.salutation_name}},\r\n\r\nWould you be able to provide an update on how the revisions are going for you book submission \u2018{{book.title}}\u2019? The initial deadline of /revisions deadline/  has now passed. If there will be a further delay in submitting the revisions, please could you contact me so that a new schedule can be confirmed. This will ensure that processes further down the line do not experience delays.\r\n\r\nYou can access the files for revision and resubmit them using the below link:\r\n\r\nSubmission URL: /revisions url/\r\n\r\nI look forward to hearing from you.\r\n\r\nKind regards,\r\n\r\n{{sender.first_name}}\r\n{% if sender %}{{ sender.profile.signature|safe }}{% endif %}",
+    "value": "<p>Dear {{review.user.profile.salutation}} {{review.user.last_name}},\r\n</p><p>\r\nThis is a gentle reminder that we requested you submit revisions for your book, {{book.title}}. </p><p>This revisions were due to be completed by {{review.due}}\r\n</p><p>\r\nRegards,</p>",
     "group": 3,
     "name": "revisions_reminder_email",
-    "types": "rich_text"
+    "types": "rich_text",
+    "description": null
   },
   "model": "core.setting",
   "pk": 24
 },
 {
   "fields": {
-    "value": "Dear {{copyedit.copyeditor.profile.salutation_name}},\r\n\r\n{{press_name}} have a book project requiring copyediting and wondered if you are available to take on the task. The book will be available for copyediting around [ADD DATE HERE] and will be roughly [ADD WORD COUNT HERE]. The book will be on the subject of [ADD BOOK DETAILS HERE]. Ideally, we would be looking for the copyedited files to be returned by {{copyedit.due}}.\r\n\r\nPlease could you confirm whether you or not you can accept this invitation by clicking the link below and marking your decision accordingly?\r\n\r\n{{base_url}}/tasks/copyedit/{{copyedit.pk}}/\r\n\r\nIf you need more details, would like to discuss the content or the deadline then please let me know.\r\n\r\nKind regards,\r\n\r\n{{sender.first_name}}\r\n{% if sender %}{{ sender.profile.signature|safe }}{% endif %}",
+    "value": "Dear {% if copyedit.copyeditor.profile.salutation %}{{copyedit.copyeditor.profile.salutation}}{% else %}{{copyedit.copyeditor.first_name}}{% endif %} {{copyedit.copyeditor.last_name}},\r\n<br><br>This is a request that you undertake copyediting on {{submission.title}}. Please login to the BMS, you will be directed to undertake your copyedit from the user dashboard.\r\n<br><br>Your username is: {{copyedit.copyeditor.username}}\r\n<br><br>Copyedits are requested to be completed by: {{copyedit.due}}.\r\n<br><br>Regards<br>{% if sender %}{{ sender.profile.signature|safe }}{% endif %}<br>",
     "group": 3,
     "name": "copyedit_request",
-    "types": "rich_text"
+    "types": "rich_text",
+    "description": null
   },
   "model": "core.setting",
   "pk": 25
@@ -244,17 +268,19 @@
     "value": "Hello Mr. Copyeditor. Please undertake this copyedit. You can download the files below and please upload the completed ones. If you have feedback for the Editor/Author fill in the notes box and this will be presented to both.<p></p>",
     "group": 1,
     "name": "copyedit_instructions",
-    "types": "rich_text"
+    "types": "rich_text",
+    "description": null
   },
   "model": "core.setting",
   "pk": 26
 },
 {
   "fields": {
-    "value": "Dear{{ submission.owner.profile.salutation_name }} ,\r\n\r\nYour book submission {{book.title}} has now completed our copyediting stage and is available for your final review and sign off prior to typesetting. You should be able to log into the editorial system using the below details to access the file, which will show edits via \u2018tracked changes\u2019 and also any questions that the copyeditor may have directed to you.\r\n\r\nPlease can you now review this file and accept all changes or detail your additional edits. When you are happy with the content then please upload the files back to the editorial system. \r\n\r\nPlease note that this is the last opportunity to make changes to the content of the book. The proofreading stage that follows the preparation of the galley proofs is restricted to correcting typographical and layout errors only, and not a further round of editorial changes.\r\n\r\nIf you are unable to undertake this work or have any questions, please contact me. Otherwise, please could you return the files, with any necessary feedback.\r\n\r\nKind regards,\r\n\r\n{{sender.first_name}}\r\n{% if sender %}{{ sender.profile.signature|safe }}{% endif %}",
+    "value": "<p>Dear {{ submission.owner.first_name }} {{ submission.owner.last_name }},\r\n<br><br>The copyeditor has completed their work. You can login and review the copyedits now.\r\n<br></p><p>Regards,<br>{% if sender %}{{ sender.profile.signature|safe }}{% endif %}<br></p>",
     "group": 3,
     "name": "author_copyedit_request",
-    "types": "rich_text"
+    "types": "rich_text",
+    "description": null
   },
   "model": "core.setting",
   "pk": 27
@@ -264,17 +290,19 @@
     "value": "<p>The Editor has requested that you approve some copyediting.</p>",
     "group": 1,
     "name": "copyedit_author_instructions",
-    "types": "rich_text"
+    "types": "rich_text",
+    "description": null
   },
   "model": "core.setting",
   "pk": 28
 },
 {
   "fields": {
-    "value": "Dear {{index.indexer.profile.salutation_name}},\r\n\r\n{{press_name}} have a book project requiring index creation and wondered if you are available to take on the task. The book files will be available around [ADD DATE HERE] and will be roughly [ADD WORD COUNT/PAGE COUNT HERE]. The book will be on the subject of [ADD BOOK DETAILS HERE]. Ideally, we would be looking for an embedded index to be created and returned by {{index.due}}.\r\n\r\nPlease could you confirm whether you or not you can accept this invitation by clicking the link below and marking your decision accordingly?\r\n\r\n{{base_url}}/tasks/indexing/{{index.pk}}/\r\n\r\nIf you need more details, would like to discuss the content or the deadline then please let me know.\r\n\r\nKind regards,\r\n\r\n{{sender.first_name}}\r\n{% if sender %}{{ sender.profile.signature|safe }}{% endif %}",
+    "value": "Dear {% if index.indexer.profile.salutation %}{{index.indexer.profile.salutation}}{% else %}{{index.indexer.first_name}}{% endif %} {{index.indexer.last_name}},\r\n<br><br>This is a request that you undertake copyediting on {{submission.title}}. Please login to the BMS, you will be directed to undertake your copyedit from the user dashboard.<br><br>Your username is: {{index.indexer.username}}<br><br>Copyedits are requested to be completed by: {{index.due}}.\r\n<br><br>Regards",
     "group": 3,
     "name": "index_request",
-    "types": "rich_text"
+    "types": "rich_text",
+    "description": null
   },
   "model": "core.setting",
   "pk": 29
@@ -284,17 +312,19 @@
     "value": "<p>Please do some great indexing. Lots of love, Andy.</p>",
     "group": 1,
     "name": "index_instructions",
-    "types": "rich_text"
+    "types": "rich_text",
+    "description": null
   },
   "model": "core.setting",
   "pk": 30
 },
 {
   "fields": {
-    "value": "Dear {{typeset.typesetter.profile.salutation_name}},\r\n\r\nThe proofing comments for book.title {{submission.title}} have now been submitted. These can be accessed via the book management system. Please could these edits be made and the files returned to me?\r\n\r\nPlease could this be completed by {{typeset.due}}? If this will not be possible please let me know and we can try to re-schedule.\r\n\r\nSubmission URL: {{base_url}}/tasks/typesetting/{{typeset.pk}}/\r\n\r\nThanks,\r\n\r\n{{sender.first_name}}\r\n{% if sender %}{{ sender.profile.signature|safe }}{% endif %}",
+    "value": "<p>Dear {% if typeset.typesetter.profile.salutation %}{{typeset.typesetter.profile.salutation}}{% else %}{{typeset.typesetter.first_name}}{% endif %} {{typeset.typesetter.last_name}},\r\n</p><p>\r\nThis is a request that you undertake copyediting on {{submission.title}}. </p><p>Please login to the BMS, you will be directed to undertake your copyedit from the user dashboard.\r\n\r\nYour username is: {{typeset.typesetter.username}}\r\n\r\nCopyedits are requested to be completed by: {{typeset.due}}.\r\n</p><p>\r\nRegards,</p><p>{% if sender %}{{ sender.profile.signature|safe }}{% endif %}<br></p>",
     "group": 3,
     "name": "typeset_request",
-    "types": "rich_text"
+    "types": "rich_text",
+    "description": null
   },
   "model": "core.setting",
   "pk": 31
@@ -304,17 +334,19 @@
     "value": "<p>Here are some instructions</p>",
     "group": 1,
     "name": "typeset_instructions",
-    "types": "rich_text"
+    "types": "rich_text",
+    "description": null
   },
   "model": "core.setting",
   "pk": 32
 },
 {
   "fields": {
-    "value": "Dear {{typeset.typesetter.profile.salutation_name}},\r\n\r\nThe typesetting for your book is complete and a PDF proof is now available for to download. Please review this proof to ensure that there are no errors in the layout.\r\n\r\nKindly note that this is a proofing stage, not copyediting. At this point in the process, we will correct errors that may have been introduced during typesetting. We are also happy to make corrections to small textual errors, such as spelling or grammatical mistakes. However, we will not make large edits to the text unless absolutely necessary. This is particularly important if the index is to be generated in parallel to this proofing stage, as we will then need to be mindful of pagination.\r\n\r\nIf you are generating an index at this point in the process, please provide a simple list of indexed terms to be typeset, along with the corresponding page numbers. \r\n\r\nKind regards, \r\n{{sender.first_name}}\r\n{% if sender %}{{ sender.profile.signature|safe }}{% endif %}",
+    "value": "Dear {{ submission.owner.first_name }} {{ submission.owner.last_name }},<br><br>The typesetter has completed their work. You can login and review the typeset files now.<br><br>Regards,<br><br>{% if sender %}{{ sender.profile.signature }}{% endif %}",
     "group": 3,
     "name": "author_typeset_request",
-    "types": "rich_text"
+    "types": "rich_text",
+    "description": null
   },
   "model": "core.setting",
   "pk": 33
@@ -324,67 +356,74 @@
     "value": "<p>DO SOMETHING! JUST. DO IT!<p>",
     "group": 1,
     "name": "typeset_author_instructions",
-    "types": "rich_text"
+    "types": "rich_text",
+    "description": null
   },
   "model": "core.setting",
   "pk": 34
 },
 {
   "fields": {
-    "value": "Dear {{typeset.typesetter.profile.salutation_name}},\r\n\r\nWould you be able to provide an update on how the revisions are going for you book submission \u2018{{submission.title}}\u2019? The initial deadline of /revisions deadline/ has now passed. If there will be a further delay in submitting the revisions, please could you contact me so that a new schedule can be confirmed. This will ensure that processes further down the line do not experience delays.\r\n\r\nYou can access the files for revision and resubmit them using the below link:\r\n\r\nSubmission URL: /revisions url/\r\n\r\nI look forward to hearing from you.\r\n\r\nKind regards,\r\n\r\n{{sender.first_name}}\r\n{% if sender %}{{ sender.profile.signature|safe }}{% endif %}",
+    "value": "<p>Dear {{typeset.typesetter.profile.full_name}},\r\n</p><p>\r\nDO SOME TYPESETTING PLEASE!\r\n</p><p>\r\nRegards,</p>",
     "group": 3,
     "name": "typesetter_typeset_request",
-    "types": "rich_text"
+    "types": "rich_text",
+    "description": null
   },
   "model": "core.setting",
   "pk": 35
 },
 {
   "fields": {
-    "value": "Dear {{submission.owner.profile.salutation_name}},\r\n\r\nThank you for submitting your book manuscript, {{submission.title}}, to {{press_name}}. You will be able to track its progress through the editorial process by logging in to website.\r\n\r\nYour submission will be considered by our Editorial team prior to having the text reviewed by independent peer-reviewers. Following the completion of the review, you will be contacted with feedback and an editorial decision. Our editorial team will be in touch once this process has begun.\r\n\r\nShould you have any questions regarding your book publication then please get in touch.\r\n\r\nKind regards,\r\n\r\n{{principal_contact_name}}\r\n{{press_name}}",
+    "value": "<p>Dear {{ submission.owner.first_name }} {{ submission.owner.last_name }},\r\n<br><br>Your submission has been received. An Editor will be in touch soon with the next steps.<br><br><span style=\"line-height: 1.42857;\">Regards,&nbsp;</span></p><p>{{press.general.name}}</p>",
     "group": 3,
     "name": "author_submission_ack",
-    "types": "rich_text"
+    "types": "rich_text",
+    "description": null
   },
   "model": "core.setting",
   "pk": 36
 },
 {
   "fields": {
-    "value": "This is an automated email to alert you that the following book submission has been received: {{submission.title}}, submitted by {{submission.owner.profile.full_name}}.\r\n\r\nPlease access the book management system to review this submission and process accordingly. The book details can be accessed at {{base_url}}/editor/submission/{{submission.pk}}/.",
+    "value": "<p><span style=\"line-height: 1.42857;\">A new submission has been uploaded.\r\n\r\nView the submission: http://{{base_url}}/workflow/new/{{submission.id}}\r\n<br></span></p><p><span style=\"line-height: 1.42857;\">Regards,\r\n<br><br>RUA Bot</span><br></p>",
     "group": 3,
     "name": "editor_submission_ack",
-    "types": "rich_text"
+    "types": "rich_text",
+    "description": null
   },
   "model": "core.setting",
   "pk": 37
 },
 {
   "fields": {
-    "value": "Dear {{proposal.owner.profile.salutation_name}},\r\n\r\nAfter review of your proposal to {{press.press_name}}, we have reached a decision to accept the book, \"\"{$articleTitle}\"\", for full submission and peer review. We hope that you are pleased with this news.\r\n\r\nWe will be in touch regarding the next steps of the process.\r\n\r\nKind regards,\r\n\r\n{{sender.first_name}}\r\n{% if sender %}{{ sender.profile.signature|safe }}{% endif %}",
+    "value": "<p>GO AWAY!</p><p>{% if sender %}{{ sender.profile.signature|safe }}{% endif %}<br></p>",
     "group": 3,
     "name": "proposal_accept",
-    "types": "rich_text"
+    "types": "rich_text",
+    "description": null
   },
   "model": "core.setting",
   "pk": 39
 },
 {
   "fields": {
-    "value": "Dear {{proposal.owner.profile.salutation_name}},\r\n\r\nAfter review of your proposal to {{press.press_name}}, we have reached a decision to reject the book, \"\"{$articleTitle}\"\", for full submission and peer review. A short summary of the reasons for not accepting this submission from the editorial team can be found below. We hope that you find this useful.\r\n\r\n[ADD COMMENTS ON WHY THE PROPOSAL IS BEING REJECTED]\r\n\r\nWe thank you for your submission and hope that you will consider us for a future publication.\r\n\r\nKind regards,\r\n\r\n{{sender.first_name}}\r\n{% if sender %}{{ sender.profile.signature|safe }}{% endif %}",
+    "value": "dsfff",
     "group": 3,
     "name": "proposal_decline",
-    "types": "rich_text"
+    "types": "rich_text",
+    "description": null
   },
   "model": "core.setting",
   "pk": 40
 },
 {
   "fields": {
-    "value": "Dear {{proposal.owner.profile.salutation_name}},\r\n\r\nAfter review, we have reached a decision regarding your book proposal, \u2018{{proposal.title}} {{proposal.subtitle}}\u2019 to {{press_name}}. Our decision is to request some revisions of the proposal prior to acceptance for full submission and peer review.\r\n\r\nA summary of the requested edits from the editorial team can be found below. Please consider these points and revise the proposal details accordingly:\r\n\r\nEditorial Revision Requests:\r\nMajor revisions:\r\n[XXXX EDITOR TO INSERT LIST OF MAJOR REVISIONS HERE, IF ANY XXXX]\r\n\r\nMinor revisions:\r\n[XXXX EDITOR TO INSERT LIST OF MINOR REVISIONS HERE, IF ANY XXXX]\r\n\r\n\r\nYou can access the proposal details and submit your revisions via the book management system: {{base_url}}/submission/proposal/{{proposal.pk}}/revisions/\r\n\r\nShould you disagree with any of these requests, or have any questions, then please get in touch and we can discuss the options available.\r\n\r\nPlease could you have the revisions submitted by (DUE DATE). If you cannot make this deadline, please let us know as early as possible.\r\n\r\nKind regards,\r\n\r\n{{sender.first_name}}\r\n{% if sender %}{{ sender.profile.signature|safe }}{% endif %}",
+    "value": "<p>Dear someone,\r\n</p><p>\r\nSomething something,\r\n</p><p>\r\nRegards,\r\n</p><p>\r\n{{ sender.profile.signature }}</p>",
     "group": 3,
-    "name": "proposal_request_revisions",
-    "types": "rich_text"
+    "name": "proposal_request_revisisons",
+    "types": "rich_text",
+    "description": null
   },
   "model": "core.setting",
   "pk": 41
@@ -394,7 +433,8 @@
     "value": "afea9c80-b081-42e9-99bd-a4b710e6aafc..png",
     "group": 4,
     "name": "brand_header",
-    "types": "file"
+    "types": "file",
+    "description": null
   },
   "model": "core.setting",
   "pk": 42
@@ -404,7 +444,8 @@
     "value": "0791a2db-c180-4fe5-a951-dc002ae08fd6..ico",
     "group": 4,
     "name": "favicon",
-    "types": "file"
+    "types": "file",
+    "description": null
   },
   "model": "core.setting",
   "pk": 43
@@ -414,7 +455,8 @@
     "value": "Falkirk",
     "group": 1,
     "name": "city",
-    "types": "text"
+    "types": "text",
+    "description": null
   },
   "model": "core.setting",
   "pk": 44
@@ -424,7 +466,8 @@
     "value": "<p>You must agree to the below terms in order to submit your book to this press.</p>",
     "group": 1,
     "name": "submission_checklist_help",
-    "types": "rich_text"
+    "types": "rich_text",
+    "description": null
   },
   "model": "core.setting",
   "pk": 45
@@ -434,7 +477,8 @@
     "value": "<p><span style=\"line-height: 1.42857;\">Book editors of {{submission.title}}<Submission id:{{submission.id}}> have been updated.</p>\r\n{% if added_editors %}\r\n<p>These book editors have been added: </p>\r\n--------\r\n  {% for editor in added_editors %}\r\n        {{editor.first_name}} {% if editor.middle_name %}{{editor.middle_name}} {% endif %}{{editor.last_name}}>{% if not forloop.last %}, {% endif %}\r\n\r\n    {% endfor %}\r\n----------\r\n\r\n{% endif %}\r\n{% if removed_editors %}\r\n<p>These book editors have been removed: </p>\r\n--------\r\n  {% for editor in removed_editors %}\r\n        {{editor.first_name}} {% if editor.middle_name %}{{editor.middle_name}} {% endif %}{{editor.last_name}}>{% if not forloop.last %}, {% endif %}\r\n\r\n    {% endfor %}\r\n----------\r\n{% endif %}\r\n<p> \r\nView the submission: http://{{base_url}}/editor/submission/{{submission.id}}/\r\n<br></span></p><p><span style=\"line-height: 1.42857;\">Regards,\r\n<br><br>RUA Bot</span><br></p>",
     "group": 3,
     "name": "book_editor_ack",
-    "types": "rich_text"
+    "types": "rich_text",
+    "description": null
   },
   "model": "core.setting",
   "pk": 46
@@ -444,7 +488,8 @@
     "value": "<p>Dear {{ author.full_name }} ,\r\n</p><p>\r\nWe think you should know a new decision has been made on the submission {{submission.title}}.\r\n</p><p>\r\nDecision: {% ifequal decision 'decline'%} Reject Submission {% else %}Move to {{decision|title}} {% endifequal %}\r\n</p><p>\r\nRegards,\r\n</p>",
     "group": 3,
     "name": "decision_ack",
-    "types": "rich_text"
+    "types": "rich_text",
+    "description": null
   },
   "model": "core.setting",
   "pk": 47
@@ -454,7 +499,8 @@
     "value": "placeholder",
     "group": 1,
     "name": "oai_identifier",
-    "types": "char"
+    "types": "char",
+    "description": null
   },
   "model": "core.setting",
   "pk": 48
@@ -464,7 +510,8 @@
     "value": "<p>Dear {{ review.user.first_name }} {{ review.user.last_name }},\r\n</p><p>\r\nWe think you should know that the due date of a review assignment that you assigned to has changed. </p>\r\n<p>\r\nReview id: {{review.id}}\r\nDue Date: {{review.due}}\r\n</p>\r\n<p>\r\nSincerely,</p><p>\r\nPress Team</p><p>{% if sender %}{{ sender.profile.signature|safe }}{% endif %}<br></p><p>\r\n</p>",
     "group": 3,
     "name": "review_due_ack",
-    "types": "rich_text"
+    "types": "rich_text",
+    "description": null
   },
   "model": "core.setting",
   "pk": 49
@@ -474,17 +521,19 @@
     "value": "on",
     "group": 1,
     "name": "direct_submissions",
-    "types": "boolean"
+    "types": "boolean",
+    "description": "Select to enable direct submissions. Deselect to disable direct submissions."
   },
   "model": "core.setting",
   "pk": 50
 },
 {
   "fields": {
-    "value": "on",
+    "value": "",
     "group": 1,
     "name": "suggested_reviewers",
-    "types": "boolean"
+    "types": "boolean",
+    "description": "Select to enable the suggest reviewers field during the first stage of a new submission. Deselect to disable the field."
   },
   "model": "core.setting",
   "pk": 51
@@ -494,7 +543,8 @@
     "value": "If you have any suggestions about who could review this book, please add them here. Please ensure you include a current, active, email address.",
     "group": 1,
     "name": "suggested_reviewers_guide",
-    "types": "rich_text"
+    "types": "rich_text",
+    "description": null
   },
   "model": "core.setting",
   "pk": 52
@@ -504,7 +554,8 @@
     "value": "You can supply additional info about your files to help the editors and reviewers. Your label will be displayed for the editors to see.",
     "group": 1,
     "name": "manuscript_guidelines",
-    "types": "rich_text"
+    "types": "rich_text",
+    "description": null
   },
   "model": "core.setting",
   "pk": 53
@@ -514,7 +565,8 @@
     "value": "You can supply additional info about your files to help the editors and reviewers. Your label will be displayed for the editors to see.",
     "group": 1,
     "name": "additional_files_guidelines",
-    "types": "rich_text"
+    "types": "rich_text",
+    "description": null
   },
   "model": "core.setting",
   "pk": 54
@@ -524,7 +576,8 @@
     "value": "on",
     "group": 1,
     "name": "preview_review_files",
-    "types": "boolean"
+    "types": "boolean",
+    "description": "Select to enable previewing of assignment files before accepting or declining an assignment. Deselect to disable previewing of assignment files."
   },
   "model": "core.setting",
   "pk": 55
@@ -534,7 +587,8 @@
     "value": "fake_user@fakeadress.com",
     "group": 1,
     "name": "primary_contact_email",
-    "types": "text"
+    "types": "text",
+    "description": null
   },
   "model": "core.setting",
   "pk": 56
@@ -544,7 +598,8 @@
     "value": "rua_user_first_name rua_user_last_name",
     "group": 1,
     "name": "primary_contact_name",
-    "types": "text"
+    "types": "text",
+    "description": null
   },
   "model": "core.setting",
   "pk": 57
@@ -554,7 +609,8 @@
     "value": "Declining task",
     "group": 3,
     "name": "task_decline",
-    "types": "rich_text"
+    "types": "rich_text",
+    "description": null
   },
   "model": "core.setting",
   "pk": 58
@@ -564,7 +620,8 @@
     "value": " Dear {{user.profile.full_name}},\r\nPassword reset request has been made.\r\nYour reset code is : {{reset_code}}\r\n\r\nClick this link in order to continue the password reset process: {{reset_url}}",
     "group": 3,
     "name": "reset_password",
-    "types": "rich_text"
+    "types": "rich_text",
+    "description": null
   },
   "model": "core.setting",
   "pk": 59
@@ -574,7 +631,8 @@
     "value": "Dear {{owner.profile.salutation_name}},\r\n\r\nThank you for submitting your book proposal, {{proposal.title}} {{proposal.subtitle}}, to {{press_name}}. You will be able to track its progress through the proposal review process by logging in to website.\r\n\r\nYour proposal will be considered by our Editorial team, who my also seek external review of the proposal details. Following the completion of the review, you will be contacted with feedback and an editorial decision. Our editorial team will be in touch once this process has begun.\r\n\r\nShould you have any questions regarding your book publication then please get in touch.\r\n\r\nKind regards,\r\n\r\n{{principal_contact_name}}\r\n{{press_name}}",
     "group": 3,
     "name": "proposal_submission_ack",
-    "types": "rich_text"
+    "types": "rich_text",
+    "description": null
   },
   "model": "core.setting",
   "pk": 60
@@ -584,7 +642,8 @@
     "value": "<p>Dear {{receiver.profile.full_name}},\r\n</p><p>\r\nProposal {{proposal.title}}<{{proposal.id}}> has been updated by {{sender.profile.full_name}}\r\n</p><p>\r\nRegards,\r\n</p><p>\r\n{{ sender.profile.signature }}</p>",
     "group": 3,
     "name": "proposal_update_ack",
-    "types": "rich_text"
+    "types": "rich_text",
+    "description": null
   },
   "model": "core.setting",
   "pk": 61
@@ -594,7 +653,8 @@
     "value": "<p>Dear {{receiver.profile.full_name}},\r\n</p><p>\r\nProposal {{proposal.title}}<{{proposal.id}}> revisions have been submitted by {{sender.profile.full_name}}\r\n</p><p>\r\nRegards,\r\n</p><p>\r\n{{ sender.profile.signature }}</p>",
     "group": 3,
     "name": "proposal_revision_submit_ack",
-    "types": "rich_text"
+    "types": "rich_text",
+    "description": null
   },
   "model": "core.setting",
   "pk": 62
@@ -604,7 +664,8 @@
     "value": "<p>Dear {{ editor.profile.full_name }} ,\r\n</p><p>\r\nYou have been assigned as production editor of the submission {{submission.title}} that has moved to production\r\n</p><p>\r\nRegards,\r\n</p>",
     "group": 3,
     "name": "production_editor_ack",
-    "types": "rich_text"
+    "types": "rich_text",
+    "description": null
   },
   "model": "core.setting",
   "pk": 63
@@ -614,7 +675,8 @@
     "value": "Dear {{user.profile.full_name}},\r\nYou have been assigned owner of submission {{submission.title}} {% if submission.subtitle%}{{submission.subtitle}}{% endif %}\r\nA profile has been created for you.\r\n\r\nUsername is your email account.\r\nPassword : {{code}}\r\n\r\nClick this link in order to continue the password reset to reset your password: {{base_url}}/user/profile/resetpassword/\r\n",
     "group": 3,
     "name": "new_user_email",
-    "types": "rich_text"
+    "types": "rich_text",
+    "description": null
   },
   "model": "core.setting",
   "pk": 64
@@ -624,7 +686,8 @@
     "value": "You've been asked to undertake a review on behalf of the Press and Author.",
     "group": 1,
     "name": "instructions_for_task_review",
-    "types": "rich_text"
+    "types": "rich_text",
+    "description": null
   },
   "model": "core.setting",
   "pk": 65
@@ -634,7 +697,8 @@
     "value": "You've been asked to undertake a review of a proposal on behalf of the Press and Author.",
     "group": 1,
     "name": "instructions_for_task_proposal",
-    "types": "rich_text"
+    "types": "rich_text",
+    "description": null
   },
   "model": "core.setting",
   "pk": 66
@@ -644,7 +708,8 @@
     "value": "You've been asked to undertake a typeset assignment on behalf of the Press and Author.",
     "group": 1,
     "name": "instructions_for_task_typeset",
-    "types": "rich_text"
+    "types": "rich_text",
+    "description": null
   },
   "model": "core.setting",
   "pk": 67
@@ -654,7 +719,8 @@
     "value": "You've been asked to undertake an indexing assignment on behalf of the Press and Author.",
     "group": 1,
     "name": "instructions_for_task_index",
-    "types": "rich_text"
+    "types": "rich_text",
+    "description": null
   },
   "model": "core.setting",
   "pk": 68
@@ -664,7 +730,8 @@
     "value": "You've been asked to undertake a copyedit assignment on behalf of the Press and Author.",
     "group": 1,
     "name": "instructions_for_task_copyedit",
-    "types": "rich_text"
+    "types": "rich_text",
+    "description": null
   },
   "model": "core.setting",
   "pk": 69
