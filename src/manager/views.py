@@ -653,22 +653,44 @@ def add_field(request,form_id):
 	return render(request, template, context)
 
 @staff_member_required
-def add_form(request):
+def add_form(request, form_id = None):
+	edit = True
+	if form_id:
+		review =  review_models.Form.objects.get(id=form_id)
+		form  = forms.ReviewForm(instance = review)
+	else:
+		edit = False
+		review = None
+		form = forms.ReviewForm()
 
-	form = forms.ReviewForm()
 	if request.POST:
-		review_form = forms.ReviewForm(request.POST)
+		if form_id:
+			review_form = forms.ReviewForm(request.POST, instance = review)
+		else:
+			review_form = forms.ReviewForm(request.POST)
+
 		if review_form.is_valid():
-			new_form = review_form.save()
-			return redirect(reverse('manager_create_elements',kwargs={'form_id': new_form.id}))
+			if form_id:
+				new_form = review_form.save(commit=False)
+				review.name = request.POST.get("name")
+				review.ref = request.POST.get("ref")
+				review.intro_text = request.POST.get("intro_text")
+				review.completion_text = request.POST.get("completion_text")
+				review.save()
+				return redirect(reverse('manager_view_review_form',kwargs={'form_id': form_id}))
+			else:
+				new_form = review_form.save()
+				return redirect(reverse('manager_create_elements',kwargs={'form_id': new_form.id}))
+
 	
 		else:
 			print form.errors
-		return redirect(reverse('manager_review_forms'))
 
 	template = 'manager/review/add_form.html'
 	context = {
 		'new_form': form,
+		'review': review,
+		'edit' : edit,
 	}
 	return render(request, template, context)
 

@@ -59,6 +59,8 @@ urlpatterns = patterns('',
     url(r'^review-forms/new/form/$', 'manager.views.add_form', name='manager_add_form'),
     url(r'^review-forms/form/(?P<form_id>\d+)/create/elements/$', 'manager.views.create_elements', name='manager_create_elements'),
     url(r'^review-forms/form/(?P<form_id>\d+)/add/field/$', 'manager.views.add_field', name='manager_add_review_form_field'),
+    url(r'^review-forms/form/(?P<form_id>\d+)/edit/$', 'manager.views.add_form', name='manager_edit_review_form'),
+
 
     # Users
     url(r'^user/$', 'manager.views.users', name='manager_users'),
