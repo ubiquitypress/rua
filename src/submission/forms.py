@@ -47,8 +47,10 @@ class SubmissionChecklist(forms.Form):
 			for item in checklist_items:
 				if book:
 					self.fields[item.text] = forms.BooleanField(required=item.required, initial=True)
+					self.fields[item.text].label = item.text
 				else:
 					self.fields[item.text] = forms.BooleanField(required=item.required)
+					self.fields[item.text].label = item.text
 
 class SubmitBookStageTwo(forms.ModelForm):
 
