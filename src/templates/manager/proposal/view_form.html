@@ -9,7 +9,7 @@
 
 {% block body %}
 <div class="col-md-12 other-sub-heading container-fluid" style="margin-top:-20px">
-      <h3>Proposal Form: {{form.name}} <a href="{% url 'proposal_forms'%}" class="btn  btn-transparent-white" style="position: absolute;right:20;margin-top:-8px">Go back</a><a href="{% url 'manager_create_proposal_elements' form.id %}" class="btn  btn-transparent-white" style="position: absolute;right:100px;margin-top:-8px">+ Create form element</a></h3>
+      <h3>Proposal Form: {{form.name}} <a href="{% url 'proposal_forms'%}" class="btn  btn-transparent-white" style="position: absolute;right:20;margin-top:-8px">Go back</a></h3>
 </div>
 </br></br>
 <div class="container-fluid">
@@ -37,7 +37,7 @@
     </br>
     <hr />
 <div class="col-md-12 other-heading container-fluid" style="margin-top:-20px">
-      <h4>Fields <a href="{% url 'manager_add_proposal_form_field' form.id  %}" class="btn  btn-transparent-white" style="position: absolute;right:20;margin-top:-8px">+ Add field</a></h4>
+      <h4>Fields <a href="{% url 'manager_add_proposal_form_field' form.id  %}" class="btn  btn-transparent-white" style="position: absolute;right:20;margin-top:-8px">+ Add field</a><a href="{% url 'manager_create_proposal_elements' form.id %}" class="btn  btn-transparent-white" style="position: absolute;right:120px;margin-top:-8px">+ Create form element</a></h4>
 </div>
 </br></br>
      <table id="fields" class="table table-bordered">

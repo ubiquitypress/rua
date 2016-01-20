@@ -623,6 +623,16 @@ def add_field(request,form_id):
 	fields = review_models.FormElementsRelationship.objects.filter(form=form)
 	elements = review_models.FormElement.objects.all().order_by('pk')
 	new_form = forms.FormElementsRelationshipForm()
+
+	form = review_models.Form.objects.get(id=form_id)
+	fields = review_models.FormElementsRelationship.objects.filter(form=form)
+
+	try:
+		preview_form = review_f.GeneratedForm(form=form)
+	except (ObjectDoesNotExist, ValueError):
+		preview_form = None
+
+
 	if request.POST and 'finish' in request.POST:
 		return redirect(reverse('manager_view_review_form',kwargs={'form_id': form_id}))
 	elif request.POST and "delete" in request.POST:
@@ -632,12 +642,12 @@ def add_field(request,form_id):
 		return redirect(reverse('manager_add_review_form_field',kwargs={'form_id': form_id}))
 	elif request.POST:
 		field_form = forms.FormElementsRelationshipForm(request.POST)
-		element_class = request.POST.get("element_class")
+		width = request.POST.get("width")
 		element_index = request.POST.get("element")
 		help_text = request.POST.get("help_text")
 		order = int(request.POST.get("order"))
 		element = elements[int(element_index)-1]
-		relationship=review_models.FormElementsRelationship(form=form,element=element,element_class=element_class,order=order,help_text=help_text)
+		relationship=review_models.FormElementsRelationship(form=form,element=element,width=width,order=order,help_text=help_text)
 		relationship.save()
 		fields = review_models.FormElementsRelationship.objects.filter(form=form)
 		form.form_fields=fields
@@ -649,6 +659,7 @@ def add_field(request,form_id):
 		'form': form,
 		'new_form':new_form,
 		'fields': fields,
+		'preview_form':preview_form,
 	}
 	return render(request, template, context)
 

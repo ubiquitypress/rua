@@ -82,7 +82,25 @@
            {% endif %}
 
   </div>
+     <hr />
+    </br></br>
+      <div class="col-md-12 file-sub-heading container-fluid" style="margin-top:-20px">
+      <h4>Preview:</h4>
+</div>
+  {% if fields %}
+    <div class="well" style="overflow: auto">
+      <div class="col-md-12">
+        {% bootstrap_form preview_form %}
+      </div>
 
+          
+         </div>
+    {% else %}
+    <div class="well">
+    <h5>No field has been added to the form</h5>
+  </div>
+    {% endif %}
+  </div>
   </div>
 {% endblock body %}
 
