@@ -29,6 +29,10 @@ class StagesProposalForm(forms.ModelForm):
 	class Meta:
 		model = core_models.ProposalForm
 		exclude = ()
+	def __init__(self, *args, **kwargs):
+		super(StagesProposalForm, self).__init__(*args, **kwargs)
+		self.fields['intro_text'].label = "Introduction text"
+
 class StagesProposalFormElementForm(forms.ModelForm):
 
 	class Meta:

@@ -25,6 +25,7 @@
         <th width="25%">ID</th>
         <th width="25%">Name</th>
          <th></th>
+         <th></th>
     </tr>
   </thead>
   <tbody>
@@ -33,6 +34,7 @@
         <td>{{ form.id }}</td>
         <td>{{ form.name }}</td>
         <td width="8%"><a style="width:80px"class="btn btn-other btn-round" href="{% url 'manager_view_proposal_form' form.id %}">View</a></td>
+        <td width="8%"><a style="width:80px"class="btn btn-default btn-round" href="{% url 'manager_edit_proposal_form' form.id %}">Edit</a></td>
       </tr>
       {% endfor %}
     </tbody>

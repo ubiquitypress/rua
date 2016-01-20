@@ -21,6 +21,7 @@
         <th width="25%">Name</th>
         <th width="25%"> Intro Text</th>
          <th width="25%">Completion Text</th>
+         <th></th>
     </tr>
   </thead>
   <tbody>
@@ -29,6 +30,7 @@
         <td>{{ form.name }}</td>
         <td>{{ form.intro_text }}</td>
         <td>{{ form.completion_text }}</td>
+        <td><a style="width:80px"class="btn btn-default btn-round" href="{% url 'manager_edit_proposal_form' form.id %}">Edit</a></td>
       </tr>
     </tbody>
     </table>

@@ -8,7 +8,7 @@
 
 {% block body %}
 <div class="col-md-12 other-heading container-fluid" style="margin-top:-20px">
-      <h3>Create Proposal Form: Stage 1 <a href="{% url 'proposal_forms'   %}" class="btn  btn-transparent-white" style="position: absolute;right:20;margin-top:-8px">Go back</a></h3>
+      <h3>{% if edit %} Edit Form: {{proposal.name}} <a href="{% url 'manager_view_proposal_form' proposal.id  %}" class="btn  btn-transparent-white" style="position: absolute;right:20;margin-top:-8px">{% else %}Create Proposal Form: Stage 1 <a href="{% url 'proposal_forms'   %}" class="btn  btn-transparent-white" style="position: absolute;right:20;margin-top:-8px">{% endif %}Go back</a></h3>
 </div>
 	<div class="col-md-12">
 		  {% if new_form %}
@@ -33,9 +33,9 @@
               </div>
                   {% endifequal %}
           {% endfor %}
-             <button name="next_stage" style="width:120px" type="submit" class="btn btn-decline pull-right">     <!-- might need to change it to "fa-cloud-upload" -->
+             <button name="next_stage" style="width:120px" type="submit" class="btn btn-{% if edit %}accept btn-round {% else %}decline{%endif%} pull-right">     <!-- might need to change it to "fa-cloud-upload" -->
 
- Next
+ {% if edit %} Update {% else %} Next {% endif %}
      </button>
         </form>
            {% endif %}
@@ -49,6 +49,7 @@
 {% block js %}
 <script type="text/javascript" language="javascript" src="//cdn.datatables.net/1.10.7/js/jquery.dataTables.min.js"></script>
 <script type="text/javascript" language="javascript" src="//cdn.datatables.net/plug-ins/1.10.7/integration/bootstrap/3/dataTables.bootstrap.js"></script>
+<script type="text/javascript">$("textarea").jqte();</script>
 <script>
   $(document).ready(function() {
       $('#users-without').DataTable({

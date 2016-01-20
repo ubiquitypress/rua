@@ -445,22 +445,44 @@ def edit_proposal_field(request,form_id,field_id):
 	return render(request, template, context)
 
 @staff_member_required
-def add_proposal_form(request):
+def add_proposal_form(request, form_id = None):
+	edit = True
+	if form_id:
+		proposal = core_models.ProposalForm.objects.get(id=form_id)
+		form = forms.StagesProposalForm(instance = proposal)
+	else: 
+		edit = False
+		proposal = None
+		form = forms.StagesProposalForm()
 
-	form = forms.StagesProposalForm()
 	if request.POST:
-		proposal_form = forms.StagesProposalForm(request.POST)
+		if form_id:
+			proposal_form = forms.StagesProposalForm(request.POST, instance = proposal)
+		else:
+			proposal_form = forms.StagesProposalForm(request.POST)
+
 		if proposal_form.is_valid():
-			new_form = proposal_form.save()
-			return redirect(reverse('manager_create_proposal_elements',kwargs={'form_id': new_form.id}))
+			if form_id:
+				new_form = proposal_form.save(commit = False)
+				proposal.name = request.POST.get("name")
+				proposal.ref = request.POST.get("ref")
+				proposal.intro_text = request.POST.get("intro_text")
+				proposal.completion_text = request.POST.get("completion_text")
+				proposal.save()
+				return redirect(reverse('manager_view_proposal_form',kwargs={'form_id': form_id}))
+			else:
+				new_form = proposal_form.save()
+				return redirect(reverse('manager_create_proposal_elements',kwargs={'form_id': new_form.id}))
 	
 		else:
 			print form.errors
-		return redirect(reverse('proposal_forms'))
 	template = 'manager/proposal/add_form.html'
 
 	context = {
 		'new_form': form,
+		'proposal': proposal,
+		'edit' : edit,
+
 	}
 
 	return render(request, template, context)

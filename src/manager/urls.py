@@ -41,6 +41,8 @@ urlpatterns = patterns('',
     url(r'^submission/proposal_forms/form-elements/$', 'manager.views.proposal_form_elements', name='manager_proposal_form_elements'),
     #Form Creation
     url(r'^submission/proposal_forms/new/form/$', 'manager.views.add_proposal_form', name='manager_add_proposal_form'),
+    url(r'^submission/proposal_forms/form/(?P<form_id>\d+)/edit/$', 'manager.views.add_proposal_form', name='manager_edit_proposal_form'),
+
     url(r'^submission/proposal_forms/form/(?P<form_id>\d+)/create/elements/$', 'manager.views.create_proposal_elements', name='manager_create_proposal_elements'),
     url(r'^submission/proposal_forms/form/(?P<form_id>\d+)/edit/element/(?P<element_id>\d+)/$', 'manager.views.edit_proposal_element', name='manager_edit_proposal_element'),
     url(r'^submission/proposal_forms/form/(?P<form_id>\d+)/add/field/$', 'manager.views.add_proposal_field', name='manager_add_proposal_form_field'), 
