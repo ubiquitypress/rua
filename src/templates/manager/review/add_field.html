@@ -21,7 +21,9 @@
         <th width="25%">Name</th>
          <th width="25%">Choices</th>
         <th width="25%">Type</th>
-         <th width="25%">Required</th>
+         <th width="25%">Width</th>
+         <th width="25%">Order</th>
+         <th width="8%"></th>
          <th width="8%"></th>
     </tr>
   </thead>
@@ -31,16 +33,19 @@
         <td>{{ field.element.name }}</td>
         <td>{% if field.element.choices %}{{ field.element.choices }}{%else%}None{%endif%}</td>
         <td>{{ field.element.field_type }}</td>
-        <td>{{ field.element.required }}</td>
+        <td>{{ field.width }}</td>
+        <td>{{ field.order }}</td>
          <td>  <form method="POST">
     {% csrf_token %}<button name="delete" value="{{forloop.counter0}}"class="btn btn-danger button-round">Delete</button></form></td>
+         <td><a href="{% url 'manager_edit_review_form_field' form.id field.id %}" class="btn btn-success button-round">Edit</a></td>
+
       </tr>
       {% endfor %}
     </tbody>
     </table>
 </div>
 
-      <h4>Add new field</h4>
+      <h4> {% if current_field %} Edit field #{{current_field.id}} {% else %}Add new field {% endif %} </h4>
     <form method="POST">
     {% csrf_token %}
     <div class="well" style="overflow: auto">
@@ -70,7 +75,7 @@
               </div>
                {% endifequal %}
           {% endfor %}
-             <button style="width:120px"name="submit" id="submit" type="submit" class="btn btn-accept"> Add
+             <button style="width:120px"name="submit" id="submit" type="submit" class="btn btn-accept">{% if current_field %}  Update {% else %} Add {% endif %}
      </button>    </form>
         <form method="POST">
     {% csrf_token %}

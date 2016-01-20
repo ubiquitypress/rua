@@ -663,6 +663,100 @@ def add_field(request,form_id):
 	}
 	return render(request, template, context)
 
+
+@staff_member_required
+def edit_elements(request, form_id, element_id):
+
+	form =  review_models.Form.objects.get(id=form_id)
+	elements = review_models.FormElement.objects.all()
+	element = get_object_or_404(review_models.FormElement, pk = element_id)
+
+	new_form = forms.FormElementForm()
+	if request.POST and "delete" in request.POST:
+		index = int(request.POST.get("delete"))
+		field = elements[index]
+		field.delete()
+		return redirect(reverse('manager_create_elements',kwargs={'form_id': form_id}))
+	elif request.POST and 'continue' in request.POST:
+		form_element_form=forms.FormElementForm(request.POST)
+		if form_element_form.is_valid():
+			form_element_form.save()
+		return redirect(reverse('manager_add_review_form_field',kwargs={'form_id': form_id}))
+	elif request.POST:
+		form_element_form=forms.FormElementForm(request.POST)
+		if form_element_form.is_valid():
+			form_element_form.save()
+			return redirect(reverse('manager_create_elements',kwargs={'form_id': form_id}))
+
+	template = 'manager/review/create_elements.html'
+	context = {
+		'form': form,
+		'new_form':new_form,
+		'elements' : elements,
+	}
+	return render(request, template, context)
+
+
+@staff_member_required
+def edit_field(request,form_id, field_id):
+
+	form = review_models.Form.objects.get(id=form_id)
+	fields = review_models.FormElementsRelationship.objects.filter(form=form)
+	current_field = get_object_or_404(review_models.FormElementsRelationship, pk=field_id)
+
+	elements = review_models.FormElement.objects.all().order_by('pk')
+	new_form = forms.FormElementsRelationshipForm(instance = current_field)
+
+	form = review_models.Form.objects.get(id=form_id)
+	fields = review_models.FormElementsRelationship.objects.filter(form=form)
+
+	try:
+		preview_form = review_f.GeneratedForm(form=form)
+	except (ObjectDoesNotExist, ValueError):
+		preview_form = None
+
+
+	if request.POST and 'finish' in request.POST:
+		return redirect(reverse('manager_view_review_form',kwargs={'form_id': form_id}))
+	elif request.POST and "delete" in request.POST:
+		index = int(request.POST.get("delete"))
+		field = fields[index]
+		field.delete()
+		return redirect(reverse('manager_add_review_form_field',kwargs={'form_id': form_id}))
+	elif request.POST:
+
+		field_form = forms.FormElementsRelationshipForm(request.POST, instance=current_field)
+
+		width = request.POST.get("width")
+		element_index = request.POST.get("element")
+		help_text = request.POST.get("help_text")
+		order = int(request.POST.get("order"))
+		index = int(element_index)-1
+		element_id = elements[int(element_index)-1].pk
+		element = review_models.FormElement.objects.get(pk=element_id)
+
+		current_field.element = element
+		current_field.width = width
+		current_field.help_text = help_text
+		current_field.order = order
+		current_field.save()
+
+		fields = review_models.FormElementsRelationship.objects.filter(form=form)
+		form.form_fields=fields
+		form.save()
+		
+		return redirect(reverse('manager_add_review_form_field',kwargs={'form_id': form_id}))
+	
+	template = 'manager/review/add_field.html'
+	context = {
+		'form': form,
+		'new_form':new_form,
+		'fields': fields,
+		'preview_form':preview_form,
+		'current_field':current_field,
+	}
+	return render(request, template, context)
+
 @staff_member_required
 def add_form(request, form_id = None):
 	edit = True
@@ -734,6 +828,7 @@ def create_elements(request,form_id):
 		'elements' : elements,
 	}
 	return render(request, template, context)
+
 
 @staff_member_required
 def users(request):
