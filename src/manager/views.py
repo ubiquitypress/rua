@@ -704,6 +704,8 @@ def add_user(request):
 				new_pass = logic.generate_password()
 				user.set_password(new_pass)
 				messages.add_message(request, messages.SUCCESS, 'New user %s, password set to %s.' % (user.username, new_pass))
+				email_text = core_models.Setting.objects.get(group__name='email', name='new_user_email').value
+				logic.send_new_user_ack(email_text, user, new_pass)
 
 			user.save()
 
@@ -725,6 +727,7 @@ def add_user(request):
 				profile.interest.add(new_interest)
 
 			profile.save()
+
 
 			return redirect(reverse('manager_users'))
 

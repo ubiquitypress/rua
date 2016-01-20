@@ -674,9 +674,9 @@
   "fields": {
     "value": "Dear {{user.profile.full_name}},\r\nYou have been assigned owner of submission {{submission.title}} {% if submission.subtitle%}{{submission.subtitle}}{% endif %}\r\nA profile has been created for you.\r\n\r\nUsername is your email account.\r\nPassword : {{code}}\r\n\r\nClick this link in order to continue the password reset to reset your password: {{base_url}}/user/profile/resetpassword/\r\n",
     "group": 3,
-    "name": "new_user_email",
+    "name": "new_user_owner_email",
     "types": "rich_text",
-    "description": null
+    "description": ""
   },
   "model": "core.setting",
   "pk": 64
@@ -735,5 +735,16 @@
   },
   "model": "core.setting",
   "pk": 69
+},
+{
+  "fields": {
+    "value": "Dear {{user.profile.full_name}},\r\nA profile has been created for you.\r\n\r\nUsername: {{user.username}}\r\nPassword: {{code}}\r\n\r\nClick this link in order to continue the password reset to reset your password: {{base_url}}/user/profile/resetpassword/\r\n",
+    "group": 3,
+    "name": "new_user_email",
+    "types": "rich_text",
+    "description": ""
+  },
+  "model": "core.setting",
+  "pk": 70
 }
 ]

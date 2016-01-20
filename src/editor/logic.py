@@ -39,7 +39,7 @@ def send_new_user_ack(submission, email_text, new_user, code):
 		'submission':submission,
 	}
 
-	email.send_email('Copyediting Completed', context, from_email.value, new_user.email, email_text, book=submission)
+	email.send_email('New User : Profile Details', context, from_email.value, new_user.email, email_text, book=submission)
 
 
 def handle_copyeditor_assignment(request,book, copyedit, files, due_date, note, email_text, requestor, attachment=None):

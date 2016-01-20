@@ -274,7 +274,7 @@ def editor_change_owner(request, submission_id):
 	 		new_profile.save()
 	 		book.owner = new_user
 			book.save()
-			email_text = models.Setting.objects.get(group__name='email', name='new_user_email').value
+			email_text = models.Setting.objects.get(group__name='email', name='new_user_owner_email').value
 			logic.send_new_user_ack(book, email_text, new_user, new_pass)
 
 		authors = get_list_of_authors(book)
