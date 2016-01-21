@@ -12,7 +12,8 @@
       <h3>Create Review Form : Stage 2 </h3>
 </div>
 	<div class="col-md-12">
-		  {% if new_form %}
+
+{% if new_form %}
             <p>Create form elements that will be used to create fields for the form on the next stage. If you are happy with the existing elements, continue to the next stage.</p>
       <h4>Existing elements</h4>
 <div class="well" style="overflow: auto">
@@ -23,6 +24,7 @@
          <th width="25%">Choices</th>
         <th width="25%">Type</th>
          <th width="25%">Required</th>
+         <th width="9%"></th>
          <th width="9%"></th>
     </tr>
   </thead>
@@ -35,13 +37,19 @@
         <td>{{ element.required }}</td>
         <td><form method="POST">
     {% csrf_token %}<button name="delete" value="{{forloop.counter0}}"class="btn btn-danger button-round">Delete</button></form></td>
+
+        <td><a href="{% url 'manager_edit_elements' form.id element.id %}" class="btn btn-success button-round">Edit</a></td>
       </tr>
       {% endfor %}
     </tbody>
     </table>
 </div>
 
+{% if edit %}
+      <h4>Edit element #{{current_element.pk}}</h4>
+     {% else %}
       <h4>Create a new element</h4>
+           {% endif %}
     <form method="POST">
     {% csrf_token %}
     <div class="well" style="overflow: auto">
@@ -60,7 +68,8 @@
               </div>
 
           {% endfor %}
-             <button name="submit" style="width:120px" id="submit" type="submit" class="btn btn-accept"> Create
+             <button name="submit" style="width:120px" id="submit" type="submit" class="btn btn-accept"> 
+{% if edit %} Save {% else %}Create {% endif %}
      </button>  </form>
        <form method="POST">
     {% csrf_token %}
@@ -68,10 +77,13 @@
  Next
      </button>
         </form>
-           {% endif %}
+ 
+
 
   </div>
 
+
+           {% endif %}
   </div>
 {% endblock body %}
 

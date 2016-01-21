@@ -669,23 +669,29 @@ def edit_elements(request, form_id, element_id):
 
 	form =  review_models.Form.objects.get(id=form_id)
 	elements = review_models.FormElement.objects.all()
-	element = get_object_or_404(review_models.FormElement, pk = element_id)
+	current_element = get_object_or_404(review_models.FormElement, pk = element_id)
 
-	new_form = forms.FormElementForm()
+	new_form = forms.FormElementForm(instance=current_element)
 	if request.POST and "delete" in request.POST:
 		index = int(request.POST.get("delete"))
 		field = elements[index]
 		field.delete()
 		return redirect(reverse('manager_create_elements',kwargs={'form_id': form_id}))
 	elif request.POST and 'continue' in request.POST:
-		form_element_form=forms.FormElementForm(request.POST)
+		form_element_form=forms.FormElementForm(request.POST, instance = current_element)
 		if form_element_form.is_valid():
-			form_element_form.save()
+			new_element = form_element_form.save(commit=False)
+
 		return redirect(reverse('manager_add_review_form_field',kwargs={'form_id': form_id}))
 	elif request.POST:
-		form_element_form=forms.FormElementForm(request.POST)
+		form_element_form=forms.FormElementForm(request.POST, instance = current_element)
 		if form_element_form.is_valid():
-			form_element_form.save()
+			new_element = form_element_form.save(commit=False)
+			current_element.name = new_element.name
+			current_element.choices = new_element.choices
+			current_element.field_type = new_element.field_type
+			current_element.required = new_element.required
+			current_element.save()
 			return redirect(reverse('manager_create_elements',kwargs={'form_id': form_id}))
 
 	template = 'manager/review/create_elements.html'
@@ -693,6 +699,8 @@ def edit_elements(request, form_id, element_id):
 		'form': form,
 		'new_form':new_form,
 		'elements' : elements,
+		'current_element':current_element,
+		'edit': True,
 	}
 	return render(request, template, context)
 
