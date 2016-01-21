@@ -86,26 +86,31 @@
         </form>
            {% endif %}
 
-  </div>
+  </div></br></br>
      <hr />
     </br></br>
       <div class="col-md-12 file-sub-heading container-fluid" style="margin-top:-20px">
       <h4>Preview:</h4>
 </div>
-  {% if fields %}
+       {% if preview_form %}
     <div class="well" style="overflow: auto">
-      <div class="col-md-12">
-        {% bootstrap_form preview_form %}
-      </div>
 
-          
+          {% for field in preview_form %}
+            <div class="{% if field.field.widget.attrs.div_class %}{{ field.field.widget.attrs.div_class }}{% else %}col-md-12{% endif %}">
+            {% if field.field.widget.attrs.is_checkbox %}
+              {% if field.errors %}<span class="red">{{ field.errors|join:", " }}</span><br />{% endif %}
+              {{ field }} {% if field.field.help_text %}<span class="small">{{ field.field.help_text|safe }}</span>{% endif %}
+            {% else %}
+                 {% if field.errors %}<span class="red">{{ field.errors|join:", " }}</span>{% endif %}
+                 {% bootstrap_field field %}
+              {% endif %}
+              </div>
+          {% endfor %}
          </div>
     {% else %}
-    <div class="well">
-    <h5>No field has been added to the form</h5>
-  </div>
+    <h4>No field has been added yet</h4>
     {% endif %}
-  </div>
+          
   </div>
 {% endblock body %}
 
