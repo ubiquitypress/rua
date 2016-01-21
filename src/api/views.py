@@ -60,3 +60,10 @@ class JuraBookViewSet(viewsets.ModelViewSet):
 
     queryset = models.Book.objects.all().order_by('-submission_date')
     serializer_class = serializers.JuraBookSerializer
+
+class OMPViewSet(viewsets.ModelViewSet):
+
+    permission_classes = (IsAuthenticated,)
+
+    queryset = models.Book.objects.all().order_by('-submission_date')
+    serializer_class = serializers.OMPSerializer

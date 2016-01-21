@@ -1,6 +1,8 @@
 from core import models
 from rest_framework import serializers
 
+from pprint import pprint
+
 class AuthorSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
@@ -159,7 +161,7 @@ class BookSerializer(serializers.HyperlinkedModelSerializer):
     editor = EditorSerializer(many=True)
     keywords = KeywordSerializer(many=True)
     subject = SubjectSerializer(many=True)
-    identifier = IdentiferSerializer(many=True, source='identifier_set')
+    identifier = IdentiferSerializer(many=True, source='identifier_set', required=False)
 
     class Meta:
         model = models.Book
@@ -197,7 +199,7 @@ class JuraBookSerializer(serializers.HyperlinkedModelSerializer):
     chapters = ChapterSerializer(many=True, source='chapter_set')
     physical_formats = PhysicalFormatSerializer(many=True,  source='physicalformat_set')
     stage = StageSerializer(many=False)
-    identifier = IdentiferSerializer(many=True, source='identifier_set')
+    identifier = IdentiferSerializer(many=True, source='identifier_set', required=False)
     languages = LanguageSerializer(many=True)
 
     class Meta:
@@ -228,3 +230,94 @@ class JuraBookSerializer(serializers.HyperlinkedModelSerializer):
             'stage',
             'identifier',
             )
+
+    def create(self, validated_data):
+        author_data = validated_data.pop('author')
+        keyword_data = validated_data.pop('keywords')
+        lang_data = validated_data.pop('languages')
+        subject_data = validated_data.pop('subject')
+        stage_data = validated_data.pop('stage')
+
+        pprint(validated_data)
+
+        book = models.Book.objects.create(**validated_data)
+
+        stage = models.Stage.objects.create(book=book, current_stage="published")
+
+        for author in author_data:
+            author = models.Author.objects.create(book=book, **author_data)
+
+
+
+        return book
+
+class OMPSerializer(serializers.HyperlinkedModelSerializer):
+    """
+    This serializer is used only by Ubiquity press
+    """
+    license = serializers.ReadOnlyField(source='license.code')
+    author = AuthorSerializer(many=True)
+    keywords = KeywordSerializer(many=True)
+    subject = SubjectSerializer(many=True)
+    stage = StageSerializer(many=False)
+    identifier = IdentiferSerializer(many=True, source='identifier_set', required=False)
+    languages = LanguageSerializer(many=True)
+
+    class Meta:
+        model = models.Book
+        fields = (
+            'id',
+            'slug',
+            'prefix',
+            'title',
+            'subtitle',
+            'cover',
+            'submission_date',
+            'publication_date',
+            #'series',
+            'license',
+            'pages',
+            'book_type',
+            'author',
+            'description',
+            'keywords',
+            'subject',
+            'languages',
+            'review_type',
+            'stage',
+            'identifier',
+            )
+
+    def create(self, validated_data):
+        author_data = validated_data.pop('author')
+        keyword_data = validated_data.pop('keywords')
+        lang_data = validated_data.pop('languages')
+        subject_data = validated_data.pop('subject')
+        stage_data = validated_data.pop('stage')
+
+        pprint(validated_data)
+        book = models.Book.objects.create(**validated_data)
+        stage = models.Stage.objects.create(current_stage="published")
+        book.stage = stage
+
+        for author in author_data:
+            author = models.Author.objects.create(**author)
+            book.author.add(author)
+
+        for language in lang_data:
+            lang, c = models.Language.objects.get_or_create(**language)
+            book.languages.add(lang)
+
+        for subject in subject_data:
+            subj, c = models.Subject.objects.get_or_create(**subject)
+            book.subject.add(subj)
+
+        for keyword in keyword_data:
+            keyw, c = models.Keyword.objects.get_or_create(**keyword)
+            book.keywords.add(keyw)
+
+
+        book.save()
+        return book
+
+

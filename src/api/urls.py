@@ -10,6 +10,7 @@ router = routers.DefaultRouter()
 router.register(r'books', views.BookViewSet)
 router.register(r'authors', views.AuthorViewSet)
 router.register(r'jura', views.JuraBookViewSet)
+router.register(r'omp', views.OMPViewSet)
 
 urlpatterns = patterns('',
     url(r'^$', 'api.views.index', name='index'),
