@@ -1328,27 +1328,6 @@ button.list-group-item-file.active:focus {
       background-color:#057572!important;
       color:white !important;
     }
-.bottom-space{
-         height:80% !important; 
-
-    }
-.bottom-space-lg{
-         height:90% !important; 
-
-    }
-  .bottom-space-sm{
-         height:65% !important; 
-
-    }
-  .bottom-space-xs{
-         height:50% !important; 
-
-    }
-     
-      .bottom-space-md{
-         height:75% !important; 
-
-    }
 .proposal {
   background-color:#7c50ff !important;
 }
