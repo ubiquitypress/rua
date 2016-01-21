@@ -35,87 +35,9 @@
 		$('#id_profile_image').val($(this).val());
 		});
 	</script>
-	<script  type="text/javascript" >
-	var isOpera = !!window.opera || navigator.userAgent.indexOf(' OPR/') >= 0;
-    // Opera 8.0+ (UA detection to detect Blink/v8-powered Opera)
-var isFirefox = typeof InstallTrigger !== 'undefined';   // Firefox 1.0+
-var isSafari = Object.prototype.toString.call(window.HTMLElement).indexOf('Constructor') > 0;
-    // At least Safari 3+: "[object HTMLElementConstructor]"
-var isChrome = !!window.chrome && !isOpera;              // Chrome 1+
-var isIE = /*@cc_on!@*/false || !!document.documentMode;   // At least IE6
-
-if (isFirefox) {
-	var cssId = 'myCss';  // you could encode the css path itself to generate id..
-if (!document.getElementById(cssId))
-{
-    var head  = document.getElementsByTagName('head')[0];
-    var link  = document.createElement('link');
-    link.id   = cssId;
-    link.rel  = 'stylesheet';
-    link.type = 'text/css';
-    link.href = "{% static 'css/bottom-space.css' %}";
-    link.media = 'all';
-    head.appendChild(link);
-}
-}
-if (isIE) {
-	var cssId = 'myCss';  // you could encode the css path itself to generate id..
-if (!document.getElementById(cssId))
-{
-    var head  = document.getElementsByTagName('head')[0];
-    var link  = document.createElement('link');
-    link.id   = cssId;
-    link.rel  = 'stylesheet';
-    link.type = 'text/css';
-    link.href = "{% static 'css/bottom-space.css' %}";
-    link.media = 'all';
-    head.appendChild(link);
-}
-}
-if (isOpera) {
-	var cssId = 'myCss';  // you could encode the css path itself to generate id..
-if (!document.getElementById(cssId))
-{
-    var head  = document.getElementsByTagName('head')[0];
-    var link  = document.createElement('link');
-    link.id   = cssId;
-    link.rel  = 'stylesheet';
-    link.type = 'text/css';
-    link.href = "{% static 'css/bottom-space.css' %}";
-    link.media = 'all';
-    head.appendChild(link);
-}
-}
-if (isChrome) {
-	var cssId = 'myCss';  // you could encode the css path itself to generate id..
-if (!document.getElementById(cssId))
-{
-    var head  = document.getElementsByTagName('head')[0];
-    var link  = document.createElement('link');
-    link.id   = cssId;
-    link.rel  = 'stylesheet';
-    link.type = 'text/css';
-    link.href = "{% static 'css/bottom-space-padding.css' %}";
-    link.media = 'all';
-    head.appendChild(link);
-}
-}
-
-if (isSafari) {
-	var cssId = 'myCss';  // you could encode the css path itself to generate id..
-if (!document.getElementById(cssId))
-{
-    var head  = document.getElementsByTagName('head')[0];
-    var link  = document.createElement('link');
-    link.id   = cssId;
-    link.rel  = 'stylesheet';
-    link.type = 'text/css';
-    link.href = "{% static 'css/bottom-space-padding.css' %}";
-    link.media = 'all';
-    head.appendChild(link);
-}
-}
-	</script>
+	<script>var padding = "{% static 'css/bottom-space-padding.css' %}";
+		var nopadding = "{% static 'css/bottom-space.css' %}";</script>
+	<script type="text/javascript" src="{% static 'js/bottom-space-check.js' %}"></script>
 	<script>
 	toastr.options = {
 	  "closeButton": true,
