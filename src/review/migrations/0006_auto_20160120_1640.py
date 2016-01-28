@@ -16,7 +16,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='formelementsrelationship',
             name='width',
-            field=models.CharField(default=datetime.datetime(2016, 1, 20, 16, 40, 46, 974101, tzinfo=utc), max_length=20, choices=[(b'col-md-4', b'third'), (b'col-md-6', b'half'), (b'col-md-12', b'full')]),
+            field=models.CharField(default="col-md-12", max_length=20, choices=[(b'col-md-4', b'third'), (b'col-md-6', b'half'), (b'col-md-12', b'full')]),
             preserve_default=False,
         ),
     ]

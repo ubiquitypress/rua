@@ -50,7 +50,7 @@ class FormElementsRelationship(models.Model):
 	form = models.ForeignKey(Form)
 	element = models.ForeignKey(FormElement)
 	order = models.IntegerField()
-	width = models.CharField(max_length=20, choices = bs_class_choices)
+	width = models.CharField(max_length=20, choices=bs_class_choices)
 	help_text = models.TextField(max_length=1000, null=True, blank=True)
 
 	def __unicode__(self):
