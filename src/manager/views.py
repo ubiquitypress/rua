@@ -359,21 +359,20 @@ def add_proposal_field(request,form_id):
 		return redirect(reverse('manager_add_proposal_form_field',kwargs={'form_id': form_id}))
 	elif request.POST:
 		field_form = forms.StagesProposalFormElementRelationshipForm(request.POST)
-		if field_form.is_valid():
-			width = request.POST.get("width")
-			element_index = request.POST.get("element")
-			help_text = request.POST.get("help_text")
-			order = int(request.POST.get("order"))
+		width = request.POST.get("width")
+		element_index = request.POST.get("element")
+		help_text = request.POST.get("help_text")
+		order = int(request.POST.get("order"))
 
-			element_id = int(element_index)
-			element = core_models.ProposalFormElement.objects.get(pk=element_id)
-			print element.name
-			relationship=core_models.ProposalFormElementsRelationship(form=form,element=element,width=width,order=order,help_text=help_text)
-			relationship.save()
-			fields = core_models.ProposalFormElementsRelationship.objects.filter(form=form)
-			form.form_fields=fields
-			form.save()
-			return redirect(reverse('manager_add_proposal_form_field',kwargs={'form_id': form_id}))
+		element_id = int(element_index)
+		element = core_models.ProposalFormElement.objects.get(pk=element_id)
+		print element.name
+		relationship=core_models.ProposalFormElementsRelationship(form=form,element=element,width=width,order=order,help_text=help_text)
+		relationship.save()
+		fields = core_models.ProposalFormElementsRelationship.objects.filter(form=form)
+		form.form_fields=fields
+		form.save()
+		return redirect(reverse('manager_add_proposal_form_field',kwargs={'form_id': form_id}))
 	template = 'manager/proposal/add_field.html'
 
 	context = {
@@ -643,19 +642,18 @@ def add_field(request,form_id):
 		return redirect(reverse('manager_add_review_form_field',kwargs={'form_id': form_id}))
 	elif request.POST:
 		field_form = forms.FormElementsRelationshipForm(request.POST)
-		if field_form.is_valid():
-			width = request.POST.get("width")
-			element_index = request.POST.get("element")
-			help_text = request.POST.get("help_text")
-			order = int(request.POST.get("order"))
-			element_id = int(element_index)
-			element = review_models.FormElement.objects.get(pk=element_id)
-			relationship=review_models.FormElementsRelationship(form=form,element=element,width=width,order=order,help_text=help_text)
-			relationship.save()
-			fields = review_models.FormElementsRelationship.objects.filter(form=form)
-			form.form_fields=fields
-			form.save()
-			return redirect(reverse('manager_add_review_form_field',kwargs={'form_id': form_id}))
+		width = request.POST.get("width")
+		element_index = request.POST.get("element")
+		help_text = request.POST.get("help_text")
+		order = int(request.POST.get("order"))
+		element_id = int(element_index)
+		element = review_models.FormElement.objects.get(pk=element_id)
+		relationship=review_models.FormElementsRelationship(form=form,element=element,width=width,order=order,help_text=help_text)
+		relationship.save()
+		fields = review_models.FormElementsRelationship.objects.filter(form=form)
+		form.form_fields=fields
+		form.save()
+		return redirect(reverse('manager_add_review_form_field',kwargs={'form_id': form_id}))
 	
 	template = 'manager/review/add_field.html'
 	context = {
