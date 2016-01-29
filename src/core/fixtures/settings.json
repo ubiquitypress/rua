@@ -100,17 +100,6 @@
 },
 {
   "fields": {
-    "value": "If you have any suggestions about who could review this book, please add them here. Please ensure you include their email address, affiliation details and why they are suitable. Suggested reviewers must be wholly independent of the book project and must be from a separate affiliation than the authors/editors. All reviewers will be asked to declare any competing interests. the publisher does not guarantee to use these suggestions.<br>",
-    "group": 1,
-    "name": "review_suggestions",
-    "types": "rich_text",
-    "description": "Help text for reviewer suggestions."
-  },
-  "model": "core.setting",
-  "pk": 11
-},
-{
-  "fields": {
     "value": "on",
     "group": 1,
     "name": "ci_required",
