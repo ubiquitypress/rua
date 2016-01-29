@@ -204,7 +204,43 @@ def handle_proposal_file(file, proposal, kind, owner, label=None):
 	new_file.save()
 
 	return new_file
+def handle_proposal_file_form(file, proposal, kind, owner, label=None):
 
+	original_filename = str(file._get_name())
+	filename = str(uuid4()) + str(os.path.splitext(original_filename)[1])
+	folder_structure = os.path.join(settings.BASE_DIR, 'files', 'proposals', str(proposal.id))
+
+	if not os.path.exists(folder_structure):
+		os.makedirs(folder_structure)
+
+	path = os.path.join(folder_structure, str(filename))
+	fd = open(path, 'wb')
+	for chunk in file.chunks():
+		fd.write(chunk)
+	fd.close()
+
+	file_mime = mime.guess_type(filename)
+
+	try:
+		file_mime = file_mime[0]
+	except IndexError:
+		file_mime = 'unknown'
+
+	if not file_mime:
+		file_mime = 'unknown'
+
+	new_file = models.File(
+		mime_type=file_mime,
+		original_filename=original_filename,
+		uuid_filename=filename,
+		stage_uploaded=1,
+		kind=kind,
+		label=label,
+		owner=owner
+	)
+	new_file.save()
+
+	return new_file.pk
 def handle_attachment(request, submission):
 	if request.FILES.get('attachment_file'):
 		attachment_file = request.FILES.get('attachment_file')

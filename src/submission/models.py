@@ -19,7 +19,7 @@ class Proposal(models.Model):
 	author = models.CharField(max_length=255)
 	date_submitted = models.DateTimeField(auto_now_add=True)
 	form = models.ForeignKey('core.ProposalForm')
-	data = models.TextField()
+	data = models.TextField(blank=True, null=True)
 	date_review_started = models.DateTimeField(blank=True, null=True)
 	review_assignments = models.ManyToManyField('ProposalReview', related_name='review', null=True, blank=True)
 	review_form = models.ForeignKey('review.Form', null=True, blank=True)
