@@ -666,7 +666,6 @@
     "name": "production_editor_ack",
     "types": "rich_text",
     "description": null
-    ,"description": null
   },
   "model": "core.setting",
   "pk": 63
@@ -678,7 +677,6 @@
     "name": "new_user_owner_email",
     "types": "rich_text",
     "description": ""
-    ,"description": null
   },
   "model": "core.setting",
   "pk": 64
@@ -690,7 +688,6 @@
     "name": "instructions_for_task_review",
     "types": "rich_text",
     "description": null
-    ,"description": null
   },
   "model": "core.setting",
   "pk": 65
@@ -702,7 +699,6 @@
     "name": "instructions_for_task_proposal",
     "types": "rich_text",
     "description": null
-    ,"description": null
   },
   "model": "core.setting",
   "pk": 66
@@ -714,7 +710,6 @@
     "name": "instructions_for_task_typeset",
     "types": "rich_text",
     "description": null
-    ,"description": null
   },
   "model": "core.setting",
   "pk": 67
@@ -726,7 +721,6 @@
     "name": "instructions_for_task_index",
     "types": "rich_text",
     "description": null
-    ,"description": null
   },
   "model": "core.setting",
   "pk": 68
@@ -738,7 +732,6 @@
     "name": "instructions_for_task_copyedit",
     "types": "rich_text",
     "description": null
-    ,"description": null
   },
   "model": "core.setting",
   "pk": 69
@@ -749,8 +742,7 @@
     "group": 3,
     "name": "new_user_email",
     "types": "rich_text",
-    "description": ""
-    ,"description": null
+    "description": null
   },
   "model": "core.setting",
   "pk": 70
