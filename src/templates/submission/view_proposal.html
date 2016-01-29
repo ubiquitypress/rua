@@ -141,11 +141,11 @@ function popitup(url,title) {
 <script language="javascript" type="text/javascript">
 $(document).ready(function () {    
        {%for field in default_fields%}
-
+{% if field.field.required %} 
          var required_text=$('label[for="' + "id_{{field.name}}"+ '"]').html()+" *";
          var current_field = $('label[for="' + "id_{{field.name}}"+ '"]');
          current_field.text(required_text); 
-
+ {% endif %}
        {% endfor %}
 
     {% if proposal_form %}
