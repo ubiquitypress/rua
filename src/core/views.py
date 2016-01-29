@@ -1442,7 +1442,7 @@ def create_proposal_review_form(proposal):
     document = Document()
     document.add_heading(proposal.proposal.title, 0)
     p = document.add_paragraph('You should complete this form and then use the review page to upload it.')
-    relations = review_models.FormElementsRelationship.objects.filter(form=proposal.proposal.review_form)
+    relations = review_models.FormElementsRelationship.objects.filter(form=proposal.proposal.review_form).order_by('order')
     for relation in relations:
 
         if relation.element.field_type in ['text', 'textarea', 'date', 'email']:

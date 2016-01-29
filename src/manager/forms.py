@@ -114,7 +114,7 @@ class GeneratedForm(forms.Form):
 
 		form_obj = kwargs.pop('form', None)
 		super(GeneratedForm, self).__init__(*args, **kwargs)
-		relations = core_models.ProposalFormElementsRelationship.objects.filter(form__id=form_obj.id)
+		relations = core_models.ProposalFormElementsRelationship.objects.filter(form__id=form_obj.id).order_by('order')
 		for relation in relations:
 
 			if relation.element.field_type == 'text':
@@ -136,13 +136,15 @@ class GeneratedForm(forms.Form):
 			elif relation.element.field_type == 'check':
 				self.fields[relation.element.name] = forms.BooleanField(widget=forms.CheckboxInput(attrs={'is_checkbox':True, 'div_class':relation.width}), required=relation.element.required)
 			self.fields[relation.element.name].help_text = relation.help_text
+
+
 class GeneratedReviewForm(forms.Form):
 
 	def __init__(self, *args, **kwargs):
 
 		form_obj = kwargs.pop('form', None)
 		super(GeneratedReviewForm, self).__init__(*args, **kwargs)
-		relations = review_models.FormElementsRelationship.objects.filter(form=form_obj)
+		relations = review_models.FormElementsRelationship.objects.filter(form=form_obj).order_by('order')
 		for relation in relations:
 
 			if relation.element.field_type == 'text':
