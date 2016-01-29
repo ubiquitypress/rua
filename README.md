@@ -12,6 +12,8 @@ Rua is an Open Source application designed to assist with the Monograph publishi
 - production
 - publication
 
+Rua is completely free to use under the GNU GENERAL PUBLIC LICENSE v2 (see LICENSE). [Ubiquity Press](http://ubiquitypress.com/site/contact/) also offers a paid for hosted service for Rua.
+
 # Technology
 RUA is written in Python using the Django Web Application framework and follows a MTV (that is, “model”, “template”, and “view.”) style. The template system is simple, easy to modify and uses Twitter Bootstrap 3.
 
