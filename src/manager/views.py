@@ -1004,6 +1004,7 @@ def group_members_order(request, group_id):
 		response = 'Nothing to process, post required'
 
 	return HttpResponse(response)
+	
 @staff_member_required
 @csrf_exempt
 def checklist_order(request):

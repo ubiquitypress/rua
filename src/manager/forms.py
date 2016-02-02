@@ -59,7 +59,6 @@ class EditKey(forms.Form):
 		value = kwargs.pop('value', None)
 		super(EditKey, self).__init__(*args, **kwargs)
 
-		print key_type, value
 		if key_type == 'rich_text':
 			self.fields['value'].widget = SummernoteWidget()
 		elif key_type == 'boolean':
