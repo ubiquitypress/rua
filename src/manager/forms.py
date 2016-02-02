@@ -2,6 +2,7 @@ from django import forms
 from django.forms import ModelForm
 from django.core.exceptions import ValidationError
 from django_summernote.widgets import SummernoteWidget, SummernoteInplaceWidget
+from django.utils.encoding import smart_text
 
 from manager import models
 from core import models as core_models
@@ -55,7 +56,7 @@ class ReviewForm(forms.ModelForm):
 class EditKey(forms.Form):
 
 	def __init__(self, *args, **kwargs):
-		key_type = kwargs.pop('key_type', None)
+		key_type = smart_text(kwargs.pop('key_type', None))
 		value = kwargs.pop('value', None)
 		super(EditKey, self).__init__(*args, **kwargs)
 
