@@ -18,7 +18,7 @@ from core import models as core_models, log, task, logic as core_logic
 from submission import logic, models as submission_models
 from manager import forms as manager_forms
 from  __builtin__ import any as string_any
-
+from core.files import handle_proposal_file_form
 import mimetypes as mime
 from uuid import uuid4
 import os
@@ -357,9 +357,12 @@ def start_proposal(request):
 	default_fields = manager_forms.DefaultForm()
 
 	if request.method == 'POST':
-		proposal_form = manager_forms.GeneratedForm(request.POST,form=core_models.ProposalForm.objects.get(pk=proposal_form_id))
+		proposal_form = manager_forms.GeneratedForm(request.POST, request.FILES,form=core_models.ProposalForm.objects.get(pk=proposal_form_id))
 		default_fields = manager_forms.DefaultForm(request.POST)
 		if proposal_form.is_valid() and default_fields.is_valid():
+			defaults = {field.name: field.value() for field in default_fields}
+			proposal = submission_models.Proposal(form=core_models.ProposalForm.objects.get(pk=proposal_form_id), data=None, owner=request.user, **defaults)
+			proposal.save()
 			save_dict = {}
 			file_fields = core_models.ProposalFormElementsRelationship.objects.filter(form=core_models.ProposalForm.objects.get(pk=proposal_form_id), element__field_type='upload')
 			data_fields = core_models.ProposalFormElementsRelationship.objects.filter(~Q(element__field_type='upload'), form=core_models.ProposalForm.objects.get(pk=proposal_form_id))
@@ -367,16 +370,15 @@ def start_proposal(request):
 			for field in file_fields:
 				if field.element.name in request.FILES:
 					# TODO change value from string to list [value, value_type]
-					save_dict[field.element.name] = [handle_proposal_file(request.FILES[field.element.name], submission, review_assignment, 'reviewer')]
+					save_dict[field.element.name] = [handle_proposal_file_form(request.FILES[field.element.name], proposal, 'other', request.user, "Attachment: Uploaded by %s" % (request.user.username))]
 
 			for field in data_fields:
 				if field.element.name in request.POST:
 					# TODO change value from string to list [value, value_type]
 					save_dict[field.element.name] = [request.POST.get(field.element.name), 'text']
-
-			defaults = {field.name: field.value() for field in default_fields}
+			
 			json_data = json.dumps(save_dict)
-			proposal = submission_models.Proposal(form=core_models.ProposalForm.objects.get(pk=proposal_form_id), data=json_data, owner=request.user, **defaults)
+			proposal.data = json_data
 			proposal.save()
 			editors = User.objects.filter(profile__roles__slug='press-editor')
 			message = "A new  Proposal '%s' with id %s has been submitted by %s ."  % (proposal.title,proposal.pk,request.user.username)
@@ -426,7 +428,7 @@ def proposal_revisions(request, proposal_id):
 			for field in file_fields:
 				if field.element.name in request.FILES:
 					# TODO change value from string to list [value, value_type]
-					save_dict[field.element.name] = [handle_proposal_file(request.FILES[field.element.name], submission, review_assignment, 'reviewer')]
+					save_dict[field.element.name] = [handle_proposal_file_form(request.FILES[field.element.name], proposal, 'other', request.user, "Attachment: Uploaded by %s" % (request.user.username))]
 
 			for field in data_fields:
 				if field.element.name in request.POST:
@@ -504,7 +506,7 @@ def proposal_view(request, proposal_id):
 			for field in file_fields:
 				if field.element.name in request.FILES:
 					# TODO change value from string to list [value, value_type]
-					save_dict[field.element.name] = [handle_proposal_file(request.FILES[field.element.name], submission, review_assignment, 'reviewer')]
+					save_dict[field.element.name] = [handle_proposal_file_form(request.FILES[field.element.name], proposal, 'other', request.user, "Attachment: Uploaded by %s" % (request.user.username))]
 
 			for field in data_fields:
 				if field.element.name in request.POST:

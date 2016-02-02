@@ -796,6 +796,22 @@ def serve_file(request, submission_id, file_id):
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 @is_editor
+def serve_proposal_file_id(request, proposal_id, file_id):
+    proposal = get_object_or_404(submission_models.Proposal, pk=proposal_id)
+    _file = get_object_or_404(models.File, pk=file_id)
+    file_path = os.path.join(settings.BASE_DIR, 'files', 'proposals',str(proposal_id), _file.uuid_filename)
+    print file_path
+    try:
+        fsock = open(file_path, 'r')
+        mimetype = mimetypes.guess_type(file_path)
+        response = StreamingHttpResponse(fsock, content_type=mimetype)
+        response['Content-Disposition'] = "attachment; filename=%s" % (_file.original_filename)
+        return response
+    except IOError:
+        messages.add_message(request, messages.ERROR, 'File not found. %s' % (file_path))
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+@is_editor
 def serve_proposal_file(request, proposal_id, file_id):
     proposal = get_object_or_404(submission_models.Proposal, pk=proposal_id)
     _file = get_object_or_404(models.File, pk=file_id)
@@ -1442,7 +1458,7 @@ def create_proposal_review_form(proposal):
     document = Document()
     document.add_heading(proposal.proposal.title, 0)
     p = document.add_paragraph('You should complete this form and then use the review page to upload it.')
-    relations = review_models.FormElementsRelationship.objects.filter(form=proposal.proposal.review_form)
+    relations = review_models.FormElementsRelationship.objects.filter(form=proposal.proposal.review_form).order_by('order')
     for relation in relations:
 
         if relation.element.field_type in ['text', 'textarea', 'date', 'email']:

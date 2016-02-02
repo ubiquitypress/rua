@@ -11,7 +11,7 @@ class GeneratedForm(forms.Form):
 	def __init__(self, *args, **kwargs):
 		form_obj = kwargs.pop('form', None)
 		super(GeneratedForm, self).__init__(*args, **kwargs)
-		relations = models.FormElementsRelationship.objects.filter(form=form_obj)
+		relations = models.FormElementsRelationship.objects.filter(form=form_obj).order_by('order')
 		for relation in relations:
 			if relation.element.field_type == 'text':
 				self.fields[relation.element.name] = forms.CharField(widget=forms.TextInput(attrs={'div_class':relation.width}), required=relation.element.required)

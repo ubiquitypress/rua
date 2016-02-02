@@ -69,6 +69,8 @@ urlpatterns = patterns('',
     
     # Files
     url(r'^files/submission/(?P<submission_id>\d+)/get/marc21/(?P<type>[-\w]+)/$', 'core.views.serve_marc21_file', name='serve_marc21_file'),
+     url(r'^files/proposal/(?P<proposal_id>\d+)/file/(?P<file_id>\d+)/download/$', 'core.views.serve_proposal_file_id', name='serve_proposal_file_id'),
+    
     url(r'^files/user/submission/(?P<submission_id>\d+)/file/(?P<file_id>\d+)/download/$', 'core.views.serve_file', name='serve_file'),
     url(r'^files/submission/(?P<submission_id>\d+)/file/upload/additional/$', 'core.views.upload_additional', name='upload_additional'),
     url(r'^files/submission/(?P<submission_id>\d+)/file/upload/manuscript/$', 'core.views.upload_manuscript', name='upload_manuscript'),
