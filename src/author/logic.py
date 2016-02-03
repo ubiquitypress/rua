@@ -11,7 +11,7 @@ def author_tasks(user):
 	copyedit_tasks = models.CopyeditAssignment.objects.filter(book__owner=user, author_invited__isnull=False, author_completed__isnull=True).select_related('book')
 	typeset_tasks = models.TypesetAssignment.objects.filter(book__owner=user, author_invited__isnull=False, author_completed__isnull=True).select_related('book')
 	proofing_tasks = editor_models.CoverImageProof.objects.filter(book__owner=user, completed__isnull=True).select_related('book')
-	proposal_tasks = submission_models.Proposal.objects.filter(owner=user,status='revisions_required')
+	proposal_tasks = submission_models.Proposal.objects.filter(owner=user, status='revisions_required')
 
 	for revision in revision_tasks:
 		task_list.append({'type': 'revisions', 'book': revision.book, 'task': 'Revisions', 'date': revision.due, 'title': revision.book.title, 'url': '/author/submission/%s/revisions/%s/' % (revision.book.id, revision.id)})
