@@ -12,7 +12,7 @@ from django.db.models import Q
 from django.core import serializers
 from django.conf import settings
 from  __builtin__ import any as string_any
-
+import string
 from django.template import Context, Template
 from review import models as review_models
 from core import log, models, forms, logic
@@ -22,7 +22,7 @@ from files import handle_file_update, handle_attachment, handle_file, handle_pro
 from submission import models as submission_models
 from core.decorators import is_reviewer, is_editor, is_book_editor, is_book_editor_or_author, is_onetasker,is_author
 from review import forms as review_forms
-
+from datetime import datetime
 from manager import models as manager_models
 from manager import forms as manager_forms
 from submission import forms as submission_forms
@@ -1396,7 +1396,8 @@ def decline_proposal(request, proposal_id):
     template = 'core/proposals/decline_proposal.html'
     context = {
         'proposal': proposal,
-        'email_text': logic.setting_template_loader(setting=email_text,path="core/proposals/",pattern="email_template_",dictionary={'sender':request.user,'receiver':proposal.owner}),
+        'email_text': logic.setting_template_loader(setting=email_text,path="core/proposals/",pattern="email_template_",dictionary={'sender':request.user,'receiver':proposal.owner,'proposal':proposal,
+        'press_name':models.Setting.objects.get(group__name='general', name='press_name').value}),
     }
 
     return render(request, template, context)
@@ -1424,7 +1425,8 @@ def accept_proposal(request, proposal_id):
     
     context = {
         'proposal': proposal,
-        'email_text': logic.setting_template_loader(setting=email_text,path="core/proposals/",pattern="email_template_",dictionary={'sender':request.user,'receiver':proposal.owner}),
+        'email_text': logic.setting_template_loader(setting=email_text,path="core/proposals/",pattern="email_template_",dictionary={'sender':request.user,'receiver':proposal.owner,'proposal':proposal,
+        'press_name':models.Setting.objects.get(group__name='general', name='press_name').value}),
     }
 
     return render(request, template, context)
@@ -1439,8 +1441,14 @@ def request_proposal_revisions(request, proposal_id):
         proposal.status = 'revisions_required'
         logic.close_active_reviews(proposal)
         proposal.requestor=request.user
-        logic.send_proposal_revisions(proposal, email_text=request.POST.get('revisions-email'), sender=request.user)
+        email_updated_text =request.POST.get('revisions-email')
+        due_date =request.POST.get('due_date') 
+        proposal.revision_due_date = datetime.strptime(due_date, "%Y-%m-%d")
         proposal.save()
+        print proposal.revision_due_date
+        email_updated_text = string.replace(email_updated_text,'_due_date_',due_date)
+        logic.send_proposal_revisions(proposal, email_text=email_updated_text, sender=request.user)
+        
         log.add_proposal_log_entry(proposal=proposal,user=request.user, kind='proposal', message='Revisions request for proposal %s %s.'%(proposal.title,proposal.subtitle), short_name='Proposal Revisions Requested')
     
         return redirect(reverse('proposals'))
@@ -1448,7 +1456,8 @@ def request_proposal_revisions(request, proposal_id):
     template = 'core/proposals/revisions_proposal.html'
     context = {
         'proposal': proposal,
-        'email_text': logic.setting_template_loader(setting=email_text,path="core/proposals/",pattern="email_template_",dictionary={'sender':request.user,'receiver':proposal.owner}),
+        'email_text': logic.setting_template_loader(setting=email_text,path="core/proposals/",pattern="email_template_",dictionary={'sender':request.user,'receiver':proposal.owner,'proposal':proposal,
+        'press_name':models.Setting.objects.get(group__name='general', name='press_name').value}),
     }
 
     return render(request, template, context)

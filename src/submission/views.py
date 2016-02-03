@@ -24,6 +24,7 @@ from uuid import uuid4
 import os
 from pprint import pprint
 import json
+from datetime import datetime
 
 @login_required
 def start_submission(request, book_id=None):
@@ -407,7 +408,9 @@ def start_proposal(request):
 def proposal_revisions(request, proposal_id):
 
 	proposal = get_object_or_404(submission_models.Proposal, pk=proposal_id, owner=request.user, status='revisions_required')
-
+	overdue = False;
+	if proposal.revision_due_date.date() < datetime.today().date():
+		overdue = True
 	proposal_form = manager_forms.GeneratedForm(form=core_models.ProposalForm.objects.get(pk=proposal.form.id))
 	default_fields = manager_forms.DefaultForm(initial={'title': proposal.title,'author':proposal.author,'subtitle':proposal.subtitle})
 	data = json.loads(proposal.data)
@@ -459,9 +462,11 @@ def proposal_revisions(request, proposal_id):
 	template = "submission/start_proposal.html"
 	context = {
 		'proposal_form': proposal_form,
+		'proposal':proposal,
 		'default_fields': default_fields,
 		'data':data,
 		'revise':True,
+		'overdue':overdue,
 	}
 
 	return render(request, template, context)

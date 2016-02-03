@@ -3,7 +3,7 @@ from core.cache import cache_result
 from revisions import models as revisions_models
 from submission import models as submission_models
 from editor import models as editor_models
-
+from datetime import datetime
 def author_tasks(user):
 	base_url = models.Setting.objects.get(group__name='general', name='base_url').value
 	task_list = []
@@ -26,7 +26,10 @@ def author_tasks(user):
 		task_list.append({'type': 'coverimage', 'book': proof.book, 'task': 'Cover Image Proof', 'date': proof.assigned, 'title': proof.book.title, 'url': 'http://%s/author/submission/%s/production/#%s' % (base_url, proof.book.id, proof.id)})
 	
 	for proposal in proposal_tasks:
-		task_list.append({'type': 'proposal', 'task': 'Proposal Revision', 'proposal': proposal})
+		overdue = False;
+		if proposal.revision_due_date.date() < datetime.today().date():
+			overdue = True
+		task_list.append({'type': 'proposal', 'task': 'Proposal Revision', 'proposal': proposal,'overdue':overdue})
 		
 
 	return task_list

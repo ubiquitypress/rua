@@ -117,7 +117,7 @@
                     <div class="row">
                      <div class="band" style="margin-left:10px;margin-right:10px">
                <h5><span class="author-note">Revisions</span> requested for proposal <span class="author-note">{{ note.proposal.title }}</span></h5>
-                 
+                     <h5> <b>Revision Due</b> {% if note.overdue %} <b style="color:rgb(205,33,33)">Overdue ({{ note.proposal.revision_due_date }})</b>{%else%} <b style="color:rgb(187,123,73)">{{ note.proposal.revision_due_date }}</b>{% endif %}</h5>
                     </div>
                 
                 <br />

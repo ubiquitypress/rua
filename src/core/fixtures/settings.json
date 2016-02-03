@@ -396,37 +396,37 @@
     "pk": 37
 },
 {
-    "fields": {
-        "value": "Dear {{proposal.owner.profile.salutation_name}},\r\n\r\nAfter review of your proposal to {{press.press_name}}, we have reached a decision to accept the book, \"\"{$articleTitle}\"\", for full submission and peer review. We hope that you are pleased with this news.\r\n\r\nWe will be in touch regarding the next steps of the process.\r\n\r\nKind regards,\r\n\r\n{{sender.first_name}}\r\n{% if sender %}{{ sender.profile.signature|safe }}{% endif %}",
-        "group": 3,
-        "name": "proposal_accept",
-        "types": "rich_text",
-        "description": null
-    },
-    "model": "core.setting",
-    "pk": 39
+  "fields": {
+    "value": "Dear {{proposal.owner.profile.salutation_name}},\r\n\r\nAfter review of your proposal to {{press_name}}, we have reached a decision to accept the book, {{proposal.title}}, for full submission and peer review. We hope that you are pleased with this news.\r\n\r\nWe will be in touch regarding the next steps of the process.\r\n\r\nKind regards,\r\n\r\n{{sender.first_name}}\r\n{% if sender %}{{ sender.profile.signature|safe }}{% endif %}",
+    "group": 3,
+    "name": "proposal_accept",
+    "types": "rich_text",
+    "description": null
+  },
+  "model": "core.setting",
+  "pk": 39
 },
 {
-    "fields": {
-        "value": "Dear {{proposal.owner.profile.salutation_name}},\r\n\r\nAfter review of your proposal to {{press.press_name}}, we have reached a decision to reject the book, \"\"{$articleTitle}\"\", for full submission and peer review. A short summary of the reasons for not accepting this submission from the editorial team can be found below. We hope that you find this useful.\r\n\r\n[ADD COMMENTS ON WHY THE PROPOSAL IS BEING REJECTED]\r\n\r\nWe thank you for your submission and hope that you will consider us for a future publication.\r\n\r\nKind regards,\r\n\r\n{{sender.first_name}}\r\n{% if sender %}{{ sender.profile.signature|safe }}{% endif %}",
-        "group": 3,
-        "name": "proposal_decline",
-        "types": "rich_text",
-        "description": null
-    },
-    "model": "core.setting",
-    "pk": 40
+  "fields": {
+    "value": "Dear {{proposal.owner.profile.salutation_name}},\r\n\r\nAfter review of your proposal to {{press_name}}, we have reached a decision to reject the book, {{proposal.title}}, for full submission and peer review. A short summary of the reasons for not accepting this submission from the editorial team can be found below. We hope that you find this useful.\r\n\r\n[ADD COMMENTS ON WHY THE PROPOSAL IS BEING REJECTED]\r\n\r\nWe thank you for your submission and hope that you will consider us for a future publication.\r\n\r\nKind regards,\r\n\r\n{{sender.first_name}}\r\n{% if sender %}{{ sender.profile.signature|safe }}{% endif %}",
+    "group": 3,
+    "name": "proposal_decline",
+    "types": "rich_text",
+    "description": null
+  },
+  "model": "core.setting",
+  "pk": 40
 },
 {
-    "fields": {
-        "value": "Dear {{proposal.owner.profile.salutation_name}},\r\n\r\nAfter review, we have reached a decision regarding your book proposal, \u2018{{proposal.title}} {{proposal.subtitle}}\u2019 to {{press_name}}. Our decision is to request some revisions of the proposal prior to acceptance for full submission and peer review.\r\n\r\nA summary of the requested edits from the editorial team can be found below. Please consider these points and revise the proposal details accordingly:\r\n\r\nEditorial Revision Requests:\r\nMajor revisions:\r\n[XXXX EDITOR TO INSERT LIST OF MAJOR REVISIONS HERE, IF ANY XXXX]\r\n\r\nMinor revisions:\r\n[XXXX EDITOR TO INSERT LIST OF MINOR REVISIONS HERE, IF ANY XXXX]\r\n\r\n\r\nYou can access the proposal details and submit your revisions via the book management system: {{base_url}}/submission/proposal/{{proposal.pk}}/revisions/\r\n\r\nShould you disagree with any of these requests, or have any questions, then please get in touch and we can discuss the options available.\r\n\r\nPlease could you have the revisions submitted by (DUE DATE). If you cannot make this deadline, please let us know as early as possible.\r\n\r\nKind regards,\r\n\r\n{{sender.first_name}}\r\n{% if sender %}{{ sender.profile.signature|safe }}{% endif %}",
-        "group": 3,
-        "name": "proposal_request_revisions",
-        "types": "rich_text",
-        "description": null
-    },
-    "model": "core.setting",
-    "pk": 41
+  "fields": {
+    "value": "Dear &nbsp;{{proposal.owner.profile.salutation_name}},\r\n\r\nAfter review, we have reached a decision regarding your book proposal, \u2018{{proposal.title}} {{proposal.subtitle}}\u2019 to {{press_name}}. Our decision is to request some revisions of the proposal prior to acceptance for full submission and peer review.\r\n\r\nA summary of the requested edits from the editorial team can be found below. Please consider these points and revise the proposal details accordingly:\r\n\r\nEditorial Revision Requests:\r\nMajor revisions:\r\n[XXXX EDITOR TO INSERT LIST OF MAJOR REVISIONS HERE, IF ANY XXXX]\r\n\r\nMinor revisions:\r\n[XXXX EDITOR TO INSERT LIST OF MINOR REVISIONS HERE, IF ANY XXXX]\r\n\r\n\r\nYou can access the proposal details and submit your revisions via the book management system: {{base_url}}/submission/proposal/{{proposal.pk}}/revisions/\r\n\r\nShould you disagree with any of these requests, or have any questions, then please get in touch and we can discuss the options available.\r\n\r\nPlease could you have the revisions submitted by&nbsp;_due_date_. If you cannot make this deadline, please let us know as early as possible.\r\n\r\nKind regards,\r\n\r\n{{sender.first_name}}\r\n{% if sender %}{{ sender.profile.signature|safe }}{% endif %}",
+    "group": 3,
+    "name": "proposal_request_revisions",
+    "types": "rich_text",
+    "description": null
+  },
+  "model": "core.setting",
+  "pk": 41
 },
 {
     "fields": {
