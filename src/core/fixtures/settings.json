@@ -242,15 +242,15 @@
     "pk": 23
 },
 {
-    "fields": {
-        "value": "Dear {{review.user.profile.salutation_name}},\r\n\r\nWould you be able to provide an update on how the revisions are going for you book submission \u2018{{book.title}}\u2019? The initial deadline of /revisions deadline/  has now passed. If there will be a further delay in submitting the revisions, please could you contact me so that a new schedule can be confirmed. This will ensure that processes further down the line do not experience delays.\r\n\r\nYou can access the files for revision and resubmit them using the below link:\r\n\r\nSubmission URL: /revisions url/\r\n\r\nI look forward to hearing from you.\r\n\r\nKind regards,\r\n\r\n{{sender.first_name}}\r\n{% if sender %}{{ sender.profile.signature|safe }}{% endif %}",
-        "group": 3,
-        "name": "revisions_reminder_email",
-        "types": "rich_text",
-        "description": null
-    },
-    "model": "core.setting",
-    "pk": 24
+  "fields": {
+    "value": "Dear {{review.user.profile.salutation_name}}, Would you be able to provide an update on how the revisions are going for you book submission {{book.title}}? The initial deadline of {{review.due}} &nbsp;has now passed. If there will be a further delay in submitting the revisions, please could you contact me so that a new schedule can be confirmed. This will ensure that processes further down the line do not experience delays. You can access the files for revision and resubmit them using the below link: Submission URL: {{base_url}}/author/submission/{{book.id}}/revisions/{{review.id}}/.&nbsp;<span style=\"line-height: 1.42857;\">I look forward to hearing from you. Kind regards, {{sender.first_name}} {% if sender %}{{ sender.profile.signature|safe }}{% endif %}</span>",
+    "group": 3,
+    "name": "revisions_reminder_email",
+    "types": "rich_text",
+    "description": null
+  },
+  "model": "core.setting",
+  "pk": 24
 },
 {
     "fields": {
@@ -363,15 +363,15 @@
     "pk": 34
 },
 {
-    "fields": {
-        "value": "Dear {{typeset.typesetter.profile.salutation_name}},\r\n\r\nWould you be able to provide an update on how the revisions are going for you book submission \u2018{{submission.title}}\u2019? The initial deadline of /revisions deadline/ has now passed. If there will be a further delay in submitting the revisions, please could you contact me so that a new schedule can be confirmed. This will ensure that processes further down the line do not experience delays.\r\n\r\nYou can access the files for revision and resubmit them using the below link:\r\n\r\nSubmission URL: /revisions url/\r\n\r\nI look forward to hearing from you.\r\n\r\nKind regards,\r\n\r\n{{sender.first_name}}\r\n{% if sender %}{{ sender.profile.signature|safe }}{% endif %}",
-        "group": 3,
-        "name": "typesetter_typeset_request",
-        "types": "rich_text",
-        "description": null
-    },
-    "model": "core.setting",
-    "pk": 35
+  "fields": {
+    "value": "<span style=\"line-height: 20px;\">Dear {{typeset.typesetter.profile.salutation_name}}, Would you be able to provide an update on how the revisions are going for you book submission {{submission.title}}? The initial deadline of {{typeset.due}} has now passed. If there will be a further delay in submitting the revisions, please could you contact me so that a new schedule can be confirmed. This will ensure that processes further down the line do not experience delays. You can access the files for revision and resubmit them using the below link: Submission URL: {{base_url}}/tasks/typesetting/{{typeset.pk}}/ I look forward to hearing from you. Kind regards, {{sender.first_name}} {% if sender %}{{ sender.profile.signature|safe }}{% endif %}</span>",
+    "group": 3,
+    "name": "typesetter_typeset_request",
+    "types": "rich_text",
+    "description": null
+  },
+  "model": "core.setting",
+  "pk": 35
 },
 {
     "fields": {
