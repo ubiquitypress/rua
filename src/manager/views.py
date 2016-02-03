@@ -899,6 +899,7 @@ def add_user(request):
 		'profile_form' : profile_form,
 		'user_form': user_form,
 		'active': 'add',
+		'return': request.GET.get('return', False)
 	}
 	return render(request, template, context)
 
