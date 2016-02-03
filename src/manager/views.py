@@ -8,6 +8,7 @@ from django.core.urlresolvers import reverse
 from django.contrib import messages
 from django.core.cache import cache
 from django.core.exceptions import ObjectDoesNotExist
+from django.utils.encoding import smart_text
 
 from manager import models
 from review import models as review_models
@@ -15,20 +16,21 @@ from review import forms as review_f
 from manager import forms, logic
 from django.conf import settings
 from core import models as core_models, forms as core_forms
+from core.decorators import is_press_editor
 from submission import forms as submission_forms
 from submission import models as submission_models
 
 from uuid import uuid4
 import os
 
-@staff_member_required
+@is_press_editor
 def index(request):
 	template = 'manager/index.html'
 	context = {}
 
 	return render(request, template, context)
 
-@staff_member_required
+@is_press_editor
 def groups(request):
 
 	template = 'manager/groups.html'
@@ -38,7 +40,7 @@ def groups(request):
 
 	return render(request, template, context)
 
-@staff_member_required
+@is_press_editor
 def group(request, group_id=None):
 
 	form = forms.GroupForm()
@@ -67,7 +69,7 @@ def group(request, group_id=None):
 
 	return render(request, template, context)
 
-@staff_member_required
+@is_press_editor
 def group_delete(request, group_id):
 
 	group = get_object_or_404(models.Group, pk=group_id)
@@ -75,7 +77,7 @@ def group_delete(request, group_id):
 
 	return redirect('manager_groups')
 
-@staff_member_required
+@is_press_editor
 def group_members(request, group_id):
 
 	group = get_object_or_404(models.Group, pk=group_id)
@@ -91,7 +93,7 @@ def group_members(request, group_id):
 
 	return render(request, template, context)
 
-@staff_member_required
+@is_press_editor
 def group_members_assign(request, group_id, user_id):
 
 	group = get_object_or_404(models.Group, pk=group_id)
@@ -106,7 +108,7 @@ def group_members_assign(request, group_id, user_id):
 
 	return redirect(reverse('manager_group_members', kwargs={'group_id': group.id}))
 
-@staff_member_required
+@is_press_editor
 def manager_membership_delete(request, group_id, member_id):
 
 	group = get_object_or_404(models.Group, pk=group_id)
@@ -116,7 +118,7 @@ def manager_membership_delete(request, group_id, member_id):
 
 	return redirect(reverse('manager_group_members', kwargs={'group_id': group.id}))
 
-@staff_member_required
+@is_press_editor
 @csrf_exempt
 def roles(request):
 
@@ -127,7 +129,7 @@ def roles(request):
 
 	return render(request, template, context)
 
-@staff_member_required
+@is_press_editor
 def role(request, slug):
 
 	role = get_object_or_404(core_models.Role, slug=slug)
@@ -143,7 +145,7 @@ def role(request, slug):
 
 	return render(request, template, context)
 
-@staff_member_required
+@is_press_editor
 def role_action(request, slug, user_id, action):
 
 	user = get_object_or_404(User, pk=user_id)
@@ -158,14 +160,14 @@ def role_action(request, slug, user_id, action):
 
 	return redirect(reverse('manager_role', kwargs={'slug': role.slug}))
 
-@staff_member_required
+@is_press_editor
 def flush_cache(request):
 	cache._cache.flush_all()
 	messages.add_message(request, messages.SUCCESS, 'Memcached has been flushed.')
 
 	return redirect(reverse('manager_index'))
 
-@staff_member_required
+@is_press_editor
 def settings_index(request):
 	
 	template = 'manager/settings/index.html'
@@ -175,7 +177,7 @@ def settings_index(request):
 
 	return render(request, template, context)
 
-@staff_member_required
+@is_press_editor
 def edit_setting(request, setting_group, setting_name):
 	group = get_object_or_404(core_models.SettingGroup, name=setting_group)
 	setting = get_object_or_404(core_models.Setting, group=group, name=setting_name)
@@ -189,7 +191,7 @@ def edit_setting(request, setting_group, setting_name):
 		return redirect(reverse('settings_index'))
 
 	if request.POST:
-		value = request.POST.get('value')
+		value = smart_text(request.POST.get('value'))
 		if request.FILES:
 			value = handle_file(request, request.FILES['value'])
 
@@ -254,7 +256,7 @@ def submission_checklist(request):
 
 	return render(request, template, context)
 
-@staff_member_required
+@is_press_editor
 def proposal_forms(request):
 
 	proposal_forms = core_models.ProposalForm.objects.all()
@@ -280,7 +282,7 @@ def proposal_forms(request):
 
 	return render(request, template, context)
 
-@staff_member_required
+@is_press_editor
 def view_proposal_form(request,form_id):
 
 	form = core_models.ProposalForm.objects.get(id=form_id)
@@ -309,7 +311,7 @@ def view_proposal_form(request,form_id):
 
 	return render(request, template, context)
 
-@staff_member_required
+@is_press_editor
 def proposal_form_elements(request):
 
 	elements = core_models.ProposalFormElement.objects.all()
@@ -337,7 +339,7 @@ def proposal_form_elements(request):
 
 	return render(request, template, context)
 
-@staff_member_required
+@is_press_editor
 def add_proposal_field(request,form_id):
 
 	form = core_models.ProposalForm.objects.get(id=form_id)
@@ -385,7 +387,7 @@ def add_proposal_field(request,form_id):
 
 	return render(request, template, context)
 
-@staff_member_required
+@is_press_editor
 def edit_proposal_field(request,form_id,field_id):
 
 	form = core_models.ProposalForm.objects.get(id=form_id)
@@ -444,7 +446,7 @@ def edit_proposal_field(request,form_id,field_id):
 
 	return render(request, template, context)
 
-@staff_member_required
+@is_press_editor
 def add_proposal_form(request, form_id = None):
 	edit = True
 	if form_id:
@@ -487,7 +489,7 @@ def add_proposal_form(request, form_id = None):
 
 	return render(request, template, context)
 
-@staff_member_required
+@is_press_editor
 def create_proposal_elements(request,form_id):
 
 	form = core_models.ProposalForm.objects.get(id=form_id)
@@ -517,7 +519,7 @@ def create_proposal_elements(request,form_id):
 		'elements' : elements,
 	}
 	return render(request, template, context)
-@staff_member_required
+@is_press_editor
 def edit_proposal_element(request,form_id,element_id):
 
 	form = core_models.ProposalForm.objects.get(id=form_id)
@@ -555,7 +557,7 @@ def edit_proposal_element(request,form_id,element_id):
 		'element':current_element,
 	}
 	return render(request, template, context)
-@staff_member_required
+@is_press_editor
 def review_forms(request):
 
 	forms = review_models.Form.objects.all()
@@ -566,7 +568,7 @@ def review_forms(request):
 	}
 	return render(request, template, context)
 
-@staff_member_required
+@is_press_editor
 def view_review_form(request,form_id):
 
 	form = review_models.Form.objects.get(id=form_id)
@@ -590,7 +592,7 @@ def view_review_form(request,form_id):
 	}
 	return render(request, template, context)
 
-@staff_member_required
+@is_press_editor
 def review_form_elements(request):
 
 	elements = review_models.FormElement.objects.all()
@@ -616,7 +618,7 @@ def review_form_elements(request):
 	}
 	return render(request, template, context)
 
-@staff_member_required
+@is_press_editor
 def add_field(request,form_id):
 
 	form = review_models.Form.objects.get(id=form_id)
@@ -665,7 +667,7 @@ def add_field(request,form_id):
 	return render(request, template, context)
 
 
-@staff_member_required
+@is_press_editor
 def edit_elements(request, form_id, element_id):
 
 	form =  review_models.Form.objects.get(id=form_id)
@@ -706,7 +708,7 @@ def edit_elements(request, form_id, element_id):
 	return render(request, template, context)
 
 
-@staff_member_required
+@is_press_editor
 def edit_field(request,form_id, field_id):
 
 	form = review_models.Form.objects.get(id=form_id)
@@ -766,7 +768,7 @@ def edit_field(request,form_id, field_id):
 	}
 	return render(request, template, context)
 
-@staff_member_required
+@is_press_editor
 def add_form(request, form_id = None):
 	edit = True
 	if form_id:
@@ -808,7 +810,7 @@ def add_form(request, form_id = None):
 	}
 	return render(request, template, context)
 
-@staff_member_required
+@is_press_editor
 def create_elements(request,form_id):
 
 	form =  review_models.Form.objects.get(id=form_id)
@@ -839,7 +841,7 @@ def create_elements(request,form_id):
 	return render(request, template, context)
 
 
-@staff_member_required
+@is_press_editor
 def users(request):
 
 	template = 'manager/users/index.html'
@@ -848,7 +850,7 @@ def users(request):
 	}
 	return render(request, template, context)
 
-@staff_member_required
+@is_press_editor
 def add_user(request):
 	user_form = core_forms.FullUserProfileForm()
 	profile_form = core_forms.FullProfileForm()
@@ -898,7 +900,7 @@ def add_user(request):
 	}
 	return render(request, template, context)
 
-@staff_member_required
+@is_press_editor
 def user_edit(request, user_id):
 	user = User.objects.get(pk=user_id)
 	user_form = core_forms.UserProfileForm(instance=user)
@@ -929,7 +931,7 @@ def user_edit(request, user_id):
 	}
 	return render(request, template, context)
 
-@staff_member_required
+@is_press_editor
 def inactive_users(request):
 
 	users = User.objects.filter(active=False)
@@ -942,7 +944,7 @@ def inactive_users(request):
 
 ## File handler
 
-@staff_member_required
+@is_press_editor
 def handle_file(request, file):
 
 	original_filename = str(file._get_name())
@@ -963,7 +965,7 @@ def handle_file(request, file):
 
 ## AJAX Handler
 
-@staff_member_required
+@is_press_editor
 @csrf_exempt
 def groups_order(request):
 
@@ -984,7 +986,7 @@ def groups_order(request):
 
 	return HttpResponse(response)
 
-@staff_member_required
+@is_press_editor
 @csrf_exempt
 def group_members_order(request, group_id):
 
@@ -1006,7 +1008,7 @@ def group_members_order(request, group_id):
 
 	return HttpResponse(response)
 	
-@staff_member_required
+@is_press_editor
 @csrf_exempt
 def checklist_order(request):
 
