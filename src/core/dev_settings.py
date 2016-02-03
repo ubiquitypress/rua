@@ -121,7 +121,7 @@ TIME_ZONE = 'UTC'
 
 USE_I18N = True
 
-USE_L10N = True
+USE_L10N = False
 
 USE_TZ = True
 
@@ -182,7 +182,7 @@ LOGIN_URL = '/login/'
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
-DATE_FORMAT = '%d %b, %Y'
+DATE_FORMAT = '%Y-%m-%d'
 DATETIME_FORMAT = '%d %b, %Y %H:%M'
 
 SUMMERNOTE_CONFIG = {
