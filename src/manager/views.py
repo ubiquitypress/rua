@@ -847,6 +847,8 @@ def users(request):
 	template = 'manager/users/index.html'
 	context = {
 		'users': User.objects.all(),
+		'password': request.GET.get('password', None),
+		'username': request.GET.get('username', None),
 	}
 	return render(request, template, context)
 
@@ -890,7 +892,7 @@ def add_user(request):
 			profile.save()
 
 
-			return redirect(reverse('manager_users'))
+			return redirect("%s?username=%s&password=%s" % (reverse('manager_users'), user.username, new_pass))
 
 	template = 'manager/users/edit.html'
 	context = {
