@@ -936,12 +936,23 @@ def user_edit(request, user_id):
 @is_press_editor
 def inactive_users(request):
 
-	users = User.objects.filter(active=False)
+	users = User.objects.filter(is_active=False)
 
 	template = 'manager/users/inactive.html'
 	context = {
 		'users': users,
 	}
+
+	return render(request, template, context)
+
+@is_press_editor
+def activate_user(request, user_id):
+
+	user = get_object_or_404(models.User, pk=user_id, is_active=False)
+	user.is_active = True
+	user.save()
+
+	return redirect(reverse('manager_inactive_users'))
 
 
 ## File handler
