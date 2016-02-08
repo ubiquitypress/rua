@@ -9,7 +9,9 @@
 {% endblock %}
 
 {% block body %}
-<h3>{{title|title}}</h3>
-<div class="border-well-xs"></div>
-<div class="well border-well">{{page_content|safe}}</div>
+<div class="container">
+	<h3>{{title|title}}</h3>
+	<hr />
+	{{page_content.value|safe}}
+</div>
 {% endblock %}

@@ -677,10 +677,9 @@ def email_users_proposal(request, proposal_id, user_id):
     }
     return render(request, template, context)
 
-@login_required
 def page(request, page_name):
 
-    page_content = get_object_or_404(models.Setting, group__name='page', name=page_name).value
+    page_content = get_object_or_404(models.Setting, group__name='page', name=page_name)
     title = page_name.replace('-', ' ')
 
     template = 'core/page.html'
