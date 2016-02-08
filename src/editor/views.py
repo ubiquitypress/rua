@@ -37,7 +37,10 @@ def editor_dashboard(request):
 	if search:
 		query_list.append(Q(title__contains=search) | Q(subtitle__contains=search) | Q(prefix__contains=search))
 
-	if filterby:
+	if not 'press-editor' in request.user_roles:
+		query_list.append(Q(book_editors__in=[request.user]))
+
+	if query_list:
 		book_list = models.Book.objects.filter(publication_date__isnull=True).filter(*query_list).exclude(stage__current_stage='declined').select_related('stage').select_related('owner__profile').order_by(order)
 	else:
 		book_list = models.Book.objects.filter(publication_date__isnull=True).exclude(stage__current_stage='declined').select_related('stage').select_related('owner__profile').order_by(order)

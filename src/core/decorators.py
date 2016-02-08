@@ -110,7 +110,7 @@ def is_book_editor(function):
 			return function(request, *args, **kwargs)
 		elif submission_id:
 			book = get_object_or_404(models.Book, pk=submission_id)
-			if request.user in book.press_editors.all() or book.series in request.user.series_set.all():
+			if request.user in book.book_editors.all() or book.series in request.user.series_set.all():
 				return function(request, *args, **kwargs)
 			else:
 				messages.add_message(request, messages.ERROR, 'You need to have Press Editor, Book Editor or Series Editor level permission to view this page.')
@@ -141,7 +141,7 @@ def is_book_editor_or_author(function):
 			return function(request, *args, **kwargs)
 		elif submission_id:
 			book = get_object_or_404(models.Book, pk=submission_id)
-			if request.user in book.press_editors.all() or book.series in request.user.series_set.all() or book.owner == request.user:
+			if request.user in book.book_editors.all() or book.series in request.user.series_set.all() or book.owner == request.user:
 				return function(request, *args, **kwargs)
 			else:
 				messages.add_message(request, messages.ERROR, 'You need to have Press Editor, Book Editor or Series Editor level permission to view this page.')
