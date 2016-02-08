@@ -12,7 +12,7 @@ from core.logic import order_data, decode_json
 from submission import models as submission_models
 from revisions import models as revision_models
 from review import models as review_models
-from core.files import handle_file_update, handle_attachment,handle_file,handle_copyedit_file,handle_typeset_file
+from core.files import handle_file_update, handle_attachment, handle_file, handle_copyedit_file, handle_typeset_file
 
 @is_author
 def author_dashboard(request):
@@ -210,6 +210,35 @@ def revise_file(request, submission_id, revision_id, file_id):
 		'file': _file,
 		'author_include': 'author/revision.html',
 		'submission_files': 'author/revise_file.html',
+		'form': form,
+	}
+
+	return render(request, template, context)
+
+@login_required
+def revision_new_file(request, submission_id, revision_id, file_type):
+	revision = get_object_or_404(revision_models.Revision, pk=revision_id, book__owner=request.user)
+	book = revision.book
+
+	form = forms.AuthorRevisionForm(instance=revision)
+
+	if request.POST:
+		print request.FILES
+		new_upload = request.FILES.get('new_file')
+		new_file = handle_file(new_upload, book, 'revision', request.user, label=request.POST.get('file_label'))
+		new_file.kind = file_type
+		new_file.save()
+
+		book.files.add(new_file)
+
+		return redirect(reverse('author_revision', kwargs={'submission_id': submission_id, 'revision_id': revision.id}))
+
+	template = 'author/submission.html'
+	context = {
+		'submission': book,
+		'revision': revision,
+		'author_include': 'author/revision.html',
+		'submission_files': 'author/revision_new_file.html',
 		'form': form,
 	}
 

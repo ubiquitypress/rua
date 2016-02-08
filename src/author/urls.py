@@ -23,5 +23,6 @@ urlpatterns = patterns('',
 
 	    url(r'^submission/(?P<submission_id>\d+)/revisions/(?P<revision_id>\d+)/$', 'author.views.revision', name='author_revision'),
 	    url(r'^submission/(?P<submission_id>\d+)/revisions/(?P<revision_id>\d+)/update_file/(?P<file_id>\d+)/$', 'author.views.revise_file', name='revise_file'),
+	    url(r'^submission/(?P<submission_id>\d+)/revisions/(?P<revision_id>\d+)/new/(?P<file_type>[-\w]+)/file/$', 'author.views.revision_new_file', name='revision_new_file'),
 	    url(r'^submission/(?P<submission_id>\d+)/contract/(?P<contract_id>\d+)/signoff/$', 'author.views.author_contract_signoff', name='author_contract_signoff'),
 )

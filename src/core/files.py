@@ -204,6 +204,7 @@ def handle_proposal_file(file, proposal, kind, owner, label=None):
 	new_file.save()
 
 	return new_file
+	
 def handle_proposal_file_form(file, proposal, kind, owner, label=None):
 
 	original_filename = str(file._get_name())
@@ -241,6 +242,7 @@ def handle_proposal_file_form(file, proposal, kind, owner, label=None):
 	new_file.save()
 
 	return new_file.pk
+
 def handle_attachment(request, submission):
 	if request.FILES.get('attachment_file'):
 		attachment_file = request.FILES.get('attachment_file')
