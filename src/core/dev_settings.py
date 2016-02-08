@@ -182,8 +182,8 @@ LOGIN_URL = '/login/'
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
-DATE_FORMAT = '%Y-%m-%d'
-DATETIME_FORMAT = '%d %b, %Y %H:%M'
+DATE_FORMAT = 'Y-m-d'
+DATETIME_FORMAT = 'Y-m-d H:m'
 
 SUMMERNOTE_CONFIG = {
     # Using SummernoteWidget - iframe mode
