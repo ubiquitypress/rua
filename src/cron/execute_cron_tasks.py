@@ -12,12 +12,12 @@ def remind_unaccepted_reviews(task):
 	days = int(models.Setting.objects.get(group__name='cron', name='remind_unaccepted_reviews').value)
 	email_text = models.Setting.objects.get(group__name='email', name='unaccepted_reminder').value
 	dt = timezone.now()
-	target_date = dt + timedelta(days=days)
+	target_date = dt - timedelta(days=days)
 
 	books = models.Book.objects.filter(stage__current_stage='review')
 
 	for book in books:
-		reviews = models.ReviewAssignment.objects.filter(book=book, review_round__round_number=book.get_latest_review_round(), unaccepted_reminder=False, accepted__isnull=True, declined__isnull=True, due=target_date.date)
+		reviews = models.ReviewAssignment.objects.filter(book=book, review_round__round_number=book.get_latest_review_round(), unaccepted_reminder=False, accepted__isnull=True, declined__isnull=True, assigned=target_date.date)
 		for review in reviews:
 			send_reminder_email(book, 'Review Request Reminder', review, email_text)
 			# Lets make sure that we don't accidentally send this twice.
@@ -62,8 +62,6 @@ def reminder_overdue_revisions(task):
 	dt = timezone.now()
 	target_date = dt - timedelta(days=days)
 
-	print target_date
-
 	books = models.Book.objects.filter(Q(stage__current_stage='review') | Q(stage__current_stage='submission'))
 
 	for book in books:
@@ -78,7 +76,7 @@ def reminder_overdue_revisions(task):
 
 def send_reminder_email(book, subject, review, email_text):
     from_email = models.Setting.objects.get(group__name='email', name='from_address')
-    press_name = core_models.Setting.objects.get(group__name='general', name='press_name').value
+    press_name = models.Setting.objects.get(group__name='general', name='press_name').value
 
     context = {
         'book': book,
