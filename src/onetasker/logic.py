@@ -33,6 +33,19 @@ def get_assignemnt_form(request, assignment_type, assignment):
 
 	return form
 
+def get_unposted_form(request, assignment_type, assignment):
+
+	if assignment_type == 'copyedit':
+		form = forms.Copyedit(instance=assignment)
+	elif assignment_type == 'typesetting':
+		form = forms.Typeset(instance=assignment)
+	elif assignment_type == 'indexing':
+		form = forms.Index(instance=assignment)
+	else:
+		raise Http404
+
+	return form
+
 def handle_files(assignment, files):
 	for _file in files:
 		new_file = handle_file(_file, assignment)
