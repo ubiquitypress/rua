@@ -83,7 +83,6 @@ def add_file(assignment, new_file):
 	return assignment
 
 def complete_task(assignment):
-	print 'hey'
 	if assignment.type()== 'copyedit':
 		assignment.completed = datetime.now()
 	elif assignment.type()== 'typesetting':

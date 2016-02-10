@@ -3,25 +3,7 @@
 <h4>{{ assignment.type|capfirst }}</h4>
 <hr />
 Complete the form below and upload your files. The upload box is capable of uploading more than one file at a time.<br /><br />
-    <form method="POST" enctype="multipart/form-data">
-    {% if form.errors %}
-      <div class="alert alert-info">
-          Please correct errors below. Note, you'll have to reselect any files you want uploaded.
-          {% for error in form.errors %}
-            {{ error }}
-            {% endfor %}
-        </div>
-        {% endif %}
-    {% csrf_token %}
-    {% bootstrap_form form %}
-    {{ form.errors }}
-    <div class="row">
-      </div>
-      <br />
-     
-    </form>
-    </div>
-     <form id="fileupload" name="file_upload" method="POST" enctype="multipart/form-data">
+    <form id="fileupload" name="file_upload" method="POST" enctype="multipart/form-data">
         <!-- The fileupload-buttonbar contains buttons to add/delete files and start/cancel the upload -->
         <input type="hidden" value="{{ assignment.type }}" id="assignment_type_field">
           <input type="hidden" value="{{ assignment.id }}" id="assignment_id_field">
@@ -92,8 +74,24 @@ Complete the form below and upload your files. The upload box is capable of uplo
     
     {% csrf_token %}
     <p>When you have uploaded your files and are happy with their order, press the Complete button below to move onto the Author/Contributor section of the submission.</p>
-  <button type="submit" name="task" class="btn btn-success">Complete {{ assignment.type|capfirst }}</button>
+ 
+    {% if form.errors %}
+      <div class="alert alert-info">
+          Please correct errors below. Note, you'll have to reselect any files you want uploaded.
+          {% for error in form.errors %}
+            {{ error }}
+            {% endfor %}
+        </div>
+        {% endif %}
+    {% csrf_token %}
+    {% bootstrap_form form %}
+    {{ form.errors }}
+    <div class="row">
+      </div>
+      <br /> 
+      <button type="submit" name="task" class="btn btn-success">Complete {{ assignment.type|capfirst }}</button>
     </form>
+    </div>
     <br>
   </div>
 
