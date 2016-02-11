@@ -155,6 +155,17 @@ class LanguageSerializer(serializers.HyperlinkedModelSerializer):
             'display',
         )
 
+class LicenseSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = models.License
+        fields = (
+            'name',
+            'short_name',
+            'version',
+            'url',
+            'description',
+        )
+
 class BookSerializer(serializers.HyperlinkedModelSerializer):
     license = serializers.ReadOnlyField(source='license.short_name')
     author = AuthorSerializer(many=True)

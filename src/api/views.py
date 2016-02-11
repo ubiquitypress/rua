@@ -67,3 +67,8 @@ class OMPViewSet(viewsets.ModelViewSet):
 
     queryset = models.Book.objects.all().order_by('-submission_date')
     serializer_class = serializers.OMPSerializer
+
+class LicenseViewSet(viewsets.ModelViewSet):
+
+    queryset = models.License.objects.all()
+    serializer_class = serializers.LicenseSerializer
