@@ -183,7 +183,8 @@ class BookSerializer(serializers.HyperlinkedModelSerializer):
             'keywords',
             'subject',
             'review_type',
-            'identifier'
+            'identifier',
+            'peer_review_override',
             )
 
 class JuraBookSerializer(serializers.HyperlinkedModelSerializer):
@@ -229,6 +230,7 @@ class JuraBookSerializer(serializers.HyperlinkedModelSerializer):
             'physical_formats',
             'stage',
             'identifier',
+            'peer_review_override',
             )
 
     def create(self, validated_data):

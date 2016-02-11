@@ -96,7 +96,8 @@ class EditMetadata(forms.ModelForm):
 			'review_type',
 			'languages',
 			'publication_date',
-			'expected_completion_date'
+			'expected_completion_date',
+			'peer_review_override',
 		)
 
 		widgets = {
