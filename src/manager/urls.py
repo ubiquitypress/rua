@@ -35,34 +35,8 @@ urlpatterns = patterns('',
     url(r'^submission/checklist/delete/(?P<item_id>\d+)/$', 'manager.views.delete_submission_checklist', name='delete_submission_checklist'),
     url(r'^submission/checklist/order/$', 'manager.views.checklist_order', name='checklist_order'),
  
-    #Proposal Form Management
-    url(r'^submission/proposal_forms/$', 'manager.views.proposal_forms', name='proposal_forms'),
-    url(r'^submission/proposal_forms/view/form/(?P<form_id>\d+)/$', 'manager.views.view_proposal_form', name='manager_view_proposal_form'),
-    url(r'^submission/proposal_forms/form-elements/$', 'manager.views.proposal_form_elements', name='manager_proposal_form_elements'),
-    #Form Creation
-    url(r'^submission/proposal_forms/new/form/$', 'manager.views.add_proposal_form', name='manager_add_proposal_form'),
-    url(r'^submission/proposal_forms/form/(?P<form_id>\d+)/edit/$', 'manager.views.add_proposal_form', name='manager_edit_proposal_form'),
-
-    url(r'^submission/proposal_forms/form/(?P<form_id>\d+)/create/elements/$', 'manager.views.create_proposal_elements', name='manager_create_proposal_elements'),
-    url(r'^submission/proposal_forms/form/(?P<form_id>\d+)/edit/element/(?P<element_id>\d+)/$', 'manager.views.edit_proposal_element', name='manager_edit_proposal_element'),
-    url(r'^submission/proposal_forms/form/(?P<form_id>\d+)/add/field/$', 'manager.views.add_proposal_field', name='manager_add_proposal_form_field'), 
-    url(r'^submission/proposal_forms/form/(?P<form_id>\d+)/edit/field/(?P<field_id>\d+)/$', 'manager.views.edit_proposal_field', name='manager_edit_proposal_field'),
-
     # Cache
     url(r'^cache/flush/$', 'manager.views.flush_cache', name='manager_flush_cache'),
-
-    #Review Form Management
-    url(r'^review-forms/$', 'manager.views.review_forms', name='manager_review_forms'),
-    url(r'^review-forms/view/form/(?P<form_id>\d+)/$', 'manager.views.view_review_form', name='manager_view_review_form'),
-    url(r'^review-forms/form-elements/$', 'manager.views.review_form_elements', name='manager_review_form_elements'),
-    #Form Creation
-    url(r'^review-forms/new/form/$', 'manager.views.add_form', name='manager_add_form'),
-    url(r'^review-forms/form/(?P<form_id>\d+)/create/elements/$', 'manager.views.create_elements', name='manager_create_elements'),
-    url(r'^review-forms/form/(?P<form_id>\d+)/add/field/$', 'manager.views.add_field', name='manager_add_review_form_field'),
-     url(r'^review-forms/form/(?P<form_id>\d+)/edit/elements/(?P<element_id>\d+)/$', 'manager.views.edit_elements', name='manager_edit_elements'),
-    url(r'^review-forms/form/(?P<form_id>\d+)/edit/field/(?P<field_id>\d+)/$', 'manager.views.edit_field', name='manager_edit_review_form_field'),
-    url(r'^review-forms/form/(?P<form_id>\d+)/edit/$', 'manager.views.add_form', name='manager_edit_review_form'),
-
 
     # Users
     url(r'^user/$', 'manager.views.users', name='manager_users'),
@@ -73,5 +47,23 @@ urlpatterns = patterns('',
 
     # Key help
     url(r'^key_help/$', 'manager.views.key_help', name='manager_key_help'),
+
+    # Forms
+    url(r'^forms/add/(?P<form_type>[-\w.]+)/$', 'manager.views.add_new_form', name='manager_add_new_form'), 
+
+    url(r'^forms/proposal/$', 'manager.views.proposal_forms', name='manager_proposal_forms'),
+    url(r'^forms/proposal/(?P<form_id>\d+)/$', 'manager.views.edit_proposal_form', name='manager_edit_proposal_form'),
+    url(r'^forms/proposal/(?P<form_id>\d+)/element/(?P<relation_id>\d+)/$', 'manager.views.edit_proposal_form', name='manager_edit_proposal_form_element'),
+    url(r'^forms/proposal/(?P<form_id>\d+)/element/(?P<relation_id>\d+)/delete/$', 'manager.views.delete_proposal_form_element', name='manager_delete_proposal_form_element'),
+    url(r'^forms/proposal/(?P<form_id>\d+)/preview/$', 'manager.views.preview_proposal_form', name='manager_preview_proposal_form'),
+
+    url(r'^forms/review/$', 'manager.views.review_forms', name='manager_review_forms'),
+    url(r'^forms/review/(?P<form_id>\d+)/$', 'manager.views.edit_review_form', name='manager_edit_review_form'),
+    url(r'^forms/review/(?P<form_id>\d+)/element/(?P<relation_id>\d+)/$', 'manager.views.edit_review_form', name='manager_edit_review_form_element'),
+    url(r'^forms/review/(?P<form_id>\d+)/element/(?P<relation_id>\d+)/delete/$', 'manager.views.delete_review_form_element', name='manager_delete_review_form_element'),
+    url(r'^forms/review/(?P<form_id>\d+)/preview/$', 'manager.views.preview_review_form', name='manager_preview_review_form'),
+
+
+
 
 )

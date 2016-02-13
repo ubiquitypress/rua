@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% load bootstrap3 %}
+
+{% block body %}
+<div class="col-md-12 primary-heading container-fluid"style="margin-top:-20px" >
+	<h2>{{ press.general.press_name }} Review Forms</h2>
+</div>
+<div class="col-md-12">
+	<form method="POST">
+	{% csrf_token %}
+	{% bootstrap_form form %}
+	<button class="btn btn-success" type="input" name="submit">Add Form</button>
+	</form>
+</div>
+{% endblock body %}

@@ -14,41 +14,45 @@ class GroupForm(forms.ModelForm):
 	class Meta:
 		model = models.Group
 		exclude = ()
-class FormElementForm(forms.ModelForm):
+
+class FormElement(forms.ModelForm):
 
 	class Meta:
 		model = review_models.FormElement
-		exclude = ()
-class FormElementsRelationshipForm(forms.ModelForm):
+		exclude = ('form',)
+
+class FormElementsRelationship(forms.ModelForm):
 
 	class Meta:
 		model = review_models.FormElementsRelationship
-		exclude = ()
+		exclude = ('form', 'element')
 
-class StagesProposalForm(forms.ModelForm):
+class ProposalForms(forms.ModelForm):
 
 	class Meta:
 		model = core_models.ProposalForm
-		exclude = ()
+		exclude = ('proposal_fields',)
 	def __init__(self, *args, **kwargs):
-		super(StagesProposalForm, self).__init__(*args, **kwargs)
+		super(ProposalForms, self).__init__(*args, **kwargs)
 		self.fields['intro_text'].label = "Introduction text"
 
-class StagesProposalFormElementForm(forms.ModelForm):
+class ProposalElement(forms.ModelForm):
 
 	class Meta:
 		model = core_models.ProposalFormElement
-		exclude = ()
-class StagesProposalFormElementRelationshipForm(forms.ModelForm):
+		exclude = ('form',)
+
+class ProposalElementRelationship(forms.ModelForm):
 
 	class Meta:
 		model = core_models.ProposalFormElementsRelationship
-		exclude = ()
+		exclude = ('form', 'element')
+
 class ReviewForm(forms.ModelForm):
 
 	class Meta:
 		model = review_models.Form
-		exclude = ()
+		exclude = ('form_fields',)
 	def __init__(self, *args, **kwargs):
 		super(ReviewForm, self).__init__(*args, **kwargs)
 		self.fields['intro_text'].label = "Introduction text"

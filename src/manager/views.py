@@ -257,591 +257,6 @@ def submission_checklist(request):
 	return render(request, template, context)
 
 @is_press_editor
-def proposal_forms(request):
-
-	proposal_forms = core_models.ProposalForm.objects.all()
-	choices_form = forms.ProposalForm()
-	selected_form = core_models.Setting.objects.get(name='proposal_form').value
-	if request.POST:
-		choices_form = forms.ProposalForm(request.POST)
-		if choices_form.is_valid:
-			setting = core_models.Setting.objects.get(name='proposal_form')
-			setting.value = int(request.POST.get('selection'))
-			setting.save()
-			messages.add_message(request, messages.INFO, 'Proposal succesfully changed')
-			return redirect(reverse('proposal_forms'))
-
-	template = 'manager/proposal/proposal_forms.html'
-
-
-	context = {
-		'forms':proposal_forms,
-		'choices_form':choices_form,
-		'selected_form':int(selected_form),
-	}
-
-	return render(request, template, context)
-
-@is_press_editor
-def view_proposal_form(request,form_id):
-
-	form = core_models.ProposalForm.objects.get(id=form_id)
-
-	try:
-		preview_form = forms.GeneratedForm(form=core_models.ProposalForm.objects.get(pk=form_id))
-	except (ObjectDoesNotExist, ValueError):
-		preview_form = None
-
-	fields = core_models.ProposalFormElementsRelationship.objects.filter(form=form)
-	if request.POST and "delete" in request.POST:
-		index = int(request.POST.get("delete"))
-		field = fields[index]
-		field.delete()
-		return redirect(reverse('manager_view_proposal_form',kwargs={'form_id': form_id}))
-	
-	default_fields = forms.DefaultForm()
-	template = 'manager/proposal/view_form.html'
-
-	context = {
-		'form': form,
-		'fields':fields,
-		'preview_form' : preview_form,
-		'default_fields' : default_fields,
-	}
-
-	return render(request, template, context)
-
-@is_press_editor
-def proposal_form_elements(request):
-
-	elements = core_models.ProposalFormElement.objects.all()
-
-	new_form = forms.StagesProposalFormElementForm()
-
-	if request.POST and "delete" in request.POST:
-		index = int(request.POST.get("delete"))
-		field = elements[index]
-		field.delete()
-		return redirect(reverse('manager_proposal_form_elements'))
-	elif request.POST:
-		form_element_form=forms.StagesProposalFormElementForm(request.POST)
-		if form_element_form.is_valid():
-			form_element_form.save()
-			return redirect(reverse('manager_proposal_form_elements'))
-
-
-	template = 'manager/proposal/elements.html'
-
-	context = {
-		'elements': elements,
-		'new_form':new_form
-	}
-
-	return render(request, template, context)
-
-@is_press_editor
-def add_proposal_field(request,form_id):
-
-	form = core_models.ProposalForm.objects.get(id=form_id)
-	fields = core_models.ProposalFormElementsRelationship.objects.filter(form=form)
-	elements = core_models.ProposalFormElement.objects.all()
-	try:
-		preview_form = forms.GeneratedForm(form=form)
-	except (ObjectDoesNotExist, ValueError):
-		preview_form = None
-	default_fields = forms.DefaultForm()
-	new_form = forms.StagesProposalFormElementRelationshipForm()
-	if request.POST and 'finish' in request.POST:
-		print 'Finish'
-		return redirect(reverse('manager_view_proposal_form',kwargs={'form_id': form_id}))
-	elif request.POST and "delete" in request.POST:
-		index = int(request.POST.get("delete"))
-		field = fields[index]
-		field.delete()
-		return redirect(reverse('manager_add_proposal_form_field',kwargs={'form_id': form_id}))
-	elif request.POST:
-		field_form = forms.StagesProposalFormElementRelationshipForm(request.POST)
-		width = request.POST.get("width")
-		element_index = request.POST.get("element")
-		help_text = request.POST.get("help_text")
-		order = int(request.POST.get("order"))
-
-		element_id = int(element_index)
-		element = core_models.ProposalFormElement.objects.get(pk=element_id)
-		print element.name
-		relationship=core_models.ProposalFormElementsRelationship(form=form,element=element,width=width,order=order,help_text=help_text)
-		relationship.save()
-		fields = core_models.ProposalFormElementsRelationship.objects.filter(form=form)
-		form.form_fields=fields
-		form.save()
-		return redirect(reverse('manager_add_proposal_form_field',kwargs={'form_id': form_id}))
-	template = 'manager/proposal/add_field.html'
-
-	context = {
-		'form': form,
-		'new_form':new_form,
-		'fields': fields,
-		'preview_form':preview_form,
-		'default_fields':default_fields,
-	}
-
-	return render(request, template, context)
-
-@is_press_editor
-def edit_proposal_field(request,form_id,field_id):
-
-	form = core_models.ProposalForm.objects.get(id=form_id)
-	fields = core_models.ProposalFormElementsRelationship.objects.filter(form=form)
-	current_field = core_models.ProposalFormElementsRelationship.objects.get(pk=field_id)
-	elements = core_models.ProposalFormElement.objects.all()
-	
-	try:
-		preview_form = forms.GeneratedForm(form=form)
-	except (ObjectDoesNotExist, ValueError):
-		preview_form = None
-
-	default_fields = forms.DefaultForm()
-	new_form = forms.StagesProposalFormElementRelationshipForm(instance=current_field)
-	if request.POST and 'finish' in request.POST:
-		print 'Finish'
-		return redirect(reverse('manager_view_proposal_form',kwargs={'form_id': form_id}))
-	elif request.POST and "delete" in request.POST:
-		index = int(request.POST.get("delete"))
-		field = fields[index]
-		field.delete()
-		return redirect(reverse('manager_add_proposal_form_field',kwargs={'form_id': form_id}))
-	elif request.POST:
-		field_form = forms.StagesProposalFormElementRelationshipForm(request.POST,instance=current_field)
-
-		width = request.POST.get("width")
-		element_index = request.POST.get("element")
-		help_text = request.POST.get("help_text")
-		order = int(request.POST.get("order"))
-		index = int(element_index)-1
-		element_id = elements[int(element_index)-1].pk
-		element = core_models.ProposalFormElement.objects.get(pk=element_id)
-
-		current_field.element = element
-		current_field.width = width
-		current_field.help_text = help_text
-		current_field.order = order
-		current_field.save()
-
-		fields = core_models.ProposalFormElementsRelationship.objects.filter(form=form)
-		form.form_fields=fields
-		form.save()
-		return redirect(reverse('manager_add_proposal_form_field',kwargs={'form_id': form_id}))
-	
-	template = 'manager/proposal/add_field.html'
-
-	context = {
-		'form': form,
-		'new_form':new_form,
-		'fields': fields,
-		'current_field':current_field,
-		'update':True,
-		'preview_form':preview_form,
-		'default_fields':default_fields,
-	}
-
-	return render(request, template, context)
-
-@is_press_editor
-def add_proposal_form(request, form_id = None):
-	edit = True
-	if form_id:
-		proposal = core_models.ProposalForm.objects.get(id=form_id)
-		form = forms.StagesProposalForm(instance = proposal)
-	else: 
-		edit = False
-		proposal = None
-		form = forms.StagesProposalForm()
-
-	if request.POST:
-		if form_id:
-			proposal_form = forms.StagesProposalForm(request.POST, instance = proposal)
-		else:
-			proposal_form = forms.StagesProposalForm(request.POST)
-
-		if proposal_form.is_valid():
-			if form_id:
-				new_form = proposal_form.save(commit = False)
-				proposal.name = request.POST.get("name")
-				proposal.ref = request.POST.get("ref")
-				proposal.intro_text = request.POST.get("intro_text")
-				proposal.completion_text = request.POST.get("completion_text")
-				proposal.save()
-				return redirect(reverse('manager_view_proposal_form',kwargs={'form_id': form_id}))
-			else:
-				new_form = proposal_form.save()
-				return redirect(reverse('manager_create_proposal_elements',kwargs={'form_id': new_form.id}))
-	
-		else:
-			print form.errors
-	template = 'manager/proposal/add_form.html'
-
-	context = {
-		'new_form': form,
-		'proposal': proposal,
-		'edit' : edit,
-
-	}
-
-	return render(request, template, context)
-
-@is_press_editor
-def create_proposal_elements(request,form_id):
-
-	form = core_models.ProposalForm.objects.get(id=form_id)
-	elements = core_models.ProposalFormElement.objects.all()
-	new_form = forms.StagesProposalFormElementForm()
-
-	if request.POST and "delete" in request.POST:
-		index = int(request.POST.get("delete"))
-		field = elements[index]
-		field.delete()
-		return redirect(reverse('manager_create_proposal_elements',kwargs={'form_id': form_id}))
-	elif request.POST and 'continue' in request.POST:
-		form_element_form=forms.StagesProposalFormElementForm(request.POST)
-		if form_element_form.is_valid():
-			form_element_form.save()
-		return redirect(reverse('manager_add_proposal_form_field',kwargs={'form_id': form_id}))
-	elif request.POST:
-		form_element_form=forms.StagesProposalFormElementForm(request.POST)
-		if form_element_form.is_valid():
-			form_element_form.save()
-			return redirect(reverse('manager_create_proposal_elements',kwargs={'form_id': form_id}))
-
-	template = 'manager/proposal/create_elements.html'
-	context = {
-		'form': form,
-		'new_form':new_form,
-		'elements' : elements,
-	}
-	return render(request, template, context)
-@is_press_editor
-def edit_proposal_element(request,form_id,element_id):
-
-	form = core_models.ProposalForm.objects.get(id=form_id)
-	elements = core_models.ProposalFormElement.objects.all()
-	current_element = core_models.ProposalFormElement.objects.get(pk=element_id)
-	new_form = forms.StagesProposalFormElementForm(instance=current_element)
-
-	if request.POST and "delete" in request.POST:
-		index = int(request.POST.get("delete"))
-		field = elements[index]
-		field.delete()
-		return redirect(reverse('manager_create_proposal_elements',kwargs={'form_id': form_id}))
-	elif request.POST and 'continue' in request.POST:
-		form_element_form=forms.StagesProposalFormElementForm(request.POST,instance=current_element)
-		if form_element_form.is_valid():
-			form_element_form.save()
-		return redirect(reverse('manager_add_proposal_form_field',kwargs={'form_id': form_id}))
-	elif request.POST and 'update' in request.POST:
-		form_element_form=forms.StagesProposalFormElementForm(request.POST,instance=current_element)
-		if form_element_form.is_valid():
-			new_element=form_element_form.save(commit=False)
-			current_element.name = new_element.name
-			current_element.choices = new_element.choices
-			current_element.field_type = new_element.field_type
-			current_element.required = new_element.required
-			current_element.save()
-		return redirect(reverse('manager_create_proposal_elements',kwargs={'form_id': form_id}))
-
-	template = 'manager/proposal/create_elements.html'
-	context = {
-		'form': form,
-		'new_form':new_form,
-		'elements' : elements,
-		'update':True,
-		'element':current_element,
-	}
-	return render(request, template, context)
-@is_press_editor
-def review_forms(request):
-
-	forms = review_models.Form.objects.all()
-
-	template = 'manager/review/review_forms.html'
-	context = {
-		'forms': forms,
-	}
-	return render(request, template, context)
-
-@is_press_editor
-def view_review_form(request,form_id):
-
-	form = review_models.Form.objects.get(id=form_id)
-	fields = review_models.FormElementsRelationship.objects.filter(form=form)
-	try:
-		preview_form = review_f.GeneratedForm(form=form)
-	except (ObjectDoesNotExist, ValueError):
-		preview_form = None
-
-	if request.POST and "delete" in request.POST:
-		index = int(request.POST.get("delete"))
-		field = fields[index]
-		field.delete()
-		return redirect(reverse('manager_view_review_form',kwargs={'form_id': form_id}))
-
-	template = 'manager/review/view_form.html'
-	context = {
-		'form': form,
-		'preview_form':preview_form,
-		'fields':fields,
-	}
-	return render(request, template, context)
-
-@is_press_editor
-def review_form_elements(request):
-
-	elements = review_models.FormElement.objects.all()
-
-	new_form = forms.FormElementForm()
-
-	if request.POST and "delete" in request.POST:
-		index = int(request.POST.get("delete"))
-		field = elements[index]
-		field.delete()
-		return redirect(reverse('manager_review_form_elements'))
-	elif request.POST:
-		form_element_form=forms.FormElementForm(request.POST)
-		if form_element_form.is_valid():
-			form_element_form.save()
-			return redirect(reverse('manager_review_form_elements'))
-
-
-	template = 'manager/review/elements.html'
-	context = {
-		'elements': elements,
-		'new_form':new_form
-	}
-	return render(request, template, context)
-
-@is_press_editor
-def add_field(request,form_id):
-
-	form = review_models.Form.objects.get(id=form_id)
-	fields = review_models.FormElementsRelationship.objects.filter(form=form)
-	elements = review_models.FormElement.objects.all().order_by('pk')
-	new_form = forms.FormElementsRelationshipForm()
-
-	form = review_models.Form.objects.get(id=form_id)
-	fields = review_models.FormElementsRelationship.objects.filter(form=form)
-
-	try:
-		preview_form = review_f.GeneratedForm(form=form)
-	except (ObjectDoesNotExist, ValueError):
-		preview_form = None
-
-
-	if request.POST and 'finish' in request.POST:
-		return redirect(reverse('manager_view_review_form',kwargs={'form_id': form_id}))
-	elif request.POST and "delete" in request.POST:
-		index = int(request.POST.get("delete"))
-		field = fields[index]
-		field.delete()
-		return redirect(reverse('manager_add_review_form_field',kwargs={'form_id': form_id}))
-	elif request.POST:
-		field_form = forms.FormElementsRelationshipForm(request.POST)
-		width = request.POST.get("width")
-		element_index = request.POST.get("element")
-		help_text = request.POST.get("help_text")
-		order = int(request.POST.get("order"))
-		element_id = int(element_index)
-		element = review_models.FormElement.objects.get(pk=element_id)
-		relationship=review_models.FormElementsRelationship(form=form,element=element,width=width,order=order,help_text=help_text)
-		relationship.save()
-		fields = review_models.FormElementsRelationship.objects.filter(form=form)
-		form.form_fields=fields
-		form.save()
-		return redirect(reverse('manager_add_review_form_field',kwargs={'form_id': form_id}))
-	
-	template = 'manager/review/add_field.html'
-	context = {
-		'form': form,
-		'new_form':new_form,
-		'fields': fields,
-		'preview_form':preview_form,
-	}
-	return render(request, template, context)
-
-
-@is_press_editor
-def edit_elements(request, form_id, element_id):
-
-	form =  review_models.Form.objects.get(id=form_id)
-	elements = review_models.FormElement.objects.all()
-	current_element = get_object_or_404(review_models.FormElement, pk = element_id)
-
-	new_form = forms.FormElementForm(instance=current_element)
-	if request.POST and "delete" in request.POST:
-		index = int(request.POST.get("delete"))
-		field = elements[index]
-		field.delete()
-		return redirect(reverse('manager_create_elements',kwargs={'form_id': form_id}))
-	elif request.POST and 'continue' in request.POST:
-		form_element_form=forms.FormElementForm(request.POST, instance = current_element)
-		if form_element_form.is_valid():
-			new_element = form_element_form.save(commit=False)
-
-		return redirect(reverse('manager_add_review_form_field',kwargs={'form_id': form_id}))
-	elif request.POST:
-		form_element_form=forms.FormElementForm(request.POST, instance = current_element)
-		if form_element_form.is_valid():
-			new_element = form_element_form.save(commit=False)
-			current_element.name = new_element.name
-			current_element.choices = new_element.choices
-			current_element.field_type = new_element.field_type
-			current_element.required = new_element.required
-			current_element.save()
-			return redirect(reverse('manager_create_elements',kwargs={'form_id': form_id}))
-
-	template = 'manager/review/create_elements.html'
-	context = {
-		'form': form,
-		'new_form':new_form,
-		'elements' : elements,
-		'current_element':current_element,
-		'edit': True,
-	}
-	return render(request, template, context)
-
-
-@is_press_editor
-def edit_field(request,form_id, field_id):
-
-	form = review_models.Form.objects.get(id=form_id)
-	fields = review_models.FormElementsRelationship.objects.filter(form=form)
-	current_field = get_object_or_404(review_models.FormElementsRelationship, pk=field_id)
-
-	elements = review_models.FormElement.objects.all().order_by('pk')
-	new_form = forms.FormElementsRelationshipForm(instance = current_field)
-
-	form = review_models.Form.objects.get(id=form_id)
-	fields = review_models.FormElementsRelationship.objects.filter(form=form)
-
-	try:
-		preview_form = review_f.GeneratedForm(form=form)
-	except (ObjectDoesNotExist, ValueError):
-		preview_form = None
-
-
-	if request.POST and 'finish' in request.POST:
-		return redirect(reverse('manager_view_review_form',kwargs={'form_id': form_id}))
-	elif request.POST and "delete" in request.POST:
-		index = int(request.POST.get("delete"))
-		field = fields[index]
-		field.delete()
-		return redirect(reverse('manager_add_review_form_field',kwargs={'form_id': form_id}))
-	elif request.POST:
-
-		field_form = forms.FormElementsRelationshipForm(request.POST, instance=current_field)
-
-		width = request.POST.get("width")
-		element_index = request.POST.get("element")
-		help_text = request.POST.get("help_text")
-		order = int(request.POST.get("order"))
-		index = int(element_index)-1
-		element_id = elements[int(element_index)-1].pk
-		element = review_models.FormElement.objects.get(pk=element_id)
-
-		current_field.element = element
-		current_field.width = width
-		current_field.help_text = help_text
-		current_field.order = order
-		current_field.save()
-
-		fields = review_models.FormElementsRelationship.objects.filter(form=form)
-		form.form_fields=fields
-		form.save()
-		
-		return redirect(reverse('manager_add_review_form_field',kwargs={'form_id': form_id}))
-	
-	template = 'manager/review/add_field.html'
-	context = {
-		'form': form,
-		'new_form':new_form,
-		'fields': fields,
-		'preview_form':preview_form,
-		'current_field':current_field,
-	}
-	return render(request, template, context)
-
-@is_press_editor
-def add_form(request, form_id = None):
-	edit = True
-	if form_id:
-		review =  review_models.Form.objects.get(id=form_id)
-		form  = forms.ReviewForm(instance = review)
-	else:
-		edit = False
-		review = None
-		form = forms.ReviewForm()
-
-	if request.POST:
-		if form_id:
-			review_form = forms.ReviewForm(request.POST, instance = review)
-		else:
-			review_form = forms.ReviewForm(request.POST)
-
-		if review_form.is_valid():
-			if form_id:
-				new_form = review_form.save(commit=False)
-				review.name = request.POST.get("name")
-				review.ref = request.POST.get("ref")
-				review.intro_text = request.POST.get("intro_text")
-				review.completion_text = request.POST.get("completion_text")
-				review.save()
-				return redirect(reverse('manager_view_review_form',kwargs={'form_id': form_id}))
-			else:
-				new_form = review_form.save()
-				return redirect(reverse('manager_create_elements',kwargs={'form_id': new_form.id}))
-
-	
-		else:
-			print form.errors
-
-	template = 'manager/review/add_form.html'
-	context = {
-		'new_form': form,
-		'review': review,
-		'edit' : edit,
-	}
-	return render(request, template, context)
-
-@is_press_editor
-def create_elements(request,form_id):
-
-	form =  review_models.Form.objects.get(id=form_id)
-	elements = review_models.FormElement.objects.all()
-	new_form = forms.FormElementForm()
-	if request.POST and "delete" in request.POST:
-		index = int(request.POST.get("delete"))
-		field = elements[index]
-		field.delete()
-		return redirect(reverse('manager_create_elements',kwargs={'form_id': form_id}))
-	elif request.POST and 'continue' in request.POST:
-		form_element_form=forms.FormElementForm(request.POST)
-		if form_element_form.is_valid():
-			form_element_form.save()
-		return redirect(reverse('manager_add_review_form_field',kwargs={'form_id': form_id}))
-	elif request.POST:
-		form_element_form=forms.FormElementForm(request.POST)
-		if form_element_form.is_valid():
-			form_element_form.save()
-			return redirect(reverse('manager_create_elements',kwargs={'form_id': form_id}))
-
-	template = 'manager/review/create_elements.html'
-	context = {
-		'form': form,
-		'new_form':new_form,
-		'elements' : elements,
-	}
-	return render(request, template, context)
-
-
-@is_press_editor
 def users(request):
 
 	template = 'manager/users/index.html'
@@ -961,14 +376,194 @@ def key_help(request):
 	with open('%s%s' % (settings.BASE_DIR, '/core/fixtures/key_help.json')) as data_file:    
 		data = json.load(data_file)
 
-	print(data_file)
-
 	template = "manager/keys.html"
 	context = {
 		'data': data,
 		'data_render': json.dumps(data, indent=4)
 	}
 	return render(request, template, context)
+
+@is_press_editor
+def add_new_form(request, form_type):
+
+	if form_type == 'review':
+		form = forms.ReviewForm()
+	else:
+		form = forms.ProposalForms()
+
+	if request.POST:
+		if form_type == 'review':
+			form = forms.ReviewForm(request.POST)
+		else:
+			form = forms.ProposalForms(request.POST)
+
+		if form.is_valid:
+			form.save()
+
+		return redirect(reverse('manager_%s_forms' % form_type))
+
+	template = 'manager/add_new_form.html'
+	context = {
+		'form': form,
+		'form_type': form_type,
+	}
+	return render(request, template, context)
+
+@is_press_editor
+def proposal_forms(request):
+
+	template = 'manager/proposal/forms.html'
+	context = {
+		'proposal_forms': core_models.ProposalForm.objects.all()
+	}
+	return render(request, template, context)
+
+@is_press_editor
+def edit_proposal_form(request, form_id, relation_id=None):
+
+	form = get_object_or_404(core_models.ProposalForm, pk=form_id)
+
+	if relation_id:
+		relation = get_object_or_404(core_models.ProposalFormElementsRelationship, pk=relation_id)
+		element_form = forms.ProposalElement(instance=relation.element)
+		relation_form = forms.ProposalElementRelationship(instance=relation)
+	else:
+		element_form = forms.ProposalElement()
+		relation_form = forms.ProposalElementRelationship()
+
+	if request.POST:
+		if relation_id:
+			element_form = forms.ProposalElement(request.POST, instance=relation.element)
+			relation_form = forms.ProposalElementRelationship(request.POST, instance=relation)
+		else:
+			element_form = forms.ProposalElement(request.POST)
+			relation_form = forms.ProposalElementRelationship(request.POST)
+
+		if element_form.is_valid() and relation_form.is_valid():
+			new_element = element_form.save()
+
+			new_relation = relation_form.save(commit=False)
+			new_relation.form = form
+			new_relation.element = new_element
+			new_relation.save()
+
+			form.proposal_fields.add(new_relation)
+
+			return redirect(reverse('manager_edit_proposal_form', kwargs={'form_id': form_id}))
+
+	template = 'manager/proposal/edit_form.html'
+	context = {
+		'form': form,
+		'element_form': element_form,
+		'relation_form': relation_form,
+	}
+	return render(request, template, context)
+
+@is_press_editor
+def preview_proposal_form(request, form_id):
+
+	form = get_object_or_404(core_models.ProposalForm, pk=form_id)
+
+	preview_form = forms.GeneratedForm(form=core_models.ProposalForm.objects.get(pk=form_id))
+	fields = core_models.ProposalFormElementsRelationship.objects.filter(form=form)
+	default_fields = forms.DefaultForm()
+
+	template = 'manager/proposal/preview_form.html'
+	context = {
+		'form': form,
+		'preview_form': preview_form,
+		'fields': fields,
+		'default_fields': default_fields,
+	}
+	return render(request, template, context)
+
+@is_press_editor
+def delete_proposal_form_element(request, form_id, relation_id):
+
+	form = get_object_or_404(core_models.ProposalForm, pk=form_id)
+	relation = get_object_or_404(core_models.ProposalFormElementsRelationship, pk=relation_id)
+
+	relation.element.delete()
+	relation.delete()
+
+	return redirect(reverse('manager_edit_proposal_form', kwargs={'form_id': form_id}))
+
+@is_press_editor
+def review_forms(request):
+
+	template = 'manager/review/forms.html'
+	context = {
+		'review_forms': review_models.Form.objects.all()
+	}
+	return render(request, template, context)
+
+@is_press_editor
+def edit_review_form(request, form_id, relation_id=None):
+
+	form = get_object_or_404(review_models.Form, pk=form_id)
+
+	if relation_id:
+		relation = get_object_or_404(review_models.FormElementsRelationship, pk=relation_id)
+		element_form = forms.FormElement(instance=relation.element)
+		relation_form = forms.FormElementsRelationship(instance=relation)
+	else:
+		element_form = forms.ProposalElement()
+		relation_form = forms.FormElementsRelationship()
+
+	if request.POST:
+		if relation_id:
+			element_form = forms.FormElement(request.POST, instance=relation.element)
+			relation_form = forms.FormElementsRelationship(request.POST, instance=relation)
+		else:
+			element_form = forms.FormElement(request.POST)
+			relation_form = forms.FormElementsRelationship(request.POST)
+
+		if element_form.is_valid() and relation_form.is_valid():
+			new_element = element_form.save()
+
+			new_relation = relation_form.save(commit=False)
+			new_relation.form = form
+			new_relation.element = new_element
+			new_relation.save()
+
+			form.form_fields.add(new_relation)
+
+			return redirect(reverse('manager_edit_review_form', kwargs={'form_id': form_id}))
+
+	template = 'manager/review/edit_form.html'
+	context = {
+		'form': form,
+		'element_form': element_form,
+		'relation_form': relation_form,
+	}
+	return render(request, template, context)
+
+@is_press_editor
+def preview_review_form(request, form_id):
+
+	form = get_object_or_404(review_models.Form, pk=form_id)
+
+	preview_form = forms.GeneratedReviewForm(form=review_models.Form.objects.get(pk=form_id))
+	fields = review_models.FormElementsRelationship.objects.filter(form=form)
+
+	template = 'manager/review/preview_form.html'
+	context = {
+		'form': form,
+		'preview_form': preview_form,
+		'fields': fields,
+	}
+	return render(request, template, context)
+
+@is_press_editor
+def delete_review_form_element(request, form_id, relation_id):
+
+	form = get_object_or_404(review_models.Form, pk=form_id)
+	relation = get_object_or_404(review_models.FormElementsRelationship, pk=relation_id)
+
+	relation.element.delete()
+	relation.delete()
+
+	return redirect(reverse('manager_edit_review_form', kwargs={'form_id': form_id}))
 
 
 ## File handler
