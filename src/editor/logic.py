@@ -335,7 +335,7 @@ def send_requests_revisions(book, revision, email_text):
 		'book': book,
 		'revision': revision,
 		'press_name': press_name,
-		'revision_url': "http://%s/revisions/%s" % (base_url, revision.id)
+		'revision_url': "http://%s/author/submission/%s/revisions/%s" % (base_url, book.id, revision.id)
 	}
 
 	email.send_email('Revisions Requested', context, from_email.value, book.owner.email, email_text, book=book)
