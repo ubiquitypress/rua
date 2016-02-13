@@ -78,14 +78,13 @@
 </div>
 <hr>
 </div>
-
        <div class="col-md-4 dash-right bottom-space">
            <div class="dash-container" >
        <div class="dash-container" >
       <h4><b>COMPLETE REVIEW</b></h4>
       <p class="subtitle-form-text"><em> {{ form_info.intro_text|safe }} </em></p>
-       <h4>1. Completed the Review Form</h4>
-    <h6>Alternatively you may <a href="?download=docx">download</a> the review form, complete it offline, and upload it.</h6>
+       <h4>1. Complete the Review Form</h4>
+    <h6>Alternatively you may <a href="?download=docx">download</a> the review form, for use offline, but you will need to paste the results here.</h6>
     
 
 
@@ -94,6 +93,7 @@
           Please correct errors below. Note, you'll have to reselect any files you want uploaded.
         </div>
         {% endif %}
+      <div class="row">
       <form enctype="multipart/form-data" method="post">
       {% for field in form %}
             <div class="form-group">
@@ -110,10 +110,6 @@
       {% endfor %}
   
       {% csrf_token %}
-</br> </br> 
-</br> </br> 
-</br> </br> 
-</br> </br>
      <h4>2. Upload Review File</h4>
       <div class="form-group">
           <div class="row">
@@ -140,6 +136,7 @@
       <br/><br/>
 
       </form>
+      
 
 	</div>
   </div>

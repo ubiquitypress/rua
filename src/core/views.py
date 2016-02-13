@@ -1239,7 +1239,7 @@ def view_proposal_review(request, proposal_id, assignment_id):
     default_fields = manager_forms.DefaultForm(initial={'title': proposal.title,'author':proposal.author,'subtitle':proposal.subtitle})
     relationships = models.ProposalFormElementsRelationship.objects.filter(form=proposal.form)
     data = json.loads(proposal.data)
-    intial_data={}
+    intial_data = {}
     for k,v in data.items():
         intial_data[k] = v[0]
 
@@ -1305,10 +1305,11 @@ def view_proposal_review(request, proposal_id, assignment_id):
         'relationships':relationships,
         'data_ordered': data_ordered,
         'result': result,
-        'form':form,
+        'form': form,
         'recommendation_form':recommendation_form,
         'active': 'proposal_review',
-        'instructions': models.Setting.objects.get(group__name='general', name='instructions_for_task_proposal').value
+        'instructions': models.Setting.objects.get(group__name='general', name='instructions_for_task_proposal').value,
+        'data': data,
     }
 
     return render(request, template, context)
