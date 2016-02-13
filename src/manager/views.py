@@ -955,6 +955,21 @@ def activate_user(request, user_id):
 
 	return redirect(reverse('manager_inactive_users'))
 
+@is_press_editor
+def key_help(request):
+	import json
+	with open('%s%s' % (settings.BASE_DIR, '/core/fixtures/key_help.json')) as data_file:    
+		data = json.load(data_file)
+
+	print(data_file)
+
+	template = "manager/keys.html"
+	context = {
+		'data': data,
+		'data_render': json.dumps(data, indent=4)
+	}
+	return render(request, template, context)
+
 
 ## File handler
 

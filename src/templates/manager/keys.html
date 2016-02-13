@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% load static from staticfiles %}
+{% load bootstrap3 %}
+
+{% block body %}
+    <div class="col-md-12 primary-heading container-fluid"style="margin-top:-20px" >
+     <h2>Key Help <a href="{% url 'manager_index' %}" class="btn  btn-transparent-white" style="position: absolute;right:30px;margin-top:-6.5px">Go back</a></h2>
+    </div>
+    <p>Below is a mapping of the keys available in a book. Most emails have a book object and thus have access to these items.</p>
+    <p>More info can be found on the <a href="https://docs.djangoproject.com/en/1.9/topics/templates/">django website</a>.</p>
+    <p>Example: </p>
+    <pre>
+    {% templatetag openvariable %} book.subtitle {% templatetag closevariable %}
+
+    will render:
+
+    Are the valuable?
+    </pre>
+
+    <p>Loop: </p>
+    <pre>
+      You can loop through objects that are inside [] tags. For example author.
+      {% verbatim %}
+      {% for author in authors %}
+        {{ author.first_name }}
+      {% endfor %} 
+      {% endverbatim %}     
+      will render:
+
+      UP
+    </pre>
+    <p>Inviting a reviewer</p>
+    <pre>
+      In some examples, like inviting a reviewer, you will have access to that review assignment in the template so do not need to loop.
+      {% verbatim %}
+      {{ review.user.first_name }} {{ review.user.last_name }}
+      {% endverbatim %} 
+      will render:
+
+      UP Tech
+      {% verbatim %}
+      {{ review.due }}
+      {% endverbatim %}
+      will render a date in YYYY-mm-dd format (ISO) like:
+
+      2015-12-31
+    </pre>
+    <p>Example Data: </p>
+    <pre>
+      {{ data_render }}
+    </pre>
+{% endblock body %}

@@ -71,4 +71,7 @@ urlpatterns = patterns('',
     url(r'^user/add/$', 'manager.views.add_user', name='add_user'),
     url(r'^user/(?P<user_id>\d+)/edit/$', 'manager.views.user_edit', name='user_edit'),
 
+    # Key help
+    url(r'^key_help/$', 'manager.views.key_help', name='manager_key_help'),
+
 )

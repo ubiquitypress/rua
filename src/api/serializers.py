@@ -1,7 +1,21 @@
+from django.contrib.auth.models import User
+
 from core import models
+from review import models as review_models
 from rest_framework import serializers
 
 from pprint import pprint
+
+class UserSerializer(serializers.HyperlinkedModelSerializer):
+
+    class Meta:
+        model = User
+        fields = (
+            'username',
+            'first_name',
+            'last_name',
+            'email',
+        )
 
 class AuthorSerializer(serializers.HyperlinkedModelSerializer):
 
@@ -45,6 +59,46 @@ class EditorSerializer(serializers.HyperlinkedModelSerializer):
         'linkedin',
         'facebook',
         'sequence',
+        )
+
+class ReviewRoundSerializer(serializers.HyperlinkedModelSerializer):
+
+    class Meta:
+        model = models.ReviewRound
+        fields = (
+            'round_number',
+            'date_started',
+        )
+
+class FormResultSerializer(serializers.HyperlinkedModelSerializer):
+
+    class Meta:
+        model = review_models.FormResult
+        fields = (
+            'data',
+            'date',
+        )
+
+class ReviewAssignmentSerializer(serializers.HyperlinkedModelSerializer):
+
+    user = UserSerializer()
+    review_round = ReviewRoundSerializer()
+    results = FormResultSerializer()
+
+    class Meta:
+        model = models.ReviewAssignment
+        fields = (
+            'review_round',
+            'review_type',
+            'user',
+            'assigned',
+            'accepted',
+            'declined',
+            'due',
+            'completed',
+            'competing_interests',
+            'recommendation',
+            'results',
         )
 
 class KeywordSerializer(serializers.HyperlinkedModelSerializer):
@@ -213,6 +267,7 @@ class JuraBookSerializer(serializers.HyperlinkedModelSerializer):
     stage = StageSerializer(many=False)
     identifier = IdentiferSerializer(many=True, source='identifier_set', required=False)
     languages = LanguageSerializer(many=True)
+    review_assignments = ReviewAssignmentSerializer(many=True)
 
     class Meta:
         model = models.Book
@@ -242,6 +297,7 @@ class JuraBookSerializer(serializers.HyperlinkedModelSerializer):
             'stage',
             'identifier',
             'peer_review_override',
+            'review_assignments',
             )
 
     def create(self, validated_data):

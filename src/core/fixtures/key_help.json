@@ -1,0 +1,183 @@
+{
+    "id": 45,
+    "slug": "armed-services-unit",
+    "prefix": "",
+    "title": "Armed Services Unit",
+    "subtitle": "Are they valuable?",
+    "cover": null,
+    "submission_date": "2015-10-29",
+    "publication_date": null,
+    "license": "cc-4-by",
+    "pages": "",
+    "book_type": null,
+    "author": [
+        {
+            "id": 51,
+            "salutation": "Mr",
+            "first_name": "UP",
+            "middle_name": "",
+            "last_name": "Tech",
+            "institution": "Ubiquity Press",
+            "department": "Technical",
+            "country": "GB",
+            "author_email": "tech@ubiquitypress.com",
+            "biography": "Technical Account for Ubiquity Press.",
+            "orcid": "0000-0002-4669-4330",
+            "twitter": "ajrbyers",
+            "linkedin": "ajrbyers",
+            "facebook": "ajrbyers",
+            "sequence": 1
+        }
+    ],
+    "editor": [],
+    "description": "sdlfkjsdlkfj",
+    "keywords": [
+        {
+            "name": "dsfsdffs"
+        }
+    ],
+    "subject": [
+        {
+            "name": "sdfsddfs"
+        }
+    ],
+    "languages": [
+        {
+            "code": "afr",
+            "display": "Afrikaans"
+        },
+        {
+            "code": "afa",
+            "display": "Afro-Asiatic languages"
+        }
+    ],
+    "review_type": "closed",
+    "formats": [
+        {
+            "id": 17,
+            "file": {
+                "id": 322,
+                "label": "Armed Services Unit PDF 1",
+                "original_filename": "authormockups.psd",
+                "uuid_filename": "f8637339-515b-453b-bdef-b4d4a928fe28.psd",
+                "mime_type": "image/vnd.adobe.photoshop",
+                "kind": "format",
+                "sequence": 1
+            },
+            "name": "Main PDF",
+            "identifier": "1234.1",
+            "file_type": "pdf",
+            "sequence": 1
+        }
+    ],
+    "chapters": [
+        {
+            "id": 8,
+            "file": {
+                "id": 323,
+                "label": "ASU Chapter 1 PDF",
+                "original_filename": "authorreviews-selected.png",
+                "uuid_filename": "d4b1940c-a472-4f09-a1ad-3c39efc8a0e3.png",
+                "mime_type": "image/png",
+                "kind": "chapter",
+                "sequence": 1
+            },
+            "name": "Chapter 1",
+            "identifier": "1234.1.1",
+            "file_type": "pdf",
+            "sequence": 1
+        }
+    ],
+    "physical_formats": [],
+    "stage": {
+        "current_stage": "production",
+        "proposal": null,
+        "submission": "2015-10-29T21:36:52.044123Z",
+        "review": "2015-12-02T16:46:30.594391Z",
+        "internal_review": "2015-12-02T16:56:24.287743Z",
+        "external_review": "2016-02-13T14:59:05.698902Z",
+        "editing": "2016-02-03T11:13:54.025117Z",
+        "production": "2016-02-13T17:16:42.552446Z",
+        "publication": null,
+        "declined": null
+    },
+    "identifier": [
+        {
+            "id": 27,
+            "identifier": "doi",
+            "value": "1234.1",
+            "displayed": true,
+            "object_type": "digital_format",
+            "object_id": 17
+        }
+    ],
+    "peer_review_override": false,
+    "review_assignments": [
+        {
+            "review_round": {
+                "round_number": 2,
+                "date_started": "2015-12-02T16:56:09.953012Z"
+            },
+            "review_type": "internal",
+            "user": {
+                "username": "andy",
+                "first_name": "UP",
+                "last_name": "Tech",
+                "email": "tech@ubiquitypress.com"
+            },
+            "assigned": "2015-12-02",
+            "accepted": "2015-12-02",
+            "declined": null,
+            "due": "2015-12-31",
+            "completed": "2015-12-02",
+            "competing_interests": "rsfsfg",
+            "recommendation": "accept",
+            "results": {
+                "data": "{\"Element #2\": [\" item 3\", \"text\"], \"Element #1\": [\"dsfdsfdsfdsfsdff\", \"text\"]}",
+                "date": "2015-12-02"
+            }
+        },
+        {
+            "review_round": {
+                "round_number": 2,
+                "date_started": "2015-12-02T16:56:09.953012Z"
+            },
+            "review_type": "external",
+            "user": {
+                "username": "ajrbyers",
+                "first_name": "Andy",
+                "last_name": "Byers",
+                "email": "ajrbyers@gmail.com"
+            },
+            "assigned": "2016-02-13",
+            "accepted": null,
+            "declined": null,
+            "due": "2016-02-25",
+            "completed": null,
+            "competing_interests": null,
+            "recommendation": null,
+            "results": null
+        },
+        {
+            "review_round": {
+                "round_number": 3,
+                "date_started": "2016-02-13T14:59:14.013716Z"
+            },
+            "review_type": "internal",
+            "user": {
+                "username": "ajrbyers",
+                "first_name": "Andy",
+                "last_name": "Byers",
+                "email": "ajrbyers@gmail.com"
+            },
+            "assigned": "2016-02-13",
+            "accepted": null,
+            "declined": null,
+            "due": "2016-02-25",
+            "completed": null,
+            "competing_interests": null,
+            "recommendation": null,
+            "results": null
+        }
+    ]
+}
