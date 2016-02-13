@@ -390,13 +390,22 @@ def overview(request):
 
     template = 'core/dashboard/dashboard.html'
     context = {
-        'proposals': submission_models.Proposal.objects.exclude(status='declined').exclude(status='accepted'),
-        'declined_proposals': submission_models.Proposal.objects.filter(status='declined'),
-        'accepted_proposals': submission_models.Proposal.objects.filter(status='accepted'),  
         'new_submissions': models.Book.objects.filter(stage__current_stage='submission'),
         'in_review': models.Book.objects.filter(stage__current_stage='review'),
         'in_editing': models.Book.objects.filter(stage__current_stage='editing'),
         'in_production': models.Book.objects.filter(stage__current_stage='production'),
+    }
+
+    return render(request, template, context)
+
+@login_required
+def proposal_overview(request):
+
+    template = 'core/dashboard/proposal_overview.html'
+    context = {
+        'proposals': submission_models.Proposal.objects.exclude(status='declined').exclude(status='accepted'),
+        'declined_proposals': submission_models.Proposal.objects.filter(status='declined'),
+        'accepted_proposals': submission_models.Proposal.objects.filter(status='accepted'),  
     }
 
     return render(request, template, context)
