@@ -78,8 +78,6 @@ class AuthorContractSignoff(forms.ModelForm):
 		model = core_models.Contract
 		fields = ('author_file',)
 
-
-
 class EditMetadata(forms.ModelForm):
 
 	class Meta:
@@ -98,6 +96,7 @@ class EditMetadata(forms.ModelForm):
 			'publication_date',
 			'expected_completion_date',
 			'peer_review_override',
+			'book_type',
 		)
 
 		widgets = {
@@ -144,12 +143,12 @@ class Typeset(forms.ModelForm):
 		model = core_models.TypesetAssignment
 		fields = ('note',)
 
-
 class TypesetDate(forms.ModelForm):
 
 	class Meta:
 		model = core_models.TypesetAssignment
 		fields = ('due',)
+
 class TypesetAuthorDate(forms.ModelForm):
 
 	class Meta:
@@ -173,7 +172,6 @@ class TypesetTypesetterInvite(forms.ModelForm):
 	class Meta:
 		model = core_models.TypesetAssignment
 		fields = ('note_to_typesetter',)
-
 
 class TypesetTypesetter(forms.ModelForm):
 

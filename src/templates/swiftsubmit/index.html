@@ -1,0 +1,183 @@
+{% extends "base.html" %}
+{% load static from staticfiles %}
+{% load bootstrap3 %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block css %}
+    <style type="text/css">
+    body {
+        overflow:hidden;
+    }
+    .navbar {
+        margin-bottom: 0px !important;
+    }
+
+    .timeline > li > .timeline-badge{
+        left: 92% !important;
+    }
+
+    .timeline > li > .timeline-panel {
+        width: 80% !important;
+        float: none;
+    }
+
+    .timeline:before {
+        left: 92% !important;
+    }
+    </style>
+    <link href="{% static "css/timeline.css" %}" rel="stylesheet">
+    <link type='text/css' href="{% static "css/jq-ui.css" %}" rel="stylesheet">
+    <link type='text/css' href="{% static "css/jquery.tagit.css" %}" rel="stylesheet">
+{% endblock %}
+
+{% block body %}
+
+<div class="row">
+    <div class="col-md-12 book-heading container-fluid">
+        <h3>Swift Submit: New Book Metadata</h3>
+    </div>
+
+    <div class="col-md-12 dash-center bottom-space">
+        <div class="dash-container">
+         <!-- Tab panes -->
+          <div class="tab-content">
+            <div role="tabpanel" class="tab-pane active" id="metadata">
+              <form method="POST" action="?metadata=true">
+                {% csrf_token %}
+                <br />
+                <div class="form-group">
+                  <div class="row">
+                    <div class="col-md-12">
+                      {{ metadata_form.errors }}
+                      {% bootstrap_form_errors metadata_form layout='inline' %}
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-4">
+                      {% bootstrap_field metadata_form.prefix %}
+                    </div>
+                    <div class="col-md-4">
+                      {% bootstrap_field metadata_form.title %}
+                    </div>
+                    <div class="col-md-4">
+                      {% bootstrap_field metadata_form.subtitle %}
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-md-4">
+                      {% bootstrap_field metadata_form.series %}
+                    </div>
+                    <div class="col-md-4">
+                      {% bootstrap_field metadata_form.license %}
+                    </div>
+                    <div class="col-md-4">
+                      {% bootstrap_field metadata_form.pages %}
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-md-4">
+                      {% bootstrap_field metadata_form.slug %}
+                    </div>
+                    <div class="col-md-4">
+                      {% bootstrap_field metadata_form.review_type %}
+                    </div>
+                    <div class="col-md-4">
+                      {% bootstrap_field metadata_form.publication_date %}
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-md-6" style="max-height: 290px; overflow-x: scroll;">
+                      {% bootstrap_field metadata_form.languages %}
+                    </div>
+                    <div class="col-md-6">
+                      {% bootstrap_field metadata_form.expected_completion_date %}
+                      {% bootstrap_field metadata_form.peer_review_override %}
+                      <div class="aside"><strong>Keywords</strong> Hit Enter to add a new keyword.</div>
+                      <input type="text" id="tags" name="tags" value="{% for keyword in submission.keywords.all %}{{ keyword }}{% if not forloop.last %},{% endif %}{% endfor %}"/>
+                      <div class="aside"><strong>Disciplines</strong> Hit Enter to add a new discipline.</div>
+                        <input type="text" id="stags" name="stags" value="{% for subject in submission.subject.all %}{{ subject }}{% if not forloop.last %},{% endif %}{% endfor %}"/>
+                      </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-md-12">
+                      {% bootstrap_field metadata_form.description %}
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-md-12">
+                      {% bootstrap_field metadata_form.book_type %}
+                    </div>
+                  </div>
+
+                </div>
+
+                <button class="btn btn-success" type="submt">Update Metadata</button>
+              </form>
+            </div>
+          <hr />
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+
+{% block js %}
+<script language="javascript" type="text/javascript">
+<!--
+function popitup(url,title) {
+    newwindow=window.open(url,title,'height=750,width=600');
+    if (window.focus) {newwindow.focus()}
+    return false;
+}
+
+// -->
+</script>
+<script type="text/javascript" src="{% static "js/fancyfile.js" %}"></script>
+<script type="text/javascript">$("textarea").jqte();</script>
+<script type="text/javascript">
+$(document).ready(function() {
+      $('#due_date').datepicker({ dateFormat: 'yy-mm-dd' }).val();
+  });
+</script>
+
+<script>
+$(function() {
+    $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+        localStorage.setItem('catalog_tab', $(this).attr('href'));
+    });
+    var lastTab = localStorage.getItem('catalog_tab');
+    if (lastTab) {
+        $('[href="' + lastTab + '"]').tab('show');
+    }
+});
+</script>
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css">
+<script src="http://code.jquery.com/ui/1.11.0/jquery-ui.js"></script>
+<script src="{% static "js/tag-it.min.js" %}"></script>
+<script type="text/javascript">
+  $(document).ready(function() {
+      $("#tags").tagit(
+        {allowSpaces: true});
+  });
+</script>
+<script type="text/javascript">
+  $(document).ready(function() {
+      $("#stags").tagit(
+        {allowSpaces: true});
+  });
+</script>
+<script type="text/javascript">
+  $(document).ready(function() {
+      $('#id_publication_date').datepicker({ dateFormat: 'yy-mm-dd' }).val();
+
+      $('#id_expected_completion_date').datepicker({ dateFormat: 'yy-mm-dd' }).val();
+  });
+</script>
+{% endblock js %}

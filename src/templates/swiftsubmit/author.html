@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+{% load static from staticfiles %}
+{% load bootstrap3 %}
+
+{% block title %}Update Profile{% endblock %}
+
+{% block body %}
+<div class="row">
+	<div class="col-md-8">
+		<h1>Add New Author</h1>
+	</div>
+	<div class="col-md-4">
+	<h1>Current Authors</h1>
+	</div>
+</div>
+<br />
+<div class="col-md-8">
+    {{ author_form.errors }}
+  		<form method="post" class="form" enctype="multipart/form-data">
+	    {% csrf_token %}
+		  <div class="form-group">
+		  	<div class="row">
+		  		<div class="col-md-3">{% bootstrap_field author_form.salutation %}</div>
+		  		<div class="col-md-3">{% bootstrap_field author_form.first_name %}</div>
+		  		<div class="col-md-3">{% bootstrap_field author_form.middle_name %}</div>
+		  		<div class="col-md-3">{% bootstrap_field author_form.last_name %}</div>
+		  	</div>
+		  </div>
+		  <hr />
+		  <div class="form-group">
+		  	<div class="row">
+		  		<div class="col-md-12">{% bootstrap_field author_form.biography %}</div>
+		  	</div>
+		  </div>
+		  <hr />
+		  <div class="form-group">
+		  	<div class="row">
+		  		<div class="col-md-4">{% bootstrap_field author_form.institution %}</div>
+		  		<div class="col-md-4">{% bootstrap_field author_form.department %}</div>
+		  		<div class="col-md-4">{% bootstrap_field author_form.country %}</div>
+		  	</div>
+		  </div>
+		  <hr />
+		  <div class="form-group">
+		  	<div class="row">
+		  		<div class="col-md-3">{% bootstrap_field author_form.orcid %}</div>
+		  		<div class="col-md-3">{% bootstrap_field author_form.twitter %}</div>
+		  		<div class="col-md-3">{% bootstrap_field author_form.facebook %}</div>
+		  		<div class="col-md-3">{% bootstrap_field author_form.linkedin %}</div>
+		  	</div>
+		  </div>
+		  <hr />
+		  <div class="form-group">
+		  	<div class="row">
+		  		<div class="col-md-6">{% bootstrap_field author_form.author_email %}</div>
+		  		</div>
+		  	</div>
+		  	{% buttons %}
+		        <button name="add_author" id="add_author" type="submit" class="btn btn-task btn-round-half">
+		            <i class="fa fa-user"></i> Add Author
+		        </button>
+		    {% endbuttons %}
+		    </form>
+		  </div>
+		  <div class="col-md-4">
+			
+			{% for author in book.author.all %}
+			<div class="well sm">
+				{{ author.full_name }}, {{ author.institution }} <a href="?delete={{ author.pk }}" class="pull-right"><i class="fa fa-trash"></i></a>
+			</div>
+			{% empty %}
+			<div class="well sm">
+				No Authors
+			</div>
+			{% endfor %}
+		</div>
+		
+
+		<div class="col-md-12">
+			<hr />
+			<p>Once you have added all of your authors, click Next Step to move on.</p>
+			<form method="POST">
+			{% csrf_token %}
+			<button name="next_step" id="next_step" type="submit" class="btn btn-task btn-round-half">
+	            Next Step
+	        </button>
+	        </form>
+		</div>
+
+
+
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript" src="{% static "js/fancyfile.js" %}"></script>
+<script type="text/javascript">$("textarea").jqte();</script>
+{% endblock %}

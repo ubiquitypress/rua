@@ -61,6 +61,7 @@ INSTALLED_APPS = (
     'author',
     'onetasker',
     'editor',
+    'swiftsubmit',
 
     # 3rd Party
     'bootstrap3',
@@ -69,15 +70,15 @@ INSTALLED_APPS = (
     'django_summernote',
     'rest_framework',
 
-     'allauth',
-     'allauth.account',
-     'allauth.socialaccount',
-     
-     # allauth providers
-     'allauth.socialaccount.providers.github',
-     'allauth.socialaccount.providers.google',
-     'allauth.socialaccount.providers.orcid',
-     'allauth.socialaccount.providers.twitter',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    
+    # allauth providers
+    'allauth.socialaccount.providers.github',
+    'allauth.socialaccount.providers.google',
+    'allauth.socialaccount.providers.orcid',
+    'allauth.socialaccount.providers.twitter',
 )
 
 MIDDLEWARE_CLASSES = (

@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% load static from staticfiles %}
+{% load bootstrap3 %}
+
+{% block title %}Update Profile{% endblock %}
+
+{% block body %}
+<div class="row">
+	<div class="col-md-12">
+		<h1>Add Stage Details</h1>
+	</div>
+</div>
+<br />
+<div class="col-md-12">
+    {{ form.errors }}
+    <p>Add the dates when the book entered each of these stages, leave them blank if the submission either did not go through the stage or has not yet gone through it. You can also select the current stage which will drop the book into that stage within the system.</p>
+  	<form method="post" class="form" enctype="multipart/form-data">
+	    {% csrf_token %}
+	    <div class="row">
+		    <div class="col-md-3">
+		    	{% bootstrap_field form.current_stage %}
+		 	</div>
+		 	<div class="col-md-3">
+		 		{% bootstrap_field form.proposal %}
+		 	</div>
+		 	<div class="col-md-3">
+		 		{% bootstrap_field form.submission %}
+		 	</div>
+		 	<div class="col-md-3">
+		 		{% bootstrap_field form.review %}
+		 	</div>
+		 	<div class="col-md-3">
+		 		{% bootstrap_field form.editing %}
+		 	</div>
+		 	<div class="col-md-3">
+		 		{% bootstrap_field form.copyediting %}
+		 	</div>
+		 	<div class="col-md-3">
+		 		{% bootstrap_field form.indexing %}
+		 	</div>
+		 	<div class="col-md-3">
+		 		{% bootstrap_field form.production %}
+		 	</div>
+		 	<div class="col-md-3">
+		 		{% bootstrap_field form.typesetting %}
+		 	</div>
+		 	<div class="col-md-3">
+		 		{% bootstrap_field form.publication %}
+		 	</div>
+		</div>
+		<div class="row">
+		 	<hr />
+			<button name="next_step" id="next_step" type="submit" class="btn btn-task btn-round-half">
+		        Complete Swift Submission
+		    </button>
+		</div>
+	</form>
+</div>
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+  $(document).ready(function() {
+      $('input[type="text"]').datepicker({ dateFormat: 'yy-mm-dd' }).val();
+  });
+</script>
+{% endblock %}

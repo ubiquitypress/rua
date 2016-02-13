@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% load static from staticfiles %}
+{% load bootstrap3 %}
+
+{% block css %}
+  <link href="{% static "css/timeline.css" %}" rel="stylesheet">
+{% endblock %}
+{% block body %}
+<div class="col-md-12 book-heading container-fluid">
+        <h3>Swift Submit: {{ book.title }} Formats</h3>
+    </div>
+ <div class="col-md-12 dash-container bottom-space">
+
+  {{ form.errors }}
+        <div class="media-body">
+        {{ format_form.errors }}
+        <div class="row">
+          <div class="col-md-6">
+          <h5>Add New Files</h5>
+            <form method="POST" enctype="multipart/form-data">
+              {% csrf_token %}
+              {% bootstrap_form_errors format_form layout='inline' %}
+                <div class="form-group">
+                    <div class="row">
+                      <div class="col-md-12">
+                      {% bootstrap_field format_form.name %}
+                      {% bootstrap_field format_form.identifier %}
+                      {% bootstrap_field format_form.file_type %}
+                      {% bootstrap_field format_form.sequence %}
+                         <div class="form-group"><label class="control-label" for="id_file_label">File Label</label><input class="form-control" id="id_file_label" maxlength="100" name="file_label" placeholder="File Label" title="" type="text" value="{{existing_file.label}}"></div>
+                         {% if existing_file %}
+                          <div class="form-group"><label class="control-label" for="id_file">File</label><input class="form-control" maxlength="100" id="id_file"
+                         title="" type="text" value="{{existing_file.original_filename}}" readonly></div>
+                         {% else %}
+                         <div class="input-group">
+                            <span class="input-group-btn">
+                                <span class="btn btn-task btn-browse btn-file">
+                                    Browse&hellip; <input class="" id="id_format_file" name="format_file" title="" type="file">
+                                </span>
+                            </span>
+                            <input type="text" class="form-control" readonly>
+                        </div>
+                        {% endif %}
+                        <div class="input-group pull-right ">
+                            <br />
+                            <button class="btn btn-task btn-round-half" type="submit" name="new_format" id="new_format">Submit</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+            </form>
+          </div>
+
+          <div class="col-md-6">
+            <h5>Current Files</h5>
+             {% include "editor/production/public_files.html" with format_data=format_list format_type='format' %}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            <hr />
+            <p>When you have uploaded all of the format files you want, press the continue button to move to the next step.</p>
+            <form method="POST">
+              {% csrf_token %}
+              <button class="btn btn-task btn-round-half" type="submit" name="next_step" id="next_step">Next Step</button>
+            </form>
+          </div>
+        </div>
+        
+      </div>
+{% endblock body %}
+
+{% block js %}
+<script type="text/javascript" src="{% static "js/fancyfile.js" %}"></script>
+{% endblock %}

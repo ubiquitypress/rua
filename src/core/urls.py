@@ -15,6 +15,7 @@ urlpatterns = patterns('',
     url(r'^author/', include('author.urls')),
     url(r'^editor/', include('editor.urls')),
     url(r'^tasks/', include('onetasker.urls')),
+    url(r'^swiftsubmit/', include('swiftsubmit.urls')),
 
     # 3rd Party Apps
     url(r'^summernote/', include('django_summernote.urls')),
@@ -112,6 +113,6 @@ handler403 = 'core.views.permission_denied'
 if settings.DEBUG:
     urlpatterns += patterns('',
         url(r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT}),
-        url(r'^404/$', TemplateView.as_view(template_name='core/404.html')),
-        url(r'^500/$', TemplateView.as_view(template_name='core/500.html')),
+        url(r'^404/$', TemplateView.as_view(template_name='404.html')),
+        url(r'^500/$', TemplateView.as_view(template_name='500.html')),
     )
