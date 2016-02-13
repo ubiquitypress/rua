@@ -11,9 +11,9 @@ from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Q
 from django.core import serializers
 from django.conf import settings
-from  __builtin__ import any as string_any
-import string
 from django.template import Context, Template
+from django.db import IntegrityError
+
 from review import models as review_models
 from core import log, models, forms, logic
 from author import orcid
@@ -26,10 +26,9 @@ from datetime import datetime
 from manager import models as manager_models
 from manager import forms as manager_forms
 from submission import forms as submission_forms
-from django.db import IntegrityError
+
 from docx import Document
 from docx.shared import Inches
-
 from pprint import pprint
 import json
 from time import strftime
@@ -39,6 +38,9 @@ import os
 import mimetypes
 import mimetypes as mime
 from bs4 import BeautifulSoup
+
+from  __builtin__ import any as string_any
+import string
 # Website Views
 
 def index(request):
@@ -1161,7 +1163,7 @@ def view_completed_proposal_review(request, proposal_id, assignment_id):
     for k,v in data.items():
         intial_data[k] = v[0]
 
-    proposal_form.initial=intial_data
+    proposal_form.initial = intial_data
     review_assignment = get_object_or_404(submission_models.ProposalReview, pk=assignment_id)
     result = review_assignment.results
     form = review_forms.GeneratedForm(form=proposal.review_form)
@@ -1226,7 +1228,8 @@ def view_completed_proposal_review(request, proposal_id, assignment_id):
         'recommendation_form':recommendation_form,
         'active': 'proposal_review',
         'relationships':relationships,
-        'instructions': models.Setting.objects.get(group__name='general', name='instructions_for_task_proposal').value
+        'instructions': models.Setting.objects.get(group__name='general', name='instructions_for_task_proposal').value,
+        'data': data,
     }
 
     return render(request, template, context)
