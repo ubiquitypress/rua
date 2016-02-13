@@ -1,4 +1,4 @@
-from django.core.mail import EmailMultiAlternatives
+from django.core.mail import EmailMessage
 from django.template.loader import get_template
 from django.template import Context, Template
 from django.conf import settings
@@ -25,7 +25,7 @@ def send_email(subject, context, from_email, to, html_template, bcc=None, cc=Non
 	if not type(to) in [list,tuple]:
 		to = [to]
 
-	msg = EmailMultiAlternatives(subject, html_content, from_email, to, bcc=bcc, cc=cc)
+	msg = EmailMessage(subject, html_content, from_email, to, bcc=bcc, cc=cc)
 	
 	if book:
 		log.add_email_log_entry(book = book, subject = subject, from_address = from_email, to = to, bcc = bcc, cc = cc, content = html_content, attachment = attachment)
