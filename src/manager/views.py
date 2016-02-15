@@ -31,6 +31,13 @@ def index(request):
 	return render(request, template, context)
 
 @is_press_editor
+def about(request):
+	template = 'manager/about.html'
+	context = {}
+
+	return render(request, template, context)
+
+@is_press_editor
 def groups(request):
 
 	template = 'manager/groups.html'

@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% load bootstrap3 %}
+
+
+{% block body %}
+	<div class="col-md-12">
+
+    <div class="primary-heading container-fluid" style="margin-top:-20px">
+		  <h3>About Rua<a href="{% url 'manager_index' %}" class="btn  btn-transparent-white" style="position: absolute;right:30px;margin-top:-8px">Go back</a></h3>
+    </div>
+		<div class="col-md-12">
+      <h3>About Us</h3>
+      <p>Rua was initially the work of a group of volunteers: .
+
+      <ul>
+        <li>Andy Byers</li>
+        <li>Mauro Sanchez</li>
+        <li>Paige Mackay</li>
+      </ul>
+
+      <p>Development of the platform is now supported by <a href="http://www.ubiquitypress.com">Ubiquity Press</a>. Contributions from Ubiquity Press include the above and: </p>
+      <ul>
+        <li>Ioannis Cleary</li>
+        <li>Tim Wakeford</li>
+        <li>Tom Mowlam</li>
+      </ul>
+
+      <p>Rua Design and Interface:</p>
+      <ul>
+        <li>Linnea Strid</li>
+        <li>UP Tech Team</li>
+        <li>Thanks to the team at Bootstrap</li>
+      </ul>
+
+      <p>Rua 1.0 was completed on the 15th of February, 2016 in Falkirk, Scotland.</p>
+      <hr />
+      <h3>About Rua</h3>
+
+      <p>Rua - the Simple Monograph Workflow</p>
+
+      <h3>Context</h3>
+
+      <p>Rua is an Open Source application designed to assist with the Monograph publishing life cycle. Stages include:</p>
+
+      <ul>
+      <li>optional proposal</li>
+      <li>submission</li>
+      <li>internal review</li>
+      <li>peer review</li>
+      <li>copy editing</li>
+      <li>production</li>
+      <li>publication</li>
+      </ul>
+
+      <p>Rua is completely free to use under the GNU GENERAL PUBLIC LICENSE v2 (see LICENSE). <a href="http://ubiquitypress.com/site/contact/">Ubiquity Press</a> also offers a paid for hosted service for Rua.</p>
+
+      <h3>Technology</h3>
+
+      <p>RUA is written in Python using the Django Web Application framework and follows a MTV (that is, “model”, “template”, and “view.”) style. The template system is simple, easy to modify and uses Twitter Bootstrap 3.</p>
+    </div>
+	</div>
+{% endblock body %}

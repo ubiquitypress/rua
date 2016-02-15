@@ -8,6 +8,7 @@ urlpatterns = patterns('',
 
     # New Submissions
     url(r'^$', 'manager.views.index', name='manager_index'),
+    url(r'^about/$', 'manager.views.about', name='manager_about'),
 
     # Group Management
     url(r'^groups/$', 'manager.views.groups', name='manager_groups'),
