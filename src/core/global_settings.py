@@ -1,3 +1,5 @@
+import os
+
 INSTALLED_APPS = (
     'flat',
     'django.contrib.sites',
