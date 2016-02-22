@@ -1,0 +1,145 @@
+[
+{
+    "fields": {
+        "help_text": "",
+        "width": "6",
+        "order": 1,
+        "form": 2,
+        "element": 1
+    },
+    "model": "review.formelementsrelationship",
+    "pk": 1
+},
+{
+    "fields": {
+        "help_text": "",
+        "width": "col-md-12",
+        "order": 4,
+        "form": 1,
+        "element": 9
+    },
+    "model": "review.formelementsrelationship",
+    "pk": 5
+},
+{
+    "fields": {
+        "help_text": "",
+        "width": "col-md-12",
+        "order": 5,
+        "form": 1,
+        "element": 11
+    },
+    "model": "review.formelementsrelationship",
+    "pk": 8
+},
+{
+    "fields": {
+        "help_text": "",
+        "width": "col-md-12",
+        "order": 6,
+        "form": 1,
+        "element": 12
+    },
+    "model": "review.formelementsrelationship",
+    "pk": 9
+},
+{
+    "fields": {
+        "help_text": "Please give an overview of the book proposal. Please give your opinion on 1) whether the objectives, themes and arguments of the proposed book would be a welcome addition to the subject; 2) if there are obvious additions to the content of the book that would enhance the use and understanding of the subject area; 3) if the structure of the book has been laid out in a logical manner; 4) if the target audience would benefit from such a publication; 5) if the author are qualified/informed enough to publish content in this subject.",
+        "width": "col-md-12",
+        "order": 2,
+        "form": 2,
+        "element": 18
+    },
+    "model": "review.formelementsrelationship",
+    "pk": 38
+},
+{
+    "fields": {
+        "help_text": "If you have specific feedback suggesting ways in which the proposal could be edited to enhance the quality of the book, please add comments here.",
+        "width": "col-md-12",
+        "order": 3,
+        "form": 2,
+        "element": 19
+    },
+    "model": "review.formelementsrelationship",
+    "pk": 39
+},
+{
+    "fields": {
+        "help_text": "If the book is accepted for full submission and peer-review, would you be interested in reviewing the book? (note: a positive indication here does not commit you to any review task in the future. You will be able to decline the invitation, should be it made in the future)",
+        "width": "col-md-12",
+        "order": 4,
+        "form": 2,
+        "element": 20
+    },
+    "model": "review.formelementsrelationship",
+    "pk": 40
+},
+{
+    "fields": {
+        "help_text": "",
+        "width": "col-md-12",
+        "order": 1,
+        "form": 1,
+        "element": 21
+    },
+    "model": "review.formelementsrelationship",
+    "pk": 41
+},
+{
+    "fields": {
+        "help_text": "",
+        "width": "col-md-12",
+        "order": 2,
+        "form": 1,
+        "element": 22
+    },
+    "model": "review.formelementsrelationship",
+    "pk": 42
+},
+{
+    "fields": {
+        "help_text": "",
+        "width": "col-md-12",
+        "order": 3,
+        "form": 1,
+        "element": 23
+    },
+    "model": "review.formelementsrelationship",
+    "pk": 43
+},
+{
+    "fields": {
+        "help_text": "",
+        "width": "col-md-12",
+        "order": 7,
+        "form": 1,
+        "element": 24
+    },
+    "model": "review.formelementsrelationship",
+    "pk": 44
+},
+{
+    "fields": {
+        "help_text": "Please provide any additional information to the publisher, particularly if there are specific revisions that the book requires",
+        "width": "col-md-12",
+        "order": 8,
+        "form": 1,
+        "element": 25
+    },
+    "model": "review.formelementsrelationship",
+    "pk": 45
+},
+{
+    "fields": {
+        "help_text": "Please comment on the questions asked by the press Editor as fully as possible.",
+        "width": "col-md-12",
+        "order": 1,
+        "form": 3,
+        "element": 26
+    },
+    "model": "review.formelementsrelationship",
+    "pk": 46
+}
+]

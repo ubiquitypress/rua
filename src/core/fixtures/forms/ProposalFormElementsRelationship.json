@@ -1,0 +1,145 @@
+[
+{
+    "fields": {
+        "help_text": "",
+        "width": "col-md-6",
+        "order": 1,
+        "form": 2,
+        "element": 2
+    },
+    "model": "core.proposalformelementsrelationship",
+    "pk": 2
+},
+{
+    "fields": {
+        "help_text": "",
+        "width": "col-md-6",
+        "order": 2,
+        "form": 2,
+        "element": 3
+    },
+    "model": "core.proposalformelementsrelationship",
+    "pk": 3
+},
+{
+    "fields": {
+        "help_text": "",
+        "width": "col-md-6",
+        "order": 3,
+        "form": 2,
+        "element": 4
+    },
+    "model": "core.proposalformelementsrelationship",
+    "pk": 4
+},
+{
+    "fields": {
+        "help_text": "",
+        "width": "col-md-6",
+        "order": 4,
+        "form": 2,
+        "element": 5
+    },
+    "model": "core.proposalformelementsrelationship",
+    "pk": 5
+},
+{
+    "fields": {
+        "help_text": "Please describe the proposed book in a few paragraphs. Set out the objectives, themes and arguments of the proposed book. Which academic discipline/s would you suggest it falls within, and why is this book necessary? If the book is to be part of a series, please provide the name of the series and give a brief description of each of the volumes you have in mind or have already published.",
+        "width": "col-md-12",
+        "order": 5,
+        "form": 2,
+        "element": 6
+    },
+    "model": "core.proposalformelementsrelationship",
+    "pk": 6
+},
+{
+    "fields": {
+        "help_text": "Please list the proposed table of contents for the book, with a 100-200 word description of each chapter. If you plan to approach others to contribute chapters to the book please provide the names and affiliations of those contributing authors.",
+        "width": "col-md-12",
+        "order": 6,
+        "form": 2,
+        "element": 7
+    },
+    "model": "core.proposalformelementsrelationship",
+    "pk": 7
+},
+{
+    "fields": {
+        "help_text": "Please provide a brief biography for each of the author(s), including academic/professional experience, past publications and relevant research. ",
+        "width": "col-md-12",
+        "order": 7,
+        "form": 2,
+        "element": 8
+    },
+    "model": "core.proposalformelementsrelationship",
+    "pk": 8
+},
+{
+    "fields": {
+        "help_text": "Please provide information about the intended readership of the proposed book (scientific disciplines, industries, level of education achieved, for books which can be used in university courses names of typical courses, etc.). Please also list other books which are most similar to your proposed book in terms of coverage and/or readership and describe how your book would differentiate to existing similar books. Against this background, please explain why there is a need for the proposed book? If it is a series, give a brief summary of where you see the series in three years\u2019 time, e.g. how many volumes do you envisage there to be.",
+        "width": "col-md-12",
+        "order": 8,
+        "form": 2,
+        "element": 9
+    },
+    "model": "core.proposalformelementsrelationship",
+    "pk": 9
+},
+{
+    "fields": {
+        "help_text": "Approximately how many illustrations and tables will be included within the book?",
+        "width": "col-md-6",
+        "order": 9,
+        "form": 2,
+        "element": 10
+    },
+    "model": "core.proposalformelementsrelationship",
+    "pk": 10
+},
+{
+    "fields": {
+        "help_text": "Please provide an estimate of the total number of words to be included in the book.",
+        "width": "col-md-6",
+        "order": 10,
+        "form": 2,
+        "element": 11
+    },
+    "model": "core.proposalformelementsrelationship",
+    "pk": 11
+},
+{
+    "fields": {
+        "help_text": "Date the complete manuscript will be finalised and submitted for review.",
+        "width": "col-md-6",
+        "order": 11,
+        "form": 2,
+        "element": 12
+    },
+    "model": "core.proposalformelementsrelationship",
+    "pk": 12
+},
+{
+    "fields": {
+        "help_text": "If you have any draft chapters or chapters that have been published elsewhere, please upload them.",
+        "width": "col-md-6",
+        "order": 12,
+        "form": 2,
+        "element": 13
+    },
+    "model": "core.proposalformelementsrelationship",
+    "pk": 13
+},
+{
+    "fields": {
+        "help_text": "Any additional information you think may support your proposal that is not covered by any of the other questions.",
+        "width": "col-md-12",
+        "order": 13,
+        "form": 2,
+        "element": 15
+    },
+    "model": "core.proposalformelementsrelationship",
+    "pk": 17
+}
+]
