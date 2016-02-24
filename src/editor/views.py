@@ -43,7 +43,7 @@ def editor_dashboard(request):
 	if query_list:
 		book_list = models.Book.objects.filter(publication_date__isnull=True).filter(*query_list).exclude(stage__current_stage='declined').select_related('stage').select_related('owner__profile').order_by(order)
 	else:
-		book_list = models.Book.objects.filter(publication_date__isnull=True).exclude(stage__current_stage='declined').select_related('stage').select_related('owner__profile').order_by(order)
+		book_list = models.Book.objects.filter(publication_date__isnull=True).exclude(stage__current_stage='declined').select_related('stage').order_by(order)
 
 	template = 'editor/dashboard.html'
 	context = {
@@ -56,6 +56,18 @@ def editor_dashboard(request):
 
 	return render(request, template, context)
 
+@login_required
+@is_editor
+def published_books(request):
+
+	book_list = models.Book.objects.filter(publication_date__isnull=False)
+
+	template = 'editor/published_books.html'
+	context = {
+		'book_list': book_list,
+	}
+
+	return render(request, template, context)
 
 @is_book_editor
 def editor_notes(request, submission_id, note_id = None):

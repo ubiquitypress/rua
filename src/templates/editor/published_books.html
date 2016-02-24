@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% load static from staticfiles %}
+{% load bootstrap3 %}
+
+{% block title %}Published Books{% endblock %}
+
+{% block css %}
+ <style type="text/css">
+    body {
+        overflow:hidden;
+    } 
+ </style>
+	<link href="{% static "css/timeline.css" %}" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/plug-ins/1.10.7/integration/bootstrap/3/dataTables.bootstrap.css">
+{% endblock %}
+
+{% block body %}
+<div class="row">
+	<div class="col-md-12 book-heading container-fluid" style="margin-top:-20px">
+	      <h3>Published Submissions</h3>
+	</div>
+
+    <div class="col-md-12 dash-center">
+
+    	<div class="dash-container">
+    		<div class="media-body bottom-space-sm">
+				<div class="col-md-12">
+          			<table class="table table-bordered">
+          				<thead>
+          					<tr>
+          						<th width="50%">Title</th>
+          						<th>Date Published</th>
+          						<th>DOI</th>
+          						<th>Pub ID</th>
+          						<th></th>
+          					</tr>
+          				</thead>
+          				<tbody>
+          					{% for book in book_list %}
+          					<tr>
+          						<td>{{ book.title }}</td>
+          						<td>{{ book.publication_date }}</td>
+          						<td>{{ book.doi }}</td>
+          						<td>{{ book.pub_id }}</td>
+          						<td><a href="{% url 'catalog' book.pk %}">Catalog</a></td>
+          					</tr>
+          					{% endfor %}
+          				</tbody>
+          			</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript" language="javascript" src="//cdn.datatables.net/1.10.7/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" language="javascript" src="//cdn.datatables.net/plug-ins/1.10.7/integration/bootstrap/3/dataTables.bootstrap.js"></script>
+<script>
+  $(document).ready(function() {
+      $('.table').DataTable({
+        "lengthMenu": [[20], [20, 50, "All"]]
+      });
+  } );
+
+</script>
+{% endblock js %}

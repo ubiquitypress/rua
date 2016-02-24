@@ -296,6 +296,20 @@ class Book(models.Model):
 		else:
 			return self.title
 
+	def doi(self):
+		try:
+			doi = Identifier.objects.get(book=self, identifier='doi', digital_format__isnull=True, physical_format__isnull=True)
+			return doi.value
+		except Identifier.DoesNotExist:
+			return 'No DOI'
+
+	def pub_id(self):
+		try:
+			pub_id = Identifier.objects.get(book=self, identifier='pub_id', digital_format__isnull=True, physical_format__isnull=True)
+			return pub_id.value
+		except Identifier.DoesNotExist:
+			return 'No Pub ID'
+
 def identifier_choices():
 	return (
 		('doi', 'DOI'),

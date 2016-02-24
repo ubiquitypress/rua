@@ -3,6 +3,7 @@ from django.conf.urls import patterns, include, url
 urlpatterns = patterns('',
 	# Review
     url(r'dashboard/$', 'editor.views.editor_dashboard', name='editor_dashboard'),
+    url(r'dashboard/published/$', 'editor.views.published_books', name='editor_published_books'),
     url(r'^submission/(?P<submission_id>\d+)/$', 'editor.views.editor_submission', name='editor_submission'),
     url(r'^submission/(?P<submission_id>\d+)/add/editors/$', 'editor.views.editor_add_editors', name='editor_add_editors'),
     url(r'^submission/(?P<submission_id>\d+)/change/owner/$', 'editor.views.editor_change_owner', name='editor_change_owner'),
