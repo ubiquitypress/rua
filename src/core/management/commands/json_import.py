@@ -6,7 +6,7 @@ import sys
 import json
 from pprint import pprint
 
-file = 'up'
+file = 'ucp'
 
 class Command(BaseCommand):
 
@@ -17,7 +17,7 @@ class Command(BaseCommand):
 			print 'Please supply a file path'
 			pass
 		else:
-			with open('/Users/andy/Desktop/rua_data/%s.json' % file) as data_file:    
+			with open('/user/home/tech/rua_data/%s.json' % file) as data_file:    
 				book_list = json.load(data_file)
 				for book in book_list:
 					
@@ -35,8 +35,6 @@ class Command(BaseCommand):
 
 					new_book = models.Book.objects.create(**book_dict)
 
-					print new_book
-
 					for author in book.get('author'):
 						new_author = models.Author.objects.create(**author)
 						new_book.author.add(new_author)
@@ -53,7 +51,6 @@ class Command(BaseCommand):
 						new_subject, create = models.Subject.objects.get_or_create(**subject)
 						new_book.subject.add(new_subject)
 
-					pprint(book)
 					identifier = models.Identifier.objects.create(
 						book=new_book,
 						identifier='doi', 
@@ -72,6 +69,8 @@ class Command(BaseCommand):
 
 					new_book.stage = stage
 					new_book.save()
+
+					print new_book.title
 					
 
 
