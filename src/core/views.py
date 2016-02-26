@@ -30,7 +30,7 @@ from submission import forms as submission_forms
 from docx import Document
 from docx.shared import Inches
 from pprint import pprint
-import json
+from django.utils import simplejson as json
 from time import strftime
 import time
 from uuid import uuid4
