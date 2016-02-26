@@ -199,6 +199,10 @@ def edit_setting(request, setting_group, setting_name):
 
 	if request.POST:
 		value = smart_text(request.POST.get('value'))
+
+		if setting.types == 'boolean' and value != 'on':
+			value = ''
+			
 		if request.FILES:
 			value = handle_file(request, request.FILES['value'])
 
