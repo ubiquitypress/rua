@@ -6,7 +6,7 @@ from docx import Document
 from docx.shared import Inches
 from pprint import pprint
 import mimetypes
-
+from django.utils.encoding import smart_text
 from django.contrib.auth.models import User
 from django.shortcuts import redirect, render, get_object_or_404
 from django.db.models import Q
@@ -168,7 +168,7 @@ def review(request, review_type, submission_id,review_round, access_key=None):
 					# TODO change value from string to list [value, value_type]
 					save_dict[field.element.name] = [request.POST.get(field.element.name), 'text']
 
-			json_data = json.dumps(save_dict)
+			json_data = smart_text(json.dumps(save_dict))
 			form_results = models.FormResult(form=submission.review_form, data=json_data)
 			form_results.save()
 

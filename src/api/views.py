@@ -3,7 +3,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Q
 from django.utils import timezone
 from django.forms.models import model_to_dict
-
+from django.utils.encoding import smart_text
 from rest_framework.decorators import api_view, permission_classes
 from django.conf.urls import url, include
 from django.contrib.auth.models import User
@@ -37,7 +37,7 @@ def index(request):
         'API Endpoints':
             [],
     }
-    json_content = json.dumps(response_dict)
+    json_content = smart_text(json.dumps(response_dict))
 
     return HttpResponse(json_content, content_type="application/json")
 

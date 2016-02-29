@@ -22,7 +22,7 @@ from core.files import handle_file,handle_copyedit_file,handle_marc21_file
 from  __builtin__ import any as string_any
 from django.template.loader import render_to_string
 from django.template import Context, Template
-
+from django.utils.encoding import smart_text
 
 def setting_template_loader(setting, path, dictionary,pattern = None):
 	html_template = setting.value
@@ -487,7 +487,7 @@ def decode_json(json_data):
 	return json.loads(json_data)
 
 def encode_data(data):
-	return json.dumps(data)
+	return smart_text(json.dumps(data))
 
 
 

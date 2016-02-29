@@ -390,7 +390,7 @@ def key_help(request):
 	template = "manager/keys.html"
 	context = {
 		'data': data,
-		'data_render': json.dumps(data, indent=4)
+		'data_render': smart_text(json.dumps(data, indent=4))
 	}
 	return render(request, template, context)
 

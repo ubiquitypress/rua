@@ -19,7 +19,7 @@ from core import models as core_models, log, task, logic as core_logic
 from submission import logic, models as submission_models
 from manager import forms as manager_forms
 from core.files import handle_proposal_file_form
-
+from django.utils.encoding import smart_text
 from  __builtin__ import any as string_any
 import mimetypes as mime
 from uuid import uuid4
@@ -380,7 +380,7 @@ def start_proposal(request):
 					# TODO change value from string to list [value, value_type]
 					save_dict[field.element.name] = [request.POST.get(field.element.name), 'text']
 			
-			json_data = json.dumps(save_dict)
+			json_data = smart_text(json.dumps(save_dict))
 			proposal.data = json_data
 			proposal.save()
 			editors = User.objects.filter(profile__roles__slug='press-editor')
@@ -442,7 +442,7 @@ def proposal_revisions(request, proposal_id):
 
 			messages.add_message(request, messages.SUCCESS, 'Revisions for Proposal %s submitted' % proposal.id)
 		
-			json_data = json.dumps(save_dict)
+			json_data = smart_text(json.dumps(save_dict))
 			proposal = submission_models.Proposal.objects.get(form=core_models.ProposalForm.objects.get(pk=proposal.form.id), owner=request.user,pk=proposal_id)
 			proposal.data=json_data
 			proposal.status = "revisions_submitted"
@@ -520,7 +520,7 @@ def proposal_view(request, proposal_id):
 					# TODO change value from string to list [value, value_type]
 					save_dict[field.element.name] = [request.POST.get(field.element.name), 'text']
 
-			json_data = json.dumps(save_dict)
+			json_data = smart_text(json.dumps(save_dict))
 			proposal = submission_models.Proposal.objects.get(form=core_models.ProposalForm.objects.get(pk=proposal.form.id),pk=proposal_id)
 			proposal.data=json_data
 			proposal.status = "submission"

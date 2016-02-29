@@ -13,7 +13,7 @@ from django.core import serializers
 from django.conf import settings
 from django.template import Context, Template
 from django.db import IntegrityError
-
+from django.utils.encoding import smart_text
 from review import models as review_models
 from core import log, models, forms, logic
 from author import orcid
@@ -430,7 +430,7 @@ def task_new(request):
         task.assignee = request.user
         task.save()
 
-        return HttpResponse(json.dumps({'id': task.pk,'text': task.text}))
+        return HttpResponse(smart_text(json.dumps({'id': task.pk,'text': task.text})))
     else:
         return HttpResponse(new_task_form.errors)
 
@@ -453,9 +453,9 @@ def new_message(request, submission_id):
             'date_sent': new_message.date_sent.strftime("%-d %b %Y, %H:%M"),
         }
 
-        return HttpResponse(json.dumps(response_dict))
+        return HttpResponse(smart_text(json.dumps(response_dict)))
     else:
-        return HttpResponse(json.dumps(new_message_form.errors))
+        return HttpResponse(smart_text(json.dumps(new_message_form.errors)))
 
 @csrf_exempt
 @is_book_editor_or_author
@@ -479,14 +479,14 @@ def get_messages(request, submission_id):
             'messages': message_list,
         }
 
-        return HttpResponse(json.dumps(response_dict))
+        return HttpResponse(smart_text(json.dumps(response_dict)))
     except Exception, e:
         return HttpResponse(e)
 
 def get_authors(request, submission_id):
     if request.is_ajax():
         q = request.GET.get('term', '')
-        data = json.dumps(logic.get_author_emails(submission_id,q))
+        data = smart_text(json.dumps(logic.get_author_emails(submission_id,q)))
     else:
         data = 'Unable to get authors'
     mimetype = 'application/json'
@@ -496,7 +496,7 @@ def get_editors(request, submission_id):
     if request.is_ajax():
         q = request.GET.get('term', '')
         results = []
-        data = json.dumps(logic.get_editor_emails(submission_id,q))
+        data = smart_text(json.dumps(logic.get_editor_emails(submission_id,q)))
     else:
         data = 'Unable to get editors'
 
@@ -506,7 +506,7 @@ def get_editors(request, submission_id):
 def get_onetaskers(request, submission_id):
     if request.is_ajax():
         q = request.GET.get('term', '')
-        data = json.dumps(logic.get_onetasker_emails(submission_id,q))
+        data = smart_text(json.dumps(logic.get_onetasker_emails(submission_id,q)))
     else:
         data = 'Unable to get onetaskers'
     mimetype = 'application/json'
@@ -531,7 +531,7 @@ def get_all(request, submission_id):
         for editor in editor_results:
             if not string_any(editor['value'] in result['value'] for result in results):
                 results.append(editor)
-        data = json.dumps(results)
+        data = smart_text(json.dumps(results))
     else:
         data = 'Unable to get any user'
     mimetype = 'application/json'
@@ -546,7 +546,7 @@ def get_proposal_users(request, proposal_id):
         for user in proposal_results:
             if not string_any(user['value'] in result['value'] for result in results):
                results.append(user)
-        data = json.dumps(results)
+        data = smart_text(json.dumps(results))
     else:
         data = 'Unable to get any user'
     mimetype = 'application/json'
@@ -1207,7 +1207,7 @@ def view_completed_proposal_review(request, proposal_id, assignment_id):
                     # TODO change value from string to list [value, value_type]
                     save_dict[field.element.name] = [request.POST.get(field.element.name), 'text']
 
-            json_data = json.dumps(save_dict)
+            json_data = smart_text(json.dumps(save_dict))
             form_results = review_models.FormResult(form=proposal.review_form, data=json_data)
             form_results.save()
 
@@ -1290,7 +1290,7 @@ def view_proposal_review(request, proposal_id, assignment_id):
                     # TODO change value from string to list [value, value_type]
                     save_dict[field.element.name] = [request.POST.get(field.element.name), 'text']
 
-            json_data = json.dumps(save_dict)
+            json_data = smart_text(json.dumps(save_dict))
             form_results = review_models.FormResult(form=proposal.review_form, data=json_data)
             form_results.save()
 
