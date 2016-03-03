@@ -174,7 +174,7 @@ def view_profile(request):
     template = 'core/user/profile.html'
     context = {
         'user_profile': user_profile,
-        'name_width':name_len*9,
+        'name_width':name_len*14,
     }
 
     return render(request, template, context)
