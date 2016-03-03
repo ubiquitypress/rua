@@ -14,7 +14,7 @@
 </div>
 
    <hr />
-   <p>{{core_proposal.intro_text}}</p>
+   <p>{{core_proposal.intro_text|safe}}</p>
    
     <form method="post" class="form" enctype="multipart/form-data">
 	    {% csrf_token %}     
