@@ -417,10 +417,12 @@ def proposal_revisions(request, proposal_id):
 		overdue = True
 	proposal_form = manager_forms.GeneratedForm(form=core_models.ProposalForm.objects.get(pk=proposal.form.id))
 	default_fields = manager_forms.DefaultForm(initial={'title': proposal.title,'author':proposal.author,'subtitle':proposal.subtitle})
-	data = json.loads(proposal.data)
+	data = {}
 	intial_data={}
-	for k,v in data.items():
-		intial_data[k] = v[0]
+	if proposal.data:
+		data = json.loads(proposal.data)
+		for k,v in data.items():
+			intial_data[k] = v[0]
 
 	proposal_form.initial=intial_data
 	if request.POST:
@@ -486,10 +488,14 @@ def proposal_view(request, proposal_id):
 
 	proposal_form = manager_forms.GeneratedForm(form=core_models.ProposalForm.objects.get(pk=proposal.form.id))
 	default_fields = manager_forms.DefaultForm(initial={'title': proposal.title,'author':proposal.author,'subtitle':proposal.subtitle})
-	data = json.loads(proposal.data)
+
 	intial_data={}
-	for k,v in data.items():
-		intial_data[k] = v[0]
+	data = {}
+	if proposal.data:
+		data = json.loads(proposal.data)
+		for k,v in data.items():
+			intial_data[k] = v[0]
+
 
 	proposal_form.initial=intial_data
 	
