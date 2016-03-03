@@ -990,7 +990,10 @@ def proposal_history(request):
 def view_proposal(request, proposal_id):
     proposal = get_object_or_404(submission_models.Proposal, pk=proposal_id)
     relationships = models.ProposalFormElementsRelationship.objects.filter(form=proposal.form)
-    data = json.loads(proposal.data)
+    if proposal.data:
+        data = json.loads(proposal.data)
+    else:
+        data = {}
     
     if not request.POST and request.GET.get('download') == 'docx':
         path = create_proposal_form(proposal)
