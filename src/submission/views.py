@@ -401,7 +401,8 @@ def start_proposal(request):
 	template = "submission/start_proposal.html"
 	context = {
 		'proposal_form': proposal_form,
-		'default_fields': default_fields
+		'default_fields': default_fields,
+		'core_proposal':core_models.ProposalForm.objects.get(pk=proposal_form_id),
 	}
 
 	return render(request, template, context)
@@ -409,6 +410,7 @@ def start_proposal(request):
 @login_required
 def proposal_revisions(request, proposal_id):
 
+	proposal_form_id = core_models.Setting.objects.get(name='proposal_form').value
 	proposal = get_object_or_404(submission_models.Proposal, pk=proposal_id, owner=request.user, status='revisions_required')
 	overdue = False;
 	if proposal.revision_due_date.date() < datetime.today().date():
@@ -469,6 +471,7 @@ def proposal_revisions(request, proposal_id):
 		'data':data,
 		'revise':True,
 		'overdue':overdue,
+		'core_proposal':core_models.ProposalForm.objects.get(pk=proposal_form_id),
 	}
 
 	return render(request, template, context)
@@ -476,6 +479,7 @@ def proposal_revisions(request, proposal_id):
 def proposal_view(request, proposal_id):
 
 	proposal = submission_models.Proposal.objects.get(pk=proposal_id)
+	proposal_form_id = core_models.Setting.objects.get(name='proposal_form').value
 
 	if proposal.owner == request.user:
 		viewable = True
@@ -546,6 +550,7 @@ def proposal_view(request, proposal_id):
 		'revise':True,
 		'editor': editor,
 		'viewable':viewable,
+		'core_proposal':core_models.ProposalForm.objects.get(pk=proposal_form_id),
 	}
 
 	return render(request, template, context)

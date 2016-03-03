@@ -13,8 +13,10 @@
 </div>
 
    <hr />
+   <p>{{core_proposal.intro_text}}</p>
+
    {% if viewable %}
-   <p>Please complete the form below. Your proposal will then be scruitinised by our committe and if approved, you will be invited to complete a full submission.</p>
+
  
     <form method="post" class="form" enctype="multipart/form-data">
       {% csrf_token %}     
