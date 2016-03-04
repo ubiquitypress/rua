@@ -53,7 +53,9 @@
  
     <th>Title</th>
     <th>Subtitle</th>
+    {% if not review.blind %}
     <th>Author</th>
+    {% endif %}
     <th>Requestor</th>
     <th>Status</th>
     <th>Date Submitted</th>
@@ -64,7 +66,9 @@
   <tr>
     <td>{{ proposal.title }}</td>
     <td>{{ proposal.subtitle }}</td>
+    {% if not review.blind %}
     <td>{{ proposal.author }}</td>
+    {% endif %}
     <td>{{ proposal.requestor.username }} <sup> <a href="core/email.html" onclick="return popitup('/email/proposal/{{proposal.id}}/user/{{proposal.requestor.id}}/','proposal_{{proposal.requestor.id}}')"class="fa fa-envelope-o btn btn-xs btn-default"></a></sup></td>
     <td>{{ proposal.get_status_display }}</td>
     <td>{{ proposal.date_submitted }}</td>

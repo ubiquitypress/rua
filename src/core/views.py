@@ -1055,6 +1055,7 @@ def start_proposal_review(request, proposal_id):
     if request.POST:
         start_form = submission_forms.ProposalStart(request.POST, instance=proposal)
         if start_form.is_valid():
+            blind = request.POST.get('blind')
             proposal = start_form.save(commit=False)
             proposal.date_review_started = timezone.now()
             due_date = request.POST.get('due_date')
@@ -1069,6 +1070,7 @@ def start_proposal_review(request, proposal_id):
                     user=reviewer,
                     proposal=proposal,
                     due=due_date,
+                    blind = blind,
                 )
 
                 try:
@@ -1086,6 +1088,7 @@ def start_proposal_review(request, proposal_id):
                         user=member.user,
                         proposal=proposal,
                         due=due_date,
+                        blind = blind,
                     )
 
                     try:
@@ -1348,6 +1351,7 @@ def add_proposal_reviewers(request, proposal_id):
 
     if request.POST:
         due_date = request.POST.get('due_date')
+        blind = request.POST.get('blind')
         reviewers = User.objects.filter(pk__in=request.POST.getlist('reviewer'))
         committees = manager_models.Group.objects.filter(pk__in=request.POST.getlist('committee'))
         email_text = request.POST.get('email_text')
@@ -1359,6 +1363,7 @@ def add_proposal_reviewers(request, proposal_id):
                 user=reviewer,
                 proposal=proposal,
                 due=due_date,
+                blind = blind,
             )
 
             try:
@@ -1376,6 +1381,7 @@ def add_proposal_reviewers(request, proposal_id):
                     user=reviewer,
                     proposal=proposal,
                     due=due_date,
+                    blind = blind,
                 )
 
                 try:
