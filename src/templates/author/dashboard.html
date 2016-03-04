@@ -87,13 +87,38 @@
                             <h5><i class="fa fa-eye"></i></h5>
                         </div>
                     </div>
+
+                    {% ifequal proposal.status 'accepted'%}
+                      <div class="band submission proposal-accept ">
+                    PROPOSAL - ACCEPTED
+                    {% endifequal %}
+                    {% ifequal proposal.status 'declined'%}
+                      <div class="band submission proposal-declined ">
+                    PROPOSAL - DECLINED
+                    {% endifequal %}
+                    {% ifequal proposal.status 'revisions_required'%}
+
+                      <div class="band submission proposal-revision ">
+                    PROPOSAL - REVISIONS
+                    {% endifequal %}
+                    {% ifequal proposal.status 'revisions_submitted'%}
+
+                    <div class="band submission proposal-revision ">
+                    PROPOSAL - REVISIONS
+                    {% endifequal %}
+                    {% ifequal proposal.status 'submission'%}
+
                     <div class="band submission proposal ">
                     PROPOSAL
+                    {% endifequal %}
+
                     </div>
+               
                     <br>
                     <a href="{% url 'proposal_view_submitted' proposal.pk %}" class="btn btn-sm btn-other  view pull-right" style="margin-right:10px;">View Proposal</a>
           
-                    <br /><br />
+                    <br />
+                    <br />
                 </div>
                   {% endfor %}
         </div>

@@ -550,11 +550,16 @@ def proposal_view(request, proposal_id):
 			messages.add_message(request, messages.SUCCESS, 'Proposal %s updated' % proposal.id)
 			return redirect(reverse('user_dashboard'))
 
+	if proposal.status == 'accepted' or proposal.status == 'declined':
+		not_readonly = False
+	else:
+		not_readonly = True
 	template = "submission/view_proposal.html"
 	context = {
 		'proposal_form': proposal_form,
 		'default_fields': default_fields,
 		'proposal':proposal,
+		'not_readonly':not_readonly,
 		'data':data,
 		'revise':True,
 		'editor': editor,

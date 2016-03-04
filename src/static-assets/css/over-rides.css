@@ -531,6 +531,38 @@ body > div.container-fluid > div > div > div > a {
   text-transform: uppercase;
 }
 
+.band-decline {
+  background-color:#cc0000!important;
+  color:white;
+  font-size:10px;
+  padding:2 2 2 10;
+  margin-bottom: 10px;
+}
+.band-revision {
+  background-color:#cc0000!important;
+  color:white;
+  font-size:10px;
+  padding:2 2 2 10;
+  margin-bottom: 10px;
+}
+.decision-proposal-decline {
+  background-color: 
+  width: 130px;
+  text-align: right;
+  color: white;
+  padding: 0;
+  text-transform: uppercase;
+}
+
+.decision-proposal-revision {
+  background-color: #ffcc00!important;
+  width: 130px;
+  text-align: right;
+  color: white;
+  padding: 0;
+  text-transform: uppercase;
+}
+
 .production {
   background-color: rgb(123, 195, 61);
   width: 130px;
@@ -605,7 +637,34 @@ body > div.container-fluid > div > div > div > a {
   padding:2 2 2 10;
   margin-bottom: 10px;
 }
-
+.border-proposal-accept-xs {
+  border-bottom: 6px rgb(159,197,88) solid;
+  margin-bottom: 10px;
+  margin-top: -4px;
+  width:100%;
+}
+.border-proposal-decline-xs {
+  border-bottom: 6px #cc0000 solid;
+  margin-bottom: 10px;
+  margin-top: -4px;
+  width:100%;
+}
+.proposal-accept {
+  background-color:#09aa09  !important;
+}
+.proposal-declined {
+  background-color:#cc0000 !important;
+}
+.proposal-revision {
+  background-color:#f2c40d !important;
+}
+.band-no-recommendation {
+  background-color:rgb(181, 181, 181);
+  color:white;
+  font-size:10px;
+  padding:2 2 2 10;
+  margin-bottom: 10px;
+}
 .activity {
   padding: 5 5 5 10;
 }
