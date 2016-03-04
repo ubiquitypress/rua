@@ -13,7 +13,7 @@
   {% csrf_token %}
 
 
-  <p>Select some reviewrs and a review form to start the review process.</p>  <hr />
+  <p>Select some reviewers and a review form to start the review process.</p>  <hr />
   <div class="col-md-12 primary-heading-2 container-fluid" >
   <h4>Individual Review</h4>
 </div>
@@ -71,6 +71,8 @@
   <input type="text" name="due_date" id="due_date" required="required" class="form-control"/><br/><br />
   {% bootstrap_form start_form %}
 <br />
+<div class="form-group"><div class="checkbox"><label for="id_hide_proposer_details"><input class="" id="blind" name="blind" type="checkbox" is_checkbox=""> Blind review</label></div><small>Hides author name.</small></div>
+<br>
  <div class="col-md-12 primary-heading-1 container-fluid" >
         <h4>Email Invite</h4>
         </div>
