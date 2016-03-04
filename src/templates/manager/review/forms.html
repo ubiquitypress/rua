@@ -8,6 +8,7 @@
 	<table class="table table-bordered">
 		<thead>
 			<tr>
+				<th>ID</th>
 				<th>Form Name</th>
 				<th>Ref</th>
 				<th>Field Count</th>
@@ -17,6 +18,7 @@
 		<tbody>
 			{% for form in review_forms %}
 			<tr>
+				<td>{{ form.id }}</td>
 				<td>{{ form.name }}</td>
 				<td>{{ form.ref }}</td>
 				<td>{{ form.form_fields.count }}</td>

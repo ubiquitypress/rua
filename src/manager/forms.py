@@ -141,6 +141,7 @@ class GeneratedForm(forms.Form):
 			elif relation.element.field_type == 'check':
 				self.fields[relation.element.name] = forms.BooleanField(widget=forms.CheckboxInput(attrs={'is_checkbox':True, 'div_class':relation.width}), required=relation.element.required)
 			self.fields[relation.element.name].help_text = relation.help_text
+			self.fields[relation.element.name].label = relation.element.name
 
 
 class GeneratedReviewForm(forms.Form):
@@ -171,4 +172,5 @@ class GeneratedReviewForm(forms.Form):
 			elif relation.element.field_type == 'check':
 				self.fields[relation.element.name] = forms.BooleanField(widget=forms.CheckboxInput(attrs={'is_checkbox':True, 'div_class':relation.width}), required=relation.element.required)
 			self.fields[relation.element.name].help_text = relation.help_text
+			self.fields[relation.element.name].label = relation.element.name
 

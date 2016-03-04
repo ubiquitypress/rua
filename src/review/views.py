@@ -126,7 +126,7 @@ def reviewer_decision(request, review_type, submission_id, review_assignment, de
 	return render(request, template, context)
 
 @is_reviewer
-def review(request, review_type, submission_id,review_round, access_key=None):
+def review(request, review_type, submission_id, review_round, access_key=None):
 
 	ci_required = core_models.Setting.objects.get(group__name='general', name='ci_required')
 
@@ -344,13 +344,11 @@ def serve_file(request, file_path):
 		messages.add_message(request, messages.ERROR, 'File not found.')
 		return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
-def handle_review_file(file, book, review_assignment, kind):
-
-
+def handle_review_file(file, proposal, review_assignment, kind):
 
 	original_filename = str(file._get_name())
 	filename = str(uuid4()) + str(os.path.splitext(original_filename)[1])
-	folder_structure = os.path.join(settings.BASE_DIR, 'files', 'books', str(book.id))
+	folder_structure = os.path.join(settings.BASE_DIR, 'files', 'proposals', str(proposal.id))
 
 	if not os.path.exists(folder_structure):
 		os.makedirs(folder_structure)
