@@ -436,6 +436,10 @@ class ReviewAssignment(models.Model):
 	accepted_reminder = models.BooleanField(default=False)
 	overdue_reminder = models.BooleanField(default=False)
 
+	#Reopened
+
+	reopened = models.BooleanField(default=False)
+
 	class Meta:
 		unique_together = ('book', 'user', 'review_type', 'review_round')
 

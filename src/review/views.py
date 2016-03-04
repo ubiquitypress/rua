@@ -31,11 +31,22 @@ from submission import models as submission_models
 
 @has_reviewer_role
 def reviewer_dashboard(request):
+	
+	reopened_tasks = core_models.ReviewAssignment.objects.filter(user=request.user,completed__isnull=False, reopened=True, declined__isnull=True).select_related('book')
+	incoming_tasks = core_models.ReviewAssignment.objects.filter(user=request.user,completed__isnull=True, reopened=False, declined__isnull=True).select_related('book')
+	pending_tasks = []
 
-	pending_tasks = core_models.ReviewAssignment.objects.filter(user=request.user,completed__isnull=True,declined__isnull=True).select_related('book')
-	completed_tasks = core_models.ReviewAssignment.objects.filter(user=request.user,completed__isnull=False).select_related('book')
+	for task in reopened_tasks:
+		pending_tasks.append(task)
+
+	for task in incoming_tasks:
+		pending_tasks.append(task)
+
+	completed_tasks = core_models.ReviewAssignment.objects.filter(user=request.user,completed__isnull=False, reopened = False).select_related('book')
 	pending_proposal_tasks = submission_models.ProposalReview.objects.filter(user=request.user,completed__isnull=True,declined__isnull=True)
 	completed_proposal_tasks = submission_models.ProposalReview.objects.filter(user=request.user,completed__isnull=False)
+	
+	
 
 	template = 'review/dashboard.html'
 	context = {	
@@ -123,7 +134,7 @@ def review(request, review_type, submission_id,review_round, access_key=None):
 	if access_key:
 		review_assignment = get_object_or_404(core_models.ReviewAssignment, access_key=access_key,review_round__round_number=review_round, declined__isnull=True, review_type=review_type)
 		submission = get_object_or_404(core_models.Book, pk=submission_id)
-		if review_assignment.completed:
+		if review_assignment.completed and not review_assignment.reopened:
 			return redirect(reverse('review_complete_with_access_key', kwargs={'review_type': review_type, 'submission_id': submission.pk,'access_key':access_key,'review_round':review_round}))
 	
 	elif review_type == 'proposal':
@@ -132,7 +143,7 @@ def review(request, review_type, submission_id,review_round, access_key=None):
 	else:
 		submission = get_object_or_404(core_models.Book, pk=submission_id)
 		review_assignment = get_object_or_404(core_models.ReviewAssignment, Q(user=request.user), Q(book=submission),Q(review_round__round_number=review_round), Q(declined__isnull=True), Q(review_type=review_type),Q(access_key__isnull=True) | Q(access_key__exact=''))
-		if review_assignment.completed:
+		if review_assignment.completed and not review_assignment.reopened:
 			return redirect(reverse('review_complete', kwargs={'review_type': review_type, 'submission_id': submission.pk,'review_round':review_round}))
 	
 	if review_assignment:
@@ -143,10 +154,26 @@ def review(request, review_type, submission_id,review_round, access_key=None):
 				return redirect(reverse('reviewer_decision_without', kwargs={'review_type': review_type, 'submission_id': submission.pk,'review_assignment':review_assignment.pk}))
 	
 	editors = logic.get_editors(review_assignment)
-		
+
 	form = forms.GeneratedForm(form=submission.review_form)
+	
+	if review_assignment.reopened:
+		result = review_assignment.results
+		if result:
+			initial_data = {}
+			data = json.loads(result.data)
+			for k,v in data.items():
+				initial_data[k] = v[0]
+			form.initial = initial_data
+	
 	recommendation_form = core_forms.RecommendationForm(ci_required=ci_required.value)
 	
+	if review_assignment.reopened:
+		initial_data = {}
+		initial_data[u'recommendation']=review_assignment.recommendation
+		initial_data[u'competing_interests']=review_assignment.competing_interests
+		recommendation_form.initial=initial_data
+			
 	if not request.POST and request.GET.get('download') == 'docx':
 		path = create_review_form(submission)
 		return serve_file(request, path)
@@ -169,8 +196,14 @@ def review(request, review_type, submission_id,review_round, access_key=None):
 					save_dict[field.element.name] = [request.POST.get(field.element.name), 'text']
 
 			json_data = smart_text(json.dumps(save_dict))
-			form_results = models.FormResult(form=submission.review_form, data=json_data)
-			form_results.save()
+			if review_assignment.reopened:
+				review_assignment.results.data = json_data
+				review_assignment.results.save()
+				review_assignment.reopened=False
+			else:
+				form_results = models.FormResult(form=submission.review_form, data=json_data)
+				form_results.save()
+				review_assignment.results = form_results
 
 			if request.FILES.get('review_file_upload'):
 				handle_review_file(request.FILES.get('review_file_upload'), submission, review_assignment, 'reviewer')
@@ -180,7 +213,7 @@ def review(request, review_type, submission_id,review_round, access_key=None):
 				review_assignment.accepted = timezone.now()
 			review_assignment.recommendation = request.POST.get('recommendation')
 			review_assignment.competing_interests = request.POST.get('competing_interests')
-			review_assignment.results = form_results
+			
 			review_assignment.save()
 			message = "%s Review assignment with id %s has been completed by %s ."  % (review_assignment.review_type.title(),review_assignment.id,review_assignment.user.profile.full_name())
 			press_editors = User.objects.filter(profile__roles__slug='press-editor')
@@ -233,6 +266,11 @@ def review_complete(request, review_type, submission_id,review_round,access_key=
 		if not result:
 			review_assignment.completed=None
 			review_assignment.save()
+		if access_key:
+			return redirect(reverse('review_with_access_key', kwargs={'review_type': review_type, 'submission_id': submission.id,'access_key':access_key,'review_round':review_round}))
+		else: 
+			return redirect(reverse('review_without_access_key', kwargs={'review_type': review_type, 'submission_id': submission.id,'review_round':review_round}))
+	elif review_assignment.completed and review_assignment.reopened:
 		if access_key:
 			return redirect(reverse('review_with_access_key', kwargs={'review_type': review_type, 'submission_id': submission.id,'access_key':access_key,'review_round':review_round}))
 		else: 

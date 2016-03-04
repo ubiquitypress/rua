@@ -312,7 +312,7 @@ def task_count(request):
 def review_assignment_count(request):
 	# TODO: change this to be handled based on whether the user is logged in or not.
 	try:
-		return models.ReviewAssignment.objects.filter(user=request.user, completed__isnull=True,declined__isnull=True).count()+submission_models.ProposalReview.objects.filter(user=request.user, completed__isnull=True,declined__isnull=True).count()
+		return models.ReviewAssignment.objects.filter(user=request.user, completed__isnull=True,declined__isnull=True).count()+submission_models.ProposalReview.objects.filter(user=request.user, completed__isnull=True,declined__isnull=True).count()+models.ReviewAssignment.objects.filter(user=request.user, completed__isnull=False,declined__isnull=True, reopened=True).count()
 	except TypeError:
 		return 0
 
