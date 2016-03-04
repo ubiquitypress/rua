@@ -398,7 +398,15 @@ def overview(request):
     }
 
     return render(request, template, context)
+@login_required
+def overview_inprogress(request):
 
+    template = 'core/dashboard/inprogress_dashboard.html'
+    context = {
+        'submissions': models.Book.objects.filter(stage__isnull=True),
+    }
+
+    return render(request, template, context)
 @login_required
 def proposal_overview(request):
 

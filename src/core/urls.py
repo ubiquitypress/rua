@@ -56,6 +56,7 @@ urlpatterns = patterns('',
     url(r'^user/submission/(?P<submission_id>\d+)/$', 'core.views.user_submission', name='user_submission'),
     
     url(r'overview/$', 'core.views.overview', name='overview'),
+    url(r'overview/inprogress/$', 'core.views.overview_inprogress', name='overview_inprogress'),
     url(r'overview/proposals/$', 'core.views.proposal_overview', name='proposal_overview'),
 
     # Email

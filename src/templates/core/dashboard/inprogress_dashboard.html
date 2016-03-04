@@ -1,0 +1,94 @@
+{% extends "fluid-base.html" %}
+{% load static from staticfiles %}
+{% load bootstrap3 %}
+
+{% block title %}In Progress Overview{% endblock %}
+
+{% block css %}
+<link href="{% static "css/dashboard.css" %}" rel="stylesheet">
+{% endblock %}
+
+{% block body %}
+  <div class="row">
+    <div class="col-md-4">
+      <div class="well well-sm">
+        <h4> &nbsp;Submissions In Progress</h4>
+          <div class="border-overview-submission-xs"></div>
+        {% for submission in submissions %}
+          <a href="{% url 'editor_submission' submission.id %}">
+          <div class="panel panel-default border-overview-submission">
+            <div class="panel-heading clearfix even">
+              <h3 class="panel-title pull-left">{{ submission.title }}</h3>
+              <br /><br />
+              <div class="row">
+                <div class="col-md-6">
+                 <span class="small">By {{ submission.owner.profile.full_name }}</span>
+                </div>
+                <div class="col-md-6">
+                <span class="small pull-right">Submitted {{ submission.submission_date }}</span>
+                </div>
+              </div>
+            </div>
+            <div class="panel-body small">
+              {% if submission.submission_stage > 1 %}
+                <i class="fa fa-check-circle">&nbsp;</i>Stage 1 <br>
+
+                {% if submission.submission_stage > 2 %}
+                   <i class="fa fa-check-circle">&nbsp;</i>Stage 2 <br>
+                    {% if submission.submission_stage > 3 %}
+                       <i class="fa fa-check-circle">&nbsp;</i>Stage 3 <br>
+                       {% if submission.submission_stage > 4 %}
+                         <i class="fa fa-check-circle">&nbsp;</i>Stage 4 <br>
+                          {% if submission.submission_stage > 5 %}
+                             <i class="fa fa-check-circle">&nbsp;</i>Stage 5 <br>
+
+                          {% if submission.stage %}
+                             <i class="fa fa-check-circle">&nbsp;</i>Stage 6 <br>
+                          {% else %}
+                             <i class="fa fa-circle">&nbsp;</i>Stage 6 <br>
+                          {% endif %} 
+                          {% else %}
+                             <i class="fa fa-circle">&nbsp;</i>Stage 5 <br>
+                             <i class="fa fa-circle-o">&nbsp;</i>Stage 6 <br>
+
+                          {% endif %} 
+                       {% else %}
+                         <i class="fa fa-circle">&nbsp;</i>Stage 4 <br>
+                         <i class="fa fa-circle-o">&nbsp;</i>Stage 5 <br>
+                         <i class="fa fa-circle-o">&nbsp;</i>Stage 6 <br>
+
+                       {% endif %}
+                    {% else %}
+                       <i class="fa fa-circle">&nbsp;</i>Stage 3 <br>
+                       <i class="fa fa-circle-o">&nbsp;</i>Stage 4 <br>
+                       <i class="fa fa-circle-o">&nbsp;</i>Stage 5 <br>
+                       <i class="fa fa-circle-o">&nbsp;</i>Stage 6 <br>
+
+                    {% endif %} 
+                {% else %}
+                   <i class="fa fa-circle">&nbsp;</i>Stage 2 <br>
+                   <i class="fa fa-circle-o">&nbsp;</i>Stage 3 <br>
+                   <i class="fa fa-circle-o">&nbsp;</i>Stage 4 <br>
+                   <i class="fa fa-circle-o">&nbsp;</i>Stage 5 <br>
+                   <i class="fa fa-circle-o">&nbsp;</i>Stage 6 <br>
+
+
+                {% endif %}
+           
+            {% else %}
+              <i class="fa fa-circle">&nbsp;</i>Stage 1 <br>
+              <i class="fa fa-circle-o">&nbsp;</i>Stage 2 <br>
+              <i class="fa fa-circle-o">&nbsp;</i>Stage 3 <br>
+              <i class="fa fa-circle-o">&nbsp;</i>Stage 4 <br>
+              <i class="fa fa-circle-o">&nbsp;</i>Stage 5 <br>
+              <i class="fa fa-circle-o">&nbsp;</i>Stage 6 <br>
+            {% endif %}
+            </div>
+          </div>
+          </a>
+        {% include "core/dashboard/dashboard_modal.html" with submission=submission %}
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+{% endblock %}
