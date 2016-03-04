@@ -14,6 +14,7 @@ from django.conf import settings
 from django.template import Context, Template
 from django.db import IntegrityError
 from django.utils.encoding import smart_text
+
 from review import models as review_models
 from core import log, models, forms, logic
 from author import orcid
