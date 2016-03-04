@@ -3,26 +3,29 @@ from django.template.loader import get_template
 from django.template import Context
 from django.db.models import Max
 from django.utils import timezone
+from django.db.models import Q
+from django.template.loader import render_to_string
+from django.template import Context, Template
+from django.utils.encoding import smart_text
+from django.shortcuts import redirect, render, get_object_or_404
+from django.core.urlresolvers import reverse
+
 from core.decorators import is_copyeditor, is_typesetter, is_indexer
 from core import models
 from core.cache import cache_result
-from django.db.models import Q
 from revisions import models as revisions_models
+from submission import logic as submission_logic, models as submission_models
+from core.files import handle_file,handle_copyedit_file,handle_marc21_file
+
 import json
 from pymarc import Record, Field
 from core import email
 from pymarc import *
-from submission import logic as submission_logic
 import os
 from uuid import uuid4
-from submission import models as submission_models
 import re
-from django.shortcuts import redirect, render, get_object_or_404
-from core.files import handle_file,handle_copyedit_file,handle_marc21_file
 from  __builtin__ import any as string_any
-from django.template.loader import render_to_string
-from django.template import Context, Template
-from django.utils.encoding import smart_text
+
 
 def setting_template_loader(setting, path, dictionary,pattern = None):
 	html_template = setting.value
@@ -305,6 +308,7 @@ def task_count(request):
 		return models.Task.objects.filter(assignee=request.user, completed__isnull=True).count()
 	except TypeError:
 		return 0
+
 def review_assignment_count(request):
 	# TODO: change this to be handled based on whether the user is logged in or not.
 	try:
@@ -462,8 +466,7 @@ def send_proposal_review_request(proposal, review_assignment, email_text):
 	base_url = models.Setting.objects.get(group__name='general', name='base_url')
 	press_name = models.Setting.objects.get(group__name='general', name='press_name').value
 
-
-	review_url = 'http://%s/review/%s/%s/' % (base_url.value, 'proposal', proposal.id)
+	review_url = "http://{0}{1}".format(base_url.value, reverse('view_proposal_review_decision', kwargs={'proposal_id': proposal.id, 'assignment_id': review_assignment.id}))
 
 	context = {
 		'review': review_assignment,
@@ -471,8 +474,8 @@ def send_proposal_review_request(proposal, review_assignment, email_text):
 		'proposal': proposal,
 		'press_name': press_name,
 	}
-
 	email.send_email('Proposal Review Request', context, from_email.value, review_assignment.user.email, email_text)
+
 #### WORKFLOW Logic #####
 
 
