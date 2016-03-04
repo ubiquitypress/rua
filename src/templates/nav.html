@@ -34,10 +34,10 @@
                       <li><a class="hover-dropdown "  href="{% url 'view_profile' %}">Profile</a></li>
                       <li class="divider"></li>
                       {% if request.user.is_staff or 'press-editor' in roles %}
-                      <li><a class="hover-dropdown" href="{% url 'overview' %}">Book Overview</a></li>
+                      <li><a class="hover-dropdown" href="{% url 'overview' %}">Overview</a></li>
                       <li><a class="hover-dropdown" href="{% url 'proposal_overview' %}">Proposal Overview</a></li>
                       <li><a class="hover-dropdown" href="{% url 'overview_inprogress' %}">In Progress Overview</a></li>
-                      
+
                       <li class="divider"></li>
                       <li><a class="hover-dropdown" href="{% url 'editor_published_books' %}">Published Books</a></li>
                       <li class="divider"></li>
