@@ -1032,7 +1032,7 @@ def create_proposal_form(proposal):
     data = json.loads(proposal.data)
     for k,v in data.items():
         document.add_heading(k, level=1)        
-        text = BeautifulSoup(v[0],"html.parser").get_text()
+        text = BeautifulSoup(str(v[0]),"html.parser").get_text()
         document.add_paragraph(text).bold = True  
 
     document.add_page_break()
@@ -1494,6 +1494,10 @@ def request_proposal_revisions(request, proposal_id):
     }
 
     return render(request, template, context)
+
+def render_choices(choices):
+    c_split = choices.split('|')
+    return [(choice.capitalize(), choice) for choice in c_split]
 
 @is_reviewer
 def create_proposal_review_form(proposal):
