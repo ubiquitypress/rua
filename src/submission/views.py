@@ -267,7 +267,7 @@ def submission_five(request, book_id):
 		log.add_log_entry(book, request.user, 'submission', 'Submission of %s completed' % book.title, 'Submission Completed')
 
 		# Send ack email
-		press_editors  = core_models.User.objects.filter(profile__roles__slug='press-editor')
+		press_editors = core_models.User.objects.filter(profile__roles__slug='press-editor')
 		logic.send_acknowldgement_email(book, press_editors)
 		return redirect(reverse('author_dashboard'))
 
