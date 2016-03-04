@@ -357,7 +357,6 @@ def editor(request, book_id, editor_id=None):
 
 @login_required
 def start_proposal(request):
-	print request.META
 	proposal_form_id = core_models.Setting.objects.get(name='proposal_form').value
 	proposal_form = manager_forms.GeneratedForm(form=core_models.ProposalForm.objects.get(pk=proposal_form_id))
 	default_fields = manager_forms.DefaultForm()
