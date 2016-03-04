@@ -32,6 +32,7 @@ from datetime import datetime
 def start_submission(request, book_id=None):
 	
 	direct_submissions =  core_models.Setting.objects.get(group__name='general', name='direct_submissions').value
+	
 	if not direct_submissions:
 		return redirect(reverse('proposal_start'))
 
@@ -40,6 +41,8 @@ def start_submission(request, book_id=None):
 
 	if book_id:
 		book = get_object_or_404(core_models.Book, pk=book_id, owner=request.user)
+		if not book.proposal:
+			return redirect(reverse('proposal_start'))
 		book_form = forms.SubmitBookStageOne(instance=book, ci_required=ci_required.value)
 		checklist_form = forms.SubmissionChecklist(checklist_items=checklist_items, book=book)
 	else:

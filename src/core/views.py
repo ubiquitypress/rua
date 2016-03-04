@@ -1430,8 +1430,11 @@ def accept_proposal(request, proposal_id):
         logic.close_active_reviews(proposal)
         proposal.requestor=request.user
         submission = logic.create_submission_from_proposal(proposal, proposal_type=request.POST.get('proposal-type'))
+        submission.proposal = proposal
+        submission.save()
         attachment = handle_attachment(request, submission)
         logic.send_proposal_accept(proposal, email_text=request.POST.get('accept-email'), submission=submission, sender=request.user, attachment=attachment)
+        proposal.date_accepted = timezone.now()
         proposal.save()
         log.add_proposal_log_entry(proposal=proposal,user=request.user, kind='proposal',  message='Proposal "%s %s" was accepted.'%(proposal.title,proposal.subtitle), short_name='Proposal Accepted')
     

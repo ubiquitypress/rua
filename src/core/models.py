@@ -203,6 +203,9 @@ class Book(models.Model):
 	# Contract
 	contract = models.ForeignKey('Contract', null=True, blank=True)
 
+	# Proposal
+	proposal = models.ForeignKey('submission.Proposal', null = True, blank = True)
+
 	peer_review_override = models.BooleanField(default=False, help_text="If enabled, this will mark a book as Peer Reviewed even if there is no Reviews in the Rua database.")
 
 	def __unicode__(self):
