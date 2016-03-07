@@ -170,12 +170,37 @@ def view_profile(request):
         user_profile = models.Profile(user=request.user)
         user_profile.save()
     name_len=len(request.user.first_name)+len(request.user.last_name)
-    print name_len
 
     template = 'core/user/profile.html'
     context = {
         'user_profile': user_profile,
         'name_width':name_len*14,
+        'readonly': False,
+        'user_exists': True,
+    }
+
+    return render(request, template, context)
+
+@login_required
+def view_profile_readonly(request,username):
+    if request.user.username == username:
+        return redirect(reverse('view_profile'))
+    user_exists = False
+    user_profile = None
+    try:
+        user_profile = models.Profile.objects.get(user__username=username)
+        user_exists = True
+    except:
+        user_exists = False
+
+    name_len=len(request.user.first_name)+len(request.user.last_name)
+
+    template = 'core/user/profile.html'
+    context = {
+        'user_profile': user_profile,
+        'name_width':name_len*14,
+        'readonly': True,
+        'user_exists': user_exists,
     }
 
     return render(request, template, context)
