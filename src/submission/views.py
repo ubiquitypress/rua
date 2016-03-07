@@ -267,7 +267,7 @@ def submission_five(request, book_id):
 		log.add_log_entry(book, request.user, 'submission', 'Submission of %s completed' % book.title, 'Submission Completed')
 
 		# Send ack email
-		press_editors  = core_models.User.objects.filter(profile__roles__slug='press-editor')
+		press_editors = core_models.User.objects.filter(profile__roles__slug='press-editor')
 		logic.send_acknowldgement_email(book, press_editors)
 		return redirect(reverse('author_dashboard'))
 
@@ -357,7 +357,6 @@ def editor(request, book_id, editor_id=None):
 
 @login_required
 def start_proposal(request):
-	print request.META
 	proposal_form_id = core_models.Setting.objects.get(name='proposal_form').value
 	proposal_form = manager_forms.GeneratedForm(form=core_models.ProposalForm.objects.get(pk=proposal_form_id))
 	default_fields = manager_forms.DefaultForm()

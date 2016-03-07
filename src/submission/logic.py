@@ -67,8 +67,13 @@ def send_acknowldgement_email(book, press_editors):
 
     email.send_email('Submission Acknowledgement', context, from_email, book.owner.email, author_text, book=book)
 
-    for editor in press_editors:
-        email.send_email('New Submission', context, from_email, editor.email, editor_text, book=book) 
+    if len(press_editors) > 1:
+        editor = press_editors[0]
+        cc_eds = [editor.email for editor in press_editors if not editor == press_editors[0]]
+    else:
+        editor = press_editors[0]
+        cc_eds = None
+    email.send_email('New Submission', context, from_email, editor.email, editor_text, book=book, cc=cc_eds) 
 
 def handle_book_labels(post, book, kind):
     for _file in book.files.all():

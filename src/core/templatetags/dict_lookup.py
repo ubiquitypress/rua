@@ -1,5 +1,6 @@
 from django import template
 from django.core.urlresolvers import reverse
+from django.template.defaultfilters import linebreaksbr
 register = template.Library()
 
 import json
@@ -13,4 +14,4 @@ def lookup(the_dict, key):
 		url = reverse('proposals:serve_file', kwargs={'filename': os.path.basename(the_dict.get(key, '')[0])})
    		return '<a href="%s">Download File</a>' % url
    	else:
-   		return the_dict.get(key, '')[0]
+   		return linebreaksbr(the_dict.get(key, '')[0])
