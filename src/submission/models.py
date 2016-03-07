@@ -62,7 +62,7 @@ class ProposalReview(models.Model):
 	results = models.ForeignKey('review.FormResult', null=True, blank=True)
 	recommendation = models.CharField(max_length=10, choices=review_recommendation(), null=True, blank=True)
 	competing_interests = models.TextField(blank=True, null=True, help_text="If any of the authors or editors have any competing interests please add them here. EG. 'This study was paid for by corp xyz.'")
-	blind = models.BooleanField(default=False)
+	blind = models.NullBooleanField(default=False, blank=True, null=True)
 
 	class Meta:
 		unique_together = ('proposal', 'user')
