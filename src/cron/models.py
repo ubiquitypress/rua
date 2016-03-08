@@ -4,6 +4,7 @@ def cron_schedule():
     return (
         ('hourly', 'Hourly'),
         ('daily', 'Daily'),
+        ('weekly', 'Weekly'),
     )
 
 class CronTask(models.Model):

@@ -783,6 +783,7 @@ class Task(models.Model):
 	rejected = models.DateTimeField(blank=True, null=True)
 	due = models.DateField(null=True, blank=True)
 	completed = models.DateField(null=True, blank=True)
+	emailed = models.BooleanField(default=False)
 
 	def status_color(self):
 		now = date.today()
