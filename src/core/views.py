@@ -977,7 +977,7 @@ def versions_file(request, submission_id, file_id):
 def view_log(request, submission_id):
     book = get_object_or_404(models.Book, pk=submission_id)
     log_list = models.Log.objects.filter(book=book).order_by('-date_logged')
-    email_list = models.EmailLog.objects.filter(book=book).order_by('-sent')
+    email_list = models.EmailLog.objects.filter(Q(book=book) | Q(proposal=book.proposal)).order_by('-sent')
 
     template = 'editor/log.html'
     context = {
