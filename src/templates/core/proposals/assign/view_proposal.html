@@ -11,7 +11,9 @@
 
  <div class="col-md-12">
   <div class="dash-container other-heading container-fluid" style="margin-top:-20px">
-         <h2>{% if revise%} Update {%else%}Submit an{%endif%} Unassigned Proposal <a href="{% url 'proposals' %}" class="btn  btn-transparent-white" style="position: absolute;right:25px;margin-top:-8px">Go back</a></h2>
+
+      
+         <h2>{% if revise%} Update {%else%}Submit an{%endif%} {% if not proposal.owner %}Unassigned{%endif%} Proposal {% if not not_readonly %}<a href="{% url 'proposal_assign_edit' proposal.id  %}" class="btn  btn-transparent-white" style="position: absolute;right:110px;width:100px;margin-top:-8px">Edit</a>  {% else %}<a href="{% url 'proposal_assign_view_submitted' proposal.id  %}" class="btn  btn-transparent-white" style="position: absolute;right:110px;width:100px;margin-top:-8px">Assign</a>{% endif %}<a href="{% url 'proposals' %}" class="btn  btn-transparent-white" style="position: absolute;right:25px;margin-top:-8px">Go back</a></h2>
 
 </div>
 
@@ -97,9 +99,15 @@
           
 
            {% endfor %}
-           </div>
-  <hr />
+         
+
+      {% endif %}
+
+      {% endif %}
+    </div>
+        <hr />
     <h3>Authors</h3>
+    <br>
   <table class="table table-bordered">
     <thead>
   <tr>
@@ -111,15 +119,22 @@
   <tr>
     <td>{{ author.first_name }}</td>
     <td>{{ author.last_name }}</td>
-    <td width="8%"><a href="{% url 'proposal_assign_view_submitted' proposal.id %}" class="btn btn-other" style="width:100px">Assign</a></td>
+    <td width="8%">
+      {% ifequal proposal.owner.pk author.pk %}
+      Owner
+      {% else %}
+ <a href="{% url 'proposal_assign_user' proposal.id author.pk %}" class="btn btn-view btn-sm btn-round" id="author" name="author" value="{{ author.pk }}" type="submit"  data-toggle="tooltip" data-placement="bottom" style="width:100px; height: 30px;"><i class="glyphicon glyphicon-plus"style="font-size:10px"></i>  Assign</a>
+      {% endifequal %}
+ 
+        </span>
+ </form>
+
+    </td>
   </tr>
 
   {% endfor %}
   </tbody>
   </table>
-      {% endif %}
-
-      {% endif %}
 
     {% if proposal.requestor %}
     <br>
