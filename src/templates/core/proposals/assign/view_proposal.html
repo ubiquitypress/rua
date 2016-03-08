@@ -1,0 +1,206 @@
+{% extends "base.html" %}
+{% load static from staticfiles %}
+{% load bootstrap3 %}
+
+{% block title %}Submit Proposal{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/plug-ins/1.10.7/integration/bootstrap/3/dataTables.bootstrap.css">
+{% endblock css %}
+{% block body %}
+
+ <div class="col-md-12">
+  <div class="dash-container other-heading container-fluid" style="margin-top:-20px">
+         <h2>{% if revise%} Update {%else%}Submit an{%endif%} Unassigned Proposal <a href="{% url 'proposals' %}" class="btn  btn-transparent-white" style="position: absolute;right:25px;margin-top:-8px">Go back</a></h2>
+
+</div>
+
+   <p>{{core_proposal.intro_text|safe}}</p>
+   <hr />
+   {% if proposal.status == "accepted" or proposal.status == "declined" %}
+   <table class="table table-bordered">
+    <thead>
+        <tr>
+          <th>Decision</th>
+        </tr>
+    </thead>
+    <tbody>
+    <tr>
+      <td>{{ proposal.get_status_display }} </td>
+    </tr>
+  </tbody>
+  </table>
+
+  <br>
+  {% endif %}
+
+   {% if viewable%}
+
+ 
+    <form method="post" class="form" enctype="multipart/form-data">
+      {% csrf_token %}     
+      <div class="dash-container bottom-space">
+        {% if editor %}
+
+      {% if not_readonly %}
+           <div class="well" style="overflow:auto">
+        {% bootstrap_form default_fields %}
+        {% if proposal_form %}
+         {% for field in proposal_form %}
+            <div class="{% if field.field.widget.attrs.div_class %}{{ field.field.widget.attrs.div_class }}{% else %}dash-container{% endif %}">
+            {% if field.field.widget.attrs.is_checkbox %}
+              {% if field.errors %}<span class="red">{{ field.errors|join:", " }}</span><br />{% endif %}
+              {{ field }} {% if field.field.help_text %}<span class="small">{{ field.field.help_text|safe }}</span>{% endif %}
+            {% else %}
+                 {% if field.errors %}<span class="red">{{ field.errors|join:", " }}</span>{% endif %}
+                 {% bootstrap_field field %}
+              {% endif %}
+              </div>
+          {% endfor %}
+         {% endif %}
+        </div>
+
+        
+      {% buttons %}
+ 
+      <div class="dash-container">
+       <a href="{% url 'proposals'%}"class="btn btn-primary pull-left" style="width:120px">
+             Go Back
+          </a>
+          <button name="book" type="submit" class="btn btn-accept pull-right" style="width:120px">
+             Save
+          </button>
+      </div>
+      {% endbuttons %}
+    </form>
+    <br>
+    <br>
+    <br>
+  <br>
+  <br>
+  {% else %}
+ <div class="well" style="overflow:auto">
+   <div class="form-group"><label class="control-label" for="id_title">Title</label><input class="form-control" id="id_title" name="title" placeholder="Title" required="required" title="" type="text" value="{{proposal.title}}" readonly></div>
+ <div class="form-group"><label class="control-label" for="id_subtitle">Subtitle</label><input class="form-control" id="id_subtitle" name="subtitle" placeholder="Subtitle" required="required" title="" type="text" value="{{proposal.subtitle}}" readonly></div>
+<div class="form-group"><label class="control-label" for="id_author">Author</label><input class="form-control" id="id_author" name="author" placeholder="Author" required="required" title="" type="text" value="test" readonly></div>
+  {% if proposal_form %}
+          {%for field in proposal_form%}
+            <div class="{% if field.field.widget.attrs.div_class %}{{ field.field.widget.attrs.div_class }}{% else %}dash-container{% endif %}">
+            {% if field.field.widget.attrs.is_checkbox %}
+              {% if field.errors %}<span class="red">{{ field.errors|join:", " }}</span><br />{% endif %}
+              {{ field }} &nbsp;{% if field.field.help_text %}{{ field.field.help_text|safe }}{% endif %}
+            {% else %}
+                 {% if field.errors %}<span class="red">{{ field.errors|join:", " }}</span>{% endif %}
+              <label class="control-label" for="id_{{field.name}}">{{field.label}}{% if field.element.required %}*{% endif %}</label><input class="form-control" div_class="dash-container" id="id_{{field.name}}" name="{{field.name}}" placeholder="{{field.label}}" title="help" type="text" value="{{field.value}}" readonly>
+              {% endif %}
+              </div>
+          
+
+           {% endfor %}
+      {% endif %}
+
+      {% endif %}
+</div>
+  <hr />
+    <h3>Authors</h3>
+  <table class="table table-bordered">
+    <thead>
+  <tr>
+    <th>First Name</th>
+    <th>Last Name</th>
+    <th></th>
+  </tr></thead><tbody>
+  {% for author in authors %}
+  <tr>
+    <td>{{ author.first_name }}</td>
+    <td>{{ author.last_name }}</td>
+    <td width="8%"><a href="{% url 'proposal_assign_view_submitted' proposal.id %}" class="btn btn-other" style="width:100px">Assign</a></td>
+  </tr>
+
+  {% endfor %}
+  </tbody>
+  </table>
+    {% if proposal.requestor %}
+    <br>
+    
+  
+    <br>
+   <table class="table table-bordered">
+    <thead>
+        <tr>
+          <th>Requestor</th>
+        </tr>
+    </thead>
+    <tbody>
+    <tr>
+      <td>{{ proposal.requestor.username }} <sup> <a href="core/email.html" onclick="return popitup('/email/proposal/{{proposal.id}}/user/{{proposal.requestor.id}}/','proposal_{{proposal.requestor.id}}')"class="fa fa-envelope-o btn btn-xs btn-default"></a></sup></td>
+    </tr>
+  </tbody>
+  </table>
+  <br>
+  <br>
+  {% endif %}
+    {% endif %}
+   {% else %}
+       <div class="dash-container bottom-space">
+    <br>
+       <div class="well">
+        You do not have permission to view this proposal.
+       </div>
+    </div>
+    {% endif %}
+	</div>
+{% endblock body %}
+
+{% block js %}
+<script type="text/javascript" src="{% static "js/fancyfile.js" %}"></script>
+<script type="text/javascript">$("textarea").jqte();</script>
+<script type="text/javascript" language="javascript" src="//cdn.datatables.net/1.10.7/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" language="javascript" src="//cdn.datatables.net/plug-ins/1.10.7/integration/bootstrap/3/dataTables.bootstrap.js"></script>
+<script>
+  $(document).ready(function() {
+      $('.table').DataTable({
+        "lengthMenu": [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]],
+
+         "order": [[  {% if open %}3{% else %}0{% endif %}, "desc" ]]
+
+      });
+  } );
+</script>
+<script language="javascript" type="text/javascript">
+<!--
+function popitup(url,title) {
+    newwindow=window.open(url,title,'height=750,width=600');
+    if (window.focus) {newwindow.focus()}
+    return false;
+}
+
+// -->
+</script>
+<script language="javascript" type="text/javascript">
+$(document).ready(function () {    
+       {%for field in default_fields%}
+{% if field.field.required %} 
+         var required_text=$('label[for="' + "id_{{field.name}}"+ '"]').html()+" *";
+         var current_field = $('label[for="' + "id_{{field.name}}"+ '"]');
+         current_field.text(required_text); 
+ {% endif %}
+       {% endfor %}
+
+    {% if proposal_form %}
+        
+        {%for field in proposal_form%}
+    
+          {% if field.field.required %} 
+            var required_text=$('label[for="' + "id_{{field.name}}"+ '"]').html()+" *";
+            var current_field = $('label[for="' + "id_{{field.name}}"+ '"]');
+            current_field.text(required_text); 
+          {% endif %}
+
+        {% endfor %}
+
+    {% endif %}
+  });
+</script>
+
+{% endblock js %}

@@ -987,11 +987,237 @@ def view_log(request, submission_id):
     return render(request, template, context)
 
 ## PROPOSALS ##
+@is_editor
+def assign_proposal(request):
+    proposal_form_id = models.Setting.objects.get(name='proposal_form').value
+    proposal_form = manager_forms.GeneratedForm(form=models.ProposalForm.objects.get(pk=proposal_form_id))
+    default_fields = manager_forms.DefaultForm()
+
+    if request.method == 'POST':
+        proposal_form = manager_forms.GeneratedForm(request.POST, request.FILES,form=models.ProposalForm.objects.get(pk=proposal_form_id))
+        default_fields = manager_forms.DefaultForm(request.POST)
+        if proposal_form.is_valid() and default_fields.is_valid():
+            defaults = {field.name: field.value() for field in default_fields}
+            proposal = submission_models.Proposal(form=models.ProposalForm.objects.get(pk=proposal_form_id), data=None, owner=None, **defaults)
+            proposal.save()
+            save_dict = {}
+            file_fields = models.ProposalFormElementsRelationship.objects.filter(form=models.ProposalForm.objects.get(pk=proposal_form_id), element__field_type='upload')
+            data_fields = models.ProposalFormElementsRelationship.objects.filter(~Q(element__field_type='upload'), form=models.ProposalForm.objects.get(pk=proposal_form_id))
+
+            for field in file_fields:
+                if field.element.name in request.FILES:
+                    # TODO change value from string to list [value, value_type]
+                    save_dict[field.element.name] = [handle_proposal_file_form(request.FILES[field.element.name], proposal, 'other', request.user, "Attachment: Uploaded by %s" % (request.user.username))]
+
+            for field in data_fields:
+                if field.element.name in request.POST:
+                    # TODO change value from string to list [value, value_type]
+                    save_dict[field.element.name] = [request.POST.get(field.element.name), 'text']
+            
+            json_data = smart_text(json.dumps(save_dict))
+            proposal.data = json_data
+            proposal.save()
+            editors = User.objects.filter(profile__roles__slug='press-editor')
+            message = "A new Unassigned Proposal '%s' with id %s has been submitted by %s ."  % (proposal.title,proposal.pk,request.user.username)
+            for editor in editors:
+                notification = models.Task(assignee=editor,creator=request.user,text=message,workflow='proposal')
+                notification.save()
+
+            messages.add_message(request, messages.SUCCESS, 'Unassigned Proposal %s submitted' % proposal.id)
+ #           email_text = models.Setting.objects.get(group__name='email', name='proposal_submission_ack').value
+  #          logic.send_proposal_submission_ack(proposal, email_text=email_text, owner=request.user)
+
+            log.add_proposal_log_entry(proposal=proposal,user=request.user, kind='proposal', message='Unassigned Proposal has been submitted by %s.' % request.user.profile.full_name(), short_name='Unassigned Proposal Submitted')
+    
+            return redirect(reverse('proposals',kwargs = {}))
+
+
+    template = "core/proposals/assign/start_proposal.html"
+    context = {
+        'proposal_form': proposal_form,
+        'default_fields': default_fields,
+        'core_proposal':models.ProposalForm.objects.get(pk=proposal_form_id),
+    }
+
+    return render(request, template, context)
 
 @is_editor
+def proposal_assign_view(request, proposal_id):
+
+    proposal = submission_models.Proposal.objects.get(pk=proposal_id)
+    proposal_form_id = models.Setting.objects.get(name='proposal_form').value
+    authors = User.objects.filter(profile__roles__slug='author')
+                
+    if proposal.owner == request.user:
+        viewable = True
+
+    proposal_form = manager_forms.GeneratedForm(form=models.ProposalForm.objects.get(pk=proposal.form.id))
+    default_fields = manager_forms.DefaultForm(initial={'title': proposal.title,'author':proposal.author,'subtitle':proposal.subtitle})
+
+    intial_data={}
+    data = {}
+    if proposal.data:
+        data = json.loads(proposal.data)
+        for k,v in data.items():
+            intial_data[k] = v[0]
+
+
+    proposal_form.initial=intial_data
+    
+    roles = request.user.profile.roles.all()
+
+    if string_any('Editor' in role.name for role in roles):
+        viewable = True
+        editor = True
+        if proposal.requestor and not proposal.requestor == request.user:
+            editor = False
+
+        print editor
+    else:
+        editor = False
+
+    if request.POST and editor:
+        proposal_form = manager_forms.GeneratedForm(request.POST, request.FILES, form=models.ProposalForm.objects.get(pk=proposal.form.id))
+        default_fields = manager_forms.DefaultForm(request.POST)
+        if proposal_form.is_valid() and default_fields.is_valid():
+
+            save_dict = {}
+            file_fields = models.ProposalFormElementsRelationship.objects.filter(form=models.ProposalForm.objects.get(pk=proposal.form.id), element__field_type='upload')
+            data_fields = models.ProposalFormElementsRelationship.objects.filter(~Q(element__field_type='upload'), form=models.ProposalForm.objects.get(pk=proposal.form.id))
+
+            for field in file_fields:
+                if field.element.name in request.FILES:
+                    # TODO change value from string to list [value, value_type]
+                    save_dict[field.element.name] = [handle_proposal_file_form(request.FILES[field.element.name], proposal, 'other', request.user, "Attachment: Uploaded by %s" % (request.user.username))]
+
+            for field in data_fields:
+                if field.element.name in request.POST:
+                    # TODO change value from string to list [value, value_type]
+                    save_dict[field.element.name] = [request.POST.get(field.element.name), 'text']
+
+            json_data = smart_text(json.dumps(save_dict))
+            proposal = submission_models.Proposal.objects.get(form=models.ProposalForm.objects.get(pk=proposal.form.id),pk=proposal_id)
+            proposal.data=json_data
+            proposal.status = "submission"
+            defaults=default_fields.cleaned_data
+            proposal.title = defaults.get("title")
+            proposal.author = defaults.get("author")
+            proposal.subtitle = defaults.get("subtitle")    
+            proposal.requestor=request.user
+            proposal.save()
+
+            update_email_text = models.Setting.objects.get(group__name='email', name='proposal_update_ack').value
+            log.add_proposal_log_entry(proposal=proposal,user=request.user, kind='proposal', message='Proposal "%s %s" has been updated.'%(proposal.title,proposal.subtitle), short_name='Proposal Updated')
+            logic.send_proposal_update(proposal, email_text=update_email_text, sender=request.user, receiver=proposal.owner)
+            messages.add_message(request, messages.SUCCESS, 'Proposal %s updated' % proposal.id)
+            return redirect(reverse('user_dashboard'))
+
+    template = "core/proposals/assign/view_proposal.html"
+    context = {
+        'proposal_form': proposal_form,
+        'default_fields': default_fields,
+        'proposal':proposal,
+        'not_readonly':False,
+        'data':data,
+        'revise':True,
+        'editor': editor,
+        'authors': authors,
+        'viewable':viewable,
+        'core_proposal':models.ProposalForm.objects.get(pk=proposal_form_id),
+    }
+
+    return render(request, template, context)
+
+@is_editor
+def proposal_assign_edit(request, proposal_id):
+
+    proposal = submission_models.Proposal.objects.get(pk=proposal_id)
+    proposal_form_id = models.Setting.objects.get(name='proposal_form').value
+
+    if proposal.owner == request.user:
+        viewable = True
+
+    proposal_form = manager_forms.GeneratedForm(form=models.ProposalForm.objects.get(pk=proposal.form.id))
+    default_fields = manager_forms.DefaultForm(initial={'title': proposal.title,'author':proposal.author,'subtitle':proposal.subtitle})
+
+    intial_data={}
+    data = {}
+    if proposal.data:
+        data = json.loads(proposal.data)
+        for k,v in data.items():
+            intial_data[k] = v[0]
+
+
+    proposal_form.initial=intial_data
+    
+    roles = request.user.profile.roles.all()
+
+    if string_any('Editor' in role.name for role in roles):
+        viewable = True
+        editor = True
+        if proposal.requestor and not proposal.requestor == request.user:
+            editor = False
+
+        print editor
+    else:
+        editor = False
+
+    if request.POST and editor:
+        proposal_form = manager_forms.GeneratedForm(request.POST, request.FILES, form=models.ProposalForm.objects.get(pk=proposal.form.id))
+        default_fields = manager_forms.DefaultForm(request.POST)
+        if proposal_form.is_valid() and default_fields.is_valid():
+
+            save_dict = {}
+            file_fields = models.ProposalFormElementsRelationship.objects.filter(form=models.ProposalForm.objects.get(pk=proposal.form.id), element__field_type='upload')
+            data_fields = models.ProposalFormElementsRelationship.objects.filter(~Q(element__field_type='upload'), form=models.ProposalForm.objects.get(pk=proposal.form.id))
+
+            for field in file_fields:
+                if field.element.name in request.FILES:
+                    # TODO change value from string to list [value, value_type]
+                    save_dict[field.element.name] = [handle_proposal_file_form(request.FILES[field.element.name], proposal, 'other', request.user, "Attachment: Uploaded by %s" % (request.user.username))]
+
+            for field in data_fields:
+                if field.element.name in request.POST:
+                    # TODO change value from string to list [value, value_type]
+                    save_dict[field.element.name] = [request.POST.get(field.element.name), 'text']
+
+            json_data = smart_text(json.dumps(save_dict))
+            proposal = submission_models.Proposal.objects.get(form=models.ProposalForm.objects.get(pk=proposal.form.id),pk=proposal_id)
+            proposal.data=json_data
+            proposal.status = "submission"
+            defaults=default_fields.cleaned_data
+            proposal.title = defaults.get("title")
+            proposal.author = defaults.get("author")
+            proposal.subtitle = defaults.get("subtitle")    
+            proposal.save()
+
+            update_email_text = models.Setting.objects.get(group__name='email', name='proposal_update_ack').value
+            log.add_proposal_log_entry(proposal=proposal,user=request.user, kind='proposal', message='Unassigned Proposal "%s %s" has been updated.'%(proposal.title,proposal.subtitle), short_name='Unassigned Proposal Updated')
+            #logic.send_proposal_update(proposal, email_text=update_email_text, sender=request.user, receiver=proposal.owner)
+            messages.add_message(request, messages.SUCCESS, 'Unassigned Proposal %s updated' % proposal.id)
+            return redirect(reverse('proposals'))
+
+    template = "core/proposals/assign/view_proposal.html"
+    context = {
+        'proposal_form': proposal_form,
+        'default_fields': default_fields,
+        'proposal':proposal,
+        'not_readonly':True,
+        'data':data,
+        'revise':True,
+        'editor': editor,
+        'viewable':viewable,
+        'core_proposal':models.ProposalForm.objects.get(pk=proposal_form_id),
+    }
+
+    return render(request, template, context)
+@is_editor
 def proposal(request):
-    proposal_list = submission_models.Proposal.objects.filter((~Q(status='declined') & ~Q(status='accepted')))
+    proposal_list = submission_models.Proposal.objects.filter((~Q(status='declined') & ~Q(status='accepted') & Q(owner__isnull=False)))
+    unassigned_proposals = submission_models.Proposal.objects.filter(owner__isnull=True)
+   
     proposals = []
+
     for proposal in proposal_list:
         if not proposal.requestor:
             proposals.append(proposal)
@@ -1000,6 +1226,7 @@ def proposal(request):
     template = 'core/proposals/proposal.html'
     context = {
         'proposal_list': proposals,
+        'unassigned_proposal_list': unassigned_proposals,
         'open': True,
     }
 

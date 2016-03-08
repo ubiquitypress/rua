@@ -13,7 +13,7 @@ def proposal_status():
 class Proposal(models.Model):
 
 
-	owner = models.ForeignKey(User)
+	owner = models.ForeignKey(User,blank=True, null=True)
 	title = models.CharField(max_length=255)
 	subtitle = models.CharField(max_length=255)
 	author = models.CharField(max_length=255)

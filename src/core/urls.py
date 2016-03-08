@@ -93,7 +93,12 @@ urlpatterns = patterns('',
     url(r'^misc_files/(?P<submission_id>\d+)/upload/$', 'core.views.upload_misc_file', name='upload_misc_file'),
 
     # Proposals
+
     url(r'^proposals/$', 'core.views.proposal', name='proposals'),
+    url(r'^proposals/unassigned/$', 'core.views.assign_proposal', name='proposal_assign'),
+    url(r'^proposal/unassigned/(?P<proposal_id>\d+)/edit/$', 'core.views.proposal_assign_edit', name='proposal_assign_edit'),
+    
+    url(r'^proposal/assign/(?P<proposal_id>\d+)/$', 'core.views.proposal_assign_view', name='proposal_assign_view_submitted'),
     url(r'^proposals/history/$', 'core.views.proposal_history', name='proposals_history'),
     url(r'^proposals/(?P<proposal_id>\d+)/$', 'core.views.view_proposal', name='view_proposal'),
     url(r'^proposals/(?P<proposal_id>\d+)/review/start/$', 'core.views.start_proposal_review', name='start_proposal_review'),

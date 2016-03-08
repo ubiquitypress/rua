@@ -43,6 +43,37 @@
   {% endfor %}
   </tbody>
   </table>
+
+    <hr />
+    <h3>Unassigned</h3>
+  <table class="table table-bordered">
+    <thead>
+  <tr>
+    {% if open %}{% else %}
+    <th></th>{% endif %}
+    <th>Title</th>
+    <th>Subtitle</th>
+    <th>Date Submitted</th>
+    <th>Status</th>
+    <th></th>
+    <th></th>
+  </tr></thead><tbody>
+  {% for proposal in unassigned_proposal_list %}
+  <tr>
+    {% if open %}{% else %}
+   
+    <td>{{ proposal.pk }}</td>{% endif %}
+    <td>{{ proposal.title }}</td>
+    <td>{{ proposal.subtitle }}</td>
+    <td>{{ proposal.date_submitted }}</td>
+    <td>{{ proposal.get_status_display }}</td>
+    <td width="8%"><a href="{% url 'proposal_assign_edit' proposal.id %}" class="btn btn-other" style="width:100px">Edit</a></td>
+    <td width="8%"><a href="{% url 'proposal_assign_view_submitted' proposal.id %}" class="btn btn-other" style="width:100px">Assign</a></td>
+  </tr>
+
+  {% endfor %}
+  </tbody>
+  </table>
 </div>
 {% endblock %}
 
