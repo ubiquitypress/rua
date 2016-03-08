@@ -101,7 +101,7 @@ class Profile(models.Model):
 	reset_code_validated = models.BooleanField(default=False)
 	roles = models.ManyToManyField('Role')
 	interest = models.ManyToManyField('Interest', null=True, blank=True)
-	website = models.URLField(max_length=2000, help_text="User's personal website", null=True, blank=True)
+	website = models.URLField(max_length=2000, help_text="User's personal website. Remember to include http:// or https:// at the start.", null=True, blank=True)
 	
 
 	def full_name(self):
