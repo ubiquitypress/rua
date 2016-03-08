@@ -1554,6 +1554,9 @@ def view_proposal_review(request, proposal_id, assignment_id):
             review_assignment.competing_interests = request.POST.get('competing_interests')
             review_assignment.results = form_results
             review_assignment.save()
+            message = "Review assignment for proposal '%s' has been completed by %s ."  % (review_assignment.proposal.title,review_assignment.user.profile.full_name())
+            notification = models.Task(assignee=review_assignment.proposal.requestor,creator=request.user,text=message,workflow='proposal')
+            notification.save()
 
             return redirect(reverse('user_dashboard'))
 
