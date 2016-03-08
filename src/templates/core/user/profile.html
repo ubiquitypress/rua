@@ -60,6 +60,12 @@
                 <h4>Biography</h4>
                 {{ user_profile.biography|safe }}
             </div>
+            {% if user_profile.website %}
+              <div class="bs-callout bs-callout-website" id="callout-helper-bg-specificity">
+                <h4>Website: <small>
+                <a href="{{ user_profile.website }}">{{ user_profile.website }}</a></small></h4>
+              </div>
+            {% endif %}
       			{% if user_profile.orcid %}<a target="_blank" class="btn btn-social btn-orcid" href="http://orcid.org/{{ user_profile.orcid }}/"><i class="fa">iD</i>&nbsp;ORCiD</a>{% endif %}
       			{% if user_profile.facebook %}<a target="_blank" class="btn btn-social btn-facebook" href="http://facebook.com/{{ user_profile.facebook}}"><i class="fa fa-facebook-official"></i>&nbsp;Facebook</a>{% endif %}
       			{% if user_profile.twitter %}<a target="_blank" class="btn btn-social btn-twitter" href="http://twitter.com/{{ user_profile.twitter }}"><i class="fa fa-twitter"></i>&nbsp;Twitter</a>{% endif %}
@@ -68,7 +74,7 @@
       			{% if user_profile.github %}<a target="_blank" class="btn btn-social btn-github" href="https://github.com/{{ user_profile.github }}"><i class="fa fa-github"></i>&nbsp;Github</a>{% endif %}
         </div>
         {% else %}
-      <h3><i class="fa fa-exclamation-triangle"></i>&nbsp;&nbsp;User does not exist. </h3>
+      <h3><i class="fa fa-exclamation-triangle"></i>&nbsp;&nbsp;User or Profile does not exist. </h3>
         {% endif %}
 	</div>
 </div>

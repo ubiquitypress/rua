@@ -1043,6 +1043,12 @@ body > div.container-fluid > div > div > div > a {
 .bs-callout-profile h4 {
     color: #AD2234;
 }
+.bs-callout-website {
+    border-left-color: #0099ff;
+}
+.bs-callout-website h4 {
+    color: #0099ff;
+}
 .bs-callout-profile-2 {
     border-left-color: #E99300;
 }
