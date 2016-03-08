@@ -9,7 +9,7 @@
   <form method="POST">
     {% csrf_token %}
     <div class="form-group">
-      <label for="comment">Email Asiignment Requestor:</label>
+      <label for="comment">Email Assignment Contact Editor:</label>
       <textarea name="decline-email" class="form-control" rows="8" id="comment">{{ email_text }}</textarea>
     </div>
     <button class="btn btn-danger pull-right" type="submit">Send and Record Decision</button>
