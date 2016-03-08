@@ -907,6 +907,9 @@ def delete_file(request, submission_id, file_id, returner):
         return redirect(reverse('editor_production', kwargs={'submission_id': book.id}))
     elif returner == 'editor':
         return redirect(reverse('editor_submission', kwargs={'submission_id': book.id}))
+    elif returner == 'author':
+        return redirect(reverse('author_dashboard'))
+
 
 @is_book_editor_or_author
 def update_file(request, submission_id, file_id, returner):
