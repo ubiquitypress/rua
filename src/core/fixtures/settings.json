@@ -746,5 +746,27 @@
     },
     "model": "core.setting",
     "pk": 71
+},
+{
+  "fields": {
+    "value": "7",
+    "group": 5,
+    "name": "notification_reminder",
+    "types": "number",
+    "description": ""
+  },
+  "model": "core.setting",
+  "pk": 72
+},
+{
+  "fields": {
+    "value": "Dear {{user.profile.salutation_name}}, \r\nYou currently have {{notification_count}} unread notifications on {{press_name}}.\r\n\r\n{{notifications}}\r\n\r\nYou can login to view them: {{base_url}}/login/\r\n\r\nRegards,\r\n\r\nRua Bot.",
+    "group": 3,
+    "name": "notification_reminder_email",
+    "types": "rich_text",
+    "description": ""
+  },
+  "model": "core.setting",
+  "pk": 73
 }
 ]

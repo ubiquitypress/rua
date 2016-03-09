@@ -22,3 +22,4 @@ class Command(BaseCommand):
 				ect.remind_accepted_reviews(task)
 				ect.remind_overdue_reviews(task)
 				ect.reminder_overdue_revisions(task)
+				ect.reminder_notifications_not_emailed(task)

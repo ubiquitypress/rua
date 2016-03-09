@@ -73,20 +73,29 @@ def reminder_overdue_revisions(task):
 			review.save()
 			
 def reminder_notifications_not_emailed(task):
-	days = int(models.Setting.objects.get(group__name='cron', name='revisions_reminder').value)
-	email_text = models.Setting.objects.get(group__name='email', name='revisions_reminder_email').value
+	from_email = models.Setting.objects.get(group__name='email', name='from_address')
+    press_name = models.Setting.objects.get(group__name='general', name='press_name').value
+	days = int(models.Setting.objects.get(group__name='cron', name='notification_reminder').value)
+	email_text = models.Setting.objects.get(group__name='email', name='notification_reminder_email').value
 	dt = timezone.now()
 	target_date = dt - timedelta(days=days)
 
-	books = models.Book.objects.filter(Q(stage__current_stage='review') | Q(stage__current_stage='submission'))
-
-	for book in books:
-		revisions = revision_models.Revision.objects.filter(book=book, completed__isnull=True, overdue_reminder=False, due=target_date.date)
-		for review in revisions:
-			review.user = review.book.owner
-			send_reminder_email(book, 'Revision Request Reminder', review, email_text)
-			review.overdue_reminder = True
-			review.save()
+	editors = User.objects.filter(Q(profile__roles__slug='press-editor') | Q(profile__roles__slug='book-editor') | Q(profile__roles__slug='production-editor'))
+  
+	for editor in editors:
+		tasks = models.Task.objects.filter(assignee = editor, emailed = False, completed__isnull = True)
+		task_list = ""
+		for notification in tasks:
+			task_list = task_list +'- '+ notification.text + "\n"
+		
+		context = {
+	        'user': editor,
+	        'notifications': task_list,
+	        'notification_count': tasks.count(),
+	        'press_name': press_name,
+	        'base_url': models.Setting.objects.get(group__name='general', name='base_url').value,	
+    	}
+		email.send_email('Weekly Notification Reminder', context, from_email.value, editor.email, email_text)
 
 # Utils
 
