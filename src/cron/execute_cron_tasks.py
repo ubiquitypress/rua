@@ -89,8 +89,7 @@ def reminder_notifications_not_emailed(task):
 			task_list = task_list +'- '+ notification.text + "\n"
 			notification.emailed = True
 			notification.save()
-
-		
+			
 		context = {
 	        'user': editor,
 	        'notifications': task_list,
