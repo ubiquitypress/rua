@@ -3,7 +3,7 @@
 {% load bootstrap3 %}
 {% load dict_lookup %}
 
-{% block title %}Reviewing #{{ submission.id }}{% endblock %}
+{% block title %}Reviewing #{{ proposal.id }}{% endblock %}
 
 {% block body %}
 <div class="row">
@@ -44,14 +44,14 @@
    <div class="dash-container" >
             <h4 class="header-text">Proposal details</h4> 
         </div>
-  <table class="table table-bordered">
+  <table class="table table-bordered table-condensed">
     <thead>
   <tr>
  
-    <th>Title</th>
+    <th>Book Title</th>
     <th>Subtitle</th>
     {% if not review_assignment.blind %}
-    <th>Author</th>
+    <th>Submitting Author/Editor</th>
     {% endif %}
     <th>User</th>
     <th>Contact Editor</th>

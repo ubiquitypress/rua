@@ -71,6 +71,22 @@ def reminder_overdue_revisions(task):
 			send_reminder_email(book, 'Revision Request Reminder', review, email_text)
 			review.overdue_reminder = True
 			review.save()
+			
+def reminder_notifications_not_emailed(task):
+	days = int(models.Setting.objects.get(group__name='cron', name='revisions_reminder').value)
+	email_text = models.Setting.objects.get(group__name='email', name='revisions_reminder_email').value
+	dt = timezone.now()
+	target_date = dt - timedelta(days=days)
+
+	books = models.Book.objects.filter(Q(stage__current_stage='review') | Q(stage__current_stage='submission'))
+
+	for book in books:
+		revisions = revision_models.Revision.objects.filter(book=book, completed__isnull=True, overdue_reminder=False, due=target_date.date)
+		for review in revisions:
+			review.user = review.book.owner
+			send_reminder_email(book, 'Revision Request Reminder', review, email_text)
+			review.overdue_reminder = True
+			review.save()
 
 # Utils
 
