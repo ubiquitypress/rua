@@ -87,6 +87,9 @@ def reminder_notifications_not_emailed(task):
 		task_list = ""
 		for notification in tasks:
 			task_list = task_list +'- '+ notification.text + "\n"
+			notification.emailed = True
+			notification.save()
+
 		
 		context = {
 	        'user': editor,
@@ -96,8 +99,6 @@ def reminder_notifications_not_emailed(task):
 	        'base_url': models.Setting.objects.get(group__name='general', name='base_url').value,	
     	}
 		email.send_email('Weekly Notification Reminder', context, from_email.value, editor.email, email_text)
-		task.emailed = True
-		task.save()
 
 # Utils
 
