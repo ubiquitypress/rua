@@ -35,7 +35,13 @@ urlpatterns = patterns('',
     url(r'^submission/checklist/edit/(?P<item_id>\d+)/$', 'manager.views.edit_submission_checklist', name='edit_submission_checklist'),
     url(r'^submission/checklist/delete/(?P<item_id>\d+)/$', 'manager.views.delete_submission_checklist', name='delete_submission_checklist'),
     url(r'^submission/checklist/order/$', 'manager.views.checklist_order', name='checklist_order'),
- 
+    
+    #Series Management
+    url(r'^series/$', 'manager.views.series', name='series'),
+    url(r'^series/add/$', 'manager.views.series_add', name='series_add'),
+    url(r'^series/(?P<series_id>\d+)/edit/$', 'manager.views.series_edit', name='series_edit'),
+
+
     # Cache
     url(r'^cache/flush/$', 'manager.views.flush_cache', name='manager_flush_cache'),
 

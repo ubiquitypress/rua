@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% load static from staticfiles %}
+{% load bootstrap3 %}
+
+{% block title %}{{ active|capfirst }} Series{% endblock %}
+
+{% block css %}
+    <link type='text/css' href="{% static "css/jq-ui.css" %}" rel="stylesheet">
+    <link type='text/css' href="{% static "css/jquery.tagit.css" %}" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/plug-ins/1.10.7/integration/bootstrap/3/dataTables.bootstrap.css">
+{% endblock %}
+
+{% block body %}
+<div class="col-md-12 primary-heading container-fluid" style="margin-top:-20px">
+ 		<h3>{{ active|capfirst }} Series<span class="pull-right"><a href="{% if return %}{{ return }}{% else %}{% url 'manager_users' %}{% endif %}" class="btn  btn-transparent-white" style="position: absolute;right:20px;margin-top:-8px">Go back</a></span></h3>
+</div>
+
+<div class="col-md-12">
+	<div class="row">
+		<div class="col-md-11">
+	
+		</div>
+    </div>
+	<br />
+  	<form method="post" class="form" enctype="multipart/form-data">
+	    {% csrf_token %}
+		  
+	{% bootstrap_form series_form %}
+			{% buttons %}
+		        <button name="register" id="register" type="submit" class="pull-right btn btn-primary" style="width:150px;margin-left:15px;">
+		            <i class="fa fa-user"></i> Update Series
+		        </button>
+		    </br> </br>
+		    {% endbuttons %}
+		</form>
+
+	</form>
+ </br> </br>
+ {% ifequal active 'update' %}
+ <h3> Submissions </h3>
+<hr>
+    <table class="table table-bordered" cellspacing="0" width="100%" id='users'>
+      <thead>
+      <tr>
+        <th width="15%">Book Title</th>
+        <th width="20%"></th>
+      </tr>
+      </thead>
+      {% for book in books %}
+      <tr>
+        <td>{{ book.full_title }}</td>
+        <td>{% ifequal book.series series %} Remove {% else %} Add {% endifequal %}</td>
+      </tr>
+      {% endfor %}
+    </table>
+     {% endifequal %}
+</div> </br> </br> </br>
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript" src="{% static "js/fancyfile.js" %}"></script>
+<script type="text/javascript">$("textarea").jqte();</script>
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css">
+<script src="http://code.jquery.com/ui/1.11.0/jquery-ui.js"></script>
+<script src="{% static "js/tag-it.min.js" %}"></script>
+
+<script type="text/javascript">
+  $(document).ready(function() {
+      $("#interests").tagit(
+        {allowSpaces: true});
+  });
+</script>
+<script type="text/javascript" language="javascript" src="//cdn.datatables.net/1.10.7/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" language="javascript" src="//cdn.datatables.net/plug-ins/1.10.7/integration/bootstrap/3/dataTables.bootstrap.js"></script>
+<script>
+  $(document).ready(function() {
+      $('.table').DataTable({
+        "lengthMenu": [[10, 15, 20, -1], [10, 15, 20, "All"]]
+      });
+  } );
+</script>
+
+{% endblock %}

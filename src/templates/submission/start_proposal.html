@@ -17,7 +17,7 @@
    <p>{{core_proposal.intro_text|safe}}</p>
    
     <form method="post" class="form" enctype="multipart/form-data">
-	    {% csrf_token %}     
+      {% csrf_token %}     
 
       <div class="dash-container   bottom-space">
       <div class="well" style="overflow:auto">
@@ -40,14 +40,14 @@
         </div>
 
         
-	    {% buttons %}
+      {% buttons %}
       <div class="dash-container">
-	        <button name="book" type="submit" class="btn btn-other pull-right" style="width:120px">
-	           Submit
-	        </button>
+          <button name="book" type="submit" class="btn btn-other pull-right" style="width:120px">
+             Submit
+          </button>
       </div>
-	    {% endbuttons %}
-		</form>
+      {% endbuttons %}
+    </form>
         {% if proposal.requestor %}
     <br>
     <br>
@@ -67,7 +67,7 @@
   <br>
   <br>
   {% endif %}
-	</div>
+  </div>
 {% endblock body %}
 
 {% block js %}

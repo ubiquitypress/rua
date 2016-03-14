@@ -267,6 +267,16 @@ def submission_checklist(request):
 
 	return render(request, template, context)
 
+
+@is_press_editor
+def series(request):
+
+	template = 'manager/series/index.html'
+	context = {
+		'all_series': core_models.Series.objects.all(),
+	}
+	return render(request, template, context)
+
 @is_press_editor
 def users(request):
 
@@ -275,6 +285,46 @@ def users(request):
 		'users': User.objects.all(),
 		'password': request.GET.get('password', None),
 		'username': request.GET.get('username', None),
+	}
+	return render(request, template, context)
+
+@is_press_editor
+def series_edit(request, series_id):
+	books = core_models.Book.objects.all()
+	series = core_models.Series.objects.get(pk=series_id)
+	series_form = forms.SeriesForm(instance=series)
+	
+	if request.method == 'POST':
+		series_form = forms.SeriesForm(request.POST, instance=series)
+		if series_form.is_valid():
+			series = series_form.save()
+			return redirect(reverse('series'))
+
+
+	template = 'manager/series/edit.html'
+	context = {
+		'series': series,
+		'books': books,
+		'series_form' : series_form,
+		'active': 'update',
+	}
+	return render(request, template, context)
+
+
+@is_press_editor
+def series_add(request):
+	series_form = forms.SeriesForm()
+	
+	if request.method == 'POST':
+		series_form = forms.SeriesForm(request.POST)
+		if series_form.is_valid():
+			series = series_form.save()
+			return redirect(reverse('series'))
+
+	template = 'manager/series/edit.html'
+	context = {
+		'series_form' : series_form,
+		'active': 'add',
 	}
 	return render(request, template, context)
 

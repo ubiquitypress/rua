@@ -15,6 +15,12 @@ class GroupForm(forms.ModelForm):
 		model = models.Group
 		exclude = ()
 
+class SeriesForm(forms.ModelForm):
+
+	class Meta:
+		model = core_models.Series
+		exclude = ()
+		
 class FormElement(forms.ModelForm):
 
 	class Meta:
