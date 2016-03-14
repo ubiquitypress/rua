@@ -474,7 +474,7 @@
 },
 {
     "fields": {
-        "value": "<p>Dear {{ author.full_name }},\r\n</p><p>The Editorial team at&nbsp;{{press_name}} have recorded a decision on your book submission {{submission.title}}.\r\n</p><p>\r\nThe press decision is:</p><p>[PRESS EDITOR TO COMPLETE DECISION AND GIVE MORE DETAIL ON WHY THE DECISION HAS BEEN MADE HERE]<br></p><p>\r\nRegards,\r\n</p><p>{{sender.first_name}}\r\n{% if sender %}{{ sender.profile.signature|safe }}{% endif %}<br></p>",
+        "value": "<p>Dear {{ author.full_name }},\r\n</p><p>The Editorial team at&nbsp;{{press_name}} have recorded a decision on your book submission {{submission.title}}.\r\n</p><p>\r\nThe press decision is:</p><p>[PRESS EDITOR TO COMPLETE DECISION AND GIVE MORE DETAIL ON WHY THE DECISION HAS BEEN MADE HERE]<br>{{ link_to_page }}<br></p><p>\r\nRegards,\r\n</p><p>{{sender.first_name}}\r\n{% if sender %}{{ sender.profile.signature|safe }}{% endif %}<br></p>",
         "group": 3,
         "name": "decision_ack",
         "types": "rich_text",

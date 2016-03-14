@@ -23,7 +23,11 @@
         <textarea class="form-control" id="id_email_text" name="id_email_text" required="required" cols="100" rows="10">{{ email_text }}</textarea>
         </div>
           <br />
-
+          {% ifequal decision 'editing' %}
+<input  type="checkbox" name="include_url" id="include_url"> Include review url </input> <br>
+  <p class="small">Add  '<b>link_to_page</b>' template tag if missing.( double { at start and end of word )</p>
+  <hr>
+  {% endifequal %}
   <label class="control-label" for="id_label">Attachment</label>
   <p class="small">Please add any additonal files here.</p>
   <div class="input-group">

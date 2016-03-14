@@ -538,7 +538,7 @@ def handle_typeset_assignment(book, typesetter, files, due_date, email_text, req
 	log.add_log_entry(book=book, user=requestor, kind='typeser', message='Typesetter %s %s assigned. Due %s' % (typesetter.first_name, typesetter.last_name, due_date), short_name='Typeset Assignment')
 
 # Email Handlers - TODO: move to email.py?
-def send_decision_ack(book, decision, email_text, attachment=None):
+def send_decision_ack(book, decision, email_text, url=None, attachment=None):
 	from_email = models.Setting.objects.get(group__name='email', name='from_address')
 	base_url = models.Setting.objects.get(group__name='general', name='base_url')
 	decision_full = decision
@@ -552,6 +552,7 @@ def send_decision_ack(book, decision, email_text, attachment=None):
 			'submission': book,
 			'author': author,
 			'decision':decision,
+			'link_to_page': url,
 		}
 
 		email.send_email('Submission decision update: %s'% decision_full, context, from_email.value, author.author_email, email_text, book=book, attachment=attachment)

@@ -535,7 +535,7 @@ def editor_decision(request, submission_id, decision):
 			book.stage.save()
 			messages.add_message(request, messages.SUCCESS, 'Submission declined.')	
 			if 'inform' in request.POST:
-				core_logic.send_decision_ack(book,decision,request.POST.get('id_email_text'), attachment)
+				core_logic.send_decision_ack(book = book, decision = decision,email_text = request.POST.get('id_email_text'), attachment = attachment)
 			elif 'skip' in request.POST:
 				print "Skip"
 			return redirect(reverse('editor_dashboard'))
@@ -551,7 +551,7 @@ def editor_decision(request, submission_id, decision):
 
 			messages.add_message(request, messages.SUCCESS, 'Submission has been moved to the review stage.')
 			if 'inform' in request.POST:
-				core_logic.send_decision_ack(book,decision,request.POST.get('id_email_text'), attachment)
+				core_logic.send_decision_ack(book = book, decision = decision,email_text = request.POST.get('id_email_text'), attachment = attachment)
 			elif 'skip' in request.POST:
 				print "Skip"
 
@@ -564,7 +564,11 @@ def editor_decision(request, submission_id, decision):
 			book.stage.current_stage = 'editing'
 			book.stage.save()
 			if 'inform' in request.POST:
-				core_logic.send_decision_ack(book,decision,request.POST.get('id_email_text'), attachment)
+				if 'include_url' in request.POST and request.POST['include_url']=='on':
+					url ="%s/author/submission/%s/review/" % (request.META['HTTP_HOST'],book.pk)
+				else:
+					url = None
+				core_logic.send_decision_ack(book = book, decision = decision,email_text = request.POST.get('id_email_text'), attachment = attachment, url = url)
 			elif 'skip' in request.POST:
 				print "Skip"
 			return redirect(reverse('editor_editing', kwargs={'submission_id': submission_id}))
@@ -575,7 +579,7 @@ def editor_decision(request, submission_id, decision):
 			book.stage.current_stage = 'production'
 			book.stage.save()
 			if 'inform' in request.POST:
-				core_logic.send_decision_ack(book,decision,request.POST.get('id_email_text'), attachment)
+				core_logic.send_decision_ack(book = book, decision = decision,email_text = request.POST.get('id_email_text'), attachment = attachment)
 				production_editor_list = User.objects.filter(pk__in=request.POST.getlist('production_editor'))
 				for editor in production_editor_list:
 					core_logic.send_production_editor_ack(book,editor,request.POST.get('id_editor_email_text'), attachment)
