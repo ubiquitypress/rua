@@ -289,6 +289,8 @@ def add_user(request):
 		if profile_form.is_valid() and user_form.is_valid():
 			user = user_form.save()
 
+			new_pass = None
+
 			if 'new_password' in request.POST:
 				new_pass = logic.generate_password()
 				user.set_password(new_pass)
@@ -376,7 +378,12 @@ def inactive_users(request):
 def activate_user(request, user_id):
 
 	user = get_object_or_404(models.User, pk=user_id, is_active=False)
-	user.is_active = True
+	user.is_active = True    
+	if not user.profile.roles.filter(slug='reader').exists():
+		user.profile.roles.add(core_models.Role.objects.get(slug="reader"))
+	if not user.profile.roles.filter(slug='author').exists():
+		user.profile.roles.add(core_models.Role.objects.get(slug="author"))
+	user.profile.save()
 	user.save()
 
 	return redirect(reverse('manager_inactive_users'))
