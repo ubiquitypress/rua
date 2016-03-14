@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load static from staticfiles %}
 {% load bootstrap3 %}
 
 {% block body %}
@@ -22,3 +23,35 @@
 </form>
 </div>  
 {% endblock body %}
+
+{% block js %}
+<script type="text/javascript" src="{% static "js/fancyfile.js" %}"></script>
+<script type="text/javascript">$("textarea").jqte();</script>
+
+<script language="javascript" type="text/javascript">
+$(document).ready(function () {    
+       {%for field in default_fields%}
+          {% if field.field.required %} 
+         var required_text=$('label[for="' + "id_{{field.name}}"+ '"]').html()+" *";
+         var current_field = $('label[for="' + "id_{{field.name}}"+ '"]');
+         current_field.text(required_text); 
+          {% endif %}
+       {% endfor %}
+
+    {% if preview_form %}
+        
+        {%for field in preview_form%}
+    
+          {% if field.field.required %} 
+            var required_text=$('label[for="' + "id_{{field.name|safe}}"+ '"]').html()+" *";
+            required_text = required_text.replace('&amp;','&');
+            var current_field = $('label[for="' + "id_{{field.name|safe}}"+ '"]');
+            current_field.text(required_text); 
+          {% endif %}
+
+        {% endfor %}
+
+    {% endif %}
+  });
+</script>
+{% endblock %}
