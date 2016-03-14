@@ -143,6 +143,7 @@ def register(request):
         form = forms.UserCreationForm(request.POST)
         if form.is_valid():
             new_user = form.save()
+            messages.add_message(request, messages.INFO, models.Setting.objects.get(group__name='general', name='registration_message').value)
             return redirect(reverse('login'))
     else:
         form = forms.UserCreationForm()

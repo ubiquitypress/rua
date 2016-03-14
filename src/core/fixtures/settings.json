@@ -768,5 +768,16 @@
   },
   "model": "core.setting",
   "pk": 73
+},
+{
+  "fields": {
+    "value": "An email has been sent with a user activation link.",
+    "group": 1,
+    "name": "registration_message",
+    "types": "rich_text",
+    "description": "Message that will be shown to users when they register."
+  },
+  "model": "core.setting",
+  "pk": 74
 }
 ]
