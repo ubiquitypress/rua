@@ -154,7 +154,11 @@ def register(request):
 def activate(request, code):
     profile = get_object_or_404(models.Profile, activation_code=code)
     if profile:
-        profile.user.is_active = True
+        profile.user.is_active = True   
+        if not profile.roles.filter(slug='reader').exists():
+            profile.roles.add(models.Role.objects.get(slug="reader"))
+        if not profile.roles.filter(slug='author').exists():
+            profile.roles.add(models.Role.objects.get(slug="author"))
         profile.date_confirmed = timezone.now()
         profile.activation_code = ''
         profile.save()
