@@ -64,6 +64,10 @@ class ProposalReview(models.Model):
 	competing_interests = models.TextField(blank=True, null=True, help_text="If any of the authors or editors have any competing interests please add them here. EG. 'This study was paid for by corp xyz.'")
 	blind = models.NullBooleanField(default=False, blank=True, null=True)
 
+	#Reopened
+	comments_from_editor = models.TextField(blank=True, null=True, help_text="If any editors have any comments for the reviewer")
+	reopened = models.BooleanField(default=False)
+
 	class Meta:
 		unique_together = ('proposal', 'user')
 
