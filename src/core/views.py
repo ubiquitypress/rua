@@ -1506,6 +1506,7 @@ def view_proposal_review(request, proposal_id, assignment_id):
     default_fields = manager_forms.DefaultForm(initial={'title': proposal.title,'author':proposal.author,'subtitle':proposal.subtitle})
     relationships = models.ProposalFormElementsRelationship.objects.filter(form=proposal.form)
     data = json.loads(proposal.data)
+
     intial_data = {}
     for k,v in data.items():
         intial_data[k] = v[0]
@@ -1513,10 +1514,27 @@ def view_proposal_review(request, proposal_id, assignment_id):
     proposal_form.initial=intial_data
     review_assignment = get_object_or_404(submission_models.ProposalReview, pk=assignment_id)
     result = review_assignment.results
+
     form = review_forms.GeneratedForm(form=proposal.review_form)
+    
+    if review_assignment.reopened:
+        result = review_assignment.results
+        if result:
+            initial_data = {}
+            data = json.loads(result.data)
+            for k,v in data.items():
+                initial_data[k] = v[0]
+            form.initial = initial_data
 
     ci_required = models.Setting.objects.get(group__name='general', name='ci_required')
     recommendation_form = forms.RecommendationForm(ci_required=ci_required.value)
+    
+    if review_assignment.reopened:
+        initial_data = {}
+        initial_data[u'recommendation']=review_assignment.recommendation
+        initial_data[u'competing_interests']=review_assignment.competing_interests
+        recommendation_form.initial=initial_data
+
     if result:
         relations = review_models.FormElementsRelationship.objects.filter(form=result.form)
         data_ordered = logic.order_data(logic.decode_json(result.data), relations)
@@ -1558,6 +1576,7 @@ def view_proposal_review(request, proposal_id, assignment_id):
             review_assignment.recommendation = request.POST.get('recommendation')
             review_assignment.competing_interests = request.POST.get('competing_interests')
             review_assignment.results = form_results
+            review_assignment.reopened = False
             review_assignment.save()
             message = "Review assignment for proposal '%s' has been completed by %s ."  % (review_assignment.proposal.title,review_assignment.user.profile.full_name())
             notification = models.Task(assignee=review_assignment.proposal.requestor,creator=request.user,text=message,workflow='proposal')
@@ -1699,6 +1718,37 @@ def accept_proposal(request, proposal_id):
 
     template = 'core/proposals/accept_proposal.html'
     
+    context = {
+        'proposal': proposal,
+        'email_text': logic.setting_template_loader(setting=email_text,path="core/proposals/",pattern="email_template_",dictionary={'sender':request.user,'receiver':proposal.owner,'proposal':proposal,
+        'press_name':models.Setting.objects.get(group__name='general', name='press_name').value}),
+    }
+
+    return render(request, template, context)
+
+@is_editor
+def reopen_proposal_review(request, proposal_id, assignment_id):
+
+    proposal = get_object_or_404(submission_models.Proposal, pk=proposal_id)
+    review_assignment = get_object_or_404(submission_models.ProposalReview, pk=assignment_id)
+    email_text = models.Setting.objects.get(group__name='email', name='proposal_review_request')
+
+    if request.POST:
+        review_assignment.reopened = True
+        review_assignment.comments_from_editor = request.POST.get('comments')
+        review_assignment.completed = None
+        review_assignment.save()
+        email_updated_text =request.POST.get('email')
+        due_date =request.POST.get('due_date') 
+        review_assignment.due = datetime.strptime(due_date, "%Y-%m-%d")
+        review_assignment.save()
+        email_updated_text = string.replace(email_updated_text,'_due_date_',due_date)
+        logic.send_proposal_review_request(proposal, review_assignment, email_updated_text)
+        log.add_proposal_log_entry(proposal=proposal,user=request.user, kind='proposal', message='Revisions request for proposal %s %s.'%(proposal.title,proposal.subtitle), short_name='Proposal Revisions Requested')
+    
+        return redirect(reverse('proposals'))
+
+    template = 'core/proposals/reopen_review.html'
     context = {
         'proposal': proposal,
         'email_text': logic.setting_template_loader(setting=email_text,path="core/proposals/",pattern="email_template_",dictionary={'sender':request.user,'receiver':proposal.owner,'proposal':proposal,

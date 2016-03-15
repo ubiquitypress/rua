@@ -130,7 +130,7 @@
 
                     
                     <div class="band" style="margin-left:10px;margin-right:10px">
-                        <p class="small">  Review requested for proposal <span style="color:rgb(101,117,132)"> {{task.proposal.title}}</span> </p>
+                        <p class="small">  Review requested for proposal <span style="color:rgb(101,117,132)"> {{task.proposal.title}} </span> {% if task.reopened %} <span class="pull-right small no-recommendation" style="right:40px;position:relative;">&nbsp; Reopened &nbsp; </span>{% endif %} </p>
 
                          {% if task.accepted %}
                           <h5> <b>Task Due</b> <b style="color:rgb(187,123,73)">{{ task.due }}</b></h5>
