@@ -99,6 +99,7 @@ class Profile(models.Model):
 	signature = models.TextField(null=True, blank=True)
 	reset_code = models.TextField(null=True, blank=True)
 	reset_code_validated = models.BooleanField(default=False)
+	terms_and_conditions = models.BooleanField(default=False)
 	roles = models.ManyToManyField('Role')
 	interest = models.ManyToManyField('Interest', null=True, blank=True)
 	website = models.URLField(max_length=2000, help_text="User's personal website. Remember to include http:// or https:// at the start.", null=True, blank=True)

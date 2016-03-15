@@ -56,6 +56,7 @@ class UserCreationForm(forms.ModelForm):
 
 		# Add a profile for this new user and create a new activation code.
 		profile = models.Profile(user=user, activation_code=uuid.uuid4())
+		profile.terms_and_conditions = True;
 		profile.save()
 
 		# Send email to the user 

@@ -779,5 +779,16 @@
   },
   "model": "core.setting",
   "pk": 74
+},
+{
+  "fields": {
+    "value": "TERMS n CONDITIONS",
+    "group": 2,
+    "name": "terms-conditions",
+    "types": "rich_text",
+    "description": "Users need to agree to this at registration"
+  },
+  "model": "core.setting",
+  "pk": 75
 }
 ]

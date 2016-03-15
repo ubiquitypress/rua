@@ -12,6 +12,9 @@
   	<form method="post" class="form">
 	    {% csrf_token %}
 	    {% bootstrap_form form %}</div>
+	    <div class="container-fluid">
+	    <input type="checkbox" name="terms" required> I agree to the <a href="{% url 'page' 'terms-conditions'%}">Terms & Conditions</a> </input>
+	    </div>
 	    {% buttons %}
 	        <button name="register" id="register" style="right:10%;width:120px" type="submit" class="pull-right btn-round btn btn-primary">
 	            <i class="fa fa-user-plus"></i> Register
