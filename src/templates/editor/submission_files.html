@@ -1,7 +1,6 @@
-<h3>FILES</h3>
+<h3>FILES  <a href="{% url 'serve_all_files' submission.id %}" class="btn btn-sm btn-task pull-right"><i class="fa fa-cloud-download">&nbsp;</i>Download All</a></h3>
 
-
-
+ <br><br>
 <h5><b>Manuscript Files  <sup><a href="{% url 'upload_manuscript' submission.id%}" class="pull-right btn btn-green btn-xs">&nbsp; + Upload &nbsp;</a></sup></b></h5>
 <ul class="media-list manuscript-upload-states">
   {% for file in submission.files.all %}

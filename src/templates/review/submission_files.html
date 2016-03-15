@@ -1,5 +1,6 @@
 
-<h5><b>Review Files:</b></h5>
+<h5><b>Review Files:</b>  <a href="{% url 'serve_all_review_files' submission.id review_assignment.review_type %}" class="btn btn-xs btn-task pull-right"><i class="fa fa-cloud-download">&nbsp;</i>Download All</a></h5>
+<br>
 {% if review_assignment.review_type == 'internal' %}
 <ul class="media-list manuscript-upload-states">
 	{% for file in submission.internal_review_files.all %}
