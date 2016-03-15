@@ -18,8 +18,9 @@
       <tr>
         <th width="15%">Name</th>
         <th width="15%">Editor</th>
-        <th width="15%">Description</th>
-        <th width="20%"></th>
+        <th width="25%">Description</th>
+        <th width="15%"></th>
+        <th width="15%"></th>
       </tr>
       </thead>
       {% for series in all_series %}
@@ -28,6 +29,7 @@
         <td>{{ series.editor.profile.full_name }}</td>
         <td>{{ series.description }}</td>
         <td><a class="btn btn-primary btn-round-half"style="width:75px"href="{% url 'series_edit' series.id %}">Edit</a></td>
+        <td><a class="btn btn-decline btn-round-half"style="width:75px"href="{% url 'series_delete' series.id %}">Delete</a></td>
       </tr>
       {% endfor %}
     </table>

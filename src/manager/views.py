@@ -310,6 +310,22 @@ def series_edit(request, series_id):
 	}
 	return render(request, template, context)
 
+@is_press_editor
+def series_submission_add(request,submission_id, series_id):
+	book = get_object_or_404(core_models.Book, pk = submission_id)
+	series = get_object_or_404(core_models.Series, pk = series_id)
+	book.series = series
+	book.save()
+	return redirect(reverse('series_edit',kwargs={'series_id':series_id}))
+
+@is_press_editor
+def series_submission_remove(request,submission_id):
+	book = get_object_or_404(core_models.Book, pk = submission_id)
+	book.series = None
+	book.save()
+	return redirect(reverse('series'))
+
+
 
 @is_press_editor
 def series_add(request):
@@ -325,6 +341,25 @@ def series_add(request):
 	context = {
 		'series_form' : series_form,
 		'active': 'add',
+	}
+	return render(request, template, context)
+
+@is_press_editor
+def series_delete(request,series_id):
+	series = get_object_or_404(core_models.Series, pk = series_id)
+	books = core_models.Book.objects.filter(series = series)
+	
+	if request.method == 'POST':
+		for book in books:
+			book.series = None
+			book.save()
+		series.delete()
+		return redirect(reverse('series'))
+
+	template = 'manager/series/delete.html'
+	context = {
+		'series' : series,
+		'books': books,
 	}
 	return render(request, template, context)
 

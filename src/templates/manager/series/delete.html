@@ -2,7 +2,7 @@
 {% load static from staticfiles %}
 {% load bootstrap3 %}
 
-{% block title %}{{ active|capfirst }} Series{% endblock %}
+{% block title %}Delete Series{% endblock %}
 
 {% block css %}
     <link type='text/css' href="{% static "css/jq-ui.css" %}" rel="stylesheet">
@@ -12,7 +12,7 @@
 
 {% block body %}
 <div class="col-md-12 primary-heading container-fluid" style="margin-top:-20px">
- 		<h3>{{ active|capfirst }} Series<span class="pull-right"><a href="{% if return %}{{ return }}{% else %}{% url 'manager_users' %}{% endif %}" class="btn  btn-transparent-white" style="position: absolute;right:20px;margin-top:-8px">Go back</a></span></h3>
+ 		<h3>Delete Series<span class="pull-right"><a href="{% if return %}{{ return }}{% else %}{% url 'manager_users' %}{% endif %}" class="btn  btn-transparent-white" style="position: absolute;right:20px;margin-top:-8px">Go back</a></span></h3>
 </div>
 
 <div class="col-md-12">
@@ -24,36 +24,55 @@
 	<br />
   	<form method="post" class="form" enctype="multipart/form-data">
 	    {% csrf_token %}
-		  
-	{% bootstrap_form series_form %}
+		 
+    <table class="table table-bordered" cellspacing="0" width="100%" id='users'>
+      <thead>
+      <tr>
+        <th width="15%">Name</th>
+        <th width="15%">Editor</th>
+        <th width="25%">Description</th>
+        <th width="25%">ISSN</th>
+        <th width="25%">URL</th>
+      </tr>
+      </thead>
+      <tr>
+        <td>{{ series.name }}</td>
+        <td>{{ series.editor.profile.full_name }}</td>
+        <td>{{ series.description }}</td>
+        <td>{{ series.issn }}</td>
+        <td>{{ series.url }}</td>
+      </tr>
+    </table>
+</br> </br>
+ <h3>These submissions will be affected</h3>
+<hr>
+    <table class="table table-bordered" cellspacing="0" width="100%" id='books'>
+      <thead>
+      <tr>
+        <th width="10%">ID</th>
+        <th width="70%">Book Title</th>
+      </tr>
+      </thead>
+      {% for book in books %}
+      <tr>
+        <td>{{ book.pk }}</td>
+        <td>{{ book.full_title }}</td>
+    
+           </tr>
+      {% endfor %}
+    </table>
+
+    </br>
 			{% buttons %}
-		        <button name="register" id="register" type="submit" class="pull-right btn btn-primary" style="width:150px;margin-left:15px;">
-		            <i class="fa fa-user"></i> Update Series
+		        <button name="delete" id="delete" type="submit" class="pull-right btn btn-danger" style="width:150px;margin-left:15px;">
+		           Delete
 		        </button>
 		    </br> </br>
 		    {% endbuttons %}
 		</form>
 
 	</form>
- </br> </br>
- {% ifequal active 'update' %}
- <h3> Submissions </h3>
-<hr>
-    <table class="table table-bordered" cellspacing="0" width="100%" id='users'>
-      <thead>
-      <tr>
-        <th width="70%">Book Title</th>
-        <th width="12%"></th>
-      </tr>
-      </thead>
-      {% for book in books %}
-      <tr>
-        <td>{{ book.full_title }}</td>
-        <td>{% if book.series %}{% ifequal book.series series %}<a href="{% url 'series_submission_remove' book.pk %}" class="btn btn-decline btn-round" style="width:120px"> Remove </a> {% else %}<a href="{% url 'series_submission_add' book.pk series.pk %}" class="btn btn-warning btn-round" style="width:120px">  Replace </a>{% endifequal %} {% else %} <a href="{% url 'series_submission_add' book.pk series.pk %}" class="btn btn-success btn-round" style="width:120px"> Add </a> {% endif %}</td>
-           </tr>
-      {% endfor %}
-    </table>
-     {% endifequal %}
+ 
 </div> </br> </br> </br>
 {% endblock %}
 
@@ -74,7 +93,7 @@
 <script type="text/javascript" language="javascript" src="//cdn.datatables.net/plug-ins/1.10.7/integration/bootstrap/3/dataTables.bootstrap.js"></script>
 <script>
   $(document).ready(function() {
-      $('.table').DataTable({
+      $('#books').DataTable({
         "lengthMenu": [[10, 15, 20, -1], [10, 15, 20, "All"]]
       });
   } );

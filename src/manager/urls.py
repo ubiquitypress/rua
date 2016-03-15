@@ -39,7 +39,11 @@ urlpatterns = patterns('',
     #Series Management
     url(r'^series/$', 'manager.views.series', name='series'),
     url(r'^series/add/$', 'manager.views.series_add', name='series_add'),
+    url(r'^series/delete/(?P<series_id>\d+)/$', 'manager.views.series_delete', name='series_delete'),
+  
     url(r'^series/(?P<series_id>\d+)/edit/$', 'manager.views.series_edit', name='series_edit'),
+    url(r'^series/submission/(?P<submission_id>\d+)/series/add/(?P<series_id>\d+)/$', 'manager.views.series_submission_add', name='series_submission_add'),
+    url(r'^series/submission/(?P<submission_id>\d+)/series/remove/$', 'manager.views.series_submission_remove', name='series_submission_remove'),
 
 
     # Cache
