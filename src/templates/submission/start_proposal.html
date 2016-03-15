@@ -13,22 +13,33 @@
 
 </div>
 
-   <hr />
    <p>{{core_proposal.intro_text|safe}}</p>
-   
+    <hr />
+   <label id="error_fields" class="red" style="width:100%"></label>
     <form method="post" class="form" enctype="multipart/form-data">
       {% csrf_token %}     
 
       <div class="dash-container   bottom-space">
       <div class="well" style="overflow:auto">
-        {% bootstrap_form default_fields %}
-        {% if proposal_form %}
-          <div class="row">
-         {% for field in proposal_form %}
-            <div class="{% if field.field.widget.attrs.div_class %}{{ field.field.widget.attrs.div_class }}{% else %}col-md-12{% endif %}">
+          {% for field in default_fields %}
+            <div id="{{field.field.label}}"class="{% if field.field.widget.attrs.div_class %}{{ field.field.widget.attrs.div_class }}{% else %}col-md-12{% endif %}">
             {% if field.field.widget.attrs.is_checkbox %}
               {% if field.errors %}<span class="red">{{ field.errors|join:", " }}</span><br />{% endif %}
-              {{ field }} &nbsp;{% if field.field.help_text %}{{ field.field.help_text|safe }}{% endif %}
+            {{ field }}&nbsp;{% if field.field.help_text %}{{ field.field.help_text|safe }}{% endif %}
+            {% else %}
+                 {% if field.errors %}<span class="red">{{ field.errors|join:", " }}</span>{% endif %}
+                 {% bootstrap_field field %}
+              {% endif %}
+              </div>
+          {% endfor %}
+        {% if proposal_form %}
+
+          <div class="row">
+         {% for field in proposal_form %}
+            <div id="{{field.field.label}}"class="{% if field.field.widget.attrs.div_class %}{{ field.field.widget.attrs.div_class }}{% else %}col-md-12{% endif %}">
+            {% if field.field.widget.attrs.is_checkbox %}
+              {% if field.errors %}<span class="red">{{ field.errors|join:", " }}</span><br />{% endif %}
+            {{ field }}&nbsp;{% if field.field.help_text %}{{ field.field.help_text|safe }}{% endif %}
             {% else %}
                  {% if field.errors %}<span class="red">{{ field.errors|join:", " }}</span>{% endif %}
                  {% bootstrap_field field %}
@@ -73,6 +84,24 @@
 {% block js %}
 <script type="text/javascript" src="{% static "js/fancyfile.js" %}"></script>
 <script type="text/javascript">$("textarea").jqte();</script>
+<script type="text/javascript">
+  
+$(function() {
+  $('a[href*="#"]:not([href="#"])').click(function() {
+    if (location.pathname.replace(/^\//,'') == this.pathname.replace(/^\//,'') && location.hostname == this.hostname) {
+      var target = $(this.hash);
+      target = target.length ? target : $('[name=' + this.hash.slice(1) +']');
+      if (target.length) {
+        $('html, body').animate({
+          scrollTop: target.offset().top
+        }, 1000);
+        return false;
+      }
+    }
+  });
+});
+
+</script>
 <script language="javascript" type="text/javascript">
 <!--
 function popitup(url,title) {
@@ -83,7 +112,17 @@ function popitup(url,title) {
 
 // -->
 </script>
+<script type="text/javascript">
+  $(document).on("click", ":button", function(){
+        var error_msg = "<div class='alert alert-danger' style='font-color:red;color:red;width:100%'>{% for field in default_fields %}  <a href='#id_{{field.name}}'>{{field.label}}</a> is required <br> {% endfor %}   {% for field in proposal_form %}  <a href='#{{field.field.label}}'>{{field.field.label}}</a> is required <br> {% endfor %} </div>";
 
+        (document.getElementById('error_fields')).innerHTML = error_msg;
+
+      
+    });
+</script>
+
+</script>
 <script language="javascript" type="text/javascript">
 $(document).ready(function () {    
        {%for field in default_fields%}
