@@ -39,6 +39,29 @@ class Proposal(models.Model):
 	def status_verbose(self):
 		return dict(proposal_status())[self.status]
 
+class IncompleteProposal(models.Model):
+
+
+	owner = models.ForeignKey(User,blank=True, null=True)
+	title = models.CharField(max_length=255,blank=True, null=True, verbose_name='Book Title')
+	subtitle = models.CharField(max_length=255,blank=True, null=True)
+	author = models.CharField(max_length=255,blank=True, null=True, verbose_name='Submitting author/editor')
+	date_submitted = models.DateTimeField(auto_now_add=True,blank=True, null=True)
+	form = models.ForeignKey('core.ProposalForm',blank=True, null=True)
+	data = models.TextField(blank=True, null=True)
+	date_review_started = models.DateTimeField(blank=True, null=True)
+	review_assignments = models.ManyToManyField('ProposalReview', related_name='incomplete_review', null=True, blank=True)
+	review_form = models.ForeignKey('review.Form', null=True, blank=True)
+	requestor = models.ForeignKey(User, null=True,blank=True,related_name="incomplete_editor_requestor")
+	revision_due_date = models.DateTimeField(blank=True, null=True)
+	date_accepted = models.DateTimeField(blank=True, null=True)
+	book_type = models.CharField(max_length=50, null=True, blank=True, choices=book_type_choices(), help_text="A monograph is a work authored, in its entirety, by one or more authors. An edited volume has different authors for each chapter.")
+	
+	status = models.CharField(max_length=20,blank=True, null=True, choices=proposal_status(), default='submission')
+
+	def status_verbose(self):
+		return dict(proposal_status())[self.status]
+
 
 class SubmissionChecklistItem(models.Model):
 

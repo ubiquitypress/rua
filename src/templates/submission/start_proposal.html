@@ -59,8 +59,11 @@
         </div> 
       {% buttons %}
       <div class="dash-container">
-          <button name="book" type="submit" class="btn btn-other pull-right" style="width:120px">
+          <button name="book_submit" id="book_submit" type="submit" class="btn btn-other pull-right" style="width:120px">
              Submit
+          </button>
+             <button name="incomplete" name="incomplete" type="submit" class="btn btn-default pull-left" style="width:120px">
+             Save
           </button>
       </div>
       {% endbuttons %}
@@ -132,7 +135,7 @@ function popitup(url,title) {
 </script>
 <script language="javascript" type="text/javascript">
 $(document).ready(function () {    
-       {%for field in default_fields%}
+       {%for field in default_fields_validated%}
           {% if field.field.required %} 
          var required_text=$('label[for="' + "id_{{field.name}}"+ '"]').html()+" *";
          var current_field = $('label[for="' + "id_{{field.name}}"+ '"]');
@@ -142,7 +145,7 @@ $(document).ready(function () {
 
     {% if proposal_form %}
         
-        {%for field in proposal_form%}
+        {%for field in proposal_form_validated %}
     
           {% if field.field.required %} 
             var required_text=$('label[for="' + "id_{{field.name|safe}}"+ '"]').html()+" *";
