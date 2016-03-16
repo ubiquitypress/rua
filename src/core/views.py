@@ -1797,7 +1797,7 @@ def accept_proposal(request, proposal_id):
         proposal.status = 'accepted'
         logic.close_active_reviews(proposal)
         proposal.requestor=request.user
-        submission = logic.create_submission_from_proposal(proposal, proposal_type=request.POST.get('proposal-type'))
+        submission = logic.create_submission_from_proposal(proposal, proposal_type=proposal.book_type)
         submission.proposal = proposal
         submission.save()
         attachment = handle_attachment(request, submission)

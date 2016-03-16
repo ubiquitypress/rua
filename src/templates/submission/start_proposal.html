@@ -48,9 +48,15 @@
           {% endfor %}
           </div>
           {% endif %}
-        </div>
-
-        
+       
+      <br>
+   <label for="proposal-type">Proposal Type</label>
+      <select class="form-control" id="proposal-type" name="proposal-type">
+        <option value='monograph'>Monograph</option>
+        <option value='edited_volume'>Edited Volume</option>
+      </select>
+      <br>
+        </div> 
       {% buttons %}
       <div class="dash-container">
           <button name="book" type="submit" class="btn btn-other pull-right" style="width:120px">

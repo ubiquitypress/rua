@@ -367,6 +367,9 @@ def start_proposal(request):
 		if proposal_form.is_valid() and default_fields.is_valid():
 			defaults = {field.name: field.value() for field in default_fields}
 			proposal = submission_models.Proposal(form=core_models.ProposalForm.objects.get(pk=proposal_form_id), data=None, owner=request.user, **defaults)
+			proposal_type=request.POST.get('proposal-type')
+			if proposal_type:
+				proposal.book_type = proposal_type
 			proposal.save()
 			save_dict = {}
 			file_fields = core_models.ProposalFormElementsRelationship.objects.filter(form=core_models.ProposalForm.objects.get(pk=proposal_form_id), element__field_type='upload')
@@ -456,6 +459,9 @@ def proposal_revisions(request, proposal_id):
 			proposal.title = defaults.get("title")
 			proposal.author = defaults.get("author")
 			proposal.subtitle = defaults.get("subtitle")
+			proposal_type=request.POST.get('proposal-type')
+			if proposal_type:
+				proposal.book_type = proposal_type
 			proposal.save()
 			notification = core_models.Task(assignee=proposal.requestor,creator=request.user,text="Revisions for Proposal '%s' with id %s submitted" % (proposal.title,proposal.id),workflow='proposal')
 			notification.save()
@@ -541,6 +547,9 @@ def proposal_view(request, proposal_id):
 			proposal.title = defaults.get("title")
 			proposal.author = defaults.get("author")
 			proposal.subtitle = defaults.get("subtitle")	
+			proposal_type=request.POST.get('proposal-type')
+			if proposal_type:
+				proposal.book_type = proposal_type
 			proposal.requestor=request.user
 			proposal.save()
 
