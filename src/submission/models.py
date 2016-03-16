@@ -74,6 +74,7 @@ class ProposalReview(models.Model):
 	#Reopened
 	comments_from_editor = models.TextField(blank=True, null=True, help_text="If any editors have any comments for the reviewer")
 	reopened = models.BooleanField(default=False)
+	withdrawn = models.BooleanField(default=False)
 
 	class Meta:
 		unique_together = ('proposal', 'user')

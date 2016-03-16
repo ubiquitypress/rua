@@ -15,7 +15,9 @@
    <a href="{% url 'editor_review_round_remove' submission.id round_id review.pk %}" class=" btn btn-danger btn-xs pull-left">
           Delete
               </a>
-   
+                <a href="{% url 'editor_review_round_withdraw' submission.id round_id review.pk %}" class=" btn {% if review.withdrawn %}btn-info{% else %}btn-warning{% endif %} btn-xs pull-left" style="margin-left:5px">
+           {% if review.withdrawn %} Re-Enable {% else %} Withdraw {% endif %}
+              </a>
           <br>
           <br>
         <strong>{{ review.user.profile.full_name }}<sup> <a style="height:17px;margin-top:6px" href="core/email.html" onclick="return popitup('/email/onetaskers/submission/{{submission.id}}/user/{{review.user.pk}}/','onetasker_{{review.user.pk}}')"class="fa fa-envelope-o btn btn-xs btn-default"></a></sup></strong>
@@ -78,6 +80,9 @@
         <p>
            <a href="{% url 'editor_review_round_remove' submission.id round_id review.pk %}" class=" btn btn-danger btn-xs pull-left">
           Delete
+              </a>
+                   <a href="{% url 'editor_review_round_withdraw' submission.id round_id review.pk %}" class=" btn {% if review.withdrawn %} btn-info{% else %}btn-warning{% endif %} btn-xs pull-left" style="margin-left:5px">
+            {% if review.withdrawn %} Re-Enable {% else %} Withdraw {% endif %}
               </a>
           <br>
           <br>

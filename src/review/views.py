@@ -32,8 +32,8 @@ from submission import models as submission_models
 @has_reviewer_role
 def reviewer_dashboard(request):
 	
-	reopened_tasks = core_models.ReviewAssignment.objects.filter(user=request.user,completed__isnull=False, reopened=True, declined__isnull=True).select_related('book')
-	incoming_tasks = core_models.ReviewAssignment.objects.filter(user=request.user,completed__isnull=True, reopened=False, declined__isnull=True).select_related('book')
+	reopened_tasks = core_models.ReviewAssignment.objects.filter(user=request.user,completed__isnull=False, reopened=True, declined__isnull=True, withdrawn = False).select_related('book')
+	incoming_tasks = core_models.ReviewAssignment.objects.filter(user=request.user,completed__isnull=True, reopened=False, declined__isnull=True, withdrawn = False).select_related('book')
 	pending_tasks = []
 
 	for task in reopened_tasks:
@@ -42,9 +42,9 @@ def reviewer_dashboard(request):
 	for task in incoming_tasks:
 		pending_tasks.append(task)
 
-	completed_tasks = core_models.ReviewAssignment.objects.filter(user=request.user,completed__isnull=False, reopened = False).select_related('book')
-	pending_proposal_tasks = submission_models.ProposalReview.objects.filter(user=request.user,completed__isnull=True,declined__isnull=True)
-	completed_proposal_tasks = submission_models.ProposalReview.objects.filter(user=request.user,completed__isnull=False)
+	completed_tasks = core_models.ReviewAssignment.objects.filter(user=request.user,completed__isnull=False, reopened = False, withdrawn = False).select_related('book')
+	pending_proposal_tasks = submission_models.ProposalReview.objects.filter(user=request.user,completed__isnull=True,declined__isnull=True, withdrawn = False)
+	completed_proposal_tasks = submission_models.ProposalReview.objects.filter(user=request.user,completed__isnull=False, withdrawn = False)
 	
 	
 
@@ -66,9 +66,9 @@ def reviewer_decision(request, review_type, submission_id, review_assignment, de
 	# Check the review assignment as not been completed and is being accessed by the assigned user
 	submission = get_object_or_404(core_models.Book, pk=submission_id)
 	if access_key:
-		review_assignment = get_object_or_404(core_models.ReviewAssignment, access_key=access_key,pk=review_assignment, declined__isnull=True, review_type=review_type)
+		review_assignment = get_object_or_404(core_models.ReviewAssignment, access_key=access_key,pk=review_assignment, declined__isnull=True, review_type=review_type, withdrawn = False)
 	else:
-		review_assignment = get_object_or_404(core_models.ReviewAssignment, Q(user=request.user), Q(book=submission),Q(pk=review_assignment), Q(declined__isnull=True), Q(review_type=review_type),Q(access_key__isnull=True) | Q(access_key__exact=''))
+		review_assignment = get_object_or_404(core_models.ReviewAssignment, Q(user=request.user), Q(book=submission),Q(pk=review_assignment), Q(declined__isnull=True), Q(review_type=review_type),Q(withdrawn = False),Q(access_key__isnull=True) | Q(access_key__exact=''))
 	#
 	editors = logic.get_editors(review_assignment)
 	print editors
@@ -132,17 +132,17 @@ def review(request, review_type, submission_id, review_round, access_key=None):
 
 	# Check that this review is being access by the user, is not completed and has not been declined.
 	if access_key:
-		review_assignment = get_object_or_404(core_models.ReviewAssignment, access_key=access_key,review_round__round_number=review_round, declined__isnull=True, review_type=review_type)
+		review_assignment = get_object_or_404(core_models.ReviewAssignment, access_key=access_key,review_round__round_number=review_round, declined__isnull=True, review_type=review_type, withdrawn = False)
 		submission = get_object_or_404(core_models.Book, pk=submission_id)
 		if review_assignment.completed and not review_assignment.reopened:
 			return redirect(reverse('review_complete_with_access_key', kwargs={'review_type': review_type, 'submission_id': submission.pk,'access_key':access_key,'review_round':review_round}))
 	
 	elif review_type == 'proposal':
 		submission = get_object_or_404(submission_models.Proposal, pk=submission_id)
-		review_assignment = get_object_or_404(submission_models.ProposalReview, user=request.user, proposal=submission, completed__isnull=True, declined__isnull=True)
+		review_assignment = get_object_or_404(submission_models.ProposalReview, user=request.user, proposal=submission, completed__isnull=True, declined__isnull=True, withdrawn = False)
 	else:
 		submission = get_object_or_404(core_models.Book, pk=submission_id)
-		review_assignment = get_object_or_404(core_models.ReviewAssignment, Q(user=request.user), Q(book=submission),Q(review_round__round_number=review_round), Q(declined__isnull=True), Q(review_type=review_type),Q(access_key__isnull=True) | Q(access_key__exact=''))
+		review_assignment = get_object_or_404(core_models.ReviewAssignment, Q(user=request.user), Q(book=submission),Q(review_round__round_number=review_round), Q(declined__isnull=True), Q(review_type=review_type),Q(withdrawn = False),Q(access_key__isnull=True) | Q(access_key__exact=''))
 		if review_assignment.completed and not review_assignment.reopened:
 			return redirect(reverse('review_complete', kwargs={'review_type': review_type, 'submission_id': submission.pk,'review_round':review_round}))
 	
@@ -251,14 +251,14 @@ def review(request, review_type, submission_id, review_round, access_key=None):
 def review_complete(request, review_type, submission_id,review_round,access_key=None):
 
 	if access_key:
-		review_assignment = get_object_or_404(core_models.ReviewAssignment, access_key=access_key, declined__isnull=True, review_type=review_type, review_round=review_round)
+		review_assignment = get_object_or_404(core_models.ReviewAssignment, access_key=access_key, declined__isnull=True, review_type=review_type, review_round=review_round, withdrawn = False)
 		submission = get_object_or_404(core_models.Book, pk=submission_id)
 	elif review_type == 'proposal':
 		submission = get_object_or_404(submission_models.Proposal, pk=submission_id)
 		review_assignment = get_object_or_404(submission_models.ProposalReview, user=request.user, proposal=submission)
 	else:
 		submission = get_object_or_404(core_models.Book, pk=submission_id)
-	 	review_assignment = get_object_or_404(core_models.ReviewAssignment, Q(user=request.user), Q(review_round__round_number=review_round), Q(book=submission), Q(review_type=review_type), Q(access_key__isnull=True) | Q(access_key__exact=''))
+	 	review_assignment = get_object_or_404(core_models.ReviewAssignment, Q(user=request.user), Q(review_round__round_number=review_round), Q(book=submission), Q(withdrawn = False), Q(review_type=review_type), Q(access_key__isnull=True) | Q(access_key__exact=''))
 
 	
 	result = review_assignment.results

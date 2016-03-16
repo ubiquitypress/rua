@@ -276,18 +276,18 @@ def editor_change_owner(request, submission_id):
 		except User.DoesNotExist:
 			new_pass = manager_logic.generate_password()
 			new_user = User.objects.create_user(username = user.author_email,
-	                                 email= user.author_email,
-	                                 password= new_pass, 
-	                                 first_name = user.first_name, 
-	                                 last_name = user.last_name)
+									 email= user.author_email,
+									 password= new_pass, 
+									 first_name = user.first_name, 
+									 last_name = user.last_name)
 			messages.add_message(request, messages.SUCCESS, 'Profile created for %s %s, password set to %s.' % (type, new_user.username, new_pass))
 			new_profile = models.Profile(middle_name=user.middle_name, salutation=user.salutation, institution = user.institution,
 			 department = user.department, country = user.country, biography = user.biography, orcid = user.orcid, twitter = user.twitter, linkedin = user.linkedin, facebook = user.facebook, user = new_user )
 			new_profile.save()
 			author_role = get_object_or_404(models.Role, name="Author")
-	 		new_profile.roles.add(author_role)
-	 		new_profile.save()
-	 		book.owner = new_user
+			new_profile.roles.add(author_role)
+			new_profile.save()
+			book.owner = new_user
 			book.save()
 			email_text = models.Setting.objects.get(group__name='email', name='new_user_owner_email').value
 			logic.send_new_user_ack(book, email_text, new_user, new_pass)
@@ -456,6 +456,19 @@ def editor_review_round_remove(request, submission_id, round_number,review_id):
 	review_assignment.delete()
 
 	return redirect(reverse('editor_review_round', kwargs={'submission_id': submission_id, 'round_number': submission.get_latest_review_round()}))
+
+@is_book_editor
+def editor_review_round_withdraw(request, submission_id, round_number, review_id):
+	submission = get_object_or_404(models.Book, pk=submission_id)
+	review_assignment = get_object_or_404(models.ReviewAssignment, pk=review_id)
+	if review_assignment.withdrawn:
+		review_assignment.withdrawn = False
+	else:
+		review_assignment.withdrawn = True
+	review_assignment.save()
+
+	return redirect(reverse('editor_review_round', kwargs={'submission_id': submission_id, 'round_number': submission.get_latest_review_round()}))
+
 
 @is_book_editor
 def editor_review_round_reopen(request, submission_id, round_number,review_id):
@@ -961,10 +974,10 @@ def update_contributor(request, submission_id, contributor_type, contributor_id=
 			saved_contributor = form.save()
 
 			if not contributor:
- 				if contributor_type == 'author':
- 					book.author.add(saved_contributor)
- 				elif contributor_type == 'editor':
- 					book.editor.add(saved_contributor)
+				if contributor_type == 'author':
+					book.author.add(saved_contributor)
+				elif contributor_type == 'editor':
+					book.editor.add(saved_contributor)
 			
 			return redirect(reverse('catalog', kwargs={'submission_id': submission_id}))
 

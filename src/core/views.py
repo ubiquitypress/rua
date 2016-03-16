@@ -1376,6 +1376,18 @@ def create_proposal_form(proposal):
     return path
 
 @is_editor
+def withdraw_proposal_review(request, proposal_id,review_id):
+    submission = get_object_or_404(submission_models.Proposal, pk=proposal_id)
+    review_assignment = get_object_or_404(submission_models.ProposalReview, pk=review_id)
+    if review_assignment.withdrawn:
+        review_assignment.withdrawn = False
+    else:
+        review_assignment.withdrawn = True
+    review_assignment.save()
+
+    return redirect(reverse('view_proposal', kwargs={'proposal_id': proposal_id}))
+
+@is_editor
 def remove_proposal_review(request, proposal_id,review_id):
     submission = get_object_or_404(submission_models.Proposal, pk=proposal_id)
     review_assignment = get_object_or_404(submission_models.ProposalReview, pk=review_id)
@@ -1469,7 +1481,7 @@ def view_proposal_review_decision(request, proposal_id, assignment_id):
         intial_data[k] = v[0]
 
     proposal_form.initial=intial_data
-    review_assignment = get_object_or_404(submission_models.ProposalReview, pk=assignment_id)
+    review_assignment = get_object_or_404(submission_models.ProposalReview, pk=assignment_id, withdrawn = False)
     
     if request.POST:
         if 'accept' in request.POST:
@@ -1527,7 +1539,7 @@ def view_completed_proposal_review(request, proposal_id, assignment_id):
         intial_data[k] = v[0]
 
     proposal_form.initial = intial_data
-    review_assignment = get_object_or_404(submission_models.ProposalReview, pk=assignment_id)
+    review_assignment = get_object_or_404(submission_models.ProposalReview, pk=assignment_id, withdrawn = False)
     result = review_assignment.results
     form = review_forms.GeneratedForm(form=proposal.review_form)
 
@@ -1611,7 +1623,7 @@ def view_proposal_review(request, proposal_id, assignment_id):
         intial_data[k] = v[0]
 
     proposal_form.initial=intial_data
-    review_assignment = get_object_or_404(submission_models.ProposalReview, pk=assignment_id)
+    review_assignment = get_object_or_404(submission_models.ProposalReview, pk=assignment_id, withdrawn = False)
     result = review_assignment.results
 
     form = review_forms.GeneratedForm(form=proposal.review_form)

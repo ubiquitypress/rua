@@ -444,6 +444,7 @@ class ReviewAssignment(models.Model):
 
 	#Reopened
 	reopened = models.BooleanField(default=False)
+	withdrawn = models.BooleanField(default=False)
 
 	class Meta:
 		unique_together = ('book', 'user', 'review_type', 'review_round')
