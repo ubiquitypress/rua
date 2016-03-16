@@ -22,6 +22,7 @@ def author_dashboard(request):
 	context = {
 		'user_submissions': models.Book.objects.filter(owner=request.user).order_by("-pk").select_related('stage'),
 		'user_proposals': submission_models.Proposal.objects.filter(owner=request.user).order_by("-pk"),
+		'user_incomplete_proposals': submission_models.IncompleteProposal.objects.filter(owner=request.user).order_by("-pk"),
 		'author_tasks': logic.author_tasks(request.user),
 		'author_task_number': len(logic.author_tasks(request.user)),
 		'new_messages': logic.check_for_new_messages(request.user),

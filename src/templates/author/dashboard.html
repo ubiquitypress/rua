@@ -121,6 +121,35 @@
                     <br />
                 </div>
                   {% endfor %}
+
+                    <h4> INCOMPLETE PROPOSALS </h4>
+            
+             {% for proposal in user_incomplete_proposals %}
+                <div class="notification author">
+                    <div class="row">
+                        <div class="col-md-10">
+                            <h5>{{ proposal.title }}</h5>
+                            <p class="small"><em>{% if proposal.date_submitted %}Submitted {{ proposal.date_submitted  }}{% endif %}</em></p>
+                        </div>
+                        <div class="col-md-2">
+                            <h5><i class="fa fa-eye"></i></h5>
+                        </div>
+                    </div>
+
+                  
+
+                    <div class="band submission proposal ">
+                   INCOMPLETE PROPOSAL
+
+                    </div>
+               
+                    <br>
+                    <a href="{% url 'incomplete_proposal' proposal.pk %}" class="btn btn-sm btn-other  view pull-right" style="margin-right:10px;"> Continue Proposal</a>
+          
+                    <br />
+                    <br />
+                </div>
+                  {% endfor %}
         </div>
           
     </div>
