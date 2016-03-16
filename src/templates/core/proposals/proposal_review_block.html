@@ -8,6 +8,7 @@
     <th>Recommendation</th>
     <th></th>
     <th></th>
+    <th></th>
   </tr>
 {% for reviewer in review_data %}
   <tr>
@@ -17,8 +18,12 @@
     <td>{{ reviewer.due }}</td>
     <td>{% if reviewer.completed %}{{ reviewer.completed }}{% else %}--{% endif %}</td>
     <td>{% if reviewer.completed %}{{ reviewer.get_recommendation_display }}{% else %}--{% endif %}</td>
+
     <td>{% if reviewer.completed %}<a href="{% url 'view_completed_proposal_review' proposal.id reviewer.id %}">View Review</a>{% endif %}</td>
     <td>{% if reviewer.reopened %}{% if reviewer.completed %}<a href="{% url 'reopen_proposal_review' proposal.id reviewer.id %}">Reopen</a>{% endif %}{% else %} {% if reviewer.completed %}<a href="{% url 'reopen_proposal_review' proposal.id reviewer.id %}">Reopen</a> {% endif %}{% endif %}</td>
+     <td width="10%"> <a href="{% url 'remove_proposal_review' proposal.id reviewer.pk %}" class=" btn btn-danger btn-sm pull-left" style="width:120px">
+          Delete
+              </a></td>
   </tr>
 
 {% empty %}

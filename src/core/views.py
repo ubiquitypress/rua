@@ -1375,6 +1375,13 @@ def create_proposal_form(proposal):
     document.save(path)
     return path
 
+@is_editor
+def remove_proposal_review(request, proposal_id,review_id):
+    submission = get_object_or_404(submission_models.Proposal, pk=proposal_id)
+    review_assignment = get_object_or_404(submission_models.ProposalReview, pk=review_id)
+    review_assignment.delete()
+
+    return redirect(reverse('view_proposal', kwargs={'proposal_id': proposal_id}))
 
 @is_editor
 def start_proposal_review(request, proposal_id):
