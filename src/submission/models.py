@@ -10,6 +10,12 @@ def proposal_status():
 		('declined', 'Declined'),
 	)
 
+def book_type_choices():
+	return (
+		('monograph', 'Monograph'),
+		('edited_volume', 'Edited Volume'),
+	)
+
 class Proposal(models.Model):
 
 
@@ -26,7 +32,8 @@ class Proposal(models.Model):
 	requestor = models.ForeignKey(User, null=True,blank=True,related_name="editor_requestor")
 	revision_due_date = models.DateTimeField(blank=True, null=True)
 	date_accepted = models.DateTimeField(blank=True, null=True)
-
+	book_type = models.CharField(max_length=50, null=True, blank=True, choices=book_type_choices(), help_text="A monograph is a work authored, in its entirety, by one or more authors. An edited volume has different authors for each chapter.")
+	
 	status = models.CharField(max_length=20, choices=proposal_status(), default='submission')
 
 	def status_verbose(self):
