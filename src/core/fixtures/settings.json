@@ -790,5 +790,16 @@
   },
   "model": "core.setting",
   "pk": 75
+},
+{
+  "fields": {
+    "value": "tech@ubiquitypress.com;",
+    "group": 1,
+    "name": "publication_committee",
+    "types": "text",
+    "description": "Publication committee contacted during an editorial review assignment. Separate email addresses with this character ';'"
+  },
+  "model": "core.setting",
+  "pk": 76
 }
 ]
