@@ -458,6 +458,45 @@ class ReviewAssignment(models.Model):
 	def __repr__(self):
 		return u'%s - %s %s' %  (self.pk, self.book.title, self.user.username)
 
+class BookReviewAssignment(models.Model):
+	book = models.ForeignKey(Book) #TODO: Remove this as it is already linked to the book through the review round
+	assigned = models.DateField(auto_now=True)
+	accepted = models.DateField(blank=True, null=True)
+	declined = models.DateField(blank=True, null=True)
+	due = models.DateField(blank=True, null=True)
+	completed = models.DateField(blank=True, null=True)
+	files = models.ManyToManyField('File', blank=True, null=True)
+	body = models.TextField(blank=True, null=True)
+	#Special fields
+	editorial_board = models.ManyToManyField(User, blank=True, null=True)
+	management_editor = models.ForeignKey(User, related_name='management_editor')
+	editorial_board_access_key = models.CharField(max_length=258,null=True,blank=True)
+	publishing_committee_access_key = models.CharField(max_length=258,null=True,blank=True)
+	editorial_board_passed = models.BooleanField(default=False)
+	publication_committee_passed = models.BooleanField(default=False)
+
+	results = models.ForeignKey('review.FormResult', null=True, blank=True)
+	recommendation = models.CharField(max_length=10, choices=review_recommendation(), null=True, blank=True)
+	competing_interests = models.TextField(blank=True, null=True, help_text=mark_safe("If any of the authors or editors have any competing interests please add them here. EG. 'This study was paid for by corp xyz.'. <a href='/page/competing_interests/'>More info</a>"))
+
+	# Used to ensure that an email is not sent more than once.
+	unaccepted_reminder = models.BooleanField(default=False)
+	accepted_reminder = models.BooleanField(default=False)
+	overdue_reminder = models.BooleanField(default=False)
+
+	#Reopened
+	reopened = models.BooleanField(default=False)
+	withdrawn = models.BooleanField(default=False)
+
+	class Meta:
+		unique_together = ('book', 'management_editor')
+
+	def __unicode__(self):
+		return u'%s - %s %s' % (self.pk, self.book.title, self.management_editor.username)
+
+	def __repr__(self):
+		return u'%s - %s %s' %  (self.pk, self.book.title, self.management_editor.username)
+
 class CopyeditAssignment(models.Model):
 	book = models.ForeignKey(Book)
 	copyeditor = models.ForeignKey(User, related_name='copyeditor')
