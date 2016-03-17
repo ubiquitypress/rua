@@ -458,7 +458,7 @@ class ReviewAssignment(models.Model):
 	def __repr__(self):
 		return u'%s - %s %s' %  (self.pk, self.book.title, self.user.username)
 
-class BookReviewAssignment(models.Model):
+class EditorialReviewAssignment(models.Model):
 	book = models.ForeignKey(Book) #TODO: Remove this as it is already linked to the book through the review round
 	assigned = models.DateField(auto_now=True)
 	accepted = models.DateField(blank=True, null=True)
