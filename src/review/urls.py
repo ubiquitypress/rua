@@ -15,7 +15,7 @@ urlpatterns = patterns('',
 	url(r'^(?P<review_type>[-\w]+)/(?P<submission_id>\d+)/assignment/(?P<review_assignment>\d+)/access_key/(?P<access_key>[-\w+]+)/decision/(?P<decision>[-\w]+)/$', 'review.views.reviewer_decision', name='reviewer_decision_with_access_key'),
 
 	
-	# Review
+	# Review	
 	url(r'^(?P<review_type>[-\w]+)/(?P<submission_id>\d+)/review-round/(?P<review_round>\d+)/access_key/(?P<access_key>[-\w+]+)/$', 'review.views.review', name='review_with_access_key'),
 	url(r'^(?P<review_type>[-\w]+)/(?P<submission_id>\d+)/review-round/(?P<review_round>\d+)/$', 'review.views.review', name='review_without_access_key'),
 	url(r'^(?P<review_type>[-\w]+)/(?P<submission_id>\d+)/review-round/(?P<review_round>\d+)/complete/$', 'review.views.review_complete', name='review_complete'),

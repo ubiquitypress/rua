@@ -195,6 +195,8 @@ class Book(models.Model):
 
 	# Review
 	review_assignments = models.ManyToManyField('ReviewAssignment', related_name='review', null=True, blank=True)
+	editorial_review_assignments = models.ManyToManyField('EditorialReviewAssignment', related_name='editorial_review', null=True, blank=True)
+	
 	review_form = models.ForeignKey('review.Form', null=True, blank=True)
 
 	# Files

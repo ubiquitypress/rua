@@ -369,6 +369,7 @@ def editor_tasks(request, submission_id):
 def editor_review(request, submission_id):
 	book = get_object_or_404(models.Book, pk=submission_id)
 	review_rounds = models.ReviewRound.objects.filter(book=book).order_by('-round_number')
+	editorial_review_assignments = models.EditorialReviewAssignment.objects.filter(book=book).order_by('-pk')
 
 	if request.POST and 'new_round' in request.POST:
 		new_round = logic.create_new_review_round(book)
@@ -378,6 +379,7 @@ def editor_review(request, submission_id):
 	context = {
 		'submission': book,
 		'author_include': 'editor/review_revisions.html',
+		'editorial_review_assignments': editorial_review_assignments,
 		'review_rounds': review_rounds,
 		'revision_requests': revision_models.Revision.objects.filter(book=book, revision_type='review'),
 		'active_page': 'editor_review',
@@ -425,6 +427,29 @@ def editor_review_round(request, submission_id, round_number):
 		'revision_requests': revision_models.Revision.objects.filter(book=book, revision_type='review'),
 		'internal_review_assignments': internal_review_assignments,
 		'external_review_assignments': external_review_assignments,
+		'editorial_review_assignments': models.EditorialReviewAssignment.objects.filter(book=book).order_by('-pk'),
+		
+		'active_page': 'editor_review',
+	}
+
+	return render(request, template, context)
+
+@is_book_editor
+def editorial_review_view(request, submission_id, review_id):
+	book = get_object_or_404(models.Book, pk=submission_id)
+	review = get_object_or_404(models.EditorialReviewAssignment, book=book, pk=review_id)
+	editorial_review_assignments = models.EditorialReviewAssignment.objects.filter(book=book).order_by('-pk')
+
+
+	template = 'editor/submission.html'
+	context = {
+		'submission': book,
+		'author_include': 'editor/review_revisions.html',
+		'submission_files': 'editor/editorial_review.html',
+		'revision_requests': revision_models.Revision.objects.filter(book=book, revision_type='review'),
+		'editorial_review_assignments': editorial_review_assignments,
+		'review': review,
+		'review_rounds': models.ReviewRound.objects.filter(book=book).order_by('-round_number'),
 		'active_page': 'editor_review',
 	}
 

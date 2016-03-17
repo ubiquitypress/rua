@@ -44,6 +44,10 @@ class ReviewAssAdmin(admin.ModelAdmin):
 	list_display = ('review_type', 'user', 'assigned','book','user')
 	search_fields = ('user','book',)
 
+class EditorialReviewAssAdmin(admin.ModelAdmin):
+	list_display = ('management_editor', 'assigned','book')
+	search_fields = ('management_editor','book',)
+
 class FileAdmin(admin.ModelAdmin):
 	list_display = ('original_filename', 'uuid_filename', 'kind','date_uploaded')
 
@@ -79,6 +83,7 @@ admin_list = [
 	(SettingGroup,),
 	(Role, RoleAdmin,),
 	(ReviewAssignment, ReviewAssAdmin),
+	(EditorialReviewAssignment, EditorialReviewAssAdmin),
 	(Format,),
 	(Chapter,),
 	(ReviewRound, ReviewRoundAdmin),
