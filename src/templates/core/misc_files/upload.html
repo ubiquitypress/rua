@@ -71,7 +71,7 @@
 
           <a href="{% url 'editor_notes' submission.pk %}">
         <div class="dash-menu {%ifequal active_page 'notes' %}current{% endifequal %}">
-            <h5>Notes <i class="fa fa-chevron-right pull-right"></i></h5>
+            <h5>Notes &nbsp; <span class="badge circle" style="background-color:#5bc0de"> {{submission.number_of_notes}} </span> <i class="fa fa-chevron-right pull-right"></i></h5>
         </div>
         </a>
         {% if submission.stage.review %}

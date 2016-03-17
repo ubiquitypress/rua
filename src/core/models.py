@@ -222,6 +222,12 @@ class Book(models.Model):
 			return self.reviewround_set.all().order_by('-round_number')[0].round_number
 		except IndexError:
 			return 0
+			
+	def number_of_notes(self):
+		try:
+			return Note.objects.filter(book=self).count()
+		except IndexError:
+			return 0
 
 	def authors_or_editors(self):
 		authors_or_editors = []
