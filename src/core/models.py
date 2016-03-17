@@ -465,8 +465,6 @@ class EditorialReviewAssignment(models.Model):
 	book = models.ForeignKey(Book) #TODO: Remove this as it is already linked to the book through the review round
 	
 	assigned = models.DateField(auto_now=True)
-	accepted = models.DateField(blank=True, null=True)
-	declined = models.DateField(blank=True, null=True)
 	due = models.DateField(blank=True, null=True)
 	completed = models.DateField(blank=True, null=True)
 	
