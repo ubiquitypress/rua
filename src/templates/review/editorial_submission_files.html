@@ -1,0 +1,36 @@
+
+<h5><b>Review Files:</b>  <a href="{% url 'serve_all_files' submission.id %}" class="btn btn-xs btn-task pull-right"><i class="fa fa-cloud-download">&nbsp;</i>Download All</a></h5>
+<br>
+<ul class="media-list manuscript-upload-states">
+	{% for file in submission.files.all %}
+
+  <li class="media grey-container">
+    <div class="media-left">
+      <span > <h1>
+        {% if file.mime_type == 'image/jpeg' or file.mime_type == 'image/png' %}
+			 &nbsp; &nbsp;  	<i class="fa fa-file-image-o"></i>
+			  {% else %}
+			  &nbsp; &nbsp;  	<i class="fa fa-file-text-o"></i>
+			  {% endif %}
+      </span></h1>
+    </div>
+
+    <div class="media-body">
+
+     		<div class="col-md-4">
+          
+			  <h5><b>{{ file.label }}</b></h5>
+			  <h5><b>{{ file.kind|capfirst }}</b></h5>
+			  <h5>{{ file.truncated_filename }}</h5>
+			</div>
+    </div>
+        <div class="media-right">
+      <a href="{% url 'serve_file' submission.id file.id %}" class="btn btn-sm btn-task pull-right download-small" ><i class="fa fa-cloud-download"> &nbsp; Download</i></a>
+    </div>
+  	</li>
+	  {% empty %}
+     <li class="grey-container">
+      <h5>&nbsp;&nbsp;&nbsp;No files</h5>
+   </li>
+	{% endfor %}
+</ul>
