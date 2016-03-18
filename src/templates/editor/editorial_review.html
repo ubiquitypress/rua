@@ -55,7 +55,18 @@
         </p>
       </div>
       <div class="col-md-4">
-        {% if not review.completed %}<h5>Due: {{ review.due }}&nbsp;&nbsp;<a href=""><i class="fa fa-edit"></i></a></h5>{% else %}<a href="" style="margin-top: 10px;margin-right:10px;" class="btn btn-xs btn-success">View Review</a>{% endif %}
+        {% if not review.completed %}<h5>Due: {{ review.due }}&nbsp;&nbsp;<a href=""><i class="fa fa-edit"></i></a></h5>{% else %}
+
+{% if review.publishing_committee_access_key %}
+
+  <a href="{% url 'editorial_review_complete' submission.id  review.publishing_committee_access_key %}"  style="margin-top: 10px;margin-right:10px;" class="btn btn-xs btn-success"></h5>View Review</a>
+ 
+  {% else%}
+  <a href="{% url 'editorial_review_complete' submission.id   review.editorial_board_access_key %}"  style="margin-top: 10px;margin-right:10px;" class="btn btn-xs btn-success">View Review</a></h5>
+
+ {% endif %}
+
+       {% endif %}
       </div>
    
     </div>

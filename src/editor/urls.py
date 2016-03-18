@@ -22,10 +22,10 @@ urlpatterns = patterns('',
     url(r'^submission/(?P<submission_id>\d+)/review/round/(?P<round_number>\d+)/withdraw/(?P<review_id>\d+)/$', 'editor.views.editor_review_round_withdraw', name='editor_review_round_withdraw'),
 
     #Editorial
-    url(r'^editorial/submission/(?P<submission_id>\d+)/access_key/(?P<access_key>[-\w./]+)/$', 'review.views.editorial_review', name='editorial_review'),
-    url(r'^editorial/submission/(?P<submission_id>\d+)/access_key/(?P<access_key>[-\w./]+)/complete/$', 'review.views.editorial_review_complete', name='editorial_review_complete'),
-    url(r'^editorial/submission/(?P<submission_id>\d+)/add/$', 'editor.views.editor_add_editorial_reviewers', name='editor_add_editorial_reviewers'),
-    url(r'^editorial/submission/(?P<submission_id>\d+)/(?P<review_id>\d+)/$', 'editor.views.editorial_review_view', name='editorial_review_view'),
+    url(r'^review/submission/(?P<submission_id>\d+)/access_key/(?P<access_key>[-\w./]+)/$', 'review.views.editorial_review', name='editorial_review'),
+    url(r'^review/complete/submission/(?P<submission_id>\d+)/access_key/(?P<access_key>[-\w./]+)/$', 'review.views.editorial_review_complete', name='editorial_review_complete'),
+    url(r'^review/submission/(?P<submission_id>\d+)/add/$', 'editor.views.editor_add_editorial_reviewers', name='editor_add_editorial_reviewers'),
+    url(r'^review/submission/(?P<submission_id>\d+)/(?P<review_id>\d+)/$', 'editor.views.editorial_review_view', name='editorial_review_view'),
 
     url(r'^submission/(?P<submission_id>\d+)/review/round/(?P<round_id>\d+)/assignment/(?P<review_id>\d+)/$', 'editor.views.editor_review_assignment', name='editor_review_assignment'),
     url(r'^submission/(?P<submission_id>\d+)/review/round/(?P<round_id>\d+)/assignment/(?P<review_id>\d+)/set/due/$', 'editor.views.update_review_due_date', name='update_review_due_date'),
