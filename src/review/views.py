@@ -332,7 +332,9 @@ def editorial_review(request, submission_id, access_key):
 			for k,v in data.items():
 				initial_data[k] = v[0]
 			form.initial = initial_data
-		else:
+		elif not result:
+			resubmit = True
+		elif result and review_assignment.editorial_board_passed:
 			resubmit = False
 	else:
 		result = review_assignment.publication_committee_results
@@ -342,7 +344,9 @@ def editorial_review(request, submission_id, access_key):
 			for k,v in data.items():
 				initial_data[k] = v[0]
 			form.initial = initial_data
-		else:
+		elif not result:
+			resubmit = True
+		elif result and review_assignment.publication_committee_passed:
 			resubmit = False
 
 
@@ -381,8 +385,12 @@ def editorial_review(request, submission_id, access_key):
 				file_fields = models.FormElementsRelationship.objects.filter(form=review_assignment.editorial_board_review_form, element__field_type='upload')
 				data_fields = models.FormElementsRelationship.objects.filter(~Q(element__field_type='upload'), form=review_assignment.editorial_board_review_form)
 			else:
-				file_fields = models.FormElementsRelationship.objects.filter(form=review_assignment.publication_committee_review_form, element__field_type='upload')
-				data_fields = models.FormElementsRelationship.objects.filter(~Q(element__field_type='upload'), form=review_assignment.publication_committee_review_form)
+				if not review_assignment.publication_committee_review_form:
+					file_fields = models.FormElementsRelationship.objects.filter(form=review_assignment.editorial_board_review_form, element__field_type='upload')
+					data_fields = models.FormElementsRelationship.objects.filter(~Q(element__field_type='upload'), form=review_assignment.editorial_board_review_form)
+				else:
+					file_fields = models.FormElementsRelationship.objects.filter(form=review_assignment.publication_committee_review_form, element__field_type='upload')
+					data_fields = models.FormElementsRelationship.objects.filter(~Q(element__field_type='upload'), form=review_assignment.publication_committee_review_form)
 
 			for field in file_fields:
 				if field.element.name in request.FILES:
@@ -415,7 +423,10 @@ def editorial_review(request, submission_id, access_key):
 					review_assignment.editorial_board_results = form_results
 					review_assignment.save()
 				else:
-					form_results = models.FormResult(form=review_assignment.publication_committee_review_form, data=json_data)
+					if not review_assignment.publication_committee_review_form:
+						form_results = models.FormResult(form=review_assignment.editorial_board_review_form, data=json_data)
+					else:
+						form_results = models.FormResult(form=review_assignment.publication_committee_review_form, data=json_data)
 					form_results.save()
 					review_assignment.publication_committee_results = form_results
 					review_assignment.save()

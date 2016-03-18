@@ -482,6 +482,23 @@ def editorial_review_view(request, submission_id, review_id):
 	return render(request, template, context)
 
 @is_book_editor
+def editorial_review_accept(request, submission_id, review_id, type):
+	book = get_object_or_404(models.Book, pk=submission_id)
+	review = get_object_or_404(models.EditorialReviewAssignment, book=book, pk=review_id)
+	if type == 'editorial':
+		review.editorial_board_passed = True
+		review.publishing_committee_access_key = uuid4()
+		review.save()
+	else:
+		review.publication_committee_passed = True
+		review.completed = timezone.now()
+		review.save()
+
+	return redirect(reverse('editorial_review_view', kwargs={'submission_id': submission_id, 'review_id': review.pk}))
+
+
+
+@is_book_editor
 def remove_assignment_editor(request, submission_id, assignment_type, assignment_id):
 	submission = get_object_or_404(models.Book, pk=submission_id)
 	if assignment_type == 'indexing':
