@@ -24,22 +24,38 @@
 <a href="" class=" btn btn-danger btn-xs pull-left">
           Delete
               </a>
+
+              {% if editorial_board_member%}
+              {% if not review.editorial_board_results %}
+  <a class="btn btn-xs btn-review btn-round-half" href="{% url 'editorial_review' review.book.pk review.editorial_board_access_key %}" style="margin-left:8px">&nbsp;&nbsp;Go to Editorial Review &nbsp;&nbsp;</a>
+{% endif%}
+{% endif%}
           <br>
           <br>
         <strong>{{ review.management_editor.profile.full_name }}<sup> <a style="height:17px;margin-top:6px" href="core/email.html" onclick="return popitup('/email/onetaskers/submission/{{submission.id}}/user/{{review.management_editor.pk}}/','onetasker_{{review.management_editor.pk}}')"class="fa fa-envelope-o btn btn-xs btn-default"></a></sup></strong>
         </p>
-        {% if review.declined %}
-        	<span class="declined">Review Declined on {{ review.declined }}</span>
-        {% else %}
+       
         <span class=" {% if review.reopened %}no-recommendation{% else %}{% if review.recommendation %}recommendation{% else %}no-recommendation{% endif %}{% endif %}">&nbsp;
-        {% if review.reopened %}
-        Awaiting recommendation
-        {% else %}
-        {% if review.recommendation %}Recommend to {{ review.get_recommendation_display }}{% else %}{% if review.accepted %}Awaiting recommendation{% else %} Invitation Sent{% endif %}{% endif %}
-        {% endif %}
+       {% if review.editorial_board_results %}
+
+       {% if review.editorial_board_passed %}
+
+       {% if review.publication_committee_results %}
+       Publication committee submitted
+       {% else %}
+        Awaiting publication committee
+       {% endif%}
+       {% else%}
+
+        Editorial board submitted
+       {% endif %}
+       {% else %}
+
+        Awaiting editorial board
+       {% endif%}
+       
         &nbsp;
         </span>
-        {% endif %}
 
         <p>
         	{% if review.completed %}
@@ -54,7 +70,8 @@
         	{% endif %}
         </p>
       </div>
-      <div class="col-md-4">
+      <div class="col-md-4" style="margin-left:-20px">
+
         {% if not review.completed %}<h5>Due: {{ review.due }}&nbsp;&nbsp;<a href=""><i class="fa fa-edit"></i></a></h5>{% else %}
 
 {% if review.publishing_committee_access_key %}

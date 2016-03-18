@@ -441,10 +441,15 @@ def editorial_review_view(request, submission_id, review_id):
 	review = get_object_or_404(models.EditorialReviewAssignment, book=book, pk=review_id)
 	editorial_review_assignments = models.EditorialReviewAssignment.objects.filter(book=book).order_by('-pk')
 
+	if review.editorial_board.filter(pk=request.user.pk).exists():
+		member = True
+	else:
+		member = False
 
 	template = 'editor/submission.html'
 	context = {
 		'submission': book,
+		'editorial_board_member': member,
 		'author_include': 'editor/review_revisions.html',
 		'submission_files': 'editor/editorial_review.html',
 		'revision_requests': revision_models.Revision.objects.filter(book=book, revision_type='review'),
