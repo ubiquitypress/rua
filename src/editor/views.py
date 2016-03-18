@@ -446,15 +446,35 @@ def editorial_review_view(request, submission_id, review_id):
 	else:
 		member = False
 
+	editorial_board_relations = review_models.FormElementsRelationship.objects.filter(form=review.editorial_board_review_form)
+	
+	if review.editorial_board_results:
+		editorial_board_data_ordered = core_logic.order_data(core_logic.decode_json(review.editorial_board_results.data), editorial_board_relations)
+	else:
+		editorial_board_data_ordered = None
+
+	publication_committee_relations = review_models.FormElementsRelationship.objects.filter(form=review.publication_committee_review_form)
+	
+	if review.publication_committee_results:
+		publication_committee_data_ordered = core_logic.order_data(core_logic.decode_json(review.publication_committee_results.data), publication_committee_relations)
+	else:
+		publication_committee_data_ordered = None
+
+
+
 	template = 'editor/submission.html'
 	context = {
 		'submission': book,
 		'editorial_board_member': member,
+		'editorial_board_relations':editorial_board_relations,
+		'editorial_board_data_ordered':editorial_board_data_ordered,
+		'publication_committee_relations':publication_committee_relations,
+		'publication_committee_data_ordered':publication_committee_data_ordered,
 		'author_include': 'editor/review_revisions.html',
 		'submission_files': 'editor/editorial_review.html',
 		'revision_requests': revision_models.Revision.objects.filter(book=book, revision_type='review'),
 		'editorial_review_assignments': editorial_review_assignments,
-		'review': review,
+		'review_assignment': review,
 		'review_rounds': models.ReviewRound.objects.filter(book=book).order_by('-round_number'),
 		'active_page': 'editor_review',
 	}

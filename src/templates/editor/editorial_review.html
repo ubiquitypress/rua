@@ -1,11 +1,13 @@
-<h3>Editorial Review #{{ review.pk }}</h3>
+
+{% load dict_lookup %}
+<h3>Editorial Review #{{ review_assignment.pk }}</h3>
 <hr>
 <h4>Editorial Board</h4>
 <table  class="table table-bordered">
    <tr>
       <th>Name</th>
     </tr>
-    {% for editor in review.editorial_board.all %}
+    {% for editor in review_assignment.editorial_board.all %}
   
   <tr>
   <td><small><strong>{{ editor.profile.full_name }}<sup> <a style="height:17px;margin-top:6px" href="core/email.html" onclick="return popitup('/email/editors/submission/{{submission.id}}/user/{{editor.pk}}/','editor_{{editor.pk}}')"class="fa fa-envelope-o btn btn-xs btn-default"></a></sup></strong></small></td>
@@ -26,21 +28,21 @@
               </a>
 
               {% if editorial_board_member%}
-              {% if not review.editorial_board_results %}
-  <a class="btn btn-xs btn-review btn-round-half" href="{% url 'editorial_review' review.book.pk review.editorial_board_access_key %}" style="margin-left:8px">&nbsp;&nbsp;Go to Editorial Review &nbsp;&nbsp;</a>
+              {% if not review_assignment.editorial_board_results %}
+  <a class="btn btn-xs btn-review btn-round-half" href="{% url 'editorial_review' review_assignment.book.pk review_assignment.editorial_board_access_key %}" style="margin-left:8px">&nbsp;&nbsp;Go to Editorial Review &nbsp;&nbsp;</a>
 {% endif%}
 {% endif%}
           <br>
           <br>
-        <strong>{{ review.management_editor.profile.full_name }}<sup> <a style="height:17px;margin-top:6px" href="core/email.html" onclick="return popitup('/email/onetaskers/submission/{{submission.id}}/user/{{review.management_editor.pk}}/','onetasker_{{review.management_editor.pk}}')"class="fa fa-envelope-o btn btn-xs btn-default"></a></sup></strong>
+        <strong>{{ review_assignment.management_editor.profile.full_name }}<sup> <a style="height:17px;margin-top:6px" href="core/email.html" onclick="return popitup('/email/onetaskers/submission/{{submission.id}}/user/{{review_assignment.management_editor.pk}}/','onetasker_{{review_assignment.management_editor.pk}}')"class="fa fa-envelope-o btn btn-xs btn-default"></a></sup></strong>
         </p>
        
-        <span class=" {% if review.reopened %}no-recommendation{% else %}{% if review.recommendation %}recommendation{% else %}no-recommendation{% endif %}{% endif %}">&nbsp;
-       {% if review.editorial_board_results %}
+        <span class=" {% if review_assignment.reopened %}no-recommendation{% else %}{% if review_assignment.recommendation %}recommendation{% else %}no-recommendation{% endif %}{% endif %}">&nbsp;
+       {% if review_assignment.editorial_board_results %}
 
-       {% if review.editorial_board_passed %}
+       {% if review_assignment.editorial_board_passed %}
 
-       {% if review.publication_committee_results %}
+       {% if review_assignment.publication_committee_results %}
        Publication committee submitted
        {% else %}
         Awaiting publication committee
@@ -58,35 +60,98 @@
         </span>
 
         <p>
-        	{% if review.completed %}
-        	<strong>Completed on: </strong>{{ review.completed }}
-           {% if not review.reopened %}
+        	{% if review_assignment.completed %}
+        	<strong>Completed on: </strong>{{ review_assignment.completed }}
+           {% if not review_assignment.reopened %}
  <a href="" class="btn btn-xs btn-default" style="margin-top:-5px">Reopen</a>
  {%endif%}
-        	{% elif review.accepted %}
-        	<strong>Accepted on: </strong>{{ review.accepted }}
+        	{% elif review_assignment.accepted %}
+        	<strong>Accepted on: </strong>{{ review_assignment.accepted }}
         	{% else %}
-        	<strong>Assigned on: </strong>{{ review.assigned }}
+        	<strong>Assigned on: </strong>{{ review_assignment.assigned }}
         	{% endif %}
         </p>
       </div>
       <div class="col-md-4" style="margin-left:-20px">
 
-        {% if not review.completed %}<h5>Due: {{ review.due }}&nbsp;&nbsp;<a href=""><i class="fa fa-edit"></i></a></h5>{% else %}
+        {% if not review_assignment.completed %}<h5>Due: {{ review_assignment.due }}&nbsp;&nbsp;<a href=""><i class="fa fa-edit"></i></a></h5>{% else %}
 
-{% if review.publishing_committee_access_key %}
+{% if review_assignment.publishing_committee_access_key %}
 
-  <a href="{% url 'editorial_review_complete' submission.id  review.publishing_committee_access_key %}"  style="margin-top: 10px;margin-right:10px;" class="btn btn-xs btn-success"></h5>View Review</a>
+  <a href="{% url 'editorial_review_complete' submission.id  review_assignment.publishing_committee_access_key %}"  style="margin-top: 10px;margin-right:10px;" class="btn btn-xs btn-success"></h5>View Review</a>
  
   {% else%}
-  <a href="{% url 'editorial_review_complete' submission.id   review.editorial_board_access_key %}"  style="margin-top: 10px;margin-right:10px;" class="btn btn-xs btn-success">View Review</a></h5>
+  <a href="{% url 'editorial_review_complete' submission.id   review_assignment.editorial_board_access_key %}"  style="margin-top: 10px;margin-right:10px;" class="btn btn-xs btn-success">View Review</a></h5>
 
  {% endif %}
 
        {% endif %}
+
       </div>
-   
     </div>
+       <div class="dash-container">
+       <h3>Editorial Group's Decision</h3>
+       <hr>
+       <div style="clear:both"></div>
+      {% for item in editorial_board_data_ordered %}
+      <div class="{% cycle 'left-float' 'right-float' %}">
+        
+        <h4> <b>{{ item.0 }}:</b></h4>
+        <h5> {% lookup review_assignment.editorial_board_results.data item.0 %} </h5>
+      </div>
+      <div {% cycle '' 'style="clear:both"' %}></div>
+      {% endfor %}
+</br>
+      <h5><b>Supporting Files:</b></h5>
+      <ul class="media-list manuscript-upload-states">
+  {% for file in review_assignment.files.all %}
+  
+  {% if file.kind == 'reviewer' %}
+  <li class="media grey-container">
+    <div class="media-left">
+      <span > <h1>
+        {% if file.mime_type == 'image/jpeg' or file.mime_type == 'image/png' %}
+       &nbsp; &nbsp;    <i class="fa fa-file-image-o"></i>
+        {% else %}
+        &nbsp; &nbsp;   <i class="fa fa-file-text-o"></i>
+        {% endif %}
+      </span></h1>
+    </div>
+    <div class="media-body">
+             <div class="col-md-4">
+        <h5><b>{{ file.label }}</b></h5>
+        <h5><b>{{ file.kind|capfirst }}</b></h5>
+        <h5>{{ file.original_filename }}</h5>
+      </div>
+    </div>
+         <div class="media-right">
+      <a href="{% url 'serve_file' submission.id file.id %}" class="btn btn-sm btn-task pull-right download-small"><i class="fa fa-cloud-download"> &nbsp; Download</i></a>
+    </div>
+    </li>
+    {% endif %}
+    {% empty %}
+     <li class="grey-container">
+      <h5>&nbsp;&nbsp;&nbsp;No files</h5>
+   </li>
+  {% endfor %}
+</ul>
+
+        <hr />
+        <h5><b> Editorial Group - Recommendation: </b></h5>
+        {% ifequal review_assignment.editorial_board_recommendation 'reject' %}
+        <p class="submission-reject"> <b> {{review_assignment.editorial_board_recommendation|title}} Submission </b></p>
+        {% endifequal %}
+         {% ifequal review_assignment.editorial_board_recommendation 'accept' %}
+        <p class="submission-accept"> <b> {{review_assignment.editorial_board_recommendation|title}} Submission </b></p>
+        {% endifequal %}
+        {% ifequal review_assignment.editorial_board_recommendation 'revisions' %}
+        <p class="submission-revisions"> <b> Revisions Required</b></p>
+        {% endifequal %}
+  <hr />
+        <h5><b>Editorial Group - Competing interests:</b> <br /><br />{{review_assignment.editorial_board_competing_interests|linebreaksbr}}</h5><br><small>If any of the authors or editors have any competing interests <br>please add them here. EG. 'This study was paid for by corp xyz.'.<br> <a href='/page/competing_interests/'>More info</a></small><br><br>
+      <br/><br/>
+         <a href=""  style="margin-top: 10px;margin-right:10px;" class="btn btn-xs btn-review"></h5>&nbsp;&nbsp;Request Revisions&nbsp;&nbsp;</a>  <a href=""  style="margin-top: 10px;margin-right:0px;" class="btn btn-xs btn-other pull-right"></h5>&nbsp;&nbsp;Invite Publication Committee&nbsp;&nbsp;</a>
+         </div>
   </li>
 </ul>
 
