@@ -193,8 +193,11 @@ def handle_editorial_review_assignment(request,book, editors, access_key, due_da
 	else:
 		obj.editorial_board_access_key = access_key
 	obj.save()
+	message = "A new Editorial Review Assignment for %s has been assigned to you by %s ."  % (book.title,request.user.username)
 	for editor in editors:
 		if not obj.editorial_board.filter(username=editor.username).exists():
+			notification = models.Task(assignee=editor,creator=request.user,text=message,workflow='editorial-review', editorial_review = obj, book=book)
+			notification.save()
 			obj.editorial_board.add(editor)
 			obj.save()
 			log.add_log_entry(book=book, user=user, kind='review', message='Editorial member %s %s assigned.' % (editor.first_name, editor.last_name), short_name='Editorial Review Assignment')
@@ -205,7 +208,7 @@ def handle_editorial_review_assignment(request,book, editors, access_key, due_da
 	if created:
 		book.editorial_review_assignments.add(obj)
 		send_editorial_review_request(book, obj, email_text, user, attachment)
-		return created
+		return obj
 	else:
 		return obj
 

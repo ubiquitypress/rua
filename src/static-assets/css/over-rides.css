@@ -812,6 +812,24 @@ body > div.container-fluid > div > div > div > a {
     color:#ffffff;
     box-shadow: none;
 }
+
+.btn-review{
+  background-color:#EEAD23;
+  color:#ffffff;
+  border-color:#EEAD28;
+  border-radius: 24px;
+}
+
+.btn-review:hover, .btn-review:focus, .btn-review:active, .btn-review.active, .open > .dropdown-toggle.btn-review {
+    background: #FFAF00;
+    color:#ffffff;
+}
+
+.btn-review:active, .btn-review.active {
+    background: #D7980E;
+    color:#ffffff;
+    box-shadow: none;
+}
 .label-task-table{
   background-color:#77A7A5 !important;
   color:#ffffff  !important;

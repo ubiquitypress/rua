@@ -66,5 +66,7 @@
       <td width="25%">{% if review.completed %}Completed{% else %}<small>Due on {{ review.due }}</small>{% endif %}</td>
         <td width="25%"><a class="btn btn-task" href="{% url 'editorial_review_view' submission.id review.id %}">View</a></td>
     </tr>
+    {% empty %}
+    <td colspan="4"> No assignments found.</td>
     {% endfor %}
     </table>

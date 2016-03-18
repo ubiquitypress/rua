@@ -47,6 +47,7 @@ def task_choices():
 	choices = (
 		('submission', 'Submission'),
 		('review', 'Review'),
+		('editorial-review', 'Editorial Review'),
 		('editing', 'Editing'),
 		('production', 'Production'),
 		('personal', 'Personal'),
@@ -851,6 +852,7 @@ class Task(models.Model):
 	due = models.DateField(null=True, blank=True)
 	completed = models.DateField(null=True, blank=True)
 	emailed = models.BooleanField(default=False)
+	editorial_review = models.ForeignKey(EditorialReviewAssignment, null=True, blank = True)
 
 	def status_color(self):
 		now = date.today()

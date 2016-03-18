@@ -100,14 +100,16 @@
             {% for note in notifications %}
             <div class="notification" id="task-{{ note.id }}" id="callout-helper-bg-specificity">
                 <h5>{{ note.text|capfirst }}</h5>
-                {% ifequal note.workflow 'proposal' %}
+                {% if note.workflow == 'proposal' or note.workflow == 'editorial-review' %}
                 {% else %}
                 <p><em>Book {{ note.book}}{{ note.book.id }}: {{ note.book.full_title }}</em></p>
-                {% endifequal %}
+                {% endif %}
                 <span class="pull-right" style="padding-right: 10px;margin-bottom:10px" >
                 <br />
                       {% ifequal note.workflow 'proposal' %}
                    <a class="btn btn-xs btn-other" href="{% url 'proposals' %}">&nbsp;&nbsp;Go to Proposals&nbsp;&nbsp;</a> {% endifequal %}
+                     {% ifequal note.workflow 'editorial-review' %}
+                   <a class="btn btn-xs btn-review btn-round-half" href="{% url 'editorial_review' note.book.pk note.editorial_review.editorial_board_access_key %}">&nbsp;&nbsp;Go to Editorial Review &nbsp;&nbsp;</a> {% endifequal %}
                        <button class="btn btn-xs btn-read" id="{{ note.id }}" value="{{ note.id }}">&nbsp;&nbsp;Mark as Read&nbsp;&nbsp;</button>
                 </span>
                 <p><em>Posted {{ note.assigned }}</em></p> </br>
