@@ -8,7 +8,7 @@
     {% for editor in review.editorial_board.all %}
   
   <tr>
-  <td><small>{{ editor.profile.full_name }}  <strong>{{ editor.profile.full_name }}<sup> <a style="height:17px;margin-top:6px" href="core/email.html" onclick="return popitup('/email/editors/submission/{{submission.id}}/user/{{editor.pk}}/','editor_{{editor.pk}}')"class="fa fa-envelope-o btn btn-xs btn-default"></a></sup></strong></small></td>
+  <td><small><strong>{{ editor.profile.full_name }}<sup> <a style="height:17px;margin-top:6px" href="core/email.html" onclick="return popitup('/email/editors/submission/{{submission.id}}/user/{{editor.pk}}/','editor_{{editor.pk}}')"class="fa fa-envelope-o btn btn-xs btn-default"></a></sup></strong></small></td>
     </tr>
     {% endfor %}
   </table>
