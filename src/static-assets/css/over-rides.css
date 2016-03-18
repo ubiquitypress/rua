@@ -512,7 +512,14 @@ body > div.container-fluid > div > div > div > a {
   padding: 0;
   text-transform: uppercase;
 }
-
+.in_progress {
+  background-color: rgb(180, 180, 180);
+  width: 130px;
+  text-align: right;
+  color: white;
+  padding: 0;
+  text-transform: uppercase;
+}
 .review {
   background-color: rgb(233, 181, 69);
   width: 130px;

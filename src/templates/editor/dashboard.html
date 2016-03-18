@@ -81,7 +81,7 @@
                 {% if book.stage.current_stage %}
                 <p class="pull-right small {{ book.stage.current_stage }}">{{ book.stage.get_current_stage_display }}</p>
                 {% else %}
-                <p class="pull-right small submission">In Progress</p>
+                <p class="pull-right small in_progress">In Progress</p>
                 {% endif %}
                 <p><em>Submitted {{ book.submission_date }}</em></p>
                 </a>

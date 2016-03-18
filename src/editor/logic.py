@@ -181,6 +181,33 @@ def handle_review_assignment(request,book, reviewer, review_type, due_date, revi
 		messages.add_message(request, messages.WARNING, 'Review Assignment for user <%s> already exists. User might already exist in one of the selected committees' % reviewer.username)
 		return obj
 
+def handle_editorial_review_assignment(request,book, editors, access_key, due_date, user, email_text, attachment=None):
+	obj, created = models.EditorialReviewAssignment.objects.get_or_create(
+			management_editor = user,
+			completed = None,
+			book=book,
+			defaults={'due':due_date}
+	)
+	if obj.editorial_board_access_key:
+		obj.publishing_committee_access_key = access_key
+	else:
+		obj.editorial_board_access_key = access_key
+	obj.save()
+	for editor in editors:
+		if not obj.editorial_board.filter(username=editor.username).exists():
+			obj.editorial_board.add(editor)
+			obj.save()
+			log.add_log_entry(book=book, user=user, kind='review', message='Editorial member %s %s assigned.' % (editor.first_name, editor.last_name), short_name='Editorial Review Assignment')
+	
+		else:
+			messages.add_message(request, messages.WARNING, 'Editorial Review Assignment for user <%s> already exists. User might already exist in one of the selected committees' % editor.username)
+	
+	if created:
+		book.editorial_review_assignments.add(obj)
+		send_editorial_review_request(book, obj, email_text, user, attachment)
+		return created
+	else:
+		return obj
 
 # Email Handlers - TODO: move to email.py?
 
@@ -201,6 +228,28 @@ def send_review_request(book, review_assignment, email_text, sender, attachment=
 	}
 
 	email.send_email('Review Request', context, from_email.value, review_assignment.user.email, email_text, book=book, attachment=attachment)
+
+def send_editorial_review_request(book, review_assignment, email_text, sender, attachment=None):
+	from_email = models.Setting.objects.get(group__name='email', name='from_address')
+	base_url = models.Setting.objects.get(group__name='general', name='base_url')
+	press_name = models.Setting.objects.get(group__name='general', name='press_name').value
+	
+	if review_assignment.publishing_committee_access_key:
+		decision_url = 'http://%s/editorial/submission/%s/access_key/%s/' % (base_url.value, book.id, review_assignment.publishing_committee_access_key)
+	else:
+		decision_url = 'http://%s/editorial/submission/%s/access_key/%s/' % (base_url.value, book.id, review_assignment.editorial_board_access_key)
+
+	context = {
+		'book': book,
+		'review': review_assignment,
+		'decision_url': decision_url,
+		'sender': sender,
+		'base_url':base_url.value,
+		'press_name':press_name,
+	}
+	for editor in review_assignment.editorial_board.all():
+		email.send_email('Editorial Review Request', context, from_email.value, editor.email, email_text, book=book, attachment=attachment)
+
 
 def send_review_update(book, review_assignment, email_text, sender, attachment=None):
 	from_email = models.Setting.objects.get(group__name='email', name='from_address')

@@ -6,6 +6,7 @@ from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 
+from uuid import uuid4
 from core.files import handle_attachment, handle_file_update, handle_attachment, handle_file
 from core import models, log, logic as core_logic, forms as core_forms
 from core.decorators import is_editor, is_book_editor, is_book_editor_or_author, is_press_editor
@@ -696,6 +697,62 @@ def add_review_files(request, submission_id, review_type):
 
 	template = 'editor/add_review_files.html'
 	context = {
+		'submission': submission,
+	}
+
+	return render(request, template, context)
+
+
+@is_book_editor
+def editor_add_editorial_reviewers(request, submission_id):
+
+	submission = get_object_or_404(models.Book, pk=submission_id)
+	editors = models.User.objects.filter(Q(profile__roles__slug='press-editor') | Q(profile__roles__slug='book-editor') | Q(profile__roles__slug='production-editor')).distinct()
+	review_forms = review_models.Form.objects.all()
+	committees = manager_models.Group.objects.filter(group_type='editorial_group')
+
+	if request.POST and "add_user" in request.POST:
+		messages.add_message(request, messages.WARNING, 'Select an "editor" role in order to be able to add this user')
+		return redirect("%s?return=%s" % (reverse('add_user'), reverse('editor_add_reviewers', kwargs={'submission_id': submission_id, 'review_type': review_type, 'round_number': round_number})))
+
+	elif request.POST:
+		editors = User.objects.filter(pk__in=request.POST.getlist('editor'))
+		committees = manager_models.Group.objects.filter(pk__in=request.POST.getlist('committee'))
+		review_form = review_models.Form.objects.get(ref=request.POST.get('review_form'))
+		due_date = request.POST.get('due_date')
+		email_text = request.POST.get('message')
+
+		if request.FILES.get('attachment'):
+			attachment = handle_file(request.FILES.get('attachment'), submission, 'misc', request.user)
+		else:
+			attachment = None
+
+		# Handle reviewers
+		assignment = logic.handle_editorial_review_assignment(request,submission, editors, uuid4(), due_date, request.user, email_text, attachment)
+
+		# Handle committees
+		for committee in committees:
+			members = manager_models.GroupMembership.objects.filter(group=committee)
+			logic.handle_editorial_review_assignment(request,submission, members, due_date, request.user, email_text, attachment)
+
+		# Tidy up and save
+		submission.stage.editorial_review = timezone.now()
+		submission.stage.save()
+		log.add_log_entry(book=submission, user=request.user, kind='review', message='Editorial Review Started', short_name='Submission entered Editorial Review')
+
+		assignment.editorial_board_review_form = review_form
+		assignment.save()
+
+		return redirect(reverse('editorial_review_view', kwargs={'submission_id': submission_id, 'review_id': assignment.pk}))
+
+	template = 'editor/add_editors_editorial_review.html'
+	context = {
+		'editors': editors,
+		'committees': committees,
+		'active': 'new',
+		'email_text': models.Setting.objects.get(group__name='email', name='review_request'),
+		'review_forms': review_forms,
+		
 		'submission': submission,
 	}
 

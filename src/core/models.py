@@ -228,6 +228,13 @@ class Book(models.Model):
 	def number_of_notes(self):
 		return Note.objects.filter(book=self).count()
 
+	def start_editorial_review(self):
+		review = EditorialReviewAssignment.objects.filter(book=self,completed__isnull=True)
+		if review:
+			return False
+		else:
+			return True
+
 	def authors_or_editors(self):
 		authors_or_editors = []
 		if self.book_type == 'monograph':
@@ -505,7 +512,7 @@ class EditorialReviewAssignment(models.Model):
 	withdrawn = models.BooleanField(default=False)
 
 	class Meta:
-		unique_together = ('book', 'management_editor')
+		unique_together = ('book', 'management_editor','due')
 
 	def __unicode__(self):
 		return u'%s - %s %s' % (self.pk, self.book.title, self.management_editor.username)
@@ -811,6 +818,7 @@ class Stage(models.Model):
 	review = models.DateTimeField(null=True, blank=True)
 	internal_review = models.DateTimeField(null=True, blank=True)
 	external_review = models.DateTimeField(null=True, blank=True)
+	editorial_review = models.DateTimeField(null=True, blank=True)
 	editing = models.DateTimeField(null=True, blank=True)
 	production = models.DateTimeField(null=True, blank=True)
 	publication = models.DateTimeField(null=True, blank=True)
