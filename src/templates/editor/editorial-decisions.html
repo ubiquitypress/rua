@@ -1,0 +1,111 @@
+{% extends "secondary_page.html" %}
+{% load static from staticfiles %}
+{% load bootstrap3 %}
+
+{% block title %}Decision - {% if decision == 'revision-editorial'%} Editorial Board: Request revisions {% endif %}
+    {% if decision == 'revision-publishing'%} Publishing Committee: Request revisions {% endif %}
+    {% if decision == 'invite-publishing'%} Invite Publishing Committee {% endif %}
+    {% if decision == 'send-decision'%} Inform Author {% endif %}{% endblock %}
+{% block page-title %}Decision - {% if decision == 'revision-editorial'%} Editorial Board: Request revisions {% endif %}
+    {% if decision == 'revision-publishing'%} Publishing Committee: Request revisions {% endif %}
+    {% if decision == 'invite-publishing'%} Invite Publishing Committee {% endif %}
+    {% if decision == 'send-decision'%} Inform Author {% endif %}{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/plug-ins/1.10.7/integration/bootstrap/3/dataTables.bootstrap.css">
+{% endblock %}
+
+{% block page-content %}
+	<div class="col-md-12 bottom-space">
+		<h2>Decision - {% if decision == 'revision-editorial'%} Editorial Board: Request revisions {% endif %}
+    {% if decision == 'revision-publishing'%} Publishing Committee: Request revisions {% endif %}
+    {% if decision == 'invite-publishing'%} Invite Publishing Committee {% endif %}
+    {% if decision == 'send-decision'%} Inform Author {% endif %}
+    </h2>
+
+
+        <p>Complete the form below in order to inform the author about your decision.</p>
+        <hr />
+        {% if permission %}
+        <form method="post" class="form" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="form-group">
+        <label>Email</label>
+        <br>
+        <textarea class="form-control" id="id_email_text" name="id_email_text" required="required" cols="100" rows="10">{{ email_text }}</textarea>
+        </div>
+          <br />
+           {% ifequal decision 'invite-publishing' %}
+<p class="small">Select a review form for the publishing committee to complete.</p>
+            <select name="review_form" id="review_form" class="form-control" required="">
+              {% for form in review_forms %}<option value="{{ form.ref }}" name="{{ form.ref }}">{{ form.name }}</option>{% endfor %}
+            </select>
+          {% endifequal %}
+             {% ifequal decision 'send-decision' %}
+        <label>Decision</label>
+        <br>
+        <select class="form-control" id="id_recommendation" name="recommendation" title="" required>
+        <option value="" selected="selected">---------</option>
+        <option value="accept">Accept</option>
+        <option value="reject">Reject</option>
+        <option value="revisions">Revisions Required</option>
+        </select>
+        {% endifequal %}
+  
+        <br>
+        <br>
+        {% buttons %}
+        <div class="container-fluid pull-right">
+               <button name="inform" id="inform" type="submit" style="width:150px;margin-left:5px" class="  btn btn-accept">
+              Send
+            </button>        
+           
+        </div>
+        {% endbuttons %}
+
+       
+     
+         </form>
+        {% else %}
+        <div class="well">
+            You cannot make this decision.
+        </div>
+        {% endif %}
+	</div>
+{% endblock %}
+
+{% block js %}
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css">
+<script src="http://code.jquery.com/ui/1.11.0/jquery-ui.js"></script>
+<script type="text/javascript" language="javascript" src="//cdn.datatables.net/1.10.7/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" language="javascript" src="//cdn.datatables.net/plug-ins/1.10.7/integration/bootstrap/3/dataTables.bootstrap.js"></script>
+<script>
+  $(document).ready(function() {
+      $('#indv-editor').DataTable({
+        "lengthMenu": [[5], [5, 10, 25, 50, "All"]]
+      });
+  } );
+</script>
+
+<script type="text/javascript" src="{% static "js/fancyfile.js" %}"></script>
+<script type="text/javascript">$("textarea").jqte();</script>
+<script type="text/javascript">
+    $(document).ready(function() {
+      $('#id_due').datepicker({ dateFormat: 'yy-mm-dd' }).val();
+    });
+</script>
+
+<script language="javascript" type="text/javascript">
+<!--
+function popitup(url,title) {
+    newwindow=window.open(url,title,'height=750,width=600');
+    if (window.focus) {newwindow.focus()}
+    return false;
+}
+
+// -->
+</script>
+
+
+
+{% endblock js %}

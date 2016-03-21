@@ -557,6 +557,48 @@ def send_decision_ack(book, decision, email_text, url=None, attachment=None):
 
 		email.send_email('Submission decision update: %s'% decision_full, context, from_email.value, author.author_email, email_text, book=book, attachment=attachment)
 
+def send_editorial_decision_ack(review_assignment, contact, decision, email_text, url=None, attachment=None):
+	from_email = models.Setting.objects.get(group__name='email', name='from_address')
+	base_url = models.Setting.objects.get(group__name='general', name='base_url')
+	publishing_committee = models.Setting.objects.get(group__name='general', name='publishing_committee').value
+	decision_full = decision
+	if contact == 'editorial-board':
+		editors = review_assignment.editorial_board.all()
+		for editor in editors:
+			context = {
+				'submission': review_assignment.book,
+				'editor': editor.profile.full_name(),
+				'decision':decision,
+				'link_to_page': url,
+			}
+
+			email.send_email('Submission decision update: %s'% decision_full, context, from_email.value, editor.email, email_text, book=review_assignment.book, attachment=attachment)
+	elif contact == 'author':
+		authors = book.author.all()
+		for author in authors:
+			context = {
+				'submission': review_assignment.book,
+				'name': author.full_name(),
+				'decision':decision,
+				'link_to_page': url,
+			}
+
+			email.send_email('Submission decision update: %s'% decision_full, context, from_email.value, author.author_email, email_text, book=review_assignment.book, attachment=attachment)
+	elif contact == 'publishing-committee':
+		emails = clean_email_list(publishing_committee.split(';'))
+		context = {
+				'submission': review_assignment.book,
+				'name': 'Publishing Committee',
+				'decision':decision,
+				'link_to_page': url,
+			}
+		for current_email in emails:
+			email.send_email('Submission decision update: %s'% decision_full, context, from_email.value, current_email, email_text, book=review_assignment.book, attachment=attachment)
+
+
+		
+
+
 # Email Handlers - TODO: move to email.py?
 def send_production_editor_ack(book, editor, email_text, attachment=None):
 	from_email = models.Setting.objects.get(group__name='email', name='from_address')

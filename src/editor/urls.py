@@ -28,6 +28,8 @@ urlpatterns = patterns('',
     url(r'^review/submission/(?P<submission_id>\d+)/(?P<review_id>\d+)/$', 'editor.views.editorial_review_view', name='editorial_review_view'),
     url(r'^review/submission/(?P<submission_id>\d+)/accept/(?P<type>[-\w]+)/(?P<review_id>\d+)/$', 'editor.views.editorial_review_accept', name='editorial_review_accept'),
     url(r'^review/submission/(?P<submission_id>\d+)/revision/(?P<review_id>\d+)/$', 'editor.views.editorial_review_view', name='editorial_review_revision'),
+    url(r'^review/submission/(?P<submission_id>\d+)/assignment/(?P<review_id>\d+)/set/due/$', 'editor.views.update_editorial_review_due_date', name='update_editorial_review_due_date'),
+    url(r'^review/submission/(?P<submission_id>\d+)/assignment/(?P<review_id>\d+)/decision/(?P<decision>[-\w]+)/$', 'editor.views.editor_editorial_decision', name='editor_editorial_decision'),
 
     url(r'^submission/(?P<submission_id>\d+)/review/round/(?P<round_id>\d+)/assignment/(?P<review_id>\d+)/$', 'editor.views.editor_review_assignment', name='editor_review_assignment'),
     url(r'^submission/(?P<submission_id>\d+)/review/round/(?P<round_id>\d+)/assignment/(?P<review_id>\d+)/set/due/$', 'editor.views.update_review_due_date', name='update_review_due_date'),

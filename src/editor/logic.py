@@ -253,6 +253,19 @@ def send_editorial_review_request(book, review_assignment, email_text, sender, a
 	for editor in review_assignment.editorial_board.all():
 		email.send_email('Editorial Review Request', context, from_email.value, editor.email, email_text, book=book, attachment=attachment)
 
+def send_editorial_review_update(book, review_assignment, email_text, sender, attachment=None):
+	from_email = models.Setting.objects.get(group__name='email', name='from_address')
+	base_url = models.Setting.objects.get(group__name='general', name='base_url')
+
+	print email_text
+	context = {
+		'book': book,
+		'review': review_assignment,
+		'sender': sender,
+	}
+	for editor in review_assignment.editorial_board.all():
+		email.send_email('Editorial Review Assignment %s: Due Date Updated' % review_assignment.id, context, from_email.value, editor.email, email_text, book=book, attachment=attachment)
+
 
 def send_review_update(book, review_assignment, email_text, sender, attachment=None):
 	from_email = models.Setting.objects.get(group__name='email', name='from_address')

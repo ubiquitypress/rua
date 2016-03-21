@@ -577,6 +577,96 @@ def update_review_due_date(request, submission_id, round_id, review_id):
 
 	return render(request, template, context)
 
+
+@is_book_editor
+def update_editorial_review_due_date(request, submission_id, review_id):
+	submission = get_object_or_404(models.Book, pk=submission_id)
+	review_assignment = get_object_or_404(models.EditorialReviewAssignment, pk=review_id)
+	previous_due_date = review_assignment.due
+	if request.POST:
+		email_text =  models.Setting.objects.get(group__name='email', name='review_due_ack').value
+		due_date = request.POST.get('due_date', None)
+		notify = request.POST.get('email', None)
+		if due_date:
+			if not str(due_date) == str(previous_due_date):
+				review_assignment.due = due_date
+				review_assignment.save()
+				if notify:
+					logic.send_editorial_review_update(submission, review_assignment, email_text, request.user, attachment=None)
+				messages.add_message(request, messages.SUCCESS, 'Due date updated.')
+			return redirect(reverse('editorial_review_view', kwargs={'submission_id': submission_id, 'review_id': review_id}))
+
+	template = 'editor/update_editorial_review_due_date.html'
+	context = {
+		'submission': submission,
+		'review': review_assignment,
+		'active': 'review',
+	}
+
+	return render(request, template, context)
+
+@is_book_editor
+def editor_editorial_decision(request, submission_id, review_id, decision):
+	book = get_object_or_404(models.Book, pk=submission_id)
+	review_assignment = get_object_or_404(models.EditorialReviewAssignment, pk=review_id)
+	review_forms = review_models.Form.objects.all()
+	
+	email_text = models.Setting.objects.get(group__name='email', name='editorial_decision_ack').value
+	editor_email_text = models.Setting.objects.get(group__name='email', name='production_editor_ack').value
+	permission = True
+
+	if request.POST:
+
+		if request.FILES.get('attachment'):
+			attachment = handle_file(request.FILES.get('attachment'), book, 'misc', request.user)
+		else:
+			attachment = None
+		if decision == 'revision-editorial':
+			messages.add_message(request, messages.SUCCESS, 'Submission declined.')	
+			if 'inform' in request.POST:
+				url ="%s/review/submission/%s/access_key/%s/" % (request.META['HTTP_HOST'],book.pk,review_assignment.editorial_board_access_key)
+				core_logic.send_editorial_decision_ack(review_assignment = review_assignment, contact = "editorial-board", decision = "Revision Required",email_text = request.POST.get('id_email_text'), attachment = attachment)
+			return redirect(reverse('editorial_review_view', kwargs={'submission_id': book.id, 'review_id':review_id}))
+
+		elif decision == 'revision-publishing':
+	
+			messages.add_message(request, messages.SUCCESS, 'Submission has been moved to the review stage.')
+			if 'inform' in request.POST:
+				url ="%s/review/submission/%s/access_key/%s/" % (request.META['HTTP_HOST'],book.pk,review_assignment.publishing_committee_access_key)
+				core_logic.send_editorial_decision_ack(review_assignment = review_assignment, contact = "publishing-committee", decision = "Revision Required",email_text = request.POST.get('id_email_text'), attachment = attachment)
+			return redirect(reverse('editorial_review_view', kwargs={'submission_id': book.id, 'review_id':review_id}))
+
+		elif decision == 'invite-publishing':
+			review_assignment.editorial_board_passed = True
+			review_assignment.publishing_committee_access_key = uuid4()
+			review_assignment.publication_committee_review_form = review_models.Form.objects.get(ref=request.POST.get('review_form'))
+			review_assignment.save()
+			if 'inform' in request.POST:
+				url ="%s/review/submission/%s/access_key/%s/" % (request.META['HTTP_HOST'],book.pk,review_assignment.publishing_committee_access_key)
+				core_logic.send_editorial_decision_ack(review_assignment = review_assignment, contact = "publishing-committee", decision = "Invitation to Editorial Review",email_text = request.POST.get('id_email_text'), attachment = attachment, url = url)
+			return redirect(reverse('editorial_review_view', kwargs={'submission_id': book.id, 'review_id':review_id}))
+
+		elif decision == 'send-decision':
+			review_assignment.publication_committee_passed = True
+			review_assignment.completed = timezone.save()
+			review_assignment.save()
+			if 'inform' in request.POST:
+				core_logic.send_editorial_decision_ack(review_assignment = review_assignment, contact = "author", decision = request.POST.get('recommendation'), email_text = request.POST.get('id_email_text'), attachment = attachment)
+			return redirect(reverse('editorial_review_view', kwargs={'submission_id': book.id, 'review_id':review_id}))
+
+
+	template = 'editor/editorial-decisions.html'
+	context = {
+		'submission': book,
+		'decision':decision,
+		'email_text': email_text,
+		'editor_email_text':editor_email_text,
+		'permission':permission,
+		'review_forms': review_forms,
+	}
+
+	return render(request, template, context)
+
 @is_book_editor
 def editor_decision(request, submission_id, decision):
 	book = get_object_or_404(models.Book, pk=submission_id)

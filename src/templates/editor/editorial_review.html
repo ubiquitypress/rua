@@ -80,7 +80,7 @@
       </div>
       <div class="col-md-4" style="margin-left:-20px">
 
-        {% if not review_assignment.completed %}<h5>Due: {{ review_assignment.due }}&nbsp;&nbsp;<a href=""><i class="fa fa-edit"></i></a></h5>{% else %}
+        {% if not review_assignment.completed %}<h5>Due: {{ review_assignment.due }}&nbsp;&nbsp;<a href="{% url 'update_editorial_review_due_date' submission.id review_assignment.pk %}"><i class="fa fa-edit"></i></a></h5>{% else %}
 {% if review_assignment.publishing_committee_access_key and review_assignment.editorial_board_access_key%}
 <a href="{% url 'editorial_review_complete' submission.id  review_assignment.publishing_committee_access_key %}"  style="margin-top: 10px;margin-right:20px;margin-left:-70px;" class="btn btn-xs btn-success"></h5>View Publishing Committee Review</a>
  <br>
@@ -167,7 +167,7 @@
   <hr />
         <h5><b>Publication Committee Group - Competing interests:</b> <br /><br />{{review_assignment.publication_committee_competing_interests|linebreaksbr}}</h5><br><small>If any of the authors or editors have any competing interests <br>please add them here. EG. 'This study was paid for by corp xyz.'.<br> <a href='/page/competing_interests/'>More info</a></small><br><br>
       <br/><br/>
-         <a href=""  style="margin-top: 10px;margin-right:10px;" class="btn btn-xs btn-review"></h5>&nbsp;&nbsp;Request Revisions&nbsp;&nbsp;</a>  <a href="{% url 'editorial_review_accept' submission.pk 'publication' review_assignment.pk  %}"  style="margin-top: 10px;margin-right:0px;" class="btn btn-xs btn-other pull-right"></h5>&nbsp;&nbsp;Send Decision&nbsp;&nbsp;</a>
+         <a href="{% url 'editor_editorial_decision' submission.id review_assignment.id 'revision-publishing'%}"  style="margin-top: 10px;margin-right:10px;" class="btn btn-xs btn-review"></h5>&nbsp;&nbsp;Request Revisions&nbsp;&nbsp;</a>  <a href="{% url 'editor_editorial_decision' submission.id review_assignment.id 'send-decision'%}"  style="margin-top: 10px;margin-right:0px;" class="btn btn-xs btn-other pull-right"></h5>&nbsp;&nbsp;Send Decision&nbsp;&nbsp;</a>
          </div>
          
 
@@ -235,7 +235,7 @@
   <hr />
         <h5><b>Editorial Group - Competing interests:</b> <br /><br />{{review_assignment.editorial_board_competing_interests|linebreaksbr}}</h5><br><small>If any of the authors or editors have any competing interests <br>please add them here. EG. 'This study was paid for by corp xyz.'.<br> <a href='/page/competing_interests/'>More info</a></small><br><br>
       <br/><br/>
-         <a href=""  style="margin-top: 10px;margin-right:10px;" class="btn btn-xs btn-review"></h5>&nbsp;&nbsp;Request Revisions&nbsp;&nbsp;</a>  <a href="{% url 'editorial_review_accept' submission.pk 'editorial' review_assignment.pk  %}"  style="margin-top: 10px;margin-right:0px;" class="btn btn-xs btn-other pull-right"></h5>&nbsp;&nbsp;Invite Publication Committee&nbsp;&nbsp;</a>
+         <a href="{% url 'editor_editorial_decision' submission.id review_assignment.id 'revision-editorial'%}"  style="margin-top: 10px;margin-right:10px;" class="btn btn-xs btn-review"></h5>&nbsp;&nbsp;Request Revisions&nbsp;&nbsp;</a>  <a href="{% url 'editor_editorial_decision' submission.id review_assignment.id 'invite-publishing'%}"  style="margin-top: 10px;margin-right:0px;" class="btn btn-xs btn-other pull-right"></h5>&nbsp;&nbsp;Invite Publication Committee&nbsp;&nbsp;</a>
          </div>
 
        {% endif %}
