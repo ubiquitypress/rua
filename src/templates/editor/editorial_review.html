@@ -81,7 +81,12 @@
       <div class="col-md-4" style="margin-left:-20px">
 
         {% if not review_assignment.completed %}<h5>Due: {{ review_assignment.due }}&nbsp;&nbsp;<a href=""><i class="fa fa-edit"></i></a></h5>{% else %}
+{% if review_assignment.publishing_committee_access_key and review_assignment.editorial_board_access_key%}
+<a href="{% url 'editorial_review_complete' submission.id  review_assignment.publishing_committee_access_key %}"  style="margin-top: 10px;margin-right:20px;margin-left:-70px;" class="btn btn-xs btn-success"></h5>View Publishing Committee Review</a>
+ <br>
+  <a href="{% url 'editorial_review_complete' submission.id   review_assignment.editorial_board_access_key %}"  style="margin-top: 10px;margin-right:20px;margin-left:-33px;" class="btn btn-xs btn-success">View Editorial Board Review</a></h5>
 
+  {% else%}
 {% if review_assignment.publishing_committee_access_key %}
 
   <a href="{% url 'editorial_review_complete' submission.id  review_assignment.publishing_committee_access_key %}"  style="margin-top: 10px;margin-right:10px;" class="btn btn-xs btn-success"></h5>View Review</a>
@@ -91,6 +96,7 @@
 
  {% endif %}
 
+       {% endif %}
        {% endif %}
 
       </div>

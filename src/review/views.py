@@ -499,7 +499,7 @@ def editorial_review_complete(request, submission_id, access_key):
 	
 	relations = models.FormElementsRelationship.objects.filter(form=result.form)
 	data_ordered = core_logic.order_data(core_logic.decode_json(result.data), relations)
-
+	print data_ordered
 	template = 'review/editorial_complete.html'
 	context = {
 		'submission': submission,
@@ -507,6 +507,7 @@ def editorial_review_complete(request, submission_id, access_key):
 		'form_info': submission.review_form,
 		'data_ordered': data_ordered,
 		'result': result,
+		'editorial_board':editorial_board,
 		'additional_files': logic.has_additional_files(submission),
 		'editors': logic.get_editors(review_assignment),
 		'instructions': core_models.Setting.objects.get(group__name='general', name='instructions_for_task_review').value

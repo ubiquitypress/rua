@@ -9,6 +9,8 @@
     }
     </style>
 {% endblock %}
+
+{% block title %}Reviewing Completed #{{ submission.id }}{% endblock %}
 {% block body %}
 <div class="row">
 <div class="col-md-12 book-heading  container-fluid" style="margin-top:-20px">
@@ -42,12 +44,26 @@
                        
         <div class="dash-container">
 
-        <h4><b>INSTRUCTIONS FOR TASK</b></h4>
+        <h4><b>INSTRUCTIONS FOR {% if editorial_board%} EDITORIAL BOARD {% else %} PUBLICATION COMMITTEE {% endif %}</b></h4>
         </br>
         <p class="task-info-text">{{instructions|safe}}</p>
      
          <h5> Task Due <span class="subtitle-text">{{ review_assignment.due }}</span></h5>
+ <hr>
+<h4>Editorial Board</h4>
+<table  class="table table-bordered">
+   <tr>
+      <th>Name</th>
+    </tr>
+    {% for editor in review_assignment.editorial_board.all %}
+  
+  <tr>
+  <td><small><strong>{{ editor.profile.full_name }}<sup> <a style="height:17px;margin-top:6px" href="core/email.html" onclick="return popitup('/email/editors/submission/{{submission.id}}/user/{{editor.pk}}/','editor_{{editor.pk}}')"class="fa fa-envelope-o btn btn-xs btn-default"></a></sup></strong></small></td>
+    </tr>
+    {% endfor %}
+  </table>
 
+<hr>    
         {% include "review/editorial_submission_files.html" %}
    
         </div>
@@ -69,7 +85,7 @@
        <div class="col-md-4 dash-right bottom-space">
        <div class="dash-container" >
        <div class="dash-container" >
-        {% if review_assignment.accepted %}
+        {% if review_assignment.completed %}
       
        <h4 style="color:green;"><b> <i class="fa fa-check-circle-o">&nbsp;</i>Many thanks, you completed this review on {{review_assignment.completed}} </b></h4>
   <h5 class="subtitle-form-completed-text"><em> Details of your review are below </em></h5>
@@ -121,18 +137,35 @@
 </ul>
 
         <hr />
+        {% if editorial_board %}
         <h5><b> Your Recommendation: </b></h5>
-        {% ifequal review_assignment.recommendation 'reject' %}
-        <p class="submission-reject"> <b> {{review_assignment.recommendation|title}} Submission </b></p>
+        {% ifequal review_assignment.editorial_board_recommendation 'reject' %}
+        <p class="submission-reject"> <b> {{review_assignment.editorial_board_recommendation|title}} Submission </b></p>
         {% endifequal %}
-         {% ifequal review_assignment.recommendation 'accept' %}
-        <p class="submission-accept"> <b> {{review_assignment.recommendation|title}} Submission </b></p>
+         {% ifequal review_assignment.editorial_board_recommendation 'accept' %}
+        <p class="submission-accept"> <b> {{review_assignment.editorial_board_recommendation|title}} Submission </b></p>
         {% endifequal %}
-        {% ifequal review_assignment.recommendation 'revisions' %}
+        {% ifequal review_assignment.editorial_board_recommendation 'revisions' %}
         <p class="submission-revisions"> <b> Revisions Required</b></p>
         {% endifequal %}
   <hr />
-        <h5><b>Competing interests:</b> <br />{{review_assignment.competing_interests|linebreaksbr}}</h5><br>If any of the authors or editors have any competing interests please add them here. EG. 'This study was paid for by corp xyz.'. <a href='/page/competing_interests/'>More info</a></small><br><br>
+        <h5><b>Competing interests:</b> <br />{{review_assignment.editorial_board_competing_interests|linebreaksbr}}</h5><br>
+        {% else %}
+          <h5><b> Your Recommendation: </b></h5>
+        {% ifequal review_assignment.publication_committee_recommendation 'reject' %}
+        <p class="submission-reject"> <b> {{review_assignment.publication_committee_recommendation|title}} Submission </b></p>
+        {% endifequal %}
+         {% ifequal review_assignment.publication_committee_recommendation 'accept' %}
+        <p class="submission-accept"> <b> {{review_assignment.publication_committee_recommendation|title}} Submission </b></p>
+        {% endifequal %}
+        {% ifequal review_assignment.publication_committee_recommendation 'revisions' %}
+        <p class="submission-revisions"> <b> Revisions Required</b></p>
+        {% endifequal %}
+  <hr />
+        <h5><b>Competing interests:</b> <br />{{review_assignment.publication_committee_competing_interests|linebreaksbr}}</h5><br>
+        {% endif %}
+
+        If any of the authors or editors have any competing interests please add them here. EG. 'This study was paid for by corp xyz.'. <a href='/page/competing_interests/'>More info</a></small><br><br>
       <br/><br/>
 
       </form>
