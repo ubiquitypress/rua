@@ -80,23 +80,38 @@
       </div>
       <div class="col-md-4" style="margin-left:-20px">
 
-        {% if not review_assignment.completed %}<h5>Due: {{ review_assignment.due }}&nbsp;&nbsp;<a href="{% url 'update_editorial_review_due_date' submission.id review_assignment.pk %}"><i class="fa fa-edit"></i></a></h5>{% else %}
-{% if review_assignment.publishing_committee_access_key and review_assignment.editorial_board_access_key%}
+        {% if not review_assignment.publication_committee_results and not review_assignment.editorial_board_results %}<h5>Due: {{ review_assignment.due }}&nbsp;&nbsp;<a href="{% url 'update_editorial_review_due_date' submission.id review_assignment.pk %}"><i class="fa fa-edit"></i></a></h5>
+
+{% if review_assignment.publication_committee_results %}
+
+  <a href="{% url 'editorial_review_complete' submission.id  review_assignment.publishing_committee_access_key %}"  style="margin-top: 4px;margin-right:20px;margin-left:-70px;" class="btn btn-xs btn-success"></h5>View Publishing Committee Review</a>
+ <br>
+  {% endif%}
+
+  {% if review_assignment.editorial_board_results %}
+
+  <a href="{% url 'editorial_review_complete' submission.id   review_assignment.editorial_board_access_key %}" style="margin-top: 4px;margin-right:20px;margin-left:-33px;" class="btn btn-xs btn-success">View Editorial Board Review</a></h5>
+  {% endif%}
+
+        {% else %}
+{% if review_assignment.publication_committee_results and review_assignment.editorial_board_results %}
 <a href="{% url 'editorial_review_complete' submission.id  review_assignment.publishing_committee_access_key %}"  style="margin-top: 10px;margin-right:20px;margin-left:-70px;" class="btn btn-xs btn-success"></h5>View Publishing Committee Review</a>
  <br>
   <a href="{% url 'editorial_review_complete' submission.id   review_assignment.editorial_board_access_key %}"  style="margin-top: 10px;margin-right:20px;margin-left:-33px;" class="btn btn-xs btn-success">View Editorial Board Review</a></h5>
 
   {% else%}
-{% if review_assignment.publishing_committee_access_key %}
+{% if review_assignment.publication_committee_results %}
 
-  <a href="{% url 'editorial_review_complete' submission.id  review_assignment.publishing_committee_access_key %}"  style="margin-top: 10px;margin-right:10px;" class="btn btn-xs btn-success"></h5>View Review</a>
+  <a href="{% url 'editorial_review_complete' submission.id  review_assignment.publishing_committee_access_key %}"  style="margin-top: 10px;margin-right:20px;margin-left:-70px;" class="btn btn-xs btn-success"></h5>View Publishing Committee Review</a>
  
-  {% else%}
-  <a href="{% url 'editorial_review_complete' submission.id   review_assignment.editorial_board_access_key %}"  style="margin-top: 10px;margin-right:10px;" class="btn btn-xs btn-success">View Review</a></h5>
+  {% endif%}
+  {% if review_assignment.editorial_board_results %}
+
+  <a href="{% url 'editorial_review_complete' submission.id   review_assignment.editorial_board_access_key %}" style="margin-top: 10px;margin-right:20px;margin-left:-33px;" class="btn btn-xs btn-success">View Editorial Board Review</a></h5>
+  {% endif%}
 
  {% endif %}
 
-       {% endif %}
        {% endif %}
 
       </div>

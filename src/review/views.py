@@ -475,7 +475,7 @@ def editorial_review(request, submission_id, access_key):
 		'recommendation_form': recommendation_form,
 		'editors':editors,
 		'resubmit': resubmit,
-		
+
 		'editorial_data_ordered': editorial_data_ordered,
 		'editorial_result': editorial_result,
 
@@ -488,7 +488,7 @@ def editorial_review(request, submission_id, access_key):
 
 def editorial_review_complete(request, submission_id, access_key):
 
-	review_assignment = get_object_or_404(core_models.EditorialReviewAssignment, Q( publishing_committee_access_key=access_key) |  Q( editorial_board_access_key=access_key), completed__isnull = False)
+	review_assignment = get_object_or_404(core_models.EditorialReviewAssignment, Q( publishing_committee_access_key=access_key) |  Q( editorial_board_access_key=access_key))
 	submission = get_object_or_404(core_models.Book, pk=submission_id)
 	
 	if access_key  == review_assignment.editorial_board_access_key:
@@ -500,9 +500,9 @@ def editorial_review_complete(request, submission_id, access_key):
 
 	
 	if not result and not editorial_board:
-		return redirect(reverse('editorial_review_complete', kwargs={'submission_id': submission.id,'access_key':review_assignment.publishing_committee_access_key}))
+		return redirect(reverse('editorial_review', kwargs={'submission_id': submission.id,'access_key':review_assignment.publishing_committee_access_key}))
 	elif not result and editorial_board:
-		return redirect(reverse('editorial_review_complete', kwargs={'submission_id': submission.id,'access_key':review_assignment.editorial_board_access_key}))
+		return redirect(reverse('editorial_review', kwargs={'submission_id': submission.id,'access_key':review_assignment.editorial_board_access_key}))
 	
 	elif review_assignment.completed and review_assignment.reopened:
 		if editorial_board:
