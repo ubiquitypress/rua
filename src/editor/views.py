@@ -650,6 +650,23 @@ def editor_editorial_decision(request, submission_id, review_id, decision):
 			review_assignment.publication_committee_passed = True
 			review_assignment.completed = timezone.now()
 			review_assignment.save()
+			author_decision = request.POST.get('recommendation')
+			
+			if author_decision == 'accept':
+				if not book.stage.editing:
+					log.add_log_entry(book=book, user=request.user, kind='editing', message='Submission moved to Editing.', short_name='Submission in Editing')
+				book.stage.editing = timezone.now()
+				book.stage.current_stage = 'editing'
+				book.stage.save()
+			elif author_decision == 'decline':
+				book.stage.declined = timezone.now()
+				book.stage.current_stage = 'declined'
+				book.stage.save()
+				messages.add_message(request, messages.SUCCESS, 'Submission declined.')
+			elif author_decision == 'revisions':
+				core_logic.send_editorial_decision_ack(review_assignment = review_assignment, contact = "author", decision = request.POST.get('recommendation'), email_text = request.POST.get('id_email_text'), attachment = attachment)
+				return redirect(reverse('request_revisions', kwargs={'submission_id': book.id, 'returner':'review'}))
+
 			if 'inform' in request.POST:
 				core_logic.send_editorial_decision_ack(review_assignment = review_assignment, contact = "author", decision = request.POST.get('recommendation'), email_text = request.POST.get('id_email_text'), attachment = attachment)
 			return redirect(reverse('editorial_review_view', kwargs={'submission_id': book.id, 'review_id':review_id}))
