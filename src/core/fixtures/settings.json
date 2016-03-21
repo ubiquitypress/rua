@@ -795,11 +795,22 @@
   "fields": {
     "value": "tech@ubiquitypress.com;",
     "group": 1,
-    "name": "publication_committee",
+    "name": "publishing_committee",
     "types": "text",
-    "description": "Publication committee contacted during an editorial review assignment. Separate email addresses with this character ';'"
+    "description": "Publishing committee contacted during an editorial review assignment. Separate email addresses with this character ';'"
   },
   "model": "core.setting",
   "pk": 76
+},
+{
+  "fields": {
+    "value": "<p>Dear {{ name }},\r\n</p><p>The management editor at&nbsp;{{press_name}} have recorded a decision on an editorial assignment that you are either assigned to or is part of your book submission {{submission.title}}.\r\n</p><p>\r\nThe press decision is:</p><p>[PRESS EDITOR TO COMPLETE DECISION AND GIVE MORE DETAIL ON WHY THE DECISION HAS BEEN MADE HERE]</p><p><span style=\"line-height: 1.42857;\">\r\n{{ link_to_page }} [DO NOT REMOVE link_to_page] </span></p><p>Regards,\r\n</p><p>{{sender.first_name}}\r\n{% if sender %}{{ sender.profile.signature|safe }}{% endif %}<br></p>",
+    "group": 3,
+    "name": "editorial_decision_ack",
+    "types": "rich_text",
+    "description": "Email sent when a decision is made on an editorial review assignment."
+  },
+  "model": "core.setting",
+  "pk": 77
 }
 ]
