@@ -104,18 +104,20 @@
 </br>
       <h5><b>Supporting Files:</b></h5>
       <ul class="media-list manuscript-upload-states">
-  {% for file in review_assignment.files.all %}
+
+        {% if editorial_board %}
+  {% for file in review_assignment.editorial_board_files.all %}
   
   {% if file.kind == 'reviewer' %}
   <li class="media grey-container">
     <div class="media-left">
-      <span > <h1>
+      <a href="{% url 'serve_file' submission.id file.id %}" style="left:10px;position:relative;"> <h1>
         {% if file.mime_type == 'image/jpeg' or file.mime_type == 'image/png' %}
-       &nbsp; &nbsp;    <i class="fa fa-file-image-o"></i>
+     <i class="fa fa-file-image-o"></i>
         {% else %}
-        &nbsp; &nbsp;   <i class="fa fa-file-text-o"></i>
+     <i class="fa fa-file-text-o"></i>
         {% endif %}
-      </span></h1>
+      </h1></a>
     </div>
     <div class="media-body">
              <div class="col-md-4">
@@ -124,8 +126,34 @@
         <h5>{{ file.original_filename }}</h5>
       </div>
     </div>
-         <div class="media-right">
-      <a href="{% url 'serve_file' submission.id file.id %}" class="btn btn-sm btn-task pull-right download-small"><i class="fa fa-cloud-download"> &nbsp; Download</i></a>
+      
+    </li>
+    {% endif %}
+    {% empty %}
+     <li class="grey-container">
+      <h5>&nbsp;&nbsp;&nbsp;No files</h5>
+   </li>
+  {% endfor %}
+  {% else %}
+   {% for file in review_assignment.publication_committee_files.all %}
+  
+  {% if file.kind == 'reviewer' %}
+  <li class="media grey-container">
+    <div class="media-left">
+      <a href="{% url 'serve_file' submission.id file.id %}" style="left:10px;position:relative;"> <h1>
+        {% if file.mime_type == 'image/jpeg' or file.mime_type == 'image/png' %}
+      <i class="fa fa-file-image-o"></i>
+        {% else %}
+      <i class="fa fa-file-text-o"></i>
+        {% endif %}
+      </h1></a>
+    </div>
+    <div class="media-body">
+             <div class="col-md-4">
+        <h5><b>{{ file.label }}</b></h5>
+        <h5><b>{{ file.kind|capfirst }}</b></h5>
+        <h5>{{ file.original_filename }}</h5>
+      </div>
     </div>
     </li>
     {% endif %}
@@ -134,6 +162,7 @@
       <h5>&nbsp;&nbsp;&nbsp;No files</h5>
    </li>
   {% endfor %}
+  {% endif %}
 </ul>
 
         <hr />

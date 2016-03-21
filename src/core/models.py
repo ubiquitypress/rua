@@ -476,7 +476,9 @@ class EditorialReviewAssignment(models.Model):
 	due = models.DateField(blank=True, null=True)
 	completed = models.DateField(blank=True, null=True)
 	
-	files = models.ManyToManyField('File', blank=True, null=True)
+	editorial_board_files = models.ManyToManyField('File', blank=True, null=True, related_name="editorial_board_files")
+	publication_committee_files = models.ManyToManyField('File', blank=True, null=True, related_name="publication_committee_files")
+
 	body = models.TextField(blank=True, null=True)
 	
 	#Special fields

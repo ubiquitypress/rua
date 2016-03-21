@@ -395,7 +395,7 @@ def editorial_review(request, submission_id, access_key):
 			for field in file_fields:
 				if field.element.name in request.FILES:
 					# TODO change value from string to list [value, value_type]
-					save_dict[field.element.name] = [handle_review_file(request.FILES[field.element.name], submission, review_assignment, 'reviewer')]
+					save_dict[field.element.name] = [handle_editorial_review_file(request.FILES[field.element.name], submission, review_assignment, 'reviewer',editorial_board)]
 
 			for field in data_fields:
 				if field.element.name in request.POST:
@@ -433,7 +433,7 @@ def editorial_review(request, submission_id, access_key):
 
 
 			if request.FILES.get('review_file_upload'):
-				handle_review_file(request.FILES.get('review_file_upload'), submission, review_assignment, 'reviewer')
+				handle_editorial_review_file(request.FILES.get('review_file_upload'), submission, review_assignment, 'reviewer',editorial_board)
 	
 			if editorial_board:
 				review_assignment.editorial_board_recommendation = request.POST.get('recommendation')
@@ -604,3 +604,45 @@ def handle_review_file(file, proposal, review_assignment, kind):
 	review_assignment.files.add(new_file)
 
 	return path
+
+def handle_editorial_review_file(file, proposal, review_assignment, kind, editorial):
+
+	original_filename = str(file._get_name())
+	filename = str(uuid4()) + str(os.path.splitext(original_filename)[1])
+	folder_structure = os.path.join(settings.BASE_DIR, 'files', 'books', str(review_assignment.book.id))
+
+	if not os.path.exists(folder_structure):
+		os.makedirs(folder_structure)
+
+	path = os.path.join(folder_structure, str(filename))
+	fd = open(path, 'wb')
+	for chunk in file.chunks():
+		fd.write(chunk)
+	fd.close()
+
+	file_mime = mime.guess_type(filename)
+
+	try:
+		file_mime = file_mime[0]
+		if not file_mime:
+			file_mime = 'unknown'
+	except IndexError:
+		file_mime = 'unknown'
+
+	new_file = core_models.File(
+		mime_type=file_mime,
+		original_filename=original_filename,
+		uuid_filename=filename,
+		stage_uploaded=1,
+		kind=kind,
+		owner=review_assignment.management_editor,
+	)
+	new_file.save()
+	if editorial:
+		review_assignment.editorial_board_files.add(new_file)
+	else:
+		review_assignment.publication_committee_files.add(new_file)
+
+
+	return path
+
