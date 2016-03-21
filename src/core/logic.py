@@ -574,7 +574,7 @@ def send_editorial_decision_ack(review_assignment, contact, decision, email_text
 
 			email.send_email('Submission decision update: %s'% decision_full, context, from_email.value, editor.email, email_text, book=review_assignment.book, attachment=attachment)
 	elif contact == 'author':
-		authors = book.author.all()
+		authors = review_assignment.book.author.all()
 		for author in authors:
 			context = {
 				'submission': review_assignment.book,

@@ -310,13 +310,22 @@ def editorial_review(request, submission_id, access_key):
 		editorial_board = True
 	elif access_key  == review_assignment.publishing_committee_access_key:
 		editorial_board = False
+
 	resubmit = True
 	editors = logic.get_editors(review_assignment)
 	form_info = None
 	if editorial_board:
+		editorial_result = None
+		editorial_relations = None
+		editorial_data_ordered = None
+
 		form_info = review_assignment.editorial_board_review_form
 		form = forms.GeneratedForm(form=review_assignment.editorial_board_review_form)
 	else:
+		editorial_result = review_assignment.editorial_board_results
+		editorial_relations = models.FormElementsRelationship.objects.filter(form=editorial_result.form)
+		editorial_data_ordered = core_logic.order_data(core_logic.decode_json(editorial_result.data), editorial_relations)
+
 		if not review_assignment.publication_committee_review_form:
 			form_info = review_assignment.editorial_board_review_form
 			form = forms.GeneratedForm(form=review_assignment.editorial_board_review_form)
@@ -466,6 +475,10 @@ def editorial_review(request, submission_id, access_key):
 		'recommendation_form': recommendation_form,
 		'editors':editors,
 		'resubmit': resubmit,
+		
+		'editorial_data_ordered': editorial_data_ordered,
+		'editorial_result': editorial_result,
+
 		'has_additional_files': logic.has_additional_files(submission),
 		'instructions': core_models.Setting.objects.get(group__name='general', name='instructions_for_task_review').value
 
@@ -499,7 +512,7 @@ def editorial_review_complete(request, submission_id, access_key):
 	
 	relations = models.FormElementsRelationship.objects.filter(form=result.form)
 	data_ordered = core_logic.order_data(core_logic.decode_json(result.data), relations)
-	print data_ordered
+
 	template = 'review/editorial_complete.html'
 	context = {
 		'submission': submission,

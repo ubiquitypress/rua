@@ -648,7 +648,7 @@ def editor_editorial_decision(request, submission_id, review_id, decision):
 
 		elif decision == 'send-decision':
 			review_assignment.publication_committee_passed = True
-			review_assignment.completed = timezone.save()
+			review_assignment.completed = timezone.now()
 			review_assignment.save()
 			if 'inform' in request.POST:
 				core_logic.send_editorial_decision_ack(review_assignment = review_assignment, contact = "author", decision = request.POST.get('recommendation'), email_text = request.POST.get('id_email_text'), attachment = attachment)

@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load static from staticfiles %}
 {% load bootstrap3 %}
-
+{% load dict_lookup %}
 {% block title %}Reviewing #{{ submission.id }}{% endblock %}
 {% block css %}
     <style type="text/css">
@@ -83,6 +83,7 @@
   </table>
 
 <hr>    
+
 
 
         {% include "review/editorial_submission_files.html" %}
@@ -180,7 +181,16 @@
         <p class="task-info-text">{{instructions|safe}}</p>
  
          <h5> Task Due <span class="subtitle-text">{{ review_assignment.due }}</span></h5>
- <hr>
+ 
+<hr>    
+
+
+        {% include "review/editorial_submission_files.html" %}
+   
+        </div>
+            
+                    <hr>
+                    <br>
 <h4>Editorial Board</h4>
 <table  class="table table-bordered">
    <tr>
@@ -194,18 +204,69 @@
     {% endfor %}
   </table>
 
-</table>
-<hr>    
+  
+<div class="dash-container">
+       <h3>Editorial Board's Decision</h3>
+       <hr>
+       <div style="clear:both"></div>
+      {% for item in editorial_data_ordered %}
+      <div class="{% cycle 'left-float' 'right-float' %}">
+        
+        <h4> <b>{{ item.0 }}:</b></h4>
+        <h5> {% lookup review_assignment.editorial_board_results.data item.0 %} </h5>
+      </div>
+      <div {% cycle '' 'style="clear:both"' %}></div>
+      {% endfor %}
+</br>
+      <h5><b>Supporting Files:</b></h5>
+      <ul class="media-list manuscript-upload-states">
+  {% for file in review_assignment.editorial_board_files.all %}
+  
+  {% if file.kind == 'reviewer' %}
+  <li class="media grey-container">
+    <div class="media-left">
+       <a href="{% url 'serve_file' submission.id file.id %}" style="left:10px;position:relative;"> <h1>
+        {% if file.mime_type == 'image/jpeg' or file.mime_type == 'image/png' %}
+       <i class="fa fa-file-image-o"></i>
+        {% else %}
+      <i class="fa fa-file-text-o"></i>
+        {% endif %}
+     </h1> </a>
+    </div>
+    <div class="media-body">
+             <div class="col-md-5">
+        <h5><b>{{ file.label }}</b></h5>
+        <h5><b>{{ file.kind|capfirst }}</b></h5>
+        <h5>{{ file.original_filename }}</h5>
+      </div>
+    </div>
+    </li>
+    {% endif %}
+    {% empty %}
+     <li class="grey-container">
+      <h5>&nbsp;&nbsp;&nbsp;No files</h5>
+   </li>
+  {% endfor %}
+</ul>
 
-
-        {% include "review/editorial_submission_files.html" %}
-   
-        </div>
-            
-                     </br>
-                      </br>
+        <hr />
+        <h5><b> Editorial Board - Recommendation: </b></h5>
+        {% ifequal review_assignment.editorial_board_recommendation 'reject' %}
+        <p class="submission-reject"> <b> {{review_assignment.editorial_board_recommendation|title}} Submission </b></p>
+        {% endifequal %}
+         {% ifequal review_assignment.editorial_board_recommendation 'accept' %}
+        <p class="submission-accept"> <b> {{review_assignment.editorial_board_recommendation|title}} Submission </b></p>
+        {% endifequal %}
+        {% ifequal review_assignment.editorial_board_recommendation 'revisions' %}
+        <p class="submission-revisions"> <b> Revisions Required</b></p>
+        {% endifequal %}
+  <hr />
+        <h5><b>Editorial Board - Competing interests:</b> <br /><br />{{review_assignment.editorial_board_competing_interests|linebreaksbr}}</h5><br><small>If any of the authors or editors have any competing interests <br>please add them here. EG. 'This study was paid for by corp xyz.'.<br> <a href='/page/competing_interests/'>More info</a></small><br><br>
+      <br/><br/>
+         </div>
                        </br>
       
+                    <hr>
         
           {% include "review/contact_editors.html"  %}
 </div>

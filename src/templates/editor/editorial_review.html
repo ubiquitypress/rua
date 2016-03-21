@@ -178,7 +178,7 @@
 
        
        <div class="dash-container">
-       <h3>Editorial Group's Decision</h3>
+       <h3>Editorial Board's Decision</h3>
        <hr>
        <div style="clear:both"></div>
       {% for item in editorial_board_data_ordered %}
@@ -222,7 +222,7 @@
 </ul>
 
         <hr />
-        <h5><b> Editorial Group - Recommendation: </b></h5>
+        <h5><b> Editorial Board - Recommendation: </b></h5>
         {% ifequal review_assignment.editorial_board_recommendation 'reject' %}
         <p class="submission-reject"> <b> {{review_assignment.editorial_board_recommendation|title}} Submission </b></p>
         {% endifequal %}
@@ -233,7 +233,7 @@
         <p class="submission-revisions"> <b> Revisions Required</b></p>
         {% endifequal %}
   <hr />
-        <h5><b>Editorial Group - Competing interests:</b> <br /><br />{{review_assignment.editorial_board_competing_interests|linebreaksbr}}</h5><br><small>If any of the authors or editors have any competing interests <br>please add them here. EG. 'This study was paid for by corp xyz.'.<br> <a href='/page/competing_interests/'>More info</a></small><br><br>
+        <h5><b>Editorial Board - Competing interests:</b> <br /><br />{{review_assignment.editorial_board_competing_interests|linebreaksbr}}</h5><br><small>If any of the authors or editors have any competing interests <br>please add them here. EG. 'This study was paid for by corp xyz.'.<br> <a href='/page/competing_interests/'>More info</a></small><br><br>
       <br/><br/>
          <a href="{% url 'editor_editorial_decision' submission.id review_assignment.id 'revision-editorial'%}"  style="margin-top: 10px;margin-right:10px;" class="btn btn-xs btn-review"></h5>&nbsp;&nbsp;Request Revisions&nbsp;&nbsp;</a>  <a href="{% url 'editor_editorial_decision' submission.id review_assignment.id 'invite-publishing'%}"  style="margin-top: 10px;margin-right:0px;" class="btn btn-xs btn-other pull-right"></h5>&nbsp;&nbsp;Invite Publication Committee&nbsp;&nbsp;</a>
          </div>
