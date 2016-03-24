@@ -1,0 +1,132 @@
+{% extends "base.html" %}
+{% load static from staticfiles %}
+{% load bootstrap3 %}
+
+{% block title %}Submit Proposal{% endblock %}
+
+{% block body %}
+
+ <div class="col-md-12">
+  <div class="dash-container other-heading container-fluid" style="margin-top:-20px">
+         <h2>History of Proposal <a href="{% url 'proposal_history_submitted' proposal.id %}"class="btn btn-transparent-white pull-right" style="width:120px; position:relative;right:5%;">
+             Go Back
+          </a></h2>
+
+</div>
+
+   <p>{{core_proposal.intro_text|safe}}</p>
+   <hr />
+   {% if proposal.status == "accepted" or proposal.status == "declined" %}
+   <table class="table table-bordered">
+    <thead>
+        <tr>
+          <th>Decision</th>
+        </tr>
+    </thead>
+    <tbody>
+    <tr>
+      <td>{{ proposal.get_status_display }} </td>
+    </tr>
+  </tbody>
+  </table>
+
+  <br>
+  {% endif %}
+
+
+ <div class="well" style="overflow:auto">
+   <div class="form-group"><label class="control-label" for="id_title">Title</label><input class="form-control" id="id_title" name="title" placeholder="Title" required="required" title="" type="text" value="{{proposal.title}}" readonly></div>
+ <div class="form-group"><label class="control-label" for="id_subtitle">Subtitle</label><input class="form-control" id="id_subtitle" name="subtitle" placeholder="Subtitle" required="required" title="" type="text" value="{{proposal.subtitle}}" readonly></div>
+<div class="form-group"><label class="control-label" for="id_author">Author</label><input class="form-control" id="id_author" name="author" placeholder="Author" required="required" title="" type="text" value="test" readonly></div>
+ </hr>
+<div class="container" style="width:100%;left:0%;right:20%;position:relative;">
+
+  {% for field in relationships %}
+
+  <div class="{{ field.width }}">
+  <div class="row">
+      <label><b>{{ field.element.name }} </b></label>
+      <div class="panel-body">{% for k,v in data.items %}{% if k == field.element.name %}
+        {% ifequal field.element.field_type 'upload' %}<a href="{% url 'serve_proposal_file_id' proposal.id  v.0 %}" style="left:-10px;position:relative;">Download</a>{% else %}
+
+<input class="form-control" placeholder="{{ field.element.name }}"  title="" type="text" value="{{ v.0|safe }}" style="left:-30px;position:relative;" readonly>
+        {% endifequal %}{% endif %}{% endfor %}</div>
+
+  </div>
+  </div>
+{% endfor %}
+</div>
+<hr>
+
+           </div>
+      <div class="dash-container">
+       <a href="{% url 'proposal_history_submitted' proposal.id %}"class="btn btn-primary pull-left" style="width:120px">
+             Go Back
+          </a>
+        </div>
+
+
+    {% if proposal.requestor %}
+    <br>
+    <br>
+    <br>
+   <table class="table table-bordered">
+    <thead>
+        <tr>
+          <th>Contact Editor</th>
+        </tr>
+    </thead>
+    <tbody>
+    <tr>
+      <td>{{ proposal.requestor.username }} <sup> <a href="core/email.html" onclick="return popitup('/email/proposal/{{proposal.id}}/user/{{proposal.requestor.id}}/','proposal_{{proposal.requestor.id}}')"class="fa fa-envelope-o btn btn-xs btn-default"></a></sup></td>
+    </tr>
+  </tbody>
+  </table>
+  <br>
+  <br>
+  {% endif %}
+   
+	</div>
+{% endblock body %}
+
+{% block js %}
+<script type="text/javascript" src="{% static "js/fancyfile.js" %}"></script>
+<script type="text/javascript">$("textarea").jqte();</script>
+<script language="javascript" type="text/javascript">
+<!--
+function popitup(url,title) {
+    newwindow=window.open(url,title,'height=750,width=600');
+    if (window.focus) {newwindow.focus()}
+    return false;
+}
+
+// -->
+</script>
+<script language="javascript" type="text/javascript">
+$(document).ready(function () {    
+       {%for field in default_fields%}
+          {% if field.field.required %} 
+         var required_text=$('label[for="' + "id_{{field.name}}"+ '"]').html()+" *";
+         var current_field = $('label[for="' + "id_{{field.name}}"+ '"]');
+         current_field.text(required_text); 
+          {% endif %}
+       {% endfor %}
+
+    {% if proposal_form %}
+        
+        {%for field in proposal_form%}
+    
+          {% if field.field.required %} 
+            var required_text=$('label[for="' + "id_{{field.name|safe}}"+ '"]').html()+" *";
+            required_text = required_text.replace('&amp;','&');
+            var current_field = $('label[for="' + "id_{{field.name|safe}}"+ '"]');
+            current_field.text(required_text); 
+          {% endif %}
+
+        {% endfor %}
+
+    {% endif %}
+  });
+</script>
+
+{% endblock js %}

@@ -8,7 +8,9 @@
 
  <div class="col-md-12">
   <div class="dash-container other-heading container-fluid" style="margin-top:-20px">
-         <h2>History of Proposal</h2>
+         <h2>History of Proposal <a href="{% url 'proposal_view_submitted' proposal.id %}"class="btn btn-transparent-white pull-right" style="width:120px; position:relative;right:5%;">
+             Go Back
+          </a></h2>
 
 </div>
 
@@ -63,13 +65,13 @@
     <th>Date</th>
     <th></th>
   </tr></thead><tbody>
-  {% for proposal in history %}
+  {% for hist in history %}
   <tr>
    
     <td>{{ forloop.counter}}</td>
-       <td>{{ proposal.user_edited.profile.full_name }}</td>
-       <td>{{ proposal.date_edited }}</td>
-    <td width="8%"><a href="{% url 'view_proposal' proposal.id %}" class="btn btn-other" style="width:100px">View</a></td>
+       <td>{{ hist.user_edited.profile.full_name }}</td>
+       <td>{{ hist.date_edited }}</td>
+    <td width="8%"><a href="{% url 'proposal_history_view_submitted' proposal.id hist.id %}" class="btn btn-other" style="width:100px">View</a></td>
   </tr>
 
   {% endfor %}

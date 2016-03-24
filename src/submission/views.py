@@ -696,6 +696,36 @@ def proposal_view(request, proposal_id):
 
 	return render(request, template, context)
 
+
+@login_required
+def proposal_history_view(request, proposal_id, history_id):
+
+	parent_proposal = submission_models.Proposal.objects.get(pk=proposal_id)
+	proposal_form_id = core_models.Setting.objects.get(name='proposal_form').value
+	proposal = get_object_or_404(submission_models.HistoryProposal, proposal = parent_proposal, pk= history_id)
+
+	proposal = get_object_or_404(submission_models.Proposal, pk=proposal_id)
+	relationships = core_models.ProposalFormElementsRelationship.objects.filter(form=proposal.form)
+	if proposal.data:
+		data = json.loads(proposal.data)
+	else:
+		data = {}
+	
+	if not request.POST and request.GET.get('download') == 'docx':
+		path = create_proposal_form(proposal)
+		return serve_proposal_file(request, path)
+
+	template = "submission/history_view_proposal.html"
+	context = {
+		'proposal':proposal,
+		'relationships':relationships,
+		'data':data,
+		'core_proposal':core_models.ProposalForm.objects.get(pk=proposal_form_id),
+	}
+
+	return render(request, template, context)
+
+
 @login_required
 def proposal_history(request, proposal_id):
 
@@ -744,7 +774,7 @@ def proposal_history(request, proposal_id):
 		'data':data,
 		'history': history,
 		'revise':True,
-        'open': True,
+		'open': True,
 		'editor': editor,
 		'viewable':viewable,
 		'core_proposal':core_models.ProposalForm.objects.get(pk=proposal_form_id),
