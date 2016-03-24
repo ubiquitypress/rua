@@ -40,7 +40,7 @@
 
 {% if current_note %}
 
-<div class="dash-container"><h3>Note #{{note_id}} <sup><a href="{% url 'submission_notes_update' proposal.id current_note.id %}" class="btn btn-primary btn-sm btn-round pull-right"> Edit Note</a></sup></h3></div>
+<div class="dash-container"><h3>Note #{{note_id}} {% if editable %}<sup><a href="{% url 'submission_notes_update' proposal.id current_note.id %}" class="btn btn-primary btn-sm btn-round pull-right"> Edit Note</a></sup> {% endif %}</h3></div>
 <div class="well border-note" style="overflow:auto;">
    {{ current_note.text|safe }}
 </div>

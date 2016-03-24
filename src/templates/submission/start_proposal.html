@@ -85,6 +85,39 @@
   </tbody>
   </table>
   <br>
+  {% if notes %}
+<div class="dash-container">
+<div class="dash-container">
+<h3> Notes </h3>
+  </div>
+  </div>
+
+    <ul class="chat" id="message-list">
+      {% for note in notes %}
+        <li class="left clearfix well container-shadow-bottom">
+          <span class="chat-img pull-left" style="margin-right:10px">
+                <img src="http://placehold.it/65/D358F7/fff&amp;text=&#9998;" alt="Pencil Icon" class="img-circle" />
+            </span>
+            <div class="chat-body clearfix" style="margin-top:10px">
+                <div class="header">
+                    <strong class="primary-font">{{ note.user.profile.full_name}}</strong> <small class="pull-right text-muted" style="margin-top:-12px">
+                        <span class="glyphicon glyphicon-time" ></span>{{ note.date_submitted|date:"Y-m-d - H:i" }}</small>
+                </div>
+                {{ note.truncated_content }}
+            </div>
+            <div class="pull-right" style="margin-top:-15px">
+              <a href="{% url 'submission_notes_view' proposal.id note.id %}" class="btn btn-task btn-sm pull-right">View Note</a>
+            </div>
+        </li>
+        <input class="last_message" type="hidden" value="{{ note.pk }}">
+        {% empty %}
+             <li class="left clearfix well container-shadow-bottom">
+          No notes
+          <br><br>
+        </li>
+        {% endfor %}
+    </ul>
+  {% endif %}
   <br>
   {% endif %}
   </div>

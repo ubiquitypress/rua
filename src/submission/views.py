@@ -523,6 +523,7 @@ def proposal_revisions(request, proposal_id):
 
 	proposal_form_id = core_models.Setting.objects.get(name='proposal_form').value
 	proposal = get_object_or_404(submission_models.Proposal, pk=proposal_id, owner=request.user, status='revisions_required')
+	notes = submission_models.ProposalNote.objects.filter(proposal=proposal)
 	overdue = False;
 	if proposal.revision_due_date.date() < datetime.today().date():
 		overdue = True
@@ -596,6 +597,7 @@ def proposal_revisions(request, proposal_id):
 		'default_fields': default_fields,
 		'data':data,
 		'revise':True,
+		'notes': notes,
 		'overdue':overdue,
 		'core_proposal':core_models.ProposalForm.objects.get(pk=proposal_form_id),
 	}
@@ -608,13 +610,17 @@ def proposal_notes(request, proposal_id, note_id = None):
 	proposal = submission_models.Proposal.objects.get(pk=proposal_id)
 	notes = submission_models.ProposalNote.objects.filter(proposal=proposal)
 	updated = False
+	editable = False
 
 	if note_id:
 		note = get_object_or_404(submission_models.ProposalNote, proposal=proposal, pk=note_id)
+		if note.user == request.user:
+			editable = True
 		if not note.date_submitted == note.date_last_updated:
 			updated = True
 	else:
 		note = None
+		editable = False
 
 	template = 'submission/view_note.html'
 	context = {
@@ -622,6 +628,7 @@ def proposal_notes(request, proposal_id, note_id = None):
 		'notes': notes,
 		'note_id': note_id,
 		'current_note': note,
+		'editable': editable,
 		'updated': updated,
 	}
 
