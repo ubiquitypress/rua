@@ -19,6 +19,15 @@ class ProposalStart(forms.ModelForm):
 		model = models.Proposal
 		fields = ('review_form',)
 
+class NoteForm(ModelForm):
+
+	class Meta:
+		model = models.ProposalNote
+		fields = ('text',)
+	def __init__(self, *args, **kwargs):
+		super(NoteForm, self).__init__(*args, **kwargs)
+		self.fields['text'].required = True
+		self.fields['text'].label = "Content"
 
 class SubmitBookStageOne(forms.ModelForm):
 

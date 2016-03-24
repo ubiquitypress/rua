@@ -28,6 +28,9 @@ urlpatterns = patterns('',
 	url(r'^proposal/(?P<proposal_id>\d+)/view/$', 'submission.views.proposal_view', name='proposal_view_submitted'),
 	url(r'^proposal/(?P<proposal_id>\d+)/history/$', 'submission.views.proposal_history', name='proposal_history_submitted'),
 	url(r'^proposal/(?P<proposal_id>\d+)/history/(?P<history_id>\d+)/$', 'submission.views.proposal_history_view', name='proposal_history_view_submitted'),
+	url(r'^proposal/(?P<proposal_id>\d+)/notes/(?P<note_id>\d+)/$', 'submission.views.proposal_notes', name='submission_notes_view'),
+    url(r'^proposal/(?P<proposal_id>\d+)/notes/update/(?P<note_id>\d+)/$', 'submission.views.proposal_update_note', name='submission_notes_update'),
+    url(r'^proposal/(?P<proposal_id>\d+)/notes/add$', 'submission.views.proposal_add_note', name='submission_notes_add'),
 
 	url(r'^proposal/(?P<proposal_id>\d+)/revisions/$', 'submission.views.proposal_revisions', name='proposal_revisions'),
 

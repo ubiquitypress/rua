@@ -72,9 +72,36 @@
       </div>
       {% endbuttons %}
     </form>
-    <br>
-    <br>
-    <br>
+   
+  {% else %}
+ <div class="well" style="overflow:auto">
+   <div class="form-group"><label class="control-label" for="id_title">Title</label><input class="form-control" id="id_title" name="title" placeholder="Title" required="required" title="" type="text" value="{{proposal.title}}" readonly></div>
+ <div class="form-group"><label class="control-label" for="id_subtitle">Subtitle</label><input class="form-control" id="id_subtitle" name="subtitle" placeholder="Subtitle" required="required" title="" type="text" value="{{proposal.subtitle}}" readonly></div>
+<div class="form-group"><label class="control-label" for="id_author">Author</label><input class="form-control" id="id_author" name="author" placeholder="Author" required="required" title="" type="text" value="test" readonly></div>
+  {% if proposal_form %}
+          {%for field in proposal_form%}
+            <div class="{% if field.field.widget.attrs.div_class %}{{ field.field.widget.attrs.div_class }}{% else %}dash-container{% endif %}">
+            {% if field.field.widget.attrs.is_checkbox %}
+              {% if field.errors %}<span class="red">{{ field.errors|join:", " }}</span><br />{% endif %}
+              {{ field }} &nbsp;{% if field.field.help_text %}{{ field.field.help_text|safe }}{% endif %}
+            {% else %}
+                 {% if field.errors %}<span class="red">{{ field.errors|join:", " }}</span>{% endif %}
+              <label class="control-label" for="id_{{field.name}}">{{field.label}}{% if field.element.required %}*{% endif %}</label><input class="form-control" div_class="dash-container" id="id_{{field.name}}" name="{{field.name}}" placeholder="{{field.label}}" title="help" type="text" value="{{field.value}}" readonly>
+              {% endif %}
+              </div>
+          
+
+           {% endfor %}
+      {% endif %}
+
+      {% endif %}
+
+
+
+   
+    {% endif %}
+     <br>
+      <br>
    <table class="table table-bordered">
     <thead>
         <tr>
@@ -102,59 +129,38 @@
         </tbody>
         </table>
     {% endif %}
-  <br>
-  <br>
-  {% else %}
- <div class="well" style="overflow:auto">
-   <div class="form-group"><label class="control-label" for="id_title">Title</label><input class="form-control" id="id_title" name="title" placeholder="Title" required="required" title="" type="text" value="{{proposal.title}}" readonly></div>
- <div class="form-group"><label class="control-label" for="id_subtitle">Subtitle</label><input class="form-control" id="id_subtitle" name="subtitle" placeholder="Subtitle" required="required" title="" type="text" value="{{proposal.subtitle}}" readonly></div>
-<div class="form-group"><label class="control-label" for="id_author">Author</label><input class="form-control" id="id_author" name="author" placeholder="Author" required="required" title="" type="text" value="test" readonly></div>
-  {% if proposal_form %}
-          {%for field in proposal_form%}
-            <div class="{% if field.field.widget.attrs.div_class %}{{ field.field.widget.attrs.div_class }}{% else %}dash-container{% endif %}">
-            {% if field.field.widget.attrs.is_checkbox %}
-              {% if field.errors %}<span class="red">{{ field.errors|join:", " }}</span><br />{% endif %}
-              {{ field }} &nbsp;{% if field.field.help_text %}{{ field.field.help_text|safe }}{% endif %}
-            {% else %}
-                 {% if field.errors %}<span class="red">{{ field.errors|join:", " }}</span>{% endif %}
-              <label class="control-label" for="id_{{field.name}}">{{field.label}}{% if field.element.required %}*{% endif %}</label><input class="form-control" div_class="dash-container" id="id_{{field.name}}" name="{{field.name}}" placeholder="{{field.label}}" title="help" type="text" value="{{field.value}}" readonly>
-              {% endif %}
-              </div>
-          
+ 
+    <div class="dash-container">
+<div class="dash-container">
+<h3> Notes <a href="{% url 'submission_notes_add' proposal.id %}" class="btn btn-info btn-round pull-right"> + Add Note</a></h3>
+  </div>
+  </div>
 
-           {% endfor %}
-      {% endif %}
-
-      {% endif %}
-
-           </div>
-      <div class="dash-container">
-       <a href="{% url 'user_dashboard'%}"class="btn btn-primary pull-left" style="width:120px">
-             Go Back
-          </a>
-        </div>
-
-
-    {% if proposal.requestor %}
-    <br>
-    <br>
-    <br>
-   <table class="table table-bordered">
-    <thead>
-        <tr>
-          <th>Contact Editor</th>
-        </tr>
-    </thead>
-    <tbody>
-    <tr>
-      <td>{{ proposal.requestor.username }} <sup> <a href="core/email.html" onclick="return popitup('/email/proposal/{{proposal.id}}/user/{{proposal.requestor.id}}/','proposal_{{proposal.requestor.id}}')"class="fa fa-envelope-o btn btn-xs btn-default"></a></sup></td>
-    </tr>
-  </tbody>
-  </table>
-  <br>
-  <br>
-  {% endif %}
-    {% endif %}
+    <ul class="chat" id="message-list">
+      {% for note in notes %}
+        <li class="left clearfix well container-shadow-bottom">
+          <span class="chat-img pull-left" style="margin-right:10px">
+                <img src="http://placehold.it/65/D358F7/fff&amp;text=&#9998;" alt="Pencil Icon" class="img-circle" />
+            </span>
+            <div class="chat-body clearfix" style="margin-top:10px">
+                <div class="header">
+                    <strong class="primary-font">{{ note.user.profile.full_name}}</strong> <small class="pull-right text-muted" style="margin-top:-12px">
+                        <span class="glyphicon glyphicon-time" ></span>{{ note.date_submitted|date:"Y-m-d - H:i" }}</small>
+                </div>
+                {{ note.truncated_content }}
+            </div>
+            <div class="pull-right" style="margin-top:-15px">
+              <a href="{% url 'submission_notes_view' proposal.id note.id %}" class="btn btn-task btn-sm pull-right">View Note</a>
+            </div>
+        </li>
+        <input class="last_message" type="hidden" value="{{ note.pk }}">
+        {% empty %}
+             <li class="left clearfix well container-shadow-bottom">
+          No notes
+          <br><br>
+        </li>
+        {% endfor %}
+    </ul>
    {% else %}
        <div class="dash-container bottom-space">
     <br>

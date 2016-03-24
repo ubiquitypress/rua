@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% load static from staticfiles %}
+{% load bootstrap3 %}
+
+{% block title %} {% if update %} Update Note # {{current_note.pk}}{% else %} Add Note {% endif %}{% endblock %}
+
+{% block body %}
+
+ <div class="col-md-12">
+  <div class="dash-container other-heading container-fluid" style="margin-top:-20px">
+         <h2> {% if update %} Update Note # {{current_note.pk}}{% else %} Add Note {% endif %}<a href="{% url 'proposal_view_submitted' proposal.id %}"class="btn btn-transparent-white pull-right" style="width:120px">
+             Go Back
+          </a></h2>
+
+</div>
+<br>
+<h3> Proposal Details </h3>
+  <hr>
+  <table class="table table-bordered">
+    <thead>
+  <tr>
+    <th>Book Title</th>
+    <th>Subtitle</th>
+    <th>Submitting Author/Editor</th>
+    <th>Date Submitted</th>
+    <th>Status</th>
+  </tr></thead><tbody>
+  <tr>
+    <td>{{ proposal.title }}</td>
+    <td>{{ proposal.subtitle }}</td>
+    <td>{{ proposal.owner.first_name }} {{ proposal.owner.last_name }}</td>
+    <td>{{ proposal.date_submitted }}</td>
+    <td>{{ proposal.get_status_display }}</td>
+  </tr>
+
+  </tbody>
+  </table>
+<br>
+     <form method="post" class="form">
+        {% csrf_token %}
+        {% bootstrap_form note_form %}
+        {% buttons %}
+            <a href="{% url 'proposal_view_submitted' proposal.id %}" class="btn btn-danger btn-round pull-right">Cancel</a>
+            <button name="submit" id="submit" type="submit" class="btn btn-{% if update %}success{% else %}info{% endif %} pull-left btn-round" style="width:100px;margin-right:20px">
+              {% if update %} Update {% else %} Submit {% endif %} 
+            </button>
+        {% endbuttons %}
+        </form>
+
+        {% endblock body %}
+
+{% block js %}
+<script type="text/javascript" src="{% static "js/fancyfile.js" %}"></script>
+<script type="text/javascript">$("textarea").jqte();</script>
+<script language="javascript" type="text/javascript">
+ {% endblock js %}

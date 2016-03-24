@@ -1,0 +1,70 @@
+
+{% extends "base.html" %}
+{% load static from staticfiles %}
+{% load bootstrap3 %}
+
+{% block title %} {% if update %} Update Note # {{current_note.pk}}{% else %} Add Note {% endif %}{% endblock %}
+
+{% block body %}
+
+ <div class="col-md-12">
+  <div class="dash-container other-heading container-fluid" style="margin-top:-20px">
+         <h2> {% if update %} Update Note # {{current_note.pk}}{% else %} Add Note {% endif %}<a href="{% url 'proposal_view_submitted' proposal.id %}"class="btn btn-transparent-white pull-right" style="width:120px">
+             Go Back
+          </a></h2>
+
+</div>
+<br>
+<h3> Proposal Details </h3>
+  <hr>
+  <table class="table table-bordered">
+    <thead>
+  <tr>
+    <th>Book Title</th>
+    <th>Subtitle</th>
+    <th>Submitting Author/Editor</th>
+    <th>Date Submitted</th>
+    <th>Status</th>
+  </tr></thead><tbody>
+  <tr>
+    <td>{{ proposal.title }}</td>
+    <td>{{ proposal.subtitle }}</td>
+    <td>{{ proposal.owner.first_name }} {{ proposal.owner.last_name }}</td>
+    <td>{{ proposal.date_submitted }}</td>
+    <td>{{ proposal.get_status_display }}</td>
+  </tr>
+
+  </tbody>
+  </table>
+<br>
+
+{% if current_note %}
+
+<div class="dash-container"><h3>Note #{{note_id}} <sup><a href="{% url 'submission_notes_update' proposal.id current_note.id %}" class="btn btn-primary btn-sm btn-round pull-right"> Edit Note</a></sup></h3></div>
+<div class="well border-note" style="overflow:auto;">
+   {{ current_note.text|safe }}
+</div>
+<div class="container-fluid">
+  <table class="table table-bordered table-condensed small">
+
+    <tr>
+      <td>Posted by:</td><td>{{current_note.user.profile.full_name}}</td>
+       </tr>
+        <tr>
+      <td>Date posted:</td><td>{{ current_note.date_submitted|date:"Y-m-d - H:i" }}</td>
+       </tr>
+       <tr>
+      <td>Last Updated:</td><td>{% if updated %}{{ current_note.date_last_updated|date:"Y-m-d - H:i" }}{% else %}Never updated {% endif %}</td>
+    </tr>
+  </table>
+</div>
+{% endif %}
+
+
+        {% endblock body %}
+
+{% block js %}
+<script type="text/javascript" src="{% static "js/fancyfile.js" %}"></script>
+<script type="text/javascript">$("textarea").jqte();</script>
+<script language="javascript" type="text/javascript">
+ {% endblock js %}

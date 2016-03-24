@@ -601,11 +601,95 @@ def proposal_revisions(request, proposal_id):
 	}
 
 	return render(request, template, context)
+
+
+@login_required
+def proposal_notes(request, proposal_id, note_id = None):
+	proposal = submission_models.Proposal.objects.get(pk=proposal_id)
+	notes = submission_models.ProposalNote.objects.filter(proposal=proposal)
+	updated = False
+
+	if note_id:
+		note = get_object_or_404(submission_models.ProposalNote, proposal=proposal, pk=note_id)
+		if not note.date_submitted == note.date_last_updated:
+			updated = True
+	else:
+		note = None
+
+	template = 'submission/view_note.html'
+	context = {
+		'proposal': proposal,
+		'notes': notes,
+		'note_id': note_id,
+		'current_note': note,
+		'updated': updated,
+	}
+
+	return render(request, template, context)
+
+@login_required
+def proposal_add_note(request, proposal_id):
+	proposal = submission_models.Proposal.objects.get(pk=proposal_id)
+	notes = submission_models.ProposalNote.objects.filter(proposal=proposal)
+	note_form = forms.NoteForm()
+	if request.POST:
+		note_form = forms.NoteForm(request.POST)
+		if note_form.is_valid():
+			note_form = note_form.save(commit=False)
+			note_form.text = request.POST.get("text")
+			note_form.user = request.user
+			note_form.proposal = proposal
+			note_form.date_submitted = timezone.now()
+			note_form.date_last_updated = timezone.now()
+			note_form.save()
+			return redirect(reverse('proposal_view_submitted', kwargs={'proposal_id': proposal.id}))
+
+
+	template = 'submission/new_note.html'
+
+	context = {
+		'proposal': proposal,
+		'notes': notes,
+		'note_form': note_form,
+	}
+
+	return render(request, template, context)
+
+@login_required
+def proposal_update_note(request, proposal_id,note_id):
+	proposal = submission_models.Proposal.objects.get(pk=proposal_id)
+	notes = submission_models.ProposalNote.objects.filter(proposal=proposal)
+
+	note = get_object_or_404(submission_models.ProposalNote, proposal=proposal, pk=note_id)
+	note_form = forms.NoteForm(instance = note)
+	if request.POST:
+		note_form = forms.NoteForm(request.POST, instance = note)
+		if note_form.is_valid():
+			note_form.save(commit=False)
+			note.text = request.POST.get("text")
+			note.user = request.user
+			note.date_last_updated = timezone.now()
+			note.save()
+			return redirect(reverse('proposal_view_submitted', kwargs={'proposal_id': proposal.id}))
+
+	template = 'submission/new_note.html'
+
+	context = {
+		'proposal': proposal,
+		'notes': notes,
+		'note_form': note_form,
+		'current_note':note,
+		'update': True,
+	}
+
+	return render(request, template, context)	
+
 @login_required
 def proposal_view(request, proposal_id):
 
 	proposal = submission_models.Proposal.objects.get(pk=proposal_id)
 	proposal_form_id = core_models.Setting.objects.get(name='proposal_form').value
+	notes = submission_models.ProposalNote.objects.filter(proposal=proposal)
 
 	if proposal.owner == request.user:
 		viewable = True
@@ -695,6 +779,7 @@ def proposal_view(request, proposal_id):
 		'revise':True,
 		'editor': editor,
 		'viewable':viewable,
+		'notes': notes,
 		'core_proposal':core_models.ProposalForm.objects.get(pk=proposal_form_id),
 	}
 
