@@ -21,6 +21,9 @@
         <th width="25%">Description</th>
         <th width="15%"></th>
         <th width="15%"></th>
+        {% if send_enabled %}
+        <th width="15%"></th>
+        {% endif %}
       </tr>
       </thead>
       {% for series in all_series %}
@@ -30,6 +33,10 @@
         <td>{{ series.description }}</td>
         <td><a class="btn btn-primary btn-round-half"style="width:75px"href="{% url 'series_edit' series.id %}">Edit</a></td>
         <td><a class="btn btn-decline btn-round-half"style="width:75px"href="{% url 'series_delete' series.id %}">Delete</a></td>
+
+        {% if send_enabled %}
+           <td><a class="btn btn-success btn-round-half"style="width:75px"href="{% url 'series_send_series' series.id %}">Send</a></td>
+        {% endif %}
       </tr>
       {% endfor %}
     </table>

@@ -100,6 +100,7 @@ admin_list = [
 	(IndexAssignment,),
 	(EmailLog,),
 	(Message,),
+	(APIConnector,),
 ]
 
 [admin.site.register(*t) for t in admin_list]

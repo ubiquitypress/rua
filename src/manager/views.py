@@ -10,6 +10,7 @@ from django.core.cache import cache
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils.encoding import smart_text
 
+from django.template.defaultfilters import slugify
 from manager import models
 from review import models as review_models
 from review import forms as review_f
@@ -22,6 +23,9 @@ from submission import models as submission_models
 
 from uuid import uuid4
 import os
+
+import requests
+import json
 
 @is_press_editor
 def index(request):
@@ -270,12 +274,33 @@ def submission_checklist(request):
 
 @is_press_editor
 def series(request):
+	send_enabled = False
+	if request.user.is_staff:
+		send_enabled = True
 
 	template = 'manager/series/index.html'
 	context = {
 		'all_series': core_models.Series.objects.all(),
+		'send_enabled': send_enabled,
 	}
 	return render(request, template, context)
+
+@is_press_editor
+def send_series(request, series_id):
+	credentials = get_object_or_404(core_models.APIConnector, slug = "jura")
+	series = get_object_or_404(core_models.Series, pk=series_id)
+	return requests.post(
+		"http://jura.ubiquity.press/api/series/",
+		auth=(credentials.username, credentials.password),
+		data={ 'press_code': series.press.code,
+	            'omp_series_id': series.pk,
+	            'title': series.name,
+	            'slug': slugify(series.name),
+	            'editor': series.editor.profile.full_name,
+	            'editor_email': series.editor.email,
+	            'description': series.description
+	            })
+
 
 @is_press_editor
 def users(request):

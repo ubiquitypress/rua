@@ -78,6 +78,12 @@ class Language(models.Model):
 	def __repr__(self):
 		return u'%s' % (self.display)
 
+
+class APIConnector(models.Model):
+	slug = models.CharField(max_length=1000, unique = True)
+	username = models.CharField(max_length=256, null=True, blank=True)
+	password = models.CharField(max_length=512, null=True, blank=True)
+
 class Profile(models.Model):
 	user = models.OneToOneField(User)
 	activation_code = models.CharField(max_length=100, null=True, blank=True)
