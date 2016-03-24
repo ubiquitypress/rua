@@ -68,13 +68,22 @@
 					    		<th>File Type</th>
 					    		<th>Select</th>
 					    	</tr>
+					    	<tr>
+					    		<td></td>
+					    		<td></td>
+					    		<td></td>
+					    		<td></td>
+					    		<td><input type="checkbox" id="all"/> All</td>
+
+					    	</tr>
 					    {% for file in submission.files.all %}
+
 					    	<tr>
 					    		<td>{{ file.original_filename }}</td>
 					      		<td>{{ file.uuid_filename }}</td>
 					      		<td>{{ file.mime_type }}</td>
 					    			<td>{{file.kind }}</td>
-					    			<td><input type="checkbox" name="file" value="{{ file.id }}"/></td>
+					    			<td><input class="file_check" type="checkbox" name="file" value="{{ file.id }}"/></td>
 					    	</tr>
 					    {% endfor %}
 					    {% for reviewer in submission.review_assignments.all %}
@@ -115,4 +124,11 @@
 
 {% block js %}
 <script type="text/javascript" src="{% static "js/fancyfile.js" %}"></script>
+<script type="text/javascript">
+	$(document).ready(function(){ 
+    $("#all").change(function(){
+      $(".file_check").prop('checked', $(this).prop("checked"));
+      });
+});
+</script>
 {% endblock %}
