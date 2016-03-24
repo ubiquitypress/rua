@@ -3,6 +3,7 @@ from models import *
 
 admin_list = [
     (Proposal,),
+    (HistoryProposal,),
     (SubmissionChecklistItem,),
     (ProposalReview,),
 ]

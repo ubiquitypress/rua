@@ -8,7 +8,9 @@
 
  <div class="col-md-12">
   <div class="dash-container other-heading container-fluid" style="margin-top:-20px">
-         <h2>{% if revise%} Update {%else%}Submit a{%endif%} Proposal</h2>
+         <h2>{% if revise%} Update {%else%}Submit a{%endif%} Proposal {% if revise%}<a href="{% url 'proposal_history_submitted' proposal.id %}"class="btn btn-transparent-white pull-right" style="width:120px">
+             History
+          </a>{% endif %}</h2>
 
 </div>
 

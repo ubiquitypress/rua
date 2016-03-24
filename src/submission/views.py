@@ -540,13 +540,33 @@ def proposal_revisions(request, proposal_id):
 		proposal_form = manager_forms.GeneratedForm(request.POST, request.FILES, form=core_models.ProposalForm.objects.get(pk=proposal.form.id))
 		default_fields = manager_forms.DefaultForm(request.POST)
 		if proposal_form.is_valid() and default_fields.is_valid():
-
+			
 			messages.add_message(request, messages.SUCCESS, 'Revisions for Proposal %s submitted' % proposal.id)
 
 			proposal_data_processing(request,proposal,proposal_form_id)
 
 			proposal = submission_models.Proposal.objects.get(form=core_models.ProposalForm.objects.get(pk=proposal.form.id), owner=request.user,pk=proposal_id)
-		
+			history_proposal =  submission_models.HistoryProposal.objects.create(
+				proposal = proposal,
+				title = proposal.title,
+				author = proposal.author,
+				subtitle = proposal.subtitle,
+				date_submitted = proposal.date_submitted,
+				form = proposal.form,
+				data = proposal.data,
+				date_review_started = proposal.date_review_started,
+				review_form = proposal.review_form,
+				requestor = proposal.requestor,
+				revision_due_date = proposal.revision_due_date,
+				date_accepted = proposal.date_accepted,
+				book_type = proposal.book_type,
+				status = proposal.status,
+				owner = proposal.owner,
+				user_edited = request.user,
+				date_edited = timezone.now()
+				)
+			history_proposal.save()
+
 			proposal.status = "revisions_submitted"
 			defaults=default_fields.cleaned_data
 			proposal.title = defaults.get("title")
@@ -620,7 +640,26 @@ def proposal_view(request, proposal_id):
 
 			proposal_data_processing(request,proposal,proposal_form_id)
 			proposal = submission_models.Proposal.objects.get(form=core_models.ProposalForm.objects.get(pk=proposal.form.id),pk=proposal_id)
-	
+			history_proposal =  submission_models.HistoryProposal.objects.create(
+				proposal = proposal,
+				title = proposal.title,
+				author = proposal.author,
+				subtitle = proposal.subtitle,
+				date_submitted = proposal.date_submitted,
+				form = proposal.form,
+				data = proposal.data,
+				date_review_started = proposal.date_review_started,
+				review_form = proposal.review_form,
+				requestor = proposal.requestor,
+				revision_due_date = proposal.revision_due_date,
+				date_accepted = proposal.date_accepted,
+				book_type = proposal.book_type,
+				status = proposal.status,
+				owner = proposal.owner,
+				user_edited = request.user,
+				date_edited = timezone.now()
+				)
+			history_proposal.save()
 			proposal.status = "submission"
 			defaults=default_fields.cleaned_data
 			proposal.title = defaults.get("title")
@@ -650,6 +689,62 @@ def proposal_view(request, proposal_id):
 		'not_readonly':not_readonly,
 		'data':data,
 		'revise':True,
+		'editor': editor,
+		'viewable':viewable,
+		'core_proposal':core_models.ProposalForm.objects.get(pk=proposal_form_id),
+	}
+
+	return render(request, template, context)
+
+@login_required
+def proposal_history(request, proposal_id):
+
+	proposal = submission_models.Proposal.objects.get(pk=proposal_id)
+	history = submission_models.HistoryProposal.objects.filter(proposal = proposal).order_by('pk')
+	proposal_form_id = core_models.Setting.objects.get(name='proposal_form').value
+
+	if proposal.owner == request.user:
+		viewable = True
+
+	proposal_form = manager_forms.GeneratedForm(form=core_models.ProposalForm.objects.get(pk=proposal.form.id))
+	default_fields = manager_forms.DefaultForm(initial={'title': proposal.title,'author':proposal.author,'subtitle':proposal.subtitle})
+
+	intial_data={}
+	data = {}
+	if proposal.data:
+		data = json.loads(proposal.data)
+		for k,v in data.items():
+			intial_data[k] = v[0]
+
+
+	proposal_form.initial=intial_data
+	
+	roles = request.user.profile.roles.all()
+
+	if string_any('Editor' in role.name for role in roles):
+		viewable = True
+		editor = True
+		if proposal.requestor and not proposal.requestor == request.user:
+			editor = False
+
+		print editor
+	else:
+		editor = False
+
+	if proposal.status == 'accepted' or proposal.status == 'declined':
+		not_readonly = False
+	else:
+		not_readonly = True
+	template = "submission/history_proposal.html"
+	context = {
+		'proposal_form': proposal_form,
+		'default_fields': default_fields,
+		'proposal':proposal,
+		'not_readonly':not_readonly,
+		'data':data,
+		'history': history,
+		'revise':True,
+        'open': True,
 		'editor': editor,
 		'viewable':viewable,
 		'core_proposal':core_models.ProposalForm.objects.get(pk=proposal_form_id),
