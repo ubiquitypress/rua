@@ -39,6 +39,28 @@ class Proposal(models.Model):
 	def status_verbose(self):
 		return dict(proposal_status())[self.status]
 
+class HistoryProposal(models.Model):
+
+	proposal = models.ForeignKey(Proposal, related_name = 'parent_proposal')
+	owner = models.ForeignKey(User,blank=True, null=True, related_name = 'parent_proposal_user')
+	title = models.CharField(max_length=255, verbose_name='Book Title')
+	subtitle = models.CharField(max_length=255)
+	author = models.CharField(max_length=255, verbose_name='Submitting author/editor')
+	date_submitted = models.DateTimeField(auto_now_add=True)
+	form = models.ForeignKey('core.ProposalForm', related_name = 'parent_proposal_Form')
+	data = models.TextField(blank=True, null=True)
+	date_review_started = models.DateTimeField(blank=True, null=True)
+	review_form = models.ForeignKey('review.Form', null=True, blank=True)
+	requestor = models.ForeignKey(User, null=True,blank=True,related_name="parent_proposal_Requestor")
+	revision_due_date = models.DateTimeField(blank=True, null=True)
+	date_accepted = models.DateTimeField(blank=True, null=True)
+	book_type = models.CharField(max_length=50, null=True, blank=True, choices=book_type_choices(), help_text="A monograph is a work authored, in its entirety, by one or more authors. An edited volume has different authors for each chapter.")
+	
+	status = models.CharField(max_length=20, choices=proposal_status(), default='submission')
+
+	def status_verbose(self):
+		return dict(proposal_status())[self.status]
+
 class IncompleteProposal(models.Model):
 
 
