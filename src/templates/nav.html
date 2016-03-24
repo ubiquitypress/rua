@@ -28,6 +28,8 @@
                   <li><a class="hover-nav" href="{% url 'editor_dashboard' %}">Editor Dashboard <span class="badge circle"><label id="editor_notifications_nav" style="height:7px">{{task_count}}</label></span></a></li>
                      <li><a class="hover-nav " href="{% url 'proposals' %}">Proposals Dashboard</a></li>
                   {% endif %}
+                  
+                   <li><a class="hover-nav" href="https://github.com/ubiquitypress/rua/wiki">Wiki</a></li>
                   <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Hi, {{ request.user.first_name }} <span class="caret"></span></a>
                     <ul class="dropdown-menu" role="menu">
