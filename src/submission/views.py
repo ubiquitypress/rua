@@ -563,7 +563,8 @@ def proposal_revisions(request, proposal_id):
 				status = proposal.status,
 				owner = proposal.owner,
 				user_edited = request.user,
-				date_edited = timezone.now()
+				date_edited = timezone.now(),
+				version = proposal.current_version
 				)
 			history_proposal.save()
 
@@ -573,6 +574,7 @@ def proposal_revisions(request, proposal_id):
 			proposal.author = defaults.get("author")
 			proposal.subtitle = defaults.get("subtitle")
 			proposal_type=request.POST.get('proposal-type')
+			proposal.current_version = proposal.current_version + 1
 			if proposal_type:
 				proposal.book_type = proposal_type
 			proposal.save()
@@ -657,7 +659,8 @@ def proposal_view(request, proposal_id):
 				status = proposal.status,
 				owner = proposal.owner,
 				user_edited = request.user,
-				date_edited = timezone.now()
+				date_edited = timezone.now(),
+				version = proposal.current_version
 				)
 			history_proposal.save()
 			proposal.status = "submission"
@@ -666,6 +669,7 @@ def proposal_view(request, proposal_id):
 			proposal.author = defaults.get("author")
 			proposal.subtitle = defaults.get("subtitle")	
 			proposal_type=request.POST.get('proposal-type')
+			proposal.current_version = proposal.current_version + 1
 			if proposal_type:
 				proposal.book_type = proposal_type
 			proposal.requestor=request.user
@@ -704,7 +708,6 @@ def proposal_history_view(request, proposal_id, history_id):
 	proposal_form_id = core_models.Setting.objects.get(name='proposal_form').value
 	proposal = get_object_or_404(submission_models.HistoryProposal, proposal = parent_proposal, pk= history_id)
 
-	proposal = get_object_or_404(submission_models.Proposal, pk=proposal_id)
 	relationships = core_models.ProposalFormElementsRelationship.objects.filter(form=proposal.form)
 	if proposal.data:
 		data = json.loads(proposal.data)

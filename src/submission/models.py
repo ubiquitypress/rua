@@ -34,6 +34,7 @@ class Proposal(models.Model):
 	date_accepted = models.DateTimeField(blank=True, null=True)
 	book_type = models.CharField(max_length=50, null=True, blank=True, choices=book_type_choices(), help_text="A monograph is a work authored, in its entirety, by one or more authors. An edited volume has different authors for each chapter.")
 	
+	current_version = models.IntegerField(default=1)
 	status = models.CharField(max_length=20, choices=proposal_status(), default='submission')
 
 	def status_verbose(self):
@@ -41,6 +42,7 @@ class Proposal(models.Model):
 
 class HistoryProposal(models.Model):
 
+	version = models.IntegerField(default=1)
 	proposal = models.ForeignKey(Proposal, related_name = 'parent_proposal')
 	user_edited = models.ForeignKey(User,blank=True, null=True, related_name = 'edited_by_user')
 	owner = models.ForeignKey(User,blank=True, null=True, related_name = 'parent_proposal_user')
