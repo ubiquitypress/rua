@@ -289,10 +289,10 @@ def series(request):
 def send_series(request, series_id):
 	credentials = get_object_or_404(core_models.APIConnector, slug = "jura")
 	series = get_object_or_404(core_models.Series, pk=series_id)
-	return requests.post(
+	requests.post(
 		"http://jura.ubiquity.press/api/series/",
 		auth=(credentials.username, credentials.password),
-		data={ 'press_code': series.press.code,
+		data={ 'press_code': 'up',
 	            'omp_series_id': series.pk,
 	            'title': series.name,
 	            'slug': slugify(series.name),
@@ -300,6 +300,7 @@ def send_series(request, series_id):
 	            'editor_email': series.editor.email,
 	            'description': series.description
 	            })
+	return redirect(reverse('series'))
 
 
 @is_press_editor
