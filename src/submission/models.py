@@ -66,6 +66,19 @@ class HistoryProposal(models.Model):
 	def status_verbose(self):
 		return dict(proposal_status())[self.status]
 
+class ProposalNote(models.Model):
+	proposal = models.ForeignKey(Proposal)
+	user = models.ForeignKey(User)
+	date_submitted = models.DateTimeField(auto_now_add=True)
+	date_last_updated = models.DateTimeField(auto_now=True)
+	text = models.TextField(null=True, blank=True)
+
+	def truncated_content(self):
+		content = str(self.text)
+		if len(content)>=22:
+			content = content[:22]+'...'
+		return content
+
 class IncompleteProposal(models.Model):
 
 
