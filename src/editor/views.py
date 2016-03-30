@@ -1230,13 +1230,13 @@ def delete_contributor(request, submission_id, contributor_type, contributor_id)
 
 	if contributor_id:
 		if contributor_type == 'author':
-			contributor = get_object_or_404(models.User, pk=contributor_id)
-			messages.add_message(request, messages.ERROR, 'User %s has been deleted.' % (contributor.username))
-			if contributor.profile:
-				contributor.profile.delete()
+			contributor = get_object_or_404(models.Author, pk=contributor_id)
+			messages.add_message(request, messages.ERROR, 'User %s has been deleted.' % (contributor.full_name))
+			book.author.remove(contributor)
 		elif contributor_type == 'editor':
 			contributor = get_object_or_404(models.Editor, pk=contributor_id)
-
+			book.editor.remove(contributor)
+		book.save()
 		contributor.delete()
 
 		return redirect(reverse('catalog', kwargs={'submission_id': submission_id}))
