@@ -22,7 +22,7 @@ from author import orcid
 from email import send_email,send_reset_email
 from files import handle_file_update, handle_attachment, handle_file, handle_proposal_file
 from submission import models as submission_models
-from core.decorators import is_reviewer, is_editor, is_book_editor, is_book_editor_or_author, is_onetasker,is_author
+from core.decorators import is_reviewer, is_editor, is_book_editor, is_book_editor_or_author, is_onetasker,is_author, is_press_editor
 from review import forms as review_forms
 from datetime import datetime
 from manager import models as manager_models
@@ -102,6 +102,48 @@ def login(request):
 
     context = {}
     template = 'core/login.html'
+
+    return render(request, template, context)
+
+@is_press_editor
+def switch_account(request):
+    if not request.user.is_authenticated():
+       return redirect(reverse('login'))
+            
+    users = models.Profile.objects.all()
+    clean_users = []
+
+    for profile in users:
+        user_roles = [role.slug for role in profile.roles.all()]
+        if not 'press-editor' in user_roles and not 'book-editor' in user_roles and not 'production-editor' in user_roles:
+            if 'author' in user_roles or 'reviewer' in user_roles or 'indexer' in user_roles or 'typesetter' in user_roles or  'copyeditor' in user_roles:
+                clean_users.append(profile.user)
+
+    if request.POST:
+        user = request.POST.get('user_name')
+        pawd = request.POST.get('user_pass')
+
+        user = authenticate(username=user, password=pawd)
+
+        if user is not None:
+            if user.is_active:
+                login_user(request, user)
+                messages.info(request, 'Login successful.')
+                roles=  user.profile.roles.all()
+                if request.GET.get('next'):
+                    return redirect(request.GET.get('next'))
+                else:
+                    return redirect(reverse('user_dashboard'))
+            else:
+                messages.add_message(request, messages.ERROR, 'User account is not active.')
+        else:
+            messages.add_message(request, messages.ERROR, 'Account not found with those details.')
+
+    context = {
+        'users': clean_users,
+
+    }
+    template = 'core/switch_account.html'
 
     return render(request, template, context)
 

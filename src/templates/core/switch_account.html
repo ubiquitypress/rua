@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% load bootstrap3 %}
+
+{% block body %}
+  	<form class="form-signin" method="POST">
+  		{% csrf_token %}
+        <h3 class="form-signin-heading">Switch Account</h3>
+       {% for user in users %}
+       {{user.username}} <br>
+       {% endfor %}
+    </form>
+
+{% endblock body %}
