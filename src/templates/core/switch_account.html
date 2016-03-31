@@ -1,13 +1,42 @@
 {% extends "base.html" %}
 {% load bootstrap3 %}
 
+{% block css %}
+<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/plug-ins/1.10.7/integration/bootstrap/3/dataTables.bootstrap.css">
+{% endblock css %}
 {% block body %}
-  	<form class="form-signin" method="POST">
+  	<form method="POST" style="width:70%;margin-left:15%;margin-right:15%">
   		{% csrf_token %}
+        <div class="profile-heading container-fluid">
         <h3 class="form-signin-heading">Switch Account</h3>
+        </div>
+        <table id="table" class="table table-small">
+        <thead>
+            <th>Accounts</th>
+        </thead>
+        <tbody>
        {% for user in users %}
-       {{user.username}} <br>
+       <tr>
+   <td>  <a href="{% url 'switch-account-user' user.id %}" class="btn btn-default" style="width:100%"><i class="fa fa-user"></i> {{user.username}} <br> <small style="color:grey">{{user.email}} </small></a></td>
+      </tr>
        {% endfor %}
+       </tbody>
+       </table>
     </form>
 
 {% endblock body %}
+{% block js %}
+<script type="text/javascript" language="javascript" src="//cdn.datatables.net/1.10.7/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" language="javascript" src="//cdn.datatables.net/plug-ins/1.10.7/integration/bootstrap/3/dataTables.bootstrap.js"></script>
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css">
+<script src="http://code.jquery.com/ui/1.11.0/jquery-ui.js"></script>
+<script>
+
+  $(document).ready(function() {
+      $('table').DataTable({
+        "lengthMenu": [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]],
+        stripeClasses:[]
+      });
+  } );
+  </script>
+{% endblock %}

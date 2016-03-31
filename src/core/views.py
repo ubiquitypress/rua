@@ -118,27 +118,6 @@ def switch_account(request):
         if not 'press-editor' in user_roles and not 'book-editor' in user_roles and not 'production-editor' in user_roles:
             if 'author' in user_roles or 'reviewer' in user_roles or 'indexer' in user_roles or 'typesetter' in user_roles or  'copyeditor' in user_roles:
                 clean_users.append(profile.user)
-
-    if request.POST:
-        user = request.POST.get('user_name')
-        pawd = request.POST.get('user_pass')
-
-        user = authenticate(username=user, password=pawd)
-
-        if user is not None:
-            if user.is_active:
-                login_user(request, user)
-                messages.info(request, 'Login successful.')
-                roles=  user.profile.roles.all()
-                if request.GET.get('next'):
-                    return redirect(request.GET.get('next'))
-                else:
-                    return redirect(reverse('user_dashboard'))
-            else:
-                messages.add_message(request, messages.ERROR, 'User account is not active.')
-        else:
-            messages.add_message(request, messages.ERROR, 'Account not found with those details.')
-
     context = {
         'users': clean_users,
 
@@ -146,6 +125,13 @@ def switch_account(request):
     template = 'core/switch_account.html'
 
     return render(request, template, context)
+
+@is_press_editor
+def switch_account_user(request, account_id):
+    user = get_object_or_404(User, pk=account_id)
+    user.backend = 'django.contrib.auth.backends.ModelBackend'
+    login_user(request, user)
+    return redirect(reverse('user_dashboard'))
 
 def login_orcid(request):
 

@@ -33,6 +33,8 @@ urlpatterns = patterns('',
     url(r'^login/orcid/$', 'core.views.login_orcid', name='orcid-login'),
     url(r'^logout/$', 'core.views.logout', name='logout'),
     url(r'^switch/account/$', 'core.views.switch_account', name='switch-account'),
+
+    url(r'^switch/account/(?P<account_id>\d+)/$', 'core.views.switch_account_user', name='switch-account-user'),
     url(r'^register/$', 'core.views.register', name='register'),
     url(r'^login/activate/(?P<code>[-\w./]+)/$', 'core.views.activate', name='activate'),
 
