@@ -35,7 +35,7 @@
                       <li><a class="hover-dropdown "  href="{% url 'view_profile' %}">Profile</a></li>  
                       {% if switch_account %}
                       <li class="divider"></li>
-                      <li><a class="hover-dropdown "  href="{% url 'switch-account' %}"><i class="fa fa-users"></i>&nbsp; Switch User</a></li>
+                      <li><a class="hover-dropdown "  href="{% url 'switch-account' %}"><i class="fa fa-users"></i>&nbsp; Switch Account</a></li>
                       {% endif %}
                       <li class="divider"></li>
                       {% if request.user.is_staff or 'press-editor' in roles %}
