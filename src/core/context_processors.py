@@ -14,6 +14,19 @@ def task_count(request):
 		return {'task_count': logic.task_count(request)}
 	except:
 		return {'task_count': 0}
+
+def switch_account(request):
+
+	if request.user.is_authenticated():
+		user_roles = [role.slug for role in request.user.profile.roles.all()]
+		if 'press-editor' in user_roles:
+			return {'switch_account': True}
+		else:
+			return {'switch_account': False}
+	else:
+		return {'switch_account': False}
+
+
 def review_assignment_count(request):
 	try:
 		return {'review_assignment_count': logic.review_assignment_count(request)}

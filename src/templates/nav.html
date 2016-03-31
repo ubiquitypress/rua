@@ -32,7 +32,11 @@
                   <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Hi, {{ request.user.first_name }} <span class="caret"></span></a>
                     <ul class="dropdown-menu" role="menu">
-                      <li><a class="hover-dropdown "  href="{% url 'view_profile' %}">Profile</a></li>
+                      <li><a class="hover-dropdown "  href="{% url 'view_profile' %}">Profile</a></li>  
+                      {% if switch_account %}
+                      <li class="divider"></li>
+                      <li><a class="hover-dropdown "  href="{% url 'logout' %}"><i class="fa fa-users"></i>&nbsp; Switch User</a></li>
+                      {% endif %}
                       <li class="divider"></li>
                       {% if request.user.is_staff or 'press-editor' in roles %}
                       <li><a class="hover-dropdown" href="{% url 'overview' %}">Overview</a></li>
