@@ -31,12 +31,12 @@ class EditorTests(TestCase):
 		'langs',
 		'cc-licenses',
 		'role',
-		'test_auth_data',
-		'test_review_data',
-		'test_core_data',
-		'test_manager_data',
-		'test_submission_checklist_item_data',
-		'test_proposal_form',
+		'test/test_auth_data',
+		'test/test_review_data',
+		'test/test_core_data',
+		'test/test_manager_data',
+		'test/test_submission_checklist_item_data',
+		'test/test_proposal_form',
 	]
 
 	# Helper Function
@@ -131,7 +131,7 @@ class EditorTests(TestCase):
 		self.assertEqual(book.contract, None)
 		self.assertEqual( "Upload Contract" in content, True)
 		self.assertEqual( "Contract Info" in content, False)
-		management.call_command('loaddata', 'test_contract_data.json', verbosity=0)
+		management.call_command('loaddata', 'test/test_contract_data.json', verbosity=0)
 		self.book.contract=core_models.Contract.objects.get(pk=1)
 		self.book.save()
 		resp =  self.client.get(reverse('contract_manager',kwargs={'submission_id':self.book.id}))
@@ -270,8 +270,8 @@ class EditorTests(TestCase):
 		self.assertEqual("Stage has not been initialised." in content, False)
 
 
-		management.call_command('loaddata', 'test_copyedit_assignment_data.json', verbosity=0)
-		management.call_command('loaddata', 'test_index_assignment_data.json', verbosity=0)
+		management.call_command('loaddata', 'test/test_copyedit_assignment_data.json', verbosity=0)
+		management.call_command('loaddata', 'test/test_index_assignment_data.json', verbosity=0)
 		onetasker= User.objects.get(username="rua_onetasker")
 		resp =  self.client.get(reverse('view_copyedit',kwargs={'copyedit_id':1,'submission_id':self.book.id}))
 		content =resp.content

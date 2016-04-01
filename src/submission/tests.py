@@ -28,14 +28,14 @@ class SubmissionTests(TestCase):
 		'langs',
 		'cc-licenses',
 		'role',
-		'test_auth_data',
-		'test_review_data',
-		'test_core_data',
-		'test_index_assignment_data',
-		'test_copyedit_assignment_data',
-		'test_manager_data',
-		'test_submission_checklist_item_data',
-		'test_proposal_form',
+		'test/test_auth_data',
+		'test/test_review_data',
+		'test/test_core_data',
+		'test/test_index_assignment_data',
+		'test/test_copyedit_assignment_data',
+		'test/test_manager_data',
+		'test/test_submission_checklist_item_data',
+		'test/test_proposal_form',
 
 	]
   # Helper Function

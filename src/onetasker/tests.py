@@ -26,11 +26,11 @@ class OnetaskerTests(TestCase):
 		'langs',
 		'cc-licenses',
 		'role',
-		'test_auth_data',
-		'test_review_data',
-		'test_core_data',
-		'test_index_assignment_data',
-		'test_copyedit_assignment_data',
+		'test/test_auth_data',
+		'test/test_review_data',
+		'test/test_core_data',
+		'test/test_index_assignment_data',
+		'test/test_copyedit_assignment_data',
 
 	]
 

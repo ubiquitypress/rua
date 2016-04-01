@@ -74,7 +74,7 @@ def reminder_overdue_revisions(task):
 			
 def reminder_notifications_not_emailed(task):
 	from_email = models.Setting.objects.get(group__name='email', name='from_address')
-    press_name = models.Setting.objects.get(group__name='general', name='press_name').value
+	press_name = models.Setting.objects.get(group__name='general', name='press_name').value
 	days = int(models.Setting.objects.get(group__name='cron', name='notification_reminder').value)
 	email_text = models.Setting.objects.get(group__name='email', name='notification_reminder_email').value
 	dt = timezone.now()
@@ -91,26 +91,26 @@ def reminder_notifications_not_emailed(task):
 			notification.save()
 			
 		context = {
-	        'user': editor,
-	        'notifications': task_list,
-	        'notification_count': tasks.count(),
-	        'press_name': press_name,
-	        'base_url': models.Setting.objects.get(group__name='general', name='base_url').value,	
-    	}
+			'user': editor,
+			'notifications': task_list,
+			'notification_count': tasks.count(),
+			'press_name': press_name,
+			'base_url': models.Setting.objects.get(group__name='general', name='base_url').value,	
+		}
 		email.send_email('Weekly Notification Reminder', context, from_email.value, editor.email, email_text)
 
 # Utils
 
 def send_reminder_email(book, subject, review, email_text):
-    from_email = models.Setting.objects.get(group__name='email', name='from_address')
-    press_name = models.Setting.objects.get(group__name='general', name='press_name').value
+	from_email = models.Setting.objects.get(group__name='email', name='from_address')
+	press_name = models.Setting.objects.get(group__name='general', name='press_name').value
 
-    context = {
-        'book': book,
-        'review': review,
-        'press_name':press_name,
-        'base_url': models.Setting.objects.get(group__name='general', name='base_url').value,	
-    }
+	context = {
+		'book': book,
+		'review': review,
+		'press_name':press_name,
+		'base_url': models.Setting.objects.get(group__name='general', name='base_url').value,	
+	}
 
-    email.send_email(subject, context, from_email.value, review.user.email, email_text, book=book)
+	email.send_email(subject, context, from_email.value, review.user.email, email_text, book=book)
 

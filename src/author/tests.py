@@ -26,9 +26,9 @@ class AuthorTests(TestCase):
 		'langs',
 		'cc-licenses',
 		'role',
-		'test_auth_data',
-		'test_core_data',
-		'test_review_data',
+		'test/test_auth_data',
+		'test/test_core_data',
+		'test/test_review_data',
 
 	]
 
@@ -104,7 +104,7 @@ class AuthorTests(TestCase):
 		self.client.login(username="rua_editor", password="tester")
 		resp =  self.client.post(reverse('request_revisions',kwargs={'submission_id':self.book.id,'returner':'review'}),{'notes_from_editor':'notes','due':'2015-11-30','id_email_text':'Hi User'})
 		self.client.login(username="rua_author", password="tester")
-		management.call_command('loaddata', 'test_copyedit_assignment_data.json', verbosity=0)
+		management.call_command('loaddata', 'test/test_copyedit_assignment_data.json', verbosity=0)
 		copyedit=core_models.CopyeditAssignment.objects.get(pk=1)
 		copyedit.author_completed=None
 		copyedit.author_invited=timezone.now()
@@ -165,8 +165,8 @@ class AuthorTests(TestCase):
 		self.assertEqual("Stage has not been initialised." in content, False)
 
 
-		management.call_command('loaddata', 'test_copyedit_assignment_data.json', verbosity=0)
-		management.call_command('loaddata', 'test_index_assignment_data.json', verbosity=0)
+		management.call_command('loaddata', 'test/test_copyedit_assignment_data.json', verbosity=0)
+		management.call_command('loaddata', 'test/test_index_assignment_data.json', verbosity=0)
 		copyedit=core_models.CopyeditAssignment.objects.get(pk=1)
 		copyedit.author_completed=None
 		copyedit.author_invited=timezone.now()
@@ -259,7 +259,7 @@ class AuthorTests(TestCase):
 		
 
 	def test_contract_sign_off(self):
-		management.call_command('loaddata', 'test_contract_data.json', verbosity=0)
+		management.call_command('loaddata', 'test/test_contract_data.json', verbosity=0)
 		self.book.contract=core_models.Contract.objects.get(pk=1)
 		self.book.save()
 		resp =  self.client.get(reverse('author_submission',kwargs={'submission_id':self.book.id}))

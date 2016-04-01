@@ -28,14 +28,14 @@ class ManagerTests(TestCase):
 		'langs',
 		'cc-licenses',
 		'role',
-		'test_auth_data',
-		'test_review_data',
-		'test_core_data',
-		'test_index_assignment_data',
-		'test_copyedit_assignment_data',
-		'test_manager_data',
-		'test_submission_checklist_item_data',
-		'test_proposal_form',
+		'test/test_auth_data',
+		'test/test_review_data',
+		'test/test_core_data',
+		'test/test_index_assignment_data',
+		'test/test_copyedit_assignment_data',
+		'test/test_manager_data',
+		'test/test_submission_checklist_item_data',
+		'test/test_proposal_form',
 
 	]
   # Helper Function
@@ -303,7 +303,7 @@ class ManagerTests(TestCase):
 			self.assertEqual(list_item in content, True)
 	
 	def test_manager_proposal_forms(self):
-		resp = self.client.get(reverse('proposal_forms'))
+		resp = self.client.get(reverse('manager_proposal_forms'))
 		content =resp.content
 		proposal_forms = core_models.ProposalForm.objects.all()
 		

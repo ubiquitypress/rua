@@ -27,9 +27,9 @@ class CoreTests(TestCase):
 		'langs',
 		'cc-licenses',
 		'role',
-		'test_auth_data',
-		'test_core_data',
-		'test_review_data',
+		'test/test_auth_data',
+		'test/test_core_data',
+		'test/test_review_data',
 	]
 	# Helper Function
 	def getmessage(cls, response):
@@ -420,8 +420,8 @@ class CoreTests(TestCase):
 		self.assertEqual("In Production" in content, True)
 
 	def test_proposals(self):
-		management.call_command('loaddata', 'test_proposal_form.json', verbosity=0)
-		management.call_command('loaddata', 'test_submission_proposal.json', verbosity=0)
+		management.call_command('loaddata', 'test/test_proposal_form.json', verbosity=0)
+		management.call_command('loaddata', 'test/test_submission_proposal.json', verbosity=0)
 		proposal = submission_models.Proposal.objects.get(pk=1)
 		login = self.client.login(username="rua_editor", password="tester")
 		resp = self.client.get(reverse('proposals'))
@@ -503,8 +503,8 @@ class CoreTests(TestCase):
 	
 
 	def test_proposals_exists_in_committee(self):
-		management.call_command('loaddata', 'test_proposal_form.json', verbosity=0)
-		management.call_command('loaddata', 'test_submission_proposal.json', verbosity=0)
+		management.call_command('loaddata', 'test/test_proposal_form.json', verbosity=0)
+		management.call_command('loaddata', 'test/test_submission_proposal.json', verbosity=0)
 		proposal = submission_models.Proposal.objects.get(pk=1)
 		login = self.client.login(username="rua_editor", password="tester")
 		proposal_reviews=submission_models.ProposalReview.objects.all()
