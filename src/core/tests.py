@@ -368,6 +368,7 @@ class CoreTests(TestCase):
 		self.assertEqual(str(message), 'User account is not active.')
 	def test_activate_user(self):
 		resp = self.client.post(reverse('register'), {'first_name': 'new','last_name':'last','username':'user1','email':'fake@faked.com','password1': 'password1','password2':"password1"})
+		print resp
 		user = User.objects.get(username="user1")
 		roles = models.Role.objects.filter(name__icontains="Editor")
 		for role in roles:

@@ -16,6 +16,8 @@ from django.test.client import Client
 from django.contrib.auth.models import User
 from django.core.urlresolvers import resolve, reverse
 from  __builtin__ import any as string_any
+
+from django.core import management
 import calendar
 # Create your tests here.
 
@@ -85,11 +87,13 @@ class SubmissionTests(TestCase):
 
 		for field in fields:
 			self.assertEqual('name="%s"' % field.element.name in content, True)
+			print field.element.name
 		forms = models.Proposal.objects.all()
 		self.assertEqual(len(forms), 0)
-		resp=self.client.post(reverse('proposal_start'),{"title":"rua_proposal_title","subtitle":"rua_proposal_subtitle","author":"rua_user","rua_element":"example","rua_element_2":"example"})
+		resp=self.client.post(reverse('proposal_start'),{"book_submit":"True","title":"rua_proposal_title","subtitle":"rua_proposal_subtitle","author":"rua_user","rua_element":"example","rua_element_2":"example"})
+	
 		forms = models.Proposal.objects.all()
-		self.assertEqual(len(forms), 1)
+		self.assertEqual(forms.count(), 1)
 
 		resp = self.client.get(reverse('proposal_revisions',kwargs={"proposal_id":1}))
 		content =resp.content
@@ -97,6 +101,8 @@ class SubmissionTests(TestCase):
 
 		proposal_form_revise = models.Proposal.objects.get(pk=1)
 		proposal_form_revise.status='revisions_required'
+		proposal_form_revise.requestor = self.user
+		proposal_form_revise.revision_due_date=timezone.now()
 		proposal_form_revise.save()
 
 		resp = self.client.get(reverse('proposal_revisions',kwargs={"proposal_id":1}))
@@ -120,6 +126,12 @@ class SubmissionTests(TestCase):
 		self.assertEqual(resp.status_code, 302)
 		self.assertEqual("403" in content, False)
 		self.assertEqual(resp['Location'], "http://testing/submission/book/2/stage/2/")
+		resp=self.client.post(reverse('edit_start',kwargs={"book_id":2}),{"book_type":"monograph","license":"2","review_type":"open-with","cover_letter":"rua_cover_letter_updated","reviewer_suggestions":"rua_suggestion","competing_interests":"rua_competing_interest","item":True,"item2":True})
+		content =resp.content
+		self.assertEqual(resp.status_code, 302)
+		self.assertEqual("403" in content, False)
+		self.assertEqual(resp['Location'], "http://testing/submission/book/2/stage/2/")
+	
 		resp=self.client.post(reverse('edit_start',kwargs={"book_id":2}),{"book_type":"monograph","license":"2","review_type":"open-with","cover_letter":"rua_cover_letter_updated","reviewer_suggestions":"rua_suggestion","competing_interests":"rua_competing_interest","item":True,"item2":True})
 		content =resp.content
 		self.assertEqual(resp.status_code, 302)
