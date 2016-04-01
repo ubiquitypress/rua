@@ -21,7 +21,7 @@ class Proposal(models.Model):
 
 	owner = models.ForeignKey(User,blank=True, null=True)
 	title = models.CharField(max_length=255, verbose_name='Book Title')
-	subtitle = models.CharField(max_length=255)
+	subtitle = models.CharField(max_length=255, blank=True, null=True)
 	author = models.CharField(max_length=255, verbose_name='Submitting author/editor')
 	date_submitted = models.DateTimeField(auto_now_add=True)
 	form = models.ForeignKey('core.ProposalForm')
@@ -47,7 +47,7 @@ class HistoryProposal(models.Model):
 	user_edited = models.ForeignKey(User,blank=True, null=True, related_name = 'edited_by_user')
 	owner = models.ForeignKey(User,blank=True, null=True, related_name = 'parent_proposal_user')
 	title = models.CharField(max_length=255, verbose_name='Book Title')
-	subtitle = models.CharField(max_length=255)
+	subtitle = models.CharField(max_length=255, blank=True, null=True)
 	author = models.CharField(max_length=255, verbose_name='Submitting author/editor')
 	date_submitted = models.DateTimeField(auto_now_add=True)
 	form = models.ForeignKey('core.ProposalForm', related_name = 'parent_proposal_Form')
