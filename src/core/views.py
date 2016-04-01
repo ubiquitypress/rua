@@ -1209,10 +1209,12 @@ def proposal_assign_view(request, proposal_id):
     
     roles = request.user.profile.roles.all()
 
+    user_roles = [role.slug for role in request.user.profile.roles.all()]
+
     if string_any('Editor' in role.name for role in roles):
         viewable = True
         editor = True
-        if proposal.requestor and not proposal.requestor == request.user:
+        if proposal.requestor and not proposal.requestor == request.user and not 'press-editor' in user_roles:
             editor = False
 
         print editor
@@ -1260,10 +1262,12 @@ def proposal_assign_edit(request, proposal_id):
     
     roles = request.user.profile.roles.all()
 
+    user_roles = [role.slug for role in request.user.profile.roles.all()]
+
     if string_any('Editor' in role.name for role in roles):
         viewable = True
         editor = True
-        if proposal.requestor and not proposal.requestor == request.user:
+        if proposal.requestor and not proposal.requestor == request.user and not 'press-editor' in user_roles:
             editor = False
 
         print editor
@@ -1325,12 +1329,17 @@ def proposal(request):
     unassigned_proposals = submission_models.Proposal.objects.filter(owner__isnull=True)
    
     proposals = []
+    user_roles = [role.slug for role in request.user.profile.roles.all()]
 
     for proposal in proposal_list:
-        if not proposal.requestor:
+        
+        if 'press-editor' in user_roles:
+            proposals.append(proposal)
+        elif not proposal.requestor:
             proposals.append(proposal)
         elif proposal.requestor==request.user:
             proposals.append(proposal)
+
     template = 'core/proposals/proposal.html'
     context = {
         'proposal_list': proposals,
@@ -1343,12 +1352,18 @@ def proposal(request):
 @is_editor
 def proposal_history(request):
     proposal_list = submission_models.Proposal.objects.all()
+  
     proposals = []
+    user_roles = [role.slug for role in request.user.profile.roles.all()]
+
     for proposal in proposal_list:
-        if not proposal.requestor:
+        if 'press-editor' in user_roles:
+            proposals.append(proposal)
+        elif not proposal.requestor:
             proposals.append(proposal)
         elif proposal.requestor==request.user:
             proposals.append(proposal)
+
     template = 'core/proposals/proposal.html'
     context = {
         'proposal_list': proposals,

@@ -715,11 +715,12 @@ def proposal_view(request, proposal_id):
 	proposal_form.initial=intial_data
 	
 	roles = request.user.profile.roles.all()
+	user_roles = [role.slug for role in request.user.profile.roles.all()]
 
 	if string_any('Editor' in role.name for role in roles):
 		viewable = True
 		editor = True
-		if proposal.requestor and not proposal.requestor == request.user:
+		if proposal.requestor and not proposal.requestor == request.user and not 'press-editor' in user_roles:
 			editor = False
 
 		print editor
@@ -845,11 +846,12 @@ def proposal_history(request, proposal_id):
 	proposal_form.initial=intial_data
 	
 	roles = request.user.profile.roles.all()
-
+	user_roles = [role.slug for role in request.user.profile.roles.all()]
+	
 	if string_any('Editor' in role.name for role in roles):
 		viewable = True
 		editor = True
-		if proposal.requestor and not proposal.requestor == request.user:
+		if proposal.requestor and not proposal.requestor == request.user and not 'press-editor' in user_roles:
 			editor = False
 
 		print editor
