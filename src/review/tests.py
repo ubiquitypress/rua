@@ -100,12 +100,11 @@ class ReviewTests(TestCase):
 		self.assertEqual("View Task" in content, True)
 
 		month = time.strftime("%m")
-		day = int(time.strftime("%d"))
+		day = time.strftime("%d")
 		year = time.strftime("%Y")
-		month_name = calendar.month_name[int(month)]
-		month_name=month_name[:3]
 
-		message = "You accepted on %s %s %s" % (day,month_name,year)
+		message = "You accepted on %s-%s-%s" % (year,month,day)
+		print message
 		self.assertEqual(message in content, True)
 
 		self.assignment.completed=timezone.now()
@@ -120,9 +119,9 @@ class ReviewTests(TestCase):
 		self.assertEqual("403" in content, False)
 		self.assertEqual("Review requested for" in content, False)
 		self.assertEqual("1 COMPLETED TASK" in content, True)
-		message = "Accepted on <b>%s %s %s</b>" % (day,month_name,year)
+		message = "Accepted on <b>%s-%s-%s</b>" % (year,month,day)
 		self.assertEqual(message in content, True)
-		message = "Completed on <b>%s %s %s</b>" % (day,month_name,year)
+		message = "Completed on <b>%s-%s-%s</b>" % (year,month,day)
 		self.assertEqual(message in content, True)
 
 
@@ -191,12 +190,9 @@ class ReviewTests(TestCase):
 		self.assertEqual(resp.status_code, 200)
 		self.assertEqual("403" in content, False)
 		month = time.strftime("%m")
-		day = int(time.strftime("%d"))
+		day = time.strftime("%d")
 		year = time.strftime("%Y")
-		month_name = calendar.month_name[int(month)]
-		month_name=month_name[:3]
-
-		message = "You accepted on %s %s %s" % (day,month_name,year)
+		message = "You accepted on %s-%s-%s" % (year,month,day)
 		self.assertEqual(message in content, True)
 		resp = self.client.get(reverse('review_complete',kwargs={'review_type':self.assignment.review_type,'submission_id':1,'review_round':1}))
 		self.assertEqual(resp.status_code, 302)
