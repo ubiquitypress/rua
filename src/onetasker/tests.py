@@ -111,12 +111,6 @@ class OnetaskerTests(TestCase):
 				self.assertEqual( author.full_name() in content, True)
 			self.assertEqual("DESCRIPTION" in content, True)
 			self.assertEqual( book.description in content, True)
-			self.assertEqual("COVER LETTER" in content, True)
-			self.assertEqual( book.cover_letter in content, True)
-			self.assertEqual("REVIEWER SUGGESTIONS" in content, True)
-			self.assertEqual( book.reviewer_suggestions in content, True)
-			self.assertEqual("COMPETING INTERESTS" in content, True)
-			self.assertEqual( book.competing_interests in content, True)
 			### decision - accept
 			response = self.client.post(reverse('onetasker_task_hub',kwargs={'assignment_type':task.get('type'),'assignment_id':task.get('assignment').id}), {'decision': 'accept'})
 			self.assertEqual(response.status_code, 302)
@@ -128,19 +122,19 @@ class OnetaskerTests(TestCase):
 			self.assertEqual(response.status_code, 200)
 			self.assertEqual("403" in content, False)
 			month = time.strftime("%m")
-			day = int(time.strftime("%d"))
+			day = time.strftime("%d")
 			year = time.strftime("%Y")
 			month_name = calendar.month_name[int(month)]
 			month_name=month_name[:3]
 
-			message = "You accepted on %s %s %s" % (day,month_name,year)
+			message = "You accepted on %s-%s-%s" % (year,month,day)
 			self.assertEqual(message in content, True)
 			### decision - decline
 			assignment.accepted=None
 			assignment.save()
 			response = self.client.post(reverse('onetasker_task_hub',kwargs={'assignment_type':task.get('type'),'assignment_id':task.get('assignment').id}), {'decision': 'decline'})
 			self.assertEqual(response.status_code, 302)
-			self.assertEqual(response['Location'], "http://testing/tasks/")
+			self.assertEqual(response['Location'], "http://testing/tasks/copyedit/1/decline/")
 
 
 
