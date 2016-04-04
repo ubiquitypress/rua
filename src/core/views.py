@@ -252,10 +252,12 @@ def update_profile(request):
             profile = profile_form.save()
             for interest in profile.interest.all():
                 profile.interest.remove(interest)
-
-            for interest in request.POST.get('interests').split(','):
-                new_interest, c = models.Interest.objects.get_or_create(name=interest)
-                profile.interest.add(new_interest)
+            
+            interests = request.POST.get('interests')
+            if interests:
+                for interest in interests.split(','):
+                    new_interest, c = models.Interest.objects.get_or_create(name=interest)
+                    profile.interest.add(new_interest)
             profile.save()
 
             return redirect(reverse('view_profile'))

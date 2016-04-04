@@ -72,7 +72,7 @@ class CoreTests(TestCase):
 		"""
 		testing roles fixture
 		"""
-		roles = ["Reader","Author","Copyeditor","Reviewer","Press Editor","Book Editor","Series Editor","Indexer","Typesetter"]
+		roles = ["Reader","Author","Copyeditor","Reviewer","Press Editor","Production Editor","Book Editor","Series Editor","Indexer","Typesetter"]
 		roles_exist=True	
 		for role_name in roles:
 			try:
@@ -80,14 +80,14 @@ class CoreTests(TestCase):
 			except models.Role.DoesNotExist:
 				roles_exist = False
 		number_of_roles = len(models.Role.objects.all())
-		self.assertEqual(number_of_roles==9, True)
+		self.assertEqual(number_of_roles==10, True)
 		self.assertEqual(roles_exist, True)
 	
 	def test_settings_fixture(self):
 		"""
 		testing settings fixture
 		"""
-		settings = ["accronym","base_url","ci_required","city","copyedit_author_instructions","copyedit_instructions","description","footer","index_instructions","press_name","proposal_form","suggested_reviewers_guide","submission_checklist_help","submission_guidelines","typeset_author_instructions","typeset_instructions","accepted_reminder","author_copyedit_request","author_submission_ack","author_typeset_request","contract_author_sign_off","copyedit_request","editor_submission_ack","external_review_request","from_address","index_request","overdue_reminder","proposal_accept","proposal_decline","proposal_request_revisions","proposal_review_request","request_revisions","review_request","revisions_reminder_email","typeset_request","typesetter_typeset_request","unaccepted_reminder","brand_header","favicon","remind_accepted_reviews","remind_overdue_reviews","remind_unaccepted_reviews","revisions_reminder"]
+		settings = ["accronym","additional_files_guidelines","base_url","ci_required","city","copyedit_author_instructions","copyedit_instructions","description","direct_submissions","footer","index_instructions","instructions_for_task_copyedit","instructions_for_task_index","instructions_for_task_proposal","instructions_for_task_review","instructions_for_task_typeset","manuscript_guidelines","oai_identifier","press_name","preview_review_files","primary_contact_email","primary_contact_name","proposal_form","publishing_committee","registration_message","review_suggestions","submission_checklist_help","submission_guidelines","suggested_reviewers","suggested_reviewers_guide","typeset_author_instructions","typeset_instructions","competing_interests","terms-conditions","accepted_reminder","author_copyedit_request","author_submission_ack","author_typeset_request","book_editor_ack","contract_author_sign_off","copyedit_request","decision_ack","editor_submission_ack","editorial_decision_ack","external_review_request","from_address","index_request","new_user_email","new_user_owner_email","notification_reminder_email","overdue_reminder","production_editor_ack","proposal_accept","proposal_decline","proposal_request_revisions","proposal_review_request","proposal_revision_submit_ack","proposal_submission_ack","proposal_update_ack","request_revisions","reset_password","review_due_ack","review_request","revisions_reminder_email","task_decline","typeset_request","typesetter_typeset_request","unaccepted_reminder","brand_header","favicon","notification_reminder","remind_accepted_reviews","remind_overdue_reviews","remind_unaccepted_reviews","revisions_reminder"]
 		settings_exist=True	
 		for setting_name in settings:
 			try:
@@ -95,7 +95,7 @@ class CoreTests(TestCase):
 			except models.Setting.DoesNotExist:
 				settings_exist = False
 		number_of_settings = len(models.Setting.objects.all())
-		self.assertEqual(number_of_settings==43, True)
+		self.assertEqual(number_of_settings,75)
 		self.assertEqual(settings_exist, True)
 	
 	def test_setting_groups_fixture(self):
@@ -365,7 +365,7 @@ class CoreTests(TestCase):
 		user.save()
 		resp = self.client.post(reverse('login'),{'user_name': 'user1','user_pass':"password1"})
 		message = self.get_specific_message(resp,0)
-		self.assertEqual(str(message), 'User account is not active.')
+		self.assertEqual(str(message), 'An email has been sent with a user activation link.')
 	def test_activate_user(self):
 		resp = self.client.post(reverse('register'), {'first_name': 'new','last_name':'last','username':'user1','email':'fake@faked.com','password1': 'password1','password2':"password1"})
 		print resp
@@ -440,7 +440,7 @@ class CoreTests(TestCase):
 		
 		self.assertEqual(resp.status_code, 200)
 		self.assertEqual("403" in content, False)
-		page_title = "Book Proposal :  %s , %s" % (proposal.title,proposal.subtitle)
+		page_title = "Book Proposal :  %s : %s" % (proposal.title,proposal.subtitle)
 		self.assertEqual(page_title in content, True)
 
 		proposal_reviews=submission_models.ProposalReview.objects.all()
@@ -450,7 +450,7 @@ class CoreTests(TestCase):
 		
 		self.assertEqual(resp.status_code, 200)
 		self.assertEqual("403" in content, False)
-		resp = self.client.post(reverse('start_proposal_review',kwargs={'proposal_id':proposal.id}),{'due_date': '2015-11-11', 'review_form': 1, 'committee': 2, 'reviewer': 1})
+		resp = self.client.post(reverse('start_proposal_review',kwargs={'proposal_id':proposal.id}),{'due_date': '2015-11-11', 'review_form': 1, 'committee': 2, 'reviewer': 1,'email_text':'hi'})
 		self.assertEqual(resp.status_code, 302)
 		self.assertEqual(resp['Location'], "http://testing/proposals/1/")
 		proposal_reviews=submission_models.ProposalReview.objects.all()
@@ -486,7 +486,7 @@ class CoreTests(TestCase):
 		
 		self.assertEqual(resp.status_code, 200)
 		self.assertEqual("403" in content, False)
-		resp = self.client.post(reverse('request_proposal_revisions',kwargs={'proposal_id':proposal.id}),{'revisions-email':'Dear user'})
+		resp = self.client.post(reverse('request_proposal_revisions',kwargs={'proposal_id':proposal.id}),{'revisions-email':'Dear user','due_date':'2015-11-11'})
 		self.assertEqual(resp.status_code, 302)
 		self.assertEqual(resp['Location'], "http://testing/proposals/")
 		proposal = submission_models.Proposal.objects.get(pk=1)
@@ -498,7 +498,7 @@ class CoreTests(TestCase):
 		
 		self.assertEqual(resp.status_code, 200)
 		self.assertEqual("403" in content, False)
-		resp =  self.client.post(reverse('add_proposal_reviewers',kwargs={'proposal_id':proposal.id}),{'due_date': '2015-11-11', 'committee': 2, 'reviewer': 4})
+		resp =  self.client.post(reverse('add_proposal_reviewers',kwargs={'proposal_id':proposal.id}),{'due_date': '2015-11-11', 'committee': 2, 'reviewer': 4,'email_text':'hi'})
 		self.assertEqual(resp.status_code, 302)
 		self.assertEqual(resp['Location'], "http://testing/proposals/1/")
 	
@@ -515,7 +515,7 @@ class CoreTests(TestCase):
 		
 		self.assertEqual(resp.status_code, 200)
 		self.assertEqual("403" in content, False)
-		resp = self.client.post(reverse('start_proposal_review',kwargs={'proposal_id':proposal.id}),{'due_date': '2015-11-11', 'review_form': 1, 'committee': 2, 'reviewer': 4})
+		resp = self.client.post(reverse('start_proposal_review',kwargs={'proposal_id':proposal.id}),{'due_date': '2015-11-11', 'review_form': 1, 'committee': 2, 'reviewer': 4,'email_text':'hi'})
 		self.assertEqual(resp.status_code, 302)
 		self.assertEqual(resp['Location'], "http://testing/proposals/1/")
 		proposal_reviews=submission_models.ProposalReview.objects.all()
