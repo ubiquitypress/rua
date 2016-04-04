@@ -80,7 +80,7 @@ class Language(models.Model):
 
 
 class APIConnector(models.Model):
-	slug = models.CharField(max_length=1000, unique = True)
+	slug = models.CharField(max_length=255, unique = True)
 	username = models.CharField(max_length=256, null=True, blank=True)
 	password = models.CharField(max_length=512, null=True, blank=True)
 

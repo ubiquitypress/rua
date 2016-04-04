@@ -16,7 +16,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='apiconnector',
             name='slug',
-            field=models.CharField(default=datetime.datetime(2016, 3, 24, 17, 28, 47, 409835, tzinfo=utc), unique=True, max_length=1000),
+            field=models.CharField(default=datetime.datetime(2016, 3, 24, 17, 28, 47, 409835, tzinfo=utc), unique=True, max_length=255),
             preserve_default=False,
         ),
     ]

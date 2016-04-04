@@ -15,7 +15,7 @@ class Migration(migrations.Migration):
             name='APIConnector',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('slug', models.CharField(max_length=1000, null=True, blank=True)),
+                ('slug', models.CharField(max_length=255, null=True, blank=True)),
                 ('username', models.CharField(max_length=256, null=True, blank=True)),
                 ('password', models.CharField(max_length=512, null=True, blank=True)),
             ],
