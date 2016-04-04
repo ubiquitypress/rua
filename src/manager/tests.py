@@ -135,64 +135,70 @@ class ManagerTests(TestCase):
 		self.assertEqual("403" in content, False)
 
 		for role in roles:
-			self.assertEqual(role.name in content, True)
-			role_resp = self.client.get(reverse('manager_role',kwargs={'slug':role.slug})) #load role page
-			role_content = role_resp.content
-			self.assertEqual(role_resp.status_code, 200)
-			self.assertEqual("403" in role_content, False)
-			have_role=[]
-			dont_have_role=[]
-			users=User.objects.all()
-			#get all users and see who has this role and who doesn't
-			for user in users:
-				if user.profile.roles.filter(name=role.name).exists():
-					have_role.append(user)
-				else:
-					dont_have_role.append(user)
-			#check for the users that have the role that a button exists for removing the role
-			for user in have_role:
-				remove_button="/manager/roles/%s/user/%s/remove/" % (role.slug,user.id)
-				self.assertEqual(remove_button in role_content, True)
-			#check for the users that don't have the role that a button exists for adding the role
-			for user in dont_have_role:
-				add_button="/manager/roles/%s/user/%s/add/" % (role.slug,user.id)
-				self.assertEqual(add_button in role_content, True)
-
-			#either remove all users from a role or add them all
-			expected_size=len(have_role)+len(dont_have_role)
-			if len(have_role)>0:
-				for user in have_role:
-					remove = self.client.post(reverse('manager_role_action',kwargs={'slug':role.slug,'user_id':user.id,'action':'remove'}))
-
-			elif len(dont_have_role)>0:				
-				for user in dont_have_role:
-					add = self.client.post(reverse('manager_role_action',kwargs={'slug':role.slug,'user_id':user.id,'action':'add'}))
-			
-			
-			role_resp = self.client.get(reverse('manager_role',kwargs={'slug':role.slug}))
-			role_content = role_resp.content
-			self.assertEqual(role_resp.status_code, 200)
-			self.assertEqual("403" in role_content, False)
-			have_role=[]
-			dont_have_role=[]
-			users=User.objects.all()
-			#recreate lists
-			for user in users:
-				if user.profile.roles.filter(name=role.name).exists():
-					have_role.append(user)
-				else:
-					dont_have_role.append(user)
-			# check which list has all the users and check that the buttons exist for removing or adding the roles 
-			if len(dont_have_role)>0:
-				self.assertEqual(len(dont_have_role),expected_size)
-				for user in dont_have_role:
-					add_button="/manager/roles/%s/user/%s/add/" % (role.slug,user.id)
-					self.assertEqual(add_button in role_content, True)
-			else:
-				self.assertEqual(len(have_role),expected_size)
+			if not role.slug == 'press-editor':
+				self.assertEqual(role.name in content, True)
+				role_resp = self.client.get(reverse('manager_role',kwargs={'slug':role.slug})) #load role page
+				role_content = role_resp.content
+				self.assertEqual(role_resp.status_code, 200)
+				self.assertEqual("403" in role_content, False)
+				have_role=[]
+				dont_have_role=[]
+				users=User.objects.all()
+				#get all users and see who has this role and who doesn't
+				for user in users:
+					if user.profile.roles.filter(name=role.name).exists():
+						have_role.append(user)
+					else:
+						dont_have_role.append(user)
+				#check for the users that have the role that a button exists for removing the role
 				for user in have_role:
 					remove_button="/manager/roles/%s/user/%s/remove/" % (role.slug,user.id)
 					self.assertEqual(remove_button in role_content, True)
+				#check for the users that don't have the role that a button exists for adding the role
+				for user in dont_have_role:
+					add_button="/manager/roles/%s/user/%s/add/" % (role.slug,user.id)
+					self.assertEqual(add_button in role_content, True)
+
+				#either remove all users from a role or add them all
+				expected_size=len(have_role)+len(dont_have_role)
+				print ""
+				print 'ROLE %s' % role.name
+				if len(have_role)>0:
+					for user in have_role:
+						print 'remove - %s' % user.username
+						remove = self.client.post(reverse('manager_role_action',kwargs={'slug':role.slug,'user_id':user.id,'action':'remove'}))
+
+				elif len(dont_have_role)>0:				
+					for user in dont_have_role:
+						print 'add - %s' % user.username
+						add = self.client.post(reverse('manager_role_action',kwargs={'slug':role.slug,'user_id':user.id,'action':'add'}))
+				
+				
+				role_resp = self.client.get(reverse('manager_role',kwargs={'slug':role.slug}))
+				role_content = role_resp.content
+				self.assertEqual(role_resp.status_code, 200)
+				have_role=[]
+				dont_have_role=[]
+				users=User.objects.all()
+				#recreate lists
+				for user in users:
+					if user.profile.roles.filter(name=role.name).exists():
+						print 'has role %s'% user.username
+						have_role.append(user)
+					else:
+						print 'does not have role %s'% user.username
+						dont_have_role.append(user)
+				# check which list has all the users and check that the buttons exist for removing or adding the roles 
+				if len(dont_have_role)>0:
+					self.assertEqual(len(dont_have_role),expected_size)
+					for user in dont_have_role:
+						add_button="/manager/roles/%s/user/%s/add/" % (role.slug,user.id)
+						self.assertEqual(add_button in role_content, True)
+				else:
+					self.assertEqual(len(have_role),expected_size)
+					for user in have_role:
+						remove_button="/manager/roles/%s/user/%s/remove/" % (role.slug,user.id)
+						self.assertEqual(remove_button in role_content, True)
 
 	def test_manager_groups(self):
 		resp = self.client.get(reverse('manager_groups'))
@@ -395,10 +401,10 @@ class ManagerTests(TestCase):
 				delete_button='/manager/forms/review/%s/element/%s/delete/' % (form.pk,field.id)
 				self.assertEqual(delete_button in form_content, True)
 				t=t+1
-			self.client.post(reverse('manager_edit_review_form',kwargs={'form_id':form.id}),{'delete':0})
+			self.client.get(reverse('manager_delete_review_form_element',kwargs={'form_id':form.id,'relation_id':review_models.FormElementsRelationship.objects.filter(form=form)[0].pk}))
 			form_element_relationships=review_models.FormElementsRelationship.objects.filter(form=form)
 			self.assertEqual(len(form_element_relationships), 0)
-		new_form_resp=self.client.post(reverse('manager_add_form'),{'name':'new_test_form','ref':'test-new_form','intro_text':'introduction','completion_text':'completed'})
+		new_form_resp=self.client.post(reverse('manager_add_new_form',kwargs={'form_type':'review'}),{'name':'new_test_form','ref':'test-new_form','intro_text':'introduction','completion_text':'completed'})
 		found = False
 		try:
 			new_form = review_models.Form.objects.get(name="new_test_form")
@@ -407,31 +413,14 @@ class ManagerTests(TestCase):
 			found=False
 		self.assertEqual(found,True)
 		self.assertEqual(new_form_resp.status_code, 302)
-		create_elements_url = "http://testing/manager/review-forms/form/%s/create/elements/" % new_form.id
+		create_elements_url = "http://testing/manager/forms/review/"
+		element_creating = "/form/%s/create/elements/" % new_form.id
 		self.assertEqual(new_form_resp['Location'], create_elements_url)
 		form_elements=review_models.FormElement.objects.all()
-		self.assertEqual(len(form_elements), 1)
-		new_form_resp=self.client.post(reverse('manager_create_elements',kwargs={'form_id':new_form.id}),{'name':'new_test_element','choices':'','field_type':'textarea','required':True})
-		form_elements=review_models.FormElement.objects.all()
-		self.assertEqual(len(form_elements), 2)
-		self.client.post(reverse('manager_create_elements',kwargs={'form_id':new_form.id}),{'delete':"1"})
+		self.assertEqual(len(form_elements), 0)
+		new_form_resp=self.client.post(reverse('manager_edit_review_form',kwargs={'form_id':new_form.id}),{'name':'new_test_element','choices':'','field_type':'textarea','required':True,'required':True,'order':5,'width': 'col-md-6','help_text':''})
 		form_elements=review_models.FormElement.objects.all()
 		self.assertEqual(len(form_elements), 1)
-		
-		new_form_resp=self.client.post(reverse('manager_create_elements',kwargs={'form_id':new_form.id}),{'continue':""})
-		create_fields_url = "http://testing/manager/review-forms/form/%s/add/field/" % new_form.id
-		self.assertEqual(new_form_resp.status_code, 302)
-		self.assertEqual(new_form_resp['Location'], create_fields_url)
-		form_element_relationships=review_models.FormElementsRelationship.objects.filter(form=new_form)
-		self.assertEqual(len(form_element_relationships), 0)
-		new_form_resp=self.client.post(reverse('manager_add_review_form_field',kwargs={'form_id':new_form.id}),{'form':"new_test_form","element":"1","order":5,"width":"col-md-4","help_text":"help"})
-		self.assertEqual(new_form_resp.status_code, 302)
-		self.assertEqual(new_form_resp['Location'], create_fields_url)
-		self.assertEqual("403" in new_form_resp.content, False)
-		form_element_relationships=review_models.FormElementsRelationship.objects.filter(form=new_form)
-		self.assertEqual(len(form_element_relationships), 1)
-
-		new_form_resp=self.client.post(reverse('manager_add_review_form_field',kwargs={'form_id':new_form.id}),{'finish':""})
-		finished_url = "http://testing/manager/review-forms/view/form/%s/" % new_form.id
-		self.assertEqual(new_form_resp.status_code, 302)
-		self.assertEqual(new_form_resp['Location'], finished_url)
+		self.client.get(reverse('manager_delete_review_form_element',kwargs={'form_id':new_form.id,'relation_id':2}))
+		form_elements=review_models.FormElement.objects.all()
+		self.assertEqual(len(form_elements), 0)
