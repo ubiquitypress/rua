@@ -80,10 +80,9 @@ class ManagerTests(TestCase):
 	def test_manager_access_not_staff(self):
 		login = self.client.login(username="rua_reviewer", password="tester")
 		resp = self.client.get(reverse('manager_index'))
+		self.assertEqual("403 - Permission Denied" in resp.content, True)
+		self.assertEqual(resp.status_code, 200)
 		
-		self.assertEqual(resp.status_code, 302)
-		self.assertEqual(resp['Location'], "http://testing/admin/login/?next=/manager/")
-	
 	def test_clear_cache(self):
 		resp = self.client.get(reverse('manager_flush_cache'))
 		self.assertEqual(resp.status_code, 302)
@@ -105,7 +104,7 @@ class ManagerTests(TestCase):
 		#add user
 		resp = self.client.post(reverse('add_user'), {'username': 'rua_new_user', 'first_name': 'Usera', 'last_name': 'Lastly', 'middle_name': 'Middler', 'roles': '2', 'country': 'GB', 'email': 'fake_new_user@fakeaddress.com', 'department': 'test', 'signature': 'Hieee', 'salutation': 'Mrs','institution': 'rua_testing', 'biography': 'bio'})
 		self.assertEqual(resp.status_code, 302)
-		self.assertEqual(resp['Location'], "http://testing/manager/user/")
+		self.assertEqual(resp['Location'], "http://testing/manager/user/?username=%s&password=%s"%("rua_new_user","None"))
 		found = False
 		try:
 			new_user = User.objects.get(username="rua_new_user")
@@ -312,27 +311,30 @@ class ManagerTests(TestCase):
 
 		for form in proposal_forms:
 			self.assertEqual(form.name in content, True)
-			view_button = "/manager/submission/proposal_forms/view/form/%s/" % form.id
+			view_button = "/manager/forms/proposal/%s/" % form.id
 			self.assertEqual(view_button in content, True)
-			form_resp = self.client.get(reverse('manager_view_proposal_form',kwargs={'form_id':form.id}))
+
+			form_resp = self.client.get(reverse('manager_edit_proposal_form',kwargs={'form_id':form.id}))
 			form_content = form_resp.content
 
 			self.assertEqual(form_resp.status_code, 200)
 			self.assertEqual("403" in form_content, False)
-			title = "Proposal Form: %s" % form.name
-			self.assertEqual(title in form_content, True)
-			self.assertEqual(form.intro_text in form_content, True)
-			self.assertEqual(form.completion_text in form_content, True)
+		#	title = "Proposal Form: %s" % form.name
+		#	self.assertEqual(title in form_content, True)
+		#	self.assertEqual(form.intro_text in form_content, True)
+		#	self.assertEqual(form.completion_text in form_content, True)
 			self.assertEqual("Fields" in form_content, True)
 			form_element_relationships=core_models.ProposalFormElementsRelationship.objects.filter(form=form)
 			self.assertEqual(len(form_element_relationships), 2)
+			
 			for field in form_element_relationships:
 				self.assertEqual(field.element.name in form_content, True)
+				
 				self.assertEqual(field.element.field_type in form_content, True)
 				delete_button='name="delete" value="%s"' % form.id
 				self.assertEqual(delete_button in form_content, True)
 			deleted = form_element_relationships[0]
-			self.client.post(reverse('manager_view_proposal_form',kwargs={'form_id':form.id}),{'delete':deleted.id})
+			self.client.post(reverse('manager_edit_proposal_form',kwargs={'form_id':form.id}),{'delete':deleted.id})
 			form_element_relationships=core_models.ProposalFormElementsRelationship.objects.filter(form=form)
 			self.assertEqual(len(form_element_relationships), 1)
 		
@@ -384,28 +386,29 @@ class ManagerTests(TestCase):
 
 		for form in review_forms:
 			self.assertEqual(form.name in content, True)
-			view_button = "/manager/review-forms/view/form/%s/" % form.id
+			view_button = "/manager/forms/review/%s/" % form.id
 			self.assertEqual(view_button in content, True)
-			form_resp = self.client.get(reverse('manager_view_review_form',kwargs={'form_id':form.id}))
+			form_resp = self.client.get(reverse('manager_edit_review_form',kwargs={'form_id':form.id}))
 			form_content = form_resp.content
 
 			self.assertEqual(form_resp.status_code, 200)
 			self.assertEqual("403" in form_content, False)
-			title = "Review Form: %s" % form.name
-			self.assertEqual(title in form_content, True)
-			self.assertEqual(form.intro_text in form_content, True)
-			self.assertEqual(form.completion_text in form_content, True)
+		#	title = "Review Form: %s" % form.name
+		#	self.assertEqual(title in form_content, True)
+		#	self.assertEqual(form.intro_text in form_content, True)
+		#	self.assertEqual(form.completion_text in form_content, True)
 			self.assertEqual("Fields" in form_content, True)
 			form_element_relationships=review_models.FormElementsRelationship.objects.filter(form=form)
 			self.assertEqual(len(form_element_relationships), 1)
 			t=0
 			for field in form_element_relationships:
-				self.assertEqual(field.element.name in form_content, True)
+				self.assertEqual("<td>%s</td>" % field.element.name in form_content, True)
+				
 				self.assertEqual(field.element.field_type in form_content, True)
-				delete_button='name="delete" value="%s"' % t
+				delete_button='/manager/forms/proposal/%s/element/%s/delete/' % (form.pk,field.id)
 				self.assertEqual(delete_button in form_content, True)
 				t=t+1
-			self.client.post(reverse('manager_view_review_form',kwargs={'form_id':form.id}),{'delete':0})
+			self.client.post(reverse('manager_edit_review_form',kwargs={'form_id':form.id}),{'delete':0})
 			form_element_relationships=review_models.FormElementsRelationship.objects.filter(form=form)
 			self.assertEqual(len(form_element_relationships), 0)
 		new_form_resp=self.client.post(reverse('manager_add_form'),{'name':'new_test_form','ref':'test-new_form','intro_text':'introduction','completion_text':'completed'})

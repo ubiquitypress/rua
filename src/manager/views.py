@@ -424,8 +424,12 @@ def add_user(request):
 
 			for interest in profile.interest.all():
 				profile.interest.remove(interest)
-
-			for interest in request.POST.get('interests').split(','):
+			
+			interests = []
+			if 'interests' in request.POST:
+				interests = request.POST.get('interests').split(',')
+			
+			for interest in interests:
 				new_interest, c = core_models.Interest.objects.get_or_create(name=interest)
 				profile.interest.add(new_interest)
 
@@ -457,10 +461,12 @@ def user_edit(request, user_id):
 			profile = profile_form.save()
 			for interest in profile.interest.all():
 				profile.interest.remove(interest)
-
-			for interest in request.POST.get('interests').split(','):
-				new_interest, c = core_models.Interest.objects.get_or_create(name=interest)
-				profile.interest.add(new_interest)
+			
+			interests = request.POST.get('interests')
+			if interests:
+				for interest in interests.split(','):
+					new_interest, c = core_models.Interest.objects.get_or_create(name=interest)
+					profile.interest.add(new_interest)
 			profile.save()
 			
 			return redirect(reverse('manager_users'))
