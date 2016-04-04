@@ -226,8 +226,8 @@ SILENCED_SYSTEM_CHECKS = (
 TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
 
 NOSE_ARGS = [
-        '--with-coverage',  # activate coverage report
-        '--with-doctest',  # activate doctest: find and run docstests
+      #  '--with-coverage',  # activate coverage report
+      #  '--with-doctest',  # activate doctest: find and run docstests
         '--verbosity=2',   # verbose output 
         '--nocapture',
         '--nologcapture',

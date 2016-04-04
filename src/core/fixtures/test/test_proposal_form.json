@@ -1,1 +1,16 @@
-[{"fields": {"proposal_fields": [], "intro_text": "introduction", "completion_text": "completion", "ref": "test-proposal", "name": "rua_proposal_form"}, "model": "core.proposalform", "pk": 1}, {"fields": {"field_type": "text", "required": true, "name": "rua_element", "choices": ""}, "model": "core.proposalformelement", "pk": 1}, {"fields": {"field_type": "text", "required": false, "name": "rua_element_2", "choices": ""}, "model": "core.proposalformelement", "pk": 2}, {"fields": {"help_text": "help", "width": "col-md-6", "order": 1, "form": 1, "element": 1}, "model": "core.proposalformelementsrelationship", "pk": 1}, {"fields": {"help_text": "help", "width": "col-md-12", "order": 3, "form": 1, "element": 2}, "model": "core.proposalformelementsrelationship", "pk": 2}]
+[
+{
+  "fields": {
+    "proposal_fields": [
+      1,
+      2
+    ],
+    "intro_text": "introduction",
+    "completion_text": "completion",
+    "ref": "test-proposal",
+    "name": "rua_proposal_form"
+  },
+  "model": "core.proposalform",
+  "pk": 1
+}
+]
