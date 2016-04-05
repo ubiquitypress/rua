@@ -94,10 +94,34 @@ class SubmissionTests(TestCase):
 	
 		forms = models.Proposal.objects.all()
 		self.assertEqual(forms.count(), 1)
+		
+		resp=self.client.get(reverse('proposal_view_submitted', kwargs={"proposal_id":1}))
+		content =resp.content
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
+		
+		resp=self.client.post(reverse('proposal_view_submitted', kwargs={"proposal_id":1}),{"book_submit":"True","title":"rua_proposal_title","subtitle":"rua_proposal_subtitle","author":"rua_user","rua_element":"example","rua_element_2":"example"})
+		content =resp.content
+		self.assertEqual(resp.status_code, 302)
+		self.assertEqual("403" in content, False)
+		
+
+		resp=self.client.get(reverse('proposal_history_submitted', kwargs={"proposal_id":1}))
+		content =resp.content
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
+
+		resp=self.client.get(reverse('proposal_history_view_submitted', kwargs={"proposal_id":1,'history_id':1}))
+		content =resp.content
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
+		
+		
 
 		notes = models.ProposalNote.objects.all()
 		self.assertEqual(notes.count(), 0)
 		resp=self.client.get(reverse('submission_notes_add', kwargs={"proposal_id":1}))
+		content =resp.content
 		self.assertEqual(resp.status_code, 200)
 		self.assertEqual("403" in content, False)
 
@@ -106,14 +130,17 @@ class SubmissionTests(TestCase):
 		self.assertEqual(notes.count(), 1)
 		
 		resp=self.client.get(reverse('submission_notes_view', kwargs={"proposal_id":1,"note_id":1}))
+		content =resp.content
 		self.assertEqual(resp.status_code, 200)
 		self.assertEqual("403" in content, False)
 
 		resp=self.client.get(reverse('submission_notes_update', kwargs={"proposal_id":1,"note_id":1}))
+		content =resp.content
 		self.assertEqual(resp.status_code, 200)
 		self.assertEqual("403" in content, False)
 
 		resp=self.client.post(reverse('submission_notes_update', kwargs={"proposal_id":1,"note_id":1}),{"text":"note_test"})
+		content =resp.content
 		self.assertEqual("403" in content, False)
 
 		resp = self.client.get(reverse('proposal_revisions',kwargs={"proposal_id":1}))
