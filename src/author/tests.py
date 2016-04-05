@@ -79,12 +79,14 @@ class AuthorTests(TestCase):
 		self.assertEqual( "Submission" in content, True)
 	
 	def test_submission_tasks(self):
+		#core_models.CopyeditAssignment.objects.all()[0].delete()
 		resp =  self.client.get(reverse('tasks',kwargs={'submission_id':self.book.id}))
 		content =resp.content
+		
 		self.assertEqual(resp.status_code, 200)
 		self.assertEqual("403" in content, False)
 		self.assertEqual("My Tasks" in content, True)
-		self.assertEqual("No outstanding tasks" in content, True)
+		self.assertEqual("<h5>No outstanding tasks</h5>" in content, True)
 		self.typeset_assignment= core_models.TypesetAssignment.objects.get(pk=1)
 		self.typeset_assignment.author_invited=timezone.now()
 		self.typeset_assignment.save()

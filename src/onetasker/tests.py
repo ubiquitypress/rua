@@ -134,7 +134,7 @@ class OnetaskerTests(TestCase):
 			assignment.save()
 			response = self.client.post(reverse('onetasker_task_hub',kwargs={'assignment_type':task.get('type'),'assignment_id':task.get('assignment').id}), {'decision': 'decline'})
 			self.assertEqual(response.status_code, 302)
-			self.assertEqual(response['Location'], "http://testing/tasks/copyedit/1/decline/")
+			self.assertEqual(response['Location'], "http://testing/tasks/%s/1/decline/" % task.get('type'))
 
 
 

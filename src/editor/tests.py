@@ -91,15 +91,13 @@ class EditorTests(TestCase):
 		authors = self.book.author.all()
 		for author in authors:
 			self.assertEqual( author.full_name() in content, True)
-		self.assertEqual("DESCRIPTION" in content, True)
-		self.assertEqual( self.book.description in content, True)
 		self.assertEqual("COVER LETTER" in content, True)
 		self.assertEqual( self.book.cover_letter in content, True)
 		self.assertEqual("REVIEWER SUGGESTIONS" in content, True)
 		self.assertEqual( self.book.reviewer_suggestions in content, True)
 		self.assertEqual("COMPETING INTERESTS" in content, True)
 		self.assertEqual( self.book.competing_interests in content, True)
-		resp =  self.client.post(reverse('editor_submission',kwargs={'submission_id':self.book.id}),{'review':''})
+		resp =  self.client.post(reverse('editor_decision',kwargs={'submission_id':self.book.id,'decision':'review'}),{'skip':'','decision':'review'})
 		book = core_models.Book.objects.get(pk=1)
 		self.assertEqual(book.stage.current_stage=='review',True)
 	
@@ -246,7 +244,7 @@ class EditorTests(TestCase):
 
 		
 	def test_editor_editing(self):
-		resp =  self.client.post(reverse('editor_review',kwargs={'submission_id':self.book.id}),{'move_to_editing':''})
+		resp =  self.client.post(reverse('editor_decision',kwargs={'submission_id':self.book.id,'decision':'editing'}),{'skip':'','decision':'editing'})
 		book = core_models.Book.objects.get(pk=1)
 		self.assertEqual(book.stage.current_stage=='editing',True)
 
