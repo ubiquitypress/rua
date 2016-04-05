@@ -1,0 +1,16 @@
+[
+{
+  "fields": {
+    "status": "submission",
+    "subtitle": "",
+    "form": 1,
+    "author": "",
+    "title": "ohon",
+    "book_type": "monograph",
+    "owner": 1,
+    "data": "{\"rua_element\": [\"\", \"text\"], \"rua_element_2\": [\"\", \"text\"]}"
+  },
+  "model": "submission.incompleteproposal",
+  "pk": 1
+}
+]

@@ -178,7 +178,9 @@ def submission_additional_files(request, book_id, file_type):
 		files = core_models.File.objects.filter(book=book, kind='additional')
 	elif file_type == 'manuscript_files':
 		files = core_models.File.objects.filter(book=book, kind='manuscript')
-
+	else:
+		files = None
+		
 	if request.POST:
 		for _file in files:
 			_file.label = request.POST.get('label_%s' % _file.id)
@@ -419,7 +421,7 @@ def incomplete_proposal(request,proposal_id):
 			incomplete_proposal.book_type = proposal_type
 			incomplete_proposal.save()
 			proposal_data_processing(request,incomplete_proposal,proposal_form_id)
-			messages.add_message(request, messages.SUCCESS, 'Proposal %s saved' % proposal.id)
+			messages.add_message(request, messages.SUCCESS, 'Proposal %s saved' % incomplete_proposal.id)
 			return redirect(reverse('user_dashboard',kwargs = {}))
 
 

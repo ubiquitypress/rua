@@ -1,0 +1,36 @@
+[
+{
+  "fields": {
+    "kind": "manuscript",
+    "description": null,
+    "date_modified": "2015-10-30T11:38:46.087Z",
+    "sequence": 1,
+    "uuid_filename": "6301cc01-5c89-4fc5-ae1b-c914bfe28988",
+    "label": "rua_manuscript",
+    "stage_uploaded": 1,
+    "mime_type": "unknown",
+    "original_filename": "test_manuscript",
+    "owner": 1,
+    "date_uploaded": "2015-10-30T11:38:35.509Z"
+  },
+  "model": "core.file",
+  "pk": 1
+},
+{
+  "fields": {
+    "kind": "additional",
+    "description": null,
+    "date_modified": "2015-10-30T11:39:21.747Z",
+    "sequence": 1,
+    "uuid_filename": "e666af5d-a678-4d15-be67-1ec4460243a5",
+    "label": "rua_additional_file",
+    "stage_uploaded": 1,
+    "mime_type": "unknown",
+    "original_filename": "test_manuscript",
+    "owner": 1,
+    "date_uploaded": "2015-10-30T11:39:13.939Z"
+  },
+  "model": "core.file",
+  "pk": 2
+}
+]
