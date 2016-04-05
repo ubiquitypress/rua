@@ -249,7 +249,7 @@ class EditorTests(TestCase):
 		editorial_assignments = core_models.EditorialReviewAssignment.objects.all()
 		self.assertEqual(editorial_assignments.count(), 1)
 		editorial_assignment = core_models.EditorialReviewAssignment.objects.get(pk=1)
-		resp = self.client.get(reverse('editor_add_editorial_reviewers',kwargs={'submission_id':1,'access_key':editorial_assignment.editorial_board_access_key}))
+		resp = self.client.get(reverse('editorial_review',kwargs={'submission_id':1,'access_key':editorial_assignment.editorial_board_access_key}))
 		self.assertEqual(resp.status_code, 200)
 		self.assertEqual("403" in resp.content, False)
 	
