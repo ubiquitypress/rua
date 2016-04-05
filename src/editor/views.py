@@ -435,6 +435,17 @@ def editor_review_round(request, submission_id, round_number):
 
 	return render(request, template, context)
 
+
+@is_book_editor
+def editor_review_round_cancel(request, submission_id, round_number):
+	book = get_object_or_404(models.Book, pk=submission_id)
+	reviews = models.ReviewAssignment.objects.filter(book=book, review_round__book=book, review_round__round_number=round_number)
+	for review in reviews:
+		review.delete()
+	logic.cancel_review_round(book)
+	return redirect(reverse('editor_review', kwargs={'submission_id': submission_id}))
+
+
 @is_book_editor
 def editorial_review_view(request, submission_id, review_id):
 	book = get_object_or_404(models.Book, pk=submission_id)

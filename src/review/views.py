@@ -197,13 +197,19 @@ def review(request, review_type, submission_id, review_round, access_key=None):
 
 			json_data = smart_text(json.dumps(save_dict))
 			if review_assignment.reopened:
-				review_assignment.results.data = json_data
-				review_assignment.results.save()
-				review_assignment.reopened=False
+				if review_assignment.results:
+					review_assignment.results.data = json_data
+					review_assignment.results.save()
+				else:
+					form_results = models.FormResult(form=submission.review_form, data=json_data)
+					form_results.save()
+					review_assignment.results = form_results
+					review_assignment.reopened=False
 			else:
 				form_results = models.FormResult(form=submission.review_form, data=json_data)
 				form_results.save()
 				review_assignment.results = form_results
+				review_assignment.save()
 
 			if request.FILES.get('review_file_upload'):
 				handle_review_file(request.FILES.get('review_file_upload'), submission, review_assignment, 'reviewer')

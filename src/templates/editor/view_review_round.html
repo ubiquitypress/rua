@@ -116,3 +116,21 @@
   {% endfor %}
 
 </ul>
+{% if review_round.round_number == submission.get_latest_review_round %}
+<br>
+<a href="{% url 'editor_review_round_cancel' submission.id review_round.round_number %}" class="btn btn-danger" onclick="return confirm_function()" style="width:100%">Cancel Review Round</a>
+{% endif %}
+
+{% block js %}
+<script>
+  function confirm_function() {
+      var agree=confirm("All review assignments will be deleted. Are you sure you want to cancel this review round?");
+
+      if (agree){
+        return true;
+      } else {
+        return false;
+      }
+  }
+</script>
+{% endblock js %}

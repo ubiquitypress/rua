@@ -164,6 +164,11 @@ def create_new_review_round(book):
 	next_round = latest_round.get('max')+1 if latest_round.get('max') > 0 else 1
 	return models.ReviewRound.objects.create(book=book, round_number=next_round)
 
+def cancel_review_round(book):
+	latest_round = models.ReviewRound.objects.filter(book=book).aggregate(max=Max('round_number'))
+	cancel_round = models.ReviewRound.objects.get(book=book,round_number=latest_round.get('max'))
+	cancel_round.delete()
+
 def handle_review_assignment(request,book, reviewer, review_type, due_date, review_round, user, email_text, attachment=None):
 	obj, created = models.ReviewAssignment.objects.get_or_create(
 			review_type=review_type,
