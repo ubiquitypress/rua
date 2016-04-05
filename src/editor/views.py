@@ -615,6 +615,12 @@ def update_editorial_review_due_date(request, submission_id, review_id):
 	}
 
 	return render(request, template, context)
+@is_book_editor
+def editorial_review_delete(request,submission_id,review_id):
+	book = get_object_or_404(models.Book, pk=submission_id)
+	review_assignment = get_object_or_404(models.EditorialReviewAssignment, pk=review_id)
+	review_assignment.delete()
+	return redirect(reverse('editor_review', kwargs={'submission_id': book.id}))
 
 @is_book_editor
 def editor_editorial_decision(request, submission_id, review_id, decision):

@@ -223,8 +223,6 @@ class ReviewTests(TestCase):
 		self.assignment= core_models.ReviewAssignment.objects.get(pk=1)
 		self.assertEqual(self.assignment.reopened, False)
 		
-	
-
 
 	def test_access_key(self):
 		self.assignment= core_models.ReviewAssignment.objects.get(pk=1)
