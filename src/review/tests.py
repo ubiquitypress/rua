@@ -209,13 +209,18 @@ class ReviewTests(TestCase):
 		self.assertEqual("403" in content, False)
 		self.assignment.reopened = True
 		self.assignment.save()
+		form_results = models.FormResult(form=self.book.review_form, data="")
+		form_results.data ='{"rua_name": ["cxxccxc", "text"]}'
+		form_results.save()
+		self.assignment.results = form_results
+		self.assignment.save()
 		self.assertEqual(self.assignment.reopened, True)
 		resp = self.client.get(reverse('review_without_access_key',kwargs={'review_type':self.assignment.review_type,'submission_id':1,'review_round':1}))
 		self.assertEqual(resp.status_code, 200)
 		resp = self.client.post(reverse('review_without_access_key',kwargs={'review_type':self.assignment.review_type,'submission_id':1,'review_round':1}), {'rua_name': 'example','recommendation':'accept','competing_interests':'nothing'})
 		self.assertEqual(resp.status_code, 302)
+		print resp.content
 		self.assignment= core_models.ReviewAssignment.objects.get(pk=1)
-		self.assignment.save()
 		self.assertEqual(self.assignment.reopened, False)
 		
 	
