@@ -237,6 +237,63 @@ class EditorTests(TestCase):
 		self.assertEqual(resp.status_code, 302)
 		self.assertEqual(resp['Location'], "http://testing/editor/submission/1/review/round/2/")
 
+	def test_published_books(self):
+		book = core_models.Book.objects.get(pk=1)
+		resp = self.client.get(reverse('editor_published_books'))
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in resp.content, False)
+		self.assertEqual("Published Submissions" in resp.content, True)
+
+	def test_editor_add_editors(self):
+		book = core_models.Book.objects.get(pk=1)
+		resp = self.client.get(reverse('editor_add_editors', kwargs={'submission_id':1}))
+		print resp.content
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in resp.content, False)
+		self.assertEqual(len(book.book_editors.all()), 0)
+		resp = self.client.get(reverse('editor_add_editors', kwargs={'submission_id':1}),{'add':1})		
+		book = core_models.Book.objects.get(pk=1)
+		self.assertEqual(len(book.book_editors.all()), 1)
+		resp = self.client.get(reverse('editor_add_editors', kwargs={'submission_id':1}),{'remove':1})
+		book = core_models.Book.objects.get(pk=1)
+		self.assertEqual(len(book.book_editors.all()), 0)
+
+	def test_editor_change_owner(self):
+		book = core_models.Book.objects.get(pk=1)
+		resp = self.client.get(reverse('editor_add_editors', kwargs={'submission_id':1}),{'add':2})
+		resp = self.client.get(reverse('editor_change_owner', kwargs={'submission_id':1}))
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in resp.content, False)
+
+	def test_editor_notes(self):
+		book = core_models.Book.objects.get(pk=1)
+		resp = self.client.get(reverse('editor_notes', kwargs={'submission_id':1}))
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in resp.content, False)
+		notes = core_models.Note.objects.all()
+		self.assertEqual(notes.count(), 0)
+		resp = self.client.get(reverse('editor_notes_add', kwargs={'submission_id':1}))
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in resp.content, False)
+		resp=self.client.post(reverse('editor_notes_add', kwargs={"submission_id":1}),{"text":"note_test"})
+		notes = core_models.Note.objects.all()
+		self.assertEqual(notes.count(), 1)
+		
+		resp=self.client.get(reverse('editor_notes_view', kwargs={"submission_id":1,"note_id":1}))
+		content =resp.content
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
+
+		resp=self.client.get(reverse('editor_notes_update', kwargs={"submission_id":1,"note_id":1}))
+		content =resp.content
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
+
+		resp=self.client.post(reverse('editor_notes_update', kwargs={"submission_id":1,"note_id":1}),{"text":"note_test"})
+		content =resp.content
+		self.assertEqual("403" in content, False)
+
+
 	def test_editorial_reviewer_assignment(self):
 		book = core_models.Book.objects.get(pk=1)
 		editorial_assignments = core_models.EditorialReviewAssignment.objects.all()
