@@ -23,13 +23,10 @@
       <div class="col-md-8">
 
         <p>
-<a href="{% url 'editorial_review_delete' review_assignment.book.pk review_assignment.pk %}" class=" btn btn-danger btn-xs pull-left">
-          Delete
-              </a>
 
               {% if editorial_board_member%}
               {% if not review_assignment.editorial_board_results %}
-  <a class="btn btn-xs btn-review btn-round-half" href="{% url 'editorial_review' review_assignment.book.pk review_assignment.editorial_board_access_key %}" style="margin-left:8px">&nbsp;&nbsp;Go to Editorial Review &nbsp;&nbsp;</a>
+  <a class="btn btn-xs btn-review btn-round-half" href="{% url 'editorial_review' review_assignment.book.pk review_assignment.editorial_board_access_key %}" style="margin-left:4px">&nbsp;&nbsp;Go to Editorial Review &nbsp;&nbsp;</a>
 {% endif%}
 {% endif%}
           <br>
@@ -260,6 +257,23 @@
     {% endif%}
   </li>
 </ul>
-
+{% if not review_assignment.editorial_board_passed %}
+<br>
+<a href="{% url 'editorial_review_delete' review_assignment.book.pk review_assignment.pk %}" class="btn btn-danger" onclick="return confirm_function()" style="width:100%">Cancel Editorial Review</a>
+{% endif %}
 <hr />
 
+
+{% block js %}
+<script>
+  function confirm_function() {
+      var agree=confirm("The editorial board will no longer have access to the editorial review assignment. Are you sure you want to cancel it?");
+
+      if (agree){
+        return true;
+      } else {
+        return false;
+      }
+  }
+</script>
+{% endblock js %}

@@ -24,7 +24,7 @@ urlpatterns = patterns('',
 
     #Editorial
     url(r'^review/submission/(?P<submission_id>\d+)/access_key/(?P<access_key>[-\w./]+)/$', 'review.views.editorial_review', name='editorial_review'),
-    url(r'^review/submission/(?P<submission_id>\d+)/editial/(?P<review_id>[-\w./]+)/delete/$', 'editor.views.editorial_review_delete', name='editorial_review_delete'),
+    url(r'^review/submission/(?P<submission_id>\d+)/editorial/(?P<review_id>[-\w./]+)/delete/$', 'editor.views.editorial_review_delete', name='editorial_review_delete'),
     
     url(r'^review/complete/submission/(?P<submission_id>\d+)/access_key/(?P<access_key>[-\w./]+)/$', 'review.views.editorial_review_complete', name='editorial_review_complete'),
     url(r'^review/submission/(?P<submission_id>\d+)/add/$', 'editor.views.editor_add_editorial_reviewers', name='editor_add_editorial_reviewers'),
