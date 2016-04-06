@@ -2628,6 +2628,18 @@
   "model": "core.setting",
   "pk": 77
 },
+
+{
+  "fields": {
+    "value": "",
+    "group": 1,
+    "name": "submit_proposals",
+    "types": "boolean",
+    "description": "If enabled, authors/editors can submit proposals to the press. If disabled, authors/editors cannot submit proposals."
+  },
+  "model": "core.setting",
+  "pk": 78
+},
 {
   "fields": {
     "proposal_fields": [

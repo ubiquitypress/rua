@@ -438,6 +438,9 @@ def incomplete_proposal(request,proposal_id):
 
 @login_required
 def start_proposal(request):
+	submit_proposals =  core_models.Setting.objects.get(group__name='general', name='submit_proposals').value
+	if not submit_proposals:
+		return redirect(reverse('user_dashboard'))
 	proposal_form_id = core_models.Setting.objects.get(name='proposal_form').value
 	proposal_form = manager_forms.GeneratedNotRequiredForm(form=core_models.ProposalForm.objects.get(pk=proposal_form_id))
 	default_fields = manager_forms.DefaultNotRequiredForm()

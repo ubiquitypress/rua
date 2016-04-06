@@ -17,6 +17,7 @@ from core.files import handle_file_update, handle_attachment, handle_file, handl
 @is_author
 def author_dashboard(request):
 	direct_submissions =  models.Setting.objects.get(group__name='general', name='direct_submissions').value
+	submit_proposals =  models.Setting.objects.get(group__name='general', name='submit_proposals').value
 	
 	template = 'author/dashboard.html'
 	context = {
@@ -27,6 +28,7 @@ def author_dashboard(request):
 		'author_task_number': len(logic.author_tasks(request.user)),
 		'new_messages': logic.check_for_new_messages(request.user),
 		'direct_submissions':direct_submissions,
+		'submit_proposals': submit_proposals,
 	}
 
 	return render(request, template, context)
