@@ -1346,7 +1346,7 @@ def proposal(request):
     context = {
         'proposal_list': proposals,
         'unassigned_proposal_list': unassigned_proposals,
-        'open': True,
+        'open': False,
     }
 
     return render(request, template, context)
