@@ -10,7 +10,7 @@
 <div class="dash-container">
  <ul class="chat" id="message-list">
       {% for note in notes %}
-        <li class="left clearfix well container-shadow-bottom">
+        <li class="left clearfix well">
           <span class="chat-img pull-left" style="margin-right:10px">
                 <img src="http://placehold.it/65/CCE0FF/fff&amp;text=&#9998;" alt="Pencil Icon" class="img-circle" />
             </span>
@@ -27,7 +27,7 @@
         </li>
         <input class="last_message" type="hidden" value="{{ note.pk }}">
         {% empty %}
-             <li class="left clearfix well container-shadow-bottom">
+             <li class="left clearfix well">
           No notes
           <br><br>
         </li>
