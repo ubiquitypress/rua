@@ -165,7 +165,19 @@ function popitup(url,title) {
     });
 </script>
 
+<script type="text/javascript">
+$(document).ready(function () { 
+    var elems = document.getElementsByTagName('*'), i;
+    for (i in elems) {
+        if((' ' + elems[i].className + ' ').indexOf(' ' + 'datepicker' + ' ')
+                > -1) {        
+      $("#"+elems[i].id).datepicker({ dateFormat: 'yy-mm-dd' }).val();
+        }
+    }
+});
+
 </script>
+
 <script language="javascript" type="text/javascript">
 $(document).ready(function () {    
        {%for field in default_fields_validated%}
