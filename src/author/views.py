@@ -108,9 +108,14 @@ def view_review_assignment(request, submission_id, round_id, review_id):
 	review_assignment = get_object_or_404(models.ReviewAssignment, pk=review_id)
 	review_rounds = models.ReviewRound.objects.filter(book=submission).order_by('-round_number')
 	result = review_assignment.results
-	relations = review_models.FormElementsRelationship.objects.filter(form=result.form)
-	data_ordered = order_data(decode_json(result.data), relations)
-
+	if result:
+		relations = review_models.FormElementsRelationship.objects.filter(form=result.form)
+	else:
+		relations = review_models.FormElementsRelationship.objects.filter(form=submission.review_form)
+	if result:
+		data_ordered = order_data(decode_json(result.data), relations)
+	else:
+		data_ordered = None
 	template = 'author/submission.html'
 	context = {
 		'author_include': 'author/review_revision.html',

@@ -119,7 +119,11 @@ class AuthorTests(TestCase):
 		self.assertEqual("Copyedit Review" in content, True)
 
 		
-
+	def test_review_assignment(self):
+		resp =  self.client.get(reverse('view_review_assignment',kwargs={'submission_id':self.book.id,'round_id':1,'review_id':1}))
+		content =resp.content
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
 		
 
 	def test_author_review_review_round(self):
