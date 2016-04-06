@@ -173,6 +173,16 @@ class EditorTests(TestCase):
 		self.assertEqual("No outstanding tasks" in content, False)
 		self.assertEqual("Typesetting Review" in content, True)
 
+	def test_editor_review_round_cancel(self):
+		book = core_models.Book.objects.get(pk=1)
+		self.assertEqual(book.stage.current_stage=='review',True)
+		rounds = core_models.ReviewRound.objects.all()
+		self.assertEqual(rounds.count(),1)
+		resp =  self.client.get(reverse('editor_review_round_cancel',kwargs={'submission_id':self.book.id,'round_number':1}))
+		rounds = core_models.ReviewRound.objects.all()
+		self.assertEqual(rounds.count(),0)
+	
+
 	def test_editor_review_review_round(self):
 		book = core_models.Book.objects.get(pk=1)
 		self.assertEqual(book.stage.current_stage=='review',True)
@@ -260,10 +270,20 @@ class EditorTests(TestCase):
 
 	def test_editor_change_owner(self):
 		book = core_models.Book.objects.get(pk=1)
+		self.assertEqual(book.owner, User.objects.get(pk=3))
 		resp = self.client.get(reverse('editor_add_editors', kwargs={'submission_id':1}),{'add':2})
 		resp = self.client.get(reverse('editor_change_owner', kwargs={'submission_id':1}))
 		self.assertEqual(resp.status_code, 200)
 		self.assertEqual("403" in resp.content, False)
+		resp = self.client.get(reverse('editor_change_owner', kwargs={'submission_id':1}),{'user':2})
+		book = core_models.Book.objects.get(pk=1)
+		self.assertEqual(book.owner, User.objects.get(pk=2))
+		resp = self.client.get(reverse('editor_change_owner', kwargs={'submission_id':1}),{'author':1})
+		book = core_models.Book.objects.get(pk=1)
+		author = core_models.Author.objects.get(pk=1)
+		self.assertEqual(book.owner.first_name,author.first_name)
+		self.assertEqual(book.owner.last_name,author.last_name)
+		self.assertEqual(book.owner.email,author.author_email)
 
 	def test_editor_notes(self):
 		book = core_models.Book.objects.get(pk=1)
@@ -309,8 +329,17 @@ class EditorTests(TestCase):
 		resp = self.client.get(reverse('editorial_review',kwargs={'submission_id':1,'access_key':editorial_assignment.editorial_board_access_key}))
 		self.assertEqual(resp.status_code, 200)
 		self.assertEqual("403" in resp.content, False)
-	
+		resp = self.client.post(reverse('editorial_review',kwargs={'submission_id':1,'access_key':editorial_assignment.editorial_board_access_key}), {'rua_name': 'example','recommendation':'accept','competing_interests':'nothing'})
+		editorial_assignment = core_models.EditorialReviewAssignment.objects.get(pk=1)
+		self.assertEqual(editorial_assignment.editorial_board_results != None, True)
+		resp = self.client.get(reverse('editorial_review_accept',kwargs={'submission_id':1,'review_id': 1, 'type':'editorial'}))
+		self.assertEqual(resp.status_code, 302)
+		self.assertEqual("403" in resp.content, False)
+		editorial_assignment = core_models.EditorialReviewAssignment.objects.get(pk=1)
+		self.assertEqual(editorial_assignment.publishing_committee_access_key != None, True)
+		self.assertEqual(editorial_assignment.editorial_board_passed, True)
 		
+
 	def test_editor_editing(self):
 		resp =  self.client.post(reverse('editor_decision',kwargs={'submission_id':self.book.id,'decision':'editing'}),{'skip':'','decision':'editing'})
 		book = core_models.Book.objects.get(pk=1)
