@@ -216,13 +216,13 @@ def view_profile(request):
     return render(request, template, context)
 
 @login_required
-def view_profile_readonly(request,username):
-    if request.user.username == username:
+def view_profile_readonly(request,user_id):
+    if request.user.pk == user_id:
         return redirect(reverse('view_profile'))
     user_exists = False
     user_profile = None
     try:
-        user_profile = models.Profile.objects.get(user__username=username)
+        user_profile = models.Profile.objects.get(user__pk=user_id)
         user_exists = True
     except:
         user_exists = False

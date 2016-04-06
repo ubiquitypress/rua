@@ -37,7 +37,7 @@
     <td>{{ proposal.title }}</td>
     <td>{{ proposal.subtitle }}</td>
     <td>{{ proposal.author }}</td>
-    <td><a href="{% url 'view_profile_readonly' proposal.owner.username %}">{{ proposal.owner.username }}</a> <sup> <a href="core/email.html" onclick="return popitup('/email/proposal/{{proposal.id}}/user/{{proposal.owner.id}}/','proposal_{{proposal.owner.id}}')"class="fa fa-envelope-o btn btn-xs btn-default"></a></sup></td>
+    <td><a href="{% url 'view_profile_readonly' proposal.owner.pk %}">{{ proposal.owner.username }}</a> <sup> <a href="core/email.html" onclick="return popitup('/email/proposal/{{proposal.id}}/user/{{proposal.owner.id}}/','proposal_{{proposal.owner.id}}')"class="fa fa-envelope-o btn btn-xs btn-default"></a></sup></td>
     <td>{{ proposal.get_status_display }}</td>
     <td>{{ proposal.date_submitted }}</td>
   </tr>
