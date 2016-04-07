@@ -25,10 +25,10 @@ def get_editors(review_assignment):
 	
 	return (press_editor_list + series_editor_list + book_editor_list)
 
-def notify_editors(book,message,editors,creator,workflow):
+def notify_editors(book, message, editors, creator, workflow):
 
 	for editor_details in editors:
-		notification = core_models.Task(book=book,assignee=editor_details['editor'],creator=creator,text=message,workflow=workflow)
+		notification = core_models.Task(book=book, assignee=editor_details['editor'], creator=creator, text=message, workflow=workflow)
 		notification.save()
 
 def has_additional_files(submission):
