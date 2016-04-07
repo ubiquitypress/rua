@@ -135,6 +135,12 @@ class OnetaskerTests(TestCase):
 			response = self.client.post(reverse('onetasker_task_hub',kwargs={'assignment_type':task.get('type'),'assignment_id':task.get('assignment').id}), {'decision': 'decline'})
 			self.assertEqual(response.status_code, 302)
 			self.assertEqual(response['Location'], "http://testing/tasks/%s/1/decline/" % task.get('type'))
+			response = self.client.get(reverse('onetasker_task_hub_decline',kwargs={'assignment_type':task.get('type'),'assignment_id':task.get('assignment').id}))
+			self.assertEqual(response.status_code, 200)
+			response = self.client.post(reverse('onetasker_task_hub_decline',kwargs={'assignment_type':task.get('type'),'assignment_id':task.get('assignment').id}), {'decline-email': 'decline'})
+			self.assertEqual(response.status_code, 302)
+			
+		
 
 
 

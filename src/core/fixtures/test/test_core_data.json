@@ -2631,7 +2631,7 @@
 
 {
   "fields": {
-    "value": "",
+    "value": "on",
     "group": 1,
     "name": "submit_proposals",
     "types": "boolean",
