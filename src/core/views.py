@@ -1398,7 +1398,7 @@ def create_proposal_form(proposal):
     document = Document()
     document.add_heading(proposal.title, 0)
     p = document.add_paragraph('You should complete this form and then use the proposal page to upload it.')
-    relations = models.ProposalFormElementsRelationship.objects.filter(form=proposal.form)
+    relations = models.ProposalFormElementsRelationship.objects.filter(form=proposal.form).order_by('order')
     document.add_heading("Title", level=1)
     document.add_paragraph(proposal.title).italic = True
     document.add_heading("Subtitle", level=1)
@@ -1407,8 +1407,10 @@ def create_proposal_form(proposal):
     document.add_paragraph(proposal.author).italic = True
 
     data = json.loads(proposal.data)
-    for k,v in data.items():
-        document.add_heading(k, level=1)        
+   
+    for relation in relations:
+        v = data[relation.element.name]
+        document.add_heading(relation.element.name, level=1)        
         text = BeautifulSoup(str(v[0]),"html.parser").get_text()
         document.add_paragraph(text).bold = True  
 
