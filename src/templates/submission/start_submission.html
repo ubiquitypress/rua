@@ -15,10 +15,16 @@
 	    {% csrf_token %}
 		<div class="form-group">
         <div class="row">
+        	{% if press.general.review_type_selection %}
 	  		<div class="col-md-3">{% bootstrap_field book_form.book_type %}</div>
 	  		<div class="col-md-3">{% bootstrap_field book_form.series %}</div>
       		<div class="col-md-3">{% bootstrap_field book_form.license %}</div>
       		<div class="col-md-3">{% bootstrap_field book_form.review_type %}</div>
+      		{% else %}
+	  		<div class="col-md-4">{% bootstrap_field book_form.book_type %}</div>
+	  		<div class="col-md-4">{% bootstrap_field book_form.series %}</div>
+      		<div class="col-md-4">{% bootstrap_field book_form.license %}</div>
+      		{% endif %}
 		</div>
     	</div>
       	<hr />
