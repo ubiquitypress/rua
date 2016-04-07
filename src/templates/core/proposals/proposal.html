@@ -18,8 +18,7 @@
   <table class="table table-bordered">
     <thead>
   <tr>
-    {% if open %}{% else %}
-    <th>ID</th>{% endif %}
+    <th>ID</th>
     <th>Book Title</th>
     <th>Subtitle</th>
     <th>Submitting Author/Editor</th>
@@ -29,9 +28,7 @@
   </tr></thead><tbody>
   {% for proposal in proposal_list %}
   <tr>
-    {% if open %}{% else %}
-   
-    <td>{{ proposal.pk }}</td>{% endif %}
+    <td>{{ proposal.pk }}</td>
     <td>{{ proposal.title }}</td>
     <td>{{ proposal.subtitle }}</td>
     <td>{{ proposal.owner.first_name }} {{ proposal.owner.last_name }}</td>
@@ -49,8 +46,7 @@
   <table class="table table-bordered">
     <thead>
   <tr>
-    {% if open %}{% else %}
-    <th>ID</th>{% endif %}
+    <th>ID</th>
     <th>Book Title</th>
     <th>Subtitle</th>
     <th>Date Submitted</th>
@@ -60,9 +56,7 @@
   </tr></thead><tbody>
   {% for proposal in unassigned_proposal_list %}
   <tr>
-    {% if open %}{% else %}
-   
-    <td>{{ proposal.pk }}</td>{% endif %}
+    <td>{{ proposal.pk }}</td>
     <td>{{ proposal.title }}</td>
     <td>{{ proposal.subtitle }}</td>
     <td>{{ proposal.date_submitted }}</td>
