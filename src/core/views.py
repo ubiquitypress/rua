@@ -1643,6 +1643,7 @@ def view_completed_proposal_review(request, proposal_id, assignment_id):
         'proposal_form':proposal_form,
         'review_assignment': review_assignment,
         'data_ordered': data_ordered,
+        'data_ordered_size': len(data_ordered),
         'result': result,
         'form':form,
         'recommendation_form':recommendation_form,
