@@ -20,7 +20,7 @@ from review import models as review_models
 from core import log, models, forms, logic
 from author import orcid
 from email import send_email,send_reset_email
-from files import handle_file_update, handle_attachment, handle_file, handle_proposal_file
+from files import handle_file_update, handle_attachment, handle_file, handle_proposal_file, handle_proposal_file_form
 from submission import models as submission_models
 from core.decorators import is_reviewer, is_editor, is_book_editor, is_book_editor_or_author, is_onetasker,is_author, is_press_editor
 from review import forms as review_forms
