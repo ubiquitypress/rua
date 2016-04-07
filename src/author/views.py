@@ -185,13 +185,15 @@ def revision(request, revision_id, submission_id):
 			log.add_log_entry(book=book, user=request.user, kind='revisions', message='%s submitted revisions for %s' % (request.user.profile.full_name(),revision.book.title), short_name='Revisions submitted')
 			messages.add_message(request, messages.SUCCESS, 'Revisions recorded, thanks.')
 			return redirect(reverse('author_dashboard'))
-	has_manuscript=False
-	has_additional=False
-	for f in book.files.all():
+
+	has_manuscript = False
+	has_additional = False
+	for file in book.files.all():
 		if file.kind == 'manuscript':
 			has_manuscript = True
 		elif file.kind == 'additional':
 			has_additional = True
+			
 	template = 'author/submission.html'
 	context = {
 		'submission': book,
