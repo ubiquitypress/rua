@@ -77,6 +77,13 @@ class ManagerTests(TestCase):
 		self.assertEqual(resp.status_code, 200)
 		self.assertEqual("403" in content, False)
 
+	def test_manager_about(self):
+		resp = self.client.get(reverse('manager_about'))
+		content =resp.content
+		
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
+
 	def test_manager_access_not_staff(self):
 		login = self.client.login(username="rua_reviewer", password="tester")
 		resp = self.client.get(reverse('manager_index'))
@@ -306,6 +313,27 @@ class ManagerTests(TestCase):
 		for item in items:
 			list_item="%s - %s" % (item.text,item.required)
 			self.assertEqual(list_item in content, True)
+		
+		for item in items:
+			resp = self.client.get(reverse('edit_submission_checklist', kwargs={'item_id':item.id}))
+			content =resp.content
+			
+			self.assertEqual(resp.status_code, 200)
+			self.assertEqual("403" in content, False)
+
+		self.client.post(reverse('edit_submission_checklist', kwargs={'item_id':3}),{'slug':'new_item','text':'item 3','required':False,'sequence':10})
+		item =submission_models.SubmissionChecklistItem.objects.get(pk=3)
+		self.assertEqual(item.required, False)
+		resp = self.client.get(reverse('delete_submission_checklist', kwargs={'item_id':item.id}))
+		items =submission_models.SubmissionChecklistItem.objects.all()
+		self.assertEqual(len(items), 2)
+	
+	def test_manager_series(self):
+		resp = self.client.get(reverse('series'))
+		content =resp.content		
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)		
+		
 	
 	def test_manager_proposal_forms(self):
 		resp = self.client.get(reverse('manager_proposal_forms'))
