@@ -75,6 +75,10 @@ def send_acknowldgement_email(book, press_editors):
         cc_eds = None
     email.send_email('New Submission', context, from_email, editor.email, editor_text, book=book, cc=cc_eds) 
 
+    for editor in press_editors:
+        notification = core_models.Task(book=book, assignee=editor, creator=press_editors[0], text='A new submission, {0}, has been made.'.format(book.title), workflow='review')
+        notification.save()
+
 def handle_book_labels(post, book, kind):
     for _file in book.files.all():
         if _file.kind == kind and  post.get("%s" % _file.id, None):
