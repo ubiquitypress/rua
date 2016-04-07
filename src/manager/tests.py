@@ -168,16 +168,13 @@ class ManagerTests(TestCase):
 
 				#either remove all users from a role or add them all
 				expected_size=len(have_role)+len(dont_have_role)
-				print ""
-				print 'ROLE %s' % role.name
+
 				if len(have_role)>0:
 					for user in have_role:
-						print 'remove - %s' % user.username
 						remove = self.client.post(reverse('manager_role_action',kwargs={'slug':role.slug,'user_id':user.id,'action':'remove'}))
 
 				elif len(dont_have_role)>0:				
 					for user in dont_have_role:
-						print 'add - %s' % user.username
 						add = self.client.post(reverse('manager_role_action',kwargs={'slug':role.slug,'user_id':user.id,'action':'add'}))
 				
 				
@@ -190,10 +187,8 @@ class ManagerTests(TestCase):
 				#recreate lists
 				for user in users:
 					if user.profile.roles.filter(name=role.name).exists():
-						print 'has role %s'% user.username
 						have_role.append(user)
 					else:
-						print 'does not have role %s'% user.username
 						dont_have_role.append(user)
 				# check which list has all the users and check that the buttons exist for removing or adding the roles 
 				if len(dont_have_role)>0:
@@ -332,8 +327,65 @@ class ManagerTests(TestCase):
 		resp = self.client.get(reverse('series'))
 		content =resp.content		
 		self.assertEqual(resp.status_code, 200)
-		self.assertEqual("403" in content, False)		
+		self.assertEqual("403" in content, False)
+		series = core_models.Series.objects.all()
+		self.assertEqual(series.count(), 0)
+
+		resp = self.client.get(reverse('series_add'))
+		content =resp.content		
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
+
+		resp = self.client.post(reverse('series_add'),{'name':'test_series','editor':1,'issn':'test issn','description':'test description','url':'http://localhost:8000/'})
+		self.assertEqual(resp.status_code, 302)
+		self.assertEqual("403" in resp.content, False)
+		self.assertEqual(resp['Location'], 'http://testing/manager/series/')
 		
+		series = core_models.Series.objects.all()
+		self.assertEqual(series.count(), 1)
+
+		resp = self.client.get(reverse('series_edit', kwargs={'series_id':1}))
+		content =resp.content		
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
+
+		resp = self.client.post(reverse('series_edit', kwargs={'series_id':1}),{'register':'','name':'test_series','editor':'1','issn':'test issn','description':'test description updated','url':'http://localhost:8000/'})
+		self.assertEqual(resp.status_code, 302)
+		self.assertEqual("403" in resp.content, False)
+		self.assertEqual(resp['Location'], 'http://testing/manager/series/')
+		series = core_models.Series.objects.get(pk=1)
+		self.assertEqual(series.description, 'test description updated')
+
+		resp = self.client.get(reverse('series_delete', kwargs={'series_id':1}))
+		content =resp.content		
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
+
+		
+		resp = self.client.get(reverse('series_submission_add', kwargs={'submission_id':1,'series_id':1}))
+		content =resp.content		
+		self.assertEqual(resp.status_code, 302)
+		self.assertEqual("403" in content, False)
+
+
+		book = core_models.Book.objects.get(pk=1)
+
+		self.assertEqual(book.series, core_models.Series.objects.get(pk=1))
+
+		resp = self.client.get(reverse('series_submission_remove', kwargs={'submission_id':1}))
+		content =resp.content		
+		self.assertEqual(resp.status_code, 302)
+		self.assertEqual("403" in content, False)
+
+		book = core_models.Book.objects.get(pk=1)
+		self.assertEqual(book.series, None)
+
+		resp = self.client.post(reverse('series_delete', kwargs={'series_id':1}))
+		series = core_models.Series.objects.all()
+		self.assertEqual(series.count(), 0)
+		
+		book = core_models.Book.objects.get(pk=1)
+
 	
 	def test_manager_proposal_forms(self):
 		resp = self.client.get(reverse('manager_proposal_forms'))
