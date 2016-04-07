@@ -171,26 +171,29 @@
                   </div>
 
                   <div class="row">
+                  <div class="col-md-4">
+                      {% bootstrap_field metadata_form.book_type %}
+                    </div>
                     <div class="col-md-4">
                       {% bootstrap_field metadata_form.series %}
                     </div>
                     <div class="col-md-4">
                       {% bootstrap_field metadata_form.license %}
                     </div>
-                    <div class="col-md-4">
-                      {% bootstrap_field metadata_form.pages %}
-                    </div>
                   </div>
 
                   <div class="row">
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                       {% bootstrap_field metadata_form.slug %}
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                       {% bootstrap_field metadata_form.review_type %}
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                       {% bootstrap_field metadata_form.publication_date %}
+                    </div>
+                    <div class="col-md-3">
+                      {% bootstrap_field metadata_form.pages %}
                     </div>
                   </div>
 

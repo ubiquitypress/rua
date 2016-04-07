@@ -107,7 +107,6 @@ class EditMetadata(forms.ModelForm):
 			'production_editors',
 			'reviewer_suggestions',
 			'competing_interests',
-			'book_type',
 			'owner',
 			'read_only_users',
 			'submission_date',
