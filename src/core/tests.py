@@ -515,7 +515,7 @@ class CoreTests(TestCase):
 		
 		self.assertEqual(resp.status_code, 200)
 		self.assertEqual("403" in content, False)
-		resp =  self.client.post(reverse('add_proposal_reviewers',kwargs={'proposal_id':proposal.id}),{'due_date': '2015-11-11', 'committee': 2, 'reviewer': 4,'email_text':'hi'})
+		resp =  self.client.post(reverse('add_proposal_reviewers',kwargs={'proposal_id':proposal.id}),{'due_date': '2015-11-11', 'committee': ['2'],'email_text':'hi'})
 		self.assertEqual(resp.status_code, 302)
 		self.assertEqual(resp['Location'], "http://testing/proposals/1/")
 	
@@ -578,6 +578,14 @@ class CoreTests(TestCase):
 		
 		self.assertEqual(resp.status_code, 200)
 		self.assertEqual("403" in content, False)
+
+		resp = self.client.get(reverse('switch-account-user',kwargs={'account_id':4}))
+		self.assertEqual(resp.status_code, 302)
+		self.assertEqual(resp['Location'], "http://testing/dashboard/")
+		resp = self.client.get(reverse('user_dashboard'))
+		self.assertEqual(resp.status_code, 302)
+		self.assertEqual(resp['Location'], "http://testing/review/dashboard/")
+		
 
 	def test_page(self):
 		resp = self.client.get(reverse('page',kwargs={'page_name':'competing_interests'}))
@@ -667,7 +675,7 @@ class CoreTests(TestCase):
 		
 		self.assertEqual(resp.status_code, 200)
 		self.assertEqual("403" in content, False)
-			
+
 		resp = self.client.post(reverse('reopen_proposal_review',kwargs={'proposal_id':1,'assignment_id':1}), {'due_date': '2015-11-11','email':'test', 'comments':'testing'})
 		review = submission_models.ProposalReview.objects.get(pk=1)
 		self.assertEqual(review.reopened, True)
