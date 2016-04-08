@@ -86,6 +86,14 @@
        <div class="col-md-4 dash-right bottom-space">
            <div class="dash-container" >
        <div class="dash-container" >
+       {% if review_assignment.reopened %} 
+       {% if review_assignment.access_key %}
+       <A class="btn btn-accept" style="width:100%" target="_blank" href="{% url 'review_complete_with_access_key_no_redirect' review_assignment.review_type review_assignment.book.pk review_assignment.review_round.round_number review_assignment.access_key %}"> View completed form </A>
+       {% else %}
+        <A class="btn btn-accept" style="width:100%"  target="_blank" href="{% url 'review_complete_no_redirect' review_assignment.review_type review_assignment.book.pk review_assignment.review_round.round_number %}">  View completed form </A>
+       {% endif %}
+       <hr>
+       {% endif %}
       <h4><b>COMPLETE REVIEW</b></h4>
       <p class="subtitle-form-text"><em> {{ form_info.intro_text|safe }} </em></p>
        <h4>1. Completed the Review Form</h4>

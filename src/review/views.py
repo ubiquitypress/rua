@@ -303,6 +303,40 @@ def review_complete(request, review_type, submission_id,review_round,access_key=
 	return render(request,template, context)
 
 
+@is_reviewer
+def review_complete_no_redirect(request, review_type, submission_id,review_round,access_key=None):
+
+	if access_key:
+		review_assignment = get_object_or_404(core_models.ReviewAssignment, access_key=access_key, results__isnull=False, declined__isnull=True, review_type=review_type, review_round=review_round, withdrawn = False)
+		submission = get_object_or_404(core_models.Book, pk=submission_id)
+	elif review_type == 'proposal':
+		submission = get_object_or_404(submission_models.Proposal, pk=submission_id)
+		review_assignment = get_object_or_404(submission_models.ProposalReview, user=request.user, proposal=submission, results__isnull=False)
+	else:
+		submission = get_object_or_404(core_models.Book, pk=submission_id)
+	 	review_assignment = get_object_or_404(core_models.ReviewAssignment, Q(user=request.user), Q(results__isnull=False), Q(review_round__round_number=review_round), Q(book=submission), Q(withdrawn = False), Q(review_type=review_type), Q(access_key__isnull=True) | Q(access_key__exact=''))
+
+	
+	result = review_assignment.results
+
+	relations = models.FormElementsRelationship.objects.filter(form=result.form)
+	data_ordered = core_logic.order_data(core_logic.decode_json(result.data), relations)
+
+	template = 'review/complete.html'
+	context = {
+		'submission': submission,
+		'review_assignment': review_assignment,
+		'form_info': submission.review_form,
+		'data_ordered': data_ordered,
+		'result': result,
+		'additional_files': logic.has_additional_files(submission),
+		'editors': logic.get_editors(review_assignment),
+		'instructions': core_models.Setting.objects.get(group__name='general', name='instructions_for_task_review').value
+	}
+
+	return render(request,template, context)
+
+
 def editorial_review(request, submission_id, access_key):
 
 	ci_required = core_models.Setting.objects.get(group__name='general', name='ci_required')

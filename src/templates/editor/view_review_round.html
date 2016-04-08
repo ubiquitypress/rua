@@ -40,6 +40,12 @@
         	<strong>Completed on: </strong>{{ review.completed }}
            {% if not review.reopened %}
  <a href="{% url 'editor_review_round_reopen' submission.id round_id review.pk %}" class="btn btn-xs btn-default" style="margin-top:-5px">Reopen</a>
+ {% else %}
+       {% if review.access_key %}
+       <A class="btn btn-xs btn-accept" style="margin-top:-5px" target="_blank" href="{% url 'review_complete_with_access_key_no_redirect' review.review_type review.book.pk review.review_round.round_number review.access_key %}"> View </A>
+       {% else %}
+        <A class="btn btn-xs btn-accept" style="margin-top:-5px" target="_blank" href="{% url 'review_complete_no_redirect' review.review_type review.book.pk review.review_round.round_number %}">  View </A>
+       {% endif %}
  {%endif%}
         	{% elif review.accepted %}
         	<strong>Accepted on: </strong>{{ review.accepted }}
