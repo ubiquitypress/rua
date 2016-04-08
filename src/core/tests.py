@@ -593,6 +593,39 @@ class CoreTests(TestCase):
 		
 		self.assertEqual(resp.status_code, 200)
 		self.assertEqual("403" in content, False)	
+	
+	def test_unassigned_proposal(self):
+		resp=self.client.get(reverse('proposal_assign'))
+		content =resp.content
+		
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
+		proposals = submission_models.Proposal.objects.filter(owner__isnull=True)
+		self.assertEqual(proposals.count(),0)
+		resp=self.client.post(reverse('proposal_assign'),{"book_submit":"True","title":"rua_proposal_title","subtitle":"rua_proposal_subtitle","author":"rua_user","rua_element":"example","rua_element_2":"example"})
+		proposals = submission_models.Proposal.objects.filter(owner__isnull=True)
+		self.assertEqual(proposals.count(),1)
+		proposal = proposals[0]
+		resp=self.client.get(reverse('proposal_assign_edit',kwargs={'proposal_id':proposal.pk}))
+		content =resp.content
+		
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
+		resp=self.client.post(reverse('proposal_assign_edit',kwargs={'proposal_id':proposal.pk}),{"book_submit":"True","title":"rua_proposal_title updated","subtitle":"rua_proposal_subtitle","author":"rua_user","rua_element":"example","rua_element_2":"example"})
+		content =resp.content
+		self.assertEqual("403" in content, False)
+		proposals = submission_models.Proposal.objects.filter(owner__isnull=True)
+		proposal = proposals[0]
+		self.assertEqual(proposal.title,"rua_proposal_title updated")
+		resp=self.client.get(reverse('proposal_assign_user',kwargs={'proposal_id':proposal.pk,'user_id':1}))
+		content =resp.content
+		
+		self.assertEqual(resp.status_code, 302)
+		self.assertEqual("403" in content, False)
+		proposals = submission_models.Proposal.objects.filter(owner__isnull=True)
+		self.assertEqual(proposals.count(),0)
+		
+		
 
 	def test_readonly_profile(self):
 		resp = self.client.get(reverse('view_profile_readonly',kwargs={'user_id':1}))
