@@ -625,6 +625,35 @@ class CoreTests(TestCase):
 		proposals = submission_models.Proposal.objects.filter(owner__isnull=True)
 		self.assertEqual(proposals.count(),0)
 		
+	def test_proposal_history(self):
+		resp=self.client.post(reverse('proposal_start'),{"book_submit":"True","title":"rua_proposal_title","subtitle":"rua_proposal_subtitle","author":"rua_user","rua_element":"example","rua_element_2":"example"})
+		resp=self.client.get(reverse('proposals_history'))
+		content =resp.content
+		
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
+		self.assertEqual("rua_proposal_title" in content, True)
+
+	def test_proposal_review(self):
+		resp=self.client.post(reverse('proposal_start'),{"book_submit":"True","title":"rua_proposal_title","subtitle":"rua_proposal_subtitle","author":"rua_user","rua_element":"example","rua_element_2":"example"})
+		resp=self.client.post(reverse('start_proposal_review', kwargs = {'proposal_id':1}),{'due_date': '2016-04-29', 'review_form': '1', 'indv-reviewer_length': '5', 'comm-reviewer_length': '5', 'email_text': 'Test', 'reviewer': ['4', '1'], 'committee':['2']})
+		proposal = submission_models.Proposal.objects.get(pk=1)
+		self.assertEqual(proposal.date_review_started != None, True)
+		reviews = submission_models.ProposalReview.objects.filter(proposal=proposal)
+		self.assertEqual(reviews.count(),2)
+		resp=self.client.get(reverse('view_proposal_review_decision',kwargs={'proposal_id':1,'assignment_id':1}))
+		content =resp.content
+		
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
+		resp=self.client.post(reverse('view_proposal_review_decision',kwargs={'proposal_id':1,'assignment_id':1}),{'accept':''})
+		resp=self.client.post(reverse('view_proposal_review_decision',kwargs={'proposal_id':1,'assignment_id':2}),{'decline':''})
+		reviews = submission_models.ProposalReview.objects.filter(proposal=proposal)
+		
+		self.assertEqual(reviews[0].accepted != None, True)
+		self.assertEqual(reviews[0].declined != None, False)
+		self.assertEqual(reviews[1].declined != None, True)
+		self.assertEqual(reviews[1].accepted != None, False)
 		
 
 	def test_readonly_profile(self):
