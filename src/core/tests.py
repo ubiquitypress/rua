@@ -654,6 +654,33 @@ class CoreTests(TestCase):
 		self.assertEqual(reviews[0].declined != None, False)
 		self.assertEqual(reviews[1].declined != None, True)
 		self.assertEqual(reviews[1].accepted != None, False)
+		resp = self.client.get(reverse('view_proposal_review',kwargs={'proposal_id':1,'assignment_id':1}))
+		content =resp.content
+		
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
+		resp = self.client.post(reverse('view_proposal_review',kwargs={'proposal_id':1,'assignment_id':1}), {'rua_name': 'example','recommendation':'accept','competing_interests':'nothing'})
+		review = submission_models.ProposalReview.objects.get(pk=1)
+		self.assertEqual(review.completed != None, True)
+		resp = self.client.get(reverse('reopen_proposal_review',kwargs={'proposal_id':1,'assignment_id':1}))
+		content =resp.content
+		
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
+			
+		resp = self.client.post(reverse('reopen_proposal_review',kwargs={'proposal_id':1,'assignment_id':1}), {'due_date': '2015-11-11','email':'test', 'comments':'testing'})
+		review = submission_models.ProposalReview.objects.get(pk=1)
+		self.assertEqual(review.reopened, True)
+		resp = self.client.get(reverse('view_proposal_review',kwargs={'proposal_id':1,'assignment_id':1}))
+		content =resp.content
+		
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
+		resp = self.client.post(reverse('view_proposal_review',kwargs={'proposal_id':1,'assignment_id':1}), {'rua_name': 'example','recommendation':'accept','competing_interests':'nothing'})
+		review = submission_models.ProposalReview.objects.get(pk=1)
+		self.assertEqual(review.reopened, False)
+
+		
 		
 
 	def test_readonly_profile(self):
