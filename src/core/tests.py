@@ -420,6 +420,23 @@ class CoreTests(TestCase):
 		self.assertEqual("In Editing" in content, True)
 		self.assertEqual("In Production" in content, True)
 
+		resp = self.client.get(reverse('overview_inprogress'))
+		content =resp.content
+		
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
+
+		self.assertEqual("Submissions In Progress" in content, True)
+
+		resp = self.client.get(reverse('proposal_overview'))
+		content =resp.content
+		
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
+		self.assertEqual("Proposals" in content, True)
+		self.assertEqual("Accepted Proposals" in content, True)
+		self.assertEqual("Declined Proposals" in content, True)
+
 	def test_proposals(self):
 		management.call_command('loaddata', 'test/test_proposal_form.json', verbosity=0)
 		management.call_command('loaddata', 'test/test_submission_proposal.json', verbosity=0)
@@ -548,8 +565,43 @@ class CoreTests(TestCase):
 		json_data =  json.loads(resp.content)
 		self.assertEqual(len(json_data)==0,True)
 
+	def test_unauth_reset(self):
+		resp = self.client.get(reverse('unauth_reset'))
+		content =resp.content
+		
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
 
+	def test_switch_account(self):
+		resp = self.client.get(reverse('switch-account'))
+		content =resp.content
+		
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
 
+	def test_page(self):
+		resp = self.client.get(reverse('page',kwargs={'page_name':'competing_interests'}))
+		content =resp.content
+		
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
+		self.assertEqual("Competing Interests" in content, True)
+
+	def test_log(self):
+		resp = self.client.get(reverse('view_log',kwargs={'submission_id':1}))
+		content =resp.content
+		
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)	
+
+	def test_readonly_profile(self):
+		resp = self.client.get(reverse('view_profile_readonly',kwargs={'user_id':1}))
+		content =resp.content
+		
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
+		self.assertEqual("/user/profile/update/" in content, False)
+		self.assertEqual("/user/profile/resetpassword/" in content, False)
 
 ##############################################	Form Tests	 ##############################################		
 
@@ -654,6 +706,13 @@ class CoreTests(TestCase):
 		resp = self.client.get(reverse('email_users', kwargs= {'group': 'unknown','submission_id':str(self.book.id)}))
 		self.assertEqual(resp.status_code, 302)	
 		self.assertEqual(resp['Location'], "http://testing/email/all/submission/1/")
+		
+		resp=self.client.post(reverse('proposal_start'),{"book_submit":"True","title":"rua_proposal_title","subtitle":"rua_proposal_subtitle","author":"rua_user","rua_element":"example","rua_element_2":"example"})
+		resp = self.client.get(reverse('email_user_proposal', kwargs= {'user_id': 1,'proposal_id':1}),  {'subject': 'all','to_values':self.author.author_email,"cc_values":"","bcc_values":"","body":'text'})
+		self.assertEqual(resp.status_code, 200)
+		resp = self.client.post(reverse('email_user_proposal', kwargs= {'user_id': 1,'proposal_id':1}),  {'subject': 'all','to_values':self.author.author_email,"cc_values":"","bcc_values":"","body":'text'})
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual( "was sent" in resp.content,True)
 
 
 
