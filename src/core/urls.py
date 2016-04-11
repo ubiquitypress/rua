@@ -101,6 +101,7 @@ urlpatterns = patterns('',
     # Proposals
 
     url(r'^proposals/$', 'core.views.proposal', name='proposals'),
+    url(r'^proposals/filter/(?P<user_id>\d+)/$', 'core.views.proposal', name='proposals_filtered'),
     url(r'^proposals/unassigned/$', 'core.views.assign_proposal', name='proposal_assign'),
     url(r'^proposals/unassigned/(?P<proposal_id>\d+)/edit/$', 'core.views.proposal_assign_edit', name='proposal_assign_edit'),
     

@@ -1326,7 +1326,7 @@ def proposal_assign_edit(request, proposal_id):
 
     return render(request, template, context)
 @is_editor
-def proposal(request):
+def proposal(request, user_id = None):
     proposal_list = submission_models.Proposal.objects.filter((~Q(status='declined') & ~Q(status='accepted') & Q(owner__isnull=False)))
     unassigned_proposals = submission_models.Proposal.objects.filter(owner__isnull=True)
    
@@ -1334,21 +1334,25 @@ def proposal(request):
     user_roles = [role.slug for role in request.user.profile.roles.all()]
 
     for proposal in proposal_list:
-        
-        if 'press-editor' in user_roles:
-            proposals.append(proposal)
-        elif not proposal.requestor:
-            proposals.append(proposal)
-        elif proposal.requestor==request.user:
-            proposals.append(proposal)
-        elif proposal.book_editors.filter(username=request.user.username).exists():
-            proposals.append(proposal)
+        if user_id:
+            if proposal.book_editors.filter(pk=user_id).exists():
+                proposals.append(proposal)
+        else:
+            if 'press-editor' in user_roles:
+                proposals.append(proposal)
+            elif not proposal.requestor:
+                proposals.append(proposal)
+            elif proposal.requestor==request.user:
+                proposals.append(proposal)
+            elif proposal.book_editors.filter(username=request.user.username).exists():
+                proposals.append(proposal)
 
     template = 'core/proposals/proposal.html'
     context = {
         'proposal_list': proposals,
         'unassigned_proposal_list': unassigned_proposals,
         'open': True,
+        'user_id':user_id,
     }
 
     return render(request, template, context)

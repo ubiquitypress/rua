@@ -15,6 +15,11 @@
 <div class="col-md-12">
 
   <hr />
+  {% if user_id %}
+  <a href="{% url 'proposals' %}" class="btn btn-danger pull-right"> Remove filter</a>
+  {% else %}
+  <a href="{% url 'proposals_filtered' request.user.pk %}" class="btn btn-primary pull-right"> Assigned to me </a>
+  {% endif %}
   <table class="table table-bordered">
     <thead>
   <tr>
