@@ -3,6 +3,6 @@
 {{ press.general.copyedit_author_instructions|safe }}
 {% endif %}
 <h4>Note from Editor</h4>
-<p>{{ copyedit.note_to_author|linebreaks }}</p>
+<p>{{ copyedit.note_to_author|safe }}</p>
 <h4>Files</h4>
 {% include "shared/review_files.html" with file_data=copyedit.copyedit_files.all %}
