@@ -1341,6 +1341,8 @@ def proposal(request):
             proposals.append(proposal)
         elif proposal.requestor==request.user:
             proposals.append(proposal)
+        elif proposal.book_editors.filter(username=request.user.username).exists():
+            proposals.append(proposal)
 
     template = 'core/proposals/proposal.html'
     context = {
