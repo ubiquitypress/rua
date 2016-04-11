@@ -537,7 +537,13 @@ class CoreTests(TestCase):
 		self.assertEqual(resp['Location'], "http://testing/proposals/1/")
 		proposal_reviews=submission_models.ProposalReview.objects.all()
 
+	def test_oai(self):
 		
+		resp = self.client.get(reverse('oai'))
+		content =resp.content
+		
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
 
 	def test_ajax_email_calls(self):
 		
@@ -571,6 +577,24 @@ class CoreTests(TestCase):
 		
 		self.assertEqual(resp.status_code, 200)
 		self.assertEqual("403" in content, False)
+		resp = self.client.post(reverse('unauth_reset'),{'username':'rua_author'})
+		content =resp.content
+		self.assertEqual(resp.status_code, 200)
+		profile = models.Profile.objects.get(user__username='rua_author')
+		resp = self.client.get(reverse('unauth_reset_code', kwargs = {'uuid':profile.reset_code}))
+		content =resp.content
+		self.assertEqual(resp.status_code, 302)
+		resp = self.client.get(reverse('unauth_reset_password', kwargs = {'uuid':profile.reset_code}))
+		content =resp.content
+		
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
+		resp = self.client.post(reverse('unauth_reset_password', kwargs = {'uuid':profile.reset_code}), {'password_1':'testing12','password_2':'testing12'})
+		content =resp.content
+		
+		self.assertEqual(resp.status_code, 302)
+		self.assertEqual(resp['Location'], "http://testing/login/")
+		
 
 	def test_switch_account(self):
 		resp = self.client.get(reverse('switch-account'))
@@ -762,6 +786,38 @@ class CoreTests(TestCase):
 		self.assertEqual(resp.status_code, 302)
 		self.assertEqual(resp['Location'], "http://testing/editor/submission/1/")
 
+	def test_upload_manuscript_file(self):
+
+		self.book = models.Book.objects.get(pk=1)
+		self.book.save()
+		resp = self.client.get(reverse('upload_manuscript',kwargs={'submission_id':self.book.id}))
+		content =resp.content
+		
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
+		self.assertEqual("Upload Manuscript File" in content, True)
+
+		manuscript_file = tempfile.NamedTemporaryFile(delete=False)
+		resp = self.client.post(reverse('upload_manuscript',kwargs={'submission_id':self.book.id}),{'file_type':'other','label':'test','manuscript':manuscript_file})
+		self.assertEqual(resp.status_code, 302)
+		self.assertEqual(resp['Location'], "http://testing/editor/submission/1/")
+
+	def test_upload_additional_file(self):
+
+		self.book = models.Book.objects.get(pk=1)
+		self.book.save()
+		resp = self.client.get(reverse('upload_additional',kwargs={'submission_id':self.book.id}))
+		content =resp.content
+		
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
+		self.assertEqual("Upload Additional File" in content, True)
+
+		additional_file = tempfile.NamedTemporaryFile(delete=False)
+		resp = self.client.post(reverse('upload_additional',kwargs={'submission_id':self.book.id}),{'file_type':'other','label':'test','additional':additional_file})
+		self.assertEqual(resp.status_code, 302)
+		self.assertEqual(resp['Location'], "http://testing/editor/submission/1/")
+	
 ############# Email
 
 	def test_email(self):
@@ -774,6 +830,10 @@ class CoreTests(TestCase):
 		#check that it exists in the database
 		
 		self.assertEqual(len(models.Book.objects.all())==1, True)
+		resp = self.client.get(reverse('email_users', kwargs= {'group': 'all','submission_id':str(self.book.id)}))
+		self.assertEqual(resp.status_code, 200)
+		content = resp.content
+		self.assertEqual("403" in content, False)
 		resp = self.client.post(reverse('email_users', kwargs= {'group': 'all','submission_id':str(self.book.id)}),  {'subject': 'all','to_values':self.author.author_email,"cc_values":"","bcc_values":"","body":'text'})
 		self.assertEqual(resp.status_code, 200)
 		self.assertEqual( "was sent" in resp.content,True)
