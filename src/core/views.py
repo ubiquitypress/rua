@@ -1566,6 +1566,7 @@ def view_proposal_review_decision(request, proposal_id, assignment_id):
         'proposal': proposal,
         'proposal_form':proposal_form,
         'review': review_assignment,
+        'data': data,
         'active': 'proposal_review',
         'relationships':relationships,
         'instructions': models.Setting.objects.get(group__name='general', name='instructions_for_task_proposal').value
