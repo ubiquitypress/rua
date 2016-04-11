@@ -1658,6 +1658,57 @@ def view_completed_proposal_review(request, proposal_id, assignment_id):
 
     return render(request, template, context)
 
+def get_list_of_editors(proposal):
+    book_editors = proposal.book_editors.all()
+    previous_editors=[]
+    for book_editor in book_editors:
+        previous_editors.append(book_editor)
+    all_book_editors = User.objects.filter(profile__roles__slug='book-editor')
+    
+    list_of_editors =[{} for t in range(0,len(all_book_editors)) ]  
+    for t,editor in enumerate(all_book_editors):
+        already_added = False
+        if editor in previous_editors:
+            already_added = True
+        list_of_editors[t] = {'editor': editor, 'already_added': already_added,}
+    return list_of_editors
+
+
+@is_press_editor
+def proposal_add_editors(request, proposal_id):
+    
+    proposal = get_object_or_404(submission_models.Proposal, pk=proposal_id)
+    
+    list_of_editors = get_list_of_editors(proposal)
+
+    email_text = models.Setting.objects.get(group__name='email', name='book_editor_ack').value
+    
+    if request.GET and "add" in request.GET:
+        user_id = request.GET.get("add")
+        user = User.objects.get(pk=user_id)
+        proposal.book_editors.add(user)
+        proposal.save()
+        list_of_editors = get_list_of_editors(proposal)
+
+    elif request.GET and "remove" in request.GET:
+        user_id = request.GET.get("remove")
+        user = User.objects.get(pk=user_id)
+        proposal.book_editors.remove(user)
+        proposal.save()
+        list_of_editors = get_list_of_editors(proposal)
+
+
+
+
+    template = 'core/proposals/add_editors.html'
+    context = {
+        'proposal': proposal,
+        'list_of_editors':list_of_editors,
+    }
+
+    return render(request, template, context)
+
+
 @is_reviewer
 def view_proposal_review(request, proposal_id, assignment_id):
 
