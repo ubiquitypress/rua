@@ -14,7 +14,7 @@
 {% endif %}
 
 <h3>DESCRIPTION</h3>
-{{ submission.description|linebreaks }}
+{{ submission.description|safe }}
 
 {% block js %}
 <script language="javascript" type="text/javascript">
