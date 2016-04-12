@@ -818,6 +818,49 @@ class CoreTests(TestCase):
 		self.assertEqual(resp.status_code, 302)
 		self.assertEqual(resp['Location'], "http://testing/editor/submission/1/")
 	
+	def test_delete_file(self):
+
+		self.book = models.Book.objects.get(pk=1)
+		self.book.save()
+		manuscript_file = tempfile.NamedTemporaryFile(delete=False)
+		resp = self.client.post(reverse('upload_manuscript',kwargs={'submission_id':self.book.id}),{'file_type':'other','label':'test','manuscript':manuscript_file})
+		
+		resp = self.client.get(reverse('delete_file',kwargs={'submission_id':self.book.id,'file_id':1,'returner':'new'}))
+		content =resp.content
+		
+		self.assertEqual(resp.status_code, 302)
+		self.assertEqual("403" in content, False)
+
+		self.assertEqual(resp['Location'], "http://testing/editor/submission/1/")
+		resp = self.client.get(reverse('delete_file',kwargs={'submission_id':self.book.id,'file_id':1,'returner':'new'}))
+		content =resp.content
+		
+		self.assertEqual(resp.status_code, 404)
+	
+	def test_update_file(self):
+
+		self.book = models.Book.objects.get(pk=1)
+		self.book.save()
+		manuscript_file = tempfile.NamedTemporaryFile(delete=False)
+		resp = self.client.post(reverse('upload_manuscript',kwargs={'submission_id':self.book.id}),{'file_type':'other','label':'test','manuscript':manuscript_file})
+		
+		resp = self.client.get(reverse('view_file',kwargs={'submission_id':self.book.id,'file_id':1}))
+		content =resp.content
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
+		resp = self.client.get(reverse('update_file',kwargs={'submission_id':self.book.id,'file_id':1,'returner':'new'}))
+		content =resp.content
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
+		resp = self.client.post(reverse('update_file',kwargs={'submission_id':self.book.id,'file_id':1,'returner':'new'}),{'rename':'new_label'})
+		content =resp.content
+		self.assertEqual(resp.status_code, 302)
+		self.assertEqual("403" in content, False)
+		resp = self.client.get(reverse('versions_file',kwargs={'submission_id':self.book.id,'file_id':1}))
+		content =resp.content
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
+	
 ############# Email
 
 	def test_email(self):
