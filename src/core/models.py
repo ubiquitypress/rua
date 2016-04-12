@@ -9,7 +9,7 @@ from decimal import Decimal
 from autoslug import AutoSlugField
 from datetime import datetime, timedelta, date
 from django.utils.safestring import mark_safe
-
+from revisions import models as revision_models
 from submission import models as submission_models
 
 fs = FileSystemStorage(location=settings.MEDIA_ROOT)
@@ -234,6 +234,12 @@ class Book(models.Model):
 
 	def number_of_notes(self):
 		return Note.objects.filter(book=self).count()
+
+	def revisions_requested(self):
+		if revision_models.Revision.objects.filter(book=self, completed__isnull=True):
+			return True
+		else:
+			return False
 
 	def start_editorial_review(self):
 		review = EditorialReviewAssignment.objects.filter(book=self,completed__isnull=True)

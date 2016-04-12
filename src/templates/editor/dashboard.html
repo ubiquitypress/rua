@@ -79,7 +79,7 @@
                 <h5>Book {{ book.id }}: {{ book.full_title }}</h5>
                 <p>{{ book.owner.profile.full_name }}</p>
                 {% if book.stage.current_stage %}
-                <p class="pull-right small {{ book.stage.current_stage }}">{{ book.stage.get_current_stage_display }}</p>
+                <p class="pull-right small {% if book.revisions_requested %}revisions{% else %}{{ book.stage.current_stage }}{% endif %}">{% if book.revisions_requested %}REVISIONS{% else %}{{ book.stage.get_current_stage_display }}{% endif %}</p>
                 {% else %}
                 <p class="pull-right small in_progress">In Progress</p>
                 {% endif %}
