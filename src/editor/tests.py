@@ -363,10 +363,25 @@ class EditorTests(TestCase):
 		self.assertEqual("COPYEDITING" in content, True)
 		self.assertEqual("INDEXING" in content, True)
 		self.assertEqual("Stage has not been initialised." in content, False)
+		
+		resp =  self.client.get(reverse('assign_indexer',kwargs={'submission_id':book.id}))
+		content =resp.content
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
 
 
-		management.call_command('loaddata', 'test/test_copyedit_assignment_data.json', verbosity=0)
-		management.call_command('loaddata', 'test/test_index_assignment_data.json', verbosity=0)
+		resp =  self.client.post(reverse('assign_indexer',kwargs={'submission_id':book.id}),{'due_date': '2016-04-21', 'indv-reviewer_length': ['5'], 'copyeditor': ['5'], 'attachment_file': '', 'note': 'Note', 'file': ['4'], 'assignment-files_length': ['5'], 'message': 'Dear'})
+		content =resp.content
+		self.assertEqual(resp.status_code, 302)
+		resp =  self.client.get(reverse('assign_copyeditor',kwargs={'submission_id':book.id}))
+		content =resp.content
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
+
+
+		resp =  self.client.post(reverse('assign_copyeditor',kwargs={'submission_id':book.id}),{'due_date': '2016-04-21', 'indv-reviewer_length': ['5'], 'copyeditor': ['5'], 'attachment_file': [''], 'note': 'Note', 'file': ['4'], 'assignment-files_length': ['5'], 'message': 'Dear'})
+		content =resp.content
+		self.assertEqual(resp.status_code, 302)
 		onetasker= User.objects.get(username="rua_onetasker")
 		resp =  self.client.get(reverse('view_copyedit',kwargs={'copyedit_id':1,'submission_id':self.book.id}))
 		content =resp.content
