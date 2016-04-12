@@ -1,0 +1,49 @@
+<ul class="media-list manuscript-upload-states">
+  {% for file in format_data.formats.all %}
+  <li class="media" style="background-color:rgb(230,230,230)">
+    <div class="media-left">
+      <span > <h1>
+        {% if file.file.mime_type == 'image/jpeg' or file.file.mime_type == 'image/png' %}
+       &nbsp; &nbsp;    <i class="fa fa-file-image-o"></i>
+        {% else %}
+        &nbsp; &nbsp;   <i class="fa fa-file-text-o"></i>
+        {% endif %}
+      </span></h1>
+    </div>
+    <div class="media-body">
+
+        <div class="col-md-3">
+          <h5><strong>{{ file.file.label }}</strong></h5>
+          <h5><strong>{{ file.name }}</strong></h5>
+          <h5>{{ file.file.original_filename|truncatechars:20 }}</h5>
+        </div>
+        <div class="col-md-3">
+          <h5><strong>Identifier</strong></h5>
+          <h5>{% if format_type == 'physical' %}--{% else %}{{ file.identifier }}{% endif %}</h5>
+        </div>
+        <div class="col-md-3">
+          <h5><strong>File Type</strong></h5>
+          <h5>{{ file.get_file_type_display }}</h5>
+        </div>
+        <div class="col-md-3">
+          <h5><strong>Sequence</strong></h5>
+          <h5>{{ file.sequence }}</h5>
+        </div>
+    </div>
+    
+    <div class="button-block-center">
+      {% if not format_type == 'physical' %}
+      <hr />
+      <a href="{% url 'serve_file' submission.id file.file.id %}" class="btn btn-sm btn-task"><i class="fa fa-download">&nbsp;</i>Download</a>
+      <td><a href="{% url 'update_format_or_chapter' submission.id format_type file.id %}"  class="btn btn-sm btn-accept">&nbsp;<i class="fa fa-cloud-upload">&nbsp;</i>Update&nbsp;</a>
+      <a href="{% url 'versions_file' submission.id file.file.id %}" class="btn btn-sm btn-view btn-round"><i class="fa fa-files-o">&nbsp;</i>Versions</a>
+      <a href="{% url 'delete_file' submission.id file.file.id active %}" class="btn btn-sm btn-decline"><i class="fa fa-trash-o">&nbsp;</i>Delete</a>
+      {% endif %}
+    </div>
+    </li>
+    {% empty %}
+     <li style="background-color:rgb(230,230,230)">
+      <h5>&nbsp;&nbsp;&nbsp;No files</h5>
+   </li>
+  {% endfor %}
+</ul>

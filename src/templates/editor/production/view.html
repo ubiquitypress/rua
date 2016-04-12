@@ -8,7 +8,7 @@
   <a href="{% url 'add_format' submission.id %}" class="btn btn-primary btn-round-half"><i class="fa fa-plus">&nbsp;</i>Add New Format</a>
   <hr />
   <h4>Publication Chapters</h4>
-  {% include "editor/production/public_files.html" with format_data=chapter_list format_type='chapter' %}
+  {% include "editor/production/chapter_public_files.html" with format_data=chapter_list format_type='chapter' %}
 
   <a href="{% url 'add_chapter' submission.id %}" class="btn btn-primary btn-round-half"><i class="fa fa-plus">&nbsp;</i>Add New Chapter</a>
 

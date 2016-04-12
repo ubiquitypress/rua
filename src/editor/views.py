@@ -1326,6 +1326,48 @@ def add_chapter(request, submission_id, file_id=None):
 		chapter_form = core_forms.ChapterForm()
 
 	if request.POST:
+		chapter_form = core_forms.ChapterFormInitial(request.POST)
+		
+		if chapter_form.is_valid():
+			new_chapter = chapter_form.save(commit=False)
+			new_chapter.book = book
+			for keyword in request.POST.get('tags').split(','):
+				new_keyword, c = models.Keyword.objects.get_or_create(name=keyword)
+				new_chapter.keywords.add(new_keyword)
+			for subject in request.POST.get('stags').split(','):
+				new_subject, c = models.Subject.objects.get_or_create(name=subject)
+				new_chapter.disciplines.add(new_subject)
+			new_chapter.save()
+			log.add_log_entry(book=book, user=request.user, kind='production', message='%s %s loaded a new chapter, %s' % (request.user.first_name, request.user.last_name, new_chapter.identifier), short_name='New Chapter Loaded')
+			return redirect(reverse('editor_production', kwargs={'submission_id': book.id}))
+
+	template = 'editor/submission.html'
+	context = {
+		'submission': book,
+		'chapter_form': chapter_form,
+		'author_include': 'editor/production/view.html',
+		'submission_files': 'editor/production/add_chapter.html',
+		'active': 'production',
+		'submission': book,
+		'existing_file':exist_file,
+		'format_list': models.Format.objects.filter(book=book).select_related('file'),
+		'chapter_list': models.Chapter.objects.filter(book=book).select_related('file'),
+		'active_page': 'production',
+	}
+
+	return render(request, template, context)
+
+@is_book_editor
+def add_chapter_format(request, submission_id, chapter_id, file_id=None):
+	book = get_object_or_404(models.Book, pk=submission_id)
+	if file_id:
+		exist_file = get_object_or_404(models.File, pk=file_id)
+		chapter_form = core_forms.ChapterFormInitial()
+	else:
+		exist_file = None
+		chapter_form = core_forms.ChapterForm()
+
+	if request.POST:
 		if file_id:
 			chapter_form = core_forms.ChapterFormInitial(request.POST)
 		else:
@@ -1361,7 +1403,7 @@ def add_chapter(request, submission_id, file_id=None):
 		'submission': book,
 		'chapter_form': chapter_form,
 		'author_include': 'editor/production/view.html',
-		'submission_files': 'editor/production/add_chapter.html',
+		'submission_files': 'editor/production/add_chapter_format.html',
 		'active': 'production',
 		'submission': book,
 		'existing_file':exist_file,
@@ -1371,6 +1413,7 @@ def add_chapter(request, submission_id, file_id=None):
 	}
 
 	return render(request, template, context)
+
 
 @is_book_editor
 def add_physical(request, submission_id):

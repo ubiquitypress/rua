@@ -203,5 +203,18 @@ $(document).ready(function() {
   });
 </script>
 
+<script src="{% static "js/tag-it.min.js" %}"></script>
+<script type="text/javascript">
+  $(document).ready(function() {
+      $("#tags").tagit(
+        {allowSpaces: true});
+  });
+</script>
+<script type="text/javascript">
+  $(document).ready(function() {
+      $("#stags").tagit(
+        {allowSpaces: true});
+  });
+</script>
 
 {% endblock js %}

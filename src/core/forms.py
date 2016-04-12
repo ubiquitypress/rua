@@ -190,17 +190,23 @@ class FormatFormInitial(forms.ModelForm):
 
 class ChapterForm(forms.ModelForm):
 
+	class Meta:
+		model = models.Chapter
+		exclude = ('book', 'formats')
+
+class ChapterFormatForm(forms.ModelForm):
+
 	chapter_file = forms.FileField(required=True)
 
 	class Meta:
-		model = models.Chapter
+		model = models.ChapterFormat
 		exclude = ('book', 'file')
 
 class ChapterFormInitial(forms.ModelForm):
 
 	class Meta:
 		model = models.Chapter
-		exclude = ('book', 'file')
+		exclude = ('book', 'formats')
 
 class UpdateChapterFormat(forms.Form):
 

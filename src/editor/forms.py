@@ -46,13 +46,19 @@ class FormatForm(forms.ModelForm):
 		model = core_models.Format
 		exclude = ('book', 'file')
 
-class ChapterForm(forms.ModelForm):
+class ChapterFormatForm(forms.ModelForm):
 
 	chapter_file = forms.FileField(required=True)
 
 	class Meta:
+		model = core_models.ChapterFormat
+		exclude = ('book',)
+
+class ChapterForm(forms.ModelForm):
+
+	class Meta:
 		model = core_models.Chapter
-		exclude = ('book', 'file')
+		exclude = ('book', 'formats')
 
 class PhysicalFormatForm(forms.ModelForm):
 
@@ -97,6 +103,7 @@ class EditMetadata(forms.ModelForm):
 			'expected_completion_date',
 			'peer_review_override',
 			'book_type',
+			'table_contents',
 		)
 
 		exclude = (
