@@ -457,11 +457,15 @@ class CoreTests(TestCase):
 		
 		self.assertEqual(resp.status_code, 200)
 		self.assertEqual("403" in content, False)
+
 		page_title = "Book Proposal :  %s : %s" % (proposal.title,proposal.subtitle)
 		self.assertEqual(page_title in content, True)
 
 		proposal_reviews=submission_models.ProposalReview.objects.all()
 		self.assertEqual(0,len(proposal_reviews))
+		resp = self.client.get(reverse('view_proposal',kwargs={'proposal_id':proposal.id}),{'download':'docx'})
+	
+		self.assertEqual(resp.status_code, 200)
 		resp = self.client.get(reverse('start_proposal_review',kwargs={'proposal_id':proposal.id}))
 		content =resp.content
 		
@@ -472,6 +476,25 @@ class CoreTests(TestCase):
 		self.assertEqual(resp['Location'], "http://testing/proposals/1/")
 		proposal_reviews=submission_models.ProposalReview.objects.all()
 		self.assertEqual(len(proposal_reviews)==0,False)
+
+		resp = self.client.get(reverse('withdraw_proposal_review',kwargs={'proposal_id':proposal.id,'review_id':1}))
+		content =resp.content
+		
+		self.assertEqual(resp.status_code, 302)
+		self.assertEqual("403" in content, False)
+		proposal_review=submission_models.ProposalReview.objects.get(pk=1)
+
+		self.assertEqual(proposal_review.withdrawn, True)
+
+		resp = self.client.get(reverse('withdraw_proposal_review',kwargs={'proposal_id':proposal.id,'review_id':1}))
+		content =resp.content
+		
+		self.assertEqual(resp.status_code, 302)
+		self.assertEqual("403" in content, False)
+		proposal_review=submission_models.ProposalReview.objects.get(pk=1)
+
+		self.assertEqual(proposal_review.withdrawn, False)
+
 
 		resp = self.client.get(reverse('accept_proposal',kwargs={'proposal_id':proposal.id}))
 		content =resp.content
