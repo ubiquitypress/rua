@@ -1332,14 +1332,13 @@ def proposal(request, user_id = None):
     unassigned_proposals = submission_models.Proposal.objects.filter(owner__isnull=True)
    
     proposals = []
-    user_roles = [role.slug for role in request.user.profile.roles.all()]
 
     for proposal in proposal_list:
         if user_id:
             if proposal.book_editors.filter(pk=user_id).exists():
                 proposals.append(proposal)
         else:
-            if 'press-editor' in user_roles:
+            if 'press-editor' in request.user_roles:
                 proposals.append(proposal)
             elif not proposal.requestor:
                 proposals.append(proposal)
@@ -1379,6 +1378,7 @@ def proposal_history(request):
     }
 
     return render(request, template, context)
+    
 @is_editor
 def view_proposal(request, proposal_id):
     proposal = get_object_or_404(submission_models.Proposal, pk=proposal_id)
