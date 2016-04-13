@@ -20,7 +20,7 @@ from review import models as review_models
 from core import log, models, forms, logic
 from author import orcid
 from email import send_email,send_reset_email
-from files import handle_file_update, handle_attachment, handle_file, handle_proposal_file
+from files import handle_file_update, handle_attachment, handle_file, handle_proposal_file, handle_proposal_file_form
 from submission import models as submission_models
 from core.decorators import is_reviewer, is_editor, is_book_editor, is_book_editor_or_author, is_onetasker,is_author, is_press_editor
 from review import forms as review_forms
@@ -1326,7 +1326,7 @@ def proposal_assign_edit(request, proposal_id):
 
     return render(request, template, context)
 @is_editor
-def proposal(request):
+def proposal(request, user_id = None):
     proposal_list = submission_models.Proposal.objects.filter((~Q(status='declined') & ~Q(status='accepted') & Q(owner__isnull=False)))
     unassigned_proposals = submission_models.Proposal.objects.filter(owner__isnull=True)
    
@@ -1334,19 +1334,25 @@ def proposal(request):
     user_roles = [role.slug for role in request.user.profile.roles.all()]
 
     for proposal in proposal_list:
-        
-        if 'press-editor' in user_roles:
-            proposals.append(proposal)
-        elif not proposal.requestor:
-            proposals.append(proposal)
-        elif proposal.requestor==request.user:
-            proposals.append(proposal)
+        if user_id:
+            if proposal.book_editors.filter(pk=user_id).exists():
+                proposals.append(proposal)
+        else:
+            if 'press-editor' in user_roles:
+                proposals.append(proposal)
+            elif not proposal.requestor:
+                proposals.append(proposal)
+            elif proposal.requestor==request.user:
+                proposals.append(proposal)
+            elif proposal.book_editors.filter(username=request.user.username).exists():
+                proposals.append(proposal)
 
     template = 'core/proposals/proposal.html'
     context = {
         'proposal_list': proposals,
         'unassigned_proposal_list': unassigned_proposals,
-        'open': False,
+        'open': True,
+        'user_id':user_id,
     }
 
     return render(request, template, context)
@@ -1398,7 +1404,7 @@ def create_proposal_form(proposal):
     document = Document()
     document.add_heading(proposal.title, 0)
     p = document.add_paragraph('You should complete this form and then use the proposal page to upload it.')
-    relations = models.ProposalFormElementsRelationship.objects.filter(form=proposal.form)
+    relations = models.ProposalFormElementsRelationship.objects.filter(form=proposal.form).order_by('order')
     document.add_heading("Title", level=1)
     document.add_paragraph(proposal.title).italic = True
     document.add_heading("Subtitle", level=1)
@@ -1407,8 +1413,10 @@ def create_proposal_form(proposal):
     document.add_paragraph(proposal.author).italic = True
 
     data = json.loads(proposal.data)
-    for k,v in data.items():
-        document.add_heading(k, level=1)        
+   
+    for relation in relations:
+        v = data[relation.element.name]
+        document.add_heading(relation.element.name, level=1)        
         text = BeautifulSoup(str(v[0]),"html.parser").get_text()
         document.add_paragraph(text).bold = True  
 
@@ -1564,6 +1572,7 @@ def view_proposal_review_decision(request, proposal_id, assignment_id):
         'proposal': proposal,
         'proposal_form':proposal_form,
         'review': review_assignment,
+        'data': data,
         'active': 'proposal_review',
         'relationships':relationships,
         'instructions': models.Setting.objects.get(group__name='general', name='instructions_for_task_proposal').value
@@ -1643,6 +1652,7 @@ def view_completed_proposal_review(request, proposal_id, assignment_id):
         'proposal_form':proposal_form,
         'review_assignment': review_assignment,
         'data_ordered': data_ordered,
+        'data_ordered_size': len(data_ordered),
         'result': result,
         'form':form,
         'recommendation_form':recommendation_form,
@@ -1653,6 +1663,57 @@ def view_completed_proposal_review(request, proposal_id, assignment_id):
     }
 
     return render(request, template, context)
+
+def get_list_of_editors(proposal):
+    book_editors = proposal.book_editors.all()
+    previous_editors=[]
+    for book_editor in book_editors:
+        previous_editors.append(book_editor)
+    all_book_editors = User.objects.filter(profile__roles__slug='book-editor')
+    
+    list_of_editors =[{} for t in range(0,len(all_book_editors)) ]  
+    for t,editor in enumerate(all_book_editors):
+        already_added = False
+        if editor in previous_editors:
+            already_added = True
+        list_of_editors[t] = {'editor': editor, 'already_added': already_added,}
+    return list_of_editors
+
+
+@is_press_editor
+def proposal_add_editors(request, proposal_id):
+    
+    proposal = get_object_or_404(submission_models.Proposal, pk=proposal_id)
+    
+    list_of_editors = get_list_of_editors(proposal)
+
+    email_text = models.Setting.objects.get(group__name='email', name='book_editor_ack').value
+    
+    if request.GET and "add" in request.GET:
+        user_id = request.GET.get("add")
+        user = User.objects.get(pk=user_id)
+        proposal.book_editors.add(user)
+        proposal.save()
+        list_of_editors = get_list_of_editors(proposal)
+
+    elif request.GET and "remove" in request.GET:
+        user_id = request.GET.get("remove")
+        user = User.objects.get(pk=user_id)
+        proposal.book_editors.remove(user)
+        proposal.save()
+        list_of_editors = get_list_of_editors(proposal)
+
+
+
+
+    template = 'core/proposals/add_editors.html'
+    context = {
+        'proposal': proposal,
+        'list_of_editors':list_of_editors,
+    }
+
+    return render(request, template, context)
+
 
 @is_reviewer
 def view_proposal_review(request, proposal_id, assignment_id):

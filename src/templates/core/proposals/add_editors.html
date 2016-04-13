@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% load static from staticfiles %}
+{% load bootstrap3 %}
+
+{% block title %}Book Proposals{% endblock %}
+{% block css %}
+<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/plug-ins/1.10.7/integration/bootstrap/3/dataTables.bootstrap.css">
+{% endblock css %}
+
+{% block body %}
+<div class="col-md-12 other-heading container-fluid" style="margin-top:-20px">
+
+  <h3>Book Proposal :  {{ proposal.title }}{% if proposal.subtitle%} : {{ proposal.subtitle }}{%endif%}<a href="{% url 'view_proposal' proposal.pk %}" class="btn  btn-transparent-white" style="position: absolute;right:20;margin-top:-8px">Go back</a></h3>
+  </div>
+<br>
+</br>
+<div class="col-md-12">
+   </br>
+  <table class="table table-bordered">
+    <thead>
+  <tr>
+ 
+    <th>Book Title</th>
+    <th>Subtitle</th>
+    <th>Submitting Author/Editor</th>
+    <th>User &nbsp;&nbsp; <span class="small">(<a href="{% url 'proposal_assign_view_submitted' proposal.id %}">Change</a>)</span></th>
+    <th>Status</th>
+    <th>Date Submitted</th>
+    
+  </tr>
+  </thead>
+  <tbody>
+  <tr>
+    <td>{{ proposal.title }}</td>
+    <td>{{ proposal.subtitle }}</td>
+    <td>{{ proposal.author }}</td>
+    <td><a href="{% url 'view_profile_readonly' proposal.owner.pk %}">{{ proposal.owner.username }}</a> <sup> <a href="core/email.html" onclick="return popitup('/email/proposal/{{proposal.id}}/user/{{proposal.owner.id}}/','proposal_{{proposal.owner.id}}')"class="fa fa-envelope-o btn btn-xs btn-default"></a></sup></td>
+    <td>{{ proposal.get_status_display }}</td>
+    <td>{{ proposal.date_submitted }}</td>
+  </tr>
+</tbody>
+</table>
+</hr>
+<div class="container" style="width:100%;left:0%;right:20%;position:relative;">
+  <hr>
+  {% for field in relationships %}
+
+  <div class="{{ field.width }}">
+  <div class="row">
+    <div class="panel panel-default ">
+      <div class="panel-heading"><span class="panel-heading"><b>{{ field.element.name }} </b></span></div>
+      <div class="panel-body">{% for k,v in data.items %}{% if k == field.element.name %}
+        {% ifequal field.element.field_type 'upload' %}<a href="{% url 'serve_proposal_file_id' proposal.id  v.0 %}">Download</a>{% else %}{{ v.0|safe }}{% endifequal %}{% endif %}{% endfor %}</div>
+    </div>
+  </div>
+  </div>
+{% endfor %}
+</div>
+<hr>
+  <div class="col-md-12 other-sub-heading container-fluid" style="margin-top:-20px">
+<h3>{% if proposal.book_editors.all %}
+               Update {% else %} Add {% endif %} Book Editors</h3>
+               </div>
+<table id="bookeditors" class="table table-bordered small" >
+    <thead>
+    <tr>
+        <th width="25%">Name</th>
+        <th></th>
+    </tr>
+  </thead>
+  <tbody>
+      {% for editor_dict in list_of_editors  %}
+      <tr>
+        <td>{{ editor_dict.editor.profile.full_name }} <sup> <a href="core/email.html" onclick="return popitup('/email/proposal/{{proposal.id}}/user/{{editor.pk}}/','proposal{{editor.pk}}')"class="fa fa-envelope-o btn btn-xs btn-default"></a></sup></td>
+
+            <td style="width:5%"> 
+      <form action="{% url 'proposal_add_editors' proposal.id %}" method="get" >
+      <span class="input-group-btn">
+          <button class="btn btn-{% if editor_dict.already_added %}danger{% else %}info{% endif%} btn-sm btn-round" id="remove" name="{% if editor_dict.already_added %}remove{% else %}add{% endif%}" value="{{ editor_dict.editor.pk }}" type="submit"  data-toggle="tooltip" data-placement="bottom" title="Remove editor from book" style="width:100px; height: 30px;"><span class="glyphicon glyphicon-{% if editor_dict.already_added %}remove{% else %}plus{% endif%}"style="position:absolute;right:70px;top:8px"></span> <b style="position:absolute;right:{% if editor_dict.already_added %}20{% else %}38{% endif%}px;top:5.5px">{% if editor_dict.already_added %}Remove{% else %}Add{% endif%}</b></button>
+        </span>
+ </form>
+       </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+    </table>
+
+    {% endblock %}

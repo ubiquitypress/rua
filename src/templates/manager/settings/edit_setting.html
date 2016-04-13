@@ -13,14 +13,21 @@
 		<form action="" method="POST" enctype="multipart/form-data">
 
 			{% csrf_token %}
-			
-			{% if setting.types == 'date' %}Date Format: dd/mm/yyyy<br />{% endif %}
-			{% if setting.types == 'rich_text' %}
-				{{ edit_form.as_p }}
+			{% if setting.name == 'default_review_type'%}
+				<select class="form-control" id="id_value" name="value" required="required" title="">
+				<option value="closed" {% if setting.value == 'closed'%}selected="selected"{% endif%}>Closed</option>
+				<option value="open-with" {% if setting.value == 'open-with'%}selected="selected"{% endif%}>Open with Reviewer Info</option>
+				<option value="open-without" {% if setting.value == 'open-without'%}selected="selected"{% endif%}>Open without Reviewer Info</option>
+				</select>
+				<br>
 			{% else %}
-				{% bootstrap_form edit_form layout='inline' %}
-			{% endif %}
-
+				{% if setting.types == 'date' %}Date Format: dd/mm/yyyy<br />{% endif %}
+				{% if setting.types == 'rich_text' %}
+					{{ edit_form.as_p }}
+				{% else %}
+					{% bootstrap_form edit_form layout='inline' %}
+				{% endif %}
+			{% endif%}
 			{% buttons %}
 			 <button type="submit" class="btn btn-primary pull-right" onclick="return confirm_function()" name="delete" value="delete">
 			        {% bootstrap_icon "remove" %} Delete

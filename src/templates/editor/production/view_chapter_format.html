@@ -1,0 +1,61 @@
+
+{% load static from staticfiles %}
+{% load bootstrap3 %}
+
+{% block css %}
+  <link href="{% static "css/timeline.css" %}" rel="stylesheet">
+
+  <link type='text/css' href="{% static "css/jq-ui.css" %}" rel="stylesheet">
+  <link type='text/css' href="{% static "css/jquery.tagit.css" %}" rel="stylesheet">
+{% endblock %}
+</br>
+<div class="col-md-12 file-heading container-fluid" style="margin-top:-10px">
+          <h4>View Chapter {{chapter.sequence}}</h4>
+    </div>
+
+<div class="col-md-12 dash-container bottom-space">
+
+        <div class="media-body">
+        <div class="col-md-12">
+              <div class="form-group">
+                  <div class="row">
+                    <div class="col-md-12">
+                    <label>Name</label>
+                     <input class="form-control" type="text" value="{{chapter_format.name}}" readonly="" /> 
+                     <br>
+                    <label>Identifier</label>
+                     <input class="form-control" type="text" value="{{chapter_format.identifier}}" readonly="" /> 
+                     <br>
+                      <label>File Type</label>
+                     <input class="form-control" type="text" value="{{chapter_format.file_type}}" readonly="" /> 
+                     <br>
+                      <label>Sequence</label>
+                     <input class="form-control" type="text" value="{{chapter_format.sequence}}" readonly="" /> 
+                     <br>
+                      <label>File: {{chapter_format.file.label}}</label> <br>
+                     <b>Original:</b> {{chapter_format.file.original_filename}}
+                      <br><br>
+                     <ul class="media-list manuscript-upload-states">
+              
+                          <li class="media" style="background-color:rgb(230,230,230)">
+                           
+                            <div class="media-body">
+
+                            
+                            <div class="button-block-center">
+                              <hr />
+                              <a href="{% url 'serve_file' submission.id chapter_format.file.id %}" class="btn btn-sm btn-task"><i class="fa fa-download">&nbsp;</i>Download</a>
+                              <td><a href="{% url 'update_format_or_chapter' submission.id 'chapter' chapter_format.id %}"  class="btn btn-sm btn-accept">&nbsp;<i class="fa fa-cloud-upload">&nbsp;</i>Update&nbsp;</a>
+                              <a href="{% url 'versions_file' submission.id chapter_format.file.id %}" class="btn btn-sm btn-view btn-round"><i class="fa fa-files-o">&nbsp;</i>Versions</a>
+                              <a href="{% url 'delete_file' submission.id chapter_format.file.id active %}" class="btn btn-sm btn-decline"><i class="fa fa-trash-o">&nbsp;</i>Delete</a>
+                             
+                            </div>
+                            </li>
+                        </ul>
+
+                    </div>
+                  </div>
+                    
+          
+        </div>
+      </div>

@@ -12,6 +12,7 @@
   <h3>Book Proposal :  {{ proposal.title }}{% if proposal.subtitle%} : {{ proposal.subtitle }}{%endif%}
 
   <a class="btn  btn-transparent-white" href="?download=docx" style="margin-left:5px"> <i class="fa fa-cloud-download"> &nbsp; Download Proposal</i></a>
+    <a class="btn  btn-transparent-white" href="{% url 'proposal_add_editors' proposal.id %}" style="margin-left:5px"> &nbsp; Book Editors</a>
 
 {% if proposal.status = 'accepted' or proposal.status = 'declined'%} 
 {% else %}<a href="{% url 'proposal_view_submitted' proposal.id %}" class="btn  btn-transparent-white" style="position: absolute;right:100px;margin-top:-8px">Edit</a>{% endif %}

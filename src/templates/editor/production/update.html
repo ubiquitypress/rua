@@ -3,7 +3,7 @@
 {% load bootstrap3 %}
 </br>
      <div class="col-md-12 file-heading container-fluid" style="margin-top:-10px">
-          <h4>Update {% ifequal type 'format' %} Format: {% else %} Chapter: {% endifequal%}{{ submission.title }}</h4>
+          <h4>Update {% ifequal type 'format' %} Format: {% else %} Chapter Format: {% endifequal%}{{ submission.title }}</h4>
     </div>
     <div class=" dash-container">
 <div class="col-md-12 dash-container">
@@ -37,12 +37,31 @@
 
               <h4>New File</h4>
               <hr/>
-             
+              <br>
+              <label>File Type</label>
+                  <select class="form-control" id="id_file_type" name="file_type" title="">
+                <option value="" selected="selected">---------</option>
+                <option value="epub">EPUB</option>
+                <option value="html">HTML</option>
+                <option value="kindle">Kindle</option>
+                <option value="mobi">MOBI</option>
+                <option value="pdf">PDF</option>
+                <option value="xml">XML</option>
+                </select>
+              <br>
               <div class="form-group"><label class="control-label" for="id_file_label">File Label</label><input class="form-control" id="id_file_label" name="file_label" title="" type="text"></div>
-              <div class="form-group"><label class="control-label" for="id_file">File</label><div class="row bootstrap3-multi-input"><div class="col-xs-12"><input class="" id="id_file" name="file" title="" type="file"></div></div></div>
+              <div class="form-group"><label class="control-label" for="id_file">File</label>
+                <div class="input-group">
+                          <span class="input-group-btn">
+                              <span class="btn btn-browse btn-task btn-file">
+                                  Browse&hellip; <input class="" id="id_chapter_file" name="chapter_file" title="" type="file">
+                              </span>
+                          </span>
+                          <input type="text" class="form-control" readonly>
+                      </div>
               <div class="input-group">
                   <br>
-                  <button class="btn btn-accept  btn-round-half" type="submit" name="update" id="update"><i class="fa fa-cloud-upload">&nbsp;</i>Update</button>
+                  <button class="btn btn-accept btn-round-half" type="submit" name="update" id="update"><i class="fa fa-cloud-upload">&nbsp;</i>Update</button>
               </div>
             </div>
           </div>

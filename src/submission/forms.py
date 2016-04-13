@@ -39,9 +39,15 @@ class SubmitBookStageOne(forms.ModelForm):
 
 	def __init__(self, *args, **kwargs):
 		ci_required = kwargs.pop('ci_required', None)
+		review_type_required = kwargs.pop('review_type_required', None)
 		super(SubmitBookStageOne, self).__init__(*args, **kwargs)
 		if ci_required == 'on':
 			self.fields['competing_interests'] = forms.CharField(widget=forms.Textarea, required=True)
+		if not review_type_required == 'on':
+			self.fields['review_type'] = forms.CharField(required=False, widget=forms.Select(choices=core_models.review_type_choices()))
+		else:
+			self.fields['review_type'] = forms.CharField(required=True, widget=forms.Select(choices=core_models.review_type_choices()))
+	
 		self.fields['license'].empty_label = None
 		self.fields['reviewer_suggestions'].label = "Suggested Reviewers"
 

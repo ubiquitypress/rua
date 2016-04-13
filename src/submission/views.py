@@ -32,7 +32,8 @@ from datetime import datetime
 def start_submission(request, book_id=None):
 	
 	direct_submissions =  core_models.Setting.objects.get(group__name='general', name='direct_submissions').value
-
+	default_review_type = core_models.Setting.objects.get(group__name='general', name='default_review_type').value
+	review_type_selection = core_models.Setting.objects.get(group__name='general', name='review_type_selection').value
 
 	ci_required = core_models.Setting.objects.get(group__name='general', name='ci_required')
 	checklist_items = submission_models.SubmissionChecklistItem.objects.all()
@@ -52,15 +53,17 @@ def start_submission(request, book_id=None):
 
 	if request.method == 'POST':
 		if book:
-			book_form = forms.SubmitBookStageOne(request.POST, instance=book, ci_required=ci_required.value)
+			book_form = forms.SubmitBookStageOne(request.POST, instance=book, ci_required=ci_required.value, review_type_required = review_type_selection)
 		else:
-			book_form = forms.SubmitBookStageOne(request.POST, ci_required=ci_required.value)
+			book_form = forms.SubmitBookStageOne(request.POST, ci_required=ci_required.value, review_type_required = review_type_selection)
 
 		checklist_form = forms.SubmissionChecklist(request.POST, checklist_items=checklist_items)
 
 		if book_form.is_valid() and checklist_form.is_valid():
 			book = book_form.save(commit=False)
 			book.owner = request.user
+			if not review_type_selection:
+				book.review_type = default_review_type
 			if not book.submission_stage > 2:
 				book.submission_stage = 2
 				book.save()

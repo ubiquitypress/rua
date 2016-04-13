@@ -101,6 +101,7 @@ urlpatterns = patterns('',
     # Proposals
 
     url(r'^proposals/$', 'core.views.proposal', name='proposals'),
+    url(r'^proposals/filter/(?P<user_id>\d+)/$', 'core.views.proposal', name='proposals_filtered'),
     url(r'^proposals/unassigned/$', 'core.views.assign_proposal', name='proposal_assign'),
     url(r'^proposals/unassigned/(?P<proposal_id>\d+)/edit/$', 'core.views.proposal_assign_edit', name='proposal_assign_edit'),
     
@@ -109,6 +110,9 @@ urlpatterns = patterns('',
    
     url(r'^proposals/history/$', 'core.views.proposal_history', name='proposals_history'),
     url(r'^proposals/(?P<proposal_id>\d+)/$', 'core.views.view_proposal', name='view_proposal'),
+    url(r'^proposals/(?P<proposal_id>\d+)/add/editor/$', 'core.views.proposal_add_editors', name='proposal_add_editors'),
+    url(r'^proposals/(?P<proposal_id>\d+)/update/editor/$', 'core.views.proposal_add_editors', name='proposal_update_editors'),
+    
     url(r'^proposals/(?P<proposal_id>\d+)/review/start/$', 'core.views.start_proposal_review', name='start_proposal_review'),
     url(r'^proposals/(?P<proposal_id>\d+)/review/add/$', 'core.views.add_proposal_reviewers', name='add_proposal_reviewers'),
     url(r'^proposals/(?P<proposal_id>\d+)/assignment/decision/(?P<assignment_id>\d+)/$', 'core.views.view_proposal_review_decision', name='view_proposal_review_decision'),

@@ -55,14 +55,22 @@ urlpatterns = patterns('',
 
     url(r'^submission/(?P<submission_id>\d+)/production/add/format/$', 'editor.views.add_format', name='add_format'),
     url(r'^submission/(?P<submission_id>\d+)/production/add/chapter/$', 'editor.views.add_chapter', name='add_chapter'),
+    url(r'^submission/(?P<submission_id>\d+)/production/chapter/(?P<chapter_id>\d+)/add/format/$', 'editor.views.add_chapter_format', name='add_chapter_format'),
+    url(r'^submission/(?P<submission_id>\d+)/production/chapter/(?P<chapter_id>\d+)/view/$', 'editor.views.view_chapter', name='editor_view_chapter'),
+    url(r'^submission/(?P<submission_id>\d+)/production/chapter/(?P<chapter_id>\d+)/update/$', 'editor.views.update_chapter', name='editor_update_chapter'),
+    url(r'^submission/(?P<submission_id>\d+)/production/chapter/(?P<chapter_id>\d+)/view/format/(?P<format_id>\d+)/$', 'editor.views.view_chapter_format', name='editor_view_chapter_format'),
+    
     url(r'^submission/(?P<submission_id>\d+)/production/add/physical/$', 'editor.views.add_physical', name='add_physical'),
     url(r'^submission/(?P<submission_id>\d+)/production/add/format/(?P<file_id>\d+)/$', 'editor.views.add_format', name='add_format_existing'),
-    url(r'^submission/(?P<submission_id>\d+)/production/add/chapter/(?P<file_id>\d+)/$', 'editor.views.add_chapter', name='add_chapter_existing'),
+    url(r'^submission/(?P<submission_id>\d+)/production/add/chapter/(?P<chapter_id>\d+)/file/(?P<file_id>\d+)/$', 'editor.views.add_chapter', name='add_chapter_existing'),
 
     url(r'^submission/(?P<submission_id>\d+)/production/delete/(?P<format_or_chapter>[-\w]+)/(?P<id>\d+)/$', 'editor.views.delete_format_or_chapter', name='delete_format_or_chapter'),
     url(r'^submission/(?P<submission_id>\d+)/production/update/(?P<format_or_chapter>[-\w]+)/(?P<id>\d+)/$', 'editor.views.update_format_or_chapter', name='update_format_or_chapter'),
    
     url(r'^submission/(?P<submission_id>\d+)/catalog/$', 'editor.views.catalog', name='catalog'),
+    url(r'^submission/(?P<submission_id>\d+)/catalog/marc21/$', 'editor.views.catalog_marc21', name='catalog_marc21'),
+    url(r'^submission/(?P<submission_id>\d+)/catalog/marc21/load/(?P<type>[-\w]+)$', 'editor.views.catalog_marc21', name='catalog_marc21_load'),
+   
     url(r'^submission/(?P<submission_id>\d+)/catalog/identifiers/$', 'editor.views.identifiers', name='identifiers'),
     url(r'^submission/(?P<submission_id>\d+)/catalog/identifiers/(?P<identifier_id>\d+)/$', 'editor.views.identifiers', name='identifiers_with_id'),
     url(r'^submission/(?P<submission_id>\d+)/catalog/retailers/$', 'editor.views.retailers', name='retailers'),

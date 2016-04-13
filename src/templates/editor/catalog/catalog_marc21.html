@@ -2,7 +2,7 @@
 {% load static from staticfiles %}
 {% load bootstrap3 %}
 
-{% block title %}Submission{% endblock %}
+{% block title %}Dashboard{% endblock %}
 
 {% block css %}
     <style type="text/css">
@@ -27,17 +27,18 @@
     }
     </style>
     <link href="{% static "css/timeline.css" %}" rel="stylesheet">
-<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/plug-ins/1.10.7/integration/bootstrap/3/dataTables.bootstrap.css">
+    <link type='text/css' href="{% static "css/jq-ui.css" %}" rel="stylesheet">
+    <link type='text/css' href="{% static "css/jquery.tagit.css" %}" rel="stylesheet">
 {% endblock %}
 
 {% block body %}
 
-<div class="row ">
-    <div class="col-md-12 book-heading container-fluid ">
+<div class="row">
+    <div class="col-md-12 book-heading container-fluid">
         <h3>Book {{ submission.id }}: {{ submission.title }}</h3>
     </div>
-    <div class="col-md-3 dash-left bottom-space" style="background-color: #EBEBEB;">
-         <div class="dash-container" >
+    <div class="col-md-3 dash-left bottom-space" style="background-color: #EBEBEB;height:80%;">
+              <div class="dash-container" >
             <h4 class="header-text">  {% if submission.prefix %}{{ submission.prefix }} {% endif %}{{ submission.title }}</h4> 
             <h5 class="subtitle-text">{{submission.subtitle}}</h5>
         </div>
@@ -65,7 +66,7 @@
             </tr>
         </table>
       </div>
-        <a href="{% url 'editor_tasks' submission.pk %}">
+               <a href="{% url 'editor_tasks' submission.pk %}">
         <div class="dash-menu {%ifequal active_page 'my_tasks' %}current{% endifequal %}">
             <h5>My Tasks <i class="fa fa-chevron-right pull-right"></i></h5>
         </div>
@@ -81,9 +82,9 @@
             <h5>Submission Details <i class="fa fa-chevron-right pull-right"></i></h5>
         </div>
         </a>
-         <a href="{% url 'editor_notes' submission.pk %}">
+          <a href="{% url 'editor_notes' submission.pk %}">
         <div class="dash-menu {%ifequal active_page 'notes' %}current{% endifequal %}">
-            <h5>Notes   &nbsp; <span class="badge circle" style="background-color:#5bc0de"> {{submission.number_of_notes}} </span> <i class="fa fa-chevron-right pull-right"></i></h5>
+            <h5>Notes  &nbsp; <span class="badge circle" style="background-color:#5bc0de"> {{submission.number_of_notes}} </span> <i class="fa fa-chevron-right pull-right"></i></h5>
         </div>
         </a>
         {% if submission.stage.review %}
@@ -120,18 +121,47 @@
         {% include "editor/snippets/available_actions.html" %}
     </div>
 
-    <div class="col-md-5 dash-center bottom-space">
+    <div class="col-md-9 dash-center bottom-space" style="height:80%">
         <div class="dash-container">
-        {% if author_include %}
-            {% include author_include %}
-        {% endif %}
-        </div>
-    </div>
-    <div class="col-md-4 dash-right bottom-space">
-        <div class="dash-container">
-        {% if submission_files %}
-            {% include submission_files %}
-        {% endif %}
+        <h4>{{ submission.title }} Catalog</h4>
+
+        <br>
+         <h3><strong> Marc 21 </strong> <a href="{% url 'catalog' submission.id %}" class="btn btn-info"> Go back to Catalog</a></h3>
+          <p>Load generated content, update it and then download the updated file. Or download the generated file using the buttons on the right</p>
+        <br>
+          <!-- Tab panes -->
+          <div class="tab-content">
+            <div role="tabpanel" class="tab-pane active" id="metadata">
+              <div class="btn-group pull-right" role="group" style="margin-top:5px">
+           <a disabled class="btn  btn-default">  Download Marc21</a> <a href="{% url 'serve_marc21_file'  submission.id 'original' %}" class="btn btn-primary ">Original</a><a href="{% url 'serve_marc21_file'  submission.id 'xml' %}" class="btn btn-accept ">XML</a></div>
+              <form method="POST" action="?metadata=true">
+                {% csrf_token %}
+                <br />
+                <div class="form-group">
+                  <div class="row">
+                   <div class="btn-group pull-left" role="group" style="margin-left:15px;margin-bottom:15px">
+           <a disabled class="btn  btn-default">  Load Marc21</a> <a href="{% url 'catalog_marc21_load'  submission.id 'original' %}" class="btn btn-default ">Original</a><a href="{% url 'catalog_marc21_load'  submission.id 'xml' %}" class="btn btn-default ">XML</a></div>
+                    <div class="col-md-12">
+                      {{ marc21_form.errors }}
+                      {% bootstrap_form_errors marc21_form layout='inline' %}
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-md-10">
+                      {% bootstrap_field marc21_form.file_content %}
+
+                    </div>
+                  </div>
+
+                <button class="btn btn-success" name='xml-download' type="submt">Download as XML</button>
+                 <button class="btn btn-primary" name='original-download' type="submt">Download Original</button>
+              </form>
+            </div>
+
+            
+
+          <hr />
         </div>
     </div>
 </div>
@@ -150,59 +180,27 @@ function popitup(url,title) {
 
 // -->
 </script>
-<script type="text/javascript" language="javascript" src="//cdn.datatables.net/1.10.7/js/jquery.dataTables.min.js"></script>
-<script type="text/javascript" language="javascript" src="//cdn.datatables.net/plug-ins/1.10.7/integration/bootstrap/3/dataTables.bootstrap.js"></script>
-<script>
-  $(document).ready(function() {
-      $('#bookeditors').DataTable({
-        "lengthMenu": [[5], [5, 10, 25, 50, "All"]]
-      });
-       $('#allauthors').DataTable({
-        "lengthMenu": [[5], [5, 10, 25, 50, "All"]]
-      });
-        $('#bookauthors').DataTable({
-        "lengthMenu": [[5], [5, 10, 25, 50, "All"]]
-      });
-         $('#book_editors').DataTable({
-        "lengthMenu": [[5], [5, 10, 25, 50, "All"]]
-      });
-      $('#indv-reviewer').DataTable({
-        "lengthMenu": [[5], [5, 10, 25, 50, "All"]]
-      });
-      $('#assignment-files').DataTable({
-        "lengthMenu": [[5], [5, 10, 25, 50, "All"]]
-      });
-       $('#typeset-assignments').DataTable({
-        "lengthMenu": [[5], [5, 10, 25, 50, "All"]]
-      });
-       $('#copyedit-assignments').DataTable({
-        "lengthMenu": [[5], [5, 10, 25, 50, "All"]]
-      });
-       $('#index-assignments').DataTable({
-        "lengthMenu": [[5], [5, 10, 25, 50, "All"]]
-      });
-  } );
-
-</script>
-<script type="text/javascript" src="{% static "js/messages.js" %}"></script>
 <script type="text/javascript" src="{% static "js/fancyfile.js" %}"></script>
-<script type="text/javascript">$("textarea").jqte();</script>
 <script type="text/javascript">
 $(document).ready(function() {
       $('#due_date').datepicker({ dateFormat: 'yy-mm-dd' }).val();
   });
 </script>
-<script type="text/javascript">
-$(document).ready(function() {
-      $('#id_due').datepicker({ dateFormat: 'yy-mm-dd' }).val();
-  });
-</script>
-<script type="text/javascript">
-$(document).ready(function() {
-      $('#id_author_due').datepicker({ dateFormat: 'yy-mm-dd' }).val();
-  });
+
+<script>
+$(function() {
+    $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+        localStorage.setItem('catalog_tab', $(this).attr('href'));
+    });
+    var lastTab = localStorage.getItem('catalog_tab');
+    if (lastTab) {
+        $('[href="' + lastTab + '"]').tab('show');
+    }
+});
 </script>
 
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css">
+<script src="http://code.jquery.com/ui/1.11.0/jquery-ui.js"></script>
 <script src="{% static "js/tag-it.min.js" %}"></script>
 <script type="text/javascript">
   $(document).ready(function() {
@@ -218,15 +216,9 @@ $(document).ready(function() {
 </script>
 <script type="text/javascript">
   $(document).ready(function() {
-      $("#disabled-tags").tagit(
-        {readOnly: true});
-  });
-</script>
-<script type="text/javascript">
-  $(document).ready(function() {
-      $("#disabled-stags").tagit(
-        {readOnly: true});
-  });
-</script>
+      $('#id_publication_date').datepicker({ dateFormat: 'yy-mm-dd' }).val();
 
+      $('#id_expected_completion_date').datepicker({ dateFormat: 'yy-mm-dd' }).val();
+  });
+</script>
 {% endblock js %}

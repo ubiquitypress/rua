@@ -812,5 +812,27 @@
   },
   "model": "core.setting",
   "pk": 78
+},
+{
+  "fields": {
+    "value": "on",
+    "group": 1,
+    "name": "review_type_selection",
+    "types": "boolean",
+    "description": "If enabled the review_type selection will appear on the start new submission page. if disabled the default  review type from the 'default_review_type' setting will be assigned to new submissions and review_type list will be hidden"
+  },
+  "model": "core.setting",
+  "pk": 79
+},
+{
+  "fields": {
+    "value": "open-with",
+    "group": 1,
+    "name": "default_review_type",
+    "types": "text",
+    "description": "Default review type used when review type selection is disabled"
+  },
+  "model": "core.setting",
+  "pk": 80
 }
 ]

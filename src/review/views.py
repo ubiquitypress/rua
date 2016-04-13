@@ -17,6 +17,8 @@ from django.core.urlresolvers import reverse
 from django.contrib import messages
 from django.http import Http404, HttpResponse, StreamingHttpResponse, HttpResponseRedirect
 
+from bs4 import BeautifulSoup
+
 from core import logic as core_logic
 from core import models as core_models
 from core import views as core_views
@@ -175,7 +177,7 @@ def review(request, review_type, submission_id, review_round, access_key=None):
 		recommendation_form.initial=initial_data
 			
 	if not request.POST and request.GET.get('download') == 'docx':
-		path = create_review_form(submission)
+		path = create_completed_review_form(submission, review_assignment.pk)
 		return serve_file(request, path)
 	elif request.POST:
 		form = forms.GeneratedForm(request.POST, request.FILES, form=submission.review_form)
@@ -267,7 +269,7 @@ def review_complete(request, review_type, submission_id,review_round,access_key=
 		review_assignment = get_object_or_404(submission_models.ProposalReview, user=request.user, proposal=submission)
 	else:
 		submission = get_object_or_404(core_models.Book, pk=submission_id)
-	 	review_assignment = get_object_or_404(core_models.ReviewAssignment, Q(user=request.user), Q(review_round__round_number=review_round), Q(book=submission), Q(withdrawn = False), Q(review_type=review_type), Q(access_key__isnull=True) | Q(access_key__exact=''))
+		review_assignment = get_object_or_404(core_models.ReviewAssignment, Q(user=request.user), Q(review_round__round_number=review_round), Q(book=submission), Q(withdrawn = False), Q(review_type=review_type), Q(access_key__isnull=True) | Q(access_key__exact=''))
 
 	
 	result = review_assignment.results
@@ -284,7 +286,49 @@ def review_complete(request, review_type, submission_id,review_round,access_key=
 			return redirect(reverse('review_with_access_key', kwargs={'review_type': review_type, 'submission_id': submission.id,'access_key':access_key,'review_round':review_round}))
 		else: 
 			return redirect(reverse('review_without_access_key', kwargs={'review_type': review_type, 'submission_id': submission.id,'review_round':review_round}))
+	
+	if not request.POST and request.GET.get('download') == 'docx':
+		path = create_completed_review_form(submission,review_assignment.pk)
+		return serve_file(request, path)
 
+	relations = models.FormElementsRelationship.objects.filter(form=result.form)
+	data_ordered = core_logic.order_data(core_logic.decode_json(result.data), relations)
+
+	template = 'review/complete.html'
+	context = {
+		'submission': submission,
+		'review_assignment': review_assignment,
+		'form_info': submission.review_form,
+		'data_ordered': data_ordered,
+		'result': result,
+		'additional_files': logic.has_additional_files(submission),
+		'editors': logic.get_editors(review_assignment),
+		'instructions': core_models.Setting.objects.get(group__name='general', name='instructions_for_task_review').value
+	}
+
+	return render(request,template, context)
+
+
+@is_reviewer
+def review_complete_no_redirect(request, review_type, submission_id,review_round,access_key=None):
+
+	if access_key:
+		review_assignment = get_object_or_404(core_models.ReviewAssignment, access_key=access_key, results__isnull=False, declined__isnull=True, review_type=review_type, review_round=review_round, withdrawn = False)
+		submission = get_object_or_404(core_models.Book, pk=submission_id)
+	elif review_type == 'proposal':
+		submission = get_object_or_404(submission_models.Proposal, pk=submission_id)
+		review_assignment = get_object_or_404(submission_models.ProposalReview, user=request.user, proposal=submission, results__isnull=False)
+	else:
+		submission = get_object_or_404(core_models.Book, pk=submission_id)
+		review_assignment = get_object_or_404(core_models.ReviewAssignment, Q(user=request.user), Q(results__isnull=False), Q(review_round__round_number=review_round), Q(book=submission), Q(withdrawn = False), Q(review_type=review_type), Q(access_key__isnull=True) | Q(access_key__exact=''))
+
+	
+	result = review_assignment.results
+
+	if not request.POST and request.GET.get('download') == 'docx':
+		path = create_completed_review_form(submission, review_assignment.pk)
+		return serve_file(request, path)
+	
 	relations = models.FormElementsRelationship.objects.filter(form=result.form)
 	data_ordered = core_logic.order_data(core_logic.decode_json(result.data), relations)
 
@@ -542,6 +586,64 @@ def editorial_review_complete(request, submission_id, access_key):
 def render_choices(choices):
 	c_split = choices.split('|')
 	return [(choice.capitalize(), choice) for choice in c_split]
+
+
+def create_completed_review_form(submission,review_id):
+	document = Document()
+	document.add_heading(submission.title, 0)
+	review_assignment = get_object_or_404(core_models.ReviewAssignment, pk=review_id)
+	relations = models.FormElementsRelationship.objects.filter(form=submission.review_form).order_by('order')
+	
+	if review_assignment.results:
+		p = document.add_paragraph('%s completed this review assignment form.'% review_assignment.user.profile.full_name())
+	
+		data = json.loads(review_assignment.results.data)
+		for relation in relations:
+			v = data[relation.element.name]
+			document.add_heading(relation.element.name, level=1)        
+			text = BeautifulSoup(str(v[0]),"html.parser").get_text()
+			document.add_paragraph(text).bold = True
+			recommendations = {'accept': 'Accept','reject': 'Reject', 'revisions':'Revisions Required'}
+
+		document.add_heading("Recommendation", level=1)
+		document.add_paragraph(recommendations[review_assignment.recommendation]).italic = True
+		document.add_heading("Competing Interests", level=1)
+		document.add_paragraph(review_assignment.competing_interests).italic = True
+	
+	else:
+		p = document.add_paragraph('You should complete this form and then use the review assignment page to upload it.')
+	
+		for relation in relations:
+
+			if relation.element.field_type in ['text', 'textarea', 'date', 'email']:
+				document.add_heading(relation.element.name+": _______________________________", level=1)
+				document.add_paragraph(relation.help_text).italic = True
+
+			if relation.element.field_type in ['select', 'check']:
+				document.add_heading(relation.element.name, level=1)
+				if relation.element.field_type == 'select':
+					choices = render_choices(relation.element.choices)
+				else:
+					choices = ['Y', 'N']
+
+				p = document.add_paragraph(relation.help_text)
+				p.add_run(' Mark your choice however you like, as long as it is clear.').italic = True
+				table = document.add_table(rows=2, cols=len(choices))
+				hdr_cells = table.rows[0].cells
+				for i, choice in enumerate(choices):
+					hdr_cells[i].text = choice[0]
+				table.style = 'TableGrid'
+
+		
+
+	document.add_page_break()
+	if not os.path.exists(os.path.join(settings.BASE_DIR, 'files', 'forms')):
+		os.makedirs(os.path.join(settings.BASE_DIR, 'files', 'forms'))
+	path = os.path.join(settings.BASE_DIR, 'files', 'forms', '%s.docx' % str(uuid4()))
+
+	document.save(path)
+	return path
+
 
 def create_review_form(submission):
 	document = Document()

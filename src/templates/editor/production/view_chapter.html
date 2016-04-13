@@ -1,0 +1,64 @@
+
+{% load static from staticfiles %}
+{% load bootstrap3 %}
+
+{% block css %}
+  <link href="{% static "css/timeline.css" %}" rel="stylesheet">
+
+  <link type='text/css' href="{% static "css/jq-ui.css" %}" rel="stylesheet">
+  <link type='text/css' href="{% static "css/jquery.tagit.css" %}" rel="stylesheet">
+{% endblock %}
+</br>
+<div class="col-md-12 file-heading container-fluid" style="margin-top:-10px">
+          <h4>{% if update%} Update Chapter <a class="btn btn-transparent-white pull-right" href="{% url 'editor_view_chapter' submission.id chapter.id%}" style="margin-top:-8px">Go Back</a>{% else %}View Chapter {{chapter.sequence}} <a class="btn btn-transparent-white pull-right" href="{% url 'editor_update_chapter' submission.id chapter.id%}" style="margin-top:-8px">Edit</a>{% endif%} </h4>
+    </div>
+
+<div class="col-md-12 dash-container bottom-space">
+
+        <div class="media-body">
+        <div class="col-md-12">
+              <div class="form-group">
+                  <div class="row">
+                    <div class="col-md-12">
+                    {% if update %}
+                      <form method="POST" enctype="multipart/form-data">
+                      {% csrf_token %}
+                      {% bootstrap_form_errors chapter_form layout='inline' %}
+                        <div class="form-group">
+                            <div class="row">
+                              <div class="col-md-12">
+                              {% bootstrap_field chapter_form.blurbs %}
+
+                              {% bootstrap_field chapter_form.sequence %}
+                             <div class="aside"><strong>Keywords</strong> Hit Enter to add a new keyword.</div>
+                                <input type="text" id="tags" name="tags" value="{% for keyword in chapter.keywords.all %}{{ keyword }}{% if not forloop.last %},{% endif %}{% endfor %}"/>
+                                <div class="aside"><strong>Disciplines</strong> Hit Enter to add a new discipline.</div>
+                                  <input type="text" id="stags" name="stags" value="{% for subject in chapter.disciplines.all %}{{ subject }}{% if not forloop.last %},{% endif %}{% endfor %}"/>
+                                </div>
+                                <div class="input-group pull-right ">
+                                    <br />
+                                    <button class="btn btn-task  btn-round-half" type="submit" name="update" id="update">Submit</button>
+                                </div>
+                              </div>
+                            </div>
+                    </form>
+                    {% else %}
+                    <label>Blurbs</label>
+                     <input class="form-control" type="text" value="{{chapter.blurbs}}" readonly="" /> 
+                    <label>Sequence</label>
+                     <input class="form-control" type="text" value="{{chapter.sequence}}" readonly="" /> 
+                   <div class="aside"><strong>Keywords</strong></div>
+                      <input type="text" id="disabled-tags" name="tags" value="{% for keyword in chapter.keywords.all %}{{ keyword }}{% if not forloop.last %},{% endif %}{% endfor %}" />
+                      <div class="aside"><strong>Disciplines</strong></div>
+                        <input type="text" id="disabled-stags" name="stags" value="{% for subject in chapter.disciplines.all %}{{ subject }}{% if not forloop.last %},{% endif %}{% endfor %}"/>
+                      </div>
+                  
+                    </div>
+                  </div>
+                    <h4><strong>Chapter Formats</strong> <a href="{% url 'add_chapter_format' submission.id chapter.id %}" class="btn btn-info btn-sm"> + Add Format</a></h4>
+          {% include "editor/production/chapter_public_files.html" %}
+
+                    {% endif %}
+          
+        </div>
+      </div>

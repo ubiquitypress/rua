@@ -87,7 +87,7 @@ class CoreTests(TestCase):
 		"""
 		testing settings fixture
 		"""
-		settings = ["accronym","submit_proposals","additional_files_guidelines","base_url","ci_required","city","copyedit_author_instructions","copyedit_instructions","description","direct_submissions","footer","index_instructions","instructions_for_task_copyedit","instructions_for_task_index","instructions_for_task_proposal","instructions_for_task_review","instructions_for_task_typeset","manuscript_guidelines","oai_identifier","press_name","preview_review_files","primary_contact_email","primary_contact_name","proposal_form","publishing_committee","registration_message","submission_checklist_help","submission_guidelines","suggested_reviewers","suggested_reviewers_guide","typeset_author_instructions","typeset_instructions","competing_interests","terms-conditions","accepted_reminder","author_copyedit_request","author_submission_ack","author_typeset_request","book_editor_ack","contract_author_sign_off","copyedit_request","decision_ack","editor_submission_ack","editorial_decision_ack","external_review_request","from_address","index_request","new_user_email","new_user_owner_email","notification_reminder_email","overdue_reminder","production_editor_ack","proposal_accept","proposal_decline","proposal_request_revisions","proposal_review_request","proposal_revision_submit_ack","proposal_submission_ack","proposal_update_ack","request_revisions","reset_password","review_due_ack","review_request","revisions_reminder_email","task_decline","typeset_request","typesetter_typeset_request","unaccepted_reminder","brand_header","favicon","notification_reminder","remind_accepted_reviews","remind_overdue_reviews","remind_unaccepted_reviews","revisions_reminder"]
+		settings = ["accronym","default_review_type","review_type_selection","submit_proposals","additional_files_guidelines","base_url","ci_required","city","copyedit_author_instructions","copyedit_instructions","description","direct_submissions","footer","index_instructions","instructions_for_task_copyedit","instructions_for_task_index","instructions_for_task_proposal","instructions_for_task_review","instructions_for_task_typeset","manuscript_guidelines","oai_identifier","press_name","preview_review_files","primary_contact_email","primary_contact_name","proposal_form","publishing_committee","registration_message","submission_checklist_help","submission_guidelines","suggested_reviewers","suggested_reviewers_guide","typeset_author_instructions","typeset_instructions","competing_interests","terms-conditions","accepted_reminder","author_copyedit_request","author_submission_ack","author_typeset_request","book_editor_ack","contract_author_sign_off","copyedit_request","decision_ack","editor_submission_ack","editorial_decision_ack","external_review_request","from_address","index_request","new_user_email","new_user_owner_email","notification_reminder_email","overdue_reminder","production_editor_ack","proposal_accept","proposal_decline","proposal_request_revisions","proposal_review_request","proposal_revision_submit_ack","proposal_submission_ack","proposal_update_ack","request_revisions","reset_password","review_due_ack","review_request","revisions_reminder_email","task_decline","typeset_request","typesetter_typeset_request","unaccepted_reminder","brand_header","favicon","notification_reminder","remind_accepted_reviews","remind_overdue_reviews","remind_unaccepted_reviews","revisions_reminder"]
 		settings_exist=True	
 		for setting_name in settings:
 			try:
@@ -95,7 +95,7 @@ class CoreTests(TestCase):
 			except models.Setting.DoesNotExist:
 				settings_exist = False
 		number_of_settings = len(models.Setting.objects.all())
-		self.assertEqual(number_of_settings,75)
+		self.assertEqual(number_of_settings,77)
 		self.assertEqual(settings_exist, True)
 	
 	def test_setting_groups_fixture(self):
@@ -420,6 +420,23 @@ class CoreTests(TestCase):
 		self.assertEqual("In Editing" in content, True)
 		self.assertEqual("In Production" in content, True)
 
+		resp = self.client.get(reverse('overview_inprogress'))
+		content =resp.content
+		
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
+
+		self.assertEqual("Submissions In Progress" in content, True)
+
+		resp = self.client.get(reverse('proposal_overview'))
+		content =resp.content
+		
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
+		self.assertEqual("Proposals" in content, True)
+		self.assertEqual("Accepted Proposals" in content, True)
+		self.assertEqual("Declined Proposals" in content, True)
+
 	def test_proposals(self):
 		management.call_command('loaddata', 'test/test_proposal_form.json', verbosity=0)
 		management.call_command('loaddata', 'test/test_submission_proposal.json', verbosity=0)
@@ -440,11 +457,15 @@ class CoreTests(TestCase):
 		
 		self.assertEqual(resp.status_code, 200)
 		self.assertEqual("403" in content, False)
+
 		page_title = "Book Proposal :  %s : %s" % (proposal.title,proposal.subtitle)
 		self.assertEqual(page_title in content, True)
 
 		proposal_reviews=submission_models.ProposalReview.objects.all()
 		self.assertEqual(0,len(proposal_reviews))
+		resp = self.client.get(reverse('view_proposal',kwargs={'proposal_id':proposal.id}),{'download':'docx'})
+	
+		self.assertEqual(resp.status_code, 200)
 		resp = self.client.get(reverse('start_proposal_review',kwargs={'proposal_id':proposal.id}))
 		content =resp.content
 		
@@ -455,6 +476,25 @@ class CoreTests(TestCase):
 		self.assertEqual(resp['Location'], "http://testing/proposals/1/")
 		proposal_reviews=submission_models.ProposalReview.objects.all()
 		self.assertEqual(len(proposal_reviews)==0,False)
+
+		resp = self.client.get(reverse('withdraw_proposal_review',kwargs={'proposal_id':proposal.id,'review_id':1}))
+		content =resp.content
+		
+		self.assertEqual(resp.status_code, 302)
+		self.assertEqual("403" in content, False)
+		proposal_review=submission_models.ProposalReview.objects.get(pk=1)
+
+		self.assertEqual(proposal_review.withdrawn, True)
+
+		resp = self.client.get(reverse('withdraw_proposal_review',kwargs={'proposal_id':proposal.id,'review_id':1}))
+		content =resp.content
+		
+		self.assertEqual(resp.status_code, 302)
+		self.assertEqual("403" in content, False)
+		proposal_review=submission_models.ProposalReview.objects.get(pk=1)
+
+		self.assertEqual(proposal_review.withdrawn, False)
+
 
 		resp = self.client.get(reverse('accept_proposal',kwargs={'proposal_id':proposal.id}))
 		content =resp.content
@@ -498,7 +538,7 @@ class CoreTests(TestCase):
 		
 		self.assertEqual(resp.status_code, 200)
 		self.assertEqual("403" in content, False)
-		resp =  self.client.post(reverse('add_proposal_reviewers',kwargs={'proposal_id':proposal.id}),{'due_date': '2015-11-11', 'committee': 2, 'reviewer': 4,'email_text':'hi'})
+		resp =  self.client.post(reverse('add_proposal_reviewers',kwargs={'proposal_id':proposal.id}),{'due_date': '2015-11-11', 'committee': ['2'],'email_text':'hi'})
 		self.assertEqual(resp.status_code, 302)
 		self.assertEqual(resp['Location'], "http://testing/proposals/1/")
 	
@@ -520,7 +560,13 @@ class CoreTests(TestCase):
 		self.assertEqual(resp['Location'], "http://testing/proposals/1/")
 		proposal_reviews=submission_models.ProposalReview.objects.all()
 
+	def test_oai(self):
 		
+		resp = self.client.get(reverse('oai'))
+		content =resp.content
+		
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
 
 	def test_ajax_email_calls(self):
 		
@@ -548,8 +594,158 @@ class CoreTests(TestCase):
 		json_data =  json.loads(resp.content)
 		self.assertEqual(len(json_data)==0,True)
 
+	def test_unauth_reset(self):
+		resp = self.client.get(reverse('unauth_reset'))
+		content =resp.content
+		
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
+		resp = self.client.post(reverse('unauth_reset'),{'username':'rua_author'})
+		content =resp.content
+		self.assertEqual(resp.status_code, 200)
+		profile = models.Profile.objects.get(user__username='rua_author')
+		resp = self.client.get(reverse('unauth_reset_code', kwargs = {'uuid':profile.reset_code}))
+		content =resp.content
+		self.assertEqual(resp.status_code, 302)
+		resp = self.client.get(reverse('unauth_reset_password', kwargs = {'uuid':profile.reset_code}))
+		content =resp.content
+		
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
+		resp = self.client.post(reverse('unauth_reset_password', kwargs = {'uuid':profile.reset_code}), {'password_1':'testing12','password_2':'testing12'})
+		content =resp.content
+		
+		self.assertEqual(resp.status_code, 302)
+		self.assertEqual(resp['Location'], "http://testing/login/")
+		
 
+	def test_switch_account(self):
+		resp = self.client.get(reverse('switch-account'))
+		content =resp.content
+		
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
 
+		resp = self.client.get(reverse('switch-account-user',kwargs={'account_id':4}))
+		self.assertEqual(resp.status_code, 302)
+		self.assertEqual(resp['Location'], "http://testing/dashboard/")
+		resp = self.client.get(reverse('user_dashboard'))
+		self.assertEqual(resp.status_code, 302)
+		self.assertEqual(resp['Location'], "http://testing/review/dashboard/")
+		
+
+	def test_page(self):
+		resp = self.client.get(reverse('page',kwargs={'page_name':'competing_interests'}))
+		content =resp.content
+		
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
+		self.assertEqual("Competing Interests" in content, True)
+
+	def test_log(self):
+		resp = self.client.get(reverse('view_log',kwargs={'submission_id':1}))
+		content =resp.content
+		
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)	
+	
+	def test_unassigned_proposal(self):
+		resp=self.client.get(reverse('proposal_assign'))
+		content =resp.content
+		
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
+		proposals = submission_models.Proposal.objects.filter(owner__isnull=True)
+		self.assertEqual(proposals.count(),0)
+		resp=self.client.post(reverse('proposal_assign'),{"book_submit":"True","title":"rua_proposal_title","subtitle":"rua_proposal_subtitle","author":"rua_user","rua_element":"example","rua_element_2":"example"})
+		proposals = submission_models.Proposal.objects.filter(owner__isnull=True)
+		self.assertEqual(proposals.count(),1)
+		proposal = proposals[0]
+		resp=self.client.get(reverse('proposal_assign_edit',kwargs={'proposal_id':proposal.pk}))
+		content =resp.content
+		
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
+		resp=self.client.post(reverse('proposal_assign_edit',kwargs={'proposal_id':proposal.pk}),{"book_submit":"True","title":"rua_proposal_title updated","subtitle":"rua_proposal_subtitle","author":"rua_user","rua_element":"example","rua_element_2":"example"})
+		content =resp.content
+		self.assertEqual("403" in content, False)
+		proposals = submission_models.Proposal.objects.filter(owner__isnull=True)
+		proposal = proposals[0]
+		self.assertEqual(proposal.title,"rua_proposal_title updated")
+		resp=self.client.get(reverse('proposal_assign_user',kwargs={'proposal_id':proposal.pk,'user_id':1}))
+		content =resp.content
+		
+		self.assertEqual(resp.status_code, 302)
+		self.assertEqual("403" in content, False)
+		proposals = submission_models.Proposal.objects.filter(owner__isnull=True)
+		self.assertEqual(proposals.count(),0)
+		
+	def test_proposal_history(self):
+		resp=self.client.post(reverse('proposal_start'),{"book_submit":"True","title":"rua_proposal_title","subtitle":"rua_proposal_subtitle","author":"rua_user","rua_element":"example","rua_element_2":"example"})
+		resp=self.client.get(reverse('proposals_history'))
+		content =resp.content
+		
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
+		self.assertEqual("rua_proposal_title" in content, True)
+
+	def test_proposal_review(self):
+		resp=self.client.post(reverse('proposal_start'),{"book_submit":"True","title":"rua_proposal_title","subtitle":"rua_proposal_subtitle","author":"rua_user","rua_element":"example","rua_element_2":"example"})
+		resp=self.client.post(reverse('start_proposal_review', kwargs = {'proposal_id':1}),{'due_date': '2016-04-29', 'review_form': '1', 'indv-reviewer_length': '5', 'comm-reviewer_length': '5', 'email_text': 'Test', 'reviewer': ['4', '1'], 'committee':['2']})
+		proposal = submission_models.Proposal.objects.get(pk=1)
+		self.assertEqual(proposal.date_review_started != None, True)
+		reviews = submission_models.ProposalReview.objects.filter(proposal=proposal)
+		self.assertEqual(reviews.count(),2)
+		resp=self.client.get(reverse('view_proposal_review_decision',kwargs={'proposal_id':1,'assignment_id':1}))
+		content =resp.content
+		
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
+		resp=self.client.post(reverse('view_proposal_review_decision',kwargs={'proposal_id':1,'assignment_id':1}),{'accept':''})
+		resp=self.client.post(reverse('view_proposal_review_decision',kwargs={'proposal_id':1,'assignment_id':2}),{'decline':''})
+		reviews = submission_models.ProposalReview.objects.filter(proposal=proposal)
+		
+		self.assertEqual(reviews[0].accepted != None, True)
+		self.assertEqual(reviews[0].declined != None, False)
+		self.assertEqual(reviews[1].declined != None, True)
+		self.assertEqual(reviews[1].accepted != None, False)
+		resp = self.client.get(reverse('view_proposal_review',kwargs={'proposal_id':1,'assignment_id':1}))
+		content =resp.content
+		
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
+		resp = self.client.post(reverse('view_proposal_review',kwargs={'proposal_id':1,'assignment_id':1}), {'rua_name': 'example','recommendation':'accept','competing_interests':'nothing'})
+		review = submission_models.ProposalReview.objects.get(pk=1)
+		self.assertEqual(review.completed != None, True)
+		resp = self.client.get(reverse('reopen_proposal_review',kwargs={'proposal_id':1,'assignment_id':1}))
+		content =resp.content
+		
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
+
+		resp = self.client.post(reverse('reopen_proposal_review',kwargs={'proposal_id':1,'assignment_id':1}), {'due_date': '2015-11-11','email':'test', 'comments':'testing'})
+		review = submission_models.ProposalReview.objects.get(pk=1)
+		self.assertEqual(review.reopened, True)
+		resp = self.client.get(reverse('view_proposal_review',kwargs={'proposal_id':1,'assignment_id':1}))
+		content =resp.content
+		
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
+		resp = self.client.post(reverse('view_proposal_review',kwargs={'proposal_id':1,'assignment_id':1}), {'rua_name': 'example','recommendation':'accept','competing_interests':'nothing'})
+		review = submission_models.ProposalReview.objects.get(pk=1)
+		self.assertEqual(review.reopened, False)
+
+		
+		
+
+	def test_readonly_profile(self):
+		resp = self.client.get(reverse('view_profile_readonly',kwargs={'user_id':1}))
+		content =resp.content
+		
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
+		self.assertEqual("/user/profile/update/" in content, False)
+		self.assertEqual("/user/profile/resetpassword/" in content, False)
 
 ##############################################	Form Tests	 ##############################################		
 
@@ -613,6 +809,81 @@ class CoreTests(TestCase):
 		self.assertEqual(resp.status_code, 302)
 		self.assertEqual(resp['Location'], "http://testing/editor/submission/1/")
 
+	def test_upload_manuscript_file(self):
+
+		self.book = models.Book.objects.get(pk=1)
+		self.book.save()
+		resp = self.client.get(reverse('upload_manuscript',kwargs={'submission_id':self.book.id}))
+		content =resp.content
+		
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
+		self.assertEqual("Upload Manuscript File" in content, True)
+
+		manuscript_file = tempfile.NamedTemporaryFile(delete=False)
+		resp = self.client.post(reverse('upload_manuscript',kwargs={'submission_id':self.book.id}),{'file_type':'other','label':'test','manuscript':manuscript_file})
+		self.assertEqual(resp.status_code, 302)
+		self.assertEqual(resp['Location'], "http://testing/editor/submission/1/")
+
+	def test_upload_additional_file(self):
+
+		self.book = models.Book.objects.get(pk=1)
+		self.book.save()
+		resp = self.client.get(reverse('upload_additional',kwargs={'submission_id':self.book.id}))
+		content =resp.content
+		
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
+		self.assertEqual("Upload Additional File" in content, True)
+
+		additional_file = tempfile.NamedTemporaryFile(delete=False)
+		resp = self.client.post(reverse('upload_additional',kwargs={'submission_id':self.book.id}),{'file_type':'other','label':'test','additional':additional_file})
+		self.assertEqual(resp.status_code, 302)
+		self.assertEqual(resp['Location'], "http://testing/editor/submission/1/")
+	
+	def test_delete_file(self):
+
+		self.book = models.Book.objects.get(pk=1)
+		self.book.save()
+		manuscript_file = tempfile.NamedTemporaryFile(delete=False)
+		resp = self.client.post(reverse('upload_manuscript',kwargs={'submission_id':self.book.id}),{'file_type':'other','label':'test','manuscript':manuscript_file})
+		
+		resp = self.client.get(reverse('delete_file',kwargs={'submission_id':self.book.id,'file_id':1,'returner':'new'}))
+		content =resp.content
+		
+		self.assertEqual(resp.status_code, 302)
+		self.assertEqual("403" in content, False)
+
+		self.assertEqual(resp['Location'], "http://testing/editor/submission/1/")
+		resp = self.client.get(reverse('delete_file',kwargs={'submission_id':self.book.id,'file_id':1,'returner':'new'}))
+		content =resp.content
+		
+		self.assertEqual(resp.status_code, 404)
+	
+	def test_update_file(self):
+
+		self.book = models.Book.objects.get(pk=1)
+		self.book.save()
+		manuscript_file = tempfile.NamedTemporaryFile(delete=False)
+		resp = self.client.post(reverse('upload_manuscript',kwargs={'submission_id':self.book.id}),{'file_type':'other','label':'test','manuscript':manuscript_file})
+		
+		resp = self.client.get(reverse('view_file',kwargs={'submission_id':self.book.id,'file_id':1}))
+		content =resp.content
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
+		resp = self.client.get(reverse('update_file',kwargs={'submission_id':self.book.id,'file_id':1,'returner':'new'}))
+		content =resp.content
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
+		resp = self.client.post(reverse('update_file',kwargs={'submission_id':self.book.id,'file_id':1,'returner':'new'}),{'rename':'new_label'})
+		content =resp.content
+		self.assertEqual(resp.status_code, 302)
+		self.assertEqual("403" in content, False)
+		resp = self.client.get(reverse('versions_file',kwargs={'submission_id':self.book.id,'file_id':1}))
+		content =resp.content
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
+	
 ############# Email
 
 	def test_email(self):
@@ -625,6 +896,10 @@ class CoreTests(TestCase):
 		#check that it exists in the database
 		
 		self.assertEqual(len(models.Book.objects.all())==1, True)
+		resp = self.client.get(reverse('email_users', kwargs= {'group': 'all','submission_id':str(self.book.id)}))
+		self.assertEqual(resp.status_code, 200)
+		content = resp.content
+		self.assertEqual("403" in content, False)
 		resp = self.client.post(reverse('email_users', kwargs= {'group': 'all','submission_id':str(self.book.id)}),  {'subject': 'all','to_values':self.author.author_email,"cc_values":"","bcc_values":"","body":'text'})
 		self.assertEqual(resp.status_code, 200)
 		self.assertEqual( "was sent" in resp.content,True)
@@ -654,6 +929,13 @@ class CoreTests(TestCase):
 		resp = self.client.get(reverse('email_users', kwargs= {'group': 'unknown','submission_id':str(self.book.id)}))
 		self.assertEqual(resp.status_code, 302)	
 		self.assertEqual(resp['Location'], "http://testing/email/all/submission/1/")
+		
+		resp=self.client.post(reverse('proposal_start'),{"book_submit":"True","title":"rua_proposal_title","subtitle":"rua_proposal_subtitle","author":"rua_user","rua_element":"example","rua_element_2":"example"})
+		resp = self.client.get(reverse('email_user_proposal', kwargs= {'user_id': 1,'proposal_id':1}),  {'subject': 'all','to_values':self.author.author_email,"cc_values":"","bcc_values":"","body":'text'})
+		self.assertEqual(resp.status_code, 200)
+		resp = self.client.post(reverse('email_user_proposal', kwargs= {'user_id': 1,'proposal_id':1}),  {'subject': 'all','to_values':self.author.author_email,"cc_values":"","bcc_values":"","body":'text'})
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual( "was sent" in resp.content,True)
 
 
 

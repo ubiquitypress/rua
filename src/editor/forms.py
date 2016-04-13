@@ -16,6 +16,15 @@ class EditorForm(ModelForm):
 		self.fields['book_editors'].queryset = User.objects.filter(profile__roles__slug='book-editor')
 		self.fields['book_editors'].label_from_instance = lambda obj: "%s %s" % (obj.first_name, obj.last_name)
 
+class Marc21Form(forms.Form):
+
+	file_content = forms.CharField(widget=forms.Textarea, required=True)
+
+	def __init__(self, *args, **kwargs):
+		content = kwargs.pop('content', None)
+		super(Marc21Form, self).__init__(*args, **kwargs)
+		self.fields['file_content'].initial = content
+
 class ChangeOwnerForm(ModelForm):
 
 	class Meta:
@@ -46,13 +55,19 @@ class FormatForm(forms.ModelForm):
 		model = core_models.Format
 		exclude = ('book', 'file')
 
-class ChapterForm(forms.ModelForm):
+class ChapterFormatForm(forms.ModelForm):
 
 	chapter_file = forms.FileField(required=True)
 
 	class Meta:
+		model = core_models.ChapterFormat
+		exclude = ('book',)
+
+class ChapterForm(forms.ModelForm):
+
+	class Meta:
 		model = core_models.Chapter
-		exclude = ('book', 'file')
+		exclude = ('book', 'formats')
 
 class PhysicalFormatForm(forms.ModelForm):
 
@@ -97,6 +112,7 @@ class EditMetadata(forms.ModelForm):
 			'expected_completion_date',
 			'peer_review_override',
 			'book_type',
+			'table_contents',
 		)
 
 		exclude = (

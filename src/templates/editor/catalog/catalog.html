@@ -133,13 +133,12 @@
             <li role="presentation"><a href="#retailers" aria-controls="home" role="tab" data-toggle="tab">Retailers</a></li>
             <li role="presentation"><a href="#cover" aria-controls="home" role="tab" data-toggle="tab">Cover Image</a></li>
             <li role="presentation"><a href="#peer-review" aria-controls="home" role="tab" data-toggle="tab">Peer Review</a></li>
+            <li role="presentation"><a href="{% url 'catalog_marc21' submission.id %}" role="tab">Marc 21</a></li>
           </ul>
 
           <!-- Tab panes -->
           <div class="tab-content">
             <div role="tabpanel" class="tab-pane active" id="metadata">
-              <div class="btn-group pull-right" role="group" style="margin-top:5px">
-           <a disabled class="btn  btn-default">  Download Marc21</a> <a href="{% url 'serve_marc21_file'  submission.id 'original' %}" class="btn btn-primary ">Original</a><a href="{% url 'serve_marc21_file'  submission.id 'xml' %}" class="btn btn-accept ">XML</a></div>
               <form method="POST" action="?metadata=true">
                 {% csrf_token %}
                 <br />
@@ -201,8 +200,13 @@
                     <div class="col-md-6" style="max-height: 290px; overflow-x: scroll;">
                       {% bootstrap_field metadata_form.languages %}
                     </div>
-                    <div class="col-md-6">
+                     <div class="col-md-3">
                       {% bootstrap_field metadata_form.expected_completion_date %}
+                      </div>
+                       <div class="col-md-3">
+                      {% bootstrap_field metadata_form.table_contents %}
+                      </div>
+                     <div class="col-md-6">
                       {% bootstrap_field metadata_form.peer_review_override %}
                       <div class="aside"><strong>Keywords</strong> Hit Enter to add a new keyword.</div>
                       <input type="text" id="tags" name="tags" value="{% for keyword in submission.keywords.all %}{{ keyword }}{% if not forloop.last %},{% endif %}{% endfor %}"/>
