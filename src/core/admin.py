@@ -86,6 +86,7 @@ admin_list = [
 	(EditorialReviewAssignment, EditorialReviewAssAdmin),
 	(Format,),
 	(Chapter,),
+	(ChapterFormat,),
 	(ReviewRound, ReviewRoundAdmin),
 	(ProposalForm, ProposalFormAdmin),
     (ProposalFormElement, ProposalFormElementAdmin),

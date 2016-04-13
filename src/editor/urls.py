@@ -57,6 +57,7 @@ urlpatterns = patterns('',
     url(r'^submission/(?P<submission_id>\d+)/production/add/chapter/$', 'editor.views.add_chapter', name='add_chapter'),
     url(r'^submission/(?P<submission_id>\d+)/production/chapter/(?P<chapter_id>\d+)/add/format/$', 'editor.views.add_chapter_format', name='add_chapter_format'),
     url(r'^submission/(?P<submission_id>\d+)/production/chapter/(?P<chapter_id>\d+)/view/$', 'editor.views.view_chapter', name='editor_view_chapter'),
+    url(r'^submission/(?P<submission_id>\d+)/production/chapter/(?P<chapter_id>\d+)/view/format/(?P<format_id>\d+)/$', 'editor.views.view_chapter_format', name='editor_view_chapter_format'),
     
     url(r'^submission/(?P<submission_id>\d+)/production/add/physical/$', 'editor.views.add_physical', name='add_physical'),
     url(r'^submission/(?P<submission_id>\d+)/production/add/format/(?P<file_id>\d+)/$', 'editor.views.add_format', name='add_format_existing'),

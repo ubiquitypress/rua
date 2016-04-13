@@ -1380,6 +1380,29 @@ def view_chapter(request, submission_id, chapter_id):
 
 	return render(request, template, context)
 
+
+@is_book_editor
+def view_chapter_format(request, submission_id, chapter_id, format_id):
+	book = get_object_or_404(models.Book, pk=submission_id)
+	chapter = get_object_or_404(models.Chapter, pk=chapter_id, book = book)
+	chapter_format = get_object_or_404(models.ChapterFormat, chapter=chapter, pk=format_id)
+
+	template = 'editor/submission.html'
+	context = {
+		'submission': book,
+		'chapter': chapter,
+		'chapter_format': chapter_format,
+		'author_include': 'editor/production/view.html',
+		'submission_files': 'editor/production/view_chapter_format.html',
+		'active': 'production',
+		'submission': book,
+		'format_list': models.Format.objects.filter(book=book).select_related('file'),
+		'chapter_list': models.Chapter.objects.filter(book=book).order_by('sequence'),
+		'active_page': 'production',
+	}
+
+	return render(request, template, context)
+
 @is_book_editor
 def add_chapter_format(request, submission_id, chapter_id, file_id=None):
 	book = get_object_or_404(models.Book, pk=submission_id)
