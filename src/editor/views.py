@@ -5,7 +5,12 @@ from django.contrib import messages
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponseRedirect, Http404, HttpResponse, StreamingHttpResponse
 
+import os
+from django.conf import settings
+import mimetypes
+import mimetypes as mime
 from uuid import uuid4
 from core.files import handle_attachment, handle_file_update, handle_attachment, handle_file
 from core import models, log, logic as core_logic, forms as core_forms
@@ -1146,14 +1151,30 @@ def catalog_marc21(request, submission_id, type = None):
 	book = get_object_or_404(models.Book, pk=submission_id)
 	if type:
 		if type=='xml':
-			marc21_form = forms.Marc21Form(content='dssdsdsdsd')
+			marc21_form = forms.Marc21Form(content=core_logic.book_to_mark21_file_content(book,request.user,True))
 		else:
-			marc21_form = forms.Marc21Form(content='dssdsdsdsd44x44')
+			marc21_form = forms.Marc21Form(content=core_logic.book_to_mark21_file_content(book,request.user))
 	else:
 		marc21_form = forms.Marc21Form()
 	
 	if request.POST:
-		print 'POST'
+		if 'xml-download' in request.POST:
+			file_pk = core_logic.book_to_mark21_file_download_content(book,request.user,request.POST.get('file_content'),True)
+		else:
+			file_pk = core_logic.book_to_mark21_file_download_content(book,request.user,request.POST.get('file_content'))
+		_file = get_object_or_404(models.File, pk=file_pk)
+		file_path = os.path.join(settings.BOOK_DIR, submission_id, _file.uuid_filename)
+
+		try:
+			fsock = open(file_path, 'r')
+			mimetype = mimetypes.guess_type(file_path)
+			response = StreamingHttpResponse(fsock, content_type=mimetype)
+			response['Content-Disposition'] = "attachment; filename=%s" % (_file.original_filename)
+			#log.add_log_entry(book=book, user=request.user, kind='file', message='File %s downloaded.' % _file.uuid_filename, short_name='Download')
+			return response
+		except IOError:
+			messages.add_message(request, messages.ERROR, 'File not found. %s' % (file_path))
+			return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 	template = 'editor/catalog/catalog_marc21.html' 
 	context = {
