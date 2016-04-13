@@ -1053,7 +1053,7 @@ def editor_production(request, submission_id):
 		'active': 'production',
 		'submission': book,
 		'format_list': models.Format.objects.filter(book=book).select_related('file'),
-		'chapter_list': models.Chapter.objects.filter(book=book),
+		'chapter_list': models.Chapter.objects.filter(book=book).order_by('sequence'),
 		'physical_list': models.PhysicalFormat.objects.filter(book=book),
 		'active_page': 'production',
 	}
@@ -1467,7 +1467,7 @@ def add_physical(request, submission_id):
 		'active': 'production',
 		'submission': book,
 		'format_list': models.Format.objects.filter(book=book).select_related('file'),
-		'chapter_list': models.Chapter.objects.filter(book=book).select_related('file'),
+		'chapter_list': models.Chapter.objects.filter(book=book).order_by('sequence'),
 		'active_page': 'production',
 	}
 
@@ -1496,7 +1496,7 @@ def update_format_or_chapter(request, submission_id, format_or_chapter, id):
 	book = get_object_or_404(models.Book, pk=submission_id)
 
 	if format_or_chapter == 'chapter':
-		item = get_object_or_404(models.Chapter, pk=id)
+		item = get_object_or_404(models.ChapterFormat, pk=id)
 		type='chapter'
 	elif format_or_chapter == 'format':
 		item = get_object_or_404(models.Format, pk=id)
@@ -1532,7 +1532,7 @@ def update_format_or_chapter(request, submission_id, format_or_chapter, id):
 		'active': 'production',
 		'submission': book,
 		'format_list': models.Format.objects.filter(book=book).select_related('file'),
-		'chapter_list': models.Chapter.objects.filter(book=book).select_related('file'),
+		'chapter_list': models.Chapter.objects.filter(book=book).order_by('sequence'),
 		'active_page': 'production',
 	}
 
@@ -1563,7 +1563,7 @@ def assign_typesetter(request, submission_id):
 		'active': 'production',
 		'submission': book,
 		'format_list': models.Format.objects.filter(book=book).select_related('file'),
-		'chapter_list': models.Chapter.objects.filter(book=book).select_related('file'),
+		'chapter_list': models.Chapter.objects.filter(book=book).order_by('sequence'),
 		'typesetters': typesetters,
 		'active_page': 'production',
 		'email_text': models.Setting.objects.get(group__name='email', name='typeset_request'),
@@ -1622,7 +1622,7 @@ def view_typesetter(request, submission_id, typeset_id):
 		'submission_files': 'editor/production/view_typeset.html',
 		'active': 'production',
 		'format_list': models.Format.objects.filter(book=book).select_related('file'),
-		'chapter_list': models.Chapter.objects.filter(book=book).select_related('file'),
+		'chapter_list': models.Chapter.objects.filter(book=book).order_by('sequence'),
 		'typeset': typeset,
 		'typeset_id': typeset.id,
 		'author_form': author_form,
@@ -1655,7 +1655,7 @@ def view_typesetter_alter_due_date(request, submission_id, typeset_id):
 		'submission_files': 'editor/production/view_typeset_due_date.html',
 		'active': 'production',
 		'format_list': models.Format.objects.filter(book=book).select_related('file'),
-		'chapter_list': models.Chapter.objects.filter(book=book).select_related('file'),
+		'chapter_list': models.Chapter.objects.filter(book=book).order_by('sequence'),
 		'typeset': typeset,
 		'typeset_id': typeset.id,
 		'date_form': date_form,
@@ -1690,7 +1690,7 @@ def view_typesetter_alter_author_due(request, submission_id, typeset_id):
 		'submission_files': 'editor/production/view_typeset_due_date.html',
 		'active': 'production',
 		'format_list': models.Format.objects.filter(book=book).select_related('file'),
-		'chapter_list': models.Chapter.objects.filter(book=book).select_related('file'),
+		'chapter_list': models.Chapter.objects.filter(book=book).order_by('sequence'),
 		'typeset': typeset,
 		'typeset_id': typeset.id,
 		'date_form': date_form,
