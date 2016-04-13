@@ -14,8 +14,7 @@ from django.conf import settings
 from django.template import Context, Template
 from django.db import IntegrityError
 from django.utils.encoding import smart_text
-import zipfile
-import StringIO
+
 from review import models as review_models
 from core import log, models, forms, logic
 from author import orcid
@@ -40,6 +39,8 @@ import os
 import mimetypes
 import mimetypes as mime
 from bs4 import BeautifulSoup
+import zipfile
+import StringIO
 
 from  __builtin__ import any as string_any
 import string
