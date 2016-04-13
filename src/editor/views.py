@@ -1053,7 +1053,7 @@ def editor_production(request, submission_id):
 		'active': 'production',
 		'submission': book,
 		'format_list': models.Format.objects.filter(book=book).select_related('file'),
-		'chapter_list': models.Chapter.objects.filter(book=book).select_related('file'),
+		'chapter_list': models.Chapter.objects.filter(book=book),
 		'physical_list': models.PhysicalFormat.objects.filter(book=book),
 		'active_page': 'production',
 	}
@@ -1309,7 +1309,7 @@ def add_format(request, submission_id, file_id=None):
 		'submission': book,
 		'existing_file':exist_file,
 		'format_list': models.Format.objects.filter(book=book).select_related('file'),
-		'chapter_list': models.Chapter.objects.filter(book=book).select_related('file'),
+		'chapter_list': models.Chapter.objects.filter(book=book),
 		'active_page': 'production',
 	}
 
@@ -1331,6 +1331,7 @@ def add_chapter(request, submission_id, file_id=None):
 		if chapter_form.is_valid():
 			new_chapter = chapter_form.save(commit=False)
 			new_chapter.book = book
+			new_chapter.save()
 			for keyword in request.POST.get('tags').split(','):
 				new_keyword, c = models.Keyword.objects.get_or_create(name=keyword)
 				new_chapter.keywords.add(new_keyword)
@@ -1338,7 +1339,7 @@ def add_chapter(request, submission_id, file_id=None):
 				new_subject, c = models.Subject.objects.get_or_create(name=subject)
 				new_chapter.disciplines.add(new_subject)
 			new_chapter.save()
-			log.add_log_entry(book=book, user=request.user, kind='production', message='%s %s loaded a new chapter, %s' % (request.user.first_name, request.user.last_name, new_chapter.identifier), short_name='New Chapter Loaded')
+			log.add_log_entry(book=book, user=request.user, kind='production', message='%s %s loaded a new chapter, %s' % (request.user.first_name, request.user.last_name, new_chapter.sequence), short_name='New Chapter Loaded')
 			return redirect(reverse('editor_production', kwargs={'submission_id': book.id}))
 
 	template = 'editor/submission.html'
@@ -1351,7 +1352,29 @@ def add_chapter(request, submission_id, file_id=None):
 		'submission': book,
 		'existing_file':exist_file,
 		'format_list': models.Format.objects.filter(book=book).select_related('file'),
-		'chapter_list': models.Chapter.objects.filter(book=book).select_related('file'),
+		'chapter_list': models.Chapter.objects.filter(book=book),
+		'active_page': 'production',
+	}
+
+	return render(request, template, context)
+
+@is_book_editor
+def view_chapter(request, submission_id, chapter_id):
+	book = get_object_or_404(models.Book, pk=submission_id)
+	chapter = get_object_or_404(models.Chapter, pk=chapter_id, book = book)
+	chapter_formats = models.ChapterFormat.objects.filter(chapter=chapter)
+
+	template = 'editor/submission.html'
+	context = {
+		'submission': book,
+		'chapter': chapter,
+		'chapter_formats': chapter_formats,
+		'author_include': 'editor/production/view.html',
+		'submission_files': 'editor/production/view_chapter.html',
+		'active': 'production',
+		'submission': book,
+		'format_list': models.Format.objects.filter(book=book).select_related('file'),
+		'chapter_list': models.Chapter.objects.filter(book=book),
 		'active_page': 'production',
 	}
 
