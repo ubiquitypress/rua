@@ -6,8 +6,7 @@ from django.core.mail import EmailMultiAlternatives
 from django.conf import settings
 from functools import partial
 
-from core import models
-from core import logic
+from core import models, logic, email
 
 import uuid
 
@@ -60,12 +59,8 @@ class UserCreationForm(forms.ModelForm):
 		profile.save()
 
 		# Send email to the user 
-		subject, from_email, to = 'Registration Confirmation', "from_address@press.com", user.email
-		html_template = 'email/html_register.html'
-		text_template = 'email/text_register.html'
-		context = {'user': user, 'profile': profile, 'base_url': settings.BASE_URL}
-		logic.send_email(subject=subject, context=context, from_email=from_email, to=to, html_template=html_template, text_template=text_template)
-		
+		email_text = models.Setting.objects.get(group__name='email', name='new_user_email').value
+		logic.send_new_user_ack(email_text, user, profile)
 
 		if commit:
 			user.save()
