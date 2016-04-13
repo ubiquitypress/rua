@@ -6,11 +6,12 @@ from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, Http404, HttpResponse, StreamingHttpResponse
+from django.conf import settings
 
 import os
-from django.conf import settings
 import mimetypes
 import mimetypes as mime
+
 from uuid import uuid4
 from core.files import handle_attachment, handle_file_update, handle_attachment, handle_file
 from core import models, log, logic as core_logic, forms as core_forms
