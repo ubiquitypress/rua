@@ -6,6 +6,8 @@ from docx import Document
 from docx.shared import Inches
 from pprint import pprint
 import mimetypes
+from bs4 import BeautifulSoup
+
 from django.utils.encoding import smart_text
 from django.contrib.auth.models import User
 from django.shortcuts import redirect, render, get_object_or_404
@@ -16,8 +18,6 @@ from django.utils import timezone
 from django.core.urlresolvers import reverse
 from django.contrib import messages
 from django.http import Http404, HttpResponse, StreamingHttpResponse, HttpResponseRedirect
-
-from bs4 import BeautifulSoup
 
 from core import logic as core_logic
 from core import models as core_models

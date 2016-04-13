@@ -9,8 +9,8 @@ from django.contrib import messages
 from django.core.cache import cache
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils.encoding import smart_text
-
 from django.template.defaultfilters import slugify
+
 from manager import models
 from review import models as review_models
 from review import forms as review_f
@@ -23,7 +23,6 @@ from submission import models as submission_models
 
 from uuid import uuid4
 import os
-
 import requests
 import json
 

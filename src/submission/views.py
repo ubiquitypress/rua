@@ -12,14 +12,15 @@ from django.db.models import Q
 from django.template.defaultfilters import slugify
 from django.views.decorators.http import require_POST
 from django.contrib.auth.models import User
+from django.utils.encoding import smart_text
 
-from jfu.http import upload_receive, UploadResponse, JFUResponse
 from submission import forms
 from core import models as core_models, log, task, logic as core_logic
 from submission import logic, models as submission_models
 from manager import forms as manager_forms
 from core.files import handle_proposal_file_form
-from django.utils.encoding import smart_text
+
+from jfu.http import upload_receive, UploadResponse, JFUResponse
 from  __builtin__ import any as string_any
 import mimetypes as mime
 from uuid import uuid4

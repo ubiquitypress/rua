@@ -1,6 +1,9 @@
 from django.shortcuts import redirect, render, get_object_or_404, Http404
 from django.contrib import messages
 from django.core.urlresolvers import reverse
+from django.conf import settings
+from django.http import HttpResponse, HttpResponseForbidden
+from django.views.decorators.csrf import csrf_exempt
 
 from core import models, logic as core_logic, task
 from core.decorators import is_onetasker
@@ -8,18 +11,14 @@ from onetasker import forms
 from core import log
 import logic
 from submission.logic import handle_book_labels
-from django.http import HttpResponse, HttpResponseForbidden
-from django.views.decorators.csrf import csrf_exempt
+
 from jfu.http import upload_receive, UploadResponse, JFUResponse
 from datetime import datetime
-
 import mimetypes as mime
 from uuid import uuid4
 import os
 from pprint import pprint
 import json
-
-from django.conf import settings
 
 @is_onetasker
 def dashboard(request):
