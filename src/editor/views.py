@@ -1142,6 +1142,30 @@ def catalog(request, submission_id):
 	return render(request, template, context)
 
 @is_book_editor
+def catalog_marc21(request, submission_id, type = None):
+	book = get_object_or_404(models.Book, pk=submission_id)
+	if type:
+		if type=='xml':
+			marc21_form = forms.Marc21Form(content='dssdsdsdsd')
+		else:
+			marc21_form = forms.Marc21Form(content='dssdsdsdsd44x44')
+	else:
+		marc21_form = forms.Marc21Form()
+	
+	if request.POST:
+		print 'POST'
+
+	template = 'editor/catalog/catalog_marc21.html' 
+	context = {
+		'active': 'production',
+		'submission': book,
+		'marc21_form':marc21_form,
+		'active_page': 'catalog_view',
+	}
+
+	return render(request, template, context)
+
+@is_book_editor
 def identifiers(request, submission_id, identifier_id=None):
 	book = get_object_or_404(models.Book, pk=submission_id)
 	digital_format_choices = logic.generate_digital_choices(book.format_set.all())

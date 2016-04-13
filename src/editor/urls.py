@@ -68,6 +68,9 @@ urlpatterns = patterns('',
     url(r'^submission/(?P<submission_id>\d+)/production/update/(?P<format_or_chapter>[-\w]+)/(?P<id>\d+)/$', 'editor.views.update_format_or_chapter', name='update_format_or_chapter'),
    
     url(r'^submission/(?P<submission_id>\d+)/catalog/$', 'editor.views.catalog', name='catalog'),
+    url(r'^submission/(?P<submission_id>\d+)/catalog/marc21/$', 'editor.views.catalog_marc21', name='catalog_marc21'),
+    url(r'^submission/(?P<submission_id>\d+)/catalog/marc21/load/(?P<type>[-\w]+)$', 'editor.views.catalog_marc21', name='catalog_marc21_load'),
+   
     url(r'^submission/(?P<submission_id>\d+)/catalog/identifiers/$', 'editor.views.identifiers', name='identifiers'),
     url(r'^submission/(?P<submission_id>\d+)/catalog/identifiers/(?P<identifier_id>\d+)/$', 'editor.views.identifiers', name='identifiers_with_id'),
     url(r'^submission/(?P<submission_id>\d+)/catalog/retailers/$', 'editor.views.retailers', name='retailers'),

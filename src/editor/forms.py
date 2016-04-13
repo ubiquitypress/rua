@@ -16,6 +16,15 @@ class EditorForm(ModelForm):
 		self.fields['book_editors'].queryset = User.objects.filter(profile__roles__slug='book-editor')
 		self.fields['book_editors'].label_from_instance = lambda obj: "%s %s" % (obj.first_name, obj.last_name)
 
+class Marc21Form(forms.Form):
+
+	file_content = forms.CharField(widget=forms.Textarea, required=True)
+
+	def __init__(self, *args, **kwargs):
+		content = kwargs.pop('content', None)
+		super(Marc21Form, self).__init__(*args, **kwargs)
+		self.fields['file_content'].initial = content
+
 class ChangeOwnerForm(ModelForm):
 
 	class Meta:
