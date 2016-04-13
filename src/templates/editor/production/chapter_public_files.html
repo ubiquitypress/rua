@@ -1,5 +1,5 @@
 <ul class="media-list manuscript-upload-states">
-  {% for file in format_data.formats.all %}
+  {% for file in chapter.formats.all %}
   <li class="media" style="background-color:rgb(230,230,230)">
     <div class="media-left">
       <span > <h1>
@@ -35,7 +35,7 @@
       {% if not format_type == 'physical' %}
       <hr />
       <a href="{% url 'serve_file' submission.id file.file.id %}" class="btn btn-sm btn-task"><i class="fa fa-download">&nbsp;</i>Download</a>
-      <td><a href="{% url 'update_format_or_chapter' submission.id format_type file.id %}"  class="btn btn-sm btn-accept">&nbsp;<i class="fa fa-cloud-upload">&nbsp;</i>Update&nbsp;</a>
+      <td><a href=""  class="btn btn-sm btn-accept">&nbsp;<i class="fa fa-cloud-upload">&nbsp;</i>Update&nbsp;</a>
       <a href="{% url 'versions_file' submission.id file.file.id %}" class="btn btn-sm btn-view btn-round"><i class="fa fa-files-o">&nbsp;</i>Versions</a>
       <a href="{% url 'delete_file' submission.id file.file.id active %}" class="btn btn-sm btn-decline"><i class="fa fa-trash-o">&nbsp;</i>Delete</a>
       {% endif %}

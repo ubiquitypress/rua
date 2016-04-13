@@ -24,14 +24,16 @@
                      <input class="form-control" type="text" value="{{chapter.blurbs}}" readonly="" /> 
                     <label>Sequence</label>
                      <input class="form-control" type="text" value="{{chapter.sequence}}" readonly="" /> 
-                   <div class="aside"><strong>Keywords</strong> Hit Enter to add a new keyword.</div>
-                      <input type="text" id="tags" name="tags" value="{% for keyword in chapter.keywords.all %}{{ keyword }}{% if not forloop.last %},{% endif %}{% endfor %}" />
-                      <div class="aside"><strong>Disciplines</strong> Hit Enter to add a new discipline.</div>
-                        <input readonly type="text" id="stags" name="stags" value="{% for subject in chapter.disciplines.all %}{{ subject }}{% if not forloop.last %},{% endif %}{% endfor %}"/>
+                   <div class="aside"><strong>Keywords</strong></div>
+                      <input type="text" id="disabled-tags" name="tags" value="{% for keyword in chapter.keywords.all %}{{ keyword }}{% if not forloop.last %},{% endif %}{% endfor %}" />
+                      <div class="aside"><strong>Disciplines</strong></div>
+                        <input type="text" id="disabled-stags" name="stags" value="{% for subject in chapter.disciplines.all %}{{ subject }}{% if not forloop.last %},{% endif %}{% endfor %}"/>
                       </div>
                   
                     </div>
                   </div>
+                    <h4><strong>Chapter Formats</strong> <a href="{% url 'add_chapter_format' submission.id chapter.id %}" class="btn btn-info btn-sm"> + Add Format</a></h4>
+          {% include "editor/production/chapter_public_files.html" %}
           
         </div>
       </div>

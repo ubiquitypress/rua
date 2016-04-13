@@ -200,7 +200,7 @@ class ChapterFormatForm(forms.ModelForm):
 
 	class Meta:
 		model = models.ChapterFormat
-		exclude = ('book', 'file')
+		exclude = ('book', 'file','chapter')
 
 class ChapterFormInitial(forms.ModelForm):
 

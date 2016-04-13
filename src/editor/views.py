@@ -1309,7 +1309,7 @@ def add_format(request, submission_id, file_id=None):
 		'submission': book,
 		'existing_file':exist_file,
 		'format_list': models.Format.objects.filter(book=book).select_related('file'),
-		'chapter_list': models.Chapter.objects.filter(book=book),
+		'chapter_list': models.Chapter.objects.filter(book=book).order_by('sequence'),
 		'active_page': 'production',
 	}
 
@@ -1352,7 +1352,7 @@ def add_chapter(request, submission_id, file_id=None):
 		'submission': book,
 		'existing_file':exist_file,
 		'format_list': models.Format.objects.filter(book=book).select_related('file'),
-		'chapter_list': models.Chapter.objects.filter(book=book),
+		'chapter_list': models.Chapter.objects.filter(book=book).order_by('sequence'),
 		'active_page': 'production',
 	}
 
@@ -1374,7 +1374,7 @@ def view_chapter(request, submission_id, chapter_id):
 		'active': 'production',
 		'submission': book,
 		'format_list': models.Format.objects.filter(book=book).select_related('file'),
-		'chapter_list': models.Chapter.objects.filter(book=book),
+		'chapter_list': models.Chapter.objects.filter(book=book).order_by('sequence'),
 		'active_page': 'production',
 	}
 
@@ -1383,26 +1383,28 @@ def view_chapter(request, submission_id, chapter_id):
 @is_book_editor
 def add_chapter_format(request, submission_id, chapter_id, file_id=None):
 	book = get_object_or_404(models.Book, pk=submission_id)
+	chapter = get_object_or_404(models.Chapter, pk=chapter_id, book = book)
 	if file_id:
 		exist_file = get_object_or_404(models.File, pk=file_id)
-		chapter_form = core_forms.ChapterFormInitial()
+		chapter_form = core_forms.ChapterFormatForm()
 	else:
 		exist_file = None
-		chapter_form = core_forms.ChapterForm()
+		chapter_form = core_forms.ChapterFormatForm()
 
 	if request.POST:
 		if file_id:
-			chapter_form = core_forms.ChapterFormInitial(request.POST)
+			chapter_form = core_forms.ChapterFormatForm(request.POST)
 		else:
-			chapter_form = core_forms.ChapterForm(request.POST, request.FILES)
+			chapter_form = core_forms.ChapterFormatForm(request.POST, request.FILES)
 		
 		if chapter_form.is_valid():
 			if file_id:
 				new_file = None
 			else :
 				new_file = handle_file(request.FILES.get('chapter_file'), book, 'chapter', request.user)
-			new_chapter = chapter_form.save(commit=False)
-			new_chapter.book = book
+			new_chapter_format = chapter_form.save(commit=False)
+			new_chapter_format.chapter=chapter
+			new_chapter_format.book = book
 			label = request.POST.get('file_label')
 			if new_file:
 				if label:
@@ -1410,20 +1412,25 @@ def add_chapter_format(request, submission_id, chapter_id, file_id=None):
 				else:
 					new_file.label = None
 				new_file.save()
-				new_chapter.file = new_file
+				new_chapter_format.file = new_file
 			else:
 				new_file = exist_file
 				new_file.pk = None
 				new_file.label = label
 				new_file.save()
-				new_chapter.file = new_file		
-			new_chapter.save()
-			log.add_log_entry(book=book, user=request.user, kind='production', message='%s %s loaded a new chapter, %s' % (request.user.first_name, request.user.last_name, new_chapter.identifier), short_name='New Chapter Loaded')
+				new_chapter_format.file = new_file		
+			new_chapter_format.save()
+			chapter.formats.add(new_chapter_format)
+			chapter.save()
+			log.add_log_entry(book=book, user=request.user, kind='production', message='%s %s loaded a new chapter, %s' % (request.user.first_name, request.user.last_name, new_chapter_format.identifier), short_name='New Chapter Loaded')
 			return redirect(reverse('editor_production', kwargs={'submission_id': book.id}))
+		else:
+			print chapter_form.errors
 
 	template = 'editor/submission.html'
 	context = {
 		'submission': book,
+		'chapter':chapter,
 		'chapter_form': chapter_form,
 		'author_include': 'editor/production/view.html',
 		'submission_files': 'editor/production/add_chapter_format.html',
@@ -1431,7 +1438,7 @@ def add_chapter_format(request, submission_id, chapter_id, file_id=None):
 		'submission': book,
 		'existing_file':exist_file,
 		'format_list': models.Format.objects.filter(book=book).select_related('file'),
-		'chapter_list': models.Chapter.objects.filter(book=book).select_related('file'),
+		'chapter_list': models.Chapter.objects.filter(book=book).order_by('sequence'),
 		'active_page': 'production',
 	}
 
