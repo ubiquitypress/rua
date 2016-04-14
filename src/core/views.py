@@ -972,7 +972,6 @@ def serve_proposal_file_id(request, proposal_id, file_id):
     proposal = get_object_or_404(submission_models.Proposal, pk=proposal_id)
     _file = get_object_or_404(models.File, pk=file_id)
     file_path = os.path.join(settings.BASE_DIR, 'files', 'proposals',str(proposal_id), _file.uuid_filename)
-    print file_path
     try:
         fsock = open(file_path, 'r')
         mimetype = mimetypes.guess_type(file_path)
@@ -1020,11 +1019,8 @@ def serve_versioned_file(request, submission_id, revision_id):
 @is_book_editor_or_author
 def delete_file(request, submission_id, file_id, returner):
     book = get_object_or_404(models.Book, pk=submission_id)
-    print book
     _file = get_object_or_404(models.File, pk=file_id)
     file_id = _file.id
-    print _file
-    print file_id
     _file.delete()
 
     if returner == 'new':
@@ -1219,8 +1215,6 @@ def proposal_assign_view(request, proposal_id):
         editor = True
         if proposal.requestor and not proposal.requestor == request.user and not 'press-editor' in user_roles:
             editor = False
-
-        print editor
     else:
         editor = False
    
@@ -1465,7 +1459,7 @@ def start_proposal_review(request, proposal_id):
             proposal.date_review_started = timezone.now()
             due_date = request.POST.get('due_date')
             email_text = request.POST.get('email_text')
-            print email_text
+
             reviewers = User.objects.filter(pk__in=request.POST.getlist('reviewer'))
             committees = manager_models.Group.objects.filter(pk__in=request.POST.getlist('committee'))
 
@@ -1835,7 +1829,6 @@ def add_proposal_reviewers(request, proposal_id):
         reviewers = User.objects.filter(pk__in=request.POST.getlist('reviewer'))
         committees = manager_models.Group.objects.filter(pk__in=request.POST.getlist('committee'))
         email_text = request.POST.get('email_text')
-        print email_text
 
         # Handle reviewers
         for reviewer in reviewers:
@@ -1989,7 +1982,6 @@ def request_proposal_revisions(request, proposal_id):
         due_date =request.POST.get('due_date') 
         proposal.revision_due_date = datetime.strptime(due_date, "%Y-%m-%d")
         proposal.save()
-        print proposal.revision_due_date
         email_updated_text = string.replace(email_updated_text,'_due_date_',due_date)
         logic.send_proposal_revisions(proposal, email_text=email_updated_text, sender=request.user)
         
