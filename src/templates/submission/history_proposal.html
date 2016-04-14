@@ -51,7 +51,7 @@
     <td>{{ proposal.subtitle }}</td>
     <td>{{ proposal.owner.first_name }} {{ proposal.owner.last_name }}</td>
     <td>{{ proposal.date_submitted }}</td>
-    <td>{{ proposal.get_status_display }}</td>
+    <td>{% if proposal.in_review %} {% if proposal.reviews_completed %} Reviews Completed {% else %} In Review {% endif %}{% else %}{{ proposal.get_status_display }}{% endif %}</td>
   </tr>
 
   </tbody>

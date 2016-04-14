@@ -39,6 +39,18 @@ class Proposal(models.Model):
 
 	def status_verbose(self):
 		return dict(proposal_status())[self.status]
+	
+	def in_review(self):
+		if ProposalReview.objects.filter(proposal=self).count()>0:
+			return True
+		else:
+			return False
+
+	def reviews_completed(self):
+		if ProposalReview.objects.filter(proposal=self, completed__isnull=True):
+			return False
+		else:
+			return True
 
 class HistoryProposal(models.Model):
 
