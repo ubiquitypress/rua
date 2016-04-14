@@ -35,9 +35,69 @@
 
   <br>
   {% endif %}
-
    {% if viewable%}
 
+{% if assign %}
+<br>
+<h3> Proposal Details </h3>
+  <hr>
+  <table class="table table-bordered">
+    <thead>
+  <tr>
+    <th>Book Title</th>
+    <th>Subtitle</th>
+    {% if proposal.owner %}
+    <th>Submitting Author/Editor</th>
+    {% endif %}
+    <th>Date Submitted</th>
+    <th>Status</th>
+  </tr></thead><tbody>
+  <tr>
+    <td>{{ proposal.title }}</td>
+    <td>{{ proposal.subtitle }}</td>
+    {% if proposal.owner %}
+    <td>{{ proposal.owner.first_name }} {{ proposal.owner.last_name }}</td>
+    {% endif %}
+    <td>{{ proposal.date_submitted }}</td>
+    <td>{% if proposal.in_review %} {% if proposal.reviews_completed %} Reviews Completed {% else %} In Review {% endif %}{% else %}{{ proposal.get_status_display }}{% endif %}</td>
+  </tr>
+
+  </tbody>
+  </table>
+<br>
+   <h3>Assign User</h3>
+   <small>The new user should be selected from the available list and they will be the main point of contact for this proposal.</small>
+    <br>
+    <br>
+  <table class="table table-bordered">
+    <thead>
+  <tr>
+    <th>First Name</th>
+    <th>Last Name</th>
+    <th></th>
+  </tr></thead><tbody>
+  {% for author in authors %}
+  <tr>
+    <td>{{ author.first_name }}</td>
+    <td>{{ author.last_name }}</td>
+    <td width="8%">
+      {% ifequal proposal.owner.pk author.pk %}
+      Owner
+      {% else %}
+ <a href="{% url 'proposal_assign_user' proposal.id author.pk %}" class="btn btn-view btn-sm btn-round" id="author" name="author" value="{{ author.pk }}" type="submit"  data-toggle="tooltip" data-placement="bottom" style="width:100px; height: 30px;"><i class="glyphicon glyphicon-plus"style="font-size:10px"></i>  Assign</a>
+      {% endifequal %}
+ 
+        </span>
+ </form>
+
+    </td>
+  </tr>
+
+  {% endfor %}
+  </tbody>
+  </table>
+
+{% else %}
  
     <form method="post" class="form" enctype="multipart/form-data">
       {% csrf_token %}     
@@ -106,36 +166,7 @@
       {% endif %}
     </div>
         <hr />
-    <h3>Authors</h3>
-    <br>
-  <table class="table table-bordered">
-    <thead>
-  <tr>
-    <th>First Name</th>
-    <th>Last Name</th>
-    <th></th>
-  </tr></thead><tbody>
-  {% for author in authors %}
-  <tr>
-    <td>{{ author.first_name }}</td>
-    <td>{{ author.last_name }}</td>
-    <td width="8%">
-      {% ifequal proposal.owner.pk author.pk %}
-      Owner
-      {% else %}
- <a href="{% url 'proposal_assign_user' proposal.id author.pk %}" class="btn btn-view btn-sm btn-round" id="author" name="author" value="{{ author.pk }}" type="submit"  data-toggle="tooltip" data-placement="bottom" style="width:100px; height: 30px;"><i class="glyphicon glyphicon-plus"style="font-size:10px"></i>  Assign</a>
-      {% endifequal %}
- 
-        </span>
- </form>
-
-    </td>
-  </tr>
-
-  {% endfor %}
-  </tbody>
-  </table>
-
+   
     {% if proposal.requestor %}
     <br>
     
@@ -157,6 +188,8 @@
   <br>
   {% endif %}
     {% endif %}
+
+  {% endif %}
    {% else %}
        <div class="dash-container bottom-space">
     <br>

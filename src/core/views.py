@@ -1227,6 +1227,7 @@ def proposal_assign_view(request, proposal_id):
         'not_readonly':False,
         'data':data,
         'revise':True,
+        'assign':True,
         'editor': editor,
         'authors': authors,
         'viewable':viewable,
