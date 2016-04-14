@@ -1412,7 +1412,7 @@ def create_proposal_form(proposal):
     for relation in relations:
         v = data[relation.element.name]
         document.add_heading(relation.element.name, level=1)        
-        text = BeautifulSoup(str(v[0]),"html.parser").get_text()
+        text = BeautifulSoup(smart_text(v[0]),"html.parser").get_text()
         document.add_paragraph(text).bold = True  
 
     document.add_page_break()
