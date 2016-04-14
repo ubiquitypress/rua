@@ -31,6 +31,8 @@
 {% endif%}
           <br>
           <br>
+          <br>
+          <br>
         <strong>{{ review_assignment.management_editor.profile.full_name }}<sup> <a style="height:17px;margin-top:6px" href="core/email.html" onclick="return popitup('/email/onetaskers/submission/{{submission.id}}/user/{{review_assignment.management_editor.pk}}/','onetasker_{{review_assignment.management_editor.pk}}')"class="fa fa-envelope-o btn btn-xs btn-default"></a></sup></strong>
         </p>
        
@@ -84,12 +86,13 @@
 {% if review_assignment.publication_committee_results %}
 
   <a href="{% url 'editorial_review_complete' submission.id  review_assignment.publishing_committee_access_key %}"  style="margin-top: 4px;margin-right:20px;margin-left:-70px;" class="btn btn-xs btn-success"></h5>View Publishing Committee Review</a>
- <br>
+ <br> <br>
   {% endif%}
 
   {% if review_assignment.editorial_board_results %}
 
   <a href="{% url 'editorial_review_complete' submission.id   review_assignment.editorial_board_access_key %}" style="margin-top: 4px;margin-right:20px;margin-left:-33px;" class="btn btn-xs btn-success">View Editorial Board Review</a></h5>
+  <br> <br>
   {% endif%}
 
         {% else %}
@@ -97,16 +100,17 @@
 <a href="{% url 'editorial_review_complete' submission.id  review_assignment.publishing_committee_access_key %}"  style="margin-top: 10px;margin-right:20px;margin-left:-70px;" class="btn btn-xs btn-success"></h5>View Publishing Committee Review</a>
  <br>
   <a href="{% url 'editorial_review_complete' submission.id   review_assignment.editorial_board_access_key %}"  style="margin-top: 10px;margin-right:20px;margin-left:-33px;" class="btn btn-xs btn-success">View Editorial Board Review</a></h5>
-
+ <br> <br>
   {% else%}
 {% if review_assignment.publication_committee_results %}
 
   <a href="{% url 'editorial_review_complete' submission.id  review_assignment.publishing_committee_access_key %}"  style="margin-top: 10px;margin-right:20px;margin-left:-70px;" class="btn btn-xs btn-success"></h5>View Publishing Committee Review</a>
- 
+  <br>
   {% endif%}
   {% if review_assignment.editorial_board_results %}
 
   <a href="{% url 'editorial_review_complete' submission.id   review_assignment.editorial_board_access_key %}" style="margin-top: 10px;margin-right:20px;margin-left:-33px;" class="btn btn-xs btn-success">View Editorial Board Review</a></h5>
+   <br>
   {% endif%}
 
  {% endif %}
