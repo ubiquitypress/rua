@@ -1443,9 +1443,13 @@ def withdraw_proposal_review(request, proposal_id,review_id):
 
 @is_editor
 def remove_proposal_review(request, proposal_id,review_id):
-    submission = get_object_or_404(submission_models.Proposal, pk=proposal_id)
+    proposal = get_object_or_404(submission_models.Proposal, pk=proposal_id)
     review_assignment = get_object_or_404(submission_models.ProposalReview, pk=review_id)
     review_assignment.delete()
+    review_assignments = submission_models.ProposalReview.objects.filter(proposal=proposal)
+    if not review_assignments:
+        proposal.review_form = None
+        proposal.save()
 
     return redirect(reverse('view_proposal', kwargs={'proposal_id': proposal_id}))
 
@@ -1828,14 +1832,19 @@ def add_proposal_reviewers(request, proposal_id):
     reviewers = models.User.objects.filter(profile__roles__slug='reviewer')
     committees = manager_models.Group.objects.filter(group_type='review_committee')
     email_text = models.Setting.objects.get(group__name='email', name='proposal_review_request').value
-
+    start_form = submission_forms.ProposalStart()
+    
     if request.POST:
+        if not proposal.review_form:
+            start_form = submission_forms.ProposalStart(request.POST, instance=proposal)
+            if start_form.is_valid():
+                proposal = start_form.save(commit=False)
+                proposal.save()
         due_date = request.POST.get('due_date')
         blind = request.POST.get('blind')
         reviewers = User.objects.filter(pk__in=request.POST.getlist('reviewer'))
         committees = manager_models.Group.objects.filter(pk__in=request.POST.getlist('committee'))
         email_text = request.POST.get('email_text')
-        print email_text
 
         # Handle reviewers
         for reviewer in reviewers:
@@ -1884,6 +1893,7 @@ def add_proposal_reviewers(request, proposal_id):
         'reviewers': reviewers,
         'committees': committees,
         'email_text':email_text,
+        'start_form':start_form,
     }
 
     return render(request, template, context)
