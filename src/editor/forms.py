@@ -18,7 +18,8 @@ class EditorForm(ModelForm):
 
 class Marc21Form(forms.Form):
 
-	file_content = forms.CharField(widget=forms.Textarea, required=True)
+	file_content = forms.CharField(widget=forms.Textarea, required=False)
+	format_file = forms.FileField(required=False)
 
 	def __init__(self, *args, **kwargs):
 		content = kwargs.pop('content', None)

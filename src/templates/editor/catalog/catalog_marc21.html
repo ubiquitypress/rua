@@ -134,7 +134,7 @@
             <div role="tabpanel" class="tab-pane active" id="metadata">
               <div class="btn-group pull-right" role="group" style="margin-top:5px">
            <a disabled class="btn  btn-default">  Download Marc21</a> <a href="{% url 'serve_marc21_file'  submission.id 'original' %}" class="btn btn-primary ">Original</a><a href="{% url 'serve_marc21_file'  submission.id 'xml' %}" class="btn btn-accept ">XML</a></div>
-              <form method="POST" action="?metadata=true">
+              <form method="POST" enctype="multipart/form-data">
                 {% csrf_token %}
                 <br />
                 <div class="form-group">
@@ -146,10 +146,21 @@
                       {% bootstrap_form_errors marc21_form layout='inline' %}
                     </div>
                   </div>
-
+                  <label> Load file </label>
+                    <div class="input-group">
+                          <span class="input-group-btn">
+                              <span class="btn btn-task btn-browse btn-file">
+                                  Browse&hellip; <input class="" id="id_format_file" name="format_file" title="" type="file">
+                              </span>
+                          </span>
+                          <input type="text" class="form-control" readonly>
+                      </div>
+                           <button class="btn btn-task pull-right" style="width:140px" type="submt">Load</button>
+                      <br>
                   <div class="row">
                     <div class="col-md-10">
-                      {% bootstrap_field marc21_form.file_content %}
+
+                      <div class="form-group"><label class="control-label" for="id_file_content">File content</label><textarea class="form-control" cols="40" id="id_file_content" name="file_content" placeholder="File content" rows="10" title="" >{% if content_preloaded %}{{content_preloaded}}{% endif%}</textarea></div>
 
                     </div>
                   </div>
