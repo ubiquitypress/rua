@@ -76,7 +76,7 @@ urlpatterns = patterns('',
     
     # Files
     url(r'^files/submission/(?P<submission_id>\d+)/get/marc21/(?P<type>[-\w]+)/$', 'core.views.serve_marc21_file', name='serve_marc21_file'),
-     url(r'^files/proposal/(?P<proposal_id>\d+)/file/(?P<file_id>\d+)/download/$', 'core.views.serve_proposal_file_id', name='serve_proposal_file_id'),
+    url(r'^files/proposal/(?P<proposal_id>\d+)/file/(?P<file_id>\d+)/download/$', 'core.views.serve_proposal_file_id', name='serve_proposal_file_id'),
     
     url(r'^files/user/submission/(?P<submission_id>\d+)/file/(?P<file_id>\d+)/download/$', 'core.views.serve_file', name='serve_file'),
     url(r'^files/user/submission/(?P<submission_id>\d+)/files/download/$', 'core.views.serve_all_files', name='serve_all_files'),
@@ -95,11 +95,9 @@ urlpatterns = patterns('',
 
     #redirect to correct dashboard
     url(r'^dashboard/$', 'core.views.dashboard', name='user_dashboard'),
-
     url(r'^misc_files/(?P<submission_id>\d+)/upload/$', 'core.views.upload_misc_file', name='upload_misc_file'),
 
     # Proposals
-
     url(r'^proposals/$', 'core.views.proposal', name='proposals'),
     url(r'^proposals/filter/(?P<user_id>\d+)/$', 'core.views.proposal', name='proposals_filtered'),
     url(r'^proposals/unassigned/$', 'core.views.assign_proposal', name='proposal_assign'),

@@ -858,7 +858,6 @@ def send_author_sign_off(submission, email_text, sender):
 
 	email.send_email('Book Contract Uploaded', context, from_email.value, submission.owner.email, email_text, book=submission)
 
-
 def send_invite_typesetter(book, typeset, email_text, sender, attachment):
 
 	print attachment
@@ -872,3 +871,16 @@ def send_invite_typesetter(book, typeset, email_text, sender, attachment):
 	}
 
 	email.send_email('Typesetting', context, from_email.value, typeset.typesetter.email, email_text, book=book, attachment=attachment)	
+
+def send_new_user_ack(email_text, new_user, profile):
+	from_email = models.Setting.objects.get(group__name='email', name='from_address')
+	press_name = models.Setting.objects.get(group__name='general', name='press_name').value
+
+	context = {
+		'base_url': models.Setting.objects.get(group__name='general', name='base_url').value,
+		'user': new_user,
+		'profile': profile,
+		'press_name': press_name,
+	}
+
+	email.send_email('Registration Confirmation', context, from_email.value, new_user.email, email_text)

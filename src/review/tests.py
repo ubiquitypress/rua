@@ -1,20 +1,22 @@
 from django.test import TestCase
-from review import models
 from django.utils import timezone
-import time
-import datetime
-from django.test import SimpleTestCase
-from django.db.models import Q
-from review import views
-from core import models as core_models
-import json
 from django.http import HttpRequest
 from django.test.client import Client
 from django.contrib.auth.models import User
 from django.core.urlresolvers import resolve, reverse
+from django.test import SimpleTestCase
+from django.db.models import Q
+
+from review import models
+from review import views
+from core import models as core_models
+
+import json
 from  __builtin__ import any as string_any
 import calendar
 import tempfile
+import time
+import datetime
 # Create your tests here.
 
 class ReviewTests(TestCase):

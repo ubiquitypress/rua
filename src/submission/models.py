@@ -18,7 +18,6 @@ def book_type_choices():
 
 class Proposal(models.Model):
 
-
 	owner = models.ForeignKey(User,blank=True, null=True)
 	title = models.CharField(max_length=255, verbose_name='Book Title')
 	subtitle = models.CharField(max_length=255, blank=True, null=True)

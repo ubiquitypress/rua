@@ -6,11 +6,12 @@ from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, Http404, HttpResponse, StreamingHttpResponse
+from django.conf import settings
 
 import os
-from django.conf import settings
 import mimetypes
 import mimetypes as mime
+
 from uuid import uuid4
 from core.files import handle_attachment, handle_file_update, handle_attachment, handle_file
 from core import models, log, logic as core_logic, forms as core_forms
@@ -512,8 +513,6 @@ def editorial_review_accept(request, submission_id, review_id, type):
 
 	return redirect(reverse('editorial_review_view', kwargs={'submission_id': submission_id, 'review_id': review.pk}))
 
-
-
 @is_book_editor
 def remove_assignment_editor(request, submission_id, assignment_type, assignment_id):
 	submission = get_object_or_404(models.Book, pk=submission_id)
@@ -553,7 +552,6 @@ def editor_review_round_withdraw(request, submission_id, round_number, review_id
 
 	return redirect(reverse('editor_review_round', kwargs={'submission_id': submission_id, 'round_number': submission.get_latest_review_round()}))
 
-
 @is_book_editor
 def editor_review_round_reopen(request, submission_id, round_number,review_id):
 	submission = get_object_or_404(models.Book, pk=submission_id)
@@ -562,8 +560,6 @@ def editor_review_round_reopen(request, submission_id, round_number,review_id):
 	review_assignment.save()
 
 	return redirect(reverse('editor_review_round', kwargs={'submission_id': submission_id, 'round_number': submission.get_latest_review_round()}))
-
-
 
 @is_book_editor
 def update_review_due_date(request, submission_id, round_id, review_id):
@@ -593,7 +589,6 @@ def update_review_due_date(request, submission_id, round_id, review_id):
 
 	return render(request, template, context)
 
-
 @is_book_editor
 def update_editorial_review_due_date(request, submission_id, review_id):
 	submission = get_object_or_404(models.Book, pk=submission_id)
@@ -620,6 +615,7 @@ def update_editorial_review_due_date(request, submission_id, review_id):
 	}
 
 	return render(request, template, context)
+
 @is_book_editor
 def editorial_review_delete(request,submission_id,review_id):
 	book = get_object_or_404(models.Book, pk=submission_id)
@@ -733,7 +729,6 @@ def editor_decision(request, submission_id, decision):
 			permission = False
 
 	if request.POST:
-		print request.FILES
 
 		if request.FILES.get('attachment'):
 			attachment = handle_file(request.FILES.get('attachment'), book, 'misc', request.user)
@@ -872,7 +867,6 @@ def add_review_files(request, submission_id, review_type):
 	}
 
 	return render(request, template, context)
-
 
 @is_book_editor
 def editor_add_editorial_reviewers(request, submission_id):
