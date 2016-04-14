@@ -2124,6 +2124,7 @@ def contract_manager(request, submission_id, contract_id=None):
 	return render(request, template, context)
 
 ## END CONTRACTS ##
+
 ### WORKFLOW NEW SUBMISSIONS 
 
 @is_editor
