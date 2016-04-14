@@ -1458,7 +1458,7 @@ def start_proposal_review(request, proposal_id):
             proposal = start_form.save(commit=False)
             proposal.date_review_started = timezone.now()
             due_date = request.POST.get('due_date')
-            email_text = request.POST.get('email_text')
+            email_text = smart_text(request.POST.get('email_text'))
 
             reviewers = User.objects.filter(pk__in=request.POST.getlist('reviewer'))
             committees = manager_models.Group.objects.filter(pk__in=request.POST.getlist('committee'))
