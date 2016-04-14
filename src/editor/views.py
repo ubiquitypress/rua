@@ -660,7 +660,7 @@ def editor_editorial_decision(request, submission_id, review_id, decision):
 			review_assignment.publication_committee_review_form = review_models.Form.objects.get(ref=request.POST.get('review_form'))
 			review_assignment.save()
 			if 'inform' in request.POST:
-				url ="%s/review/submission/%s/access_key/%s/" % (request.META['HTTP_HOST'],book.pk,review_assignment.publishing_committee_access_key)
+				url ="%s/editor/review/submission/%s/access_key/%s/" % (request.META['HTTP_HOST'],book.pk,review_assignment.publishing_committee_access_key)
 				core_logic.send_editorial_decision_ack(review_assignment = review_assignment, contact = "publishing-committee", decision = "Invitation to Editorial Review",email_text = request.POST.get('id_email_text'), attachment = attachment, url = url)
 			return redirect(reverse('editorial_review_view', kwargs={'submission_id': book.id, 'review_id':review_id}))
 
@@ -1143,32 +1143,40 @@ def catalog(request, submission_id):
 @is_book_editor
 def catalog_marc21(request, submission_id, type = None):
 	book = get_object_or_404(models.Book, pk=submission_id)
+	content_preloaded = None
+
 	if type:
 		if type=='xml':
-			marc21_form = forms.Marc21Form(content=core_logic.book_to_mark21_file_content(book,request.user,True))
+			content_preloaded = core_logic.book_to_mark21_file_content(book,request.user,True)
 		else:
-			marc21_form = forms.Marc21Form(content=core_logic.book_to_mark21_file_content(book,request.user))
-	else:
-		marc21_form = forms.Marc21Form()
+			content_preloaded = core_logic.book_to_mark21_file_content(book,request.user)
+		
+	marc21_form = forms.Marc21Form()
 	
 	if request.POST:
-		if 'xml-download' in request.POST:
-			file_pk = core_logic.book_to_mark21_file_download_content(book,request.user,request.POST.get('file_content'),True)
+		if request.FILES:
+			uploaded_file = request.FILES.get('format_file')
+			content_preloaded = ""
+			for chunk in uploaded_file.chunks():
+				content_preloaded = content_preloaded + chunk
 		else:
-			file_pk = core_logic.book_to_mark21_file_download_content(book,request.user,request.POST.get('file_content'))
-		_file = get_object_or_404(models.File, pk=file_pk)
-		file_path = os.path.join(settings.BOOK_DIR, submission_id, _file.uuid_filename)
+			if 'xml-download' in request.POST:
+				file_pk = core_logic.book_to_mark21_file_download_content(book,request.user,request.POST.get('file_content'),True)
+			else:
+				file_pk = core_logic.book_to_mark21_file_download_content(book,request.user,request.POST.get('file_content'))
+			_file = get_object_or_404(models.File, pk=file_pk)
+			file_path = os.path.join(settings.BOOK_DIR, submission_id, _file.uuid_filename)
 
-		try:
-			fsock = open(file_path, 'r')
-			mimetype = mimetypes.guess_type(file_path)
-			response = StreamingHttpResponse(fsock, content_type=mimetype)
-			response['Content-Disposition'] = "attachment; filename=%s" % (_file.original_filename)
-			#log.add_log_entry(book=book, user=request.user, kind='file', message='File %s downloaded.' % _file.uuid_filename, short_name='Download')
-			return response
-		except IOError:
-			messages.add_message(request, messages.ERROR, 'File not found. %s' % (file_path))
-			return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+			try:
+				fsock = open(file_path, 'r')
+				mimetype = mimetypes.guess_type(file_path)
+				response = StreamingHttpResponse(fsock, content_type=mimetype)
+				response['Content-Disposition'] = "attachment; filename=%s" % (_file.original_filename)
+				#log.add_log_entry(book=book, user=request.user, kind='file', message='File %s downloaded.' % _file.uuid_filename, short_name='Download')
+				return response
+			except IOError:
+				messages.add_message(request, messages.ERROR, 'File not found. %s' % (file_path))
+				return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 	template = 'editor/catalog/catalog_marc21.html' 
 	context = {
@@ -1176,6 +1184,7 @@ def catalog_marc21(request, submission_id, type = None):
 		'submission': book,
 		'marc21_form':marc21_form,
 		'active_page': 'catalog_view',
+		'content_preloaded':content_preloaded,
 	}
 
 	return render(request, template, context)
