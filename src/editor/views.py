@@ -660,7 +660,7 @@ def editor_editorial_decision(request, submission_id, review_id, decision):
 			review_assignment.publication_committee_review_form = review_models.Form.objects.get(ref=request.POST.get('review_form'))
 			review_assignment.save()
 			if 'inform' in request.POST:
-				url ="%s/editor/review/submission/%s/access_key/%s/" % (request.META['HTTP_HOST'],book.pk,review_assignment.publishing_committee_access_key)
+				url ="%s/review/editorial/%s/access_key/%s/" % (request.META['HTTP_HOST'],book.pk,review_assignment.publishing_committee_access_key)
 				core_logic.send_editorial_decision_ack(review_assignment = review_assignment, contact = "publishing-committee", decision = "Invitation to Editorial Review",email_text = request.POST.get('id_email_text'), attachment = attachment, url = url)
 			return redirect(reverse('editorial_review_view', kwargs={'submission_id': book.id, 'review_id':review_id}))
 

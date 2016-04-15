@@ -77,7 +77,12 @@
                 </div>
             {% endfor %}
             <h4> MY PROPOSALS </h4>
-            
+            {% if not user_proposals %}
+
+                <div class="well">
+            No completed proposals found.
+            </div>
+            {% endif %}
              {% for proposal in user_proposals %}
                 <div class="notification author">
                     <div class="row">
@@ -125,7 +130,12 @@
                   {% endfor %}
 
                     <h4> INCOMPLETE PROPOSALS </h4>
-            
+               {% if not user_incomplete_proposals %}
+
+                <div class="well">
+            No incomplete proposals found.
+            </div>
+            {% endif %}
              {% for proposal in user_incomplete_proposals %}
                 <div class="notification author">
                     <div class="row">
