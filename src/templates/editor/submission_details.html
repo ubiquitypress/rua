@@ -73,3 +73,11 @@
 
 <h3>COMPETING INTERESTS</h3>
 {{ submission.competing_interests|safe }}
+
+{% if submission.proposal %}
+<hr>
+
+<h3>PROPOSAL</h3> <br>
+<a href="{% url 'view_proposal' submission.proposal.pk %}" class="btn btn-other"> View Proposal</a>
+
+{% endif %}
