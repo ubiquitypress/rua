@@ -111,6 +111,12 @@ class Profile(models.Model):
 	interest = models.ManyToManyField('Interest', null=True, blank=True)
 	website = models.URLField(max_length=2000, help_text="User's personal website. Remember to include http:// or https:// at the start.", null=True, blank=True)
 	
+	def is_editor(self):
+		user_roles = [role.slug for role in self.roles.all()]
+		if 'press-editor' in user_roles or 'book-editor' in user_roles or 'production-editor' in user_roles:
+			return True
+		else:
+			False
 
 	def full_name(self):
 		if self.middle_name:

@@ -646,6 +646,8 @@ def proposal_notes(request, proposal_id, note_id = None):
 @login_required
 def proposal_add_note(request, proposal_id):
 	proposal = submission_models.Proposal.objects.get(pk=proposal_id)
+	if not request.user.profile.is_editor():
+		return redirect(reverse('proposal_view_submitted', kwargs={'proposal_id':proposal_id}))
 	notes = submission_models.ProposalNote.objects.filter(proposal=proposal)
 	note_form = forms.NoteForm()
 	if request.POST:
