@@ -533,9 +533,6 @@ class EditorialReviewAssignment(models.Model):
 	reopened = models.BooleanField(default=False)
 	withdrawn = models.BooleanField(default=False)
 
-	class Meta:
-		unique_together = ('book', 'management_editor','due')
-
 	def __unicode__(self):
 		return u'%s - %s %s' % (self.pk, self.book.title, self.management_editor.username)
 

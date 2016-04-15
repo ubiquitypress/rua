@@ -411,11 +411,6 @@ def editorial_review(request, submission_id, access_key):
 		elif result and review_assignment.publication_committee_passed:
 			resubmit = False
 
-
-
-	
-
-	
 	recommendation_form = core_forms.RecommendationForm(ci_required=ci_required.value)
 	
 	initial_data = {}
@@ -541,7 +536,7 @@ def editorial_review(request, submission_id, access_key):
 
 def editorial_review_complete(request, submission_id, access_key):
 
-	review_assignment = get_object_or_404(core_models.EditorialReviewAssignment, Q( publishing_committee_access_key=access_key) |  Q( editorial_board_access_key=access_key))
+	review_assignment = get_object_or_404(core_models.EditorialReviewAssignment, Q(publishing_committee_access_key = access_key) |  Q(editorial_board_access_key = access_key))
 	submission = get_object_or_404(core_models.Book, pk=submission_id)
 	
 	if access_key  == review_assignment.editorial_board_access_key:
