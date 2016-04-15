@@ -78,6 +78,29 @@
 <hr>
 
 <h3>PROPOSAL</h3> <br>
-<a href="{% url 'view_proposal' submission.proposal.pk %}" class="btn btn-other"> View Proposal</a>
+
+  <table class="table table-bordered">
+    <thead>
+  <tr>
+ 
+    <th>Book Title</th>
+    <th>Subtitle</th>
+    <th>Submitting Author/Editor</th>
+    <th>User</th>
+    <th>Date Submitted</th>
+    <th></th>
+    
+  </tr>
+  </thead>
+  <tbody>
+  <tr>
+    <td>{{ submission.proposal.title }}</td>
+    <td>{{ submission.submission.proposal.subtitle }}</td>
+    <td>{{ submission.proposal.author }}</td>
+    <td><a href="{% url 'view_profile_readonly' submission.proposal.owner.pk %}">{{ submission.proposal.owner.username }}</a></td>
+    <td><a href="{% url 'view_proposal' submission.proposal.pk %}" class="btn btn-other"> View Proposal</a></td>
+  </tr>
+</tbody>
+</table>
 
 {% endif %}
