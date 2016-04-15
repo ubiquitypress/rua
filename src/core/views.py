@@ -1114,6 +1114,23 @@ def view_log(request, submission_id):
     return render(request, template, context)
 
 ## PROPOSALS ##
+@is_book_editor
+def view_proposal_log(request, proposal_id):
+    proposal = get_object_or_404(submission_models.Proposal, pk=proposal_id)
+    log_list = models.Log.objects.filter(proposal=proposal).order_by('-date_logged')
+    email_list = models.EmailLog.objects.filter(proposal=proposal).order_by('-sent')
+
+    template = 'editor/proposal_log.html'
+    context = {
+        'proposal': proposal,
+        'log_list': log_list,
+        'email_list': email_list,
+        'active': 'log',
+    }
+
+    return render(request, template, context)
+
+
 @is_editor
 def assign_proposal(request):
     proposal_form_id = models.Setting.objects.get(name='proposal_form').value
