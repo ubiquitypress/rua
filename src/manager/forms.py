@@ -4,6 +4,7 @@ from django.core.exceptions import ValidationError
 from django_summernote.widgets import SummernoteWidget, SummernoteInplaceWidget
 from django.utils.encoding import smart_text
 
+from django.template.defaultfilters import slugify
 from manager import models
 from core import models as core_models
 from review import models as review_models
@@ -142,7 +143,7 @@ class GeneratedForm(forms.Form):
 			elif relation.element.field_type == 'textarea':
 				self.fields[relation.element.name] = forms.CharField(widget=forms.Textarea(attrs={'div_class':relation.width}), required=relation.element.required)
 			elif relation.element.field_type == 'date':
-				self.fields[relation.element.name] = forms.CharField(widget=forms.DateInput(attrs={'class':'datepicker', 'div_class':relation.width}), required=relation.element.required)
+				self.fields[relation.element.name] = forms.CharField(widget=forms.DateInput(attrs={'class':'datepicker','id':slugify(relation.element.name), 'div_class':relation.width}), required=relation.element.required)
 			elif relation.element.field_type == 'upload':
 				self.fields[relation.element.name] = forms.FileField(widget=forms.FileInput(attrs={'div_class':relation.width}), required=relation.element.required)
 			elif relation.element.field_type == 'select':
@@ -172,7 +173,7 @@ class GeneratedNotRequiredForm(forms.Form):
 			elif relation.element.field_type == 'textarea':
 				self.fields[relation.element.name] = forms.CharField(widget=forms.Textarea(attrs={'div_class':relation.width}), required=False)
 			elif relation.element.field_type == 'date':
-				self.fields[relation.element.name] = forms.CharField(widget=forms.DateInput(attrs={'class':'datepicker', 'div_class':relation.width}), required=False)
+				self.fields[relation.element.name] = forms.CharField(widget=forms.DateInput(attrs={'class':'datepicker','id':slugify(relation.element.name), 'div_class':relation.width}), required=False)
 			elif relation.element.field_type == 'upload':
 				self.fields[relation.element.name] = forms.FileField(widget=forms.FileInput(attrs={'div_class':relation.width}), required=False)
 			elif relation.element.field_type == 'select':
@@ -202,7 +203,7 @@ class GeneratedReviewForm(forms.Form):
 			elif relation.element.field_type == 'textarea':
 				self.fields[relation.element.name] = forms.CharField(widget=forms.Textarea(attrs={'div_class':relation.width}), required=relation.element.required)
 			elif relation.element.field_type == 'date':
-				self.fields[relation.element.name] = forms.CharField(widget=forms.DateInput(attrs={'class':'datepicker', 'div_class':relation.width}), required=relation.element.required)
+				self.fields[relation.element.name] = forms.CharField(widget=forms.DateInput(attrs={'class':'datepicker','id':slugify(relation.element.name), 'div_class':relation.width}), required=relation.element.required)
 			elif relation.element.field_type == 'upload':
 				self.fields[relation.element.name] = forms.FileField(widget=forms.FileInput(attrs={'div_class':relation.width}), required=relation.element.required)
 			elif relation.element.field_type == 'select':
