@@ -1475,6 +1475,7 @@ def start_proposal_review(request, proposal_id):
                     proposal=proposal,
                     due=due_date,
                     blind = blind,
+                    requestor = request.user
                 )
 
                 try:
@@ -1493,6 +1494,7 @@ def start_proposal_review(request, proposal_id):
                         proposal=proposal,
                         due=due_date,
                         blind = blind,
+                        requestor = request.user
                     )
 
                     try:
@@ -1848,6 +1850,7 @@ def add_proposal_reviewers(request, proposal_id):
                 proposal=proposal,
                 due=due_date,
                 blind = blind,
+                requestor = request.user
             )
 
             try:
@@ -1866,6 +1869,7 @@ def add_proposal_reviewers(request, proposal_id):
                     proposal=proposal,
                     due=due_date,
                     blind = blind,
+                    requestor = request.user
                 )
 
                 try:
