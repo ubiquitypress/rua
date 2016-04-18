@@ -288,7 +288,7 @@ def author_production(request, submission_id):
 		'active': 'production',
 		'submission': book,
 		'format_list': models.Format.objects.filter(book=book).select_related('file'),
-		'chapter_list': models.Chapter.objects.filter(book=book).select_related('file'),
+		'chapter_list': models.Chapter.objects.filter(book=book),
 	}
 
 	return render(request, template, context)
@@ -344,7 +344,7 @@ def author_view_typesetter(request, submission_id, typeset_id):
 		'submission_files': 'author/production/view_typeset.html',
 		'active': 'production',
 		'format_list': models.Format.objects.filter(book=book).select_related('file'),
-		'chapter_list': models.Chapter.objects.filter(book=book).select_related('file'),
+		'chapter_list': models.Chapter.objects.filter(book=book),
 		'typeset': typeset,
 		'typeset_id': typeset.id,
 		'author_form': author_form,
