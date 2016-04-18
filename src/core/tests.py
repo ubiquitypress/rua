@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*- 
+
 from django.test import TestCase
 from core import models
 from django.utils import timezone
@@ -28,7 +31,7 @@ class CoreTests(TestCase):
 		'cc-licenses',
 		'role',
 		'test/test_auth_data',
-		'test/test_core_data',
+		'test/test_unicode_core_data',
 		'test/test_review_data',
 	]
 	# Helper Function
@@ -365,7 +368,7 @@ class CoreTests(TestCase):
 		user.save()
 		resp = self.client.post(reverse('login'),{'user_name': 'user1','user_pass':"password1"})
 		message = self.get_specific_message(resp,0)
-		self.assertEqual(str(message), 'An email has been sent with a user activation link.')
+		self.assertEqual(str(message), 'An email has been sent with a user activation link. øö')
 	def test_activate_user(self):
 		resp = self.client.post(reverse('register'), {'first_name': 'new','last_name':'last','username':'user1','email':'fake@faked.com','password1': 'password1','password2':"password1"})
 		print resp
