@@ -834,5 +834,16 @@
   },
   "model": "core.setting",
   "pk": 80
+},
+{
+  "fields": {
+    "value": "'on'",
+    "group": 1,
+    "name": "editorial_assignment_feature",
+    "types": "boolean",
+    "description": "Editorial review assignment feature can be turned on or off."
+  },
+  "model": "core.setting",
+  "pk": 81
 }
 ]
