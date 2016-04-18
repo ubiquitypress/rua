@@ -9,7 +9,7 @@
   <h3>Start Proposal Review - {{ proposal.title }}{% if proposal.subtitle%}: {{ proposal.subtitle }}{%endif%}<a href="{% url 'add_user' %}" class="btn  btn-transparent-white" style="position: absolute;right:110px;margin-top:-8px">+ Add New User</a> <a href="{% url 'view_proposal' proposal.id %}" class="btn  btn-transparent-white" style="position: absolute;right:20px;margin-top:-8px">Go back</a></h3>
 </div>
 <div class="col-md-12">
-  <form method="POST">
+  <form method="POST"  enctype="multipart/form-data">
   {% csrf_token %}
 
 
@@ -77,7 +77,22 @@
         <h4>Email Invite</h4>
         </div>
   <textarea class="form-control" id="email_text" name="email_text" required="required" cols="100" rows="10">{{ email_text }}</textarea><br/>
+
+  <label class="control-label" for="id_label">Attachment</label>
+  <p class="small">Please add any additonal files here.</p>
+  <div class="input-group">
+      <span class="input-group-btn">
+        <span class="btn btn-primary btn-browse btn-file">
+          Browse&hellip; <input type="file" id="attachment" name="attachment">
+        </span>
+      </span>
+      <input type="text" class="form-control" readonly>
+    </div>
+        <br>
+
   <button class="btn btn-primary pull-right" type="submit" style="width:100px">Submit</button>
+
+
   </form>
 </br></br>
 </div>
@@ -90,6 +105,8 @@
 <link rel="stylesheet" href="http://code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css">
 <script src="http://code.jquery.com/ui/1.11.0/jquery-ui.js"></script>
 <script type="text/javascript">$("textarea").jqte();</script>
+
+<script type="text/javascript" src="{% static "js/fancyfile.js" %}"></script>
 <script>  
   {% if reviewers %}
   $(document).ready(function() {

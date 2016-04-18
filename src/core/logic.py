@@ -617,7 +617,7 @@ def build_time_line(book):
 	return sorted(clean_timeline, key=lambda k: k['date']) 
 
 # Email handler - should be moved to logic!
-def send_proposal_review_request(proposal, review_assignment, email_text):
+def send_proposal_review_request(proposal, review_assignment, email_text, attachment = None):
 	from_email = models.Setting.objects.get(group__name='email', name='from_address')
 	base_url = models.Setting.objects.get(group__name='general', name='base_url')
 	press_name = models.Setting.objects.get(group__name='general', name='press_name').value
@@ -630,7 +630,7 @@ def send_proposal_review_request(proposal, review_assignment, email_text):
 		'proposal': proposal,
 		'press_name': press_name,
 	}
-	email.send_email('Proposal Review Request', context, from_email.value, review_assignment.user.email, email_text)
+	email.send_email('Proposal Review Request', context, from_email.value, review_assignment.user.email, email_text, proposal = proposal, attachment = attachment)
 
 #### WORKFLOW Logic #####
 
