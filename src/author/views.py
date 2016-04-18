@@ -423,7 +423,49 @@ def view_index(request, submission_id, index_id):
 
 	return render(request, template, context)
 
+@login_required
+def view_chapter(request, submission_id, chapter_id):
+	book = get_object_or_404(models.Book, pk=submission_id)
+	chapter = get_object_or_404(models.Chapter, pk=chapter_id, book = book)
+	chapter_formats = models.ChapterFormat.objects.filter(chapter=chapter)
 
+	template = 'author/submission.html'
+	context = {
+		'submission': book,
+		'chapter': chapter,
+		'chapter_formats': chapter_formats,
+		'author_include': 'author/production/view.html',
+		'submission_files': 'author/production/view_chapter.html',
+		'active': 'production',
+		'submission': book,
+		'format_list': models.Format.objects.filter(book=book).select_related('file'),
+		'chapter_list': models.Chapter.objects.filter(book=book).order_by('sequence'),
+		'active_page': 'production',
+	}
+
+	return render(request, template, context)
+
+@login_required
+def view_chapter_format(request, submission_id, chapter_id, format_id):
+	book = get_object_or_404(models.Book, pk=submission_id)
+	chapter = get_object_or_404(models.Chapter, pk=chapter_id, book = book)
+	chapter_format = get_object_or_404(models.ChapterFormat, chapter=chapter, pk=format_id)
+
+	template = 'author/submission.html'
+	context = {
+		'submission': book,
+		'chapter': chapter,
+		'chapter_format': chapter_format,
+		'author_include': 'author/production/view.html',
+		'submission_files': 'author/production/view_chapter_format.html',
+		'active': 'production',
+		'submission': book,
+		'format_list': models.Format.objects.filter(book=book).select_related('file'),
+		'chapter_list': models.Chapter.objects.filter(book=book).order_by('sequence'),
+		'active_page': 'production',
+	}
+
+	return render(request, template, context)
 
 @login_required
 def copyedit_review(request, submission_id, copyedit_id):
