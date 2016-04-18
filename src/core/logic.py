@@ -596,6 +596,7 @@ def build_time_line(book):
 		timeline.append({'stage': 'Review', 'date': book.stage.review})
 		if book.proposal:
 			timeline.append({'stage': 'Proposal Submitted', 'date': book.proposal.date_submitted})
+			timeline.append({'stage': 'Proposal Review Started', 'date': book.proposal.date_review_started})
 			timeline.append({'stage': 'Proposal Accepted', 'date': book.proposal.date_accepted})
 		timeline.append({'stage': 'Book Submitted', 'date': book.stage.submission})
 		timeline.append({'stage': 'Proposal', 'date': book.stage.proposal})
