@@ -78,6 +78,13 @@ class FullUserProfileForm(forms.ModelForm):
 		model = User
 		fields = ("username", "first_name", "last_name", "email")
 
+class RegistrationProfileForm(forms.ModelForm):
+
+	class Meta:
+		model = models.Profile
+		fields = ("salutation", "middle_name", "biography","interest", "orcid", "institution", "department", "country", "twitter", "facebook", "linkedin", "impactstory", "github", "profile_image", "signature","website")
+
+
 class ProfileForm(forms.ModelForm):
 
 	class Meta:

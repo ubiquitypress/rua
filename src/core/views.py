@@ -170,20 +170,26 @@ def logout(request):
 
 def register(request):
     if request.method == 'POST':
-        form = forms.UserCreationForm(request.POST)
+        form = forms.UserCreationForm(request.POST)    
         if form.is_valid():
             author_role = models.Role.objects.get(slug='author')
             new_user = form.save()
-            new_user.profile.roles.add(author_role)
-            new_user.save()
+            profile_form = forms.RegistrationProfileForm(request.POST,instance=new_user.profile)
+            
+            if profile_form.is_valid():
+                profile_form.save()
+                new_user.profile.roles.add(author_role)
+                new_user.profile.save()
 
             messages.add_message(request, messages.INFO, models.Setting.objects.get(group__name='general', name='registration_message').value)
             return redirect(reverse('login'))
     else:
         form = forms.UserCreationForm()
+        profile_form = forms.RegistrationProfileForm()
 
     return render(request, "core/register.html", {
         'form': form,
+        'profile_form': profile_form,
     })
 
 def activate(request, code):

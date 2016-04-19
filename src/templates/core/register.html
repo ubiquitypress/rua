@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load static from staticfiles %}
 {% load bootstrap3 %}
 
 {% block title %}Create an account{% endblock %}
@@ -9,9 +10,10 @@
 	
 	<h1>Create an account</h1><hr>
 	<div class="well">
-  	<form method="post" class="form">
+  	<form method="post" class="form" enctype="multipart/form-data">
 	    {% csrf_token %}
-	    {% bootstrap_form form %}</div>
+	    {% bootstrap_form form %}
+	    {% bootstrap_form profile_form %}</div>
 	    <div class="container-fluid">
 	    <input type="checkbox" name="terms" required> I agree to the <a href="{% url 'page' 'terms-conditions'%}">Terms & Conditions</a> </input>
 	    </div>
@@ -23,4 +25,30 @@
 	</form>
 </br><br/>
 </div>
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript" src="{% static "js/fancyfile.js" %}"></script>
+<script type="text/javascript">$("textarea").jqte();</script>
+
+
+<script language="javascript" type="text/javascript">
+$(document).ready(function () {    
+       {%for field in profile_form%}
+          {% if field.field.required %} 
+         var required_text=$('label[for="' + "id_{{field.name}}"+ '"]').html()+" *";
+         var current_field = $('label[for="' + "id_{{field.name}}"+ '"]');
+         current_field.text(required_text); 
+          {% endif %}
+       {% endfor %}
+       {%for field in form%}
+          {% if field.field.required %} 
+         var required_text=$('label[for="' + "id_{{field.name}}"+ '"]').html()+" *";
+         var current_field = $('label[for="' + "id_{{field.name}}"+ '"]');
+         current_field.text(required_text); 
+          {% endif %}
+       {% endfor %}
+
+  });
+</script>
 {% endblock %}
