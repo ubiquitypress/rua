@@ -69,10 +69,8 @@
   
   <p class="small">Set a due date for the reviews. Reviewers will be politely reminded to submit their review before the due date.</p>
   <input type="text" name="due_date" id="due_date" required="required" class="form-control" /><br/><br/>
-{% if not proposal.review_form %}
   {% bootstrap_form start_form %}
     <br/><br />
-    {% endif %}
   <div class="form-group"><div class="checkbox"><label for="id_hide_proposer_details"><input class="" id="blind" name="blind" type="checkbox" is_checkbox=""> Blind review</label></div><small>Hides author name.</small></div>
 
 <br>

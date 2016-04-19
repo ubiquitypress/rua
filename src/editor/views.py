@@ -950,13 +950,13 @@ def editor_add_reviewers(request, submission_id, review_type, round_number):
 
 		# Handle reviewers
 		for reviewer in reviewers:
-			logic.handle_review_assignment(request,submission, reviewer, review_type, due_date, review_round, request.user, email_text, attachment)
+			logic.handle_review_assignment(request,submission, reviewer, review_type, due_date, review_round, request.user, email_text, review_form, attachment)
 
 		# Handle committees
 		for committee in committees:
 			members = manager_models.GroupMembership.objects.filter(group=committee)
 			for member in members:
-				logic.handle_review_assignment(request,submission, member.user, review_type, due_date, review_round, request.user, email_text, attachment)
+				logic.handle_review_assignment(request,submission, member.user, review_type, due_date, review_round, request.user, email_text, review_form, attachment)
 
 		# Tidy up and save
 		if review_type == 'internal' and not submission.stage.internal_review:

@@ -113,7 +113,7 @@ def view_review_assignment(request, submission_id, round_id, review_id):
 	if result:
 		relations = review_models.FormElementsRelationship.objects.filter(form=result.form)
 	else:
-		relations = review_models.FormElementsRelationship.objects.filter(form=submission.review_form)
+		relations = review_models.FormElementsRelationship.objects.filter(form=review_assignment.review_form)
 	if result:
 		data_ordered = order_data(decode_json(result.data), relations)
 	else:

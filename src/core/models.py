@@ -483,6 +483,9 @@ class ReviewAssignment(models.Model):
 	#Reopened
 	reopened = models.BooleanField(default=False)
 	withdrawn = models.BooleanField(default=False)
+	
+	#Review
+	review_form = models.ForeignKey('review.Form', null=True, blank=True)
 
 	class Meta:
 		unique_together = ('book', 'user', 'review_type', 'review_round')

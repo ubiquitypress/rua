@@ -157,7 +157,7 @@ def review(request, review_type, submission_id, review_round, access_key=None):
 	
 	editors = logic.get_editors(review_assignment)
 
-	form = forms.GeneratedForm(form=submission.review_form)
+	form = forms.GeneratedForm(form=review_assignment.review_form)
 	
 	if review_assignment.reopened:
 		result = review_assignment.results
@@ -180,12 +180,12 @@ def review(request, review_type, submission_id, review_round, access_key=None):
 		path = create_completed_review_form(submission, review_assignment.pk)
 		return serve_file(request, path)
 	elif request.POST:
-		form = forms.GeneratedForm(request.POST, request.FILES, form=submission.review_form)
+		form = forms.GeneratedForm(request.POST, request.FILES, form=review_assignment.review_form)
 		recommendation_form = core_forms.RecommendationForm(request.POST, ci_required=ci_required.value)
 		if form.is_valid() and recommendation_form.is_valid():
 			save_dict = {}
-			file_fields = models.FormElementsRelationship.objects.filter(form=submission.review_form, element__field_type='upload')
-			data_fields = models.FormElementsRelationship.objects.filter(~Q(element__field_type='upload'), form=submission.review_form)
+			file_fields = models.FormElementsRelationship.objects.filter(form=review_assignment.review_form, element__field_type='upload')
+			data_fields = models.FormElementsRelationship.objects.filter(~Q(element__field_type='upload'), form=review_assignment.review_form)
 
 			for field in file_fields:
 				if field.element.name in request.FILES:
@@ -205,13 +205,13 @@ def review(request, review_type, submission_id, review_round, access_key=None):
 					review_assignment.reopened=False
 					review_assignment.save()
 				else:
-					form_results = models.FormResult(form=submission.review_form, data=json_data)
+					form_results = models.FormResult(form=review_assignment.review_form, data=json_data)
 					form_results.save()
 					review_assignment.results = form_results
 					review_assignment.reopened=False
 					review_assignment.save()
 			else:
-				form_results = models.FormResult(form=submission.review_form, data=json_data)
+				form_results = models.FormResult(form=review_assignment.review_form, data=json_data)
 				form_results.save()
 				review_assignment.results = form_results
 				review_assignment.save()
@@ -248,7 +248,7 @@ def review(request, review_type, submission_id, review_round, access_key=None):
 		'review_assignment': review_assignment,
 		'submission': submission,
 		'form': form,
-		'form_info': submission.review_form,
+		'form_info': review_assignment.review_form,
 		'recommendation_form': recommendation_form,
 		'editors':editors,
 		'has_additional_files': logic.has_additional_files(submission),
@@ -298,7 +298,7 @@ def review_complete(request, review_type, submission_id,review_round,access_key=
 	context = {
 		'submission': submission,
 		'review_assignment': review_assignment,
-		'form_info': submission.review_form,
+		'form_info': review_assignment.review_form,
 		'data_ordered': data_ordered,
 		'result': result,
 		'additional_files': logic.has_additional_files(submission),
@@ -336,7 +336,7 @@ def review_complete_no_redirect(request, review_type, submission_id,review_round
 	context = {
 		'submission': submission,
 		'review_assignment': review_assignment,
-		'form_info': submission.review_form,
+		'form_info': review_assignment.review_form,
 		'data_ordered': data_ordered,
 		'result': result,
 		'additional_files': logic.has_additional_files(submission),
@@ -424,7 +424,11 @@ def editorial_review(request, submission_id, access_key):
 	recommendation_form.initial=initial_data
 			
 	if not request.POST and request.GET.get('download') == 'docx':
-		path = create_review_form(submission)
+		if editorial_board:
+			path = create_review_form(submission, review_assignment.editorial_board_review_form)
+		else:
+			path = create_review_form(submission, review_assignment.publication_committee_review_form)
+
 		return serve_file(request, path)
 	elif request.POST:
 		if editorial_board:
@@ -565,7 +569,7 @@ def editorial_review_complete(request, submission_id, access_key):
 	context = {
 		'submission': submission,
 		'review_assignment': review_assignment,
-		'form_info': submission.review_form,
+		'form_info': review_assignment.review_form,
 		'data_ordered': data_ordered,
 		'result': result,
 		'editorial_board':editorial_board,
@@ -587,7 +591,7 @@ def create_completed_review_form(submission,review_id):
 	document = Document()
 	document.add_heading(submission.title, 0)
 	review_assignment = get_object_or_404(core_models.ReviewAssignment, pk=review_id)
-	relations = models.FormElementsRelationship.objects.filter(form=submission.review_form).order_by('order')
+	relations = models.FormElementsRelationship.objects.filter(form=review_assignment.review_form).order_by('order')
 	
 	if review_assignment.results:
 		p = document.add_paragraph('%s completed this review assignment form.'% review_assignment.user.profile.full_name())
@@ -640,11 +644,11 @@ def create_completed_review_form(submission,review_id):
 	return path
 
 
-def create_review_form(submission):
+def create_review_form(submission, review_form):
 	document = Document()
 	document.add_heading(submission.title, 0)
 	p = document.add_paragraph('You should complete this form and then use the review page to upload it.')
-	relations = models.FormElementsRelationship.objects.filter(form=submission.review_form).order_by('order')
+	relations = models.FormElementsRelationship.objects.filter(form=review_form).order_by('order')
 	for relation in relations:
 
 		if relation.element.field_type in ['text', 'textarea', 'date', 'email']:

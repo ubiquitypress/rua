@@ -100,6 +100,7 @@
         {% else %}
         &nbsp; &nbsp;   <i class="fa fa-file-text-o"></i>
         {% endif %}
+          <a href="{% url 'serve_file' submission.id file.id %}" class="btn btn-xs btn-task pull-right download-small" style="margin-top:2px;margin-left:4px"><i class="fa fa-cloud-download"> &nbsp; Download &nbsp;</i></a>
       </span></h1>
     </div>
     <div class="media-body">
@@ -109,9 +110,7 @@
         <h5>{{ file.original_filename }}</h5>
       </div>
     </div>
-         <div class="media-right">
-      <a href="{% url 'serve_file' submission.id file.id %}" class="btn btn-sm btn-task pull-right download-small"><i class="fa fa-cloud-download"> &nbsp; Download</i></a>
-    </div>
+        
     </li>
     {% endif %}
     {% empty %}

@@ -1628,7 +1628,7 @@ def view_completed_proposal_review(request, proposal_id, assignment_id):
     proposal_form.initial = intial_data
     review_assignment = get_object_or_404(submission_models.ProposalReview, pk=assignment_id, withdrawn = False)
     result = review_assignment.results
-    form = review_forms.GeneratedForm(form=proposal.review_form)
+    form = review_forms.GeneratedForm(form=review_assignment.review_form)
 
     ci_required = models.Setting.objects.get(group__name='general', name='ci_required')
     recommendation_form = forms.RecommendationForm(ci_required=ci_required.value)
@@ -1643,12 +1643,12 @@ def view_completed_proposal_review(request, proposal_id, assignment_id):
         path = create_proposal_review_form(review_assignment)
         return serve_proposal_file(request, path)
     elif request.POST:
-        form = review_forms.GeneratedForm(request.POST, request.FILES, form=proposal.review_form)
+        form = review_forms.GeneratedForm(request.POST, request.FILES, form=review_assignment.review_form)
         recommendation_form = forms.RecommendationForm(request.POST, ci_required=ci_required.value)
         if form.is_valid() and recommendation_form.is_valid():
             save_dict = {}
-            file_fields = review_models.FormElementsRelationship.objects.filter(form=proposal.review_form, element__field_type='upload')
-            data_fields = review_models.FormElementsRelationship.objects.filter(~Q(element__field_type='upload'), form=proposal.review_form)
+            file_fields = review_models.FormElementsRelationship.objects.filter(form=review_assignment.review_form, element__field_type='upload')
+            data_fields = review_models.FormElementsRelationship.objects.filter(~Q(element__field_type='upload'), form=review_assignment.review_form)
 
             for field in file_fields:
                 if field.element.name in request.FILES:
@@ -1661,7 +1661,7 @@ def view_completed_proposal_review(request, proposal_id, assignment_id):
                     save_dict[field.element.name] = [request.POST.get(field.element.name), 'text']
 
             json_data = smart_text(json.dumps(save_dict))
-            form_results = review_models.FormResult(form=proposal.review_form, data=json_data)
+            form_results = review_models.FormResult(form=review_assignment.review_form, data=json_data)
             form_results.save()
 
             #if request.FILES.get('review_file_upload'):
@@ -1765,7 +1765,7 @@ def view_proposal_review(request, proposal_id, assignment_id):
     review_assignment = get_object_or_404(submission_models.ProposalReview, pk=assignment_id, withdrawn = False)
     result = review_assignment.results
 
-    form = review_forms.GeneratedForm(form=proposal.review_form)
+    form = review_forms.GeneratedForm(form=review_assignment.review_form)
     
     if review_assignment.reopened:
         result = review_assignment.results
@@ -1796,12 +1796,12 @@ def view_proposal_review(request, proposal_id, assignment_id):
         path = create_proposal_review_form(review_assignment)
         return serve_proposal_file(request, path)
     elif request.POST:
-        form = review_forms.GeneratedForm(request.POST, request.FILES, form=proposal.review_form)
+        form = review_forms.GeneratedForm(request.POST, request.FILES, form=review_assignment.review_form)
         recommendation_form = forms.RecommendationForm(request.POST, request.FILES, ci_required=ci_required.value)
         if form.is_valid() and recommendation_form.is_valid():
             save_dict = {}
-            file_fields = review_models.FormElementsRelationship.objects.filter(form=proposal.review_form, element__field_type='upload')
-            data_fields = review_models.FormElementsRelationship.objects.filter(~Q(element__field_type='upload'), form=proposal.review_form)
+            file_fields = review_models.FormElementsRelationship.objects.filter(form=review_assignment.review_form, element__field_type='upload')
+            data_fields = review_models.FormElementsRelationship.objects.filter(~Q(element__field_type='upload'), form=review_assignment.review_form)
 
             for field in file_fields:
                 if field.element.name in request.FILES:
@@ -1814,7 +1814,7 @@ def view_proposal_review(request, proposal_id, assignment_id):
                     save_dict[field.element.name] = [request.POST.get(field.element.name), 'text']
 
             json_data = smart_text(json.dumps(save_dict))
-            form_results = review_models.FormResult(form=proposal.review_form, data=json_data)
+            form_results = review_models.FormResult(form=review_assignment.review_form, data=json_data)
             form_results.save()
             review_file = None
             if request.FILES.get('review_file_upload'):
@@ -1865,11 +1865,10 @@ def add_proposal_reviewers(request, proposal_id):
     start_form = submission_forms.ProposalStart()
     
     if request.POST:
-        if not proposal.review_form:
-            start_form = submission_forms.ProposalStart(request.POST, request.FILES, instance=proposal)
-            if start_form.is_valid():
-                proposal = start_form.save(commit=False)
-                proposal.save()
+        start_form = submission_forms.ProposalStart(request.POST, request.FILES, instance=proposal)
+        updated_proposal = None
+        if start_form.is_valid():
+            updated_proposal = start_form.save(commit=False)
         if request.FILES.get('attachment'):
             attachment = handle_proposal_file(request.FILES.get('attachment'), proposal, 'misc', request.user)
         else:
@@ -1886,6 +1885,7 @@ def add_proposal_reviewers(request, proposal_id):
             new_review_assignment = submission_models.ProposalReview(
                 user=reviewer,
                 proposal=proposal,
+                review_form = updated_proposal.review_form,
                 due=due_date,
                 blind = blind,
                 requestor = request.user
@@ -1905,6 +1905,7 @@ def add_proposal_reviewers(request, proposal_id):
                 new_review_assignment = submission_models.ProposalReview(
                     user=member.user,
                     proposal=proposal,
+                    review_form = updated_proposal.review_form,
                     due=due_date,
                     blind = blind,
                     requestor = request.user
@@ -2061,7 +2062,7 @@ def create_proposal_review_form(proposal):
     document = Document()
     document.add_heading(proposal.proposal.title, 0)
     p = document.add_paragraph('You should complete this form and then use the review page to upload it.')
-    relations = review_models.FormElementsRelationship.objects.filter(form=proposal.proposal.review_form).order_by('order')
+    relations = review_models.FormElementsRelationship.objects.filter(form=proposal.review_form).order_by('order')
     for relation in relations:
 
         if relation.element.field_type in ['text', 'textarea', 'date', 'email']:
