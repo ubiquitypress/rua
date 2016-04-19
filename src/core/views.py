@@ -172,7 +172,11 @@ def register(request):
     if request.method == 'POST':
         form = forms.UserCreationForm(request.POST)
         if form.is_valid():
+            author_role = models.Role.objects.get(slug='author')
             new_user = form.save()
+            new_user.profile.roles.add(author_role)
+            new_user.save()
+
             messages.add_message(request, messages.INFO, models.Setting.objects.get(group__name='general', name='registration_message').value)
             return redirect(reverse('login'))
     else:
