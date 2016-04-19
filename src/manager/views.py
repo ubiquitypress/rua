@@ -405,6 +405,8 @@ def add_user(request):
 			if 'new_password' in request.POST:
 				new_pass = logic.generate_password()
 				user.set_password(new_pass)
+				user.is_active = True
+				user.save()
 				messages.add_message(request, messages.SUCCESS, 'New user %s, password set to %s.' % (user.username, new_pass))
 				email_text = core_models.Setting.objects.get(group__name='email', name='new_user_email').value
 				logic.send_new_user_ack(email_text, user, new_pass)
