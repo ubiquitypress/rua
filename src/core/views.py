@@ -1506,7 +1506,8 @@ def start_proposal_review(request, proposal_id):
                     proposal=proposal,
                     due=due_date,
                     blind = blind,
-                    requestor = request.user
+                    requestor = request.user,
+                    review_form = proposal.review_form,
                 )
 
                 try:
@@ -1525,7 +1526,8 @@ def start_proposal_review(request, proposal_id):
                         proposal=proposal,
                         due=due_date,
                         blind = blind,
-                        requestor = request.user
+                        requestor = request.user,
+                        review_form = proposal.review_form,
                     )
 
                     try:
@@ -1776,7 +1778,7 @@ def view_proposal_review(request, proposal_id, assignment_id):
         review_assignment.review_form = proposal.review_form
         review_assignment.save()
         form = review_forms.GeneratedForm(form=proposal.review_form)
-        
+
     if review_assignment.reopened:
         result = review_assignment.results
         if result:
