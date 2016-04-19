@@ -293,13 +293,13 @@ def send_series(request, series_id):
 			"http://localhost:8080/api/series/",
 			auth=(credentials.username, credentials.password),
 			data={ 'press_code': 'up',
-		            'omp_series_id': series.pk,
-		            'title': series.name,
-		            'slug': slugify(series.name),
-		            'editor': series.editor.profile.full_name,
-		            'editor_email': series.editor.email,
-		            'description': series.description
-		            })
+					'omp_series_id': series.pk,
+					'title': series.name,
+					'slug': slugify(series.name),
+					'editor': series.editor.profile.full_name,
+					'editor_email': series.editor.email,
+					'description': series.description
+					})
 		return redirect(reverse('series'))
 
 
@@ -436,8 +436,10 @@ def add_user(request):
 
 			profile.save()
 
-
-			return redirect("%s?username=%s&password=%s" % (reverse('manager_users'), user.username, new_pass))
+			if request.GET.get('next'):
+				return redirect(request.GET.get('next'))
+			else:
+				return redirect("%s?username=%s&password=%s" % (reverse('manager_users'), user.username, new_pass))
 
 	template = 'manager/users/edit.html'
 	context = {

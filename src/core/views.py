@@ -1921,7 +1921,7 @@ def add_proposal_reviewers(request, proposal_id):
 
         proposal.date_review_started = timezone.now()
         proposal.save()
-
+        
         return redirect(reverse('view_proposal', kwargs={'proposal_id': proposal.id}))
 
     template = 'core/proposals/add_reviewers.html'
