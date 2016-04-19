@@ -92,6 +92,7 @@ urlpatterns = patterns('',
 
     #log
     url(r'^log/submission/(?P<submission_id>\d+)/', 'core.views.view_log', name='view_log'),
+    url(r'^log/proposal/(?P<proposal_id>\d+)/', 'core.views.view_proposal_log', name='view_proposal_log'),
 
     #redirect to correct dashboard
     url(r'^dashboard/$', 'core.views.dashboard', name='user_dashboard'),

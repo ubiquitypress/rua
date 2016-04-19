@@ -1,0 +1,2769 @@
+[
+{
+  "fields": {
+    "code": "abk",
+    "display": "Abkhazian"
+  },
+  "model": "core.language",
+  "pk": 1
+},
+{
+  "fields": {
+    "code": "afr",
+    "display": "Afrikaans"
+  },
+  "model": "core.language",
+  "pk": 8
+},
+{
+  "fields": {
+    "code": "afa",
+    "display": "Afro-Asiatic languages"
+  },
+  "model": "core.language",
+  "pk": 9
+},
+{
+  "fields": {
+    "code": "amh",
+    "display": "Amharic"
+  },
+  "model": "core.language",
+  "pk": 17
+},
+{
+  "fields": {
+    "code": "anp",
+    "display": "Angika"
+  },
+  "model": "core.language",
+  "pk": 18
+},
+{
+  "fields": {
+    "code": "apa",
+    "display": "Apache languages"
+  },
+  "model": "core.language",
+  "pk": 19
+},
+{
+  "fields": {
+    "code": "ara",
+    "display": "Arabic"
+  },
+  "model": "core.language",
+  "pk": 20
+},
+{
+  "fields": {
+    "code": "hye",
+    "display": "Armenian"
+  },
+  "model": "core.language",
+  "pk": 24
+},
+{
+  "fields": {
+    "code": "asm",
+    "display": "Assamese"
+  },
+  "model": "core.language",
+  "pk": 27
+},
+{
+  "fields": {
+    "code": "ast",
+    "display": "Asturian; Bable; Leonese; Asturleonese"
+  },
+  "model": "core.language",
+  "pk": 28
+},
+{
+  "fields": {
+    "code": "aus",
+    "display": "Australian languages"
+  },
+  "model": "core.language",
+  "pk": 30
+},
+{
+  "fields": {
+    "code": "aze",
+    "display": "Azerbaijani"
+  },
+  "model": "core.language",
+  "pk": 36
+},
+{
+  "fields": {
+    "code": "ban",
+    "display": "Balinese"
+  },
+  "model": "core.language",
+  "pk": 37
+},
+{
+  "fields": {
+    "code": "bat",
+    "display": "Baltic languages"
+  },
+  "model": "core.language",
+  "pk": 38
+},
+{
+  "fields": {
+    "code": "bas",
+    "display": "Basa"
+  },
+  "model": "core.language",
+  "pk": 44
+},
+{
+  "fields": {
+    "code": "bak",
+    "display": "Bashkir"
+  },
+  "model": "core.language",
+  "pk": 45
+},
+{
+  "fields": {
+    "code": "eus",
+    "display": "Basque"
+  },
+  "model": "core.language",
+  "pk": 46
+},
+{
+  "fields": {
+    "code": "bel",
+    "display": "Belarusian"
+  },
+  "model": "core.language",
+  "pk": 49
+},
+{
+  "fields": {
+    "code": "ben",
+    "display": "Bengali"
+  },
+  "model": "core.language",
+  "pk": 51
+},
+{
+  "fields": {
+    "code": "ber",
+    "display": "Berber languages"
+  },
+  "model": "core.language",
+  "pk": 52
+},
+{
+  "fields": {
+    "code": "bos",
+    "display": "Bosnian"
+  },
+  "model": "core.language",
+  "pk": 61
+},
+{
+  "fields": {
+    "code": "bre",
+    "display": "Breton"
+  },
+  "model": "core.language",
+  "pk": 63
+},
+{
+  "fields": {
+    "code": "bul",
+    "display": "Bulgarian"
+  },
+  "model": "core.language",
+  "pk": 65
+},
+{
+  "fields": {
+    "code": "mya",
+    "display": "Burmese"
+  },
+  "model": "core.language",
+  "pk": 67
+},
+{
+  "fields": {
+    "code": "cat",
+    "display": "Catalan; Valencian"
+  },
+  "model": "core.language",
+  "pk": 69
+},
+{
+  "fields": {
+    "code": "cel",
+    "display": "Celtic languages"
+  },
+  "model": "core.language",
+  "pk": 72
+},
+{
+  "fields": {
+    "code": "cai",
+    "display": "Central American Indian languages"
+  },
+  "model": "core.language",
+  "pk": 73
+},
+{
+  "fields": {
+    "code": "che",
+    "display": "Chechen"
+  },
+  "model": "core.language",
+  "pk": 78
+},
+{
+  "fields": {
+    "code": "chr",
+    "display": "Cherokee"
+  },
+  "model": "core.language",
+  "pk": 79
+},
+{
+  "fields": {
+    "code": "zho",
+    "display": "Chinese"
+  },
+  "model": "core.language",
+  "pk": 83
+},
+{
+  "fields": {
+    "code": "cor",
+    "display": "Cornish"
+  },
+  "model": "core.language",
+  "pk": 93
+},
+{
+  "fields": {
+    "code": "cos",
+    "display": "Corsican"
+  },
+  "model": "core.language",
+  "pk": 94
+},
+{
+  "fields": {
+    "code": "hrv",
+    "display": "Croatian"
+  },
+  "model": "core.language",
+  "pk": 102
+},
+{
+  "fields": {
+    "code": "ces",
+    "display": "Czech"
+  },
+  "model": "core.language",
+  "pk": 104
+},
+{
+  "fields": {
+    "code": "dak",
+    "display": "Dakota"
+  },
+  "model": "core.language",
+  "pk": 105
+},
+{
+  "fields": {
+    "code": "dan",
+    "display": "Danish"
+  },
+  "model": "core.language",
+  "pk": 106
+},
+{
+  "fields": {
+    "code": "dum",
+    "display": "Dutch, Middle (ca. 1050-1350)"
+  },
+  "model": "core.language",
+  "pk": 115
+},
+{
+  "fields": {
+    "code": "nld",
+    "display": "Dutch; Flemish"
+  },
+  "model": "core.language",
+  "pk": 116
+},
+{
+  "fields": {
+    "code": "eng",
+    "display": "English"
+  },
+  "model": "core.language",
+  "pk": 124
+},
+{
+  "fields": {
+    "code": "est",
+    "display": "Estonian"
+  },
+  "model": "core.language",
+  "pk": 129
+},
+{
+  "fields": {
+    "code": "fao",
+    "display": "Faroese"
+  },
+  "model": "core.language",
+  "pk": 134
+},
+{
+  "fields": {
+    "code": "fij",
+    "display": "Fijian"
+  },
+  "model": "core.language",
+  "pk": 135
+},
+{
+  "fields": {
+    "code": "fil",
+    "display": "Filipino; Pilipino"
+  },
+  "model": "core.language",
+  "pk": 136
+},
+{
+  "fields": {
+    "code": "fin",
+    "display": "Finnish"
+  },
+  "model": "core.language",
+  "pk": 137
+},
+{
+  "fields": {
+    "code": "fiu",
+    "display": "Finno-Ugrian languages"
+  },
+  "model": "core.language",
+  "pk": 138
+},
+{
+  "fields": {
+    "code": "fra",
+    "display": "French"
+  },
+  "model": "core.language",
+  "pk": 140
+},
+{
+  "fields": {
+    "code": "gla",
+    "display": "Gaelic; Scottish Gaelic"
+  },
+  "model": "core.language",
+  "pk": 146
+},
+{
+  "fields": {
+    "code": "car",
+    "display": "Galibi Carib"
+  },
+  "model": "core.language",
+  "pk": 147
+},
+{
+  "fields": {
+    "code": "glg",
+    "display": "Galician"
+  },
+  "model": "core.language",
+  "pk": 148
+},
+{
+  "fields": {
+    "code": "lug",
+    "display": "Ganda"
+  },
+  "model": "core.language",
+  "pk": 149
+},
+{
+  "fields": {
+    "code": "gay",
+    "display": "Gayo"
+  },
+  "model": "core.language",
+  "pk": 150
+},
+{
+  "fields": {
+    "code": "gba",
+    "display": "Gbaya"
+  },
+  "model": "core.language",
+  "pk": 151
+},
+{
+  "fields": {
+    "code": "gez",
+    "display": "Geez"
+  },
+  "model": "core.language",
+  "pk": 152
+},
+{
+  "fields": {
+    "code": "kat",
+    "display": "Georgian"
+  },
+  "model": "core.language",
+  "pk": 153
+},
+{
+  "fields": {
+    "code": "deu",
+    "display": "German"
+  },
+  "model": "core.language",
+  "pk": 154
+},
+{
+  "fields": {
+    "code": "gmh",
+    "display": "German, Middle High (ca. 1050-1500)"
+  },
+  "model": "core.language",
+  "pk": 155
+},
+{
+  "fields": {
+    "code": "goh",
+    "display": "German, Old High (ca. 750-1050)"
+  },
+  "model": "core.language",
+  "pk": 156
+},
+{
+  "fields": {
+    "code": "gem",
+    "display": "Germanic languages"
+  },
+  "model": "core.language",
+  "pk": 157
+},
+{
+  "fields": {
+    "code": "gil",
+    "display": "Gilbertese"
+  },
+  "model": "core.language",
+  "pk": 158
+},
+{
+  "fields": {
+    "code": "hat",
+    "display": "Haitian; Haitian Creole"
+  },
+  "model": "core.language",
+  "pk": 169
+},
+{
+  "fields": {
+    "code": "haw",
+    "display": "Hawaiian"
+  },
+  "model": "core.language",
+  "pk": 171
+},
+{
+  "fields": {
+    "code": "heb",
+    "display": "Hebrew"
+  },
+  "model": "core.language",
+  "pk": 172
+},
+{
+  "fields": {
+    "code": "hin",
+    "display": "Hindi"
+  },
+  "model": "core.language",
+  "pk": 176
+},
+{
+  "fields": {
+    "code": "hun",
+    "display": "Hungarian"
+  },
+  "model": "core.language",
+  "pk": 180
+},
+{
+  "fields": {
+    "code": "isl",
+    "display": "Icelandic"
+  },
+  "model": "core.language",
+  "pk": 183
+},
+{
+  "fields": {
+    "code": "ind",
+    "display": "Indonesian"
+  },
+  "model": "core.language",
+  "pk": 191
+},
+{
+  "fields": {
+    "code": "gle",
+    "display": "Irish"
+  },
+  "model": "core.language",
+  "pk": 198
+},
+{
+  "fields": {
+    "code": "ita",
+    "display": "Italian"
+  },
+  "model": "core.language",
+  "pk": 202
+},
+{
+  "fields": {
+    "code": "jpn",
+    "display": "Japanese"
+  },
+  "model": "core.language",
+  "pk": 203
+},
+{
+  "fields": {
+    "code": "tlh",
+    "display": "Klingon; tlhIngan-Hol"
+  },
+  "model": "core.language",
+  "pk": 230
+},
+{
+  "fields": {
+    "code": "kon",
+    "display": "Kongo"
+  },
+  "model": "core.language",
+  "pk": 232
+},
+{
+  "fields": {
+    "code": "kor",
+    "display": "Korean"
+  },
+  "model": "core.language",
+  "pk": 234
+},
+{
+  "fields": {
+    "code": "kur",
+    "display": "Kurdish"
+  },
+  "model": "core.language",
+  "pk": 240
+},
+{
+  "fields": {
+    "code": "kru",
+    "display": "Kurukh"
+  },
+  "model": "core.language",
+  "pk": 241
+},
+{
+  "fields": {
+    "code": "lat",
+    "display": "Latin"
+  },
+  "model": "core.language",
+  "pk": 248
+},
+{
+  "fields": {
+    "code": "lav",
+    "display": "Latvian"
+  },
+  "model": "core.language",
+  "pk": 249
+},
+{
+  "fields": {
+    "code": "lit",
+    "display": "Lithuanian"
+  },
+  "model": "core.language",
+  "pk": 253
+},
+{
+  "fields": {
+    "code": "nds",
+    "display": "Low German; Low Saxon; German, Low; Saxon, Low"
+  },
+  "model": "core.language",
+  "pk": 255
+},
+{
+  "fields": {
+    "code": "lus",
+    "display": "Lushai"
+  },
+  "model": "core.language",
+  "pk": 264
+},
+{
+  "fields": {
+    "code": "ltz",
+    "display": "Luxembourgish; Letzeburgesch"
+  },
+  "model": "core.language",
+  "pk": 265
+},
+{
+  "fields": {
+    "code": "mkd",
+    "display": "Macedonian"
+  },
+  "model": "core.language",
+  "pk": 266
+},
+{
+  "fields": {
+    "code": "mlg",
+    "display": "Malagasy"
+  },
+  "model": "core.language",
+  "pk": 271
+},
+{
+  "fields": {
+    "code": "msa",
+    "display": "Malay"
+  },
+  "model": "core.language",
+  "pk": 272
+},
+{
+  "fields": {
+    "code": "mal",
+    "display": "Malayalam"
+  },
+  "model": "core.language",
+  "pk": 273
+},
+{
+  "fields": {
+    "code": "mlt",
+    "display": "Maltese"
+  },
+  "model": "core.language",
+  "pk": 274
+},
+{
+  "fields": {
+    "code": "mni",
+    "display": "Manipuri"
+  },
+  "model": "core.language",
+  "pk": 278
+},
+{
+  "fields": {
+    "code": "mri",
+    "display": "Maori"
+  },
+  "model": "core.language",
+  "pk": 281
+},
+{
+  "fields": {
+    "code": "myn",
+    "display": "Mayan languages"
+  },
+  "model": "core.language",
+  "pk": 288
+},
+{
+  "fields": {
+    "code": "moh",
+    "display": "Mohawk"
+  },
+  "model": "core.language",
+  "pk": 293
+},
+{
+  "fields": {
+    "code": "mol",
+    "display": "Moldavian; Moldovan"
+  },
+  "model": "core.language",
+  "pk": 295
+},
+{
+  "fields": {
+    "code": "mon",
+    "display": "Mongolian"
+  },
+  "model": "core.language",
+  "pk": 298
+},
+{
+  "fields": {
+    "code": "new",
+    "display": "Nepal Bhasa; Newari"
+  },
+  "model": "core.language",
+  "pk": 310
+},
+{
+  "fields": {
+    "code": "nep",
+    "display": "Nepali"
+  },
+  "model": "core.language",
+  "pk": 311
+},
+{
+  "fields": {
+    "code": "non",
+    "display": "Norse, Old"
+  },
+  "model": "core.language",
+  "pk": 318
+},
+{
+  "fields": {
+    "code": "nai",
+    "display": "North American Indian languages"
+  },
+  "model": "core.language",
+  "pk": 319
+},
+{
+  "fields": {
+    "code": "nor",
+    "display": "Norwegian"
+  },
+  "model": "core.language",
+  "pk": 322
+},
+{
+  "fields": {
+    "code": "nno",
+    "display": "Norwegian Nynorsk; Nynorsk, Norwegian"
+  },
+  "model": "core.language",
+  "pk": 323
+},
+{
+  "fields": {
+    "code": "pag",
+    "display": "Pangasinan"
+  },
+  "model": "core.language",
+  "pk": 341
+},
+{
+  "fields": {
+    "code": "pan",
+    "display": "Panjabi; Punjabi"
+  },
+  "model": "core.language",
+  "pk": 342
+},
+{
+  "fields": {
+    "code": "paa",
+    "display": "Papuan languages"
+  },
+  "model": "core.language",
+  "pk": 344
+},
+{
+  "fields": {
+    "code": "fas",
+    "display": "Persian"
+  },
+  "model": "core.language",
+  "pk": 346
+},
+{
+  "fields": {
+    "code": "phi",
+    "display": "Philippine languages"
+  },
+  "model": "core.language",
+  "pk": 348
+},
+{
+  "fields": {
+    "code": "pol",
+    "display": "Polish"
+  },
+  "model": "core.language",
+  "pk": 351
+},
+{
+  "fields": {
+    "code": "por",
+    "display": "Portuguese"
+  },
+  "model": "core.language",
+  "pk": 352
+},
+{
+  "fields": {
+    "code": "ron",
+    "display": "Romanian"
+  },
+  "model": "core.language",
+  "pk": 362
+},
+{
+  "fields": {
+    "code": "rom",
+    "display": "Romany"
+  },
+  "model": "core.language",
+  "pk": 364
+},
+{
+  "fields": {
+    "code": "rus",
+    "display": "Russian"
+  },
+  "model": "core.language",
+  "pk": 366
+},
+{
+  "fields": {
+    "code": "smo",
+    "display": "Samoan"
+  },
+  "model": "core.language",
+  "pk": 370
+},
+{
+  "fields": {
+    "code": "sco",
+    "display": "Scots"
+  },
+  "model": "core.language",
+  "pk": 377
+},
+{
+  "fields": {
+    "code": "srp",
+    "display": "Serbian"
+  },
+  "model": "core.language",
+  "pk": 380
+},
+{
+  "fields": {
+    "code": "iii",
+    "display": "Sichuan Yi; Nuosu"
+  },
+  "model": "core.language",
+  "pk": 384
+},
+{
+  "fields": {
+    "code": "scn",
+    "display": "Sicilian"
+  },
+  "model": "core.language",
+  "pk": 385
+},
+{
+  "fields": {
+    "code": "sla",
+    "display": "Slavic languages"
+  },
+  "model": "core.language",
+  "pk": 395
+},
+{
+  "fields": {
+    "code": "slk",
+    "display": "Slovak"
+  },
+  "model": "core.language",
+  "pk": 396
+},
+{
+  "fields": {
+    "code": "slv",
+    "display": "Slovenian"
+  },
+  "model": "core.language",
+  "pk": 397
+},
+{
+  "fields": {
+    "code": "sog",
+    "display": "Sogdian"
+  },
+  "model": "core.language",
+  "pk": 398
+},
+{
+  "fields": {
+    "code": "som",
+    "display": "Somali"
+  },
+  "model": "core.language",
+  "pk": 399
+},
+{
+  "fields": {
+    "code": "son",
+    "display": "Songhai languages"
+  },
+  "model": "core.language",
+  "pk": 400
+},
+{
+  "fields": {
+    "code": "wen",
+    "display": "Sorbian languages"
+  },
+  "model": "core.language",
+  "pk": 402
+},
+{
+  "fields": {
+    "code": "spa",
+    "display": "Spanish; Castilian"
+  },
+  "model": "core.language",
+  "pk": 407
+},
+{
+  "fields": {
+    "code": "zgh",
+    "display": "Standard Moroccan Tamazight"
+  },
+  "model": "core.language",
+  "pk": 409
+},
+{
+  "fields": {
+    "code": "suk",
+    "display": "Sukuma"
+  },
+  "model": "core.language",
+  "pk": 410
+},
+{
+  "fields": {
+    "code": "sun",
+    "display": "Sundanese"
+  },
+  "model": "core.language",
+  "pk": 412
+},
+{
+  "fields": {
+    "code": "swa",
+    "display": "Swahili"
+  },
+  "model": "core.language",
+  "pk": 414
+},
+{
+  "fields": {
+    "code": "swe",
+    "display": "Swedish"
+  },
+  "model": "core.language",
+  "pk": 416
+},
+{
+  "fields": {
+    "code": "gsw",
+    "display": "Swiss German; Alemannic; Alsatian"
+  },
+  "model": "core.language",
+  "pk": 417
+},
+{
+  "fields": {
+    "code": "syr",
+    "display": "Syriac"
+  },
+  "model": "core.language",
+  "pk": 418
+},
+{
+  "fields": {
+    "code": "tha",
+    "display": "Thai"
+  },
+  "model": "core.language",
+  "pk": 429
+},
+{
+  "fields": {
+    "code": "tog",
+    "display": "Tonga (Nyasa)"
+  },
+  "model": "core.language",
+  "pk": 438
+},
+{
+  "fields": {
+    "code": "ton",
+    "display": "Tonga (Tonga Islands)"
+  },
+  "model": "core.language",
+  "pk": 439
+},
+{
+  "fields": {
+    "code": "tsi",
+    "display": "Tsimshian"
+  },
+  "model": "core.language",
+  "pk": 440
+},
+{
+  "fields": {
+    "code": "tso",
+    "display": "Tsonga"
+  },
+  "model": "core.language",
+  "pk": 441
+},
+{
+  "fields": {
+    "code": "tsn",
+    "display": "Tswana"
+  },
+  "model": "core.language",
+  "pk": 442
+},
+{
+  "fields": {
+    "code": "tum",
+    "display": "Tumbuka"
+  },
+  "model": "core.language",
+  "pk": 443
+},
+{
+  "fields": {
+    "code": "tur",
+    "display": "Turkish"
+  },
+  "model": "core.language",
+  "pk": 445
+},
+{
+  "fields": {
+    "code": "ukr",
+    "display": "Ukrainian"
+  },
+  "model": "core.language",
+  "pk": 454
+},
+{
+  "fields": {
+    "code": "urd",
+    "display": "Urdu"
+  },
+  "model": "core.language",
+  "pk": 459
+},
+{
+  "fields": {
+    "code": "uzb",
+    "display": "Uzbek"
+  },
+  "model": "core.language",
+  "pk": 460
+},
+{
+  "fields": {
+    "code": "vai",
+    "display": "Vai"
+  },
+  "model": "core.language",
+  "pk": 461
+},
+{
+  "fields": {
+    "code": "ven",
+    "display": "Venda"
+  },
+  "model": "core.language",
+  "pk": 462
+},
+{
+  "fields": {
+    "code": "vie",
+    "display": "Vietnamese"
+  },
+  "model": "core.language",
+  "pk": 463
+},
+{
+  "fields": {
+    "code": "cym",
+    "display": "Welsh"
+  },
+  "model": "core.language",
+  "pk": 470
+},
+{
+  "fields": {
+    "code": "yap",
+    "display": "Yapese"
+  },
+  "model": "core.language",
+  "pk": 477
+},
+{
+  "fields": {
+    "code": "yid",
+    "display": "Yiddish"
+  },
+  "model": "core.language",
+  "pk": 478
+},
+{
+  "fields": {
+    "code": "zap",
+    "display": "Zapotec"
+  },
+  "model": "core.language",
+  "pk": 482
+},
+{
+  "fields": {
+    "code": "zha",
+    "display": "Zhuang; Chuang"
+  },
+  "model": "core.language",
+  "pk": 485
+},
+{
+  "fields": {
+    "code": "zul",
+    "display": "Zulu"
+  },
+  "model": "core.language",
+  "pk": 486
+},
+{
+  "fields": {
+    "twitter": "",
+    "profile_image": "",
+    "linkedin": "",
+    "salutation": "Mr",
+    "biography": "Bio",
+    "middle_name": "",
+    "confirmation_code": "",
+    "reset_code_validated": false,
+    "impactstory": "",
+    "department": "",
+    "website": null,
+    "interest": [],
+    "terms_and_conditions": false,
+    "facebook": "",
+    "user": 1,
+    "institution": "rua_testing",
+    "github": "",
+    "roles": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9
+    ],
+    "date_confirmed": null,
+    "country": "GB",
+    "email_sent": null,
+    "signature": "",
+    "orcid": "",
+    "activation_code": "",
+    "reset_code": null
+  },
+  "model": "core.profile",
+  "pk": 1
+},
+{
+  "fields": {
+    "twitter": "",
+    "profile_image": "",
+    "linkedin": "",
+    "salutation": null,
+    "biography": "Bio",
+    "middle_name": "",
+    "confirmation_code": "",
+    "reset_code_validated": false,
+    "impactstory": "",
+    "department": "",
+    "website": null,
+    "interest": [],
+    "terms_and_conditions": false,
+    "facebook": "",
+    "user": 2,
+    "institution": "rua_testing",
+    "github": "",
+    "roles": [
+      5,
+      6,
+      7
+    ],
+    "date_confirmed": null,
+    "country": "GB",
+    "email_sent": null,
+    "signature": "",
+    "orcid": "",
+    "activation_code": "",
+    "reset_code": null
+  },
+  "model": "core.profile",
+  "pk": 2
+},
+{
+  "fields": {
+    "twitter": "",
+    "profile_image": "",
+    "linkedin": "",
+    "salutation": null,
+    "biography": "",
+    "middle_name": "",
+    "confirmation_code": "",
+    "reset_code_validated": false,
+    "impactstory": "",
+    "department": "",
+    "website": null,
+    "interest": [],
+    "terms_and_conditions": false,
+    "facebook": "",
+    "user": 3,
+    "institution": "rua_testing",
+    "github": "",
+    "roles": [
+      2
+    ],
+    "date_confirmed": null,
+    "country": "GB",
+    "email_sent": null,
+    "signature": "",
+    "orcid": "",
+    "activation_code": "",
+    "reset_code": null
+  },
+  "model": "core.profile",
+  "pk": 3
+},
+{
+  "fields": {
+    "twitter": "",
+    "profile_image": "",
+    "linkedin": "",
+    "salutation": null,
+    "biography": "",
+    "middle_name": "",
+    "confirmation_code": "",
+    "reset_code_validated": false,
+    "impactstory": "",
+    "department": "",
+    "website": null,
+    "interest": [],
+    "terms_and_conditions": false,
+    "facebook": "",
+    "user": 4,
+    "institution": "rua_testing",
+    "github": "",
+    "roles": [
+      4
+    ],
+    "date_confirmed": null,
+    "country": "GB",
+    "email_sent": null,
+    "signature": "",
+    "orcid": "",
+    "activation_code": "",
+    "reset_code": null
+  },
+  "model": "core.profile",
+  "pk": 4
+},
+{
+  "fields": {
+    "twitter": "",
+    "profile_image": "",
+    "linkedin": "",
+    "salutation": null,
+    "biography": "",
+    "middle_name": "",
+    "confirmation_code": "",
+    "reset_code_validated": false,
+    "impactstory": "",
+    "department": "",
+    "website": null,
+    "interest": [],
+    "terms_and_conditions": false,
+    "facebook": "",
+    "user": 5,
+    "institution": "rua_testing",
+    "github": "",
+    "roles": [
+      3,
+      8,
+      9
+    ],
+    "date_confirmed": null,
+    "country": "GB",
+    "email_sent": null,
+    "signature": "",
+    "orcid": "",
+    "activation_code": "",
+    "reset_code": null
+  },
+  "model": "core.profile",
+  "pk": 5
+},
+{
+  "fields": {
+    "first_name": "rua_author_first_name",
+    "last_name": "rua_author_last_name",
+    "middle_name": "",
+    "sequence": 1,
+    "author_email": "fake@fakeaddress.com",
+    "country": "GB",
+    "twitter": "",
+    "linkedin": "",
+    "department": "",
+    "facebook": "",
+    "salutation": null,
+    "orcid": "",
+    "institution": "rua_testing",
+    "biography": "Bio"
+  },
+  "model": "core.author",
+  "pk": 1
+},
+{
+  "fields": {
+    "files": [
+      1,
+      2
+    ],
+    "subtitle": "rua_subtitle",
+    "series": null,
+    "competing_interests": "competing interest",
+    "prefix": "rua_prefix",
+    "production_editors": [],
+    "external_review_files": [
+      1
+    ],
+    "owner": 3,
+    "internal_review_files": [
+      1
+    ],
+    "subject": [
+      1
+    ],
+    "languages": [
+      124
+    ],
+    "review_form": 1,
+    "expected_completion_date": null,
+    "editorial_review_assignments": [],
+    "peer_review_override": false,
+    "title": "rua_title",
+    "pages": "",
+    "book_editors": [],
+    "editor": [],
+    "review_type": "open-with",
+    "proposal": null,
+    "submission_date": "2015-10-30",
+    "read_only_users": [],
+    "description": "rua description",
+    "reviewer_suggestions": "reviewer suggestion",
+    "misc_files": [
+      2
+    ],
+    "review_assignments": [
+      1
+    ],
+    "book_type": "monograph",
+    "publication_date": null,
+    "slug": "rua_title",
+    "stage": 1,
+    "cover_letter": "cover letter",
+    "license": 4,
+    "author": [
+      1
+    ],
+    "cover": "",
+    "contract": null,
+    "press_editors": [
+      2
+    ],
+    "submission_stage": 6,
+    "keywords": [
+      1
+    ]
+  },
+  "model": "core.book",
+  "pk": 1
+},
+{
+  "fields": {
+    "date_started": "2015-11-10T13:46:49.308Z",
+    "book": 1,
+    "round_number": 1
+  },
+  "model": "core.reviewround",
+  "pk": 1
+},
+{
+  "fields": {
+    "body": "",
+    "access_key": "",
+    "files": [
+      1
+    ],
+    "accepted_reminder": false,
+    "completed": null,
+    "reopened": false,
+    "due": "2015-10-31",
+    "results": null,
+    "assigned": "2015-11-10",
+    "competing_interests": "",
+    "unaccepted_reminder": false,
+    "book": 1,
+    "user": 4,
+    "recommendation": null,
+    "review_type": "external",
+    "review_round": 1,
+    "accepted": null,
+    "withdrawn": false,
+    "declined": null,
+    "overdue_reminder": false
+  },
+  "model": "core.reviewassignment",
+  "pk": 1
+},
+{
+  "fields": {
+    "files": [],
+    "requested": "2015-10-30",
+    "note_from_indexer": "",
+    "index_files": [],
+    "completed": null,
+    "due": "2015-10-31",
+    "indexer": 5,
+    "note": null,
+    "requestor": 2,
+    "book": 1,
+    "note_to_indexer": null,
+    "accepted": null,
+    "declined": null
+  },
+  "model": "core.indexassignment",
+  "pk": 1
+},
+{
+  "fields": {
+    "typesetter_completed": null,
+    "author_invited": null,
+    "note_to_author": "",
+    "declined": null,
+    "typesetter_files": [],
+    "typesetter_invited": null,
+    "due": null,
+    "note": "",
+    "requestor": 1,
+    "book": 1,
+    "typesetter": 5,
+    "files": [
+      2
+    ],
+    "requested": "2015-10-30",
+    "completed": null,
+    "editor_second_review": null,
+    "editor_review": null,
+    "author_completed": null,
+    "note_to_typesetter": "",
+    "accepted": null,
+    "author_files": [],
+    "note_from_author": "",
+    "author_due": null,
+    "note_from_typesetter": "",
+    "typeset_files": [
+      1
+    ]
+  },
+  "model": "core.typesetassignment",
+  "pk": 1
+},
+{
+  "fields": {
+    "code": "cc-4-by",
+    "name": "Creative Commons Attribution",
+    "short_name": "CC-BY",
+    "url": "http://creativecommons.org/licenses/by/4.0/",
+    "version": "4.0",
+    "description": "This license lets others distribute, remix, tweak, and build upon your work, even commercially, as long as they credit you for the original creation. This is the most accommodating of licenses offered. Recommended for maximum dissemination and use of licensed materials.\r\n"
+  },
+  "model": "core.license",
+  "pk": 2
+},
+{
+  "fields": {
+    "code": "cc-4-by-sa",
+    "name": "Creative Commons Attribution-ShareAlike",
+    "short_name": "CC-BY-SA",
+    "url": "http://creativecommons.org/licenses/by-sa/4.0/",
+    "version": "4.0",
+    "description": "This license lets others remix, tweak, and build upon your work even for commercial purposes, as long as they credit you and license their new creations under the identical terms. This license is often compared to \u201ccopyleft\u201d free and open source software licenses. All new works based on yours will carry the same license, so any derivatives will also allow commercial use. This is the license used by Wikipedia, and is recommended for materials that would benefit from incorporating content from Wikipedia and similarly licensed projects."
+  },
+  "model": "core.license",
+  "pk": 3
+},
+{
+  "fields": {
+    "code": "cc-4-by-nd",
+    "name": "Creative Commons Attribution-NoDerivs",
+    "short_name": "CC-BY-ND",
+    "url": "http://creativecommons.org/licenses/by-nd/4.0/",
+    "version": "4.0",
+    "description": "This license allows for redistribution, commercial and non-commercial, as long as it is passed along unchanged and in whole, with credit to you."
+  },
+  "model": "core.license",
+  "pk": 4
+},
+{
+  "fields": {
+    "code": "cc-4-by-nc",
+    "name": "Creative Commons Attribution-NonCommercial ",
+    "short_name": "CC-BY-NC",
+    "url": "http://creativecommons.org/licenses/by-nc/4.0/",
+    "version": "4.0",
+    "description": "This license lets others remix, tweak, and build upon your work non-commercially, and although their new works must also acknowledge you and be non-commercial, they don\u2019t have to license their derivative works on the same terms."
+  },
+  "model": "core.license",
+  "pk": 5
+},
+{
+  "fields": {
+    "code": "cc-4-by-nc-nd",
+    "name": "Creative Commons Attribution-NonCommercial-NoDerivs ",
+    "short_name": "CC-BY-NC-ND",
+    "url": "http://creativecommons.org/licenses/by-nc-nd/4.0/",
+    "version": "4.0",
+    "description": "This license is the most restrictive of our six main licenses, only allowing others to download your works and share them with others as long as they credit you, but they can\u2019t change them in any way or use them commercially."
+  },
+  "model": "core.license",
+  "pk": 6
+},
+{
+  "fields": {
+    "code": "cc-4-by-nd-sa",
+    "name": "Creative Commons Attribution-NonCommercial-ShareAlike ",
+    "short_name": "CC-BY-NC-SA",
+    "url": "http://creativecommons.org/licenses/by-nc-sa/4.0/",
+    "version": "4.0",
+    "description": "This license lets others remix, tweak, and build upon your work non-commercially, as long as they credit you and license their new creations under the identical terms."
+  },
+  "model": "core.license",
+  "pk": 7
+},
+{
+  "fields": {
+    "kind": "manuscript",
+    "description": null,
+    "date_modified": "2015-10-30T11:38:46.087Z",
+    "sequence": 1,
+    "uuid_filename": "6301cc01-5c89-4fc5-ae1b-c914bfe28988",
+    "label": "rua_manuscript",
+    "stage_uploaded": 1,
+    "mime_type": "unknown",
+    "original_filename": "test_manuscript",
+    "owner": 1,
+    "date_uploaded": "2015-10-30T11:38:35.509Z"
+  },
+  "model": "core.file",
+  "pk": 1
+},
+{
+  "fields": {
+    "kind": "additional",
+    "description": null,
+    "date_modified": "2015-10-30T11:39:21.747Z",
+    "sequence": 1,
+    "uuid_filename": "e666af5d-a678-4d15-be67-1ec4460243a5",
+    "label": "rua_additional_file",
+    "stage_uploaded": 1,
+    "mime_type": "unknown",
+    "original_filename": "test_manuscript",
+    "owner": 1,
+    "date_uploaded": "2015-10-30T11:39:13.939Z"
+  },
+  "model": "core.file",
+  "pk": 2
+},
+{
+  "fields": {
+    "name": "rua_subject"
+  },
+  "model": "core.subject",
+  "pk": 1
+},
+{
+  "fields": {
+    "name": "rua_keyword"
+  },
+  "model": "core.keyword",
+  "pk": 1
+},
+{
+  "fields": {
+    "publication": null,
+    "submission": "2015-10-30T11:39:55Z",
+    "review": "2015-10-30T11:49:55Z",
+    "external_review": null,
+    "indexing": null,
+    "production": null,
+    "current_stage": "review",
+    "copyediting": null,
+    "typesetting": null,
+    "internal_review": null,
+    "proposal": null,
+    "editing": null,
+    "editorial_review": null,
+    "declined": null
+  },
+  "model": "core.stage",
+  "pk": 1
+},
+{
+  "fields": {
+    "name": "Reader",
+    "slug": "reader"
+  },
+  "model": "core.role",
+  "pk": 1
+},
+{
+  "fields": {
+    "name": "Author",
+    "slug": "author"
+  },
+  "model": "core.role",
+  "pk": 2
+},
+{
+  "fields": {
+    "name": "Copyeditor",
+    "slug": "copyeditor"
+  },
+  "model": "core.role",
+  "pk": 3
+},
+{
+  "fields": {
+    "name": "Reviewer",
+    "slug": "reviewer"
+  },
+  "model": "core.role",
+  "pk": 4
+},
+{
+  "fields": {
+    "name": "Press Editor",
+    "slug": "press-editor"
+  },
+  "model": "core.role",
+  "pk": 5
+},
+{
+  "fields": {
+    "name": "Book Editor",
+    "slug": "book-editor"
+  },
+  "model": "core.role",
+  "pk": 6
+},
+{
+  "fields": {
+    "name": "Series Editor",
+    "slug": "series-editor"
+  },
+  "model": "core.role",
+  "pk": 7
+},
+{
+  "fields": {
+    "name": "Indexer",
+    "slug": "indexer"
+  },
+  "model": "core.role",
+  "pk": 8
+},
+{
+  "fields": {
+    "name": "Typesetter",
+    "slug": "typesetter"
+  },
+  "model": "core.role",
+  "pk": 9
+},
+{
+  "fields": {
+    "name": "Production Editor",
+    "slug": "production-editor"
+  },
+  "model": "core.role",
+  "pk": 10
+},
+{
+  "fields": {
+    "kind": "submission",
+    "short_name": "Submission Started",
+    "date_logged": "2015-10-30T11:37:51.067Z",
+    "book": 1,
+    "user": 1,
+    "message": "Submission Started",
+    "proposal": null
+  },
+  "model": "core.log",
+  "pk": 1
+},
+{
+  "fields": {
+    "kind": "submission",
+    "short_name": "Submission Completed",
+    "date_logged": "2015-10-30T11:39:55.785Z",
+    "book": 1,
+    "user": 1,
+    "message": "Submission of rua_title completed",
+    "proposal": null
+  },
+  "model": "core.log",
+  "pk": 2
+},
+{
+  "fields": {
+    "enabled": true,
+    "name": "general"
+  },
+  "model": "core.settinggroup",
+  "pk": 1
+},
+{
+  "fields": {
+    "enabled": true,
+    "name": "page"
+  },
+  "model": "core.settinggroup",
+  "pk": 2
+},
+{
+  "fields": {
+    "enabled": true,
+    "name": "email"
+  },
+  "model": "core.settinggroup",
+  "pk": 3
+},
+{
+  "fields": {
+    "enabled": true,
+    "name": "look"
+  },
+  "model": "core.settinggroup",
+  "pk": 4
+},
+{
+  "fields": {
+    "enabled": true,
+    "name": "cron"
+  },
+  "model": "core.settinggroup",
+  "pk": 5
+},
+{
+  "fields": {
+    "value": "The Press!",
+    "group": 1,
+    "name": "press_name",
+    "types": "char",
+    "description": null
+  },
+  "model": "core.setting",
+  "pk": 1
+},
+{
+  "fields": {
+    "value": "<p>Footer øö</p>",
+    "group": 1,
+    "name": "footer",
+    "types": "rich_text",
+    "description": null
+  },
+  "model": "core.setting",
+  "pk": 2
+},
+{
+  "fields": {
+    "value": "<h4>SUBMISSION PREPARATION CHECKLIST</h4><p> øö As part of the submission process, authors are required to check off their submission's compliance with all of the following items, and submissions may be returned to authors that do not adhere to these guidelines.</p><ul><li>The submission has not been previously published, nor is it before another press for consideration (or an explanation has been provided in Comments to the Editor).</li><li><span style=\"line-height: 1.42857;\">The submission file is in the Microsoft Word, RTF, OpenDocument, or WordPerfect file format.</span></li><li><span style=\"line-height: 1.42857;\">Where available, URLs for the references have been provided.</span></li><li><span style=\"line-height: 1.42857;\">The text is single-spaced; uses a 12-point font; employs italics, rather than underlining (except with URL addresses); and all illustrations, figures, and tables are placed within the text at the appropriate points, rather than at the end.</span></li><li><span style=\"line-height: 1.42857;\">The text adheres to the stylistic and bibliographic requirements outlined in the Author Guidelines, which is found in About the Press.</span></li></ul><h4>PRIVACY STATEMENT</h4><p>The names and email addresses entered in this press site will be used exclusively for the stated purposes of this press and will not be made available for any other purpose or to any other party.</p>",
+    "group": 1,
+    "name": "submission_guidelines",
+    "types": "rich_text",
+    "description": null
+  },
+  "model": "core.setting",
+  "pk": 3
+},
+{
+  "fields": {
+    "value": "<p>This is a øö description block where information about this press can be entered. This text block should be replace with text pulled from a database setting at some point, though for now I don't really need it to.</p>\r\n<p>This press has some specialities like publishing Alien Autopsy reports and April Fools reviews</p><p>BOOYA!</p>",
+    "group": 1,
+    "name": "description",
+    "types": "rich_text",
+    "description": null
+  },
+  "model": "core.setting",
+  "pk": 4
+},
+{
+  "fields": {
+    "value": "<p>Dear øö {{ review.user.first_name }} {{ review.user.last_name }},\r\n</p><p>\r\n__YOUR_MESSAGE_HERE__\r\n\r\nPlease log into the press web site to indicate whether you will undertake the review or not, as well as to access the submission and to record your review and recommendation.\r\n\r\nThe review itself is due {{ review.due }}.</p><p>\r\n\r\nThe Author has requested that this review be {{book.get_review_type_display}}.\r\n</p><p>\r\nPlease notify us if you intend to undertake the review by clicking this link: {{ decision_url }}\r\n</p><p>\r\nThank you for considering this request.\r\n</p><p>\r\nSincerely,</p><p>\r\nPress Team</p><p>{% if sender %}{{ sender.profile.signature|safe }}{% endif %}<br></p><p>\r\n</p>",
+    "group": 3,
+    "name": "review_request",
+    "types": "rich_text",
+    "description": null
+  },
+  "model": "core.setting",
+  "pk": 5
+},
+{
+  "fields": {
+    "value": "abp",
+    "group": 1,
+    "name": "accronym",
+    "types": "char",
+    "description": null
+  },
+  "model": "core.setting",
+  "pk": 6
+},
+{
+  "fields": {
+    "value": "localhost:8000",
+    "group": 1,
+    "name": "base_url",
+    "types": "text",
+    "description": null
+  },
+  "model": "core.setting",
+  "pk": 7
+},
+{
+  "fields": {
+    "value": "main@localhost.com",
+    "group": 3,
+    "name": "from_address",
+    "types": "rich_text",
+    "description": null
+  },
+  "model": "core.setting",
+  "pk": 8
+},
+{
+  "fields": {
+    "value": "Dear øö {{ review.user.first_name }} {{ review.user.last_name }},\r\n<br><br>__YOUR_MESSAGE_HERE__\r\n\r\nPlease log into the press web site to indicate whether you will undertake the review or not, as well as to access the submission and to record your review and recommendation.\r\n<br><br>The review itself is due {{ review.due }}.\r\n\r\nReview URL: {{ review_url }}\r\n<br><br>Thank you for considering this request.\r\n<br><br>Sincerely,\r\nPress Team\r\n",
+    "group": 3,
+    "name": "external_review_request",
+    "types": "rich_text",
+    "description": null
+  },
+  "model": "core.setting",
+  "pk": 9
+},
+{
+  "fields": {
+    "value": "on",
+    "group": 1,
+    "name": "ci_required",
+    "types": "boolean",
+    "description": null
+  },
+  "model": "core.setting",
+  "pk": 12
+},
+{
+  "fields": {
+    "value": "Test øö",
+    "group": 3,
+    "name": "proposal_review_request",
+    "types": "rich_text",
+    "description": null
+  },
+  "model": "core.setting",
+  "pk": 13
+},
+{
+  "fields": {
+    "value": "Dear øö {{submission.owner.first_name}} {{submission.owner.last_name}},\r\n<br><br>A contract has been uploaded by the Editor for you to review. Please login using the link below to review and sign off the contract.\r\n\r\n{{base_url}}/user/submission/{{submission.id}}\r\n\r\n<br><br>Regards<br>{% if sender %}{{ sender.profile.signature|safe }}{% endif %}<br>",
+    "group": 3,
+    "name": "contract_author_sign_off",
+    "types": "rich_text",
+    "description": null
+  },
+  "model": "core.setting",
+  "pk": 14
+},
+{
+  "fields": {
+    "value": "14",
+    "group": 5,
+    "name": "remind_unaccepted_reviews",
+    "types": "number",
+    "description": null
+  },
+  "model": "core.setting",
+  "pk": 15
+},
+{
+  "fields": {
+    "value": "<p>Dear øö {{review.user.profile.salutation}} {{review.user.last_name}},\r\n</p><p>\r\nThis is a gentle reminder that we requested you review a book for us called {{book.title}}. </p><p>This review is due to be completed by {{review.due:date\"c\"}}. </p><p>If you are unable to undertake this review, please let us know.\r\n</p><p>\r\nRegards,</p>",
+    "group": 3,
+    "name": "unaccepted_reminder",
+    "types": "rich_text",
+    "description": null
+  },
+  "model": "core.setting",
+  "pk": 16
+},
+{
+  "fields": {
+    "value": "7",
+    "group": 5,
+    "name": "remind_accepted_reviews",
+    "types": "number",
+    "description": null
+  },
+  "model": "core.setting",
+  "pk": 17
+},
+{
+  "fields": {
+    "value": "Dear øö {{review.user.profile.salutation}} {{review.user.last_name}},\r\n<br><br>This is a gentle reminder that you agreed to review a book for us called {{book.title}}. This review is due to be completed by {{review.due|date:\"c\"}}. If you are unable to undertake this review, please let us know.\r\n<br><br>Regards,<br>{% if sender %}{{ sender.profile.signature|safe }}{% endif %}<br>",
+    "group": 3,
+    "name": "accepted_reminder",
+    "types": "rich_text",
+    "description": null
+  },
+  "model": "core.setting",
+  "pk": 18
+},
+{
+  "fields": {
+    "value": "5",
+    "group": 5,
+    "name": "remind_overdue_reviews",
+    "types": "number",
+    "description": null
+  },
+  "model": "core.setting",
+  "pk": 19
+},
+{
+  "fields": {
+    "value": "<p>Dear øö {{review.user.profile.salutation}} {{review.user.last_name}},</p><p><br></p><p>This is a gentle reminder that you agreed to review a book for us called {{book.title}}. </p><p>This review is overdue, we requested that the review be completed by {{review.due|date:\"c\"}}. </p><p>If you are unable to undertake this review, please let us know.\r\n</p><p><br></p><p>\r\nRegards,</p>",
+    "group": 3,
+    "name": "overdue_reminder",
+    "types": "rich_text",
+    "description": null
+  },
+  "model": "core.setting",
+  "pk": 20
+},
+{
+  "fields": {
+    "value": "1",
+    "group": 1,
+    "name": "proposal_form",
+    "types": "number",
+    "description": null
+  },
+  "model": "core.setting",
+  "pk": 21
+},
+{
+  "fields": {
+    "value": "<p>Dear øö {{ revision.book.owner.first_name }} {{ revision.book.owner.last_name }},\r\n</p><p>\r\nWe think you should undertake some revisions to this article before it moves forward.\r\n</p><p>\r\nYou can submit revisions here: {{ revision_url }}\r\n</p><p>\r\nRegards,\r\n\r\n</p>",
+    "group": 3,
+    "name": "request_revisions",
+    "types": "rich_text",
+    "description": null
+  },
+  "model": "core.setting",
+  "pk": 22
+},
+{
+  "fields": {
+    "value": "14",
+    "group": 5,
+    "name": "revisions_reminder",
+    "types": "number",
+    "description": null
+  },
+  "model": "core.setting",
+  "pk": 23
+},
+{
+  "fields": {
+    "value": "<p>Dear øö {{review.user.profile.salutation}} {{review.user.last_name}},\r\n</p><p>\r\nThis is a gentle reminder that we requested you submit revisions for your book, {{book.title}}. </p><p>This revisions were due to be completed by {{review.due}}\r\n</p><p>\r\nRegards,</p>",
+    "group": 3,
+    "name": "revisions_reminder_email",
+    "types": "rich_text",
+    "description": null
+  },
+  "model": "core.setting",
+  "pk": 24
+},
+{
+  "fields": {
+    "value": "Dear øö {% if copyedit.copyeditor.profile.salutation %}{{copyedit.copyeditor.profile.salutation}}{% else %}{{copyedit.copyeditor.first_name}}{% endif %} {{copyedit.copyeditor.last_name}},\r\n<br><br>This is a request that you undertake copyediting on {{submission.title}}. Please login to the BMS, you will be directed to undertake your copyedit from the user dashboard.\r\n<br><br>Your username is: {{copyedit.copyeditor.username}}\r\n<br><br>Copyedits are requested to be completed by: {{copyedit.due}}.\r\n<br><br>Regards<br>{% if sender %}{{ sender.profile.signature|safe }}{% endif %}<br>",
+    "group": 3,
+    "name": "copyedit_request",
+    "types": "rich_text",
+    "description": null
+  },
+  "model": "core.setting",
+  "pk": 25
+},
+{
+  "fields": {
+    "value": "Hello øö Mr. Copyeditor. Please undertake this copyedit. You can download the files below and please upload the completed ones. If you have feedback for the Editor/Author fill in the notes box and this will be presented to both.<p></p>",
+    "group": 1,
+    "name": "copyedit_instructions",
+    "types": "rich_text",
+    "description": null
+  },
+  "model": "core.setting",
+  "pk": 26
+},
+{
+  "fields": {
+    "value": "<p>Dear øö {{ submission.owner.first_name }} {{ submission.owner.last_name }},\r\n<br><br>The copyeditor has completed their work. You can login and review the copyedits now.\r\n<br></p><p>Regards,<br>{% if sender %}{{ sender.profile.signature|safe }}{% endif %}<br></p>",
+    "group": 3,
+    "name": "author_copyedit_request",
+    "types": "rich_text",
+    "description": null
+  },
+  "model": "core.setting",
+  "pk": 27
+},
+{
+  "fields": {
+    "value": "<p>The øö Editor has requested that you approve some copyediting.</p>",
+    "group": 1,
+    "name": "copyedit_author_instructions",
+    "types": "rich_text",
+    "description": null
+  },
+  "model": "core.setting",
+  "pk": 28
+},
+{
+  "fields": {
+    "value": "Dear øö {% if index.indexer.profile.salutation %}{{index.indexer.profile.salutation}}{% else %}{{index.indexer.first_name}}{% endif %} {{index.indexer.last_name}},\r\n<br><br>This is a request that you undertake copyediting on {{submission.title}}. Please login to the BMS, you will be directed to undertake your copyedit from the user dashboard.<br><br>Your username is: {{index.indexer.username}}<br><br>Copyedits are requested to be completed by: {{index.due}}.\r\n<br><br>Regards",
+    "group": 3,
+    "name": "index_request",
+    "types": "rich_text",
+    "description": null
+  },
+  "model": "core.setting",
+  "pk": 29
+},
+{
+  "fields": {
+    "value": "<p>Please do øö some great indexing. Lots of love, Andy.</p>",
+    "group": 1,
+    "name": "index_instructions",
+    "types": "rich_text",
+    "description": null
+  },
+  "model": "core.setting",
+  "pk": 30
+},
+{
+  "fields": {
+    "value": "<p>Dear øö {% if typeset.typesetter.profile.salutation %}{{typeset.typesetter.profile.salutation}}{% else %}{{typeset.typesetter.first_name}}{% endif %} {{typeset.typesetter.last_name}},\r\n</p><p>\r\nThis is a request that you undertake copyediting on {{submission.title}}. </p><p>Please login to the BMS, you will be directed to undertake your copyedit from the user dashboard.\r\n\r\nYour username is: {{typeset.typesetter.username}}\r\n\r\nCopyedits are requested to be completed by: {{typeset.due}}.\r\n</p><p>\r\nRegards,</p><p>{% if sender %}{{ sender.profile.signature|safe }}{% endif %}<br></p>",
+    "group": 3,
+    "name": "typeset_request",
+    "types": "rich_text",
+    "description": null
+  },
+  "model": "core.setting",
+  "pk": 31
+},
+{
+  "fields": {
+    "value": "<p>Here øö are some instructions</p>",
+    "group": 1,
+    "name": "typeset_instructions",
+    "types": "rich_text",
+    "description": null
+  },
+  "model": "core.setting",
+  "pk": 32
+},
+{
+  "fields": {
+    "value": "Dear øö {{ submission.owner.first_name }} {{ submission.owner.last_name }},<br><br>The typesetter has completed their work. You can login and review the typeset files now.<br><br>Regards,<br><br>{% if sender %}{{ sender.profile.signature }}{% endif %}",
+    "group": 3,
+    "name": "author_typeset_request",
+    "types": "rich_text",
+    "description": null
+  },
+  "model": "core.setting",
+  "pk": 33
+},
+{
+  "fields": {
+    "value": "<p>DO øö SOMETHING! JUST. DO IT!<p>",
+    "group": 1,
+    "name": "typeset_author_instructions",
+    "types": "rich_text",
+    "description": null
+  },
+  "model": "core.setting",
+  "pk": 34
+},
+{
+  "fields": {
+    "value": "<p>Dear øö {{typeset.typesetter.profile.full_name}},\r\n</p><p>\r\nDO SOME TYPESETTING PLEASE!\r\n</p><p>\r\nRegards,</p>",
+    "group": 3,
+    "name": "typesetter_typeset_request",
+    "types": "rich_text",
+    "description": null
+  },
+  "model": "core.setting",
+  "pk": 35
+},
+{
+  "fields": {
+    "value": "<p>Dear øö {{ submission.owner.first_name }} {{ submission.owner.last_name }},\r\n<br><br>Your submission has been received. An Editor will be in touch soon with the next steps.<br><br><span style=\"line-height: 1.42857;\">Regards,&nbsp;</span></p><p>{{press.general.name}}</p>",
+    "group": 3,
+    "name": "author_submission_ack",
+    "types": "rich_text",
+    "description": null
+  },
+  "model": "core.setting",
+  "pk": 36
+},
+{
+  "fields": {
+    "value": "<p><span style=\"line-height: 1.42857;\">A øö new submission has been uploaded.\r\n\r\nView the submission: http://{{base_url}}/workflow/new/{{submission.id}}\r\n<br></span></p><p><span style=\"line-height: 1.42857;\">Regards,\r\n<br><br>RUA Bot</span><br></p>",
+    "group": 3,
+    "name": "editor_submission_ack",
+    "types": "rich_text",
+    "description": null
+  },
+  "model": "core.setting",
+  "pk": 37
+},
+{
+  "fields": {
+    "value": "<p> øö GO AWAY!</p><p>{% if sender %}{{ sender.profile.signature|safe }}{% endif %}<br></p>",
+    "group": 3,
+    "name": "proposal_accept",
+    "types": "rich_text",
+    "description": null
+  },
+  "model": "core.setting",
+  "pk": 39
+},
+{
+  "fields": {
+    "value": "dsfff øö",
+    "group": 3,
+    "name": "proposal_decline",
+    "types": "rich_text",
+    "description": null
+  },
+  "model": "core.setting",
+  "pk": 40
+},
+{
+  "fields": {
+    "value": "<p>Dear øö someone,øö\r\n</p><p>\r\nSomething something,\r\n</p><p>\r\nRegards,\r\n</p><p>\r\n{{ sender.profile.signature }}</p>",
+    "group": 3,
+    "name": "proposal_request_revisions",
+    "types": "rich_text",
+    "description": null
+  },
+  "model": "core.setting",
+  "pk": 41
+},
+{
+  "fields": {
+    "value": "afea9c80-b081-42e9-99bd-a4b710e6aafc..png",
+    "group": 4,
+    "name": "brand_header",
+    "types": "file",
+    "description": null
+  },
+  "model": "core.setting",
+  "pk": 42
+},
+{
+  "fields": {
+    "value": "0791a2db-c180-4fe5-a951-dc002ae08fd6..ico",
+    "group": 4,
+    "name": "favicon",
+    "types": "file",
+    "description": null
+  },
+  "model": "core.setting",
+  "pk": 43
+},
+{
+  "fields": {
+    "value": "Falkirk",
+    "group": 1,
+    "name": "city",
+    "types": "text",
+    "description": null
+  },
+  "model": "core.setting",
+  "pk": 44
+},
+{
+  "fields": {
+    "value": "<p>øö You must agree to the below terms in order to submit your book to this press.</p>",
+    "group": 1,
+    "name": "submission_checklist_help",
+    "types": "rich_text",
+    "description": null
+  },
+  "model": "core.setting",
+  "pk": 45
+},
+{
+  "fields": {
+    "value": "<p></p><p><span style=\"line-height: 1.42857;\">The øö book editor(s) assigned to submission {{submission.title}}<submission id:{{submission.id}}=\"\"> has been updated.</submission></span></p>\r\n{% if added_editors %}\r\n<p>These book editors have been added: </p>\r\n--------\r\n  {% for editor in added_editors %}\r\n        {{editor.first_name}} {% if editor.middle_name %}{{editor.middle_name}} {% endif %}{{editor.last_name}}&gt;{% if not forloop.last %}, {% endif %}\r\n\r\n    {% endfor %}\r\n----------\r\n\r\n{% endif %}\r\n{% if removed_editors %}<p></p><p>These book editors have been removed:</p><p>--------\r\n  {% for editor in removed_editors %}\r\n        {{editor.first_name}} {% if editor.middle_name %}{{editor.middle_name}} {% endif %}{{editor.last_name}}&gt;{% if not forloop.last %}, {% endif %}\r\n\r\n    {% endfor %}\r\n----------\r\n{% endif %}\r\n</p><p> \r\nTo view the submission, use the following link: http://{{base_url}}/editor/submission/{{submission.id}}/\r\n<br></p><p><span style=\"line-height: 1.42857;\">Regards,\r\n<br><br>RUA notification system</span><br></p><p></p>",
+    "group": 3,
+    "name": "book_editor_ack",
+    "types": "rich_text",
+    "description": "Email sent to editors when they are assigned to a book."
+  },
+  "model": "core.setting",
+  "pk": 46
+},
+{
+  "fields": {
+    "value": "<p>Dear {{ author.full_name }},\r\n</p><p>The øö Editorial team at&nbsp;{{press_name}} have recorded a decision on your book submission {{submission.title}}.\r\n</p><p>\r\nThe press decision is:</p><p>[PRESS EDITOR TO COMPLETE DECISION AND GIVE MORE DETAIL ON WHY THE DECISION HAS BEEN MADE HERE]<br>{{ link_to_page }}<br></p><p>\r\nRegards,\r\n</p><p>{{sender.first_name}}\r\n{% if sender %}{{ sender.profile.signature|safe }}{% endif %}<br></p>",
+    "group": 3,
+    "name": "decision_ack",
+    "types": "rich_text",
+    "description": "Email sent when a decision is made on a book."
+  },
+  "model": "core.setting",
+  "pk": 47
+},
+{
+  "fields": {
+    "value": "placeholder",
+    "group": 1,
+    "name": "oai_identifier",
+    "types": "char",
+    "description": "The Press' OAI identifier."
+  },
+  "model": "core.setting",
+  "pk": 48
+},
+{
+  "fields": {
+    "value": "<p>Dear øö {{ review.user.first_name }} {{ review.user.last_name }},\r\n</p><p>\r\nWe can confirm that the deadline for the book review that you have accepted has changed. Hopefully this fits what has been agreed </p>\r\n<p>\r\nReview id: {{review.id}}</p><p>Due Date: {{review.due}}\r\n</p>\r\n<p>Please let us know if it is not possible to meet this deadline as early as possible.<br></p><p>\r\nSincerely,</p><p>\r\n</p><p>{% if sender %}{{ sender.profile.signature|safe }}{% endif %}<br></p><p>\r\n</p>",
+    "group": 3,
+    "name": "review_due_ack",
+    "types": "rich_text",
+    "description": null
+  },
+  "model": "core.setting",
+  "pk": 49
+},
+{
+  "fields": {
+    "value": "on",
+    "group": 1,
+    "name": "direct_submissions",
+    "types": "boolean",
+    "description": "If enabled, authors/editors can make direct submissions to the press. If disabled, authors/editors must for make a proposal. "
+  },
+  "model": "core.setting",
+  "pk": 50
+},
+{
+  "fields": {
+    "value": "on",
+    "group": 1,
+    "name": "suggested_reviewers",
+    "types": "boolean",
+    "description": "Select to enable the suggest reviewers field during the first stage of a new submission. Deselect to disable the field."
+  },
+  "model": "core.setting",
+  "pk": 51
+},
+{
+  "fields": {
+    "value": "<p> øö If you have any suggestions about who could review this book, please add them here. Please ensure you include their email address, affiliation details and why they are suitable. Suggested reviewers must be wholly independent of the book project and must be from a separate affiliation than the authors/editors. All reviewers will be asked to declare any competing interests. The publisher does not guarantee to use these suggestions.</p>",
+    "group": 1,
+    "name": "suggested_reviewers_guide",
+    "types": "rich_text",
+    "description": null
+  },
+  "model": "core.setting",
+  "pk": 52
+},
+{
+  "fields": {
+    "value": "øö You can supply additional info about your manuscript files to help the editors and reviewers. Your label will be displayed for the editors to see.",
+    "group": 1,
+    "name": "manuscript_guidelines",
+    "types": "rich_text",
+    "description": "Set of guidelines to help the user upload a manuscript."
+  },
+  "model": "core.setting",
+  "pk": 53
+},
+{
+  "fields": {
+    "value": "You øö can supply additional info about your files to help the editors and reviewers. The label you provide will be displayed for the editors to see.",
+    "group": 1,
+    "name": "additional_files_guidelines",
+    "types": "rich_text",
+    "description": null
+  },
+  "model": "core.setting",
+  "pk": 54
+},
+{
+  "fields": {
+    "value": "on",
+    "group": 1,
+    "name": "preview_review_files",
+    "types": "boolean",
+    "description": "Select to enable previewing of assignment files before accepting or declining an assignment. Deselect to disable previewing of assignment files."
+  },
+  "model": "core.setting",
+  "pk": 55
+},
+{
+  "fields": {
+    "value": "fake_user@fakeadress.com",
+    "group": 1,
+    "name": "primary_contact_email",
+    "types": "text",
+    "description": "This is the primary email address of the system."
+  },
+  "model": "core.setting",
+  "pk": 56
+},
+{
+  "fields": {
+    "value": "rua_user_first_name rua_user_last_name",
+    "group": 1,
+    "name": "primary_contact_name",
+    "types": "text",
+    "description": "Primary contact, will be used in the footer of some system emails."
+  },
+  "model": "core.setting",
+  "pk": 57
+},
+{
+  "fields": {
+    "value": "Declining task øö",
+    "group": 3,
+    "name": "task_decline",
+    "types": "rich_text",
+    "description": null
+  },
+  "model": "core.setting",
+  "pk": 58
+},
+{
+  "fields": {
+    "value": "<p> øö Dear {{user.profile.full_name}},</p><p>A password reset request has been made for the {{press_name}} book management system.</p><p>Your reset code is : {{reset_code}}</p><p>Please click this link in order to continue the password reset process: {{reset_url}}</p>",
+    "group": 3,
+    "name": "reset_password",
+    "types": "rich_text",
+    "description": "Email sent to user when they request a password reset token."
+  },
+  "model": "core.setting",
+  "pk": 59
+},
+{
+  "fields": {
+    "value": "<p>Dear øö {{owner.profile.salutation_name}},</p><p>Thank you for submitting your book proposal, {{proposal.title}} {{proposal.subtitle}}, to {{press_name}}.</p><p>You will be able to track its progress through the proposal review process by logging in to website.\r\n\r\nYour proposal will be considered by our Editorial team, who my also seek external review of the proposal details. Following the completion of the review, you will be contacted with feedback and an editorial decision. Our editorial team will be in touch once this process has begun.</p><p>Should you have any questions regarding your book publication then please get in touch.</p><p>Kind regards,</p><p>{{principal_contact_name}}\r\n{{press_name}}</p>",
+    "group": 3,
+    "name": "proposal_submission_ack",
+    "types": "rich_text",
+    "description": null
+  },
+  "model": "core.setting",
+  "pk": 60
+},
+{
+  "fields": {
+    "value": "<p>Dear øö {{receiver.profile.full_name}},\r\n</p><p>\r\nProposal {{proposal.title}}&lt;{{proposal.id}}&gt; has been updated by {{sender.profile.full_name}}. All updates have been recorded via the book management system.<br></p><p>\r\nRegards,\r\n</p><p>\r\n{{ sender.profile.signature }}</p>",
+    "group": 3,
+    "name": "proposal_update_ack",
+    "types": "rich_text",
+    "description": null
+  },
+  "model": "core.setting",
+  "pk": 61
+},
+{
+  "fields": {
+    "value": "<p>Dear øö {{receiver.profile.full_name}},\r\n</p><p>\r\nProposal {{proposal.title}}&lt;{{proposal.id}}&gt; revisions have been submitted by {{sender.profile.full_name}}. Please log into the book management system to assess the revisions and progress the proposal through the next stage of the editorial process.<br></p><p>\r\nRegards,\r\n</p><p>\r\n{{ sender.profile.signature }}</p>",
+    "group": 3,
+    "name": "proposal_revision_submit_ack",
+    "types": "rich_text",
+    "description": null
+  },
+  "model": "core.setting",
+  "pk": 62
+},
+{
+  "fields": {
+    "value": "<p>Dear øö {{ editor.profile.full_name }} ,\r\n</p><p>\r\nYou have been assigned as production editor for the submission title '{{submission.title}}'. This book has now been moved into production and can be sent for typesetting. Please let me know if you require any information.<br></p><p>\r\nRegards,\r\n</p><p><br>{{sender.first_name}}\r\n{% if sender %}{{ sender.profile.signature|safe }}{% endif %}</p>",
+    "group": 3,
+    "name": "production_editor_ack",
+    "types": "rich_text",
+    "description": null
+  },
+  "model": "core.setting",
+  "pk": 63
+},
+{
+  "fields": {
+    "value": "<p>Dear øö {{user.profile.full_name}},</p><p>You have been assigned as the corresponding author for submission {{submission.title}} {% if submission.subtitle%}{{submission.subtitle}}{% endif %}, which is being processed by {{press_name}}.<br></p><p>A profile has been created for you with the below details and you will now be the main contact for correspondence and tasks related to the project from now:</p><p>Username is your email account.</p><p>Password : {{code}}</p><p>Please click this link in order to validate or reset your password: {{base_url}}/user/profile/resetpassword/\r\n</p><p>If you are not involved in this book project then please let us know.</p><p>Kind regards,</p><p>{{principal_contact_name}}\r\n{{press_name}}</p><p><br></p>",
+    "group": 3,
+    "name": "new_user_owner_email",
+    "types": "rich_text",
+    "description": "Email sent when the ownership of a book is changed."
+  },
+  "model": "core.setting",
+  "pk": 64
+},
+{
+  "fields": {
+    "value": "<p><p>Thank you øö for agreeing to complete the review of this book, we \r\nare very grateful. The book details should be available to you \r\nbelow. Review feedback can either be provided by completing the form on \r\nthe left or uploading a file with your comments. Notes can also be added\r\n to the editors. Once you are happy with your review then please click \r\nthe Complete button in the bottom right of the screen. If you have any \r\nquestions then please get in touch with the assigned Editorial Manager.</p></p>",
+    "group": 1,
+    "name": "instructions_for_task_review",
+    "types": "rich_text",
+    "description": null
+  },
+  "model": "core.setting",
+  "pk": 65
+},
+{
+  "fields": {
+    "value": "Thank you øö for agreeing to complete the review of this book proposal, we are very grateful. The proposal details should be available to you below. Review feedback can either be provided by completing the form on the left or uploading a file with your comments. Notes can also be added to the editors. Once you are happy with your review then please click the Complete button in the bottom right of the screen. If you have any questions then please get in touch with the assigned Editorial Manager.<br>",
+    "group": 1,
+    "name": "instructions_for_task_proposal",
+    "types": "rich_text",
+    "description": "Set of instructions displayed on the Proposal Review screen."
+  },
+  "model": "core.setting",
+  "pk": 66
+},
+{
+  "fields": {
+    "value": "Thank you øö for undertaking this typesetting project. You should have been fully briefed on the project requirements. Should you need more information then please contact the assigned Editor. The book files are available to you below.<br>",
+    "group": 1,
+    "name": "instructions_for_task_typeset",
+    "types": "rich_text",
+    "description": "Set of instructions displayed on the Typeset screen."
+  },
+  "model": "core.setting",
+  "pk": 67
+},
+{
+  "fields": {
+    "value": "<p><p>Thank you øö for agreeing to complete this indexing project. You should\r\n have been provided with the appropriate instructions by\r\n the assigned Editorial Manager for this project and the book files are \r\nprovided below. Once you have completed the indexing tasks then the \r\nrevised files can be uploaded using the relevant sections on the right \r\nof the screen, where you can also add notes back to the editor and \r\ncomplete the project. Should you need further assistance or have \r\nquestions, please get in touch.</p></p>",
+    "group": 1,
+    "name": "instructions_for_task_index",
+    "types": "rich_text",
+    "description": "Set of instructions displayed on the Indexing screen."
+  },
+  "model": "core.setting",
+  "pk": 68
+},
+{
+  "fields": {
+    "value": "<p><p>Thank you øö for agreeing to complete this copy-editing project. You should\r\n have been provided with the appropriate style-guide and instructions by\r\n the assigned Editorial Manager for this project and the book files are \r\nprovided below. Once you have completed the copy-editing tasks then the \r\nrevised files can be uploaded using the relevant sections on the right \r\nof the screen, where you can also add notes back to the editor and \r\ncomplete the project. Should you need further assistance or have \r\nquestions, please get in touch.</p></p>",
+    "group": 1,
+    "name": "instructions_for_task_copyedit",
+    "types": "rich_text",
+    "description": "Set of instructions displayed on the Copyedit screen,."
+  },
+  "model": "core.setting",
+  "pk": 69
+},
+{
+  "fields": {
+    "value": "<p>Dear øö {{user.profile.full_name}},</p><p>A profile has been created for you on the {{press_name}} book management system. The details are below:</p><p>\r\n\r\nUsername: {{user.username}}</p><p>Password: {{code}}</p><p>Please click this link if you to reset your password: {{base_url}}/user/profile/resetpassword/\r\n</p><p>If you did not create this account then please let us know.<br></p><p>Kind regards,</p><p>{{principal_contact_name}}\r\n{{press_name}}</p><p><br></p>",
+    "group": 3,
+    "name": "new_user_email",
+    "types": "rich_text",
+    "description": "Email sent to a new user."
+  },
+  "model": "core.setting",
+  "pk": 70
+},
+{
+  "fields": {
+    "value": "<h1>Competing Interests</h1><p>We øö are committed to transparent and bias-free research. To ensure that all publications are as open as possible all authors, reviewers and editors are required to declare any interests that could appear to compromise, conflict or influence the validity of the publication. This process is designed to reinforce the readers' trust in the research data.</p><p>Please declare any competing interests that you have. A conflict of interest must be declared if there is any reason why the information or the interpretation of information being produced may be influenced by a personal or financial relationship with other organisations or individuals, or if these relationships could be reasonably perceived from other people as having influencing objective data or decision-making. Everyone involved in the submission, editorial processing, peer review and publication should declare any competing interests that they may have as early as possible.</p><p>Competing interests can take the form of both financial and non-financial relationships. The declaration of such relationships helps to ensure that academic rigour is maintained and that publications cannot be accused of undue bias or misinformation.</p><p>Examples of competing interests:</p><ul><li>receipt of payment, in any form, from an organisation or individual related to the subject matter</li><li>ownership of stocks or shares in organisations directly related to the subject matter</li><li>receipt of grants or funding</li><li>membership of relevant boards</li><li>related patents/applied for patents</li><li>gifts</li><li>known relationships that will hinder impartiality (e.g. colleagues, family, mentor, previous supervisor/student).</li><li>political, religious, ideological interests</li><li>commercial</li></ul><p>Competing interests should generally be declared to cover <em>at least</em> the previous 5 years - e.g., if a reviewer supervised the author's PhD then (and if they feel comfortable reviewing the work) their professional relationship should have ended over 5 years ago. This is a minimum requirement, and individuals must declare if they have had a previous relationship with someone/an organisation relevant to the submission that could be deemed to influence decision making.</p><p><span style=\"text-decoration: underline;\"><strong>For authors</strong></span></p><p>Please add a competing interests statement into the appropriate section during the submission process. The authors\u2019 initials should be used to denote differing competing interests. For example:</p><p>\u201cTW completed paid consultancy work from [<em>company name</em>] as part of the data acquisition for this study. BH has minority shares in [<em>company name</em>], which part funded the research grant for this project. SM is a member of the editorial board for [<em>journal name</em>], which is on a voluntary basis. All other authors have no competing interests.\"</p><p>If there are no competing interests, please add the below statement:</p><p><strong>\u201c</strong>The authors declare that they have no competing interests.\u201d</p><p><span style=\"text-decoration: underline;\"><strong>For reviewers</strong></span></p><p>If you have any competing interests, please list them in the text box available on your reviewer page. For example:</p><p>\"I was previously employed by the laboratory that collected this data.\"</p><p>&nbsp;If you do not have competing interests, please add the below statement:</p><p>\"I have no competing interests to declare.\"</p><p>&nbsp;</p><p></p>",
+    "group": 2,
+    "name": "competing_interests",
+    "types": "rich_text",
+    "description": "dfdsf"
+  },
+  "model": "core.setting",
+  "pk": 71
+},
+{
+  "fields": {
+    "value": "7",
+    "group": 5,
+    "name": "notification_reminder",
+    "types": "number",
+    "description": ""
+  },
+  "model": "core.setting",
+  "pk": 72
+},
+{
+  "fields": {
+    "value": "Dear øö {{user.profile.salutation_name}}, \r\nYou currently have {{notification_count}} unread notifications on {{press_name}}.\r\n\r\n{{notifications}}\r\n\r\nYou can login to view them: {{base_url}}/login/\r\n\r\nRegards,\r\n\r\nRua Bot.",
+    "group": 3,
+    "name": "notification_reminder_email",
+    "types": "rich_text",
+    "description": ""
+  },
+  "model": "core.setting",
+  "pk": 73
+},
+{
+  "fields": {
+    "value": "An email has been sent with a user activation link. øö",
+    "group": 1,
+    "name": "registration_message",
+    "types": "rich_text",
+    "description": "Message that will be shown to users when they register."
+  },
+  "model": "core.setting",
+  "pk": 74
+},
+{
+  "fields": {
+    "value": "TERMS n CONDITIONS øö",
+    "group": 2,
+    "name": "terms-conditions",
+    "types": "rich_text",
+    "description": "Users need to agree to this at registration"
+  },
+  "model": "core.setting",
+  "pk": 75
+},
+{
+  "fields": {
+    "value": "tech@ubiquitypress.com;",
+    "group": 1,
+    "name": "publishing_committee",
+    "types": "text",
+    "description": "Publishing committee contacted during an editorial review assignment. Separate email addresses with this character ';'"
+  },
+  "model": "core.setting",
+  "pk": 76
+},
+{
+  "fields": {
+    "value": "<p>Dear øö {{ name }},\r\n</p><p>The management editor at&nbsp;{{press_name}} have recorded a decision on an editorial assignment that you are either assigned to or is part of your book submission {{submission.title}}.\r\n</p><p>\r\nThe press decision is:</p><p>[PRESS EDITOR TO COMPLETE DECISION AND GIVE MORE DETAIL ON WHY THE DECISION HAS BEEN MADE HERE]</p><p><span style=\"line-height: 1.42857;\">\r\n{{ link_to_page }} [DO NOT REMOVE link_to_page] </span></p><p>Regards,\r\n</p><p>{{sender.first_name}}\r\n{% if sender %}{{ sender.profile.signature|safe }}{% endif %}<br></p>",
+    "group": 3,
+    "name": "editorial_decision_ack",
+    "types": "rich_text",
+    "description": "Email sent when a decision is made on an editorial review assignment."
+  },
+  "model": "core.setting",
+  "pk": 77
+},
+
+{
+  "fields": {
+    "value": "on",
+    "group": 1,
+    "name": "submit_proposals",
+    "types": "boolean",
+    "description": "If enabled, authors/editors can submit proposals to the press. If disabled, authors/editors cannot submit proposals."
+  },
+  "model": "core.setting",
+  "pk": 78
+},
+{
+  "fields": {
+    "value": "on",
+    "group": 1,
+    "name": "review_type_selection",
+    "types": "boolean",
+    "description": "If enabled the review_type selection will appear on the start new submission page. if disabled the default  review type from the 'default_review_type' setting will be assigned to new submissions and review_type list will be hidden"
+  },
+  "model": "core.setting",
+  "pk": 79
+},
+{
+  "fields": {
+    "value": "open-with",
+    "group": 1,
+    "name": "default_review_type",
+    "types": "text",
+    "description": "Default review type used when review type selection is disabled"
+  },
+  "model": "core.setting",
+  "pk": 80
+},
+{
+  "fields": {
+    "proposal_fields": [
+      1,
+      2
+    ],
+    "intro_text": "introduction",
+    "completion_text": "completion",
+    "ref": "test-proposal",
+    "name": "rua_proposal_form"
+  },
+  "model": "core.proposalform",
+  "pk": 1
+},
+{
+  "fields": {
+    "field_type": "text",
+    "required": true,
+    "name": "rua_element",
+    "choices": ""
+  },
+  "model": "core.proposalformelement",
+  "pk": 1
+},
+{
+  "fields": {
+    "field_type": "text",
+    "required": false,
+    "name": "rua_element_2",
+    "choices": ""
+  },
+  "model": "core.proposalformelement",
+  "pk": 2
+},
+{
+  "fields": {
+    "help_text": "help",
+    "width": "col-md-6",
+    "order": 1,
+    "form": 1,
+    "element": 1
+  },
+  "model": "core.proposalformelementsrelationship",
+  "pk": 1
+},
+{
+  "fields": {
+    "help_text": "help",
+    "width": "col-md-12",
+    "order": 3,
+    "form": 1,
+    "element": 2
+  },
+  "model": "core.proposalformelementsrelationship",
+  "pk": 2
+},
+{
+  "fields": {
+    "from_address": "main@localhost.com",
+    "cc": "",
+    "bcc": "",
+    "content": "<p>Dear Ioannis Cleary,\r\n<br><br>Your submission has been received. An Editor will be in touch soon with the next steps.<br><br><span style=\"line-height: 1.42857;\">Regards,&nbsp;</span></p><p></p>",
+    "to": "[u'ioannis.cleary@ubiquitypress.com']",
+    "book": 1,
+    "attachment": [],
+    "proposal": null,
+    "sent": "2015-10-30T11:39:56.032Z",
+    "subject": "Submission Acknowledgement"
+  },
+  "model": "core.emaillog",
+  "pk": 1
+},
+{
+  "fields": {
+    "from_address": "main@localhost.com",
+    "cc": "",
+    "bcc": "",
+    "content": "<p><span style=\"line-height: 1.42857;\">A new submission has been uploaded.\r\n\r\nView the submission: http://localhost:8000/workflow/new/1\r\n<br></span></p><p><span style=\"line-height: 1.42857;\">Regards,\r\n<br><br>RUA Bot</span><br></p>",
+    "to": "[u'ioannis.cleary@ubiquitypress.com']",
+    "book": 1,
+    "attachment": [],
+    "proposal": null,
+    "sent": "2015-10-30T11:39:56.299Z",
+    "subject": "New Submission"
+  },
+  "model": "core.emaillog",
+  "pk": 2
+},
+{
+  "fields": {
+    "from_address": "main@localhost.com",
+    "cc": "",
+    "bcc": "",
+    "content": "<p><span style=\"line-height: 1.42857;\">A new submission has been uploaded.\r\n\r\nView the submission: http://localhost:8000/workflow/new/1\r\n<br></span></p><p><span style=\"line-height: 1.42857;\">Regards,\r\n<br><br>RUA Bot</span><br></p>",
+    "to": "[u'fake_editor@fakeaddress.com']",
+    "book": 1,
+    "attachment": [],
+    "proposal": null,
+    "sent": "2015-10-30T11:39:56.581Z",
+    "subject": "New Submission"
+  },
+  "model": "core.emaillog",
+  "pk": 3
+}
+]

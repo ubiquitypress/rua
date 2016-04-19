@@ -6,7 +6,47 @@
   {% include "author/production/public_files.html" with format_data=format_list format_type='format' %}
   <hr />
   <h4>Publication Chapters</h4>
-  {% include "author/production/public_files.html" with format_data=chapter_list format_type='chapter' %}
+<ul class="media-list manuscript-upload-states">
+  {% for chapter in chapter_list %}
+  <li class="media" style="background-color:rgb(230,230,230)">
+    <div class="media-left">
+      <span> <h2>
+        &nbsp; &nbsp;   <i class="fa fa-file-text-o" style="padding-bottom:5px"></i> <strong style="font-size: 22px">Chapter {{ chapter.sequence }}</strong> 
+      </span></h2>
+    </div>
+    <div class="media-body">
+
+        <div class="col-md-12">
+          <h4><a href="{% url 'author_view_chapter' submission.id chapter.id %}" class="btn btn-task pull-right" style="width:100px">View</a></h4>
+        </div>
+         
+    </div>
+    
+    <div class="button-block-center">
+     <hr />
+     <div class="col-md-6">
+
+            <strong>Blurb</strong>
+          <h5><strong>{% if chapter.blurb %}{{ chapter.blurb }}{% else %}None.{% endif %}</strong></h5>
+          </div>
+     <div class="col-md-6">
+
+           <div class="list-group">
+            <strong>Formats</strong>
+          {% for format in chapter.formats.all %}
+            <a class="list-group-item" href='{% url 'author_view_chapter_format' submission.id chapter.id format.id %}'><span class="badge">{{format.file_type}}</span>{{format.name}}</a>
+          {% endfor %}
+          </div>
+        </div>
+    
+    </div>
+    </li>
+    {% empty %}
+     <li style="background-color:rgb(230,230,230)">
+      <h5>&nbsp;&nbsp;&nbsp;No Chapters</h5>
+   </li>
+  {% endfor %}
+</ul>
   <hr />
   <h4>Cover Image Review</h4>
   <table class="table table-bordered table-condensed">

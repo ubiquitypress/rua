@@ -52,6 +52,7 @@
     {% endfor %}
   </table>
   {% endif %}
+   {% if press.general.editorial_assignment_feature %}
 <hr>
 <h2>Editorial Review Assignments {% if submission.start_editorial_review %}<a href="{% url 'editor_add_editorial_reviewers' submission.id %}" class="btn btn-sm btn-accept pull-right" style="margin-bottom:5px"><i class="fa fa-plus">&nbsp;</i>Create</a>{% endif%}</h2>
 
@@ -74,3 +75,4 @@
     <td colspan="4"> No assignments found.</td>
     {% endfor %}
     </table>
+  {% endif %}

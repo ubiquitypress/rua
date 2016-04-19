@@ -166,4 +166,19 @@ function popitup(url,title) {
 <script type="text/javascript">
     $(window.location.hash).modal('show')
 </script>
+
+<script src="{% static "js/tag-it.min.js" %}"></script>
+<script type="text/javascript">
+  $(document).ready(function() {
+      $("#disabled-tags").tagit(
+        {readOnly: true});
+  });
+</script>
+<script type="text/javascript">
+  $(document).ready(function() {
+      $("#disabled-stags").tagit(
+        {readOnly: true});
+  });
+</script>
+
 {% endblock js %}

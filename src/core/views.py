@@ -1104,7 +1104,7 @@ def versions_file(request, submission_id, file_id):
 @is_book_editor
 def view_log(request, submission_id):
     book = get_object_or_404(models.Book, pk=submission_id)
-    log_list = models.Log.objects.filter(book=book).order_by('-date_logged')
+    log_list = models.Log.objects.filter(Q(book=book) | Q(proposal=book.proposal)).order_by('-date_logged')
     email_list = models.EmailLog.objects.filter(Q(book=book) | Q(proposal=book.proposal)).order_by('-sent')
 
     template = 'editor/log.html'
@@ -1118,6 +1118,23 @@ def view_log(request, submission_id):
     return render(request, template, context)
 
 ## PROPOSALS ##
+@is_book_editor
+def view_proposal_log(request, proposal_id):
+    proposal = get_object_or_404(submission_models.Proposal, pk=proposal_id)
+    log_list = models.Log.objects.filter(proposal=proposal).order_by('-date_logged')
+    email_list = models.EmailLog.objects.filter(proposal=proposal).order_by('-sent')
+
+    template = 'editor/proposal_log.html'
+    context = {
+        'proposal': proposal,
+        'log_list': log_list,
+        'email_list': email_list,
+        'active': 'log',
+    }
+
+    return render(request, template, context)
+
+
 @is_editor
 def assign_proposal(request):
     proposal_form_id = models.Setting.objects.get(name='proposal_form').value
@@ -1461,9 +1478,13 @@ def start_proposal_review(request, proposal_id):
     start_form = submission_forms.ProposalStart()
 
     if request.POST:
-        start_form = submission_forms.ProposalStart(request.POST, instance=proposal)
+        start_form = submission_forms.ProposalStart(request.POST, request.FILES, instance=proposal)
         if start_form.is_valid():
-            blind = request.POST.get('blind')
+            if request.FILES.get('attachment'):
+                attachment = handle_proposal_file(request.FILES.get('attachment'), proposal, 'misc', request.user)
+            else:
+                attachment = None
+                blind = request.POST.get('blind')
             proposal = start_form.save(commit=False)
             proposal.date_review_started = timezone.now()
             due_date = request.POST.get('due_date')
@@ -1485,7 +1506,7 @@ def start_proposal_review(request, proposal_id):
                 try:
                     new_review_assignment.save()
                     proposal.review_assignments.add(new_review_assignment)
-                    logic.send_proposal_review_request(proposal, new_review_assignment, email_text)
+                    logic.send_proposal_review_request(proposal, new_review_assignment, email_text, attachment)
                 except IntegrityError:
                     messages.add_message(request, messages.WARNING, '%s %s is already a reviewer' % (reviewer.first_name, reviewer.last_name))
 
@@ -1504,7 +1525,7 @@ def start_proposal_review(request, proposal_id):
                     try:
                         new_review_assignment.save()
                         proposal.review_assignments.add(new_review_assignment)
-                        logic.send_proposal_review_request(proposal, new_review_assignment, email_text)
+                        logic.send_proposal_review_request(proposal, new_review_assignment, email_text, attachment = attachment)
                     except IntegrityError:
                         messages.add_message(request, messages.WARNING, '%s %s is already a reviewer' % (member.user.first_name, member.user.last_name))
 
@@ -1837,10 +1858,15 @@ def add_proposal_reviewers(request, proposal_id):
     
     if request.POST:
         if not proposal.review_form:
-            start_form = submission_forms.ProposalStart(request.POST, instance=proposal)
+            start_form = submission_forms.ProposalStart(request.POST, request.FILES, instance=proposal)
             if start_form.is_valid():
                 proposal = start_form.save(commit=False)
                 proposal.save()
+        if request.FILES.get('attachment'):
+            attachment = handle_proposal_file(request.FILES.get('attachment'), proposal, 'misc', request.user)
+        else:
+            attachment = None
+        print request.FILES
         due_date = request.POST.get('due_date')
         blind = request.POST.get('blind')
         reviewers = User.objects.filter(pk__in=request.POST.getlist('reviewer'))
@@ -1860,7 +1886,7 @@ def add_proposal_reviewers(request, proposal_id):
             try:
                 new_review_assignment.save()
                 proposal.review_assignments.add(new_review_assignment)
-                logic.send_proposal_review_request(proposal, new_review_assignment, email_text)
+                logic.send_proposal_review_request(proposal, new_review_assignment, email_text, attachment)
             except IntegrityError:
                 messages.add_message(request, messages.WARNING, '%s %s is already a reviewer' % (reviewer.first_name, reviewer.last_name))
 
@@ -1869,7 +1895,7 @@ def add_proposal_reviewers(request, proposal_id):
             members = manager_models.GroupMembership.objects.filter(group=committee)
             for member in members:
                 new_review_assignment = submission_models.ProposalReview(
-                    user=reviewer,
+                    user=member.user,
                     proposal=proposal,
                     due=due_date,
                     blind = blind,
@@ -1879,7 +1905,7 @@ def add_proposal_reviewers(request, proposal_id):
                 try:
                     new_review_assignment.save()
                     proposal.review_assignments.add(new_review_assignment)
-                    logic.send_proposal_review_request(proposal, new_review_assignment, email_text)
+                    logic.send_proposal_review_request(proposal, new_review_assignment, email_text, attachment)
                 except IntegrityError:
                     messages.add_message(request, messages.WARNING, '%s %s is already a reviewer' % (member.user.first_name, member.user.last_name))
 

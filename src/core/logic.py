@@ -9,7 +9,7 @@ from django.template import Context, Template
 from django.utils.encoding import smart_text
 from django.shortcuts import redirect, render, get_object_or_404
 from django.core.urlresolvers import reverse
-
+from operator import itemgetter
 from core.decorators import is_copyeditor, is_typesetter, is_indexer
 from core import models
 from core.cache import cache_result
@@ -556,7 +556,11 @@ def build_time_line_editing_copyedit(copyedit):
 		timeline.append({'stage': 'Requested', 'date': copyedit.requested,'overdue':overdue   })
 		timeline.append({'stage': 'Declined', 'date': copyedit.declined,'declined': True })
 		
-	return timeline
+	clean_timeline = []
+	for time in timeline:
+		if time['date']:
+			clean_timeline.append(time)
+	return sorted(clean_timeline, key=lambda k: k['date'])
 
 def build_time_line_editing_indexer(index):
 	timeline = []
@@ -579,8 +583,13 @@ def build_time_line_editing_indexer(index):
 	else:
 		timeline.append({'stage': 'Declined', 'date': index.declined,'declined': True  })
 		timeline.append({'stage': 'Due', 'date': index.due,'overdue':overdue   })
+	
+	clean_timeline = []
+	for time in timeline:
+		if time['date']:
+			clean_timeline.append(time)
+	return sorted(clean_timeline, key=lambda k: k['date']) 
 
-	return timeline
 def build_time_line(book):
 	timeline = []
 	if book.stage:
@@ -596,13 +605,19 @@ def build_time_line(book):
 		timeline.append({'stage': 'Review', 'date': book.stage.review})
 		if book.proposal:
 			timeline.append({'stage': 'Proposal Submitted', 'date': book.proposal.date_submitted})
+			timeline.append({'stage': 'Proposal Review Started', 'date': book.proposal.date_review_started})
 			timeline.append({'stage': 'Proposal Accepted', 'date': book.proposal.date_accepted})
-		timeline.append({'stage': 'Submission', 'date': book.stage.submission})
+		timeline.append({'stage': 'Book Submitted', 'date': book.stage.submission})
 		timeline.append({'stage': 'Proposal', 'date': book.stage.proposal})
-	return timeline
+	
+	clean_timeline = []
+	for time in timeline:
+		if time['date']:
+			clean_timeline.append(time)
+	return sorted(clean_timeline, key=lambda k: k['date']) 
 
 # Email handler - should be moved to logic!
-def send_proposal_review_request(proposal, review_assignment, email_text):
+def send_proposal_review_request(proposal, review_assignment, email_text, attachment = None):
 	from_email = models.Setting.objects.get(group__name='email', name='from_address')
 	base_url = models.Setting.objects.get(group__name='general', name='base_url')
 	press_name = models.Setting.objects.get(group__name='general', name='press_name').value
@@ -615,7 +630,7 @@ def send_proposal_review_request(proposal, review_assignment, email_text):
 		'proposal': proposal,
 		'press_name': press_name,
 	}
-	email.send_email('Proposal Review Request', context, from_email.value, review_assignment.user.email, email_text)
+	email.send_email('Proposal Review Request', context, from_email.value, review_assignment.user.email, email_text, proposal = proposal, attachment = attachment)
 
 #### WORKFLOW Logic #####
 
