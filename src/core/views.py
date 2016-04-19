@@ -19,7 +19,7 @@ from review import models as review_models
 from core import log, models, forms, logic
 from author import orcid
 from email import send_email,send_reset_email
-from files import handle_file_update, handle_attachment, handle_file, handle_proposal_file, handle_proposal_file_form
+from files import handle_file_update, handle_attachment, handle_file, handle_proposal_review_file, handle_proposal_file, handle_proposal_file_form
 from submission import models as submission_models
 from core.decorators import is_reviewer, is_editor, is_book_editor, is_book_editor_or_author, is_onetasker,is_author, is_press_editor
 from review import forms as review_forms
@@ -1797,7 +1797,7 @@ def view_proposal_review(request, proposal_id, assignment_id):
         return serve_proposal_file(request, path)
     elif request.POST:
         form = review_forms.GeneratedForm(request.POST, request.FILES, form=proposal.review_form)
-        recommendation_form = forms.RecommendationForm(request.POST, ci_required=ci_required.value)
+        recommendation_form = forms.RecommendationForm(request.POST, request.FILES, ci_required=ci_required.value)
         if form.is_valid() and recommendation_form.is_valid():
             save_dict = {}
             file_fields = review_models.FormElementsRelationship.objects.filter(form=proposal.review_form, element__field_type='upload')
@@ -1816,9 +1816,9 @@ def view_proposal_review(request, proposal_id, assignment_id):
             json_data = smart_text(json.dumps(save_dict))
             form_results = review_models.FormResult(form=proposal.review_form, data=json_data)
             form_results.save()
-
-            #if request.FILES.get('review_file_upload'):
-            #   handle_review_file(request.FILES.get('review_file_upload'), submission, review_assignment, 'reviewer')
+            review_file = None
+            if request.FILES.get('review_file_upload'):
+                review_file = handle_proposal_review_file(request.FILES.get('review_file_upload'), review_assignment, 'reviewer', request.user)
 
             review_assignment.completed = timezone.now()
             if not review_assignment.accepted:
@@ -1827,6 +1827,8 @@ def view_proposal_review(request, proposal_id, assignment_id):
             review_assignment.competing_interests = request.POST.get('competing_interests')
             review_assignment.results = form_results
             review_assignment.reopened = False
+            if review_file:
+                review_assignment.files.add(review_file)
             review_assignment.save()
             message = "Review assignment for proposal '%s' has been completed by %s ."  % (review_assignment.proposal.title,review_assignment.user.profile.full_name())
             notification = models.Task(assignee=review_assignment.proposal.requestor,creator=request.user,text=message,workflow='proposal')
