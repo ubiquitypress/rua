@@ -1628,7 +1628,13 @@ def view_completed_proposal_review(request, proposal_id, assignment_id):
     proposal_form.initial = intial_data
     review_assignment = get_object_or_404(submission_models.ProposalReview, pk=assignment_id, withdrawn = False)
     result = review_assignment.results
-    form = review_forms.GeneratedForm(form=review_assignment.review_form)
+    if review_assignment.review_form:
+        form = review_forms.GeneratedForm(form=review_assignment.review_form)
+    else:
+        review_assignment.review_form = proposal.review_form
+        review_assignment.save()
+        form = review_forms.GeneratedForm(form=proposal.review_form)
+
 
     ci_required = models.Setting.objects.get(group__name='general', name='ci_required')
     recommendation_form = forms.RecommendationForm(ci_required=ci_required.value)
@@ -1764,9 +1770,13 @@ def view_proposal_review(request, proposal_id, assignment_id):
     proposal_form.initial=intial_data
     review_assignment = get_object_or_404(submission_models.ProposalReview, pk=assignment_id, withdrawn = False)
     result = review_assignment.results
-
-    form = review_forms.GeneratedForm(form=review_assignment.review_form)
-    
+    if review_assignment.review_form:
+        form = review_forms.GeneratedForm(form=review_assignment.review_form)
+    else:
+        review_assignment.review_form = proposal.review_form
+        review_assignment.save()
+        form = review_forms.GeneratedForm(form=proposal.review_form)
+        
     if review_assignment.reopened:
         result = review_assignment.results
         if result:

@@ -156,9 +156,13 @@ def review(request, review_type, submission_id, review_round, access_key=None):
 				return redirect(reverse('reviewer_decision_without', kwargs={'review_type': review_type, 'submission_id': submission.pk,'review_assignment':review_assignment.pk}))
 	
 	editors = logic.get_editors(review_assignment)
+	if review_assignment.review_form:
+		form = forms.GeneratedForm(form=review_assignment.review_form)
+	else:
+		review_assignment.review_form = submission.review_form
+		review_assignment.save()
+		form = review_forms.GeneratedForm(form=submission.review_form)
 
-	form = forms.GeneratedForm(form=review_assignment.review_form)
-	
 	if review_assignment.reopened:
 		result = review_assignment.results
 		if result:
@@ -293,6 +297,10 @@ def review_complete(request, review_type, submission_id,review_round,access_key=
 
 	relations = models.FormElementsRelationship.objects.filter(form=result.form)
 	data_ordered = core_logic.order_data(core_logic.decode_json(result.data), relations)
+	
+	if not review_assignment.review_form:
+		review_assignment.review_form = submission.review_form
+		review_assignment.save()
 
 	template = 'review/complete.html'
 	context = {
@@ -331,6 +339,10 @@ def review_complete_no_redirect(request, review_type, submission_id,review_round
 	
 	relations = models.FormElementsRelationship.objects.filter(form=result.form)
 	data_ordered = core_logic.order_data(core_logic.decode_json(result.data), relations)
+
+	if not review_assignment.review_form:
+		review_assignment.review_form = submission.review_form
+		review_assignment.save()
 
 	template = 'review/complete.html'
 	context = {
@@ -546,9 +558,11 @@ def editorial_review_complete(request, submission_id, access_key):
 	if access_key  == review_assignment.editorial_board_access_key:
 		editorial_board = True
 		result = review_assignment.editorial_board_results
+		review_form = review_assignment.editorial_board_review_form
 	elif access_key  == review_assignment.publishing_committee_access_key:
 		editorial_board = False
 		result = review_assignment.publication_committee_results
+		review_form = review_assignment.publication_committee_review_form
 
 	
 	if not result and not editorial_board:
@@ -569,7 +583,7 @@ def editorial_review_complete(request, submission_id, access_key):
 	context = {
 		'submission': submission,
 		'review_assignment': review_assignment,
-		'form_info': review_assignment.review_form,
+		'form_info': review_form,
 		'data_ordered': data_ordered,
 		'result': result,
 		'editorial_board':editorial_board,
@@ -591,7 +605,12 @@ def create_completed_review_form(submission,review_id):
 	document = Document()
 	document.add_heading(submission.title, 0)
 	review_assignment = get_object_or_404(core_models.ReviewAssignment, pk=review_id)
-	relations = models.FormElementsRelationship.objects.filter(form=review_assignment.review_form).order_by('order')
+	if review_assignment.review_form:
+		relations = models.FormElementsRelationship.objects.filter(form=review_assignment.review_form).order_by('order')
+	else:
+		review_assignment.review_form = submission.review_form
+		review_assignment.save()
+		relations = models.FormElementsRelationship.objects.filter(form=submission.review_form).order_by('order')
 	
 	if review_assignment.results:
 		p = document.add_paragraph('%s completed this review assignment form.'% review_assignment.user.profile.full_name())
