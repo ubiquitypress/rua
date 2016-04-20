@@ -14,7 +14,6 @@ urlpatterns = patterns('',
 	url(r'^(?P<review_type>[-\w]+)/(?P<submission_id>\d+)/assignment/(?P<review_assignment>\d+)/access_key/(?P<access_key>[-\w+]+)/decision/$', 'review.views.reviewer_decision', name='reviewer_decision_without_access_key'),
 	url(r'^(?P<review_type>[-\w]+)/(?P<submission_id>\d+)/assignment/(?P<review_assignment>\d+)/access_key/(?P<access_key>[-\w+]+)/decision/(?P<decision>[-\w]+)/$', 'review.views.reviewer_decision', name='reviewer_decision_with_access_key'),
 
-	
 	# Review	
 	url(r'^(?P<review_type>[-\w]+)/(?P<submission_id>\d+)/review-round/(?P<review_round>\d+)/access_key/(?P<access_key>[-\w+]+)/$', 'review.views.review', name='review_with_access_key'),
 	url(r'^(?P<review_type>[-\w]+)/(?P<submission_id>\d+)/review-round/(?P<review_round>\d+)/$', 'review.views.review', name='review_without_access_key'),
@@ -26,4 +25,8 @@ urlpatterns = patterns('',
 	#Editorial
 	url(r'^editorial/(?P<submission_id>\d+)/access_key/(?P<access_key>[^/]+)/$', 'review.views.editorial_review', name='editorial_review'),
 	url(r'^editorial/(?P<submission_id>\d+)/access_key/(?P<access_key>[^/]+)/complete/$', 'review.views.editorial_review_complete', name='editorial_review_complete'),
+	#Other
+	url(r'^download/(?P<review_type>[-\w]+)/(?P<submission_id>\d+)/assignment/(?P<review_id>\d+)/$', 'review.views.generate_review_form', name='generate_review_form'),
+	url(r'^download/(?P<review_type>[-\w]+)/(?P<submission_id>\d+)/assignment/(?P<review_id>\d+)/access_key/(?P<access_key>[-\w+]+)/$', 'review.views.generate_review_form', name='generate_review_form_access_key'),
+	
 )

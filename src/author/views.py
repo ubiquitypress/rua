@@ -85,8 +85,8 @@ def view_review_round(request, submission_id, round_id):
 	reviews = models.ReviewAssignment.objects.filter(book=book, review_round__book=book, review_round__round_number=round_id)
 
 	review_rounds = models.ReviewRound.objects.filter(book=book).order_by('-round_number')
-	internal_review_assignments = models.ReviewAssignment.objects.filter(book=book, review_type='internal', review_round__round_number=round_id).select_related('user', 'review_round')
-	external_review_assignments = models.ReviewAssignment.objects.filter(book=book, review_type='external', review_round__round_number=round_id).select_related('user', 'review_round')
+	internal_review_assignments = models.ReviewAssignment.objects.filter(book=book, review_type='internal', review_round__round_number=round_id, hide=False).select_related('user', 'review_round')
+	external_review_assignments = models.ReviewAssignment.objects.filter(book=book, review_type='external', review_round__round_number=round_id, hide=False).select_related('user', 'review_round')
 
 	template = 'author/submission.html'
 	context = {
@@ -109,6 +109,10 @@ def view_review_assignment(request, submission_id, round_id, review_id):
 	submission = get_object_or_404(models.Book, pk=submission_id, owner=request.user)
 	review_assignment = get_object_or_404(models.ReviewAssignment, pk=review_id)
 	review_rounds = models.ReviewRound.objects.filter(book=submission).order_by('-round_number')
+	
+	if review_assignment.hide:
+		return redirect(reverse('view_review_round', kwargs={'submission_id': submission_id, 'round_id': round_id}))
+
 	result = review_assignment.results
 	if result:
 		relations = review_models.FormElementsRelationship.objects.filter(form=result.form)
@@ -123,6 +127,7 @@ def view_review_assignment(request, submission_id, round_id, review_id):
 		data_ordered = order_data(decode_json(result.data), relations)
 	else:
 		data_ordered = None
+
 	template = 'author/submission.html'
 	context = {
 		'author_include': 'author/review_revision.html',

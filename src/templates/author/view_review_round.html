@@ -7,7 +7,6 @@
 
 <ul class="manuscript-upload-states">
   {% for review in internal_review_assignments %}
-  {% if not review.hide %}
   <li>
     <div class="row">
       <div class="col-md-7">
@@ -28,12 +27,10 @@
         </p>
       </div>
       <div class="col-md-4">
-        {% if not review.completed %}<h5>Due: {{ review.due }}</h5>{% else %}<a href="{% url 'view_review_assignment' submission.id review_round.round_number review.id %}" style="margin-top: 20px;margin-right:10px;" class="btn btn-xs btn-success">View Review</a>{% endif %}
+        {% if not review.completed %}<h5>Due: {{ review.due }}</h5>{% else %}<a href="{% url 'view_review_assignment' submission.id review_round.round_number review.id %}" style="margin-top: 20px;margin-right:10px;" class="btn btn-xs btn-success">View Review</a> <br> <a href="{% url 'view_review_assignment' submission.id review_round.round_number review.id %}" class="btn btn-xs btn-info"></a>{% endif %}
       </div>
     </div>
   </li>
-
-  {% endif %}
   {% empty %}
   <li>
   <p>
@@ -55,7 +52,6 @@
 
 <ul class="manuscript-upload-states">
   {% for review in external_review_assignments %}
-  {% if not review.hide %}
   <li>
     <div class="row">
       <div class="col-md-7">
@@ -80,8 +76,6 @@
       </div>
     </div>
   </li>
-  
-  {% endif %}
   {% empty %}
   <li>
   <p>
