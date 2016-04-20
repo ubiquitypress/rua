@@ -135,7 +135,14 @@
             <li role="presentation"><a href="#peer-review" aria-controls="home" role="tab" data-toggle="tab">Peer Review</a></li>
             <li role="presentation"><a href="{% url 'catalog_marc21' submission.id %}" role="tab">Marc 21</a></li>
           </ul>
+          {% if submission.stage.current_stage == 'published' %}
+          <br>
+          <div class="alert alert-warning">
+            <strong>Warning!</strong> Any changes made here will affect the data of the published book.
+          </div>
 
+          <br>
+          {% endif %}
           <!-- Tab panes -->
           <div class="tab-content">
             <div role="tabpanel" class="tab-pane active" id="metadata">
@@ -153,7 +160,7 @@
                   <div class="row">
                      
                     
-                    <div class="col-md-4 pull-left" style="margin-top:-25px;margin-bottom:18px">
+                    <div class="col-md-6 pull-left" style="margin-top:-10px;margin-bottom:18px">
                        <b>Owner: </b>{{submission.owner.profile.full_name}}
                     <a href="{% url 'editor_change_owner' submission.id %}" class="btn btn-xs btn-view" style="margin-left:2.5px"> Change</a> 
                   </div></div>
