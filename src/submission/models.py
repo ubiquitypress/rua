@@ -140,8 +140,9 @@ class ProposalReview(models.Model):
 	blind = models.NullBooleanField(default=False, blank=True, null=True)
 	requestor = models.ForeignKey(User, null=True,blank=True,related_name="review_requestor")
 	review_form = models.ForeignKey('review.Form', null=True, blank=True)
-		
 
+	hide = models.BooleanField(default=False)
+	
 	#Reopened
 	comments_from_editor = models.TextField(blank=True, null=True, help_text="If any editors have any comments for the reviewer")
 	reopened = models.BooleanField(default=False)

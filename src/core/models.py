@@ -480,6 +480,8 @@ class ReviewAssignment(models.Model):
 	accepted_reminder = models.BooleanField(default=False)
 	overdue_reminder = models.BooleanField(default=False)
 
+	hide = models.BooleanField(default=False)
+
 	#Reopened
 	reopened = models.BooleanField(default=False)
 	withdrawn = models.BooleanField(default=False)

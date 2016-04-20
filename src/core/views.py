@@ -1755,6 +1755,17 @@ def proposal_add_editors(request, proposal_id):
 
     return render(request, template, context)
 
+@is_book_editor
+def hide_review(request, proposal_id, assignment_id):
+    proposal = get_object_or_404(submission_models.Proposal, pk=proposal_id)
+    review_assignment = get_object_or_404(submission_models.ProposalReview, pk=assignment_id, withdrawn = False)
+    if review_assignment.hide == True:
+        review_assignment.hide = False
+    else:
+        review_assignment.hide == True
+    review_assignment.save()
+    return redirect(reverse('editor_review_round', kwargs={'submission_id': submission_id, 'round_number': submission.get_latest_review_round()}))
+
 
 @is_reviewer
 def view_proposal_review(request, proposal_id, assignment_id):

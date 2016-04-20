@@ -579,6 +579,18 @@ def editor_review_round_reopen(request, submission_id, round_number,review_id):
 	return redirect(reverse('editor_review_round', kwargs={'submission_id': submission_id, 'round_number': submission.get_latest_review_round()}))
 
 @is_book_editor
+def hide_review(request, submission_id, round_id, review_id):
+	submission = get_object_or_404(models.Book, pk=submission_id)
+	review_assignment = get_object_or_404(models.ReviewAssignment, pk=review_id)
+	if review_assignment.hide == True:
+		review_assignment.hide = False
+	else:
+		review_assignment.hide == True
+	review_assignment.save()
+	return redirect(reverse('editor_review_round', kwargs={'submission_id': submission_id, 'round_number': submission.get_latest_review_round()}))
+
+
+@is_book_editor
 def update_review_due_date(request, submission_id, round_id, review_id):
 	submission = get_object_or_404(models.Book, pk=submission_id)
 	review_assignment = get_object_or_404(models.ReviewAssignment, pk=review_id)
