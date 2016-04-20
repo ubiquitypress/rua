@@ -58,6 +58,9 @@
                 <div class="col-md-8 pull-right form-group">
                     <select name="filter" class="form-control" onchange="this.form.submit()">
                         <option value="">------</option>
+                        <option value="live" {% if filterby = 'live' %}selected="selected"{% endif %}>Live Submissions</option>
+                        <option value="inprogress" {% if filterby = 'inprogress' %}selected="selected"{% endif %}>Submissions In Progress</option>
+                        <option value="revisions" {% if filterby = 'revisions' %}selected="selected"{% endif %}>Revisions</option>
                         <option value="submission" {% if filterby = 'submission' %}selected="selected"{% endif %}>New Submission</option>
                         <option value="review" {% if filterby = 'review' %}selected="selected"{% endif %}>Review</option>
                         <option value="editing" {% if filterby = 'editing' %}selected="selected"{% endif %}>Editing</option>

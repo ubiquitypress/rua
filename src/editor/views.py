@@ -39,7 +39,16 @@ def editor_dashboard(request):
 	query_list = []
 
 	if filterby:
-		query_list.append(Q(stage__current_stage=filterby))
+		if filterby == 'live':
+			query_list.append(Q(stage__current_stage__isnull=False))
+		elif filterby == 'inprogress':
+			query_list.append(Q(stage__current_stage__isnull=True))
+		else:
+			if not filterby == 'revisions':
+				query_list.append(Q(stage__current_stage=filterby))
+			else:
+				query_list.append(Q(stage__current_stage__isnull=False))
+
 
 	if search:
 		query_list.append(Q(title__contains=search) | Q(subtitle__contains=search) | Q(prefix__contains=search))
@@ -48,7 +57,15 @@ def editor_dashboard(request):
 		query_list.append(Q(book_editors__in=[request.user]))
 
 	if query_list:
-		book_list = models.Book.objects.filter(publication_date__isnull=True).filter(*query_list).exclude(stage__current_stage='declined').select_related('stage').select_related('owner__profile').order_by(order)
+		list_of_books = models.Book.objects.filter(publication_date__isnull=True).filter(*query_list).exclude(stage__current_stage='declined').select_related('stage').select_related('owner__profile').order_by(order)
+		book_list = []
+		for book in list_of_books:
+			if filterby == 'revisions':
+				if book.revisions_requested():
+					book_list.append(book)
+			else:
+				if not book.revisions_requested():
+					book_list.append(book)
 	else:
 		book_list = models.Book.objects.filter(publication_date__isnull=True).exclude(stage__current_stage='declined').select_related('stage').order_by(order)
 
