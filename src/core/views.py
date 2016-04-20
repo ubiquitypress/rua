@@ -720,8 +720,12 @@ def email_users(request, group, submission_id=None, user_id=None):
 @login_required
 def email_users_proposal(request, proposal_id, user_id):
     proposal = get_object_or_404(submission_models.Proposal, pk=proposal_id)
+    proposal_reviews = submission_models.ProposalReview.objects.filter(proposal=proposal)
     users = User.objects.all()
     user = User.objects.get(pk = user_id)
+    list_of_reviewers = []
+    for review in proposal_reviews:
+        list_of_reviewers.append(review.user)
     to_value=""
     sent = False
     if request.POST:
@@ -749,7 +753,7 @@ def email_users_proposal(request, proposal_id, user_id):
             message ="E-mail with subject '%s' was sent." % (subject)
             return HttpResponse('<script type="text/javascript">window.alert("'+message+'")</script><script type="text/javascript">window.close()</script>') 
 
-    if not proposal.owner == user and not proposal.requestor == user :
+    if not proposal.owner == user and not proposal.requestor == user and user not in list_of_reviewers :
         messages.add_message(request, messages.ERROR, "This user is not associated with this proposal")
     else:
         to_value="%s;" % (user.email)
