@@ -7,6 +7,7 @@
 
 <ul class="manuscript-upload-states">
   {% for review in internal_review_assignments %}
+  {% if not review.hide %}
   <li>
     <div class="row">
       <div class="col-md-7">
@@ -31,6 +32,8 @@
       </div>
     </div>
   </li>
+
+  {% endif %}
   {% empty %}
   <li>
   <p>
@@ -52,6 +55,7 @@
 
 <ul class="manuscript-upload-states">
   {% for review in external_review_assignments %}
+  {% if not review.hide %}
   <li>
     <div class="row">
       <div class="col-md-7">
@@ -76,6 +80,8 @@
       </div>
     </div>
   </li>
+  
+  {% endif %}
   {% empty %}
   <li>
   <p>

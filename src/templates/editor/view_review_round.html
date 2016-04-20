@@ -15,13 +15,16 @@
    <a href="{% url 'editor_review_round_remove' submission.id round_id review.pk %}" class=" btn btn-danger btn-xs pull-left">
           Delete
               </a>
+                
                 <a href="{% url 'editor_review_round_withdraw' submission.id round_id review.pk %}" class=" btn {% if review.withdrawn %}btn-info{% else %}btn-warning{% endif %} btn-xs pull-left" style="margin-left:5px">
            {% if review.withdrawn %} Re-Enable {% else %} Withdraw {% endif %}
               </a>
           <br>
           <br>
+          <br>
         <strong>{{ review.user.profile.full_name }}<sup> <a style="height:17px;margin-top:6px" href="core/email.html" onclick="return popitup('/email/onetaskers/submission/{{submission.id}}/user/{{review.user.pk}}/','onetasker_{{review.user.pk}}')"class="fa fa-envelope-o btn btn-xs btn-default"></a></sup></strong>
         </p>
+
         {% if review.declined %}
         	<span class="declined">Review Declined on {{ review.declined }}</span>
         {% else %}
@@ -54,8 +57,11 @@
         	{% endif %}
         </p>
       </div>
-      <div class="col-md-4">
-        {% if not review.completed %}<h5>Due: {{ review.due }}&nbsp;&nbsp;<a href="{% url 'update_review_due_date' submission.id review_round.round_number review.id %}"><i class="fa fa-edit"></i></a></h5>{% else %}<a href="{% url 'editor_review_assignment' submission.id review_round.round_number review.id %}" style="margin-top: 10px;margin-right:10px;" class="btn btn-xs btn-success">View Review</a>{% endif %}
+      <div class="col-md-4" style="margin-bottom: 20px;margin-left:-20px">
+        {% if not review.completed %}<h5>Due: {{ review.due }}&nbsp;&nbsp;<a href="{% url 'update_review_due_date' submission.id review_round.round_number review.id %}"><i class="fa fa-edit"></i></a></h5>{% else %}<a href="{% url 'editor_review_assignment' submission.id review_round.round_number review.id %}" style="margin-bottom: 4px;margin-top: 2px;margin-right:10px;" class="btn btn-xs btn-success">View Review</a> <br>{% endif %}
+         <a href="{% url 'hide_review' submission.id round_id review.pk %}" class=" btn {% if review.hide %} btn-info {% else %} btn-primary {% endif %} btn-xs">
+         {% if review.hide %} Show to {% else %} Hide from {% endif %} Author
+              </a>
       </div>
    
     </div>
@@ -92,6 +98,7 @@
               </a>
           <br>
           <br>
+          <br>
         <strong>{{ review.user.profile.full_name }}<sup> <a style="height:17px;margin-top:6px" href="core/email.html" onclick="return popitup('/email/onetaskers/submission/{{submission.id}}/user/{{review.user.pk}}/','onetasker_{{review.user.pk}}')"class="fa fa-envelope-o btn btn-xs btn-default"></a></sup></strong>
         </p>
         <span class="{% if review.recommendation %}recommendation{% else %}no-recommendation{% endif %}">
@@ -108,8 +115,11 @@
         </p>
       </div>
         
-      <div class="col-md-4">
-        {% if not review.completed %}<h5>Due: {{ review.due }}&nbsp;&nbsp;<a href="{% url 'update_review_due_date' submission.id review_round.round_number review.id %}"><i class="fa fa-edit"></i></a></h5>{% else %}<a href="{% url 'editor_review_assignment' submission.id review_round.round_number review.id %}" style="margin-top: 20px;margin-right:10px;" class="btn btn-xs btn-success">View Review</a>{% endif %}
+      <div class="col-md-4" style="margin-bottom: 20px;margin-left:-20px">
+        {% if not review.completed %}<h5>Due: {{ review.due }}&nbsp;&nbsp;<a href="{% url 'update_review_due_date' submission.id review_round.round_number review.id %}"><i class="fa fa-edit"></i></a></h5>{% else %}<a href="{% url 'editor_review_assignment' submission.id review_round.round_number review.id %}" style="margin-bottom: 4px;margin-top: 2px;margin-right:10px;" class="btn btn-xs btn-success">View Review</a> <br>{% endif %}
+         <a href="{% url 'hide_review' submission.id round_id review.pk %}" class=" btn {% if review.hide %} btn-info {% else %} btn-primary {% endif %} btn-xs">
+         {% if review.hide %} Show to {% else %} Hide from {% endif %} Author
+              </a>
       </div>
     </div>
   </li>

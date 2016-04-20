@@ -1762,7 +1762,7 @@ def hide_review(request, proposal_id, assignment_id):
     if review_assignment.hide == True:
         review_assignment.hide = False
     else:
-        review_assignment.hide == True
+        review_assignment.hide = True
     review_assignment.save()
     return redirect(reverse('editor_review_round', kwargs={'submission_id': submission_id, 'round_number': submission.get_latest_review_round()}))
 
