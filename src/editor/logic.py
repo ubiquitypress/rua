@@ -230,13 +230,13 @@ def send_review_request(book, review_assignment, email_text, sender, attachment=
 	context = {
 		'book': book,
 		'review': review_assignment,
-		'decision_url': decision_url,
+		'revision_url': decision_url,
 		'sender': sender,
 		'base_url':base_url.value,
 		'press_name':press_name,
 	}
 
-	email.send_email('Review Request', context, from_email.value, review_assignment.user.email, email_text, book=book, attachment=attachment)
+	email.send_email(subject ='Review Request', context = context, from_email = from_email.value, to = review_assignment.user.email, html_template = email_text, book=book, attachment=attachment)
 
 def send_editorial_review_request(book, review_assignment, email_text, sender, attachment=None):
 	from_email = models.Setting.objects.get(group__name='email', name='from_address')
