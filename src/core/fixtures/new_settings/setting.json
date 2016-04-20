@@ -8,6 +8,7 @@
     "description": "Publishing committee contacted during an editorial review assignment. Separate email addresses with this character ';'"
   },
   "model": "core.setting",
+  "pk": null
 },
 {
   "fields": {
@@ -18,6 +19,7 @@
     "description": "Email sent when a decision is made on an editorial review assignment."
   },
   "model": "core.setting",
+  "pk": null
 },
 {
   "fields": {
@@ -28,6 +30,7 @@
     "description": "If enabled, authors/editors can submit proposals to the press. If disabled, authors/editors cannot submit proposals."
   },
   "model": "core.setting",
+  "pk": null
 },
 {
   "fields": {
@@ -38,6 +41,7 @@
     "description": "If enabled the review_type selection will appear on the start new submission page. if disabled the default  review type from the 'default_review_type' setting will be assigned to new submissions and review_type list will be hidden"
   },
   "model": "core.setting",
+  "pk": null
 },
 {
   "fields": {
@@ -48,6 +52,7 @@
     "description": "Default review type used when review type selection is disabled"
   },
   "model": "core.setting",
+  "pk": null
 },
 {
   "fields": {
@@ -58,5 +63,6 @@
     "description": "Editorial review assignment feature can be turned on or off."
   },
   "model": "core.setting",
+  "pk": null
 }
 ]
