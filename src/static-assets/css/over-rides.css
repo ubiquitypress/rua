@@ -746,6 +746,24 @@ body > div.container-fluid > div > div > div > a {
     box-shadow: none;
 }
 
+.btn-proposal-header {
+    margin-left:5px!important;
+    height:28px!important;
+}
+.btn-proposal-text {
+    top:-11px!important;
+    position: relative;
+}
+.btn-proposal-header-2 {
+    height:28px!important;
+    top:23px!important;
+    position: absolute!important;
+}
+
+
+.btn-proposal-header-nomargin {
+    height:28px!important;
+}
 
 .input-group-email-field{
   margin-bottom: 5px
