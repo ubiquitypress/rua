@@ -1461,10 +1461,11 @@ def create_proposal_form(proposal):
     data = json.loads(proposal.data)
    
     for relation in relations:
-        v = data[relation.element.name]
-        document.add_heading(relation.element.name, level=1)        
-        text = BeautifulSoup(smart_text(v[0]),"html.parser").get_text()
-        document.add_paragraph(text).bold = True  
+        v = data.get(relation.element.name)
+        if v:
+            document.add_heading(relation.element.name, level=1)        
+            text = BeautifulSoup(smart_text(v[0]),"html.parser").get_text()
+            document.add_paragraph(text).bold = True  
 
     document.add_page_break()
     if not os.path.exists(os.path.join(settings.BASE_DIR, 'files', 'forms')):
