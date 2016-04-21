@@ -14,7 +14,9 @@ h1, h2, h3, h4, h5, h6 {
 p, div {
     font-family: 'Lato' Helvetica;
 }
-
+btn {
+    font-family: 'Lato' Helvetica;
+}
 .navbar-inverse {
     background-color: #363636 !important;
     border-color: #363636 !important;
