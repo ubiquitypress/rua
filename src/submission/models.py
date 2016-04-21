@@ -33,7 +33,9 @@ class Proposal(models.Model):
 	date_accepted = models.DateTimeField(blank=True, null=True)
 	book_type = models.CharField(max_length=50, null=True, blank=True, choices=book_type_choices(), help_text="A monograph is a work authored, in its entirety, by one or more authors. An edited volume has different authors for each chapter.")
 	book_editors = models.ManyToManyField(User, null=True, blank=True, related_name='proposal_book_editors')
-	
+	# Contract
+	contract = models.ForeignKey('core.Contract', null=True, blank=True, related_name = 'contract_of_proposal')
+
 	current_version = models.IntegerField(default=1)
 	status = models.CharField(max_length=20, choices=proposal_status(), default='submission')
 

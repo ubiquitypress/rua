@@ -58,6 +58,7 @@ urlpatterns = patterns('',
 
     # User submission
     url(r'^user/submission/(?P<submission_id>\d+)/$', 'core.views.user_submission', name='user_submission'),
+    url(r'^user/proposal/(?P<proposal_id>\d+)/$', 'core.views.user_proposal', name='user_proposal'),
     
     url(r'overview/$', 'core.views.overview', name='overview'),
     url(r'overview/inprogress/$', 'core.views.overview_inprogress', name='overview_inprogress'),
@@ -124,6 +125,9 @@ urlpatterns = patterns('',
     url(r'^proposals/(?P<proposal_id>\d+)/accept/$', 'core.views.accept_proposal', name='accept_proposal'),
     url(r'^proposals/(?P<proposal_id>\d+)/revisions/$', 'core.views.request_proposal_revisions', name='request_proposal_revisions'),
     url(r'^proposals/(?P<proposal_id>\d+)/decline/$', 'core.views.decline_proposal', name='decline_proposal'),
+    # Contract
+    url(r'^proposals/(?P<proposal_id>\d+)/manage/contract/$', 'core.views.contract_manager', name='proposal_contract_manager'),
+    url(r'^proposals/(?P<proposal_id>\d+)/manage/contract/(?P<contract_id>\d+)/$', 'core.views.contract_manager', name='proposal_contract_manager_edit'),
 
     # OAI - /oai?verb=ListRecords&metadataPrefix=oai_dc
     url(r'^oai/$', 'core.views.oai', name='oai'),

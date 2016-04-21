@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% load static from staticfiles %}
+{% load bootstrap3 %}
+
+{% block body %}
+<h2>Upload Contract</h2>
+<p>If you can, please sign the contract and upload a scan of it here. If you do not upload a contract, please ensure you post a copy to your Editor, click the button to sign off.</p>
+ <form method="post" class="form" enctype="multipart/form-data">
+   {% csrf_token %}
+   <div class="form-group">
+    <div class="col-md-12">
+     <div class="row">
+       <div class="col-md-6">
+        <label class="control-label" for="id_title">Contract File</label>
+          <div class="input-group">
+             <span class="input-group-btn">
+                 <span class="btn btn-primary btn-file">
+                     Browse&hellip; <input type="file" id="author_file" name="author_file">
+                 </span>
+             </span>
+             <input type="text" class="form-control" readonly>
+         </div>
+       </div>
+     </div>
+   </div>
+   <hr />
+   <div class="col-md-6">
+   <br />
+   <button name="next_stage" type="submit" class="btn btn-primary">
+       <i class="fa fa-pencil"></i> Sign Off Contract
+   </button>
+ </div>
+ </div>
+ </form>
+ {% endblock body %}
+
+ {% block js %}
+ {{ block.super }}
+ <script type="text/javascript" src="{% static "js/fancyfile.js" %}"></script>
+ {% endblock js %}

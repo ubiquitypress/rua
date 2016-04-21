@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% load static from staticfiles %}
+{% load bootstrap3 %}
+
+{% block title %}Contract Manager{% endblock %}
+
+  
+{% block body %}
+ <div class="col-md-12 other-heading container-fluid" style="margin-top:-20px">
+ <h3>Book Proposal :  {{ proposal.title }}{% if proposal.subtitle%} : {{ proposal.subtitle }}{%endif%} <a href="{% url 'view_proposal' proposal.id  %}" class="btn  btn-transparent-white" style="position: absolute;right:20;margin-top:-4px">Go back</a></h3></div>
+
+<br>
+<br>
+ <h3 class="container-fluid">Contract Manager</h3>
+<br>
+  {% if proposal.contract and action == 'normal' %}
+   </br>
+  <div class="col-md-12 other-sub-heading container-fluid" style="align:justify;height:40px;margin-top:-20px">
+ <h4>&nbsp;Contract Info &nbsp;<a href="{% url 'proposal_contract_manager_edit' proposal.id proposal.contract.id %}" class="btn  btn-transparent-white" style="position: absolute;right:20;margin-top:-6.7px"><i class="fa fa-edit"></i> Edit </a></h4>
+</div>
+  <div class="col-md-12 dash-center">
+</br>
+   <table class="table table-bordered">
+  	<tr>
+  		<th width="40%" >Title</th>
+  		<th>Editor Sign Off</th>
+  		<th >Author Sign Off</th>
+  	</tr>
+  	<tr>
+  		<td>{{ proposal.contract.title }}</td>
+  		<td>{{ proposal.contract.editor_signed_off }}</td>
+      <td>{{ proposal.contract.author_signed_off }}</td>
+  	</tr>
+    <tr>
+      <th >BPC</th>
+    </tr>
+    <tr>
+      <td>{{ proposal.contract.bpc }}</td>
+    </tr>
+    <tr>
+      </table> 
+      <table  class="table table-bordered"> 
+      <th colspan="4">Notes</th>
+    </tr>
+    <tr>
+      <td colspan="4">{% if proposal.contract.notes %}{{ proposal.contract.notes }}{% else %}No notes entered{% endif %}</td>
+    </tr>
+  </table> </br>
+  <h3>&nbsp;&nbsp;&nbsp;Files&nbsp; &nbsp;&nbsp;   &nbsp;&nbsp; &nbsp;</h3>
+  <table class="table table-condensed table-striped">
+      <tr>
+      <td>Editor File</td>
+      <td><a href="{% url 'serve_proposal_file_id' proposal.id proposal.contract.editor_file.id %}" class="btn btn-other " ><i class="fa fa-cloud-download"> &nbsp; Download</i></a></td>
+      </tr>
+      <tr>
+         <td>Author File</td>
+      <td>{% if proposal.contract.author_file %}<a href="{% url 'serve_proposal_file_id' proposal.id proposal.contract.author_file.id %}" class="btn btn-other" ><i class="fa fa-cloud-download"> &nbsp; Download</i></a>{% else %}No file uploaded{% endif %}</td>
+    </tr>
+  </table>
+</div>
+  {% else %}
+  <br>
+  <div class= "col-md-12">
+  {% include "core/proposals/contract/new_contract_form.html" %}
+  </div>
+  {% endif %}
+{% endblock %}
+
+{% block js %}
+{{ block.super }}
+<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+<script type="text/javascript" src="{% static "js/fancyfile.js" %}"></script>
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css">
+<script src="http://code.jquery.com/ui/1.11.0/jquery-ui.js"></script>
+ <script>
+  $(document).ready(function() {
+        $('#id_editor_signed_off').datepicker({ dateFormat: 'yy-mm-dd' }).val();
+        $('#id_author_signed_off').datepicker({ dateFormat: 'yy-mm-dd' }).val();
+    });
+  </script>
+{% endblock js %}

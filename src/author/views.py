@@ -12,7 +12,7 @@ from core.logic import order_data, decode_json
 from submission import models as submission_models
 from revisions import models as revision_models
 from review import models as review_models
-from core.files import handle_file_update, handle_attachment, handle_file, handle_copyedit_file, handle_typeset_file
+from core.files import handle_file_update, handle_attachment, handle_file, handle_copyedit_file, handle_typeset_file, handle_proposal_file
 
 @is_author
 def author_dashboard(request):
@@ -571,3 +571,32 @@ def author_contract_signoff(request, submission_id, contract_id):
 	}
 
 	return render(request, template, context)
+@login_required
+def proposal_author_contract_signoff(request, proposal_id, contract_id):
+	contract = get_object_or_404(models.Contract, pk=contract_id)
+	proposal = get_object_or_404(submission_models.Proposal, pk=proposal_id, owner=request.user, contract=contract)
+
+	if request.POST:
+		author_signoff_form = forms.AuthorContractSignoff(request.POST, request.FILES)
+		if author_signoff_form.is_valid():
+			print "VALID"
+			if request.FILES.get('author_file'):
+				author_file = request.FILES.get('author_file')
+				new_file = handle_proposal_file(author_file, proposal, 'contract',request.user)
+				contract.author_file = new_file
+
+			contract.author_signed_off = timezone.now()
+			contract.save()
+			return redirect(reverse('user_dashboard'))
+	else:
+		author_signoff_form = forms.AuthorContractSignoff()
+
+	template = 'author/author_contract_signoff.html'
+	context = {
+		'proposal': 'proposal',
+		'contract': 'contract',
+		'author_signoff_form': 'proposal_author_signoff_form',
+	}
+
+	return render(request, template, context)
+

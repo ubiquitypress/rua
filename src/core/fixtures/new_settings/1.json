@@ -1,0 +1,13 @@
+[
+{
+  "fields": {
+    "value": "Dear {{proposal.owner.first_name}} {{proposal.owner.last_name}},\r\n<br><br>A contract has been uploaded by the Editor for you to review. Please login using the link below to review and sign off the contract.\r\n\r\n{{base_url}}/user/proposal/{{proposal.id}}\r\n\r\n<br><br>Regards<br>{% if sender %}{{ sender.profile.signature|safe }}{% endif %}<br>",
+    "group": 3,
+    "name": "proposal_contract_author_sign_off",
+    "types": "rich_text",
+    "description": ""
+  },
+  "model": "core.setting",
+  "pk": null
+}
+]

@@ -1,0 +1,74 @@
+  {% load bootstrap3 %}
+   {% if new_contract_form.instance.pk %} 
+   <div class="col-md-12 file-sub-heading-accept container-fluid" style="align:justify;height:40px;margin-top:-20px">
+  <h4>Update Contract</h4> 
+  {% else %}
+   <div class="col-md-12 other-sub-heading container-fluid" style="align:justify;height:40px;margin-top:-20px">
+    <h4>Upload Contract</h4> 
+    {% endif %}
+  </div>
+  <p>If no author sign off date is set, the author will be emailed asking them to compelet the sign off process.</p>
+  
+        <div class="dash-container">
+   <form method="post" class="form" enctype="multipart/form-data">
+     {% csrf_token %}
+     <div class="form-group">
+           <div class="row">
+       <div class="col-md-3">
+         {% bootstrap_field new_contract_form.title %}
+      </div>
+      <div class="col-md-3">
+        {% bootstrap_field new_contract_form.editor_signed_off %}
+     </div>
+     <div class="col-md-3">
+       {% bootstrap_field new_contract_form.author_signed_off %}
+    </div>
+
+     <div class="col-md-3">
+      <label class="control-label" for="id_title">Contract File</label>
+          <div class="input-group">
+             <span class="input-group-btn">
+                    {% if new_contract_form.instance.pk %}
+                    <span class="btn btn-accept btn-browse btn-file">
+                      {% else %}
+                 <span class="btn btn-task btn-file">
+                     {% endif %}
+                     Browse&hellip; <input type="file" id="contract_file" name="contract_file">
+                 </span>
+             </span>
+             <input type="text" class="form-control" readonly>
+         </div>
+       </div>
+    </div>
+   </div>
+     <div class="row">
+     <div class="col-md-4">
+      {% bootstrap_field new_contract_form.bpc %}
+         </div>
+        <div class="col-md-8">
+      {% bootstrap_field new_contract_form.notes %}
+   </div>
+
+
+     </div>
+     </div>
+   <div class="col-md-6 bottom-space">
+      {% if new_contract_form.instance.pk %}
+     <button name="next_stage" type="submit" class="btn btn-accept btn-round-half">
+      {% else %}
+  <button name="next_stage" type="submit" class="btn btn-task">
+      {% endif %}
+      <!-- might need to change it to "fa-cloud-upload" -->
+
+        {% if new_contract_form.instance.pk %} <i class="fa fa-cloud-upload"></i>&nbsp;  Update {% else %} <i class="fa fa-file-o"></i>&nbsp;  Upload {% endif %} Contract
+     </button>
+     {% if action == 'edit' %}
+     <a href="{% url 'proposal_contract_manager' proposal.id %}" class="btn btn-danger btn-round-half">Cancel</a>
+     {% else %}
+     <!--view_new_submission view deleted-->
+     <a href="{% url 'view_proposal' proposal.id %}" class="btn btn-danger btn-round-half">Cancel</a>
+     {% endif %}
+   </div>
+
+   </div>
+   </form>

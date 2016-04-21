@@ -14,7 +14,7 @@ from django.conf import settings
 from django.template import Context, Template
 from django.db import IntegrityError
 from django.utils.encoding import smart_text
-
+from editor import forms as editor_forms
 from review import models as review_models
 from core import log, models, forms, logic
 from author import orcid
@@ -345,6 +345,25 @@ def user_submission(request, submission_id):
     context = {
         'submission': book,
         'active': 'user_submission',
+    }
+
+    return render(request, template, context)
+
+@login_required
+def user_proposal(request, proposal_id):
+    proposal = get_object_or_404(submission_models.Proposal, pk=proposal_id, owner=request.user)
+    relationships = models.ProposalFormElementsRelationship.objects.filter(form=proposal.form)
+    if proposal.data:
+        data = json.loads(proposal.data)
+    else:
+        data = {}
+
+    template = 'core/user/user_proposal.html'
+    context = {
+        'proposal': proposal,
+        'active': 'user_submission',
+        'data':data,
+        'relationships':relationships,
     }
 
     return render(request, template, context)
@@ -1988,6 +2007,76 @@ def decline_proposal(request, proposal_id):
     return render(request, template, context)
 
 
+@is_book_editor
+def contract_manager(request, proposal_id, contract_id=None):
+    proposal = get_object_or_404(submission_models.Proposal, pk=proposal_id)
+    action = 'normal'
+    if contract_id:
+        new_contract_form = editor_forms.UploadContract(instance=proposal.contract)
+        action = 'edit'
+    else:
+        new_contract_form = editor_forms.UploadContract()
+
+    if request.POST:
+
+        if contract_id:
+            proposal.contract.title = request.POST.get('title')
+            proposal.contract.notes = request.POST.get('notes')   
+            date = request.POST.get('editor_signed_off')
+
+            if '/' in str(date):
+                editor_date = date[6:] +'-'+ date[3:5]+'-'+ date[:2]
+                proposal.contract.editor_signed_off = editor_date
+            else:
+                proposal.contract.editor_signed_off = date
+
+            date = str(request.POST.get('author_signed_off'))
+
+            if '/' in str(date):
+                author_date = date[6:] +'-'+ date[3:5]+'-'+ date[:2]
+                proposal.contract.author_signed_off = author_date
+            else:
+                proposal.contract.author_signed_off = date
+
+            if 'contract_file' in request.FILES:
+                author_file = request.FILES.get('contract_file')
+                new_file = handle_proposal_file(author_file, proposal, 'contract', request.user)
+                proposal.contract.editor_file = new_file
+
+            proposal.contract.save()      
+            proposal.save()
+            return redirect(reverse('proposal_contract_manager', kwargs={'proposal_id': proposal.id}))                   
+        else:
+            new_contract_form = editor_forms.UploadContract(request.POST, request.FILES)
+            if new_contract_form.is_valid():
+                new_contract = new_contract_form.save(commit=False)
+                if 'contract_file' in request.FILES:
+                    author_file = request.FILES.get('contract_file')
+                    new_file = handle_proposal_file(author_file, proposal, 'contract', request.user)
+
+                    new_contract.editor_file = new_file
+                    new_contract.save()
+                    proposal.contract = new_contract
+                    proposal.save()
+
+                    if not new_contract.author_signed_off:
+                        email_text = models.Setting.objects.get(group__name='email', name='proposal_contract_author_sign_off').value
+                        logic.send_author_sign_off(submission, email_text, sender=request.user)
+
+                    return redirect(reverse('proposal_contract_manager', kwargs={'proposal_id': proposal.id}))
+                else:
+                    messages.add_message(request, messages.ERROR, 'You must upload a contract file.')
+        
+
+    template = 'core/proposals/contract/contract_manager.html'
+    context = {
+        'proposal': proposal,
+        'new_contract_form': new_contract_form,
+        'action': action,
+    }
+
+    return render(request, template, context)
+
 @is_editor
 def accept_proposal(request, proposal_id):
     'Marks a proposal as accepted, creates a submission and emails the user'
@@ -2000,6 +2089,8 @@ def accept_proposal(request, proposal_id):
         proposal.requestor=request.user
         submission = logic.create_submission_from_proposal(proposal, proposal_type=proposal.book_type)
         submission.proposal = proposal
+        if proposal.contract:
+            submission.contract = proposal.contract
         submission.save()
         attachment = handle_attachment(request, submission)
         logic.send_proposal_accept(proposal, email_text=request.POST.get('accept-email'), submission=submission, sender=request.user, attachment=attachment)

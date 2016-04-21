@@ -226,7 +226,7 @@ class Book(models.Model):
 	misc_files = models.ManyToManyField('File', null=True, blank=True, related_name='misc_files')
 
 	# Contract
-	contract = models.ForeignKey('Contract', null=True, blank=True)
+	contract = models.ForeignKey('Contract', null=True, blank=True, related_name = 'contract_of_book')
 
 	# Proposal
 	proposal = models.ForeignKey('submission.Proposal', null = True, blank = True)

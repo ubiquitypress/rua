@@ -1,0 +1,25 @@
+{% if proposal.contract %}
+<table class="table table-bordered table-condensed small">
+	<tr>
+		<td></td>
+		<th>Signoff</th>
+		<th>File</th>
+		<th>BPC</th>
+	</tr>
+  	<tr>
+  		<th>Editor</th>
+  		<td>{{ proposal.contract.editor_signed_off }}</td>
+  		<td><a href="{% url 'serve_proposal_file_id' proposal.id proposal.contract.editor_file.id %}" class="btn btn-xs btn-task">&nbsp;&nbsp;<i class="fa fa-cloud-download">&nbsp;</i>&nbsp;Download &nbsp;&nbsp;</a></td>
+  		
+  		<td rowspan="2">{% if proposal.contract.bpc %}{{ proposal.contract.bpc}}{% else %} None{% endif %}</td>
+	</tr>
+	<tr>
+		<th>Author</th>
+  		<td>{% if not proposal.contract.author_signed_off %}<a href="{% url 'proposal_author_contract_signoff' proposal.id proposal.contract.id %}" class="btn btn-xs btn-primary"><i class="fa fa-check">&nbsp;</i>Sign Off</a>{% else %}{{ proposal.contract.author_signed_off }}{% endif %}</td>
+  		<td>{% if proposal.contract.author_file %}<a href="{% url 'serve_proposal_file_id' proposal.id proposal.contract.author_file.id %}" class="btn btn-xs btn-task">&nbsp;&nbsp;<i class="fa fa-cloud-download">&nbsp;</i>&nbsp;Download &nbsp;&nbsp;</a>{% else %}No File{% endif %}</td>
+	</tr>
+	</table>
+</table>
+{% else %}
+<p>&nbsp;<i class="fa fa-file-o">&nbsp;</i>This proposal doesn't have a contract. You can <a href="{% url 'proposal_contract_manager' proposal.id %}">add one</a>.</p>
+{% endif %}

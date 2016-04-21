@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% load bootstrap3 %}
+
+{% block title %}{% endblock %}
+
+{% block breadcrumbs %}
+    <ol class="breadcrumb">
+	  <li><a href="{% url 'login' %}">Dashboard</a></li>
+	  <li class="">Proposals</li>
+    <li class="active">{{ proposal.title }}</li>
+	</ol>
+{% endblock %}
+
+{% block body %}
+<div class="col-md-12">
+  <h3>{{ Proposal.title }}</h3>
+  <hr />
+  <h4 id="progress">Proposal Status</h4>
+  <p>Proposal's status currently is {{ proposal.status_verbose }}</strong>. Below is a summary of your proposal's progress.</p>
+  
+  <hr />
+  <h4 id="summary">Summary</h4>
+  <ul id="main_summary_tabs" class="nav nav-tabs" role="tablist">
+    <li role="presentation" class="active"><a href="#main_summary" aria-controls="home" role="tab" data-toggle="tab">Summary</a></li>
+    <li role="presentation"><a href="#proposal" aria-controls="profile" role="tab" data-toggle="tab">Proposal Fields</a></li>
+  </ul>
+
+  <!-- Tab panes -->
+  <div class="tab-content">
+    <div role="tabpanel" class="tab-pane active" id="main_summary">{% include "core/elements/proposal_summary.html" %}</div>
+    <div role="tabpanel" class="tab-pane" id="proposal"><p class="tab-p">
+      {% for field in relationships %}
+
+        <div class="{{ field.width }}">
+        <div class="row">
+          <div class="panel panel-default ">
+            <div class="panel-heading"><span class="panel-heading"><b>{{ field.element.name }} </b></span></div>
+            <div class="panel-body">{% for k,v in data.items %}{% if k == field.element.name %}
+              {% ifequal field.element.field_type 'upload' %}<a href="{% url 'serve_proposal_file_id' proposal.id  v.0 %}">Download</a>{% else %}{{ v.0|safe }}{% endifequal %}{% endif %}{% endfor %}</div>
+          </div>
+        </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+  <hr />
+  <div>
+  <hr />
+  <h4 id="files">Files</h4>
+  <!-- Nav tabs -->
+  <ul id="summary_tabs" class="nav nav-tabs" role="tablist">
+    <li role="presentation"><a href="#contracts" aria-controls="messages" role="tab" data-toggle="tab" class="active">Contract</a></li>
+  </ul>
+ <!-- Tab panes -->
+  <div class="tab-content">
+    <div role="tabpanel" class="tab-pane active" id="contracts">{% include "core/user/proposal_contract.html" %}</div>
+  </div>
+{% endblock %}

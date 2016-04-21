@@ -14,6 +14,7 @@
   <a class="btn  btn-transparent-white" href="?download=docx" style="margin-left:5px"> <i class="fa fa-cloud-download"> &nbsp; Download Proposal</i></a>
     <a class="btn  btn-transparent-white" href="{% url 'proposal_add_editors' proposal.id %}" style="margin-left:5px"> &nbsp; Book Editors</a>
      <a class="btn  btn-transparent-white" href="{% url 'view_proposal_log' proposal.id %}" style="margin-left:5px"> &nbsp; Log &nbsp;</a>
+     <a href="{% url 'proposal_contract_manager' proposal.id %}" class="btn  btn-transparent-white"  style="margin-left:5px"> Contract</a>
 {% if proposal.status = 'accepted' or proposal.status = 'declined'%} 
 {% else %}<a href="{% url 'proposal_view_submitted' proposal.id %}" class="btn  btn-transparent-white" style="position: absolute;right:100px;margin-top:-8px">Edit</a>{% endif %}
     {% if proposal.status = 'accepted' or proposal.status = 'declined'%}<a href="{% url 'proposals_history'%}" class="btn  btn-transparent-white" style="position: absolute;right:20;margin-top:-8px">Go back</a> {% else %}<a href="{% url 'proposals'%}" class="btn  btn-transparent-white" style="position: absolute;right:20;margin-top:-8px">Go back</a>{% endif %}</h3>
@@ -60,6 +61,10 @@
   </div>
 {% endfor %}
 </div>
+
+<hr>
+<h5> <b>Contract</b>  {% if proposal.contract %}(<a href="{% url 'proposal_contract_manager' proposal.id %}">View</a>) {% endif %}:</h5>
+{% include "core/proposals/contract/contract.html" %}
 <hr>
   {% if not proposal.date_review_started %} 
 {% if proposal.status = 'accepted' or proposal.status = 'declined'%} {% else %}<a href="{% url 'start_proposal_review' proposal.id %}" class="btn btn-primary btn-round"><i class="fa fa-plus">&nbsp;</i>Start Review Process</a>{% endif %}{% else %}

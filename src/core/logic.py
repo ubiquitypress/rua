@@ -432,6 +432,18 @@ def send_email(subject, context, from_email, to, html_template, text_template=No
 	msg.attach_alternative(html_content, "text/html")
 	msg.send()
 
+def send_author_sign_off(proposal, email_text, sender):
+	from_email = models.Setting.objects.get(group__name='email', name='from_address')
+
+	context = {
+		'base_url': models.Setting.objects.get(group__name='general', name='base_url').value,
+		'proposal': proposal,
+		'sender': sender,
+	}
+
+	email.send_email('Book Contract Uploaded', context, from_email.value, proposal.owner.email, email_text, proposal=proposal)
+
+
 @cache_result(300)
 def press_settings():
 	_dict = {}

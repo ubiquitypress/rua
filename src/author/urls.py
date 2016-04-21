@@ -25,6 +25,7 @@ urlpatterns = patterns('',
         url(r'^submission/(?P<submission_id>\d+)/revisions/(?P<revision_id>\d+)/update_file/(?P<file_id>\d+)/$', 'author.views.revise_file', name='revise_file'),
         url(r'^submission/(?P<submission_id>\d+)/revisions/(?P<revision_id>\d+)/new/(?P<file_type>[-\w]+)/file/$', 'author.views.revision_new_file', name='revision_new_file'),
         url(r'^submission/(?P<submission_id>\d+)/contract/(?P<contract_id>\d+)/signoff/$', 'author.views.author_contract_signoff', name='author_contract_signoff'),
+        url(r'^proposal/(?P<proposal_id>\d+)/contract/(?P<contract_id>\d+)/signoff/$', 'author.views.proposal_author_contract_signoff', name='proposal_author_contract_signoff'),
 
         url(r'^submission/(?P<submission_id>\d+)/production/chapter/(?P<chapter_id>\d+)/view/$', 'author.views.view_chapter', name='author_view_chapter'),
         url(r'^submission/(?P<submission_id>\d+)/production/chapter/(?P<chapter_id>\d+)/view/format/(?P<format_id>\d+)/$', 'author.views.view_chapter_format', name='author_view_chapter_format'),

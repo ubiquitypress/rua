@@ -1,0 +1,21 @@
+{% if proposal.contract %}
+<table class="table table-striped">
+	<tr>
+		<th>Title</th>
+		<th>Editor File</th>
+		{% if proposal.contract.author_file %}<th>Author File</th>{% endif %}
+		<th>Editor Sign Off</th>
+		<th>Author Sign Off</th>
+	</tr>
+	<tr>
+    <td>{{ proposal.contract.title }}</td>
+		<td><a href="{% url 'serve_proposal_file_id' proposal.id proposal.contract.editor_file.id %}" class="btn btn-primary"><i class="fa fa-download">&nbsp;</i>Download</a></td>
+		{% if proposal.contract.author_file %}<td><a href="{% url 'serve_proposal_file_id' proposal.id proposal.contract.author_file.id %}" class="btn btn-primary"><i class="fa fa-download">&nbsp;</i>Download</a></td>{% endif %}
+		<td>{{ proposal.contract.editor_signed_off }}</td>
+    {% if not proposal.contract.author_signed_off %}<td><a href="{% url 'author_contract_signoff' proposal.id proposal.contract.id %}" class="btn btn-primary"><i class="fa fa-check">&nbsp;</i>Sign Off</a></td>{% else %}<td>{{ proposal.contract.author_signed_off }}</td>{% endif %}
+	</tr>
+</table>
+{% else %}
+<br/>
+<p>&nbsp;<i class="fa fa-file-o">&nbsp;</i>This proposal doesn't have a contract yet.</p>
+{% endif %}
