@@ -1133,8 +1133,36 @@ def versions_file(request, submission_id, file_id):
 @is_book_editor
 def view_log(request, submission_id):
     book = get_object_or_404(models.Book, pk=submission_id)
-    log_list = models.Log.objects.filter(Q(book=book) | Q(proposal=book.proposal)).order_by('-date_logged')
-    email_list = models.EmailLog.objects.filter(Q(book=book) | Q(proposal=book.proposal)).order_by('-sent')
+
+    if request.POST:
+        if 'search' in request.POST:
+            search = request.POST.get('search')
+            email_search = None
+        else:
+            search = None
+            email_search = request.POST.get('email_search')
+    else:
+        search = None
+        email_search = None
+
+    query_list = []
+    email_query_list = []
+
+    if email_search:
+        email_query_list.append(Q(subject__icontains=email_search) | Q(content__icontains=email_search) | Q(from_address__icontains=email_search))
+   
+    if search:
+        query_list.append(Q(message__icontains=search) | Q(short_name__icontains=search) | Q(kind__icontains=search))
+   
+    if query_list:
+        log_list =  models.Log.objects.filter(Q(book=book) | Q(proposal=book.proposal)).filter(*query_list).order_by('-date_logged')
+    else:
+        log_list = models.Log.objects.filter(Q(book=book) | Q(proposal=book.proposal)).order_by('-date_logged')
+
+    if email_query_list:
+        email_list =  models.EmailLog.objects.filter(Q(book=book) | Q(proposal=book.proposal)).filter(*email_query_list).order_by('-sent')
+    else:
+        email_list = models.EmailLog.objects.filter(Q(book=book) | Q(proposal=book.proposal)).order_by('-sent')
 
     template = 'editor/log.html'
     context = {

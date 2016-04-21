@@ -29,6 +29,15 @@ body {
   <!-- Tab panes -->
   <div class="tab-content">
     <div role="tabpanel"  class="tab-pane active" id="activity">
+      <br>
+                <form method="POST">
+                  {% csrf_token %}  
+                 <div class="input-group">
+                  <input type="text" class="form-control" id="search" name="search" placeholder="Search for an activity log...">
+                  <div class="input-group-addon"><i class="fa fa-search"></i></div>
+                </div>
+                </form>
+                <br />
       <ul class="timeline">
         {% for item in log_list %}
           <li {% if forloop.counter|divisibleby:2 %}class="timeline-inverted"{% endif %}>
@@ -48,7 +57,16 @@ body {
           {% endfor %}
       </ul>
     </div>
- <div role="tabpanel"  class="tab-pane" id="email">   
+ <div role="tabpanel"  class="tab-pane" id="email"> 
+                  <br>
+                <form method="POST">
+                  {% csrf_token %}  
+                 <div class="input-group">
+                  <input type="text" class="form-control" id="email_search" name="email_search" placeholder="Search for an email log...">
+                  <div class="input-group-addon"><i class="fa fa-search"></i></div>
+                </div>
+                </form>
+                <br />
       <ul class="timeline">
         {% for item in email_list %}
           <li {% if forloop.counter|divisibleby:2 %}class="timeline-inverted"{% endif %}>
