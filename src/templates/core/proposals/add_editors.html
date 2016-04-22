@@ -71,7 +71,7 @@
   <tbody>
       {% for editor_dict in list_of_editors  %}
       <tr>
-        <td>{{ editor_dict.editor.profile.full_name }} <sup> <a href="core/email.html" onclick="return popitup('/email/proposal/{{proposal.id}}/user/{{editor.pk}}/','proposal{{editor.pk}}')"class="fa fa-envelope-o btn btn-xs btn-default"></a></sup></td>
+        <td>{{ editor_dict.editor.profile.full_name }} <sup> <a href="core/email.html" onclick="return popitup('/email/proposal/{{proposal.id}}/user/{{editor_dict.editor.pk}}/','proposal{{editor_dict.editor.pk}}')"class="fa fa-envelope-o btn btn-xs btn-default"></a></sup></td>
 
             <td style="width:5%"> 
       <form action="{% url 'proposal_add_editors' proposal.id %}" method="get" >
@@ -84,5 +84,19 @@
       {% endfor %}
     </tbody>
     </table>
+
+    {% endblock %}
+
+    {% block js %}
+<script language="javascript" type="text/javascript">
+<!--
+function popitup(url,title) {
+    newwindow=window.open(url,title,'height=750,width=600');
+    if (window.focus) {newwindow.focus()}
+    return false;
+}
+
+// -->
+</script>
 
     {% endblock %}

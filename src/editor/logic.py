@@ -174,8 +174,11 @@ def handle_review_assignment(request,book, reviewer, review_type, due_date, revi
 			review_type=review_type,
 			user=reviewer,
 			book=book,
-			review_form = review_form,
-			review_round=review_round,defaults={'due':due_date}
+			review_round=review_round,
+			defaults={
+				'due':due_date, 
+				'review_form' : review_form,
+			}
 	)
 
 	if created:

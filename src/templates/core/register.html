@@ -12,8 +12,28 @@
 	<div class="well">
   	<form method="post" class="form" enctype="multipart/form-data">
 	    {% csrf_token %}
-	    {% bootstrap_form form %}
-	    {% bootstrap_form profile_form %}</div>
+
+      {% bootstrap_field form.username %}
+      {% bootstrap_field profile_form.salutation %}
+      {% bootstrap_field form.first_name %}
+      {% bootstrap_field profile_form.middle_name %}
+      {% bootstrap_field form.last_name %}
+      {% bootstrap_field form.email %}
+      {% bootstrap_field form.password1 %}
+      {% bootstrap_field form.password2 %}
+      {% bootstrap_field profile_form.biography %}
+      {% bootstrap_field profile_form.interest %}
+      {% bootstrap_field profile_form.institution %}
+      {% bootstrap_field profile_form.department %}
+      {% bootstrap_field profile_form.country %}
+      {% bootstrap_field profile_form.twitter %}
+      {% bootstrap_field profile_form.facebook %}
+      {% bootstrap_field profile_form.linkedin %}
+      {% bootstrap_field profile_form.impactstory %}
+      {% bootstrap_field profile_form.github %}
+      {% bootstrap_field profile_form.profile_image %}
+      {% bootstrap_field profile_form.signature %}
+      {% bootstrap_field profile_form.website %}</div>
 	    <div class="container-fluid">
 	    <input type="checkbox" name="terms" required> I agree to the <a href="{% url 'page' 'terms-conditions'%}">Terms & Conditions</a> </input>
 	    </div>
