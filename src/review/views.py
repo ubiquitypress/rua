@@ -161,7 +161,7 @@ def review(request, review_type, submission_id, review_round, access_key=None):
 	else:
 		review_assignment.review_form = submission.review_form
 		review_assignment.save()
-		form = review_forms.GeneratedForm(form=submission.review_form)
+		form = forms.GeneratedForm(form=submission.review_form)
 
 	if review_assignment.reopened:
 		result = review_assignment.results

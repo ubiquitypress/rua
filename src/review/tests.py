@@ -269,7 +269,7 @@ class ReviewTests(TestCase):
 		self.assignment.access_key="enter"
 		self.assignment.save()
 		resp = self.client.post(reverse('reviewer_decision_without_access_key',kwargs={'review_type':self.assignment.review_type,'submission_id':1,'review_assignment':1,'access_key':"enter"}), {'accept': 'I Accept'})
-		path = views.create_review_form(self.book)
+		path = views.create_review_form(self.book,self.book.review_form)
 		self.assertEqual("/files/forms/" in path, True)
 		self.assertEqual(".docx" in path, True)
 		review_file = tempfile.NamedTemporaryFile(delete=False)
