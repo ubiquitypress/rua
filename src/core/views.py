@@ -776,6 +776,10 @@ def email_users_proposal(request, proposal_id, user_id):
         messages.add_message(request, messages.ERROR, "This user is not associated with this proposal")
     else:
         to_value="%s;" % (user.email)
+
+    if user.profile.is_editor():
+        to_value="%s;" % (user.email)
+
     source = "/email/user/proposal/%s/" % proposal_id
 
 
