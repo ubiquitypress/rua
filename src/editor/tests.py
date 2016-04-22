@@ -203,10 +203,6 @@ class EditorTests(TestCase):
 		self.assertEqual("btn-task" in content, True)
 		self.assertEqual("ROUND 1" in content, True)
 		review_file = tempfile.NamedTemporaryFile(delete=False)
-		resp =  self.client.get(reverse('editor_add_reviewers',kwargs={'round_number':1,'submission_id':self.book.id,'review_type':'external'}))
-		content =resp.content
-		self.assertEqual(resp.status_code, 200)
-		self.assertEqual("403" in content, False)
 		resp =  self.client.get(reverse('editor_add_reviewers',kwargs={'round_number':1,'submission_id':self.book.id,'review_type':'internal'}))
 		content =resp.content
 		self.assertEqual(resp.status_code, 200)
@@ -214,6 +210,10 @@ class EditorTests(TestCase):
 		resp =  self.client.post(reverse('editor_add_reviewers',kwargs={'round_number':1,'submission_id':self.book.id,'review_type':'internal'}),{'message':'Dear reviewer','due_date': '2015-11-11', 'review_form': 'rua_test_form', 'committee': 2, 'reviewer': 4,'attachment':review_file})
 		self.assertEqual(resp.status_code, 302)
 		self.assertEqual(resp['Location'], "http://testing/editor/submission/1/review/round/2/")
+		resp =  self.client.get(reverse('editor_add_reviewers',kwargs={'round_number':1,'submission_id':self.book.id,'review_type':'external'}))
+		content =resp.content
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual("403" in content, False)
 		resp =  self.client.post(reverse('editor_add_reviewers',kwargs={'round_number':1,'submission_id':self.book.id,'review_type':'external'}),{'message':'Dear reviewer','due_date': '2015-11-11', 'review_form': 'rua_test_form', 'committee': 2, 'reviewer': 4,'attachment':review_file})
 		self.assertEqual(resp.status_code, 302)
 		self.assertEqual(resp['Location'], "http://testing/editor/submission/1/review/round/2/")
