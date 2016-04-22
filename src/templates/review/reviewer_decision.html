@@ -43,20 +43,14 @@
         <p class="task-info-text">{{instructions|safe}}</p>
           
          <h5> Task Due <span class="subtitle-text">{{ review_assignment.due }}</span></h5>
-        <p> <h4>Abstract</h4>
-         {{ submission.description|safe }}</p>
-         {% if file_preview %}
-        {% include "review/submission_files.html" %}
-        {% endif %}
-        </div>
-
-              <div class="col-md-12 container-fluid decision-info-undecided">                 
+         <hr>
+         <div class="col-md-12 container-fluid decision-info-undecided">                 
   
                      <p>You can accept or reject this task</p>
 
                     </div>
-</br>
-</br>
+            </br>
+            </br>
           <div class="dash-container" >
           <form method="post">
           {% csrf_token %}
@@ -64,6 +58,14 @@
              <input class="btn btn-lg btn-accept" type="submit"  name="accept" id="accept" value="I Accept" style="width:120px; font-size: 14px;" >
              </form>
             </div> 
+        <p> <h4>Abstract</h4>
+         {{ submission.description|safe }}</p>
+         {% if file_preview %}
+        {% include "review/submission_files.html" %}
+        {% endif %}
+        </div>
+
+              
    
         
                    {% include "review/contact_editors.html"  %}
