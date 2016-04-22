@@ -10,9 +10,11 @@ from pprint import pprint
 
 def filepath(book, attachment):
 	return '%s/%s/%s' % (settings.BOOK_DIR, book.id, attachment.uuid_filename)
-
 def filepath_proposal(proposal, attachment):
 	return '%s/%s/%s' % (settings.PROPOSAL_DIR, proposal.id, attachment.uuid_filename)
+
+def filepath_general(attachment):
+	return '%s/%s' % (settings.EMAIL_DIR, attachment.uuid_filename)
 
 def send_email(subject, context, from_email, to, html_template, bcc=None, cc=None, book=None, attachment=None, proposal=None):
 
@@ -37,8 +39,11 @@ def send_email(subject, context, from_email, to, html_template, bcc=None, cc=Non
 	if attachment:
 		if book:
 			msg.attach_file(filepath(book, attachment))
-		else:
+		elif proposal:
 			msg.attach_file(filepath_proposal(proposal, attachment))
+		else:
+			msg.attach_file(filepath_general(attachment))
+
 
 	msg.send()
 

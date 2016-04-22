@@ -1,5 +1,6 @@
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import get_template
+from django.contrib.auth.models import User
 from django.template import Context
 from django.db.models import Max
 from django.utils import timezone
@@ -341,6 +342,26 @@ def get_editor_emails(submission_id,term):
 		if term:
 			if term.lower() in name.lower():
 				results.append(editor_json)
+	return results
+
+def get_all_user_emails(term):
+	users = User.objects.all()
+	results = []
+	for user in users:
+		try:
+			name=user.profile.full_name()
+		except:
+			name=user.first_name+' '+user.last_name
+		user_json = {}
+		user_json['id'] = user.id
+		user_json['label'] = name
+		try:
+			user_json['value'] = user.email
+		except:
+			user_json['value'] = user.email
+		if term:
+			if term.lower() in name.lower():
+				results.append(user_json)
 	return results
 
 def get_onetasker_emails(submission_id,term):

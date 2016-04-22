@@ -72,8 +72,11 @@ urlpatterns = patterns('',
     url(r'^email/get/user/proposal/(?P<proposal_id>\d+)/$', 'core.views.get_proposal_users', name='get_proposal_users'), 
     url(r'^email/get/authors/submission/(?P<submission_id>\d+)/$', 'core.views.get_authors', name='get_authors'),
     url(r'^email/get/editors/submission/(?P<submission_id>\d+)/$', 'core.views.get_editors', name='get_editors'),
+    url(r'^email/get/users/$', 'core.views.get_all_users', name='get_all_users'),
     url(r'^email/get/onetaskers/submission/(?P<submission_id>\d+)/$', 'core.views.get_onetaskers', name='get_onetaskers'),
     url(r'^email/get/all/submission/(?P<submission_id>\d+)/$', 'core.views.get_all', name='get_all'),
+    url(r'^email/general/$', 'core.views.email_general', name='email_general'),
+    url(r'^email/general/user/(?P<user_id>\d+)/$', 'core.views.email_general', name='email_general_user_id'),
     
     # Files
     url(r'^files/submission/(?P<submission_id>\d+)/get/marc21/(?P<type>[-\w]+)/$', 'core.views.serve_marc21_file', name='serve_marc21_file'),

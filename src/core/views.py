@@ -19,7 +19,7 @@ from review import models as review_models
 from core import log, models, forms, logic
 from author import orcid
 from email import send_email,send_reset_email
-from files import handle_file_update, handle_attachment, handle_file, handle_proposal_review_file, handle_proposal_file, handle_proposal_file_form
+from files import handle_file_update, handle_attachment, handle_file, handle_email_file, handle_proposal_review_file, handle_proposal_file, handle_proposal_file_form
 from submission import models as submission_models
 from core.decorators import is_reviewer, is_editor, is_book_editor, is_book_editor_or_author, is_onetasker,is_author, is_press_editor
 from review import forms as review_forms
@@ -592,6 +592,17 @@ def get_authors(request, submission_id):
     mimetype = 'application/json'
     return HttpResponse(data, mimetype)
 
+def get_all_users(request):
+    if request.is_ajax():
+        q = request.GET.get('term', '')
+        results = []
+        data = smart_text(json.dumps(logic.get_all_user_emails(q)))
+    else:
+        data = 'Unable to get editors'
+
+    mimetype = 'application/json'
+    return HttpResponse(data, mimetype)
+
 def get_editors(request, submission_id):
     if request.is_ajax():
         q = request.GET.get('term', '')
@@ -730,6 +741,56 @@ def email_users(request, group, submission_id=None, user_id=None):
         'to_value':to_value,
         'source': source,
         'group': group_name,
+        'user_id':user_id,
+        'sent':sent,
+        
+    }
+    return render(request, template, context)
+
+@login_required
+def email_general(request, user_id=None):
+    users = User.objects.all()
+    if user_id:
+        user = get_object_or_404(User, pk=user_id)
+    else:
+        user = None
+    to_value=""
+    sent = False
+    if request.POST:
+
+        attachment = request.FILES.get('attachment')
+        subject = request.POST.get('subject')
+        body = request.POST.get('body')
+        
+        to_addresses = request.POST.get('to_values').split(';')
+        cc_addresses = request.POST.get('cc_values').split(';')
+        bcc_addresses = request.POST.get('bcc_values').split(';')
+
+        to_list=logic.clean_email_list(to_addresses)
+        cc_list=logic.clean_email_list(cc_addresses)
+        bcc_list=logic.clean_email_list(bcc_addresses)
+        
+        if attachment: 
+            attachment = handle_email_file(attachment, 'other', request.user, "Attachment: Uploaded by %s" % (request.user.username))
+        
+        if to_addresses:
+            if attachment: 
+                send_email(subject=subject, context={}, from_email=request.user.email, to=to_list, bcc=bcc_list,cc=cc_list, html_template=body, attachment=attachment)
+            else:
+                send_email(subject=subject, context={}, from_email=request.user.email, to=to_list,bcc=bcc_list,cc=cc_list, html_template=body)
+            message ="E-mail with subject '%s' was sent." % (subject)
+            return HttpResponse('<script type="text/javascript">window.alert("'+message+'")</script><script type="text/javascript">window.close()</script>') 
+    
+    if user_id:
+        to_value="%s;" % (user.email) 
+
+    source = "/email/get/users/"
+
+    template = 'core/email.html'
+    context = {
+        'from': request.user,
+        'to_value':to_value,
+        'source': source,
         'user_id':user_id,
         'sent':sent,
         
