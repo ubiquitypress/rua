@@ -1,7 +1,7 @@
 from django.core import exceptions
 from django.contrib import messages
-from django.shortcuts import get_object_or_404
-
+from django.shortcuts import redirect, render, get_object_or_404
+from django.core.urlresolvers import reverse
 from core import models
 
 from pprint import pprint
@@ -12,7 +12,7 @@ def is_author(function):
 		
 		if not request.user.is_authenticated():
 			messages.add_message(request, messages.ERROR, 'You need to log in to view this page.')
-			raise exceptions.PermissionDenied 
+			return redirect("%s?next=%s" % (reverse('login'), request.get_full_path()))
 
 		user_roles = [role.slug for role in request.user.profile.roles.all()]
 		submission_id = False
@@ -35,7 +35,7 @@ def is_press_editor(function):
 		
 		if not request.user.is_authenticated():
 			messages.add_message(request, messages.ERROR, 'You need to log in to view this page.')
-			raise exceptions.PermissionDenied 
+			return redirect("%s?next=%s" % (reverse('login'), request.get_full_path()))
 
 		user_roles = [role.slug for role in request.user.profile.roles.all()]
 
@@ -54,7 +54,7 @@ def is_production_editor(function):
 		
 		if not request.user.is_authenticated():
 			messages.add_message(request, messages.ERROR, 'You need to log in to view this page.')
-			raise exceptions.PermissionDenied 
+			return redirect("%s?next=%s" % (reverse('login'), request.get_full_path()))
 
 		user_roles = [role.slug for role in request.user.profile.roles.all()]
 
@@ -74,7 +74,7 @@ def is_editor(function):
 		
 		if not request.user.is_authenticated():
 			messages.add_message(request, messages.ERROR, 'You need to log in to view this page.')
-			raise exceptions.PermissionDenied 
+			return redirect("%s?next=%s" % (reverse('login'), request.get_full_path()))
 
 		user_roles = [role.slug for role in request.user.profile.roles.all()]
 		submission_id = False
@@ -97,7 +97,7 @@ def is_book_editor(function):
 		
 		if not request.user.is_authenticated():
 			messages.add_message(request, messages.ERROR, 'You need to log in to view this page.')
-			raise exceptions.PermissionDenied 
+			return redirect("%s?next=%s" % (reverse('login'), request.get_full_path()))
 
 		user_roles = [role.slug for role in request.user.profile.roles.all()]
 		submission_id = False
@@ -128,7 +128,7 @@ def is_book_editor_or_author(function):
 		
 		if not request.user.is_authenticated():
 			messages.add_message(request, messages.ERROR, 'You need to log in to view this page.')
-			raise exceptions.PermissionDenied 
+			return redirect("%s?next=%s" % (reverse('login'), request.get_full_path()))
 
 		user_roles = [role.slug for role in request.user.profile.roles.all()]
 		submission_id = False
@@ -159,7 +159,7 @@ def is_reviewer(function):
 		
 		if not request.user.is_authenticated():
 			messages.add_message(request, messages.ERROR, 'You need to log in to view this page.')
-			raise exceptions.PermissionDenied 
+			return redirect("%s?next=%s" % (reverse('login'), request.get_full_path()))
 
 		user_roles = [role.slug for role in request.user.profile.roles.all()]
 		submission_id = False
@@ -192,7 +192,7 @@ def has_reviewer_role(function):
 		
 		if not request.user.is_authenticated():
 			messages.add_message(request, messages.ERROR, 'You need to log in to view this page.')
-			raise exceptions.PermissionDenied 
+			return redirect("%s?next=%s" % (reverse('login'), request.get_full_path()))
 
 		user_roles = [role.slug for role in request.user.profile.roles.all()]
 		submission_id = False
@@ -215,7 +215,7 @@ def is_indexer(function):
 		
 		if not request.user.is_authenticated():
 			messages.add_message(request, messages.ERROR, 'You need to log in to view this page.')
-			raise exceptions.PermissionDenied 
+			return redirect("%s?next=%s" % (reverse('login'), request.get_full_path()))
 
 		user_roles = [role.slug for role in request.user.profile.roles.all()]
 		submission_id = False
@@ -249,7 +249,7 @@ def is_copyeditor(function):
 		
 		if not request.user.is_authenticated():
 			messages.add_message(request, messages.ERROR, 'You need to log in to view this page.')
-			raise exceptions.PermissionDenied 
+			return redirect("%s?next=%s" % (reverse('login'), request.get_full_path()))
 
 		user_roles = [role.slug for role in request.user.profile.roles.all()]
 		submission_id = False
@@ -282,7 +282,7 @@ def is_typesetter(function):
 		
 		if not request.user.is_authenticated():
 			messages.add_message(request, messages.ERROR, 'You need to log in to view this page.')
-			raise exceptions.PermissionDenied 
+			return redirect("%s?next=%s" % (reverse('login'), request.get_full_path()))
 
 		user_roles = [role.slug for role in request.user.profile.roles.all()]
 		submission_id = False
