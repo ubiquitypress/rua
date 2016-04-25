@@ -1,5 +1,6 @@
 import random
 
+from core.setting_util import get_setting
 from core import models, email, log
 
 def generate_password():
@@ -23,4 +24,4 @@ def send_new_user_ack(email_text, new_user, code):
 		'code': code,
 	}
 
-	email.send_email('New User : Profile Detail', context, from_email.value, new_user.email, email_text)
+	email.send_email(get_setting('new_user_subject','email_subject','New User : Profile Details'), context, from_email.value, new_user.email, email_text)

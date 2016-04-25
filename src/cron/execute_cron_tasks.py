@@ -5,6 +5,8 @@ from revisions import models as revision_models
 from django.utils import timezone
 from django.db.models import Q
 
+from core.setting_util import get_setting
+
 from datetime import timedelta
 from pprint import pprint
 
@@ -19,7 +21,7 @@ def remind_unaccepted_reviews(task):
 	for book in books:
 		reviews = models.ReviewAssignment.objects.filter(book=book, review_round__round_number=book.get_latest_review_round(), unaccepted_reminder=False, accepted__isnull=True, declined__isnull=True, assigned=target_date.date)
 		for review in reviews:
-			send_reminder_email(book, 'Review Request Reminder', review, email_text)
+			send_reminder_email(book, get_setting('review_request_reminder_subject','email_subject','Review Request Reminder'), review, email_text)
 			# Lets make sure that we don't accidentally send this twice.
 			review.unaccepted_reminder = True
 			review.save()
@@ -35,7 +37,7 @@ def remind_accepted_reviews(task):
 	for book in books:
 		reviews = models.ReviewAssignment.objects.filter(book=book, review_round__round_number=book.get_latest_review_round(), accepted_reminder=False, accepted__isnull=False, completed__isnull=True, declined__isnull=True, due=target_date.date)
 		for review in reviews:
-			send_reminder_email(book, 'Review Request Reminder', review, email_text)
+			send_reminder_email(book, get_setting('review_request_reminder_subject','email_subject','Review Request Reminder'), review, email_text)
 			# Lets make sure that we don't accidentally send this twice.
 			review.accepted_reminder = True
 			review.save()
@@ -51,7 +53,7 @@ def remind_overdue_reviews(task):
 	for book in books:
 		reviews = models.ReviewAssignment.objects.filter(book=book, review_round__round_number=book.get_latest_review_round(), overdue_reminder=False, completed__isnull=True, declined__isnull=True, due=target_date.date)
 		for review in reviews:
-			send_reminder_email(book, 'Review Request Reminder', review, email_text)
+			send_reminder_email(book, get_setting('review_request_reminder_subject','email_subject','Review Request Reminder'), review, email_text)
 			# Lets make sure that we don't accidentally send this twice.
 			review.overdue_reminder = True
 			review.save()
@@ -68,7 +70,7 @@ def reminder_overdue_revisions(task):
 		revisions = revision_models.Revision.objects.filter(book=book, completed__isnull=True, overdue_reminder=False, due=target_date.date)
 		for review in revisions:
 			review.user = review.book.owner
-			send_reminder_email(book, 'Revision Request Reminder', review, email_text)
+			send_reminder_email(book, get_setting('revision_request_reminder_subject','email_subject','Revision Request Reminder'), review, email_text)
 			review.overdue_reminder = True
 			review.save()
 			
@@ -97,7 +99,7 @@ def reminder_notifications_not_emailed(task):
 			'press_name': press_name,
 			'base_url': models.Setting.objects.get(group__name='general', name='base_url').value,	
 		}
-		email.send_email('Weekly Notification Reminder', context, from_email.value, editor.email, email_text)
+		email.send_email(get_setting('weekly_notification_reminder_subject','email_subject','Weekly Notification Reminder'), context, from_email.value, editor.email, email_text)
 
 # Utils
 
