@@ -133,7 +133,7 @@
     <div class="dash-container">
 <div class="dash-container">
 <h3> Notes {% if request.user.profile.is_editor %} <a href="{% url 'submission_notes_add' proposal.id %}" class="btn btn-info btn-round pull-right"> + Add Note</a></h3>
-<small>Warning: A publisher might not see these notes.</small>{% else %}</h3>
+<small><strong>Please note:</strong> These notes are for the proposal author only and will not be viewable by the publisher.</small>{% else %}</h3>
 <small>Notes from editor(s).</small>{% endif%}
   </div>
   </div>
