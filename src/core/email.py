@@ -2,7 +2,7 @@ from django.core.mail import EmailMessage
 from django.template.loader import get_template
 from django.template import Context, Template
 from django.conf import settings
-
+from setting_util import get_setting
 from core import models
 from core import log
 
@@ -60,6 +60,6 @@ def send_reset_email(user, email_text, reset_code):
 		'user': user,
 	}
 
-	send_email('[abp] Reset Code', context, from_email.value, user.email, email_text)
+	send_email(get_setting('reset_code_subject','email_subject','[abp] Reset Code'), context, from_email.value, user.email, email_text)
 
 

@@ -5,7 +5,7 @@
     "group": 6,
     "name": "book_contract_uploaded_subject",
     "types": "text",
-    "description": ""
+    "description": "Email subject. Do not remove '%s' or other string format related parts. "
   },
   "model": "core.setting",
   "pk": null
@@ -16,7 +16,7 @@
     "group": 6,
     "name": "proposal_review_request_subject",
     "types": "text",
-    "description": ""
+    "description": "Email subject. Do not remove '%s' or other string format related parts. "
   },
   "model": "core.setting",
   "pk": null
@@ -27,7 +27,7 @@
     "group": 6,
     "name": "submission_decision_update_subject",
     "types": "text",
-    "description": ""
+    "description": "Email subject. Do not remove '%s' or other string format related parts. "
   },
   "model": "core.setting",
   "pk": null
@@ -38,7 +38,7 @@
     "group": 6,
     "name": "production_editor_subject",
     "types": "text",
-    "description": ""
+    "description": "Email subject. Do not remove '%s' or other string format related parts. "
   },
   "model": "core.setting",
   "pk": null
@@ -49,7 +49,7 @@
     "group": 6,
     "name": "review_request_subject",
     "types": "text",
-    "description": ""
+    "description": "Email subject. Do not remove '%s' or other string format related parts. "
   },
   "model": "core.setting",
   "pk": null
@@ -60,7 +60,7 @@
     "group": 6,
     "name": "proposal_declined_subject",
     "types": "text",
-    "description": ""
+    "description": "Email subject. Do not remove '%s' or other string format related parts. "
   },
   "model": "core.setting",
   "pk": null
@@ -71,7 +71,7 @@
     "group": 6,
     "name": "proposal_update_subject",
     "types": "text",
-    "description": ""
+    "description": "Email subject. Do not remove '%s' or other string format related parts. "
   },
   "model": "core.setting",
   "pk": null
@@ -82,7 +82,7 @@
     "group": 6,
     "name": "proposal_submission_ack_subject",
     "types": "text",
-    "description": ""
+    "description": "Email subject. Do not remove '%s' or other string format related parts. "
   },
   "model": "core.setting",
   "pk": null
@@ -93,7 +93,7 @@
     "group": 6,
     "name": "assignment_declined_subject",
     "types": "text",
-    "description": ""
+    "description": "Email subject. Do not remove '%s' or other string format related parts. "
   },
   "model": "core.setting",
   "pk": null
@@ -104,7 +104,7 @@
     "group": 6,
     "name": "proposal_accepted_subject",
     "types": "text",
-    "description": ""
+    "description": "Email subject. Do not remove '%s' or other string format related parts. "
   },
   "model": "core.setting",
   "pk": null
@@ -115,7 +115,7 @@
     "group": 6,
     "name": "proposal_revision_required_subject",
     "types": "text",
-    "description": ""
+    "description": "Email subject. Do not remove '%s' or other string format related parts. "
   },
   "model": "core.setting",
   "pk": null
@@ -126,7 +126,7 @@
     "group": 6,
     "name": "typesetting_subject",
     "types": "text",
-    "description": ""
+    "description": "Email subject. Do not remove '%s' or other string format related parts. "
   },
   "model": "core.setting",
   "pk": null
@@ -137,7 +137,7 @@
     "group": 6,
     "name": "registration_confirmation_subject",
     "types": "text",
-    "description": ""
+    "description": "Email subject. Do not remove '%s' or other string format related parts. "
   },
   "model": "core.setting",
   "pk": null
@@ -148,7 +148,7 @@
     "group": 6,
     "name": "weekly_notification_reminder_subject",
     "types": "text",
-    "description": ""
+    "description": "Email subject. Do not remove '%s' or other string format related parts. "
   },
   "model": "core.setting",
   "pk": null
@@ -159,7 +159,7 @@
     "group": 6,
     "name": "copyediting_completed_subject",
     "types": "text",
-    "description": ""
+    "description": "Email subject. Do not remove '%s' or other string format related parts. "
   },
   "model": "core.setting",
   "pk": null
@@ -170,7 +170,7 @@
     "group": 6,
     "name": "new_user_subject",
     "types": "text",
-    "description": ""
+    "description": "Email subject. Do not remove '%s' or other string format related parts. "
   },
   "model": "core.setting",
   "pk": null
@@ -181,7 +181,7 @@
     "group": 6,
     "name": "copyedit_assignment_subject",
     "types": "text",
-    "description": ""
+    "description": "Email subject. Do not remove '%s' or other string format related parts. "
   },
   "model": "core.setting",
   "pk": null
@@ -192,7 +192,7 @@
     "group": 6,
     "name": "indexing_request_subject",
     "types": "text",
-    "description": ""
+    "description": "Email subject. Do not remove '%s' or other string format related parts. "
   },
   "model": "core.setting",
   "pk": null
@@ -203,10 +203,10 @@
     "group": 6,
     "name": "editorial_review_request",
     "types": "text",
-    "description": ""
+    "description": "Email subject. Do not remove '%s' or other string format related parts. "
   },
   "model": "core.setting",
-  "pk": null101
+  "pk": null
 },
 {
   "fields": {
@@ -214,10 +214,10 @@
     "group": 6,
     "name": "editorial_review_due_date_subject",
     "types": "text",
-    "description": ""
+    "description": "Email subject. Do not remove '%s' or other string format related parts. "
   },
   "model": "core.setting",
-  "pk": null102
+  "pk": null
 },
 {
   "fields": {
@@ -225,10 +225,10 @@
     "group": 6,
     "name": "review_due_date_subject",
     "types": "text",
-    "description": ""
+    "description": "Email subject. Do not remove '%s' or other string format related parts. "
   },
   "model": "core.setting",
-  "pk": null103
+  "pk": null
 },
 {
   "fields": {
@@ -236,10 +236,10 @@
     "group": 6,
     "name": "book_editors_subject",
     "types": "text",
-    "description": ""
+    "description": "Email subject. Do not remove '%s' or other string format related parts. "
   },
   "model": "core.setting",
-  "pk": null104
+  "pk": null
 },
 {
   "fields": {
@@ -247,10 +247,10 @@
     "group": 6,
     "name": "revisions_requested_subject",
     "types": "text",
-    "description": ""
+    "description": "Email subject. Do not remove '%s' or other string format related parts. "
   },
   "model": "core.setting",
-  "pk": null105
+  "pk": null
 },
 {
   "fields": {
@@ -258,10 +258,10 @@
     "group": 6,
     "name": "submission_ack_subject",
     "types": "text",
-    "description": ""
+    "description": "Email subject. Do not remove '%s' or other string format related parts. "
   },
   "model": "core.setting",
-  "pk": null106
+  "pk": null
 },
 {
   "fields": {
@@ -269,10 +269,10 @@
     "group": 6,
     "name": "new_submission_subject",
     "types": "text",
-    "description": ""
+    "description": "Email subject. Do not remove '%s' or other string format related parts. "
   },
   "model": "core.setting",
-  "pk": null107
+  "pk": null
 },
 {
   "fields": {
@@ -280,10 +280,10 @@
     "group": 6,
     "name": "reset_code_subject",
     "types": "text",
-    "description": ""
+    "description": "Email subject. Do not remove '%s' or other string format related parts. "
   },
   "model": "core.setting",
-  "pk": null108
+  "pk": null
 },
 {
   "fields": {
@@ -291,10 +291,10 @@
     "group": 6,
     "name": "review_request_reminder_subject",
     "types": "text",
-    "description": ""
+    "description": "Email subject. Do not remove '%s' or other string format related parts. "
   },
   "model": "core.setting",
-  "pk": null109
+  "pk": null
 },
 {
   "fields": {
@@ -302,9 +302,9 @@
     "group": 6,
     "name": "revision_request_reminder_subject",
     "types": "text",
-    "description": ""
+    "description": "Email subject. Do not remove '%s' or other string format related parts. "
   },
   "model": "core.setting",
-  "pk": null110
+  "pk": null
 }
 ]

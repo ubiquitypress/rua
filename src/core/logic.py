@@ -18,6 +18,7 @@ from revisions import models as revisions_models
 from submission import logic as submission_logic, models as submission_models
 from core.files import handle_file,handle_copyedit_file,handle_marc21_file
 
+from setting_util import get_setting
 import json
 from pymarc import Record, Field
 from core import email
@@ -462,7 +463,7 @@ def send_author_sign_off(proposal, email_text, sender):
 		'sender': sender,
 	}
 
-	email.send_email('Book Contract Uploaded', context, from_email.value, proposal.owner.email, email_text, proposal=proposal)
+	email.send_email(get_setting('book_contract_uploaded_subject','email_subject','Book Contract Uploaded'), context, from_email.value, proposal.owner.email, email_text, proposal=proposal)
 
 
 @cache_result(300)
@@ -663,7 +664,7 @@ def send_proposal_review_request(proposal, review_assignment, email_text, attach
 		'proposal': proposal,
 		'press_name': press_name,
 	}
-	email.send_email('Proposal Review Request', context, from_email.value, review_assignment.user.email, email_text, proposal = proposal, attachment = attachment)
+	email.send_email(get_setting('proposal_review_request_subject','email_subject','Proposal Review Request'), context, from_email.value, review_assignment.user.email, email_text, proposal = proposal, attachment = attachment)
 
 #### WORKFLOW Logic #####
 
@@ -741,7 +742,7 @@ def send_decision_ack(book, decision, email_text, url=None, attachment=None):
 			'link_to_page': url,
 		}
 
-		email.send_email('Submission decision update: %s'% decision_full, context, from_email.value, author.author_email, email_text, book=book, attachment=attachment)
+		email.send_email(get_setting('submission_decision_update_subject','email_subject','Submission decision update: %s')% decision_full, context, from_email.value, author.author_email, email_text, book=book, attachment=attachment)
 
 def send_editorial_decision_ack(review_assignment, contact, decision, email_text, url=None, attachment=None):
 	from_email = models.Setting.objects.get(group__name='email', name='from_address')
@@ -758,7 +759,7 @@ def send_editorial_decision_ack(review_assignment, contact, decision, email_text
 				'link_to_page': url,
 			}
 
-			email.send_email('Submission decision update: %s'% decision_full, context, from_email.value, editor.email, email_text, book=review_assignment.book, attachment=attachment)
+			email.send_email(get_setting('submission_decision_update_subject','email_subject','Submission decision update: %s') % decision_full, context, from_email.value, editor.email, email_text, book=review_assignment.book, attachment=attachment)
 	elif contact == 'author':
 		authors = review_assignment.book.author.all()
 		for author in authors:
@@ -769,7 +770,7 @@ def send_editorial_decision_ack(review_assignment, contact, decision, email_text
 				'link_to_page': url,
 			}
 
-			email.send_email('Submission decision update: %s'% decision_full, context, from_email.value, author.author_email, email_text, book=review_assignment.book, attachment=attachment)
+			email.send_email(get_setting('submission_decision_update_subject','email_subject','Submission decision update: %s') % decision_full, context, from_email.value, author.author_email, email_text, book=review_assignment.book, attachment=attachment)
 	elif contact == 'publishing-committee':
 		emails = clean_email_list(publishing_committee.split(';'))
 		context = {
@@ -779,7 +780,7 @@ def send_editorial_decision_ack(review_assignment, contact, decision, email_text
 				'link_to_page': url,
 			}
 		for current_email in emails:
-			email.send_email('Submission decision update: %s'% decision_full, context, from_email.value, current_email, email_text, book=review_assignment.book, attachment=attachment)
+			email.send_email(get_setting('submission_decision_update_subject','email_subject','Submission decision update: %s')% decision_full, context, from_email.value, current_email, email_text, book=review_assignment.book, attachment=attachment)
 
 
 		
@@ -795,7 +796,7 @@ def send_production_editor_ack(book, editor, email_text, attachment=None):
 		'editor': editor,
 	}
 
-	email.send_email('Production Editor for %s '% book.full_title, context, from_email.value, editor.email, email_text, book=book, attachment=attachment)
+	email.send_email(get_setting('production_editor_subject','email_subject','Production Editor for %s ') % book.full_title, context, from_email.value, editor.email, email_text, book=book, attachment=attachment)
 
 def send_review_request(book, review_assignment, email_text, attachment=None):
 	from_email = models.Setting.objects.get(group__name='email', name='from_address')
@@ -809,7 +810,7 @@ def send_review_request(book, review_assignment, email_text, attachment=None):
 		'decision_url': decision_url,
 	}
 
-	email.send_email('Review Request', context, from_email.value, review_assignment.user.email, email_text, book=book, attachment=attachment)
+	email.send_email(get_setting('review_request_subject','email_subject','Review Request'), context, from_email.value, review_assignment.user.email, email_text, book=book, attachment=attachment)
 
 def send_proposal_decline(proposal, email_text, sender):
 	from_email = models.Setting.objects.get(group__name='email', name='from_address')
@@ -819,7 +820,7 @@ def send_proposal_decline(proposal, email_text, sender):
 		'sender': sender,
 	}
 
-	email.send_email('[abp] Proposal Declined', context, from_email.value, proposal.owner.email, email_text)
+	email.send_email(get_setting('proposal_declined_subject','email_subject','[abp] Proposal Declined'), context, from_email.value, proposal.owner.email, email_text)
 
 def send_proposal_update(proposal, email_text, sender,receiver):
 	from_email = models.Setting.objects.get(group__name='email', name='from_address')
@@ -830,7 +831,7 @@ def send_proposal_update(proposal, email_text, sender,receiver):
 		'receiver':receiver,
 	}
 
-	email.send_email('[abp] Proposal Update', context, from_email.value, proposal.owner.email, email_text)
+	email.send_email(get_setting('proposal_update_subject','email_subject','[abp] Proposal Update'), context, from_email.value, proposal.owner.email, email_text)
 
 def send_proposal_update(proposal, email_text, sender,receiver):
 	from_email = models.Setting.objects.get(group__name='email', name='from_address')
@@ -841,7 +842,7 @@ def send_proposal_update(proposal, email_text, sender,receiver):
 		'receiver':receiver,
 	}
 
-	email.send_email('[abp] Proposal Update', context, from_email.value, proposal.owner.email, email_text)
+	email.send_email(get_setting('proposal_update_subject','email_subject','[abp] Proposal Update'), context, from_email.value, proposal.owner.email, email_text)
 
 def send_proposal_submission_ack(proposal, email_text, owner):
 	from_email = models.Setting.objects.get(group__name='email', name='from_address')
@@ -854,7 +855,7 @@ def send_proposal_submission_ack(proposal, email_text, owner):
 		'principal_contact_name':'principal_contact_name',
 	}
 
-	email.send_email('[abp] Proposal Submission Ack', context, from_email.value, proposal.owner.email, email_text)
+	email.send_email(get_setting('proposal_submission_ack_subject','email_subject','[abp] Proposal Submission Acknowledgement'), context, from_email.value, proposal.owner.email, email_text)
 
 
 
@@ -867,7 +868,7 @@ def send_task_decline(assignment,type, email_text, sender):
 		'sender': sender,
 	}
 
-	email.send_email('[abp] %s Assignment [id<%s>] Declined' % (type.title(),assignment.id), context, from_email.value, assignment.requestor.email, email_text)
+	email.send_email(get_setting('assignment_declined_subject','email_subject','[abp] %s Assignment [id<%s>] Declined') % (type.title(),assignment.id), context, from_email.value, assignment.requestor.email, email_text)
 
 def send_proposal_accept(proposal, email_text, submission, sender, attachment=None):
 	from_email = models.Setting.objects.get(group__name='email', name='from_address')
@@ -879,7 +880,7 @@ def send_proposal_accept(proposal, email_text, submission, sender, attachment=No
 		'sender': sender,
 	}
 
-	email.send_email('[abp] Proposal Accepted', context, from_email.value, proposal.owner.email, email_text, book=submission, attachment=attachment)
+	email.send_email(get_setting('proposal_accepted_subject','email_subject','[abp] Proposal Accepted'), context, from_email.value, proposal.owner.email, email_text, book=submission, attachment=attachment)
 
 def send_proposal_revisions(proposal, email_text, sender):
 	from_email = models.Setting.objects.get(group__name='email', name='from_address')
@@ -892,7 +893,7 @@ def send_proposal_revisions(proposal, email_text, sender):
 		'press_name':press_name,
 	}
 
-	email.send_email('[abp] Proposal Revisions Required', context, from_email.value, proposal.owner.email, email_text)
+	email.send_email(get_setting('proposal_revision_required_subject','email_subject','[abp] Proposal Revisions Required'), context, from_email.value, proposal.owner.email, email_text)
 
 
 def send_author_sign_off(submission, email_text, sender):
@@ -904,7 +905,7 @@ def send_author_sign_off(submission, email_text, sender):
 		'sender': sender,
 	}
 
-	email.send_email('Book Contract Uploaded', context, from_email.value, submission.owner.email, email_text, book=submission)
+	email.send_email(get_setting('book_contract_uploaded_subject','email_subject','Book Contract Uploaded'), context, from_email.value, submission.owner.email, email_text, book=submission)
 
 def send_invite_typesetter(book, typeset, email_text, sender, attachment):
 
@@ -918,7 +919,7 @@ def send_invite_typesetter(book, typeset, email_text, sender, attachment):
 		'sender': sender,
 	}
 
-	email.send_email('Typesetting', context, from_email.value, typeset.typesetter.email, email_text, book=book, attachment=attachment)	
+	email.send_email(get_setting('typesetting_subject','email_subject','Typesetting'), context, from_email.value, typeset.typesetter.email, email_text, book=book, attachment=attachment)	
 
 def send_new_user_ack(email_text, new_user, profile):
 	from_email = models.Setting.objects.get(group__name='email', name='from_address')
@@ -931,4 +932,4 @@ def send_new_user_ack(email_text, new_user, profile):
 		'press_name': press_name,
 	}
 
-	email.send_email('Registration Confirmation', context, from_email.value, new_user.email, email_text)
+	email.send_email(get_setting('registration_confirmation_subject','email_subject','Registration Confirmation'), context, from_email.value, new_user.email, email_text)
