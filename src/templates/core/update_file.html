@@ -108,7 +108,7 @@
 				<td>Uploaded</td><td>{{ file.date_uploaded }}</td>
 				</tr>
 				<tr>
-				<td>Last Modified</td><td>{{ file.date_modified }} (<a href="{% url 'versions_file' submission.id file.id %}">History</a>)</td>
+				<td>Last Modified</td><td>{{ file.date_modified }} (<a target="_blank" href="{% url 'versions_file' submission.id file.id %}">History</a>)</td>
 				</tr>
 			</tbody>
 		</table>

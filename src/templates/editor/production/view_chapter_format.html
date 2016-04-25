@@ -46,7 +46,7 @@
                               <hr />
                               <a href="{% url 'serve_file' submission.id chapter_format.file.id %}" class="btn btn-sm btn-task"><i class="fa fa-download">&nbsp;</i>Download</a>
                               <td><a href="{% url 'update_format_or_chapter' submission.id 'chapter' chapter_format.id %}"  class="btn btn-sm btn-accept">&nbsp;<i class="fa fa-cloud-upload">&nbsp;</i>Update&nbsp;</a>
-                              <a href="{% url 'versions_file' submission.id chapter_format.file.id %}" class="btn btn-sm btn-view btn-round"><i class="fa fa-files-o">&nbsp;</i>Versions</a>
+                              <a target="_blank" href="{% url 'versions_file' submission.id chapter_format.file.id %}" class="btn btn-sm btn-view btn-round"><i class="fa fa-files-o">&nbsp;</i>Versions</a>
                               <a href="{% url 'delete_file' submission.id chapter_format.file.id active %}" class="btn btn-sm btn-decline"><i class="fa fa-trash-o">&nbsp;</i>Delete</a>
                              
                             </div>

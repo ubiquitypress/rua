@@ -15,7 +15,7 @@
 			<td>{{file.kind|capfirst }}</td>
 			<td><a href="{% url 'serve_file' submission.id file.id %}" class="btn btn-sm btn-primary"><i class="fa fa-download">&nbsp;</i>Download</a></td>
 			<td><a href="{% url 'update_file' submission.id file.id active %}" class="btn btn-sm btn-primary"><i class="fa fa-cloud-upload">&nbsp;</i>Update</a></td>
-  		<td><a href="{% url 'versions_file' submission.id file.id %}" class="btn btn-sm btn-primary"><i class="fa fa-files-o">&nbsp;</i>Versions</a></td>
+  		<td><a target="_blank" href="{% url 'versions_file' submission.id file.id %}" class="btn btn-sm btn-primary"><i class="fa fa-files-o">&nbsp;</i>Versions</a></td>
   		<td><a href="{% url 'delete_file' submission.id file.id active %}" class="btn btn-sm btn-primary"><i class="fa fa-trash-o">&nbsp;</i>Delete</a></td>
   	</tr>
 {% empty %}

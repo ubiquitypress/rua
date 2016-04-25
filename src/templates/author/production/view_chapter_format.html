@@ -45,7 +45,7 @@
                             <div class="button-block-center">
                               <hr />
                               <a href="{% url 'serve_file' submission.id chapter_format.file.id %}" class="btn btn-sm btn-task"><i class="fa fa-download">&nbsp;</i>Download</a>
-                              <a href="{% url 'versions_file' submission.id chapter_format.file.id %}" class="btn btn-sm btn-view btn-round"><i class="fa fa-files-o">&nbsp;</i>Versions</a>
+                              <a target="_blank" href="{% url 'versions_file' submission.id chapter_format.file.id %}" class="btn btn-sm btn-view btn-round"><i class="fa fa-files-o">&nbsp;</i>Versions</a>
                              
                             </div>
                             </li>

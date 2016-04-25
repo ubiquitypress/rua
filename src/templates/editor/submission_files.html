@@ -26,7 +26,7 @@
       <hr />
       <a href="{% url 'serve_file' submission.id file.id %}" class="btn btn-sm btn-task"><i class="fa fa-cloud-download">&nbsp;</i>Download</a>
       <td><a href="{% url 'update_file' submission.id file.id 'editor'  %}"  class="btn btn-sm btn-accept">&nbsp;<i class="fa fa-cloud-upload">&nbsp;</i>Update&nbsp;</a>
-      <a href="{% url 'versions_file' submission.id file.id %}" class="btn btn-sm btn-view btn-round"><i class="fa fa-files-o">&nbsp;</i>Versions</a>
+      <a target="_blank" href="{% url 'versions_file' submission.id file.id %}" class="btn btn-sm btn-view btn-round"><i class="fa fa-files-o">&nbsp;</i>Versions</a>
       <a href="{% url 'delete_file' submission.id file.id 'editor' %}" class="btn btn-sm btn-decline"><i class="fa fa-trash-o">&nbsp;</i>Delete</a>
     </div>
     </li>
@@ -64,7 +64,7 @@
       <hr />
       <a href="{% url 'serve_file' submission.id file.id %}" class="btn btn-sm btn-task"><i class="fa fa-cloud-download">&nbsp;</i>Download</a>
       <td><a href="{% url 'update_file' submission.id file.id  'editor'  %}" class="btn btn-sm btn-accept">&nbsp;<i class="fa fa-cloud-upload">&nbsp;</i>Update&nbsp;</a>
-      <a href="{% url 'versions_file' submission.id file.id %}" class="btn btn-sm btn-view btn-round"><i class="fa fa-files-o">&nbsp;</i>Versions</a>
+      <a target="_blank" href="{% url 'versions_file' submission.id file.id %}" class="btn btn-sm btn-view btn-round"><i class="fa fa-files-o">&nbsp;</i>Versions</a>
       <a href="{% url 'delete_file' submission.id file.id 'editor' %}" class="btn btn-sm btn-decline"><i class="fa fa-trash-o">&nbsp;</i>Delete</a>
     </div>
     </li>
@@ -103,7 +103,7 @@
       <hr />
       <a href="{% url 'serve_file' submission.id file.id %}" class="btn btn-sm btn-task"><i class="fa fa-cloud-download">&nbsp;</i>Download</a>
       <td><a href="{% url 'update_file' submission.id file.id 'editor'  %}" class="btn btn-sm btn-accept">&nbsp;<i class="fa fa-cloud-upload">&nbsp;</i>Update&nbsp;</a>
-      <a href="{% url 'versions_file' submission.id file.id %}" class="btn btn-sm btn-view btn-round"><i class="fa fa-files-o">&nbsp;</i>Versions</a>
+      <a target="_blank" href="{% url 'versions_file' submission.id file.id %}" class="btn btn-sm btn-view btn-round"><i class="fa fa-files-o">&nbsp;</i>Versions</a>
       <a href="{% url 'delete_file' submission.id file.id 'editor' %}" class="btn btn-sm btn-decline"><i class="fa fa-trash-o">&nbsp;</i>Delete</a>
     </div>    </li>
     {% empty %}
