@@ -28,7 +28,7 @@
 		  	<div class="row">
 		  		<div class="col-md-12">
             {% if book.book_type == 'monograph' %}
-            <h3>Current Authors</h3>
+            <h3>Author List</h3>
             <p>The first author will be the corresponding author. You can change the order below.</p>
             {% for author in book.author.all %}
             <div class="well  {% if forloop.first %} border-primary-author {% endif %}">
