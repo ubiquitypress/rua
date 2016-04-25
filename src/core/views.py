@@ -1763,8 +1763,10 @@ def view_completed_proposal_review(request, proposal_id, assignment_id):
     else:
         relations = None
         data_ordered = None
-
-    if not request.POST and request.GET.get('download') == 'docx':
+    if not request.POST and request.GET.get('download') == 'proposal':
+        path = create_proposal_form(proposal)
+        return serve_proposal_file(request, path)
+    elif not request.POST and request.GET.get('download') == 'docx':
         path = create_completed_proposal_review_form(proposal, review_assignment.pk)
         return serve_proposal_file(request, path)
     elif request.POST:
@@ -1932,7 +1934,10 @@ def view_proposal_review(request, proposal_id, assignment_id):
         relations = None
         data_ordered = None
 
-    if not request.POST and request.GET.get('download') == 'docx':
+    if not request.POST and request.GET.get('download') == 'proposal':
+        path = create_proposal_form(proposal)
+        return serve_proposal_file(request, path)
+    elif not request.POST and request.GET.get('download') == 'docx':
         path = create_proposal_review_form(review_assignment)
         return serve_proposal_file(request, path)
     elif request.POST:

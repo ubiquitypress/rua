@@ -7,7 +7,7 @@
 {% block body %}
 <div class="row">
 <div class="col-md-12 other-heading container-fluid" style="margin-top:-20px">
-      <h3>Book Proposal :  {{ proposal.title }} {% if proposal.subtitle%}: {{ proposal.subtitle }}{%endif%} {% if review_assignment.reopened %} <span class="pull-right small no-recommendation" style="right:40px;position:relative;">&nbsp; Reopened &nbsp; </span>{% endif %}</h3>
+      <h3>Book Proposal :  {{ proposal.title }} {% if proposal.subtitle%}: {{ proposal.subtitle }}{%endif%} {% if review_assignment.reopened %} <span class="pull-right small no-recommendation" style="right:40px;position:relative;">&nbsp; Reopened &nbsp; </span>{% endif %}  <a class="btn  btn-transparent-white btn-proposal-header" href="?download=proposal"> <i class="fa fa-cloud-download"> &nbsp; Download Proposal</i></a></h3>
 
 </div>
 	 <div class="col-md-8 dash-center  bottom-space">
