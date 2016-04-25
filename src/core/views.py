@@ -1765,7 +1765,7 @@ def view_completed_proposal_review(request, proposal_id, assignment_id):
         data_ordered = None
 
     if not request.POST and request.GET.get('download') == 'docx':
-        path = create_proposal_review_form(review_assignment)
+        path = create_completed_proposal_review_form(proposal, review_assignment.pk)
         return serve_proposal_file(request, path)
     elif request.POST:
         form = review_forms.GeneratedForm(request.POST, request.FILES, form=review_assignment.review_form)
@@ -2295,6 +2295,70 @@ def create_proposal_review_form(proposal):
             for i, choice in enumerate(choices):
                 hdr_cells[i].text = choice[0]
             table.style = 'TableGrid'
+
+    document.add_page_break()
+    if not os.path.exists(os.path.join(settings.BASE_DIR, 'files', 'forms')):
+        os.makedirs(os.path.join(settings.BASE_DIR, 'files', 'forms'))
+    path = os.path.join(settings.BASE_DIR, 'files', 'forms', '%s.docx' % str(uuid4()))
+
+    document.save(path)
+    return path
+
+def create_completed_proposal_review_form(proposal,review_id):
+    document = Document()
+    if proposal.subtitle:
+        document.add_heading("%s: %s" % (proposal.title, proposal.subtitle), 0)
+    else:
+        document.add_heading(proposal.title, 0)
+    review_assignment = get_object_or_404(submission_models.ProposalReview, pk=review_id)
+    if review_assignment.review_form:
+        relations = review_models.FormElementsRelationship.objects.filter(form=review_assignment.review_form).order_by('order')
+    else:
+        review_assignment.review_form = proposal.review_form
+        review_assignment.save()
+        relations = review_models.FormElementsRelationship.objects.filter(form=proposal.review_form).order_by('order')
+    
+    if review_assignment.results:
+        p = document.add_paragraph('%s completed this review assignment form.'% review_assignment.user.profile.full_name())
+    
+        data = json.loads(review_assignment.results.data)
+        for relation in relations:
+            v = data[relation.element.name]
+            document.add_heading(relation.element.name, level=1)        
+            text = BeautifulSoup(str(v[0]),"html.parser").get_text()
+            document.add_paragraph(text).bold = True
+            recommendations = {'accept': 'Accept','reject': 'Reject', 'revisions':'Revisions Required'}
+
+        document.add_heading("Recommendation", level=1)
+        document.add_paragraph(recommendations[review_assignment.recommendation]).italic = True
+        document.add_heading("Competing Interests", level=1)
+        document.add_paragraph(review_assignment.competing_interests).italic = True
+    
+    else:
+        p = document.add_paragraph('You should complete this form and then use the review assignment page to upload it.')
+    
+        for relation in relations:
+
+            if relation.element.field_type in ['text', 'textarea', 'date', 'email']:
+                document.add_heading(relation.element.name+": _______________________________", level=1)
+                document.add_paragraph(relation.help_text).italic = True
+
+            if relation.element.field_type in ['select', 'check']:
+                document.add_heading(relation.element.name, level=1)
+                if relation.element.field_type == 'select':
+                    choices = render_choices(relation.element.choices)
+                else:
+                    choices = ['Y', 'N']
+
+                p = document.add_paragraph(relation.help_text)
+                p.add_run(' Mark your choice however you like, as long as it is clear.').italic = True
+                table = document.add_table(rows=2, cols=len(choices))
+                hdr_cells = table.rows[0].cells
+                for i, choice in enumerate(choices):
+                    hdr_cells[i].text = choice[0]
+                table.style = 'TableGrid'
+
+        
 
     document.add_page_break()
     if not os.path.exists(os.path.join(settings.BASE_DIR, 'files', 'forms')):

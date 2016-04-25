@@ -1,0 +1,1809 @@
+[
+{
+  "fields": {
+    "code": "abk",
+    "display": "Abkhazian"
+  },
+  "model": "core.language",
+  "pk": 1
+},
+{
+  "fields": {
+    "code": "afr",
+    "display": "Afrikaans"
+  },
+  "model": "core.language",
+  "pk": 8
+},
+{
+  "fields": {
+    "code": "afa",
+    "display": "Afro-Asiatic languages"
+  },
+  "model": "core.language",
+  "pk": 9
+},
+{
+  "fields": {
+    "code": "amh",
+    "display": "Amharic"
+  },
+  "model": "core.language",
+  "pk": 17
+},
+{
+  "fields": {
+    "code": "anp",
+    "display": "Angika"
+  },
+  "model": "core.language",
+  "pk": 18
+},
+{
+  "fields": {
+    "code": "apa",
+    "display": "Apache languages"
+  },
+  "model": "core.language",
+  "pk": 19
+},
+{
+  "fields": {
+    "code": "ara",
+    "display": "Arabic"
+  },
+  "model": "core.language",
+  "pk": 20
+},
+{
+  "fields": {
+    "code": "hye",
+    "display": "Armenian"
+  },
+  "model": "core.language",
+  "pk": 24
+},
+{
+  "fields": {
+    "code": "asm",
+    "display": "Assamese"
+  },
+  "model": "core.language",
+  "pk": 27
+},
+{
+  "fields": {
+    "code": "ast",
+    "display": "Asturian; Bable; Leonese; Asturleonese"
+  },
+  "model": "core.language",
+  "pk": 28
+},
+{
+  "fields": {
+    "code": "aus",
+    "display": "Australian languages"
+  },
+  "model": "core.language",
+  "pk": 30
+},
+{
+  "fields": {
+    "code": "aze",
+    "display": "Azerbaijani"
+  },
+  "model": "core.language",
+  "pk": 36
+},
+{
+  "fields": {
+    "code": "ban",
+    "display": "Balinese"
+  },
+  "model": "core.language",
+  "pk": 37
+},
+{
+  "fields": {
+    "code": "bat",
+    "display": "Baltic languages"
+  },
+  "model": "core.language",
+  "pk": 38
+},
+{
+  "fields": {
+    "code": "bas",
+    "display": "Basa"
+  },
+  "model": "core.language",
+  "pk": 44
+},
+{
+  "fields": {
+    "code": "bak",
+    "display": "Bashkir"
+  },
+  "model": "core.language",
+  "pk": 45
+},
+{
+  "fields": {
+    "code": "eus",
+    "display": "Basque"
+  },
+  "model": "core.language",
+  "pk": 46
+},
+{
+  "fields": {
+    "code": "bel",
+    "display": "Belarusian"
+  },
+  "model": "core.language",
+  "pk": 49
+},
+{
+  "fields": {
+    "code": "ben",
+    "display": "Bengali"
+  },
+  "model": "core.language",
+  "pk": 51
+},
+{
+  "fields": {
+    "code": "ber",
+    "display": "Berber languages"
+  },
+  "model": "core.language",
+  "pk": 52
+},
+{
+  "fields": {
+    "code": "bos",
+    "display": "Bosnian"
+  },
+  "model": "core.language",
+  "pk": 61
+},
+{
+  "fields": {
+    "code": "bre",
+    "display": "Breton"
+  },
+  "model": "core.language",
+  "pk": 63
+},
+{
+  "fields": {
+    "code": "bul",
+    "display": "Bulgarian"
+  },
+  "model": "core.language",
+  "pk": 65
+},
+{
+  "fields": {
+    "code": "mya",
+    "display": "Burmese"
+  },
+  "model": "core.language",
+  "pk": 67
+},
+{
+  "fields": {
+    "code": "cat",
+    "display": "Catalan; Valencian"
+  },
+  "model": "core.language",
+  "pk": 69
+},
+{
+  "fields": {
+    "code": "cel",
+    "display": "Celtic languages"
+  },
+  "model": "core.language",
+  "pk": 72
+},
+{
+  "fields": {
+    "code": "cai",
+    "display": "Central American Indian languages"
+  },
+  "model": "core.language",
+  "pk": 73
+},
+{
+  "fields": {
+    "code": "che",
+    "display": "Chechen"
+  },
+  "model": "core.language",
+  "pk": 78
+},
+{
+  "fields": {
+    "code": "chr",
+    "display": "Cherokee"
+  },
+  "model": "core.language",
+  "pk": 79
+},
+{
+  "fields": {
+    "code": "zho",
+    "display": "Chinese"
+  },
+  "model": "core.language",
+  "pk": 83
+},
+{
+  "fields": {
+    "code": "cor",
+    "display": "Cornish"
+  },
+  "model": "core.language",
+  "pk": 93
+},
+{
+  "fields": {
+    "code": "cos",
+    "display": "Corsican"
+  },
+  "model": "core.language",
+  "pk": 94
+},
+{
+  "fields": {
+    "code": "hrv",
+    "display": "Croatian"
+  },
+  "model": "core.language",
+  "pk": 102
+},
+{
+  "fields": {
+    "code": "ces",
+    "display": "Czech"
+  },
+  "model": "core.language",
+  "pk": 104
+},
+{
+  "fields": {
+    "code": "dak",
+    "display": "Dakota"
+  },
+  "model": "core.language",
+  "pk": 105
+},
+{
+  "fields": {
+    "code": "dan",
+    "display": "Danish"
+  },
+  "model": "core.language",
+  "pk": 106
+},
+{
+  "fields": {
+    "code": "dum",
+    "display": "Dutch, Middle (ca. 1050-1350)"
+  },
+  "model": "core.language",
+  "pk": 115
+},
+{
+  "fields": {
+    "code": "nld",
+    "display": "Dutch; Flemish"
+  },
+  "model": "core.language",
+  "pk": 116
+},
+{
+  "fields": {
+    "code": "eng",
+    "display": "English"
+  },
+  "model": "core.language",
+  "pk": 124
+},
+{
+  "fields": {
+    "code": "est",
+    "display": "Estonian"
+  },
+  "model": "core.language",
+  "pk": 129
+},
+{
+  "fields": {
+    "code": "fao",
+    "display": "Faroese"
+  },
+  "model": "core.language",
+  "pk": 134
+},
+{
+  "fields": {
+    "code": "fij",
+    "display": "Fijian"
+  },
+  "model": "core.language",
+  "pk": 135
+},
+{
+  "fields": {
+    "code": "fil",
+    "display": "Filipino; Pilipino"
+  },
+  "model": "core.language",
+  "pk": 136
+},
+{
+  "fields": {
+    "code": "fin",
+    "display": "Finnish"
+  },
+  "model": "core.language",
+  "pk": 137
+},
+{
+  "fields": {
+    "code": "fiu",
+    "display": "Finno-Ugrian languages"
+  },
+  "model": "core.language",
+  "pk": 138
+},
+{
+  "fields": {
+    "code": "fra",
+    "display": "French"
+  },
+  "model": "core.language",
+  "pk": 140
+},
+{
+  "fields": {
+    "code": "gla",
+    "display": "Gaelic; Scottish Gaelic"
+  },
+  "model": "core.language",
+  "pk": 146
+},
+{
+  "fields": {
+    "code": "car",
+    "display": "Galibi Carib"
+  },
+  "model": "core.language",
+  "pk": 147
+},
+{
+  "fields": {
+    "code": "glg",
+    "display": "Galician"
+  },
+  "model": "core.language",
+  "pk": 148
+},
+{
+  "fields": {
+    "code": "lug",
+    "display": "Ganda"
+  },
+  "model": "core.language",
+  "pk": 149
+},
+{
+  "fields": {
+    "code": "gay",
+    "display": "Gayo"
+  },
+  "model": "core.language",
+  "pk": 150
+},
+{
+  "fields": {
+    "code": "gba",
+    "display": "Gbaya"
+  },
+  "model": "core.language",
+  "pk": 151
+},
+{
+  "fields": {
+    "code": "gez",
+    "display": "Geez"
+  },
+  "model": "core.language",
+  "pk": 152
+},
+{
+  "fields": {
+    "code": "kat",
+    "display": "Georgian"
+  },
+  "model": "core.language",
+  "pk": 153
+},
+{
+  "fields": {
+    "code": "deu",
+    "display": "German"
+  },
+  "model": "core.language",
+  "pk": 154
+},
+{
+  "fields": {
+    "code": "gmh",
+    "display": "German, Middle High (ca. 1050-1500)"
+  },
+  "model": "core.language",
+  "pk": 155
+},
+{
+  "fields": {
+    "code": "goh",
+    "display": "German, Old High (ca. 750-1050)"
+  },
+  "model": "core.language",
+  "pk": 156
+},
+{
+  "fields": {
+    "code": "gem",
+    "display": "Germanic languages"
+  },
+  "model": "core.language",
+  "pk": 157
+},
+{
+  "fields": {
+    "code": "gil",
+    "display": "Gilbertese"
+  },
+  "model": "core.language",
+  "pk": 158
+},
+{
+  "fields": {
+    "code": "hat",
+    "display": "Haitian; Haitian Creole"
+  },
+  "model": "core.language",
+  "pk": 169
+},
+{
+  "fields": {
+    "code": "haw",
+    "display": "Hawaiian"
+  },
+  "model": "core.language",
+  "pk": 171
+},
+{
+  "fields": {
+    "code": "heb",
+    "display": "Hebrew"
+  },
+  "model": "core.language",
+  "pk": 172
+},
+{
+  "fields": {
+    "code": "hin",
+    "display": "Hindi"
+  },
+  "model": "core.language",
+  "pk": 176
+},
+{
+  "fields": {
+    "code": "hun",
+    "display": "Hungarian"
+  },
+  "model": "core.language",
+  "pk": 180
+},
+{
+  "fields": {
+    "code": "isl",
+    "display": "Icelandic"
+  },
+  "model": "core.language",
+  "pk": 183
+},
+{
+  "fields": {
+    "code": "ind",
+    "display": "Indonesian"
+  },
+  "model": "core.language",
+  "pk": 191
+},
+{
+  "fields": {
+    "code": "gle",
+    "display": "Irish"
+  },
+  "model": "core.language",
+  "pk": 198
+},
+{
+  "fields": {
+    "code": "ita",
+    "display": "Italian"
+  },
+  "model": "core.language",
+  "pk": 202
+},
+{
+  "fields": {
+    "code": "jpn",
+    "display": "Japanese"
+  },
+  "model": "core.language",
+  "pk": 203
+},
+{
+  "fields": {
+    "code": "tlh",
+    "display": "Klingon; tlhIngan-Hol"
+  },
+  "model": "core.language",
+  "pk": 230
+},
+{
+  "fields": {
+    "code": "kon",
+    "display": "Kongo"
+  },
+  "model": "core.language",
+  "pk": 232
+},
+{
+  "fields": {
+    "code": "kor",
+    "display": "Korean"
+  },
+  "model": "core.language",
+  "pk": 234
+},
+{
+  "fields": {
+    "code": "kur",
+    "display": "Kurdish"
+  },
+  "model": "core.language",
+  "pk": 240
+},
+{
+  "fields": {
+    "code": "kru",
+    "display": "Kurukh"
+  },
+  "model": "core.language",
+  "pk": 241
+},
+{
+  "fields": {
+    "code": "lat",
+    "display": "Latin"
+  },
+  "model": "core.language",
+  "pk": 248
+},
+{
+  "fields": {
+    "code": "lav",
+    "display": "Latvian"
+  },
+  "model": "core.language",
+  "pk": 249
+},
+{
+  "fields": {
+    "code": "lit",
+    "display": "Lithuanian"
+  },
+  "model": "core.language",
+  "pk": 253
+},
+{
+  "fields": {
+    "code": "nds",
+    "display": "Low German; Low Saxon; German, Low; Saxon, Low"
+  },
+  "model": "core.language",
+  "pk": 255
+},
+{
+  "fields": {
+    "code": "lus",
+    "display": "Lushai"
+  },
+  "model": "core.language",
+  "pk": 264
+},
+{
+  "fields": {
+    "code": "ltz",
+    "display": "Luxembourgish; Letzeburgesch"
+  },
+  "model": "core.language",
+  "pk": 265
+},
+{
+  "fields": {
+    "code": "mkd",
+    "display": "Macedonian"
+  },
+  "model": "core.language",
+  "pk": 266
+},
+{
+  "fields": {
+    "code": "mlg",
+    "display": "Malagasy"
+  },
+  "model": "core.language",
+  "pk": 271
+},
+{
+  "fields": {
+    "code": "msa",
+    "display": "Malay"
+  },
+  "model": "core.language",
+  "pk": 272
+},
+{
+  "fields": {
+    "code": "mal",
+    "display": "Malayalam"
+  },
+  "model": "core.language",
+  "pk": 273
+},
+{
+  "fields": {
+    "code": "mlt",
+    "display": "Maltese"
+  },
+  "model": "core.language",
+  "pk": 274
+},
+{
+  "fields": {
+    "code": "mni",
+    "display": "Manipuri"
+  },
+  "model": "core.language",
+  "pk": 278
+},
+{
+  "fields": {
+    "code": "mri",
+    "display": "Maori"
+  },
+  "model": "core.language",
+  "pk": 281
+},
+{
+  "fields": {
+    "code": "myn",
+    "display": "Mayan languages"
+  },
+  "model": "core.language",
+  "pk": 288
+},
+{
+  "fields": {
+    "code": "moh",
+    "display": "Mohawk"
+  },
+  "model": "core.language",
+  "pk": 293
+},
+{
+  "fields": {
+    "code": "mol",
+    "display": "Moldavian; Moldovan"
+  },
+  "model": "core.language",
+  "pk": 295
+},
+{
+  "fields": {
+    "code": "mon",
+    "display": "Mongolian"
+  },
+  "model": "core.language",
+  "pk": 298
+},
+{
+  "fields": {
+    "code": "new",
+    "display": "Nepal Bhasa; Newari"
+  },
+  "model": "core.language",
+  "pk": 310
+},
+{
+  "fields": {
+    "code": "nep",
+    "display": "Nepali"
+  },
+  "model": "core.language",
+  "pk": 311
+},
+{
+  "fields": {
+    "code": "non",
+    "display": "Norse, Old"
+  },
+  "model": "core.language",
+  "pk": 318
+},
+{
+  "fields": {
+    "code": "nai",
+    "display": "North American Indian languages"
+  },
+  "model": "core.language",
+  "pk": 319
+},
+{
+  "fields": {
+    "code": "nor",
+    "display": "Norwegian"
+  },
+  "model": "core.language",
+  "pk": 322
+},
+{
+  "fields": {
+    "code": "nno",
+    "display": "Norwegian Nynorsk; Nynorsk, Norwegian"
+  },
+  "model": "core.language",
+  "pk": 323
+},
+{
+  "fields": {
+    "code": "pag",
+    "display": "Pangasinan"
+  },
+  "model": "core.language",
+  "pk": 341
+},
+{
+  "fields": {
+    "code": "pan",
+    "display": "Panjabi; Punjabi"
+  },
+  "model": "core.language",
+  "pk": 342
+},
+{
+  "fields": {
+    "code": "paa",
+    "display": "Papuan languages"
+  },
+  "model": "core.language",
+  "pk": 344
+},
+{
+  "fields": {
+    "code": "fas",
+    "display": "Persian"
+  },
+  "model": "core.language",
+  "pk": 346
+},
+{
+  "fields": {
+    "code": "phi",
+    "display": "Philippine languages"
+  },
+  "model": "core.language",
+  "pk": 348
+},
+{
+  "fields": {
+    "code": "pol",
+    "display": "Polish"
+  },
+  "model": "core.language",
+  "pk": 351
+},
+{
+  "fields": {
+    "code": "por",
+    "display": "Portuguese"
+  },
+  "model": "core.language",
+  "pk": 352
+},
+{
+  "fields": {
+    "code": "ron",
+    "display": "Romanian"
+  },
+  "model": "core.language",
+  "pk": 362
+},
+{
+  "fields": {
+    "code": "rom",
+    "display": "Romany"
+  },
+  "model": "core.language",
+  "pk": 364
+},
+{
+  "fields": {
+    "code": "rus",
+    "display": "Russian"
+  },
+  "model": "core.language",
+  "pk": 366
+},
+{
+  "fields": {
+    "code": "smo",
+    "display": "Samoan"
+  },
+  "model": "core.language",
+  "pk": 370
+},
+{
+  "fields": {
+    "code": "sco",
+    "display": "Scots"
+  },
+  "model": "core.language",
+  "pk": 377
+},
+{
+  "fields": {
+    "code": "srp",
+    "display": "Serbian"
+  },
+  "model": "core.language",
+  "pk": 380
+},
+{
+  "fields": {
+    "code": "iii",
+    "display": "Sichuan Yi; Nuosu"
+  },
+  "model": "core.language",
+  "pk": 384
+},
+{
+  "fields": {
+    "code": "scn",
+    "display": "Sicilian"
+  },
+  "model": "core.language",
+  "pk": 385
+},
+{
+  "fields": {
+    "code": "sla",
+    "display": "Slavic languages"
+  },
+  "model": "core.language",
+  "pk": 395
+},
+{
+  "fields": {
+    "code": "slk",
+    "display": "Slovak"
+  },
+  "model": "core.language",
+  "pk": 396
+},
+{
+  "fields": {
+    "code": "slv",
+    "display": "Slovenian"
+  },
+  "model": "core.language",
+  "pk": 397
+},
+{
+  "fields": {
+    "code": "sog",
+    "display": "Sogdian"
+  },
+  "model": "core.language",
+  "pk": 398
+},
+{
+  "fields": {
+    "code": "som",
+    "display": "Somali"
+  },
+  "model": "core.language",
+  "pk": 399
+},
+{
+  "fields": {
+    "code": "son",
+    "display": "Songhai languages"
+  },
+  "model": "core.language",
+  "pk": 400
+},
+{
+  "fields": {
+    "code": "wen",
+    "display": "Sorbian languages"
+  },
+  "model": "core.language",
+  "pk": 402
+},
+{
+  "fields": {
+    "code": "spa",
+    "display": "Spanish; Castilian"
+  },
+  "model": "core.language",
+  "pk": 407
+},
+{
+  "fields": {
+    "code": "zgh",
+    "display": "Standard Moroccan Tamazight"
+  },
+  "model": "core.language",
+  "pk": 409
+},
+{
+  "fields": {
+    "code": "suk",
+    "display": "Sukuma"
+  },
+  "model": "core.language",
+  "pk": 410
+},
+{
+  "fields": {
+    "code": "sun",
+    "display": "Sundanese"
+  },
+  "model": "core.language",
+  "pk": 412
+},
+{
+  "fields": {
+    "code": "swa",
+    "display": "Swahili"
+  },
+  "model": "core.language",
+  "pk": 414
+},
+{
+  "fields": {
+    "code": "swe",
+    "display": "Swedish"
+  },
+  "model": "core.language",
+  "pk": 416
+},
+{
+  "fields": {
+    "code": "gsw",
+    "display": "Swiss German; Alemannic; Alsatian"
+  },
+  "model": "core.language",
+  "pk": 417
+},
+{
+  "fields": {
+    "code": "syr",
+    "display": "Syriac"
+  },
+  "model": "core.language",
+  "pk": 418
+},
+{
+  "fields": {
+    "code": "tha",
+    "display": "Thai"
+  },
+  "model": "core.language",
+  "pk": 429
+},
+{
+  "fields": {
+    "code": "tog",
+    "display": "Tonga (Nyasa)"
+  },
+  "model": "core.language",
+  "pk": 438
+},
+{
+  "fields": {
+    "code": "ton",
+    "display": "Tonga (Tonga Islands)"
+  },
+  "model": "core.language",
+  "pk": 439
+},
+{
+  "fields": {
+    "code": "tsi",
+    "display": "Tsimshian"
+  },
+  "model": "core.language",
+  "pk": 440
+},
+{
+  "fields": {
+    "code": "tso",
+    "display": "Tsonga"
+  },
+  "model": "core.language",
+  "pk": 441
+},
+{
+  "fields": {
+    "code": "tsn",
+    "display": "Tswana"
+  },
+  "model": "core.language",
+  "pk": 442
+},
+{
+  "fields": {
+    "code": "tum",
+    "display": "Tumbuka"
+  },
+  "model": "core.language",
+  "pk": 443
+},
+{
+  "fields": {
+    "code": "tur",
+    "display": "Turkish"
+  },
+  "model": "core.language",
+  "pk": 445
+},
+{
+  "fields": {
+    "code": "ukr",
+    "display": "Ukrainian"
+  },
+  "model": "core.language",
+  "pk": 454
+},
+{
+  "fields": {
+    "code": "urd",
+    "display": "Urdu"
+  },
+  "model": "core.language",
+  "pk": 459
+},
+{
+  "fields": {
+    "code": "uzb",
+    "display": "Uzbek"
+  },
+  "model": "core.language",
+  "pk": 460
+},
+{
+  "fields": {
+    "code": "vai",
+    "display": "Vai"
+  },
+  "model": "core.language",
+  "pk": 461
+},
+{
+  "fields": {
+    "code": "ven",
+    "display": "Venda"
+  },
+  "model": "core.language",
+  "pk": 462
+},
+{
+  "fields": {
+    "code": "vie",
+    "display": "Vietnamese"
+  },
+  "model": "core.language",
+  "pk": 463
+},
+{
+  "fields": {
+    "code": "cym",
+    "display": "Welsh"
+  },
+  "model": "core.language",
+  "pk": 470
+},
+{
+  "fields": {
+    "code": "yap",
+    "display": "Yapese"
+  },
+  "model": "core.language",
+  "pk": 477
+},
+{
+  "fields": {
+    "code": "yid",
+    "display": "Yiddish"
+  },
+  "model": "core.language",
+  "pk": 478
+},
+{
+  "fields": {
+    "code": "zap",
+    "display": "Zapotec"
+  },
+  "model": "core.language",
+  "pk": 482
+},
+{
+  "fields": {
+    "code": "zha",
+    "display": "Zhuang; Chuang"
+  },
+  "model": "core.language",
+  "pk": 485
+},
+{
+  "fields": {
+    "code": "zul",
+    "display": "Zulu"
+  },
+  "model": "core.language",
+  "pk": 486
+},
+{
+  "fields": {
+    "twitter": "",
+    "profile_image": "",
+    "linkedin": "",
+    "salutation": "Mr",
+    "biography": "Bio",
+    "middle_name": "",
+    "confirmation_code": "",
+    "reset_code_validated": false,
+    "impactstory": "",
+    "department": "",
+    "website": null,
+    "interest": [],
+    "terms_and_conditions": false,
+    "facebook": "",
+    "user": 1,
+    "institution": "rua_testing",
+    "github": "",
+    "roles": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9
+    ],
+    "date_confirmed": null,
+    "country": "GB",
+    "email_sent": null,
+    "signature": "",
+    "orcid": "",
+    "activation_code": "",
+    "reset_code": null
+  },
+  "model": "core.profile",
+  "pk": 1
+},
+{
+  "fields": {
+    "twitter": "",
+    "profile_image": "",
+    "linkedin": "",
+    "salutation": null,
+    "biography": "Bio",
+    "middle_name": "",
+    "confirmation_code": "",
+    "reset_code_validated": false,
+    "impactstory": "",
+    "department": "",
+    "website": null,
+    "interest": [],
+    "terms_and_conditions": false,
+    "facebook": "",
+    "user": 2,
+    "institution": "rua_testing",
+    "github": "",
+    "roles": [
+      5,
+      6,
+      7
+    ],
+    "date_confirmed": null,
+    "country": "GB",
+    "email_sent": null,
+    "signature": "",
+    "orcid": "",
+    "activation_code": "",
+    "reset_code": null
+  },
+  "model": "core.profile",
+  "pk": 2
+},
+{
+  "fields": {
+    "twitter": "",
+    "profile_image": "",
+    "linkedin": "",
+    "salutation": null,
+    "biography": "",
+    "middle_name": "",
+    "confirmation_code": "",
+    "reset_code_validated": false,
+    "impactstory": "",
+    "department": "",
+    "website": null,
+    "interest": [],
+    "terms_and_conditions": false,
+    "facebook": "",
+    "user": 3,
+    "institution": "rua_testing",
+    "github": "",
+    "roles": [
+      2
+    ],
+    "date_confirmed": null,
+    "country": "GB",
+    "email_sent": null,
+    "signature": "",
+    "orcid": "",
+    "activation_code": "",
+    "reset_code": null
+  },
+  "model": "core.profile",
+  "pk": 3
+},
+{
+  "fields": {
+    "twitter": "",
+    "profile_image": "",
+    "linkedin": "",
+    "salutation": null,
+    "biography": "",
+    "middle_name": "",
+    "confirmation_code": "",
+    "reset_code_validated": false,
+    "impactstory": "",
+    "department": "",
+    "website": null,
+    "interest": [],
+    "terms_and_conditions": false,
+    "facebook": "",
+    "user": 4,
+    "institution": "rua_testing",
+    "github": "",
+    "roles": [
+      4
+    ],
+    "date_confirmed": null,
+    "country": "GB",
+    "email_sent": null,
+    "signature": "",
+    "orcid": "",
+    "activation_code": "",
+    "reset_code": null
+  },
+  "model": "core.profile",
+  "pk": 4
+},
+{
+  "fields": {
+    "twitter": "",
+    "profile_image": "",
+    "linkedin": "",
+    "salutation": null,
+    "biography": "",
+    "middle_name": "",
+    "confirmation_code": "",
+    "reset_code_validated": false,
+    "impactstory": "",
+    "department": "",
+    "website": null,
+    "interest": [],
+    "terms_and_conditions": false,
+    "facebook": "",
+    "user": 5,
+    "institution": "rua_testing",
+    "github": "",
+    "roles": [
+      3,
+      8,
+      9
+    ],
+    "date_confirmed": null,
+    "country": "GB",
+    "email_sent": null,
+    "signature": "",
+    "orcid": "",
+    "activation_code": "",
+    "reset_code": null
+  },
+  "model": "core.profile",
+  "pk": 5
+},
+{
+  "fields": {
+    "first_name": "rua_author_first_name",
+    "last_name": "rua_author_last_name",
+    "middle_name": "",
+    "sequence": 1,
+    "author_email": "fake@fakeaddress.com",
+    "country": "GB",
+    "twitter": "",
+    "linkedin": "",
+    "department": "",
+    "facebook": "",
+    "salutation": null,
+    "orcid": "",
+    "institution": "rua_testing",
+    "biography": "Bio"
+  },
+  "model": "core.author",
+  "pk": 1
+},
+{
+  "fields": {
+    "files": [
+      1,
+      2
+    ],
+    "subtitle": "rua_subtitle",
+    "series": null,
+    "competing_interests": "competing interest",
+    "prefix": "rua_prefix",
+    "production_editors": [],
+    "external_review_files": [
+      1
+    ],
+    "owner": 3,
+    "internal_review_files": [
+      1
+    ],
+    "subject": [
+      1
+    ],
+    "languages": [
+      124
+    ],
+    "review_form": 1,
+    "expected_completion_date": null,
+    "editorial_review_assignments": [],
+    "peer_review_override": false,
+    "title": "rua_title",
+    "pages": "",
+    "book_editors": [],
+    "editor": [],
+    "review_type": "open-with",
+    "proposal": null,
+    "submission_date": "2015-10-30",
+    "read_only_users": [],
+    "description": "rua description",
+    "reviewer_suggestions": "reviewer suggestion",
+    "misc_files": [
+      2
+    ],
+    "review_assignments": [
+      1
+    ],
+    "book_type": "monograph",
+    "publication_date": null,
+    "slug": "rua_title",
+    "stage": 1,
+    "cover_letter": "cover letter",
+    "license": 4,
+    "author": [
+      1
+    ],
+    "cover": "",
+    "contract": null,
+    "press_editors": [
+      2
+    ],
+    "submission_stage": 6,
+    "keywords": [
+      1
+    ]
+  },
+  "model": "core.book",
+  "pk": 1
+},
+{
+  "fields": {
+    "date_started": "2015-11-10T13:46:49.308Z",
+    "book": 1,
+    "round_number": 1
+  },
+  "model": "core.reviewround",
+  "pk": 1
+},
+{
+  "fields": {
+    "body": "",
+    "access_key": "",
+    "files": [
+      1
+    ],
+    "accepted_reminder": false,
+    "completed": null,
+    "reopened": false,
+    "due": "2015-10-31",
+    "results": null,
+    "assigned": "2015-11-10",
+    "competing_interests": "",
+    "unaccepted_reminder": false,
+    "book": 1,
+    "user": 4,
+    "recommendation": null,
+    "review_type": "external",
+    "review_round": 1,
+    "accepted": null,
+    "withdrawn": false,
+    "declined": null,
+    "overdue_reminder": false
+  },
+  "model": "core.reviewassignment",
+  "pk": 1
+},
+{
+  "fields": {
+    "files": [],
+    "requested": "2015-10-30",
+    "note_from_indexer": "",
+    "index_files": [],
+    "completed": null,
+    "due": "2015-10-31",
+    "indexer": 5,
+    "note": null,
+    "requestor": 2,
+    "book": 1,
+    "note_to_indexer": null,
+    "accepted": null,
+    "declined": null
+  },
+  "model": "core.indexassignment",
+  "pk": 1
+},
+{
+  "fields": {
+    "typesetter_completed": null,
+    "author_invited": null,
+    "note_to_author": "",
+    "declined": null,
+    "typesetter_files": [],
+    "typesetter_invited": null,
+    "due": null,
+    "note": "",
+    "requestor": 1,
+    "book": 1,
+    "typesetter": 5,
+    "files": [
+      2
+    ],
+    "requested": "2015-10-30",
+    "completed": null,
+    "editor_second_review": null,
+    "editor_review": null,
+    "author_completed": null,
+    "note_to_typesetter": "",
+    "accepted": null,
+    "author_files": [],
+    "note_from_author": "",
+    "author_due": null,
+    "note_from_typesetter": "",
+    "typeset_files": [
+      1
+    ]
+  },
+  "model": "core.typesetassignment",
+  "pk": 1
+},
+{
+  "fields": {
+    "kind": "manuscript",
+    "description": null,
+    "date_modified": "2015-10-30T11:38:46.087Z",
+    "sequence": 1,
+    "uuid_filename": "6301cc01-5c89-4fc5-ae1b-c914bfe28988",
+    "label": "rua_manuscript",
+    "stage_uploaded": 1,
+    "mime_type": "unknown",
+    "original_filename": "test_manuscript",
+    "owner": 1,
+    "date_uploaded": "2015-10-30T11:38:35.509Z"
+  },
+  "model": "core.file",
+  "pk": 1
+},
+{
+  "fields": {
+    "kind": "additional",
+    "description": null,
+    "date_modified": "2015-10-30T11:39:21.747Z",
+    "sequence": 1,
+    "uuid_filename": "e666af5d-a678-4d15-be67-1ec4460243a5",
+    "label": "rua_additional_file",
+    "stage_uploaded": 1,
+    "mime_type": "unknown",
+    "original_filename": "test_manuscript",
+    "owner": 1,
+    "date_uploaded": "2015-10-30T11:39:13.939Z"
+  },
+  "model": "core.file",
+  "pk": 2
+},
+{
+  "fields": {
+    "name": "rua_subject"
+  },
+  "model": "core.subject",
+  "pk": 1
+},
+{
+  "fields": {
+    "name": "rua_keyword"
+  },
+  "model": "core.keyword",
+  "pk": 1
+},
+{
+  "fields": {
+    "publication": null,
+    "submission": "2015-10-30T11:39:55Z",
+    "review": "2015-10-30T11:49:55Z",
+    "external_review": null,
+    "indexing": null,
+    "production": null,
+    "current_stage": "review",
+    "copyediting": null,
+    "typesetting": null,
+    "internal_review": null,
+    "proposal": null,
+    "editing": null,
+    "editorial_review": null,
+    "declined": null
+  },
+  "model": "core.stage",
+  "pk": 1
+},
+{
+  "fields": {
+    "name": "Reader",
+    "slug": "reader"
+  },
+  "model": "core.role",
+  "pk": 1
+},
+{
+  "fields": {
+    "name": "Author",
+    "slug": "author"
+  },
+  "model": "core.role",
+  "pk": 2
+},
+{
+  "fields": {
+    "name": "Copyeditor",
+    "slug": "copyeditor"
+  },
+  "model": "core.role",
+  "pk": 3
+},
+{
+  "fields": {
+    "name": "Reviewer",
+    "slug": "reviewer"
+  },
+  "model": "core.role",
+  "pk": 4
+},
+{
+  "fields": {
+    "name": "Press Editor",
+    "slug": "press-editor"
+  },
+  "model": "core.role",
+  "pk": 5
+},
+{
+  "fields": {
+    "name": "Book Editor",
+    "slug": "book-editor"
+  },
+  "model": "core.role",
+  "pk": 6
+},
+{
+  "fields": {
+    "name": "Series Editor",
+    "slug": "series-editor"
+  },
+  "model": "core.role",
+  "pk": 7
+},
+{
+  "fields": {
+    "name": "Indexer",
+    "slug": "indexer"
+  },
+  "model": "core.role",
+  "pk": 8
+},
+{
+  "fields": {
+    "name": "Typesetter",
+    "slug": "typesetter"
+  },
+  "model": "core.role",
+  "pk": 9
+},
+{
+  "fields": {
+    "name": "Production Editor",
+    "slug": "production-editor"
+  },
+  "model": "core.role",
+  "pk": 10
+},
+{
+  "fields": {
+    "kind": "submission",
+    "short_name": "Submission Started",
+    "date_logged": "2015-10-30T11:37:51.067Z",
+    "book": 1,
+    "user": 1,
+    "message": "Submission Started",
+    "proposal": null
+  },
+  "model": "core.log",
+  "pk": 1
+},
+{
+  "fields": {
+    "kind": "submission",
+    "short_name": "Submission Completed",
+    "date_logged": "2015-10-30T11:39:55.785Z",
+    "book": 1,
+    "user": 1,
+    "message": "Submission of rua_title completed",
+    "proposal": null
+  },
+  "model": "core.log",
+  "pk": 2
+},
+{
+  "fields": {
+    "proposal_fields": [
+      1,
+      2
+    ],
+    "intro_text": "introduction",
+    "completion_text": "completion",
+    "ref": "test-proposal",
+    "name": "rua_proposal_form"
+  },
+  "model": "core.proposalform",
+  "pk": 1
+},
+{
+  "fields": {
+    "field_type": "text",
+    "required": true,
+    "name": "rua_element",
+    "choices": ""
+  },
+  "model": "core.proposalformelement",
+  "pk": 1
+},
+{
+  "fields": {
+    "field_type": "text",
+    "required": false,
+    "name": "rua_element_2",
+    "choices": ""
+  },
+  "model": "core.proposalformelement",
+  "pk": 2
+},
+{
+  "fields": {
+    "help_text": "help",
+    "width": "col-md-6",
+    "order": 1,
+    "form": 1,
+    "element": 1
+  },
+  "model": "core.proposalformelementsrelationship",
+  "pk": 1
+},
+{
+  "fields": {
+    "help_text": "help",
+    "width": "col-md-12",
+    "order": 3,
+    "form": 1,
+    "element": 2
+  },
+  "model": "core.proposalformelementsrelationship",
+  "pk": 2
+},
+{
+  "fields": {
+    "from_address": "main@localhost.com",
+    "cc": "",
+    "bcc": "",
+    "content": "<p>Dear Ioannis Cleary,\r\n<br><br>Your submission has been received. An Editor will be in touch soon with the next steps.<br><br><span style=\"line-height: 1.42857;\">Regards,&nbsp;</span></p><p></p>",
+    "to": "[u'ioannis.cleary@ubiquitypress.com']",
+    "book": 1,
+    "attachment": [],
+    "proposal": null,
+    "sent": "2015-10-30T11:39:56.032Z",
+    "subject": "Submission Acknowledgement"
+  },
+  "model": "core.emaillog",
+  "pk": 1
+},
+{
+  "fields": {
+    "from_address": "main@localhost.com",
+    "cc": "",
+    "bcc": "",
+    "content": "<p><span style=\"line-height: 1.42857;\">A new submission has been uploaded.\r\n\r\nView the submission: http://localhost:8000/workflow/new/1\r\n<br></span></p><p><span style=\"line-height: 1.42857;\">Regards,\r\n<br><br>RUA Bot</span><br></p>",
+    "to": "[u'ioannis.cleary@ubiquitypress.com']",
+    "book": 1,
+    "attachment": [],
+    "proposal": null,
+    "sent": "2015-10-30T11:39:56.299Z",
+    "subject": "New Submission"
+  },
+  "model": "core.emaillog",
+  "pk": 2
+},
+{
+  "fields": {
+    "from_address": "main@localhost.com",
+    "cc": "",
+    "bcc": "",
+    "content": "<p><span style=\"line-height: 1.42857;\">A new submission has been uploaded.\r\n\r\nView the submission: http://localhost:8000/workflow/new/1\r\n<br></span></p><p><span style=\"line-height: 1.42857;\">Regards,\r\n<br><br>RUA Bot</span><br></p>",
+    "to": "[u'fake_editor@fakeaddress.com']",
+    "book": 1,
+    "attachment": [],
+    "proposal": null,
+    "sent": "2015-10-30T11:39:56.581Z",
+    "subject": "New Submission"
+  },
+  "model": "core.emaillog",
+  "pk": 3
+}
+]
