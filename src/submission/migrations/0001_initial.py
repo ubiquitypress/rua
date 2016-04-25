@@ -36,7 +36,7 @@ class Migration(migrations.Migration):
                 ('due', models.DateField(null=True, blank=True)),
                 ('completed', models.DateField(null=True, blank=True)),
                 ('recommendation', models.CharField(blank=True, max_length=10, null=True, choices=[(b'accept', b'Accept'), (b'reject', b'Reject'), (b'revisions', b'Revisions Required')])),
-                ('competing_interests', models.TextField(help_text=b"If any of the authors or editors have any competing interests please add them here. EG. 'This study was paid for by corp xyz.'", null=True, blank=True)),
+                ('competing_interests', models.TextField(help_text=b"If any of the authors or editors have any competing interests please add them here. e.g.. 'This study was paid for by corp xyz.'", null=True, blank=True)),
                 ('files', models.ManyToManyField(to='core.File', null=True, blank=True)),
                 ('proposal', models.ForeignKey(to='submission.Proposal')),
                 ('results', models.ForeignKey(blank=True, to='review.FormResult', null=True)),

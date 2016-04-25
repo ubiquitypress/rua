@@ -29,7 +29,7 @@ class Migration(migrations.Migration):
                 ('editorial_board_passed', models.BooleanField(default=False)),
                 ('publication_committee_passed', models.BooleanField(default=False)),
                 ('recommendation', models.CharField(blank=True, max_length=10, null=True, choices=[(b'accept', b'Accept'), (b'reject', b'Reject'), (b'revisions', b'Revisions Required')])),
-                ('competing_interests', models.TextField(help_text=b"If any of the authors or editors have any competing interests please add them here. EG. 'This study was paid for by corp xyz.'. <a href='/page/competing_interests/'>More info</a>", null=True, blank=True)),
+                ('competing_interests', models.TextField(help_text=b"If any of the authors or editors have any competing interests please add them here. e.g.. 'This study was paid for by corp xyz.'. <a href='/page/competing_interests/'>More info</a>", null=True, blank=True)),
                 ('unaccepted_reminder', models.BooleanField(default=False)),
                 ('accepted_reminder', models.BooleanField(default=False)),
                 ('overdue_reminder', models.BooleanField(default=False)),

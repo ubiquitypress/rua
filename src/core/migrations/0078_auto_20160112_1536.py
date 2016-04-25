@@ -21,7 +21,7 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('date_submitted', models.DateField(auto_now_add=True)),
                 ('date_last_updated', models.DateField(auto_now=True)),
-                ('text', models.TextField(help_text=b"If any of the authors or editors have any competing interests please add them here. EG. 'This study was paid for by corp xyz.'", null=True, blank=True)),
+                ('text', models.TextField(help_text=b"If any of the authors or editors have any competing interests please add them here. e.g.. 'This study was paid for by corp xyz.'", null=True, blank=True)),
                 ('book', models.ForeignKey(to='core.Book')),
                 ('user', models.ForeignKey(to=settings.AUTH_USER_MODEL)),
             ],

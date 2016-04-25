@@ -473,7 +473,7 @@ class ReviewAssignment(models.Model):
 	access_key = models.CharField(max_length=200,null=True,blank=True)
 	results = models.ForeignKey('review.FormResult', null=True, blank=True)
 	recommendation = models.CharField(max_length=10, choices=review_recommendation(), null=True, blank=True)
-	competing_interests = models.TextField(blank=True, null=True, help_text=mark_safe("If any of the authors or editors have any competing interests please add them here. EG. 'This study was paid for by corp xyz.'. <a href='/page/competing_interests/'>More info</a>"))
+	competing_interests = models.TextField(blank=True, null=True, help_text=mark_safe("If any of the authors or editors have any competing interests please add them here. e.g.. 'This study was paid for by corp xyz.'. <a href='/page/competing_interests/'>More info</a>"))
 
 	# Used to ensure that an email is not sent more than once.
 	unaccepted_reminder = models.BooleanField(default=False)
@@ -526,10 +526,10 @@ class EditorialReviewAssignment(models.Model):
 	publication_committee_results = models.ForeignKey('review.FormResult', null=True, blank=True,related_name="pc_review_form_results")
 	
 	editorial_board_recommendation = models.CharField(max_length=10, choices=review_recommendation(), null=True, blank=True)
-	editorial_board_competing_interests = models.TextField(blank=True, null=True, help_text=mark_safe("If any of the authors or editors have any competing interests please add them here. EG. 'This study was paid for by corp xyz.'. <a href='/page/competing_interests/'>More info</a>"))
+	editorial_board_competing_interests = models.TextField(blank=True, null=True, help_text=mark_safe("If any of the authors or editors have any competing interests please add them here. e.g.. 'This study was paid for by corp xyz.'. <a href='/page/competing_interests/'>More info</a>"))
 	
 	publication_committee_recommendation = models.CharField(max_length=10, choices=review_recommendation(), null=True, blank=True)
-	publication_committee_competing_interests = models.TextField(blank=True, null=True, help_text=mark_safe("If any of the authors or editors have any competing interests please add them here. EG. 'This study was paid for by corp xyz.'. <a href='/page/competing_interests/'>More info</a>"))
+	publication_committee_competing_interests = models.TextField(blank=True, null=True, help_text=mark_safe("If any of the authors or editors have any competing interests please add them here. e.g.. 'This study was paid for by corp xyz.'. <a href='/page/competing_interests/'>More info</a>"))
 
 	editorial_board_review_form = models.ForeignKey('review.Form', null=True, blank=True,related_name="eb_review_form")
 	publication_committee_review_form = models.ForeignKey('review.Form', null=True, blank=True,related_name="pc_review_form")
