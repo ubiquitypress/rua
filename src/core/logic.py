@@ -843,11 +843,16 @@ def send_proposal_submission_ack(proposal, email_text, owner):
 	from_email = models.Setting.objects.get(group__name='email', name='from_address')
 	press_name = models.Setting.objects.get(group__name='general', name='press_name').value
 
+	try:
+		principal_contact_name = models.Setting.objects.get(group__name='general', name='primary_contact_name').value
+	except:
+		principal_contact_name = None
+
 	context = {
 		'proposal': proposal,
 		'owner': owner,
 		'press_name':press_name,
-		'principal_contact_name':'principal_contact_name',
+		'principal_contact_name': principal_contact_name,
 	}
 
 	email.send_email(get_setting('proposal_submission_ack_subject','email_subject','[abp] Proposal Submission Acknowledgement'), context, from_email.value, proposal.owner.email, email_text, proposal = proposal)

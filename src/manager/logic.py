@@ -17,10 +17,21 @@ def generate_password():
 
 def send_new_user_ack(email_text, new_user, code):
 	from_email = models.Setting.objects.get(group__name='email', name='from_address')
-
+	
+	try:
+		press_name = models.Setting.objects.get(group__name='general', name='press_name').value
+	except:
+		press_name=None
+	try:
+		principal_contact_name = models.Setting.objects.get(group__name='general', name='primary_contact_name').value
+	except:
+		principal_contact_name = None
+	
 	context = {
 		'base_url': models.Setting.objects.get(group__name='general', name='base_url').value,
 		'user': new_user,
+		'press_name':press_name,
+		'principal_contact_name': principal_contact_name,
 		'code': code,
 	}
 
