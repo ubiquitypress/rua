@@ -1,6 +1,6 @@
 from django.core.mail import EmailMessage
 from django.template.loader import get_template
-from django.template import Context, Template
+from django.template import Context, Template, RequestContext
 from django.conf import settings
 from setting_util import get_setting
 from core import models
@@ -70,13 +70,11 @@ def send_reset_email(user, email_text, reset_code):
 def get_email_content(request, setting_name, context):
 	
 	try:
-		template = models.Setting.objects.get(group__name='email', name=setting_name).value
+		html_template = models.Setting.objects.get(group__name='email', name=setting_name).value
 	except models.Setting.DoesNotExist:
-		template = ''
+		html_template = ''
 
-	html_template = setting.value
 	html_template.replace('\n', '<br />')
-
 
 	htmly = Template(html_template)
 	con = RequestContext(request)

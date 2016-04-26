@@ -129,7 +129,7 @@ def task_hub_decline(request, assignment_type, assignment_id,):
 			format_kind = "index"
 			assignment_user = assignment.indexer 
 		log.add_log_entry(book=assignment.book, user=request.user, kind=format_kind, message='%s assignment declined by %s.' % (assignment_type.title(),assignment_user.profile.full_name()), short_name='Assignment declined.')
-		core_logic.send_task_decline(assignment=assignment, type=assignment_type, email_text=request.POST.get('decline-email'), sender=request.user)
+		core_logic.send_task_decline(assignment=assignment, type=assignment_type, email_text=request.POST.get('decline-email'), sender=request.user, request = request)
 		return redirect(reverse('user_dashboard'))
 
 	template = 'onetasker/taskhub.html'

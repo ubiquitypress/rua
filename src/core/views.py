@@ -2097,7 +2097,7 @@ def decline_proposal(request, proposal_id):
         proposal.requestor=request.user
         proposal.save()
         log.add_proposal_log_entry(proposal=proposal,user=request.user, kind='proposal', message='Proposal "%s %s" was declined.'%(proposal.title,proposal.subtitle), short_name='Proposal Declined')
-        logic.send_proposal_decline(proposal, email_text=request.POST.get('decline-email'), sender=request.user)
+        logic.send_proposal_decline(request, proposal, email_text=request.POST.get('decline-email'), sender=request.user)
         return redirect(reverse('proposals'))
 
     template = 'core/proposals/decline_proposal.html'
@@ -2199,7 +2199,7 @@ def accept_proposal(request, proposal_id):
             submission.contract = proposal.contract
         submission.save()
         attachment = handle_attachment(request, submission)
-        logic.send_proposal_accept(proposal, email_text=request.POST.get('accept-email'), submission=submission, sender=request.user, attachment=attachment)
+        logic.send_proposal_accept(request, proposal, email_text=request.POST.get('accept-email'), submission=submission, sender=request.user, attachment=attachment)
         proposal.date_accepted = timezone.now()
         proposal.save()
         log.add_proposal_log_entry(proposal=proposal,user=request.user, kind='proposal',  message='Proposal "%s %s" was accepted.'%(proposal.title,proposal.subtitle), short_name='Proposal Accepted')
@@ -2236,7 +2236,7 @@ def reopen_proposal_review(request, proposal_id, assignment_id):
         review_assignment.due = datetime.strptime(due_date, "%Y-%m-%d")
         review_assignment.save()
         email_updated_text = string.replace(email_updated_text,'_due_date_',due_date)
-        logic.send_proposal_review_request(proposal, review_assignment, email_updated_text)
+        logic.send_proposal_review_request(request, proposal, review_assignment, email_updated_text)
         log.add_proposal_log_entry(proposal=proposal,user=request.user, kind='proposal', message='Revisions request for proposal %s %s.'%(proposal.title,proposal.subtitle), short_name='Proposal Revisions Requested')
     
         return redirect(reverse('proposals'))
@@ -2268,7 +2268,7 @@ def request_proposal_revisions(request, proposal_id):
         proposal.revision_due_date = datetime.strptime(due_date, "%Y-%m-%d")
         proposal.save()
         email_updated_text = string.replace(email_updated_text,'_due_date_',due_date)
-        logic.send_proposal_revisions(proposal, email_text=email_updated_text, sender=request.user)
+        logic.send_proposal_revisions(request, proposal, email_text=email_updated_text, sender=request.user)
         
         log.add_proposal_log_entry(proposal=proposal,user=request.user, kind='proposal', message='Revisions request for proposal %s %s.'%(proposal.title,proposal.subtitle), short_name='Proposal Revisions Requested')
     

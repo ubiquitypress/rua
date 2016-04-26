@@ -641,7 +641,7 @@ def build_time_line(book):
 	return sorted(clean_timeline, key=lambda k: k['date']) 
 
 # Email handler - should be moved to logic!
-def send_proposal_review_request(proposal, review_assignment, email_text, attachment = None):
+def send_proposal_review_request(request, proposal, review_assignment, email_text, attachment = None):
 	from_email = models.Setting.objects.get(group__name='email', name='from_address')
 	base_url = models.Setting.objects.get(group__name='general', name='base_url')
 	press_name = models.Setting.objects.get(group__name='general', name='press_name').value
@@ -654,7 +654,7 @@ def send_proposal_review_request(proposal, review_assignment, email_text, attach
 		'proposal': proposal,
 		'press_name': press_name,
 	}
-	email.send_email(get_setting('proposal_review_request_subject','email_subject','Proposal Review Request'), context, from_email.value, review_assignment.user.email, email_text, proposal = proposal, attachment = attachment)
+	email.send_email(get_setting('proposal_review_request_subject','email_subject','Proposal Review Request'), context, from_email.value, review_assignment.user.email, email_text, proposal = proposal, attachment = attachment, request = request)
 
 #### WORKFLOW Logic #####
 
@@ -802,7 +802,7 @@ def send_review_request(book, review_assignment, email_text, attachment=None):
 
 	email.send_email(get_setting('review_request_subject','email_subject','Review Request'), context, from_email.value, review_assignment.user.email, email_text, book=book, attachment=attachment)
 
-def send_proposal_decline(proposal, email_text, sender):
+def send_proposal_decline(request, proposal, email_text, sender):
 	from_email = models.Setting.objects.get(group__name='email', name='from_address')
 
 	context = {
@@ -810,7 +810,7 @@ def send_proposal_decline(proposal, email_text, sender):
 		'sender': sender,
 	}
 
-	email.send_email(get_setting('proposal_declined_subject','email_subject','[abp] Proposal Declined'), context, from_email.value, proposal.owner.email, email_text, proposal = proposal)
+	email.send_email(get_setting('proposal_declined_subject','email_subject','[abp] Proposal Declined'), context, from_email.value, proposal.owner.email, email_text, proposal = proposal, request = request)
 
 def send_proposal_update(proposal, email_text, sender,receiver):
 	from_email = models.Setting.objects.get(group__name='email', name='from_address')
@@ -850,7 +850,7 @@ def send_proposal_submission_ack(proposal, email_text, owner):
 
 
 
-def send_task_decline(assignment,type, email_text, sender):
+def send_task_decline(assignment,type, email_text, sender, request):
 	from_email = models.Setting.objects.get(group__name='email', name='from_address')
 
 	context = {
@@ -858,9 +858,9 @@ def send_task_decline(assignment,type, email_text, sender):
 		'sender': sender,
 	}
 
-	email.send_email(get_setting('assignment_declined_subject','email_subject','[abp] %s Assignment [id<%s>] Declined') % (type.title(),assignment.id), context, from_email.value, assignment.requestor.email, email_text)
+	email.send_email(get_setting('assignment_declined_subject','email_subject','[abp] %s Assignment [id<%s>] Declined') % (type.title(),assignment.id), context, from_email.value, assignment.requestor.email, email_text, request = request)
 
-def send_proposal_accept(proposal, email_text, submission, sender, attachment=None):
+def send_proposal_accept(request, proposal, email_text, submission, sender, attachment=None):
 	from_email = models.Setting.objects.get(group__name='email', name='from_address')
 
 	context = {
@@ -870,9 +870,9 @@ def send_proposal_accept(proposal, email_text, submission, sender, attachment=No
 		'sender': sender,
 	}
 
-	email.send_email(get_setting('proposal_accepted_subject','email_subject','[abp] Proposal Accepted'), context, from_email.value, proposal.owner.email, email_text, proposal=proposal, book=submission, attachment=attachment)
+	email.send_email(get_setting('proposal_accepted_subject','email_subject','[abp] Proposal Accepted'), context, from_email.value, proposal.owner.email, email_text, proposal=proposal, book=submission, attachment=attachment, request = request)
 
-def send_proposal_revisions(proposal, email_text, sender):
+def send_proposal_revisions(request, proposal, email_text, sender):
 	from_email = models.Setting.objects.get(group__name='email', name='from_address')
 	press_name = models.Setting.objects.get(group__name='general', name='press_name').value
 
@@ -883,7 +883,7 @@ def send_proposal_revisions(proposal, email_text, sender):
 		'press_name':press_name,
 	}
 
-	email.send_email(get_setting('proposal_revision_required_subject','email_subject','[abp] Proposal Revisions Required'), context, from_email.value, proposal.owner.email, email_text, proposal = proposal)
+	email.send_email(get_setting('proposal_revision_required_subject','email_subject','[abp] Proposal Revisions Required'), context, from_email.value, proposal.owner.email, email_text, proposal = proposal, request = request)
 
 
 def send_author_sign_off(submission, email_text, sender):
