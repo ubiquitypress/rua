@@ -84,8 +84,14 @@ def login(request):
     if request.POST:
         user = request.POST.get('user_name')
         pawd = request.POST.get('user_pass')
-
-        user = authenticate(username=user, password=pawd)
+        if '@' in user:
+            existing_user = User.objects.filter(email = user)
+            if existing_user:
+                user = authenticate(username=existing_user[0].username, password=pawd)
+            else:
+                user = None
+        else:
+            user = authenticate(username=user, password=pawd)
 
         if user is not None:
             if user.is_active:
