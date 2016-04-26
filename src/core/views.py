@@ -2264,7 +2264,7 @@ def request_proposal_revisions(request, proposal_id):
     template = 'core/proposals/revisions_proposal.html'
     context = {
         'proposal': proposal,
-        'email_text': logic.setting_template_loader(setting=email_text,path="core/proposals/",pattern="email_template_",dictionary={'sender':request.user,'receiver':proposal.owner,'proposal':proposal,
+        'email_text': logic.setting_template_loader(setting=email_text,path="core/proposals/",pattern="email_template_",dictionary={'sender':request.user,'receiver':proposal.owner,'base_url':  models.Setting.objects.get(group__name='general', name='base_url').value,'proposal':proposal,
         'press_name':models.Setting.objects.get(group__name='general', name='press_name').value}),
     }
 
