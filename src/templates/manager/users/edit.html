@@ -136,5 +136,12 @@
         {allowSpaces: true});
   });
 </script>
+<!--Snippet from http://jsfiddle.net/techfoobar/xQqbR/-->
 <script type="text/javascript">
+$('option').mousedown(function(e) {
+    e.preventDefault();
+    $(this).prop('selected', $(this).prop('selected') ? false : true);
+    return false;
+});
+</script>
 {% endblock %}
