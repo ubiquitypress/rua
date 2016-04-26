@@ -18,7 +18,7 @@ from editor import forms as editor_forms
 from review import models as review_models
 from core import log, models, forms, logic
 from author import orcid
-from email import send_email,send_reset_email
+from email import send_email,send_reset_email, get_email_content
 from files import handle_file_update, handle_attachment, handle_file, handle_email_file, handle_proposal_review_file, handle_proposal_file, handle_proposal_file_form
 from submission import models as submission_models
 from core.decorators import is_reviewer, is_editor, is_book_editor, is_book_editor_or_author, is_onetasker,is_author, is_press_editor
@@ -2085,7 +2085,11 @@ def add_proposal_reviewers(request, proposal_id):
 def decline_proposal(request, proposal_id):
 
     proposal = get_object_or_404(submission_models.Proposal, pk=proposal_id)
-    email_text = models.Setting.objects.get(group__name='email', name='proposal_decline')
+    email_text = get_email_content(
+        request = request, 
+        setting_name='proposal_decline', 
+        context={'sender':request.user,'receiver':proposal.owner,'proposal':proposal, 'press_name':models.Setting.objects.get(group__name='general', name='press_name').value}
+        )
 
     if request.POST:
         proposal.status = 'declined'
@@ -2099,8 +2103,7 @@ def decline_proposal(request, proposal_id):
     template = 'core/proposals/decline_proposal.html'
     context = {
         'proposal': proposal,
-        'email_text': logic.setting_template_loader(setting=email_text,path="core/proposals/",pattern="email_template_",dictionary={'sender':request.user,'receiver':proposal.owner,'proposal':proposal,
-        'press_name':models.Setting.objects.get(group__name='general', name='press_name').value}),
+        'email_text': email_text
     }
 
     return render(request, template, context)
@@ -2180,7 +2183,11 @@ def contract_manager(request, proposal_id, contract_id=None):
 def accept_proposal(request, proposal_id):
     'Marks a proposal as accepted, creates a submission and emails the user'
     proposal = get_object_or_404(submission_models.Proposal, pk=proposal_id)
-    email_text = models.Setting.objects.get(group__name='email', name='proposal_accept')
+    email_text = get_email_content(
+        request = request, 
+        setting_name='proposal_accept', 
+        context={'sender':request.user,'receiver':proposal.owner,'proposal':proposal, 'press_name':models.Setting.objects.get(group__name='general', name='press_name').value}
+        )
 
     if request.POST:
         proposal.status = 'accepted'
@@ -2203,8 +2210,7 @@ def accept_proposal(request, proposal_id):
     
     context = {
         'proposal': proposal,
-        'email_text': logic.setting_template_loader(setting=email_text,path="core/proposals/",pattern="email_template_",dictionary={'sender':request.user,'receiver':proposal.owner,'proposal':proposal,
-        'press_name':models.Setting.objects.get(group__name='general', name='press_name').value}),
+        'email_text': email_text,
     }
 
     return render(request, template, context)
@@ -2214,7 +2220,11 @@ def reopen_proposal_review(request, proposal_id, assignment_id):
 
     proposal = get_object_or_404(submission_models.Proposal, pk=proposal_id)
     review_assignment = get_object_or_404(submission_models.ProposalReview, pk=assignment_id)
-    email_text = models.Setting.objects.get(group__name='email', name='proposal_review_request')
+    email_text = get_email_content(
+        request = request, 
+        setting_name='proposal_review_request', 
+        context={'sender':request.user,'receiver':proposal.owner,'proposal':proposal, 'press_name':models.Setting.objects.get(group__name='general', name='press_name').value}
+        )
 
     if request.POST:
         review_assignment.reopened = True
@@ -2234,8 +2244,7 @@ def reopen_proposal_review(request, proposal_id, assignment_id):
     template = 'core/proposals/reopen_review.html'
     context = {
         'proposal': proposal,
-        'email_text': logic.setting_template_loader(setting=email_text,path="core/proposals/",pattern="email_template_",dictionary={'sender':request.user,'receiver':proposal.owner,'proposal':proposal,
-        'press_name':models.Setting.objects.get(group__name='general', name='press_name').value}),
+        'email_text': email_text,
     }
 
     return render(request, template, context)
@@ -2244,7 +2253,11 @@ def reopen_proposal_review(request, proposal_id, assignment_id):
 def request_proposal_revisions(request, proposal_id):
 
     proposal = get_object_or_404(submission_models.Proposal, pk=proposal_id)
-    email_text = models.Setting.objects.get(group__name='email', name='proposal_request_revisions')
+    email_text = get_email_content(
+        request = request, 
+        setting_name='proposal_request_revisions', 
+        context={'sender':request.user,'receiver':proposal.owner,'proposal':proposal, 'press_name':models.Setting.objects.get(group__name='general', name='press_name').value, 'base_url':  models.Setting.objects.get(group__name='general', name='base_url').value}
+        )
 
     if request.POST:
         proposal.status = 'revisions_required'
@@ -2264,8 +2277,7 @@ def request_proposal_revisions(request, proposal_id):
     template = 'core/proposals/revisions_proposal.html'
     context = {
         'proposal': proposal,
-        'email_text': logic.setting_template_loader(setting=email_text,path="core/proposals/",pattern="email_template_",dictionary={'sender':request.user,'receiver':proposal.owner,'base_url':  models.Setting.objects.get(group__name='general', name='base_url').value,'proposal':proposal,
-        'press_name':models.Setting.objects.get(group__name='general', name='press_name').value}),
+        'email_text': email_text,
     }
 
     return render(request, template, context)

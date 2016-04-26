@@ -6,6 +6,7 @@ from django.http import HttpResponse, HttpResponseForbidden
 from django.views.decorators.csrf import csrf_exempt
 
 from core import models, logic as core_logic, task
+from core.email import get_email_content
 from core.decorators import is_onetasker
 from onetasker import forms
 from core import log
@@ -111,7 +112,11 @@ def task_hub(request, assignment_type, assignment_id, about=None):
 def task_hub_decline(request, assignment_type, assignment_id,):
 
 	assignment = logic.get_assignment(assignment_type, assignment_id)
-	email_text = models.Setting.objects.get(group__name='email', name='task_decline')
+	email_text = get_email_content(
+		request = request, 
+		setting_name='task_decline', 
+		context={'sender':request.user,'receiver':assignment.requestor}
+		)
 
 	if request.POST:	
 		if assignment_type == 'copyedit':
@@ -133,7 +138,7 @@ def task_hub_decline(request, assignment_type, assignment_id,):
 		'assignment': assignment,
 		'send_email':True,
 		'center_block': 'onetasker/decline_contact.html',
-		'email_text': core_logic.setting_template_loader(setting=email_text,path="onetasker/",pattern="email_template_",dictionary={'sender':request.user,'receiver':assignment.requestor}),
+		'email_text': email_text,
 	}
 
 	return render(request, template, context)

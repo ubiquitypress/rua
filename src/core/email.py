@@ -16,7 +16,7 @@ def filepath_proposal(proposal, attachment):
 def filepath_general(attachment):
 	return '%s/%s' % (settings.EMAIL_DIR, attachment.uuid_filename)
 
-def send_email(subject, context, from_email, to, html_template, bcc=None, cc=None, book=None, attachment=None, proposal=None):
+def send_email(subject, context, from_email, to, html_template, bcc=None, cc=None, book=None, attachment=None, proposal=None, request=None):
 
 	html_template.replace('\n', '<br />')
 
@@ -27,7 +27,12 @@ def send_email(subject, context, from_email, to, html_template, bcc=None, cc=Non
 	if not type(to) in [list,tuple]:
 		to = [to]
 
-	msg = EmailMessage(subject, html_content, from_email, to, bcc=bcc, cc=cc)
+	if request:
+		reply_to = request.user.email
+	else:
+		reply_to = models.Setting.objects.get(group__name='email', name='from_address')
+
+	msg = EmailMessage(subject, html_content, from_email, to, bcc=bcc, cc=cc, headers={'Reply-To': reply_to})
 	
 	if book:
 		log.add_email_log_entry(book = book, subject = subject, from_address = from_email, to = to, bcc = bcc, cc = cc, content = html_content, attachment = attachment)
@@ -62,4 +67,21 @@ def send_reset_email(user, email_text, reset_code):
 
 	send_email(get_setting('reset_code_subject','email_subject','[abp] Reset Code'), context, from_email.value, user.email, email_text)
 
+def get_email_content(request, setting_name, context):
+	
+	try:
+		template = models.Setting.objects.get(group__name='email', name=setting_name).value
+	except models.Setting.DoesNotExist:
+		template = ''
+
+	html_template = setting.value
+	html_template.replace('\n', '<br />')
+
+
+	htmly = Template(html_template)
+	con = RequestContext(request)
+	con.push(context)
+	html_content = htmly.render(con)
+
+	return html_content
 

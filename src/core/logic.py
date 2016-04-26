@@ -29,16 +29,6 @@ import re
 from  __builtin__ import any as string_any
 
 
-def setting_template_loader(setting, path, dictionary,pattern = None):
-	html_template = setting.value
-	html_template.replace('\n', '<br />')
-
-	htmly = Template(html_template)
-	con = Context(dictionary)
-	html_content = htmly.render(con)
-
-	return html_content
-
 def record_field(tag,indicators,subfields):
 	return	Field( tag = tag, indicators = indicators, subfields = subfields)
 
