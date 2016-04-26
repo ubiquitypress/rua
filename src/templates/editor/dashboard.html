@@ -131,7 +131,7 @@
                   </div>
                   <div class="timeline-panel">
                       <div class="timeline-heading">
-                          <h4 class="timeline-title">{% if item.proposal %}{{item.proposal.title}}, {{item.proposal.subtitle}}{% else %}{{ item.book.title }} {% endif %}</h4>
+                          <h4 class="timeline-title">{% if item.proposal %}{{item.proposal.title}}: {{item.proposal.subtitle}}{% else %}{{ item.book.title }} {% endif %}</h4>
                           <h4 class="timeline-title">{{ item.get_kind_display }}: {{ item.short_name }}</h4>
                           <p><small class="text-muted"><i class="fa fa-check"></i> {{ item.date_logged }}</small></p>
                           <p><small class="text-muted">Action by: {{ item.user.profile.full_name }}</small></p>
