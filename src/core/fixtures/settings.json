@@ -595,7 +595,7 @@
 },
 {
     "fields": {
-        "value": "<p> Dear {{user.profile.full_name}},</p><p>A password reset request has been made for the {{press_name}} book management system.</p><p>Your reset code is : {{reset_code}}</p><p>Please click this link in order to continue the password reset process: {{reset_url}}</p>",
+        "value": "<p> Dear {{user.profile.full_name}},</p><p>A password reset request has been made for the {{press_name}} book management system.</p><p>Please click this link in order to continue the password reset process: {{reset_url}}</p>",
         "group": 3,
         "name": "reset_password",
         "types": "rich_text",
