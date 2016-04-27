@@ -659,6 +659,25 @@ def send_proposal_review_request(request, proposal, review_assignment, email_tex
 	}
 	email.send_email(get_setting('proposal_review_request_subject','email_subject','Proposal Review Request'), context, from_email, review_assignment.user.email, email_text, proposal = proposal, attachment = attachment, request = request)
 
+def send_proposal_review_reopen_request(request, proposal, review_assignment, email_text, attachment = None):
+	from_email = models.Setting.objects.get(group__name='email', name='from_address')
+	base_url = models.Setting.objects.get(group__name='general', name='base_url')
+	press_name = models.Setting.objects.get(group__name='general', name='press_name').value
+	
+	if request:
+		from_email = "%s <%s>" % (request.user.profile.full_name(),from_email.value)
+	
+	review_url = "http://{0}{1}".format(base_url.value, reverse('view_proposal_review_decision', kwargs={'proposal_id': proposal.id, 'assignment_id': review_assignment.id}))
+
+	context = {
+		'review': review_assignment,
+		'review_url': review_url,
+		'proposal': proposal,
+		'press_name': press_name,
+	}
+	email.send_email(get_setting('proposal_review_reopen_subject','email_subject','Proposal Review Assignment has reopened'), context, from_email, review_assignment.user.email, email_text, proposal = proposal, attachment = attachment, request = request)
+
+
 #### WORKFLOW Logic #####
 
 

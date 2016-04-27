@@ -1,0 +1,36 @@
+[
+{
+  "fields": {
+    "value": "<p>Dear {{review.user.profile.salutation_name}},</p><p>You have been recommended as a potential reviewer for a book proposal submitted to {{press_name}}. The proposal has been provisionally titled {{book.title}}.</p><p>All books proposed to {{press_name}} are reviewed prior to full submission. We are therefore looking for an expert in this field to comment on the content of the proposal and would very much appreciated it if you would consider this invitation to complete the review. In general, we are looking for a brief comment on the following principals: 1) are there any significant weaknesses/errors included in the book details?, 2) is there a need for such a book/would researchers find this useful?, and 3) are there suggestions on how the book content could be improved? We aim to publish books that are solid works of scholarship, irrespective of potential impact.</p><p>The proposal details are available now for review. Please accept or decline this invitation by clicking the link below and select the appropriate option. If accepting the invitation you will then have full access to the proposal details.</p><p>{{review_url}}</p><p>We are aiming to have the proposal review completed by _due_date_, therefore&nbsp;please&nbsp;consider whether this would be possible if accepting the invitation. If you require a different schedule then please let me know.</p><p>Thank you for considering this request. As always, the efforts of all reviewers are greatly appreciated.</p><p>If you are unable to undertake this review, we would greatly appreciate any thoughts you might have on others who we might approach.</p><p>Many thanks for your time and consideration of this invitation,</p><p>Kind regards,</p><p>{% if proposal.requestor %}\r\n{{proposal.requestor.first_name}}\r\n{% else %}\r\n{{press_name}}\r\n{% endif %}</p>",
+    "group": 3,
+    "name": "proposal_review_request",
+    "types": "rich_text",
+    "description": ""
+  },
+  "model": "core.setting",
+  "pk": null
+},
+{
+  "fields": {
+    "value": "<p>Dear {{review.user.profile.salutation_name}},</p><p>Your review assignment of a book proposal submitted to {{press_name}} has reopened. <span style=\"background-color: yellow;\">[ADD REASON]</span> The proposal has been provisionally titled {{book.title}}.</p><p>All books proposed to {{press_name}} are reviewed prior to full submission. We are therefore looking for an expert in this field to comment on the content of the proposal and would very much appreciated it if you would consider this invitation to complete the review. In general, we are looking for a brief comment on the following principals: 1) are there any significant weaknesses/errors included in the book details?, 2) is there a need for such a book/would researchers find this useful?, and 3) are there suggestions on how the book content could be improved? We aim to publish books that are solid works of scholarship, irrespective of potential impact.</p><p>The proposal details are available now for review. Please accept or decline this invitation by clicking the link below and select the appropriate option. If accepting the invitation you will then have full access to the proposal details.</p><p>{{review_url}}</p><p>We are aiming to have the proposal review completed by _due_date_ , therefore&nbsp;please&nbsp;consider whether this would be possible if accepting the invitation. If you require a different schedule then please let me know.</p><p>Thank you for considering this request. As always, the efforts of all reviewers are greatly appreciated.</p><p>If you are unable to undertake this review, we would greatly appreciate any thoughts you might have on others who we might approach.</p><p>Many thanks for your time and consideration of this invitation,</p><p>Kind regards,</p><p>{% if proposal.requestor %}\r\n{{proposal.requestor.first_name}}\r\n{% else %}\r\n{{press_name}}\r\n{% endif %}</p>",
+    "group": 3,
+    "name": "proposal_review_reopen",
+    "types": "rich_text",
+    "description": "Sent when review assignment has reopened"
+  },
+  "model": "core.setting",
+  "pk": null
+},
+{
+  "fields": {
+    "value": "Proposal Review Assignment has reopened.",
+    "group": 6,
+    "name": "proposal_review_reopen_subject",
+    "types": "text",
+    "description": "Email subject. Do not remove '%s' or other string format related parts. "
+  },
+  "model": "core.setting",
+  "pk": null
+}
+
+]

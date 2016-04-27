@@ -2239,8 +2239,8 @@ def reopen_proposal_review(request, proposal_id, assignment_id):
     review_assignment = get_object_or_404(submission_models.ProposalReview, pk=assignment_id)
     email_text = get_email_content(
         request = request, 
-        setting_name='proposal_review_request', 
-        context={'sender':request.user,'receiver':proposal.owner,'proposal':proposal, 'press_name':models.Setting.objects.get(group__name='general', name='press_name').value}
+        setting_name='proposal_review_reopen', 
+        context={'sender':request.user,'review':review_assignment, 'receiver':proposal.owner,'proposal':proposal, 'press_name':models.Setting.objects.get(group__name='general', name='press_name').value}
         )
 
     if request.POST:
@@ -2253,7 +2253,7 @@ def reopen_proposal_review(request, proposal_id, assignment_id):
         review_assignment.due = datetime.strptime(due_date, "%Y-%m-%d")
         review_assignment.save()
         email_updated_text = string.replace(email_updated_text,'_due_date_',due_date)
-        logic.send_proposal_review_request(request, proposal, review_assignment, email_updated_text)
+        logic.send_proposal_review_reopen_request(request, proposal, review_assignment, email_updated_text)
         log.add_proposal_log_entry(proposal=proposal,user=request.user, kind='proposal', message='Revisions request for proposal %s %s.'%(proposal.title,proposal.subtitle), short_name='Proposal Revisions Requested')
     
         return redirect(reverse('proposals'))
