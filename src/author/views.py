@@ -130,10 +130,10 @@ def view_review_assignment(request, submission_id, round_id, review_id):
 
 	template = 'author/submission.html'
 	context = {
-		'author_include': 'author/review_revision.html',
-		'submission_files': 'shared/view_review.html',
+		'author_include': 'shared/view_review.html',
 		'submission': submission,
 		'review': review_assignment,
+		'review_assignment_page': True,
 		'data_ordered': data_ordered,
 		'result': result,
 		'review_rounds': review_rounds,

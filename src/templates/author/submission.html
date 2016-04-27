@@ -130,8 +130,11 @@
         {% endif %}
     </div>
 
-    <div class="col-md-5 dash-center bottom-space" style="height:80%">
+    <div class="{% if not submission_files %}col-md-9{% else %}col-md-5{% endif %} dash-center bottom-space" style="height:80%">
         <div class="dash-container">
+        {% if review_assignment_page %}
+        <h3>Review Assignment #{{review.pk}}</h3>
+        {% endif %}
         {% if author_include %}
             {% include author_include %}
         {% endif %}
