@@ -175,6 +175,9 @@ def logout(request):
     return redirect(reverse('index'))
 
 def register(request):
+    profile_form = forms.RegistrationProfileForm()
+    form = forms.UserCreationForm()
+    
     if request.method == 'POST':
         form = forms.UserCreationForm(request.POST)    
         if form.is_valid():
@@ -185,6 +188,14 @@ def register(request):
             if profile_form.is_valid():
                 profile_form.save()
                 new_user.profile.roles.add(author_role)
+                new_user.profile.save()
+                interests = []
+                if 'interests' in request.POST:
+                    interests = request.POST.get('interests').split(',')
+                
+                for interest in interests:
+                    new_interest, c = models.Interest.objects.get_or_create(name=interest)
+                    new_user.profile.interest.add(new_interest)                
                 new_user.profile.save()
 
             messages.add_message(request, messages.INFO, models.Setting.objects.get(group__name='general', name='registration_message').value)
