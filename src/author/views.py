@@ -128,11 +128,13 @@ def view_review_assignment(request, submission_id, round_id, review_id):
 	else:
 		data_ordered = None
 
-	template = 'author/submission.html'
+	template = 'author/submission_review.html'
 	context = {
 		'author_include': 'shared/view_review.html',
 		'submission': submission,
 		'review': review_assignment,
+		'round_id': round_id,
+		'submission_id': submission_id,
 		'review_assignment_page': True,
 		'data_ordered': data_ordered,
 		'result': result,

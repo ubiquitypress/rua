@@ -33,7 +33,7 @@
 
 <div class="row">
     <div class="col-md-12 book-heading container-fluid">
-        <h3>Book {{ submission.id }}: {{ submission.title }}</h3>
+        <h3>Book {{ submission.id }}: {{ submission.title }}<a href="{% url 'view_review_round' submission_id round_id %}" class="btn  btn-transparent-white" style="position: absolute;right:20;margin-top:-4px">Go back</a></h3>
     </div>
     <div class="col-md-3 dash-left grey-container bottom-space" style="height:80%">
           <div class="dash-container" >
@@ -130,8 +130,11 @@
         {% endif %}
     </div>
 
-    <div class="col-md-5 dash-center bottom-space" style="height:80%">
+    <div class="{% if not submission_files %}col-md-9{% else %}col-md-5{% endif %} dash-center bottom-space" style="height:80%">
         <div class="dash-container">
+        {% if review_assignment_page %}
+        <h3>Review Assignment #{{review.pk}}</h3>
+        {% endif %}
         {% if author_include %}
             {% include author_include %}
         {% endif %}
