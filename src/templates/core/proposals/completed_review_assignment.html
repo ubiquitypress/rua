@@ -10,90 +10,14 @@
 <div class="col-md-12 other-heading container-fluid" style="margin-top:-20px">
       <h3>
         Book Proposal :  {{ proposal.title }} {% if proposal.subtitle%}: {{ proposal.subtitle }}{%endif%}
-          <a class="btn  btn-transparent-white btn-proposal-header" href="?download=proposal"> <i class="fa fa-cloud-download"> &nbsp; Download Proposal</i></a>
+          <a class="btn  btn-transparent-white btn-proposal-header" href="?download=proposal"> <i class="fa fa-cloud-download"> &nbsp; Download Proposal Details</i></a>
         {% if 'press-editor' in roles %}
         <a href="{% url 'view_proposal' proposal.id %}" class="btn  btn-transparent-white" style="position: absolute;right:20;margin-top:-8px">Go back</a>
         {% endif %}
       </h3> 
 
-</div>
-	 <div class="col-md-8 dash-center  bottom-space">
-
-    <div class="dash-container" >
-                       
-        <div class="dash-container">
-
-        <h4><b>INSTRUCTIONS FOR TASK</b></h4>
-        </br>
-        <p class="task-info-text">{{instructions|safe}}</p>
-     
-         <h5> Task Due <span class="subtitle-text">{{ review_assignment.due }}</span></h5>
-   
-        </div>
-              <div class="col-md-12  container-fluid decision-info-accept">                 
-  
-                     <p>You accepted on {{review_assignment.accepted}}</p>
-
-                    </div>
-                     </br>
-    
-</div>
-<hr>
-  </br>
-   <div class="dash-container" >
-            <h4 class="header-text">Proposal details</h4> 
-        </div>
-  <table class="table table-bordered table-condensed">
-    <thead>
-  <tr>
- 
-    <th>Book Title</th>
-    <th>Subtitle</th>
-    {% if not review_assignment.blind %}
-    <th>Submitting Author/Editor</th>
-    {% endif %}
-    <th>User</th>
-    <th>Contact Editor</th>
-    <th>Status</th>
-    <th>Date Submitted</th>
-    
-  </tr>
-  </thead>
-  <tbody>
-  <tr>
-    <td>{{ proposal.title }}</td>
-    <td>{{ proposal.subtitle }}</td>
-    {% if not review_assignment.blind %}
-    <td>{{ proposal.author }}</td>
-    {% endif %}
-    <td>{{ proposal.owner.username }} <sup> <a href="core/email.html" onclick="return popitup('/email/proposal/{{proposal.id}}/user/{{proposal.owner.id}}/','proposal_{{proposal.owner.id}}')"class="fa fa-envelope-o btn btn-xs btn-default"></a></sup></td>
-     <td>{{ proposal.requestor.username }} <sup> <a href="core/email.html" onclick="return popitup('/email/proposal/{{proposal.id}}/user/{{proposal.requestor.id}}/','proposal_{{proposal.requestor.id}}')"class="fa fa-envelope-o btn btn-xs btn-default"></a></sup></td>
-    <td>{% if proposal.in_review %} {% if proposal.reviews_completed %} Reviews Completed {% else %} In Review {% endif %}{% else %}{{ proposal.get_status_display }}{% endif %}</td>
-    <td>{{ proposal.date_submitted }}</td>
-  </tr>
-</tbody>
-</table>
-</hr>
-<div class="container" style="width:100%;left:0%;right:20%;position:relative;">
-<div class="row">
-  {% for field in relationships %}
-
-  <div class="{{ field.width }}">
-  <div class="row">
-    <div class="panel panel-default ">
-      <div class="panel-heading"><span class="panel-heading"><b>{{ field.element.name }}</b></span></div>
-     <div class="panel-body">{% for k,v in data.items %}{% if k == field.element.name %}
-        {% ifequal field.element.field_type 'upload' %}<a href="{% url 'serve_proposal_file_id' proposal.id  v.0 %}">Download</a>{% else %}{{ v.0|safe }}{% endifequal %}{% endif %}{% endfor %}</div>
-    </div>
-  </div>
-  </div>
-{% endfor %}
-</div>
-</div>
-
-</div>
-
-         <div class="col-md-4 dash-right bottom-space">
+</div>  <div class="dash-container" >
+         <div class="col-md-12 dash-center bottom-space">
        <div class="dash-container" >
        <div class="dash-container" >
         {% if review_assignment.accepted %}
@@ -165,6 +89,7 @@
 
       </form>
  {% endif %}
+  </div>
   </div>
   </div>
   </div>
