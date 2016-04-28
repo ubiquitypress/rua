@@ -409,7 +409,13 @@ def add_user(request):
 				user.save()
 				messages.add_message(request, messages.SUCCESS, 'New user %s, password set to %s.' % (user.username, new_pass))
 				email_text = core_models.Setting.objects.get(group__name='email', name='new_user_email').value
-				logic.send_new_user_ack(email_text, user, new_pass)
+				setting = core_models.Setting.objects.filter(name='send_new_user_email', group__name='general')
+				if setting:
+					send_email = setting[0].value
+					if send_email == 'on':
+						logic.send_new_user_ack(email_text, user, new_pass)
+				else:
+					logic.send_new_user_ack(email_text, user, new_pass)
 
 			user.save()
 

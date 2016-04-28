@@ -144,4 +144,24 @@ $('option').mousedown(function(e) {
     return false;
 });
 </script>
+
+<script language="javascript" type="text/javascript">
+$(document).ready(function () {    
+       {%for field in profile_form%}
+          {% if field.field.required %} 
+         var required_text=$('label[for="' + "id_{{field.name}}"+ '"]').html()+" *";
+         var current_field = $('label[for="' + "id_{{field.name}}"+ '"]');
+         current_field.text(required_text); 
+          {% endif %}
+       {% endfor %}
+       {%for field in user_form%}
+          {% if field.field.required %} 
+         var required_text=$('label[for="' + "id_{{field.name}}"+ '"]').html()+" *";
+         var current_field = $('label[for="' + "id_{{field.name}}"+ '"]');
+         current_field.text(required_text); 
+          {% endif %}
+       {% endfor %}
+
+  });
+</script>
 {% endblock %}
