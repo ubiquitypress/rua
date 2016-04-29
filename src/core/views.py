@@ -1266,6 +1266,7 @@ def view_log(request, submission_id):
     'file',
     'copyedit',
     'review',
+    'proposal_review',
     'index',
     'typeset',
     'revisions',
@@ -1273,6 +1274,7 @@ def view_log(request, submission_id):
     'production',
     'proposal',
     'general',
+    'reminder',
     ]
 
     template = 'editor/log.html'

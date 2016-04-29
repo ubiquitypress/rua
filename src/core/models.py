@@ -1120,6 +1120,7 @@ emaillog_choices = (
 	('file', 'File'),
 	('copyedit', 'Copyedit'),
 	('review', 'Review'),
+	('proposal_review', 'Proposal Review'),
 	('index', 'Index'),
 	('typeset', 'Typeset'),
 	('revisions', 'Revisions'),
@@ -1127,6 +1128,7 @@ emaillog_choices = (
 	('production', 'Production'),
 	('proposal', 'Proposal'),
 	('general', 'General'),
+	('reminder', 'Reminder'),
 )
 
 class EmailLog(models.Model):

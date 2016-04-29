@@ -114,5 +114,5 @@ def send_reminder_email(book, subject, review, email_text):
 		'base_url': models.Setting.objects.get(group__name='general', name='base_url').value,	
 	}
 
-	email.send_email(subject, context, from_email.value, review.user.email, email_text, book=book)
+	email.send_email(subject, context, from_email.value, review.user.email, email_text, book=book, kind = 'reminder')
 

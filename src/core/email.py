@@ -16,7 +16,7 @@ def filepath_proposal(proposal, attachment):
 def filepath_general(attachment):
 	return '%s/%s' % (settings.EMAIL_DIR, attachment.uuid_filename)
 
-def send_email(subject, context, from_email, to, html_template, bcc=None, cc=None, book=None, attachment=None, proposal=None, request=None):
+def send_email(subject, context, from_email, to, html_template, bcc=None, cc=None, book=None, attachment=None, proposal=None, request=None, kind = None):
 
 	html_template.replace('\n', '<br />')
 
@@ -35,9 +35,9 @@ def send_email(subject, context, from_email, to, html_template, bcc=None, cc=Non
 	msg = EmailMessage(subject, html_content, from_email, to, bcc=bcc, cc=cc, headers={'Reply-To': reply_to})
 	
 	if book:
-		log.add_email_log_entry(book = book, subject = subject, from_address = from_email, to = to, bcc = bcc, cc = cc, content = html_content, attachment = attachment)
+		log.add_email_log_entry(book = book, subject = subject, from_address = from_email, to = to, bcc = bcc, cc = cc, content = html_content, attachment = attachment, kind = kind)
 	if proposal:
-		log.add_email_log_entry(proposal = proposal, subject = subject, from_address = from_email, to = to, bcc = bcc, cc = cc, content = html_content, attachment = attachment)
+		log.add_email_log_entry(proposal = proposal, subject = subject, from_address = from_email, to = to, bcc = bcc, cc = cc, content = html_content, attachment = attachment, kind = kind)
 		
 	msg.content_subtype = "html"
 
@@ -65,7 +65,7 @@ def send_reset_email(user, email_text, reset_code):
 		'user': user,
 	}
 
-	send_email(get_setting('reset_code_subject','email_subject','[abp] Reset Code'), context, from_email.value, user.email, email_text)
+	send_email(get_setting('reset_code_subject','email_subject','[abp] Reset Code'), context, from_email.value, user.email, email_text, kind = 'general')
 
 def get_email_content(request, setting_name, context):
 	
