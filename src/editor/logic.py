@@ -169,7 +169,7 @@ def cancel_review_round(book):
 	cancel_round = models.ReviewRound.objects.get(book=book,round_number=latest_round.get('max'))
 	cancel_round.delete()
 
-def handle_review_assignment(request,book, reviewer, review_type, due_date, review_round, user, email_text, review_form, attachment=None):
+def handle_review_assignment(request,book, reviewer, review_type, due_date, review_round, user, email_text, review_form, attachment=None, access_key = None):
 	obj, created = models.ReviewAssignment.objects.get_or_create(
 			review_type=review_type,
 			user=reviewer,
@@ -178,13 +178,14 @@ def handle_review_assignment(request,book, reviewer, review_type, due_date, revi
 			defaults={
 				'due':due_date, 
 				'review_form' : review_form,
+				'access_key' : access_key,
 			}
 	)
 
 	if created:
 		book.review_assignments.add(obj)
 		log.add_log_entry(book=book, user=user, kind='review', message='Reviewer %s %s assigned. Round %d' % (reviewer.first_name, reviewer.last_name, review_round.round_number), short_name='Review Assignment')
-		send_review_request(book, obj, email_text, user, attachment)
+		send_review_request(book, obj, email_text, user, attachment, access_key)
 		return created
 	else:
 		messages.add_message(request, messages.WARNING, 'Review Assignment for user <%s> already exists. User might already exist in one of the selected committees' % reviewer.username)
@@ -223,17 +224,19 @@ def handle_editorial_review_assignment(request,book, editors, access_key, due_da
 
 # Email Handlers - TODO: move to email.py?
 
-def send_review_request(book, review_assignment, email_text, sender, attachment=None):
+def send_review_request(book, review_assignment, email_text, sender, attachment=None, access_key=None):
 	from_email = models.Setting.objects.get(group__name='email', name='from_address')
 	base_url = models.Setting.objects.get(group__name='general', name='base_url')
 	press_name = models.Setting.objects.get(group__name='general', name='press_name').value
-
-	decision_url = 'http://%s/review/%s/%s/assignment/%s/decision/' % (base_url.value, review_assignment.review_type, book.id, review_assignment.id)
+	if access_key:
+		decision_url = 'http://%s/review/%s/%s/assignment/%s/access_key/%s/decision/' % (base_url.value, review_assignment.review_type, book.id, review_assignment.id, access_key)
+	else:
+		decision_url = 'http://%s/review/%s/%s/assignment/%s/decision/' % (base_url.value, review_assignment.review_type, book.id, review_assignment.id)
 
 	context = {
 		'book': book,
 		'review': review_assignment,
-		'revision_url': decision_url,
+		'decision_url': decision_url,
 		'sender': sender,
 		'base_url':base_url.value,
 		'press_name':press_name,

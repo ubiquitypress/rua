@@ -977,15 +977,27 @@ def editor_add_reviewers(request, submission_id, review_type, round_number):
 		else:
 			attachment = None
 
+		if 'access_key' in request.POST:
+			generate = True
+		else:
+			generate = False
 		# Handle reviewers
 		for reviewer in reviewers:
-			logic.handle_review_assignment(request,submission, reviewer, review_type, due_date, review_round, request.user, email_text, review_form, attachment)
+			if generate:
+				access_key = uuid4()
+				logic.handle_review_assignment(request,submission, reviewer, review_type, due_date, review_round, request.user, email_text, review_form, attachment, access_key = access_key)
+			else:
+				logic.handle_review_assignment(request,submission, reviewer, review_type, due_date, review_round, request.user, email_text, review_form, attachment)
 
 		# Handle committees
 		for committee in committees:
 			members = manager_models.GroupMembership.objects.filter(group=committee)
 			for member in members:
-				logic.handle_review_assignment(request,submission, member.user, review_type, due_date, review_round, request.user, email_text, review_form, attachment)
+				if generate:
+					access_key = uuid4()
+					logic.handle_review_assignment(request,submission, member.user, review_type, due_date, review_round, request.user, email_text, review_form, attachment, access_key = access_key)
+				else:
+					logic.handle_review_assignment(request,submission, member.user, review_type, due_date, review_round, request.user, email_text, review_form, attachment)
 
 		# Tidy up and save
 		if review_type == 'internal' and not submission.stage.internal_review:
