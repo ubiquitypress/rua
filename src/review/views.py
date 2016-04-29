@@ -77,7 +77,8 @@ def reviewer_decision(request, review_type, submission_id, review_assignment_id,
 				user = review_assignment.user
 			else:
 				if request.user.is_authenticated():
-					review_assignment = get_object_or_404(core_models.ReviewAssignment, Q(user=user), Q(book=submission),Q(pk=review_assignment_id), Q(declined__isnull=True), Q(review_type=review_type),Q(withdrawn = False),Q(access_key__isnull=True) | Q(access_key__exact=''))
+					review_assignment = get_object_or_404(core_models.ReviewAssignment, Q(user=request.user), Q(book=submission),Q(pk=review_assignment_id), Q(declined__isnull=True), Q(review_type=review_type),Q(withdrawn = False),Q(access_key__isnull=True) | Q(access_key__exact=''))
+					user = request.user
 				else:
 					raise Http404
 		else:
