@@ -874,6 +874,59 @@ def email_users_proposal(request, proposal_id, user_id):
     }
     return render(request, template, context)
 
+@login_required
+def email_primary_contact(request):
+    
+    users = User.objects.all()
+    to_value=""
+    sent = False
+    if request.POST:
+
+        attachment = request.FILES.get('attachment')
+        subject = request.POST.get('subject')
+        body = request.POST.get('body')
+        
+        to_addresses = request.POST.get('to_values').split(';')
+        cc_addresses = request.POST.get('cc_values').split(';')
+        bcc_addresses = request.POST.get('bcc_values').split(';')
+
+        to_list=logic.clean_email_list(to_addresses)
+        cc_list=logic.clean_email_list(cc_addresses)
+        bcc_list=logic.clean_email_list(bcc_addresses)
+        
+        if attachment: 
+            attachment = handle_proposal_file(attachment, proposal, 'other', request.user, "Attachment: Uploaded by %s" % (request.user.username))
+        
+        if to_addresses:
+            if attachment: 
+                send_email(subject=subject, context={}, from_email=request.user.email, to=to_list, bcc=bcc_list,cc=cc_list, html_template=body, proposal=proposal, attachment=attachment)
+            else:
+                send_email(subject=subject, context={}, from_email=request.user.email, to=to_list,bcc=bcc_list,cc=cc_list, html_template=body, proposal=proposal)
+            message ="E-mail with subject '%s' was sent." % (subject)
+            return HttpResponse('<script type="text/javascript">window.alert("'+message+'")</script><script type="text/javascript">window.close()</script>') 
+
+    primary_contact = models.Setting.objects.filter(name = 'primary_contact_email')
+    
+    if primary_contact:
+        to_value = primary_contact[0].value
+    else:
+        to_value = ""
+
+    source = "/email/get/users/"
+
+
+    template = 'core/email.html'
+    context = {
+        'from': request.user,
+        'to_value':to_value,
+        'source': source,
+        'group': 'all',
+        'sent':sent,
+        
+    }
+    return render(request, template, context)
+
+
 def page(request, page_name):
 
     page_content = get_object_or_404(models.Setting, group__name='page', name=page_name)
