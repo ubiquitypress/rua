@@ -1114,6 +1114,20 @@ class Message(models.Model):
 	class Meta:
 		ordering = ('-date_sent',) 
 
+emaillog_choices = (
+	('submission', 'Submission'),
+	('workflow', 'Workflow'),
+	('file', 'File'),
+	('copyedit', 'Copyedit'),
+	('review', 'Review'),
+	('index', 'Index'),
+	('typeset', 'Typeset'),
+	('revisions', 'Revisions'),
+	('editing', 'Editing'),
+	('production', 'Production'),
+	('proposal', 'Proposal'),
+	('general', 'General'),
+)
 
 class EmailLog(models.Model):
 	book = models.ForeignKey(Book, null=True,blank=True)
@@ -1126,6 +1140,7 @@ class EmailLog(models.Model):
 	content = models.TextField()
 	attachment = models.ManyToManyField('File', null=True, blank=True,related_name="email_attachment")
 	sent = models.DateTimeField(auto_now_add=True)
-
+	kind = models.CharField(max_length=100, choices=emaillog_choices, default='general')
+	
 	def __unicode__(self):
 		return u"From: %s To: %s, CC: %s BCC: %s : Subject: %s" % (self.from_address, self.to,self.cc,self.bcc, self.subject)

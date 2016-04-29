@@ -1215,21 +1215,35 @@ def versions_file(request, submission_id, file_id):
 @is_book_editor
 def view_log(request, submission_id):
     book = get_object_or_404(models.Book, pk=submission_id)
-
+        
     if request.POST:
-        if 'search' in request.POST:
-            search = request.POST.get('search')
-            email_search = None
-        else:
-            search = None
-            email_search = request.POST.get('email_search')
+        if 'search' in request.POST or 'filter' in request.POST:
+           
+            if 'search' in request.POST:
+                search = request.POST.get('search')
+                email_search = None
+            elif 'email_search' in request.POST:
+                email_search = request.POST.get('email_search')
+                search = None
+            else:
+                email_search = None
+                search = None
+
+            if 'filter' in request.POST:
+                filterby = request.POST.get('filter')
+            else:
+                filterby = None
     else:
         search = None
         email_search = None
+        filterby = None
 
     query_list = []
     email_query_list = []
-
+    
+    if filterby:
+        email_query_list.append(Q(kind__icontains=filterby))
+    
     if email_search:
         email_query_list.append(Q(subject__icontains=email_search) | Q(content__icontains=email_search) | Q(from_address__icontains=email_search))
    
@@ -1246,12 +1260,29 @@ def view_log(request, submission_id):
     else:
         email_list = models.EmailLog.objects.filter(Q(book=book) | Q(proposal=book.proposal)).order_by('-sent')
 
+    filters = [
+    'submission',
+    'workflow',
+    'file',
+    'copyedit',
+    'review',
+    'index',
+    'typeset',
+    'revisions',
+    'editing',
+    'production',
+    'proposal',
+    'general',
+    ]
+
     template = 'editor/log.html'
     context = {
         'submission': book,
         'log_list': log_list,
         'email_list': email_list,
         'active': 'log',
+        'filters': filters,
+        'filterby': filterby,
     }
 
     return render(request, template, context)
