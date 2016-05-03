@@ -17,19 +17,32 @@
 				<th>Width</th>
 				<th>Edit</th>
 				<th>Delete</th>
+				<th colspan="2">Move</th>
 			</tr>
 		</thead>
 		<tbody>
-			{% for field in form.form_fields.all %}
+			{% for field in fields %}
 
 			<tr>
-				<td>{{ field.element.name }}</td>
-				<td>{{ field.element.field_type|capfirst }}</td>
-				<td>{{ field.element.required }}</td>
-				<td>{{ field.order }}</td>
-				<td>{{ field.get_width_display|capfirst }}</td>
-				<td><a href="{% url 'manager_edit_review_form_element' form.id field.id %}">Edit</a></td>
-				<td><a href="{% url 'manager_delete_review_form_element' form.id field.id %}">Delete</a></td>
+				<td>{{ field.field.element.name }}</td>
+				<td>{{ field.field.element.field_type|capfirst }}</td>
+				<td>{{ field.field.element.required }}</td>
+				<td>{{ field.field.order }}</td>
+				<td>{{ field.field.get_width_display|capfirst }}</td>
+				<td><a href="{% url 'manager_edit_review_form_element' form.id field.field.id %}">Edit</a></td>
+				<td><a href="{% url 'manager_delete_review_form_element' form.id field.field.id %}">Delete</a></td>
+				{% ifequal field.above -1 %}
+				<td><a disabled class="btn btn-default" href="">Up</a></td>
+				{% else %}
+				<td><a class="btn btn-default" href="{% url 'manager_reorder_review_form' form.id field.field.id field.above %}">Up</a></td>
+				{% endifequal %}
+				{% ifequal field.below -1 %}
+				<td><a disabled class="btn btn-default" href="">Down</a></td>
+
+				{% else %}
+					<td><a class="btn btn-default" href="{% url 'manager_reorder_review_form' form.id field.field.id field.below %}">Down</a></td>
+
+				{% endifequal %}
 			</tr>
 			{% empty %}
 			<tr>
