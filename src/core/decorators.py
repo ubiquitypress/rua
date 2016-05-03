@@ -82,7 +82,7 @@ def is_editor(function):
 		if kwargs.get('submission_id'):
 			submission_id = kwargs.get('submission_id')
 
-		if 'press-editor' in user_roles or 'book-editor' in user_roles or 'production-editor' in user_roles:
+		if 'press-editor' in user_roles or 'series-editor' in user_roles or 'book-editor' in user_roles or 'production-editor' in user_roles:
 			return function(request, *args, **kwargs)
 		else:
 			messages.add_message(request, messages.ERROR, 'You need to have Press Editor, Book Editor or Series Editor level permission to view this page.')
