@@ -66,6 +66,7 @@ urlpatterns = patterns('',
 
     url(r'^forms/proposal/$', 'manager.views.proposal_forms', name='manager_proposal_forms'),
     url(r'^forms/proposal/(?P<form_id>\d+)/$', 'manager.views.edit_proposal_form', name='manager_edit_proposal_form'),
+    url(r'^forms/proposal/(?P<form_id>\d+)/switch/(?P<field_1_id>\d+)/(?P<field_2_id>\d+)$', 'manager.views.reorder_proposal_form', name='manager_reorder_proposal_form'),
     url(r'^forms/proposal/(?P<form_id>\d+)/element/(?P<relation_id>\d+)/$', 'manager.views.edit_proposal_form', name='manager_edit_proposal_form_element'),
     url(r'^forms/proposal/(?P<form_id>\d+)/element/(?P<relation_id>\d+)/delete/$', 'manager.views.delete_proposal_form_element', name='manager_delete_proposal_form_element'),
     url(r'^forms/proposal/(?P<form_id>\d+)/preview/$', 'manager.views.preview_proposal_form', name='manager_preview_proposal_form'),
