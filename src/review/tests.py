@@ -144,7 +144,7 @@ class ReviewTests(TestCase):
 
 	def test_reviewer_decision(self):
 		self.assignment= core_models.ReviewAssignment.objects.get(pk=1)
-		resp = self.client.get(reverse('reviewer_decision_without',kwargs={'review_type':self.assignment.review_type,'submission_id':1,'review_assignment':1}))
+		resp = self.client.get(reverse('reviewer_decision_without',kwargs={'review_type':self.assignment.review_type,'submission_id':1,'review_assignment_id':1}))
 		content =resp.content
 
 		self.assertEqual(resp.status_code, 200)
@@ -152,14 +152,14 @@ class ReviewTests(TestCase):
 		self.assertEqual("You can accept or reject this task" in content, True)
 		self.assertEqual("I Accept" in content, True)
 		self.assertEqual("I Decline" in content, True)
-		resp = self.client.get(reverse('reviewer_decision_with',kwargs={'review_type':self.assignment.review_type,'submission_id':1,'review_assignment':1,'decision':'decline'}))
+		resp = self.client.get(reverse('reviewer_decision_with',kwargs={'review_type':self.assignment.review_type,'submission_id':1,'review_assignment_id':1,'decision':'decline'}))
 		content =resp.content
 
 		self.assertEqual(resp.status_code, 302)
 		self.assertEqual(resp['Location'], "http://testing/review/dashboard/")
 		self.assignment.declined=None
 		self.assignment.save()
-		resp = self.client.get(reverse('reviewer_decision_with',kwargs={'review_type':self.assignment.review_type,'submission_id':1,'review_assignment':1,'decision':'accept'}))
+		resp = self.client.get(reverse('reviewer_decision_with',kwargs={'review_type':self.assignment.review_type,'submission_id':1,'review_assignment_id':1,'decision':'accept'}))
 		content =resp.content
 
 		self.assertEqual(resp.status_code, 302)
@@ -167,13 +167,13 @@ class ReviewTests(TestCase):
 
 	def test_reviewer_decision_accept(self):
 		self.assignment= core_models.ReviewAssignment.objects.get(pk=1)
-		resp = self.client.post(reverse('reviewer_decision_without',kwargs={'review_type':self.assignment.review_type,'submission_id':1,'review_assignment':1}), {'accept': 'I Accept'})
+		resp = self.client.post(reverse('reviewer_decision_without',kwargs={'review_type':self.assignment.review_type,'submission_id':1,'review_assignment_id':1}), {'accept': 'I Accept'})
 		self.assertEqual(resp.status_code, 302)
 		self.assertEqual(resp['Location'], "http://testing/review/%s/%s/review-round/1/" % (self.assignment.review_type,1))
 
 	def test_reviewer_decision_decline(self):
 		self.assignment= core_models.ReviewAssignment.objects.get(pk=1)
-		resp = self.client.post(reverse('reviewer_decision_without',kwargs={'review_type':self.assignment.review_type,'submission_id':1,'review_assignment':1}), {'decline': 'I Decline'})
+		resp = self.client.post(reverse('reviewer_decision_without',kwargs={'review_type':self.assignment.review_type,'submission_id':1,'review_assignment_id':1}), {'decline': 'I Decline'})
 		self.assertEqual(resp.status_code, 302)
 		self.assertEqual(resp['Location'], "http://testing/review/dashboard/")
 
@@ -230,9 +230,9 @@ class ReviewTests(TestCase):
 		self.assignment= core_models.ReviewAssignment.objects.get(pk=1)
 		self.assignment.access_key="enter"
 		self.assignment.save()
-		resp = self.client.get(reverse('reviewer_decision_without',kwargs={'review_type':self.assignment.review_type,'submission_id':1,'review_assignment':1}))
+		resp = self.client.get(reverse('reviewer_decision_without',kwargs={'review_type':self.assignment.review_type,'submission_id':1,'review_assignment_id':1}))
 		self.assertEqual(resp.status_code, 404)
-		resp = self.client.get(reverse('reviewer_decision_without_access_key',kwargs={'review_type':self.assignment.review_type,'submission_id':1,'review_assignment':1,'access_key':"enter"}))
+		resp = self.client.get(reverse('reviewer_decision_without_access_key',kwargs={'review_type':self.assignment.review_type,'submission_id':1,'review_assignment_id':1,'access_key':"enter"}))
 		content =resp.content
 
 		self.assertEqual(resp.status_code, 200)
@@ -241,7 +241,7 @@ class ReviewTests(TestCase):
 		self.assertEqual("I Accept" in content, True)
 		self.assertEqual("I Decline" in content, True)
 
-		resp = self.client.post(reverse('reviewer_decision_without_access_key',kwargs={'review_type':self.assignment.review_type,'submission_id':1,'review_assignment':1,'access_key':"enter"}), {'accept': 'I Accept'})
+		resp = self.client.post(reverse('reviewer_decision_without_access_key',kwargs={'review_type':self.assignment.review_type,'submission_id':1,'review_assignment_id':1,'access_key':"enter"}), {'accept': 'I Accept'})
 		self.assertEqual(resp.status_code, 302)
 		self.assertEqual(resp['Location'], "http://testing/review/%s/%s/review-round/1/access_key/%s/" % (self.assignment.review_type,1,"enter"))
 		resp = self.client.get(reverse('review_complete_with_access_key',kwargs={'review_type':self.assignment.review_type,'submission_id':1,'access_key':"enter",'review_round':1}))
@@ -249,7 +249,7 @@ class ReviewTests(TestCase):
 		self.assertEqual(resp['Location'], "http://testing/review/external/1/review-round/1/access_key/enter/")
 		self.assignment.accepted = None
 		self.assignment.save()
-		resp = self.client.post(reverse('reviewer_decision_without_access_key',kwargs={'review_type':self.assignment.review_type,'submission_id':1,'review_assignment':1,'access_key':"enter"}), {'decline': 'I Decline'})
+		resp = self.client.post(reverse('reviewer_decision_without_access_key',kwargs={'review_type':self.assignment.review_type,'submission_id':1,'review_assignment_id':1,'access_key':"enter"}), {'decline': 'I Decline'})
 		self.assertEqual(resp.status_code, 302)
 		self.assertEqual(resp['Location'], "http://testing/review/dashboard/")
 		self.assignment.declined = None
@@ -268,7 +268,7 @@ class ReviewTests(TestCase):
 		self.assignment= core_models.ReviewAssignment.objects.get(pk=1)
 		self.assignment.access_key="enter"
 		self.assignment.save()
-		resp = self.client.post(reverse('reviewer_decision_without_access_key',kwargs={'review_type':self.assignment.review_type,'submission_id':1,'review_assignment':1,'access_key':"enter"}), {'accept': 'I Accept'})
+		resp = self.client.post(reverse('reviewer_decision_without_access_key',kwargs={'review_type':self.assignment.review_type,'submission_id':1,'review_assignment_id':1,'access_key':"enter"}), {'accept': 'I Accept'})
 		path = views.create_review_form(self.book,self.book.review_form)
 		self.assertEqual("/files/forms/" in path, True)
 		self.assertEqual(".docx" in path, True)

@@ -207,9 +207,9 @@ def review(request, review_type, submission_id, review_round, access_key=None):
 	if review_assignment:
 		if not review_assignment.accepted and not review_assignment.declined:
 			if access_key:
-				return redirect(reverse('reviewer_decision_without_access_key', kwargs={'review_type': review_type, 'submission_id': submission.pk,'access_key':access_key,'review_assignment':review_assignment.pk}))
+				return redirect(reverse('reviewer_decision_without_access_key', kwargs={'review_type': review_type, 'submission_id': submission.pk,'access_key':access_key,'review_assignment_id':review_assignment.pk}))
 			else:
-				return redirect(reverse('reviewer_decision_without', kwargs={'review_type': review_type, 'submission_id': submission.pk,'review_assignment':review_assignment.pk}))
+				return redirect(reverse('reviewer_decision_without', kwargs={'review_type': review_type, 'submission_id': submission.pk,'review_assignment_id':review_assignment.pk}))
 	
 	editors = logic.get_editors(review_assignment)
 	if review_assignment.review_form:

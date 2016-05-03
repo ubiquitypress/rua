@@ -157,7 +157,6 @@ def is_book_editor_or_author(function):
 def is_reviewer(function):
 	def wrap(request, *args, **kwargs):
 		one_click_no_login = models.Setting.objects.filter(name = 'one_click_review_url')
-		print one_click_no_login[0].value
 		if one_click_no_login:
 			if one_click_no_login[0].value == 'on':
 				full_url = request.get_full_path()	
