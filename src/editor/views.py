@@ -68,12 +68,15 @@ def editor_dashboard(request):
 					book_list.append(book)
 	else:
 		book_list = models.Book.objects.filter(publication_date__isnull=True).exclude(stage__current_stage='declined').select_related('stage').order_by(order)
+	
 	series_books = []
+	
 	if 'series-editor' in request.user_roles:
 		series_books = models.Book.objects.filter(series__editor=request.user).exclude(stage__current_stage='declined').select_related('stage').order_by(order)
 		for series_book in series_books:
 			if series_book not in book_list:
 				book_list.append(series_book)
+
 	template = 'editor/dashboard.html'
 	context = {
 		'book_list': book_list,

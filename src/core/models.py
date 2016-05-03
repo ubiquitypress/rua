@@ -113,7 +113,7 @@ class Profile(models.Model):
 	
 	def is_editor(self):
 		user_roles = [role.slug for role in self.roles.all()]
-		if 'press-editor' in user_roles or 'book-editor' in user_roles or 'production-editor' in user_roles:
+		if 'press-editor' in user_roles or 'book-editor' in user_roles or 'production-editor' in user_roles  or 'series-editor' in user_roles :
 			return True
 		else:
 			False
