@@ -449,6 +449,7 @@ def start_proposal(request):
 	proposal_form = manager_forms.GeneratedNotRequiredForm(form=core_models.ProposalForm.objects.get(pk=proposal_form_id))
 	default_fields = manager_forms.DefaultNotRequiredForm()
 
+	errors=False
 	proposal_form_validated = manager_forms.GeneratedForm(form=core_models.ProposalForm.objects.get(pk=proposal_form_id))
 	default_fields_validated = manager_forms.DefaultForm()
 
@@ -477,6 +478,7 @@ def start_proposal(request):
 	
 			return redirect(reverse('user_dashboard',kwargs = {}))
 		else:
+			errors=True
 			proposal_form = manager_forms.GeneratedNotRequiredForm(request.POST, request.FILES,form=core_models.ProposalForm.objects.get(pk=proposal_form_id))
 			default_fields = manager_forms.DefaultNotRequiredForm(request.POST)
 	
@@ -498,6 +500,7 @@ def start_proposal(request):
 	template = "submission/start_proposal.html"
 	context = {
 		'proposal_form': proposal_form,
+		'errors':errors,
 		'default_fields': default_fields,
 		'proposal_form_validated': proposal_form_validated,
 		'default_fields_validated': default_fields_validated,

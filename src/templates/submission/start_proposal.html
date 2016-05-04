@@ -12,13 +12,13 @@
           {% if overdue %} <b style="color:rgb(255,64,64)" class="small">{% else %}<b style="color:rgb(237,183,38)" class="small">{% endif %} Due: {{ proposal.revision_due_date }}</b>{%endif%}<a href="{% url 'author_dashboard' %}" class="btn  btn-transparent-white" style="position: absolute;right:25px;margin-top:-8px">Go back</a></h2>
 
 </div>
-
+    
+<h5>{% if errors %} <div class='alert alert-danger' style='font-color:black;color:black;width:100%'>{% for field in default_fields %}  <a href='#id_{{field.name}}'>{{field.label}}</a> is required <br> {% endfor %}   {% for field in proposal_form %}  <a href='#{{field.field.label}}'>{{field.field.label}}</a> is required <br> {% endfor %} </div> {% endif %}</h5>
    <p id="#top">{{core_proposal.intro_text|safe}}</p>
     <hr />
    <label id="error_fields" class="red" style="width:100%"></label>
     <form method="post" class="form" enctype="multipart/form-data">
-      {% csrf_token %}     
-
+      {% csrf_token %} 
       <div class="dash-container   bottom-space">
       <div class="well" style="overflow:auto">
           {% for field in default_fields %}
@@ -166,16 +166,6 @@ function popitup(url,title) {
 }
 
 // -->
-</script>
-<script type="text/javascript">
-  $(document).on("click", ":button", function(){
-        var error_msg = "<div class='alert alert-danger' style='font-color:black;color:black;width:100%'>{% for field in default_fields %}  <a href='#id_{{field.name}}'>{{field.label}}</a> is required <br> {% endfor %}   {% for field in proposal_form %}  <a href='#{{field.field.label}}'>{{field.field.label}}</a> is required <br> {% endfor %} </div>";
-
-        (document.getElementById('error_fields')).innerHTML = error_msg;
-        window.open("#error_fields","_self")
-
-      
-    });
 </script>
 
 <script type="text/javascript">
