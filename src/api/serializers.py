@@ -324,7 +324,15 @@ class JuraBookSerializer(serializers.HyperlinkedModelSerializer):
                 chapter_format_dict['sequence'] = chapter_format.sequence
                 chapter_format_dict['file_type'] = chapter_format.file_type
                 chapter_format_dict['identifier'] = chapter_format.identifier
-                chapter_format_dict['file_pk'] = chapter_format.file.pk
+                file_dict = {}
+                file_dict['id'] = chapter_format.file.pk
+                file_dict['label'] = chapter_format.file.label
+                file_dict['original_filename'] = chapter_format.file.original_filename
+                file_dict['uuid_filename'] = chapter_format.file.uuid_filename
+                file_dict['mime_type'] = chapter_format.file.mime_type
+                file_dict['kind'] = chapter_format.file.kind
+                file_dict['sequence'] = chapter_format.file.sequence
+                chapter_format_dict['file'] = file_dict
                 format_list.append(chapter_format_dict)
             chapter_dict['formats'] = format_list
             chapter_list.append(chapter_dict)
