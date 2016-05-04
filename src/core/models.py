@@ -239,6 +239,9 @@ class Book(models.Model):
 	def __repr__(self):
 		return u'%s' % self.title
 
+	def review_type_verbose(self):
+		return dict(book_review_type_choices())[self.review_type]
+
 	def get_latest_review_round(self):
 		try:
 			return self.reviewround_set.all().order_by('-round_number')[0].round_number
