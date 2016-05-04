@@ -17,7 +17,7 @@ from core.cache import cache_result
 from revisions import models as revisions_models
 from submission import logic as submission_logic, models as submission_models
 from core.files import handle_file,handle_copyedit_file,handle_marc21_file
-
+import datetime
 from setting_util import get_setting
 import json
 from pymarc import Record, Field
@@ -583,6 +583,8 @@ def build_time_line_editing_copyedit(copyedit):
 	clean_timeline = []
 	for time in timeline:
 		if time['date']:
+			if isinstance(time['date'], datetime.datetime):
+				time['date'] = time['date'].date()
 			clean_timeline.append(time)
 	return sorted(clean_timeline, key=lambda k: k['date'])
 
@@ -611,6 +613,8 @@ def build_time_line_editing_indexer(index):
 	clean_timeline = []
 	for time in timeline:
 		if time['date']:
+			if isinstance(time['date'], datetime.datetime):
+				time['date'] = time['date'].date()
 			clean_timeline.append(time)
 	return sorted(clean_timeline, key=lambda k: k['date']) 
 
@@ -637,6 +641,8 @@ def build_time_line(book):
 	clean_timeline = []
 	for time in timeline:
 		if time['date']:
+			if isinstance(time['date'], datetime.datetime):
+				time['date'] = time['date'].date()
 			clean_timeline.append(time)
 	return sorted(clean_timeline, key=lambda k: k['date']) 
 
