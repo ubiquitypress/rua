@@ -34,7 +34,7 @@ def editor_dashboard(request):
 	else:
 		filterby = None
 		search = None
-		order = 'title'
+		order = 'pk'
 
 	query_list = []
 
