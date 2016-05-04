@@ -8,8 +8,8 @@
 
  <div class="col-md-12">
   <div class="dash-container other-heading container-fluid" style="margin-top:-20px">
-         <h2>{% if revise%} Revise {%else%}Submit a{%endif%} Proposal{% if revise%}
-          {% if overdue %} <b style="color:rgb(255,64,64)" class="small">{% else %}<b style="color:rgb(237,183,38)" class="small">{% endif %} Due: {{ proposal.revision_due_date }}</b>{%endif%}<a href="{% url 'author_dashboard' %}" class="btn  btn-transparent-white" style="position: absolute;right:25px;margin-top:-8px">Go back</a></h2>
+         <h2>{% if incomplete %}Incomplete Proposal #{{incomplete_proposal.pk}}<a href="{% url 'delete_incomplete_proposal' incomplete_proposal.pk %}" class="btn btn-danger btn-round" style="margin-left:15px"> &nbsp; Delete &nbsp;</a>{% else %}{% if revise%} Revise {%else%}Submit a{%endif%} Proposal{% if revise%}
+          {% if overdue %} <b style="color:rgb(255,64,64)" class="small">{% else %}<b style="color:rgb(237,183,38)" class="small">{% endif %} Due: {{ proposal.revision_due_date }}</b>{%endif%}{% endif %}<a href="{% url 'author_dashboard' %}" class="btn  btn-transparent-white" style="position: absolute;right:25px;margin-top:-8px">Go back</a></h2>
 
 </div>
     

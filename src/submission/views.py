@@ -362,6 +362,13 @@ def editor(request, book_id, editor_id=None):
 	return render(request, template, context)
 
 @login_required
+def delete_incomplete_proposal(request,proposal_id):
+	incomplete_proposal = get_object_or_404(submission_models.IncompleteProposal, pk=proposal_id)
+	incomplete_proposal.delete()
+	messages.add_message(request, messages.SUCCESS, 'Proposal deleted')			
+	return redirect(reverse('user_dashboard',kwargs = {}))
+
+@login_required
 def incomplete_proposal(request,proposal_id):
 	proposal_form_id = core_models.Setting.objects.get(name='proposal_form').value
 	proposal_form = manager_forms.GeneratedNotRequiredForm(form=core_models.ProposalForm.objects.get(pk=proposal_form_id))
@@ -432,6 +439,8 @@ def incomplete_proposal(request,proposal_id):
 	template = "submission/start_proposal.html"
 	context = {
 		'proposal_form': proposal_form,
+		'incomplete_proposal':incomplete_proposal,
+		'incomplete': True,
 		'default_fields': default_fields,
 		'proposal_form_validated': proposal_form_validated,
 		'default_fields_validated': default_fields_validated,
