@@ -16,9 +16,9 @@
 
   <hr />
   {% if user_id %}
-  <a href="{% url 'proposals' %}" class="btn btn-danger pull-right"> Remove filter</a>
+  <a href="{% url 'proposals' %}" class="btn btn-danger pull-right" style="margin-bottom: 20px"> Remove filter</a> <br>
   {% else %}
-  <a href="{% url 'proposals_filtered' request.user.pk %}" class="btn btn-primary pull-right"> Assigned to me </a>
+  <a href="{% url 'proposals_filtered' request.user.pk %}" class="btn btn-primary pull-right" style="margin-bottom: 20px"> Assigned to me </a> <br>
   {% endif %}
   <table class="table table-bordered">
     <thead>
@@ -73,6 +73,10 @@
   {% endfor %}
   </tbody>
   </table>
+  <br>
+  <br>
+  <br>
+  <br>
 </div>
 {% endblock %}
 

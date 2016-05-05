@@ -17,7 +17,6 @@
 
 </div>
 
-   <p>{{core_proposal.intro_text|safe}}</p>
    <hr />
    {% if proposal.status == "accepted" or proposal.status == "declined" %}
    <table class="table table-bordered">
@@ -33,7 +32,6 @@
   </tbody>
   </table>
 
-  <br>
   {% endif %}
    {% if viewable%}
 
@@ -96,6 +94,10 @@
   {% endfor %}
   </tbody>
   </table>
+  
+  <br>
+  <br>
+  <br>
 
 {% else %}
  
