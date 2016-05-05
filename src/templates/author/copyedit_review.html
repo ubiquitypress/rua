@@ -4,23 +4,92 @@
 <h4>Review Copyediting</h4>
 <hr />
 Complete the form below and upload your files. If you're happy with the copyedit, you can skip uploading files. You will be able to give each file a label. The upload box is capable of uploading more than one file at a time.<br/><br/>
-<form method="POST" enctype="multipart/form-data">
-{% csrf_token %}
-{% bootstrap_form form %}
-<div class="row">
-    <div class="col-md-12">
-      <label for="copyedit_file_upload">Upload Files</label>
-       <div class="input-group">
-          <span class="input-group-btn">
-              <span class="btn btn-primary btn-file">
-                  Browse&hellip; <input type="file" id="copyedit_file_upload" name="copyedit_file_upload" multiple>
-              </span>
-          </span>
-          <input type="text" class="form-control" readonly>
+ <form id="fileupload" name="file_upload" method="POST" enctype="multipart/form-data">
+        <!-- The fileupload-buttonbar contains buttons to add/delete files and start/cancel the upload -->
+        <input type="hidden" value="copyedit" id="assignment_type_field">
+          <input type="hidden" value="{{ copyedit.id }}" id="assignment_id_field">
+        <input type="hidden" value="misc" id="type_field">
+        <div class="row fileupload-buttonbar">
+            <div class="col-md-12">
+
+            <div class="dash-container">
+                <!-- The fileinput-button span is used to style the file input field as button -->
+                <span class="btn btn-xs btn-success fileinput-button">
+                    <i class="glyphicon glyphicon-plus"></i>
+                    <span>Add files...</span>
+                    <input type="file" name="files[]" multiple>
+                </span>
+                <button type="submit" class="btn btn-xs btn-primary start">
+                    <i class="glyphicon glyphicon-upload"></i>
+                    <span>Start upload</span>
+                </button>
+                <button type="reset" class="btn btn-xs btn-warning cancel">
+                    <i class="glyphicon glyphicon-ban-circle"></i>
+                    <span>Cancel upload</span>
+                </button>
+                <button type="button" class="btn btn-xs btn-danger delete">
+                    <i class="glyphicon glyphicon-trash"></i>
+                    <span>Delete</span>
+                </button>
+                 <div class="col-md-12 pull-right" >
+                Select all <input type="checkbox" class="toggle">
+              </div>
+                <!-- The global file processing state -->
+            <br>
+                <span class="fileupload-process"></span>
+            </div>
+             </div>
+            <!-- The global progress state -->
+            <div class="col-md-12 fileupload-progress fade">
+                <!-- The global progress bar -->
+                <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100">
+                    <div class="progress-bar progress-bar-success" style="width:0%;"></div>
+                </div>
+                <!-- The extended global progress state -->
+                <div class="progress-extended">&nbsp;</div>
+            </div>
+        </div>
+        <!-- The table listing the files available for upload/download -->
+        <table role="presentation" class="table table-striped">
+          <tbody class="files">
+            {% if submitted_files %}
+              {% for file in submitted_files %}
+              <tr class="template-download fade in">
+                  <td><span class="preview"></span></td>
+                  <td>
+                      <p class="name">
+                      <span>{{ file.original_filename }}</span>
+                      </p>
+                      <p><label>File Label &nbsp;</label><input type="text" name="{{ file.id }}" id="{{ file.id }}" value="{{ file.label }}" /></p>
+                  </td>
+                  <td><span class="size"></span></td>
+                  <td><button class="btn btn-xs btn-danger delete" data-type="POST"
+                  data-url="/{{assignment.type}}/{{assignment.id}}/file/{{ file.id }}/delete/"><i class=
+                  "glyphicon glyphicon-trash"></i> <span>Delete</span></button>
+                  <input class="toggle" name="delete" type="checkbox" value="1"></td>
+              </tr>
+              {% endfor %}
+            {% endif %}
+          </tbody>
+        </table>
+    
+    {% csrf_token %}
+    <p>When you have uploaded your files and are happy with their order, press the Complete button below to move onto the Author/Contributor section of the submission.</p>
+ 
+    {% if form.errors %}
+      <div class="alert alert-info">
+          Please correct errors below. Note, you'll have to reselect any files you want uploaded.
+          {% for error in form.errors %}
+            {{ error }}
+            {% endfor %}
+        </div>
+        {% endif %}
+    {% csrf_token %}
+    {% bootstrap_form form %}
+    {{ form.errors }}
+    <div class="row">
       </div>
-    </div>
-  </div>
-  <br />
-  <button type="submit" name="submit" class="btn btn-success">Complete Copyedit</button>
-</form>
+      <br /> 
+      <button type="submit" name="task" class="btn btn-success">Complete CopyedEdit</button>
+    </form>
 </div>

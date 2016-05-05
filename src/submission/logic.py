@@ -91,3 +91,8 @@ def handle_book_labels(post, book, kind):
             _file.label = post.get("%s" % _file.id)
             _file.save()
 
+def handle_copyedit_author_labels(post, copyedit, kind):
+    for _file in copyedit.author_files.all():
+        if _file.kind == kind and  post.get("%s" % _file.id, None):
+            _file.label = post.get("%s" % _file.id)
+            _file.save()
