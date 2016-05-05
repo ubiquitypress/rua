@@ -1436,7 +1436,12 @@ def proposal_assign_view(request, proposal_id):
     proposal = submission_models.Proposal.objects.get(pk=proposal_id)
     proposal_form_id = models.Setting.objects.get(name='proposal_form').value
     authors = User.objects.filter(profile__roles__slug='author')
-                
+    email_text =  get_email_content(
+        request = request, 
+        setting_name='change_principal_contact_proposal', 
+        context={'sender':request.user,'base_url':models.Setting.objects.get(name='base_url').value,'receiver':proposal.owner,'proposal_url':reverse('proposal_view_submitted',kwargs={'proposal_id': proposal_id}),'proposal':proposal, 'press_name':models.Setting.objects.get(group__name='general', name='press_name').value}
+        )
+           
     if proposal.owner == request.user:
         viewable = True
 
@@ -1464,7 +1469,19 @@ def proposal_assign_view(request, proposal_id):
             editor = False
     else:
         editor = False
-   
+    
+    if request.POST:
+        user_id = request.POST.get('user_id')
+        user = User.objects.get(pk=int(user_id))
+        proposal.owner = user 
+        proposal.save()
+        email_text = smart_text(request.POST.get('email_text'))
+        logic.send_proposal_change_owner_ack(request, proposal, email_text=email_text, owner=user)
+        messages.add_message(request, messages.SUCCESS, 'Unassigned Proposal %s assigned' % proposal.id)
+        log.add_proposal_log_entry(proposal=proposal,user=request.user, kind='proposal', message='Proposal "%s %s" assigned to %s %s.'%(proposal.title,proposal.subtitle,user.first_name,user.last_name), short_name='Proposal Assigned')
+        return redirect(reverse('view_proposal', kwargs={'proposal_id': proposal_id}))
+ 
+
 
     template = "core/proposals/assign/view_proposal.html"
     context = {
@@ -1475,6 +1492,7 @@ def proposal_assign_view(request, proposal_id):
         'data':data,
         'revise':True,
         'assign':True,
+        'email_text': email_text,
         'editor': editor,
         'authors': authors,
         'viewable':viewable,

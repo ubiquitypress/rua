@@ -84,6 +84,13 @@
   </tbody>
   </table>
 <br>
+
+     <form method="post" >
+
+            {% csrf_token %}
+<h3>Message to User</h3>
+<
+ <textarea class="form-control" rows="10" id="email_text" name="email_text">{{ email_text }}</textarea>
    <h3>Assign User</h3>
    <small>The new user should be selected from the available list and they will be the main point of contact for this proposal.</small>
     <br>
@@ -103,7 +110,8 @@
       {% ifequal proposal.owner.pk author.pk %}
       Owner
       {% else %}
- <a href="{% url 'proposal_assign_user' proposal.id author.pk %}" class="btn btn-view btn-sm btn-round" id="author" name="author" value="{{ author.pk }}" type="submit"  data-toggle="tooltip" data-placement="bottom" style="width:100px; height: 30px;"><i class="glyphicon glyphicon-plus"style="font-size:10px"></i>  Assign</a>
+ <button type="submit" class="btn btn-view btn-sm btn-round" id="user_id" name="user_id" value="{{ author.pk }}" type="submit"  data-toggle="tooltip" data-placement="bottom" style="width:100px; height: 30px;"><i class="glyphicon glyphicon-plus"style="font-size:10px"></i>  Assign</button>
+ </form>
       {% endifequal %}
  
         </span>
