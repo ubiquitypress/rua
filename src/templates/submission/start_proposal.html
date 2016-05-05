@@ -57,6 +57,12 @@
       </select>
       <br>
         </div> 
+        {% if revise%}
+         <div class="form-group">
+          <label class="control-label" for="id_note_to_author">Email to Editor</label>
+          <textarea class="form-control" cols="40" id="email_text" name="email_text" rows="10" title="">{{ email_text }}</textarea>
+        </div>
+        {% endif %}
       {% buttons %}
       <div class="dash-container">
           <button name="book_submit" id="book_submit" type="submit" class="btn btn-other pull-right" style="width:120px">
