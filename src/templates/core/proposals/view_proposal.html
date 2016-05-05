@@ -61,7 +61,25 @@
   </div>
 {% endfor %}
 </div>
+<hr>
+<h5> <b>Book Editors</b></h5>
+<table class="table table-bordered">
+<thead>
+<tr>
+  <th>Name</th>
+  </tr>
+</thead>
+<tbody>
+{% for editor in proposal.book_editors.all %}
+<tr>
+<td>{{editor.profile.full_name}}</td>
+</tr>
+{% empty %}
+No book editors have been assigned
+{% endfor %}
 
+</tbody>
+</table>
 <hr>
 <h5> <b>Contract</b>  {% if proposal.contract %}(<a href="{% url 'proposal_contract_manager' proposal.id %}">View</a>) {% endif %}:</h5>
 {% include "core/proposals/contract/contract.html" %}
