@@ -1408,6 +1408,7 @@ def assign_proposal(request):
     template = "core/proposals/assign/start_proposal.html"
     context = {
         'proposal_form': proposal_form,
+        'unassigned': True,
         'default_fields': default_fields,
         'core_proposal':models.ProposalForm.objects.get(pk=proposal_form_id),
     }
@@ -1426,7 +1427,7 @@ def proposal_assign_user(request, proposal_id,user_id):
     messages.add_message(request, messages.SUCCESS, 'Unassigned Proposal %s assigned' % proposal.id)
     log.add_proposal_log_entry(proposal=proposal,user=request.user, kind='proposal', message='Proposal "%s %s" assigned to %s %s.'%(proposal.title,proposal.subtitle,user.first_name,user.last_name), short_name='Proposal Assigned')
           
-    return redirect(reverse('proposals'))
+    return redirect(reverse('view_proposal',kwargs={'proposal_id':proposal_id}))
 
 
 @is_editor
@@ -1558,6 +1559,7 @@ def proposal_assign_edit(request, proposal_id):
         'proposal_form': proposal_form,
         'default_fields': default_fields,
         'proposal':proposal,
+        'unassigned': True,
         'not_readonly':True,
         'data':data,
         'revise':True,

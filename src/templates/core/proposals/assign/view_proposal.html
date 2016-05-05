@@ -13,7 +13,28 @@
   <div class="dash-container other-heading container-fluid" style="margin-top:-20px">
 
       
-         <h2>{% if revise%} Update {%else%}Submit an{%endif%} {% if not proposal.owner %}Unassigned{%endif%} Proposal {% if not not_readonly %}<a href="{% url 'proposal_assign_edit' proposal.id  %}" class="btn  btn-transparent-white" style="position: absolute;right:110px;width:100px;margin-top:-8px">Edit</a>  {% else %}<a href="{% url 'proposal_assign_view_submitted' proposal.id  %}" class="btn  btn-transparent-white" style="position: absolute;right:110px;width:100px;margin-top:-8px">Assign</a>{% endif %}<a href="{% url 'proposals' %}" class="btn  btn-transparent-white" style="position: absolute;right:25px;margin-top:-8px">Go back</a></h2>
+         <h2>{% if revise%} Update {%else%}Submit an{%endif%} {% if not proposal.owner %}Unassigned{%endif%} Proposal {% if not not_readonly %}
+
+  {% if not proposal.owner %}
+         <a href="{% url 'proposal_assign_edit' proposal.id  %}" class="btn  btn-transparent-white" style="position: absolute;right:110px;width:100px;margin-top:-8px">Edit</a>  
+  {% endif %}
+
+         {% else %}<a href="{% url 'proposal_assign_view_submitted' proposal.id  %}" class="btn  btn-transparent-white" style="position: absolute;right:110px;width:100px;margin-top:-8px">Assign</a>{% endif %}
+{% if proposal %}
+  {% if proposal.owner %}
+
+            <a href="{% url 'view_proposal' proposal.id %}" class="btn  btn-transparent-white" style="position: absolute;right:25px;margin-top:-8px">Go back</a>
+  {% else %}
+
+          {% if unassigned %}
+            <a href="{% url 'proposals' %}" class="btn  btn-transparent-white" style="position: absolute;right:25px;margin-top:-8px">Go back</a>
+          {% else %}
+            <a href="{% url 'proposal_assign_view_submitted' proposal.id %}" class="btn  btn-transparent-white" style="position: absolute;right:25px;margin-top:-8px">Go back</a>
+          {% endif %}
+  {% endif %}
+{% endif %}
+
+         </h2>
 
 </div>
 
