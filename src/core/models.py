@@ -129,6 +129,20 @@ class Profile(models.Model):
 			return u"%s %s" % (self.salutation, self.user.last_name)
 		else:
 			return u"%s %s" % (self.user.first_name, self.user.last_name)
+	
+	def number_books_assigned_to(self):
+		books = Book.objects.filter(book_editors__id=self.user.pk)
+		if books:
+			return books.count()
+		else:
+			return 0
+
+	def number_proposals_assigned_to(self):
+		proposals = submission_models.Proposal.objects.filter(book_editors__id=self.user.pk)
+		if proposals:
+			return proposals.count()
+		else:
+			return 0
 
 	def initials(self):
 		if self.middle_name:

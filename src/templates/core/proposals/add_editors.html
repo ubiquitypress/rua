@@ -74,6 +74,8 @@
     <thead>
     <tr>
         <th width="25%">Name</th>
+        <th width="10%">Books</th>
+        <th width="10%">Proposals</th>
         <th></th>
     </tr>
   </thead>
@@ -81,7 +83,8 @@
       {% for editor_dict in list_of_editors  %}
       <tr>
         <td>{{ editor_dict.editor.profile.full_name }} <sup> <a href="core/email.html" onclick="return popitup('/email/proposal/{{proposal.id}}/user/{{editor_dict.editor.pk}}/','proposal{{editor_dict.editor.pk}}')"class="fa fa-envelope-o btn btn-xs btn-default"></a></sup></td>
-
+        <td>{{editor_dict.editor.profile.number_books_assigned_to}}</td>
+        <td>{{editor_dict.editor.profile.number_proposals_assigned_to}}</td>
             <td style="width:5%"> 
 
       <span class="input-group-btn">
