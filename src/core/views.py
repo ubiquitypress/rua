@@ -1970,20 +1970,46 @@ def proposal_add_editors(request, proposal_id):
     
     list_of_editors = get_list_of_editors(proposal)
 
-    email_text = models.Setting.objects.get(group__name='email', name='book_editor_ack').value
-    
-    if request.GET and "add" in request.GET:
-        user_id = request.GET.get("add")
+    email_text = get_email_content(
+        request = request, 
+        setting_name='book_editor_proposal_ack', 
+        context={'added_editors':proposal.book_editors.all(),'base_url':  models.Setting.objects.get(group__name='general', name='base_url').value,'proposal':proposal, 'press_name':models.Setting.objects.get(group__name='general', name='press_name').value}
+        )
+
+    if request.POST and "add" in request.POST:
+        user_id = request.POST.get("add")
         user = User.objects.get(pk=user_id)
         proposal.book_editors.add(user)
         proposal.save()
+        email_text = request.POST.get('email_text')
+        email_text = email_text.replace('_receiver_', user.profile.full_name())
+        editor_text = ""
+        for editor in proposal.book_editors.all():
+            editor_text = editor_text + "%s <br>" % editor.profile.full_name() 
+
+        email_text = email_text.replace('_proposal_editors_', editor_text)
+
+        logic.send_proposal_book_editor(request,proposal,email_text,request.user)
+       
         list_of_editors = get_list_of_editors(proposal)
 
-    elif request.GET and "remove" in request.GET:
-        user_id = request.GET.get("remove")
+    elif request.POST and "remove" in request.POST:
+        user_id = request.POST.get("remove")
         user = User.objects.get(pk=user_id)
         proposal.book_editors.remove(user)
         proposal.save()
+        email_text = request.POST.get('email_text')
+        email_text = email_text.replace('_receiver_', user.profile.full_name())
+        editor_text = ""
+        for editor in proposal.book_editors.all():
+            editor_text = editor_text + "%s <br>" % editor.profile.full_name() 
+
+        email_text = email_text.replace('_proposal_editors_', editor_text)
+
+        email_text = email_text.replace('You have been assigned as a', 'You have been removed from being a')
+
+        logic.send_proposal_book_editor(request,proposal,email_text,request.user)
+       
         list_of_editors = get_list_of_editors(proposal)
 
 
@@ -1992,7 +2018,8 @@ def proposal_add_editors(request, proposal_id):
     template = 'core/proposals/add_editors.html'
     context = {
         'proposal': proposal,
-        'list_of_editors':list_of_editors,
+        'list_of_editors':list_of_editors, 
+        'email_text': email_text,
     }
 
     return render(request, template, context)
