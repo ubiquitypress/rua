@@ -28,7 +28,9 @@
     <th>Subtitle</th>
     <th>Submitting Author/Editor</th>
     <th>Date Submitted</th>
+    <th>Book Editors</th>
     <th>Status</th>
+
     <th></th>
   </tr></thead><tbody>
   {% for proposal in proposal_list %}
@@ -38,7 +40,8 @@
     <td>{{ proposal.subtitle }}</td>
     <td>{{ proposal.owner.first_name }} {{ proposal.owner.last_name }}</td>
     <td>{{ proposal.date_submitted }}</td>
-    <td>{% if proposal.in_review %} {% if proposal.reviews_completed %} Reviews Completed {% else %} In Review {% endif %}{% else %}{{ proposal.get_status_display }}{% endif %}</td>
+    <td>  {% for editor in proposal.book_editors.all %} {{editor.profile.full_name}} <br> {% empty %} None. {% endfor%}</td>
+    <td>{% if proposal.in_review %} {% if proposal.reviews_completed %} Reviews Completed {% else %} In Review {% endif %}{% else %}{{ proposal.get_status_display }}{% endif %}</td>    
     <td width="8%"><a href="{% url 'view_proposal' proposal.id %}" class="btn btn-other" style="width:100px">View</a></td>
   </tr>
 
