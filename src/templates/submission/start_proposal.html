@@ -21,6 +21,7 @@
 
       <div class="dash-container   bottom-space">
       <div class="well" style="overflow:auto">
+          <div class="row">
           {% for field in default_fields %}
             <div id="{{field.field.label}}"class="{% if field.field.widget.attrs.div_class %}{{ field.field.widget.attrs.div_class }}{% else %}col-md-12{% endif %}">
             {% if field.field.widget.attrs.is_checkbox %}
@@ -32,6 +33,7 @@
               {% endif %}
               </div>
           {% endfor %}
+          </div>
         {% if proposal_form %}
 
           <div class="row">
