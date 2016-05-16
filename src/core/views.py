@@ -1730,7 +1730,8 @@ def start_proposal_review(request, proposal_id):
                 attachment = handle_proposal_file(request.FILES.get('attachment'), proposal, 'misc', request.user)
             else:
                 attachment = None
-                blind = request.POST.get('blind')
+                
+            blind = request.POST.get('blind')
             proposal = start_form.save(commit=False)
             proposal.date_review_started = timezone.now()
             due_date = request.POST.get('due_date')
