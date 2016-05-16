@@ -288,7 +288,7 @@ $(document).ready(function () {
     for (i in elems) {
         if((' ' + elems[i].className + ' ').indexOf(' ' + 'datepicker' + ' ')
                 > -1) {        
-      $("#"+elems[i].id).datepicker({ dateFormat: 'yy-mm-dd' }).val();
+      $(".datepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
         }
     }
 });
