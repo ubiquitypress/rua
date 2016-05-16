@@ -1730,7 +1730,7 @@ def start_proposal_review(request, proposal_id):
                 attachment = handle_proposal_file(request.FILES.get('attachment'), proposal, 'misc', request.user)
             else:
                 attachment = None
-                
+
             blind = request.POST.get('blind')
             proposal = start_form.save(commit=False)
             proposal.date_review_started = timezone.now()
@@ -1754,7 +1754,7 @@ def start_proposal_review(request, proposal_id):
                 try:
                     new_review_assignment.save()
                     proposal.review_assignments.add(new_review_assignment)
-                    logic.send_proposal_review_request(request,proposal, new_review_assignment, email_text, attachment)
+                    logic.send_proposal_review_request(request, proposal, new_review_assignment, email_text, attachment)
                 except IntegrityError:
                     messages.add_message(request, messages.WARNING, '%s %s is already a reviewer' % (reviewer.first_name, reviewer.last_name))
 
@@ -2190,7 +2190,7 @@ def add_proposal_reviewers(request, proposal_id):
             try:
                 new_review_assignment.save()
                 proposal.review_assignments.add(new_review_assignment)
-                logic.send_proposal_review_request(proposal, new_review_assignment, email_text, attachment)
+                logic.send_proposal_review_request(request, proposal, new_review_assignment, email_text, attachment)
             except IntegrityError:
                 messages.add_message(request, messages.WARNING, '%s %s is already a reviewer' % (reviewer.first_name, reviewer.last_name))
 
@@ -2210,7 +2210,7 @@ def add_proposal_reviewers(request, proposal_id):
                 try:
                     new_review_assignment.save()
                     proposal.review_assignments.add(new_review_assignment)
-                    logic.send_proposal_review_request(proposal, new_review_assignment, email_text, attachment)
+                    logic.send_proposal_review_request(request, proposal, new_review_assignment, email_text, attachment)
                 except IntegrityError:
                     messages.add_message(request, messages.WARNING, '%s %s is already a reviewer' % (member.user.first_name, member.user.last_name))
 
