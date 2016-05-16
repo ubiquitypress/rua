@@ -57,14 +57,25 @@
 {% endfor %}
 </div>
 <hr>
+
   <div class="col-md-12 other-sub-heading container-fluid" style="margin-top:-20px">
 <h3>{% if proposal.book_editors.all %}
-               Update {% else %} Add {% endif %} Book Editors</h3>
+               Update {% else %} Assign {% endif %} Book Editor(s)</h3>
                </div>
+<br>
+<br>
+     <form action="{% url 'proposal_add_editors' proposal.id %}" method="post" >
+      {% csrf_token %}  
+ <h4>Message to Editors</h4>
+<textarea class="form-control" rows="10" id="email_text" name="email_text">{{ email_text }}</textarea>
+<small>Do not remove tags : '_receiver_' and '_proposal_editors_'. </small>
+<hr>
 <table id="bookeditors" class="table table-bordered small" >
     <thead>
     <tr>
         <th width="25%">Name</th>
+        <th width="10%">Books</th>
+        <th width="10%">Proposals</th>
         <th></th>
     </tr>
   </thead>
@@ -72,18 +83,24 @@
       {% for editor_dict in list_of_editors  %}
       <tr>
         <td>{{ editor_dict.editor.profile.full_name }} <sup> <a href="core/email.html" onclick="return popitup('/email/proposal/{{proposal.id}}/user/{{editor_dict.editor.pk}}/','proposal{{editor_dict.editor.pk}}')"class="fa fa-envelope-o btn btn-xs btn-default"></a></sup></td>
-
+        <td>{{editor_dict.editor.profile.number_books_assigned_to}}</td>
+        <td>{{editor_dict.editor.profile.number_proposals_assigned_to}}</td>
             <td style="width:5%"> 
-      <form action="{% url 'proposal_add_editors' proposal.id %}" method="get" >
+
       <span class="input-group-btn">
           <button class="btn btn-{% if editor_dict.already_added %}danger{% else %}info{% endif%} btn-sm btn-round" id="remove" name="{% if editor_dict.already_added %}remove{% else %}add{% endif%}" value="{{ editor_dict.editor.pk }}" type="submit"  data-toggle="tooltip" data-placement="bottom" title="Remove editor from book" style="width:100px; height: 30px;"><span class="glyphicon glyphicon-{% if editor_dict.already_added %}remove{% else %}plus{% endif%}"style="position:absolute;right:70px;top:8px"></span> <b style="position:absolute;right:{% if editor_dict.already_added %}20{% else %}38{% endif%}px;top:5.5px">{% if editor_dict.already_added %}Remove{% else %}Add{% endif%}</b></button>
         </span>
- </form>
+
        </td>
       </tr>
       {% endfor %}
     </tbody>
     </table>
+     </form>
+    <br>
+    <br>
+    <br>
+    <br>
 
     {% endblock %}
 
@@ -99,4 +116,5 @@ function popitup(url,title) {
 // -->
 </script>
 
+<script type="text/javascript">$("textarea").jqte();</script>
     {% endblock %}

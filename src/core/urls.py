@@ -68,7 +68,8 @@ urlpatterns = patterns('',
     url(r'^email/(?P<group>[-\w]+)/submission/(?P<submission_id>\d+)/$', 'core.views.email_users', name='email_users'),
     url(r'^email/(?P<group>[-\w]+)/submission/(?P<submission_id>\d+)/user/(?P<user_id>\d+)/$', 'core.views.email_users', name='email_user'),
     url(r'^email/proposal/(?P<proposal_id>\d+)/user/(?P<user_id>\d+)/$', 'core.views.email_users_proposal', name='email_user_proposal'),
-   
+    url(r'^email/primary-contact/$', 'core.views.email_primary_contact', name='email_primary_contact'),
+
     url(r'^email/get/user/proposal/(?P<proposal_id>\d+)/$', 'core.views.get_proposal_users', name='get_proposal_users'), 
     url(r'^email/get/authors/submission/(?P<submission_id>\d+)/$', 'core.views.get_authors', name='get_authors'),
     url(r'^email/get/editors/submission/(?P<submission_id>\d+)/$', 'core.views.get_editors', name='get_editors'),

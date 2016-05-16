@@ -874,6 +874,59 @@ def email_users_proposal(request, proposal_id, user_id):
     }
     return render(request, template, context)
 
+@login_required
+def email_primary_contact(request):
+    
+    users = User.objects.all()
+    to_value=""
+    sent = False
+    if request.POST:
+
+        attachment = request.FILES.get('attachment')
+        subject = request.POST.get('subject')
+        body = request.POST.get('body')
+        
+        to_addresses = request.POST.get('to_values').split(';')
+        cc_addresses = request.POST.get('cc_values').split(';')
+        bcc_addresses = request.POST.get('bcc_values').split(';')
+
+        to_list=logic.clean_email_list(to_addresses)
+        cc_list=logic.clean_email_list(cc_addresses)
+        bcc_list=logic.clean_email_list(bcc_addresses)
+        
+        if attachment: 
+            attachment = handle_proposal_file(attachment, proposal, 'other', request.user, "Attachment: Uploaded by %s" % (request.user.username))
+        
+        if to_addresses:
+            if attachment: 
+                send_email(subject=subject, context={}, from_email=request.user.email, to=to_list, bcc=bcc_list,cc=cc_list, html_template=body, proposal=proposal, attachment=attachment)
+            else:
+                send_email(subject=subject, context={}, from_email=request.user.email, to=to_list,bcc=bcc_list,cc=cc_list, html_template=body, proposal=proposal)
+            message ="E-mail with subject '%s' was sent." % (subject)
+            return HttpResponse('<script type="text/javascript">window.alert("'+message+'")</script><script type="text/javascript">window.close()</script>') 
+
+    primary_contact = models.Setting.objects.filter(name = 'primary_contact_email')
+    
+    if primary_contact:
+        to_value = primary_contact[0].value
+    else:
+        to_value = ""
+
+    source = "/email/get/users/"
+
+
+    template = 'core/email.html'
+    context = {
+        'from': request.user,
+        'to_value':to_value,
+        'source': source,
+        'group': 'all',
+        'sent':sent,
+        
+    }
+    return render(request, template, context)
+
+
 def page(request, page_name):
 
     page_content = get_object_or_404(models.Setting, group__name='page', name=page_name)
@@ -1266,6 +1319,7 @@ def view_log(request, submission_id):
     'file',
     'copyedit',
     'review',
+    'proposal_review',
     'index',
     'typeset',
     'revisions',
@@ -1273,6 +1327,7 @@ def view_log(request, submission_id):
     'production',
     'proposal',
     'general',
+    'reminder',
     ]
 
     template = 'editor/log.html'
@@ -1353,6 +1408,7 @@ def assign_proposal(request):
     template = "core/proposals/assign/start_proposal.html"
     context = {
         'proposal_form': proposal_form,
+        'unassigned': True,
         'default_fields': default_fields,
         'core_proposal':models.ProposalForm.objects.get(pk=proposal_form_id),
     }
@@ -1371,7 +1427,7 @@ def proposal_assign_user(request, proposal_id,user_id):
     messages.add_message(request, messages.SUCCESS, 'Unassigned Proposal %s assigned' % proposal.id)
     log.add_proposal_log_entry(proposal=proposal,user=request.user, kind='proposal', message='Proposal "%s %s" assigned to %s %s.'%(proposal.title,proposal.subtitle,user.first_name,user.last_name), short_name='Proposal Assigned')
           
-    return redirect(reverse('proposals'))
+    return redirect(reverse('view_proposal',kwargs={'proposal_id':proposal_id}))
 
 
 @is_editor
@@ -1380,7 +1436,12 @@ def proposal_assign_view(request, proposal_id):
     proposal = submission_models.Proposal.objects.get(pk=proposal_id)
     proposal_form_id = models.Setting.objects.get(name='proposal_form').value
     authors = User.objects.filter(profile__roles__slug='author')
-                
+    email_text =  get_email_content(
+        request = request, 
+        setting_name='change_principal_contact_proposal', 
+        context={'sender':request.user,'base_url':models.Setting.objects.get(name='base_url').value,'receiver':proposal.owner,'proposal_url':reverse('proposal_view_submitted',kwargs={'proposal_id': proposal_id}),'proposal':proposal, 'press_name':models.Setting.objects.get(group__name='general', name='press_name').value}
+        )
+           
     if proposal.owner == request.user:
         viewable = True
 
@@ -1408,7 +1469,19 @@ def proposal_assign_view(request, proposal_id):
             editor = False
     else:
         editor = False
-   
+    
+    if request.POST:
+        user_id = request.POST.get('user_id')
+        user = User.objects.get(pk=int(user_id))
+        proposal.owner = user 
+        proposal.save()
+        email_text = smart_text(request.POST.get('email_text'))
+        logic.send_proposal_change_owner_ack(request, proposal, email_text=email_text, owner=user)
+        messages.add_message(request, messages.SUCCESS, 'Unassigned Proposal %s assigned' % proposal.id)
+        log.add_proposal_log_entry(proposal=proposal,user=request.user, kind='proposal', message='Proposal "%s %s" assigned to %s %s.'%(proposal.title,proposal.subtitle,user.first_name,user.last_name), short_name='Proposal Assigned')
+        return redirect(reverse('view_proposal', kwargs={'proposal_id': proposal_id}))
+ 
+
 
     template = "core/proposals/assign/view_proposal.html"
     context = {
@@ -1419,6 +1492,7 @@ def proposal_assign_view(request, proposal_id):
         'data':data,
         'revise':True,
         'assign':True,
+        'email_text': email_text,
         'editor': editor,
         'authors': authors,
         'viewable':viewable,
@@ -1503,6 +1577,7 @@ def proposal_assign_edit(request, proposal_id):
         'proposal_form': proposal_form,
         'default_fields': default_fields,
         'proposal':proposal,
+        'unassigned': True,
         'not_readonly':True,
         'data':data,
         'revise':True,
@@ -1895,20 +1970,46 @@ def proposal_add_editors(request, proposal_id):
     
     list_of_editors = get_list_of_editors(proposal)
 
-    email_text = models.Setting.objects.get(group__name='email', name='book_editor_ack').value
-    
-    if request.GET and "add" in request.GET:
-        user_id = request.GET.get("add")
+    email_text = get_email_content(
+        request = request, 
+        setting_name='book_editor_proposal_ack', 
+        context={'added_editors':proposal.book_editors.all(),'base_url':  models.Setting.objects.get(group__name='general', name='base_url').value,'proposal':proposal, 'press_name':models.Setting.objects.get(group__name='general', name='press_name').value}
+        )
+
+    if request.POST and "add" in request.POST:
+        user_id = request.POST.get("add")
         user = User.objects.get(pk=user_id)
         proposal.book_editors.add(user)
         proposal.save()
+        email_text = request.POST.get('email_text')
+        email_text = email_text.replace('_receiver_', user.profile.full_name())
+        editor_text = ""
+        for editor in proposal.book_editors.all():
+            editor_text = editor_text + "%s <br>" % editor.profile.full_name() 
+
+        email_text = email_text.replace('_proposal_editors_', editor_text)
+
+        logic.send_proposal_book_editor(request,proposal,email_text,request.user)
+       
         list_of_editors = get_list_of_editors(proposal)
 
-    elif request.GET and "remove" in request.GET:
-        user_id = request.GET.get("remove")
+    elif request.POST and "remove" in request.POST:
+        user_id = request.POST.get("remove")
         user = User.objects.get(pk=user_id)
         proposal.book_editors.remove(user)
         proposal.save()
+        email_text = request.POST.get('email_text')
+        email_text = email_text.replace('_receiver_', user.profile.full_name())
+        editor_text = ""
+        for editor in proposal.book_editors.all():
+            editor_text = editor_text + "%s <br>" % editor.profile.full_name() 
+
+        email_text = email_text.replace('_proposal_editors_', editor_text)
+
+        email_text = email_text.replace('You have been assigned as a', 'You have been removed from being a')
+
+        logic.send_proposal_book_editor(request,proposal,email_text,request.user)
+       
         list_of_editors = get_list_of_editors(proposal)
 
 
@@ -1917,7 +2018,8 @@ def proposal_add_editors(request, proposal_id):
     template = 'core/proposals/add_editors.html'
     context = {
         'proposal': proposal,
-        'list_of_editors':list_of_editors,
+        'list_of_editors':list_of_editors, 
+        'email_text': email_text,
     }
 
     return render(request, template, context)

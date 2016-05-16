@@ -128,6 +128,19 @@
           </tr>
         </tbody>
         </table>
+        {% else %}
+          <table class="table table-bordered">
+          <thead>
+              <tr>
+                <th>Contact</th>
+              </tr>
+          </thead>
+          <tbody>
+          <tr>
+            <td>Primary contact <sup> <a href="core/email.html" onclick="return popitup('/email/primary-contact/','primary')"class="fa fa-envelope-o btn btn-xs btn-default"></a></sup></td>
+          </tr>
+        </tbody>
+        </table>
     {% endif %}
  
     <div class="dash-container">

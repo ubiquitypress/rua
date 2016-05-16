@@ -16,6 +16,7 @@ from django.utils.encoding import smart_text
 
 from submission import forms
 from core import models as core_models, log, task, logic as core_logic
+from core.email import get_email_content
 from submission import logic, models as submission_models
 from manager import forms as manager_forms
 from core.files import handle_proposal_file_form
@@ -362,6 +363,13 @@ def editor(request, book_id, editor_id=None):
 	return render(request, template, context)
 
 @login_required
+def delete_incomplete_proposal(request,proposal_id):
+	incomplete_proposal = get_object_or_404(submission_models.IncompleteProposal, pk=proposal_id)
+	incomplete_proposal.delete()
+	messages.add_message(request, messages.SUCCESS, 'Proposal deleted')			
+	return redirect(reverse('user_dashboard',kwargs = {}))
+
+@login_required
 def incomplete_proposal(request,proposal_id):
 	proposal_form_id = core_models.Setting.objects.get(name='proposal_form').value
 	proposal_form = manager_forms.GeneratedNotRequiredForm(form=core_models.ProposalForm.objects.get(pk=proposal_form_id))
@@ -432,6 +440,8 @@ def incomplete_proposal(request,proposal_id):
 	template = "submission/start_proposal.html"
 	context = {
 		'proposal_form': proposal_form,
+		'incomplete_proposal':incomplete_proposal,
+		'incomplete': True,
 		'default_fields': default_fields,
 		'proposal_form_validated': proposal_form_validated,
 		'default_fields_validated': default_fields_validated,
@@ -449,6 +459,7 @@ def start_proposal(request):
 	proposal_form = manager_forms.GeneratedNotRequiredForm(form=core_models.ProposalForm.objects.get(pk=proposal_form_id))
 	default_fields = manager_forms.DefaultNotRequiredForm()
 
+	errors=False
 	proposal_form_validated = manager_forms.GeneratedForm(form=core_models.ProposalForm.objects.get(pk=proposal_form_id))
 	default_fields_validated = manager_forms.DefaultForm()
 
@@ -477,6 +488,7 @@ def start_proposal(request):
 	
 			return redirect(reverse('user_dashboard',kwargs = {}))
 		else:
+			errors=True
 			proposal_form = manager_forms.GeneratedNotRequiredForm(request.POST, request.FILES,form=core_models.ProposalForm.objects.get(pk=proposal_form_id))
 			default_fields = manager_forms.DefaultNotRequiredForm(request.POST)
 	
@@ -498,6 +510,7 @@ def start_proposal(request):
 	template = "submission/start_proposal.html"
 	context = {
 		'proposal_form': proposal_form,
+		'errors':errors,
 		'default_fields': default_fields,
 		'proposal_form_validated': proposal_form_validated,
 		'default_fields_validated': default_fields_validated,
@@ -533,6 +546,12 @@ def proposal_revisions(request, proposal_id):
 	proposal_form_id = core_models.Setting.objects.get(name='proposal_form').value
 	proposal = get_object_or_404(submission_models.Proposal, pk=proposal_id, owner=request.user, status='revisions_required')
 	notes = submission_models.ProposalNote.objects.filter(proposal=proposal)
+	email_text = get_email_content(
+        request = request, 
+        setting_name='proposal_revision_submit_ack', 
+        context={'sender':request.user,'receiver':proposal.owner,'proposal':proposal, 'press_name':core_models.Setting.objects.get(group__name='general', name='press_name').value}
+        )
+
 	overdue = False;
 	if proposal.revision_due_date.date() < datetime.today().date():
 		overdue = True
@@ -591,7 +610,8 @@ def proposal_revisions(request, proposal_id):
 			notification = core_models.Task(assignee=proposal.requestor,creator=request.user,text="Revisions for Proposal '%s' with id %s submitted" % (proposal.title,proposal.id),workflow='proposal')
 			notification.save()
 			
-			update_email_text = core_models.Setting.objects.get(group__name='email', name='proposal_revision_submit_ack').value
+			update_email_text = smart_text(request.POST.get('email_text'))
+
 			log.add_proposal_log_entry(proposal=proposal,user=request.user, kind='proposal', message='Revisions for Proposal "%s %s" with id %s have been submitted.'%(proposal.title,proposal.subtitle,proposal.pk), short_name='Proposal Revisions Submitted')
 			core_logic.send_proposal_update(proposal, email_text=update_email_text, sender=request.user, receiver=proposal.requestor)
 			notification.emailed = True
@@ -603,6 +623,7 @@ def proposal_revisions(request, proposal_id):
 	context = {
 		'proposal_form': proposal_form,
 		'proposal':proposal,
+		'email_text':email_text,
 		'default_fields': default_fields,
 		'data':data,
 		'revise':True,

@@ -82,7 +82,7 @@ def is_editor(function):
 		if kwargs.get('submission_id'):
 			submission_id = kwargs.get('submission_id')
 
-		if 'press-editor' in user_roles or 'book-editor' in user_roles or 'production-editor' in user_roles:
+		if 'press-editor' in user_roles or 'series-editor' in user_roles or 'book-editor' in user_roles or 'production-editor' in user_roles:
 			return function(request, *args, **kwargs)
 		else:
 			messages.add_message(request, messages.ERROR, 'You need to have Press Editor, Book Editor or Series Editor level permission to view this page.')
@@ -156,7 +156,27 @@ def is_book_editor_or_author(function):
 
 def is_reviewer(function):
 	def wrap(request, *args, **kwargs):
-		
+		one_click_no_login = models.Setting.objects.filter(name = 'one_click_review_url')
+		if one_click_no_login:
+			if one_click_no_login[0].value == 'on':
+				full_url = request.get_full_path()	
+				if 'access_key' in full_url:
+					if 'decision' in full_url:
+						access_key = full_url[full_url.rfind('key/')+4:]
+						access_key = access_key[:-10]
+					elif 'complete' in full_url:
+						access_key = full_url[full_url.rfind('key/')+4:]
+						access_key = access_key[:-10]
+						print access_key						
+					else:
+						access_key = full_url[full_url.rfind('key/')+4:]
+						access_key = access_key[:access_key.rfind('/')]
+					review_assignments = models.ReviewAssignment.objects.filter(access_key=access_key)
+					print review_assignments
+					if review_assignments:
+						return function(request, *args, **kwargs)
+
+
 		if not request.user.is_authenticated():
 			messages.add_message(request, messages.ERROR, 'You need to log in to view this page.')
 			return redirect("%s?next=%s" % (reverse('login'), request.get_full_path()))

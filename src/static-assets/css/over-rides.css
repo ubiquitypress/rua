@@ -1560,3 +1560,170 @@ box-shadow: 0px 7px 5px 1px rgba(236,236,236,1);
   border-bottom: 5px #E5E5E5 solid;
   margin-bottom: 15px;
 }
+.email-badge-proposal{
+  background-color:#7c50ff!important
+}
+
+.email-border-proposal{
+  border-bottom: 8px #7c50ff solid;
+  margin-bottom: -7px;
+  margin-top: 35px;
+  margin-left:-15.5px;
+  width:106%;
+}
+
+.email-badge-general{
+  background-color:#7FDBDE!important
+}
+
+.email-border-general{
+  border-bottom: 8px #7FDBDE solid;
+  margin-bottom: -7px;
+  margin-top: 35px;
+  margin-left:-15.5px;
+  width:106%;
+}
+
+.email-badge-review{
+  background-color:rgb(233, 181, 69)!important
+}
+
+.email-border-review{
+  border-bottom: 8px rgb(233, 181, 69) solid;
+  margin-bottom: -7px;
+  margin-top: 35px;
+  margin-left:-15.5px;
+  width:106%;
+}
+
+.email-badge-submission{
+  background-color:rgb(233, 181, 69)!important
+}
+
+.email-border-submission{
+  border-bottom: 8px rgb(233, 181, 69) solid;
+  margin-bottom: -7px;
+  margin-top: 35px;
+  margin-left:-15.5px;
+  width:106%;
+}
+
+.email-badge-copyedit{
+  background-color:rgb(170, 196, 61)!important
+}
+
+.email-border-copyedit{
+  border-bottom: 8px rgb(170, 196, 61) solid;
+  margin-bottom: -7px;
+  margin-top: 35px;
+  margin-left:-15.5px;
+  width:106%;
+}
+
+.email-badge-index{
+  background-color:rgb(170, 196, 61)!important
+}
+
+.email-border-index{
+  border-bottom: 8px rgb(170, 196, 61) solid;
+  margin-bottom: -7px;
+  margin-top: 35px;
+  margin-left:-15.5px;
+  width:106%;
+}
+
+.email-badge-typeset{
+  background-color:rgb(123, 195, 61)!important
+}
+
+.email-border-typeset{
+  border-bottom: 8px rgb(123, 195, 61) solid;
+  margin-bottom: -7px;
+  margin-top: 35px;
+  margin-left:-15.5px;
+  width:106%;
+}
+
+.email-badge-revisions{
+  background-color:#9BF12E!important
+}
+
+.email-border-revisions{
+  border-bottom: 8px #9BF12E solid;
+  margin-bottom: -7px;
+  margin-top: 35px;
+  margin-left:-15.5px;
+  width:106%;
+}
+
+.email-badge-production{
+  background-color:rgb(123, 195, 61)!important
+}
+
+.email-border-production{
+  border-bottom: 8px rgb(123, 195, 61) solid;
+  margin-bottom: -7px;
+  margin-top: 35px;
+  margin-left:-15.5px;
+  width:106%;
+}
+
+.email-badge-editing{
+  background-color:rgb(170, 196, 61)!important
+}
+
+.email-border-editing{
+  border-bottom: 8px rgb(170, 196, 61) solid;
+  margin-bottom: -7px;
+  margin-top: 35px;
+  margin-left:-15.5px;
+  width:106%;
+}
+
+.email-badge-file{
+  background-color:#33F387!important
+}
+
+.email-border-file{
+  border-bottom: 8px #33F387 solid;
+  margin-bottom: -7px;
+  margin-top: 35px;
+  margin-left:-15.5px;
+  width:106%;
+}
+
+.email-badge-workflow{
+  background-color:#F34A4A!important
+}
+
+.email-border-workflow{
+  border-bottom: 8px #F34A4A solid;
+  margin-bottom: -7px;
+  margin-top: 35px;
+  margin-left:-15.5px;
+  width:106%;
+}
+
+.email-badge-proposal_review{
+  background-color:#CF4AF3!important
+}
+
+.email-border-proposal_review{
+  border-bottom: 8px #CF4AF3 solid;
+  margin-bottom: -7px;
+  margin-top: 35px;
+  margin-left:-15.5px;
+  width:106%;
+}
+
+.email-badge-reminder{
+  background-color:#477EEC!important
+}
+
+.email-border-reminder{
+  border-bottom: 8px #477EEC solid;
+  margin-bottom: -7px;
+  margin-top: 35px;
+  margin-left:-15.5px;
+  width:106%;
+}

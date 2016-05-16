@@ -28,7 +28,7 @@
     <th>Book Title</th>
     <th>Subtitle</th>
     <th>Submitting Author/Editor</th>
-    <th>User &nbsp;&nbsp; <span class="small">(<a href="{% url 'proposal_assign_view_submitted' proposal.id %}">Change</a>)</span></th>
+    <th>Principal Contact &nbsp;&nbsp; <span class="small">(<a href="{% url 'proposal_assign_view_submitted' proposal.id %}">Change</a>)</span></th>
     <th>Status</th>
     <th>Date Submitted</th>
     
@@ -61,7 +61,25 @@
   </div>
 {% endfor %}
 </div>
+<hr>
+<h5> <b>Book Editors</b></h5>
+<table class="table table-bordered">
+<thead>
+<tr>
+  <th>Name</th>
+  </tr>
+</thead>
+<tbody>
+{% for editor in proposal.book_editors.all %}
+<tr>
+<td>{{editor.profile.full_name}}</td>
+</tr>
+{% empty %}
+No book editors have been assigned
+{% endfor %}
 
+</tbody>
+</table>
 <hr>
 <h5> <b>Contract</b>  {% if proposal.contract %}(<a href="{% url 'proposal_contract_manager' proposal.id %}">View</a>) {% endif %}:</h5>
 {% include "core/proposals/contract/contract.html" %}
@@ -78,7 +96,7 @@
 {% if not proposal.status = 'accepted' or not proposal.status = 'declined'%} 
 <hr>
   <h3>Action</h3>
-  <p>Once you have compeleted the review process, you can accept, decline or as the author to submit revisions the proposal. Accepting the proposal will create a submission for the author to complete and allow you to send them some notes on the proposal. Declining will move the proposal to the archive. If revisions are requested, the author will be able to edit and resubmit their proposal.</p>
+  <p>Once you have compeleted the review process, you can accept, decline or ask the author to submit revisions the proposal. Accepting the proposal will create a submission for the author to complete and allow you to send them some notes on the proposal. Declining will move the proposal to the archive. If revisions are requested, the author will be able to edit and resubmit their proposal.</p>
   <div class="container col-md-12" style="width:80%;left:10%;right:10%;position:absolute;">
     
   {% include "core/proposals/proposal_action_buttons.html" %}

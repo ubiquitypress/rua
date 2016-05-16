@@ -71,7 +71,7 @@ def send_acknowldgement_email(book, press_editors):
         'principal_contact_name': principal_contact_name,
     }
 
-    email.send_email(get_setting('submission_ack_subject','email_subject','Submission Acknowledgement'), context, from_email, book.owner.email, author_text, book=book)
+    email.send_email(get_setting('submission_ack_subject','email_subject','Submission Acknowledgement'), context, from_email, book.owner.email, author_text, book=book, kind = 'submission')
 
     if len(press_editors) > 1:
         editor = press_editors[0]
@@ -79,7 +79,7 @@ def send_acknowldgement_email(book, press_editors):
     else:
         editor = press_editors[0]
         cc_eds = None
-    email.send_email(get_setting('new_submission_subject','email_subject','New Submission'), context, from_email, editor.email, editor_text, book=book, cc=cc_eds) 
+    email.send_email(get_setting('new_submission_subject','email_subject','New Submission'), context, from_email, editor.email, editor_text, book=book, cc=cc_eds, kind = 'submission') 
 
     for editor in press_editors:
         notification = core_models.Task(book=book, assignee=editor, creator=press_editors[0], text='A new submission, {0}, has been made.'.format(book.title), workflow='review')
@@ -91,3 +91,8 @@ def handle_book_labels(post, book, kind):
             _file.label = post.get("%s" % _file.id)
             _file.save()
 
+def handle_copyedit_author_labels(post, copyedit, kind):
+    for _file in copyedit.author_files.all():
+        if _file.kind == kind and  post.get("%s" % _file.id, None):
+            _file.label = post.get("%s" % _file.id)
+            _file.save()

@@ -68,9 +68,12 @@ def handle_file(_file, assignment):
 
 	return handled_file
 
-def add_file(assignment, new_file):
+def add_file(assignment, new_file, author = None):
 	if assignment.type()== 'copyedit':
-		assignment.copyedit_files.add(new_file)
+		if author:
+			assignment.author_files.add(new_file)
+		else:
+			assignment.copyedit_files.add(new_file)
 	elif assignment.type()== 'typesetting':
 		if assignment.state().get('state') == 'typesetter_second':
 			assignment.typesetter_files.add(new_file)

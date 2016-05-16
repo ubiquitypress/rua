@@ -21,11 +21,12 @@ def list_to_text(email_list):
 	return emails
 
 
-def add_email_log_entry(subject, from_address, to, bcc, cc, content,attachment = None, proposal = None, book = None):
+def add_email_log_entry(subject, from_address, to, bcc, cc, content,attachment = None, proposal = None, book = None, kind = None):
 
 	if proposal:
 		log_dict = {
 			'proposal': proposal,
+			'kind': kind if kind else 'general',
 			'subject': subject,
 			'from_address':from_address,
 			'to': list_to_text(to) if to else '',
@@ -37,6 +38,7 @@ def add_email_log_entry(subject, from_address, to, bcc, cc, content,attachment =
 	else:	
 		log_dict = {
 			'book': book,
+			'kind': kind if kind else 'general',
 			'subject': subject,
 			'from_address':from_address,
 			'to': list_to_text(to) if to else '',

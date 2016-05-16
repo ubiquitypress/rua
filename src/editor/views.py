@@ -34,7 +34,7 @@ def editor_dashboard(request):
 	else:
 		filterby = None
 		search = None
-		order = 'title'
+		order = 'pk'
 
 	query_list = []
 
@@ -68,6 +68,14 @@ def editor_dashboard(request):
 					book_list.append(book)
 	else:
 		book_list = models.Book.objects.filter(publication_date__isnull=True).exclude(stage__current_stage='declined').select_related('stage').order_by(order)
+	
+	series_books = []
+	
+	if 'series-editor' in request.user_roles:
+		series_books = models.Book.objects.filter(series__editor=request.user).exclude(stage__current_stage='declined').select_related('stage').order_by(order)
+		for series_book in series_books:
+			if series_book not in book_list:
+				book_list.append(series_book)
 
 	template = 'editor/dashboard.html'
 	context = {
@@ -977,15 +985,27 @@ def editor_add_reviewers(request, submission_id, review_type, round_number):
 		else:
 			attachment = None
 
+		if 'access_key' in request.POST:
+			generate = True
+		else:
+			generate = False
 		# Handle reviewers
 		for reviewer in reviewers:
-			logic.handle_review_assignment(request,submission, reviewer, review_type, due_date, review_round, request.user, email_text, review_form, attachment)
+			if generate:
+				access_key = uuid4()
+				logic.handle_review_assignment(request,submission, reviewer, review_type, due_date, review_round, request.user, email_text, review_form, attachment, access_key = access_key)
+			else:
+				logic.handle_review_assignment(request,submission, reviewer, review_type, due_date, review_round, request.user, email_text, review_form, attachment)
 
 		# Handle committees
 		for committee in committees:
 			members = manager_models.GroupMembership.objects.filter(group=committee)
 			for member in members:
-				logic.handle_review_assignment(request,submission, member.user, review_type, due_date, review_round, request.user, email_text, review_form, attachment)
+				if generate:
+					access_key = uuid4()
+					logic.handle_review_assignment(request,submission, member.user, review_type, due_date, review_round, request.user, email_text, review_form, attachment, access_key = access_key)
+				else:
+					logic.handle_review_assignment(request,submission, member.user, review_type, due_date, review_round, request.user, email_text, review_form, attachment)
 
 		# Tidy up and save
 		if review_type == 'internal' and not submission.stage.internal_review:

@@ -13,11 +13,31 @@
   <div class="dash-container other-heading container-fluid" style="margin-top:-20px">
 
       
-         <h2>{% if revise%} Update {%else%}Submit an{%endif%} {% if not proposal.owner %}Unassigned{%endif%} Proposal {% if not not_readonly %}<a href="{% url 'proposal_assign_edit' proposal.id  %}" class="btn  btn-transparent-white" style="position: absolute;right:110px;width:100px;margin-top:-8px">Edit</a>  {% else %}<a href="{% url 'proposal_assign_view_submitted' proposal.id  %}" class="btn  btn-transparent-white" style="position: absolute;right:110px;width:100px;margin-top:-8px">Assign</a>{% endif %}<a href="{% url 'proposals' %}" class="btn  btn-transparent-white" style="position: absolute;right:25px;margin-top:-8px">Go back</a></h2>
+         <h2>{% if revise%} Update {%else%}Submit an{%endif%} {% if not proposal.owner %}Unassigned{%endif%} Proposal {% if not not_readonly %}
+
+  {% if not proposal.owner %}
+         <a href="{% url 'proposal_assign_edit' proposal.id  %}" class="btn  btn-transparent-white" style="position: absolute;right:110px;width:100px;margin-top:-8px">Edit</a>  
+  {% endif %}
+
+         {% else %}<a href="{% url 'proposal_assign_view_submitted' proposal.id  %}" class="btn  btn-transparent-white" style="position: absolute;right:110px;width:100px;margin-top:-8px">Assign</a>{% endif %}
+{% if proposal %}
+  {% if proposal.owner %}
+
+            <a href="{% url 'view_proposal' proposal.id %}" class="btn  btn-transparent-white" style="position: absolute;right:25px;margin-top:-8px">Go back</a>
+  {% else %}
+
+          {% if unassigned %}
+            <a href="{% url 'proposals' %}" class="btn  btn-transparent-white" style="position: absolute;right:25px;margin-top:-8px">Go back</a>
+          {% else %}
+            <a href="{% url 'proposal_assign_view_submitted' proposal.id %}" class="btn  btn-transparent-white" style="position: absolute;right:25px;margin-top:-8px">Go back</a>
+          {% endif %}
+  {% endif %}
+{% endif %}
+
+         </h2>
 
 </div>
 
-   <p>{{core_proposal.intro_text|safe}}</p>
    <hr />
    {% if proposal.status == "accepted" or proposal.status == "declined" %}
    <table class="table table-bordered">
@@ -33,7 +53,6 @@
   </tbody>
   </table>
 
-  <br>
   {% endif %}
    {% if viewable%}
 
@@ -65,6 +84,13 @@
   </tbody>
   </table>
 <br>
+
+     <form method="post" >
+
+            {% csrf_token %}
+<h3>Message to User</h3>
+<
+ <textarea class="form-control" rows="10" id="email_text" name="email_text">{{ email_text }}</textarea>
    <h3>Assign User</h3>
    <small>The new user should be selected from the available list and they will be the main point of contact for this proposal.</small>
     <br>
@@ -84,7 +110,8 @@
       {% ifequal proposal.owner.pk author.pk %}
       Owner
       {% else %}
- <a href="{% url 'proposal_assign_user' proposal.id author.pk %}" class="btn btn-view btn-sm btn-round" id="author" name="author" value="{{ author.pk }}" type="submit"  data-toggle="tooltip" data-placement="bottom" style="width:100px; height: 30px;"><i class="glyphicon glyphicon-plus"style="font-size:10px"></i>  Assign</a>
+ <button type="submit" class="btn btn-view btn-sm btn-round" id="user_id" name="user_id" value="{{ author.pk }}" type="submit"  data-toggle="tooltip" data-placement="bottom" style="width:100px; height: 30px;"><i class="glyphicon glyphicon-plus"style="font-size:10px"></i>  Assign</button>
+ </form>
       {% endifequal %}
  
         </span>
@@ -96,6 +123,10 @@
   {% endfor %}
   </tbody>
   </table>
+  
+  <br>
+  <br>
+  <br>
 
 {% else %}
  

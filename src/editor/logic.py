@@ -26,7 +26,7 @@ def send_author_invite(submission, copyedit, email_text, sender, attachment=None
 		'sender': sender,
 	}
 
-	email.send_email(get_setting('copyediting_completed_subject','email_subject','Copyediting Completed'), context, from_email.value, submission.owner.email, email_text, book=submission, attachment=attachment)
+	email.send_email(get_setting('copyediting_completed_subject','email_subject','Copyediting Completed'), context, from_email.value, submission.owner.email, email_text, book=submission, attachment=attachment, kind = 'copyedit')
 
 
 def send_new_user_ack(submission, email_text, new_user, code):
@@ -39,7 +39,7 @@ def send_new_user_ack(submission, email_text, new_user, code):
 		'submission':submission,
 	}
 
-	email.send_email(get_setting('new_user_subject','email_subject','New User : Profile Details'), context, from_email.value, new_user.email, email_text, book=submission)
+	email.send_email(get_setting('new_user_subject','email_subject','New User : Profile Details'), context, from_email.value, new_user.email, email_text, book=submission, kind = 'general')
 
 
 def handle_copyeditor_assignment(request,book, copyedit, files, due_date, note, email_text, requestor, attachment=None):
@@ -128,7 +128,7 @@ def send_copyedit_assignment(submission, copyedit, email_text, sender, attachmen
 		'press_name':press_name,
 	}
 
-	email.send_email(get_setting('copyedit_assignment_subject','email_subject','Copyedit Assignment'), context, from_email.value, copyedit.copyeditor.email, email_text, book=submission, attachment=attachment)
+	email.send_email(get_setting('copyedit_assignment_subject','email_subject','Copyedit Assignment'), context, from_email.value, copyedit.copyeditor.email, email_text, book=submission, attachment=attachment, kind = 'copyedit')
 
 
 def send_invite_indexer(book, index, email_text, sender, attachment):
@@ -141,7 +141,7 @@ def send_invite_indexer(book, index, email_text, sender, attachment):
 		'sender': sender,
 	}
 
-	email.send_email(get_setting('indexing_request_subject','email_subject','Indexing Request'), context, from_email.value, index.indexer.email, email_text, book=book, attachment=attachment)
+	email.send_email(get_setting('indexing_request_subject','email_subject','Indexing Request'), context, from_email.value, index.indexer.email, email_text, book=book, attachment=attachment, kind = 'index')
 
 
 def get_submission_tasks(book, user):
@@ -169,7 +169,7 @@ def cancel_review_round(book):
 	cancel_round = models.ReviewRound.objects.get(book=book,round_number=latest_round.get('max'))
 	cancel_round.delete()
 
-def handle_review_assignment(request,book, reviewer, review_type, due_date, review_round, user, email_text, review_form, attachment=None):
+def handle_review_assignment(request,book, reviewer, review_type, due_date, review_round, user, email_text, review_form, attachment=None, access_key = None):
 	obj, created = models.ReviewAssignment.objects.get_or_create(
 			review_type=review_type,
 			user=reviewer,
@@ -178,13 +178,14 @@ def handle_review_assignment(request,book, reviewer, review_type, due_date, revi
 			defaults={
 				'due':due_date, 
 				'review_form' : review_form,
+				'access_key' : access_key,
 			}
 	)
 
 	if created:
 		book.review_assignments.add(obj)
 		log.add_log_entry(book=book, user=user, kind='review', message='Reviewer %s %s assigned. Round %d' % (reviewer.first_name, reviewer.last_name, review_round.round_number), short_name='Review Assignment')
-		send_review_request(book, obj, email_text, user, attachment)
+		send_review_request(book, obj, email_text, user, attachment, access_key)
 		return created
 	else:
 		messages.add_message(request, messages.WARNING, 'Review Assignment for user <%s> already exists. User might already exist in one of the selected committees' % reviewer.username)
@@ -223,23 +224,25 @@ def handle_editorial_review_assignment(request,book, editors, access_key, due_da
 
 # Email Handlers - TODO: move to email.py?
 
-def send_review_request(book, review_assignment, email_text, sender, attachment=None):
+def send_review_request(book, review_assignment, email_text, sender, attachment=None, access_key=None):
 	from_email = models.Setting.objects.get(group__name='email', name='from_address')
 	base_url = models.Setting.objects.get(group__name='general', name='base_url')
 	press_name = models.Setting.objects.get(group__name='general', name='press_name').value
-
-	decision_url = 'http://%s/review/%s/%s/assignment/%s/decision/' % (base_url.value, review_assignment.review_type, book.id, review_assignment.id)
+	if access_key:
+		decision_url = 'http://%s/review/%s/%s/assignment/%s/access_key/%s/decision/' % (base_url.value, review_assignment.review_type, book.id, review_assignment.id, access_key)
+	else:
+		decision_url = 'http://%s/review/%s/%s/assignment/%s/decision/' % (base_url.value, review_assignment.review_type, book.id, review_assignment.id)
 
 	context = {
 		'book': book,
 		'review': review_assignment,
-		'revision_url': decision_url,
+		'decision_url': decision_url,
 		'sender': sender,
 		'base_url':base_url.value,
 		'press_name':press_name,
 	}
 
-	email.send_email(subject = get_setting('review_request_subject','email_subject','Review Request'), context = context, from_email = from_email.value, to = review_assignment.user.email, html_template = email_text, book=book, attachment=attachment)
+	email.send_email(subject = get_setting('review_request_subject','email_subject','Review Request'), context = context, from_email = from_email.value, to = review_assignment.user.email, html_template = email_text, book=book, attachment=attachment, kind = 'review')
 
 def send_editorial_review_request(book, review_assignment, email_text, sender, attachment=None):
 	from_email = models.Setting.objects.get(group__name='email', name='from_address')
@@ -260,7 +263,7 @@ def send_editorial_review_request(book, review_assignment, email_text, sender, a
 		'press_name':press_name,
 	}
 	for editor in review_assignment.editorial_board.all():
-		email.send_email(get_setting('editorial_review_request','email_subject','Editorial Review Request'), context, from_email.value, editor.email, email_text, book=book, attachment=attachment)
+		email.send_email(get_setting('editorial_review_request','email_subject','Editorial Review Request'), context, from_email.value, editor.email, email_text, book=book, attachment=attachment, kind = 'review')
 
 def send_editorial_review_update(book, review_assignment, email_text, sender, attachment=None):
 	from_email = models.Setting.objects.get(group__name='email', name='from_address')
@@ -273,7 +276,7 @@ def send_editorial_review_update(book, review_assignment, email_text, sender, at
 		'sender': sender,
 	}
 	for editor in review_assignment.editorial_board.all():
-		email.send_email(get_setting('editorial_review_due_date_subject','email_subject','Editorial Review Assignment %s: Due Date Updated') % review_assignment.id, context, from_email.value, editor.email, email_text, book=book, attachment=attachment)
+		email.send_email(get_setting('editorial_review_due_date_subject','email_subject','Editorial Review Assignment %s: Due Date Updated') % review_assignment.id, context, from_email.value, editor.email, email_text, book=book, attachment=attachment, kind = 'review')
 
 
 def send_review_update(book, review_assignment, email_text, sender, attachment=None):
@@ -287,7 +290,7 @@ def send_review_update(book, review_assignment, email_text, sender, attachment=N
 		'sender': sender,
 	}
 
-	email.send_email(get_setting('review_due_date_subject','email_subject','Review Assignment %s: Due Date Updated') % review_assignment.id, context, from_email.value, review_assignment.user.email, email_text, book=book, attachment=attachment)
+	email.send_email(get_setting('review_due_date_subject','email_subject','Review Assignment %s: Due Date Updated') % review_assignment.id, context, from_email.value, review_assignment.user.email, email_text, book=book, attachment=attachment, kind = 'review')
 
 def send_proposal_decline(proposal, email_text, sender):
 	from_email = models.Setting.objects.get(group__name='email', name='from_address')
@@ -297,7 +300,7 @@ def send_proposal_decline(proposal, email_text, sender):
 		'sender': sender,
 	}
 
-	email.send_email(get_setting('proposal_declined_subject','email_subject','[abp] Proposal Declined'), context, from_email.value, proposal.owner.email, email_text)
+	email.send_email(get_setting('proposal_declined_subject','email_subject','[abp] Proposal Declined'), context, from_email.value, proposal.owner.email, email_text, kind = 'proposal')
 
 def send_proposal_accept(proposal, email_text, submission, sender, attachment=None):
 	from_email = models.Setting.objects.get(group__name='email', name='from_address')
@@ -320,7 +323,7 @@ def send_proposal_revisions(proposal, email_text, sender):
 		'sender': sender,
 	}
 
-	email.send_email(get_setting('proposal_revision_required_subject','email_subject','[abp] Proposal Revisions Required'), context, from_email.value, proposal.owner.email, email_text)
+	email.send_email(get_setting('proposal_revision_required_subject','email_subject','[abp] Proposal Revisions Required'), context, from_email.value, proposal.owner.email, email_text, kind = 'proposal')
 
 
 def send_author_sign_off(submission, email_text, sender):
@@ -332,7 +335,7 @@ def send_author_sign_off(submission, email_text, sender):
 		'sender': sender,
 	}
 
-	email.send_email(get_setting('book_contract_uploaded_subject','email_subject','Book Contract Uploaded'), context, from_email.value, submission.owner.email, email_text, book=submission)
+	email.send_email(get_setting('book_contract_uploaded_subject','email_subject','Book Contract Uploaded'), context, from_email.value, submission.owner.email, email_text, book=submission, kind = 'submission')
 
 def send_copyedit_assignment(submission, copyedit, email_text, sender, attachment=None):
 	from_email = models.Setting.objects.get(group__name='email', name='from_address')
@@ -344,7 +347,7 @@ def send_copyedit_assignment(submission, copyedit, email_text, sender, attachmen
 		'sender': sender,
 	}
 
-	email.send_email(get_setting('copyedit_assignment_subject','email_subject','Copyedit Assignment'), context, from_email.value, copyedit.copyeditor.email, email_text, book=submission, attachment=attachment)
+	email.send_email(get_setting('copyedit_assignment_subject','email_subject','Copyedit Assignment'), context, from_email.value, copyedit.copyeditor.email, email_text, book=submission, attachment=attachment, kind = 'copyedit')
 
 def send_author_invite(submission, copyedit, email_text, sender, attachment=None):
 	from_email = models.Setting.objects.get(group__name='email', name='from_address')
@@ -356,7 +359,7 @@ def send_author_invite(submission, copyedit, email_text, sender, attachment=None
 		'sender': sender,
 	}
 
-	email.send_email(get_setting('copyediting_completed_subject','email_subject','Copyediting Completed'), context, from_email.value, submission.owner.email, email_text, book=submission, attachment=attachment)
+	email.send_email(get_setting('copyediting_completed_subject','email_subject','Copyediting Completed'), context, from_email.value, submission.owner.email, email_text, book=submission, attachment=attachment, kind = 'copyedit')
 
 def send_invite_indexer(book, index, email_text, sender, attachment=None):
 	from_email = models.Setting.objects.get(group__name='email', name='from_address')
@@ -370,7 +373,7 @@ def send_invite_indexer(book, index, email_text, sender, attachment=None):
 		'press_name':press_name,
 	}
 
-	email.send_email(get_setting('indexing_request_subject','email_subject','Indexing Request'), context, from_email.value, index.indexer.email, email_text, book=book, attachment=attachment)
+	email.send_email(get_setting('indexing_request_subject','email_subject','Indexing Request'), context, from_email.value, index.indexer.email, email_text, book=book, attachment=attachment, kind = 'index')
 
 def send_invite_typesetter(book, typeset, email_text, sender, attachment=None):
 
@@ -383,7 +386,7 @@ def send_invite_typesetter(book, typeset, email_text, sender, attachment=None):
 		'sender': sender,
 	}
 
-	email.send_email(get_setting('typesetting_subject','email_subject','Typesetting'), context, from_email.value, typeset.typesetter.email, email_text, book=book, attachment=attachment)
+	email.send_email(get_setting('typesetting_subject','email_subject','Typesetting'), context, from_email.value, typeset.typesetter.email, email_text, book=book, attachment=attachment, kind = 'typeset')
 
 def send_book_editors(book, added_editors,removed_editors,email_text):
 	from_email = models.Setting.objects.get(group__name='email', name='from_address')
@@ -397,7 +400,7 @@ def send_book_editors(book, added_editors,removed_editors,email_text):
 		'submission_page': "http://%s/editor/submission/%s/" % (base_url, book.id)
 	}
 	if added_editors or removed_editors:
-		email.send_email(get_setting('book_editors_subject','email_subject','Book Editors have been updated'), context, from_email.value, book.owner.email, email_text, book=book)
+		email.send_email(get_setting('book_editors_subject','email_subject','Book Editors have been updated'), context, from_email.value, book.owner.email, email_text, book=book, kind = 'general')
 
 def send_requests_revisions(book, revision, email_text):
 	from_email = models.Setting.objects.get(group__name='email', name='from_address')
@@ -412,4 +415,4 @@ def send_requests_revisions(book, revision, email_text):
 		'revision_url': "http://%s/author/submission/%s/revisions/%s" % (base_url, book.id, revision.id)
 	}
 
-	email.send_email(get_setting('revisions_requested_subject','email_subject','Revisions Requested'), context, from_email.value, book.owner.email, email_text, book=book)
+	email.send_email(get_setting('revisions_requested_subject','email_subject','Revisions Requested'), context, from_email.value, book.owner.email, email_text, book=book, kind = 'revisions')

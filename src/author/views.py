@@ -9,7 +9,7 @@ from core import models, log, task, logic as core_logic, forms as core_forms
 from editor import models as editor_models
 from author import forms, logic
 from core.logic import order_data, decode_json
-from submission import models as submission_models
+from submission import models as submission_models, logic as submission_logic
 from revisions import models as revision_models
 from review import models as review_models
 from core.files import handle_file_update, handle_attachment, handle_file, handle_copyedit_file, handle_typeset_file, handle_proposal_file
@@ -490,9 +490,11 @@ def copyedit_review(request, submission_id, copyedit_id):
 		form = core_forms.CopyeditAuthor(request.POST, instance=copyedit)
 		if form.is_valid():
 			form.save()
-			for _file in request.FILES.getlist('copyedit_file_upload'):
-				new_file = handle_copyedit_file(_file, book, copyedit, 'copyedit')
-				copyedit.author_files.add(new_file)
+			submission_logic.handle_copyedit_author_labels(request.POST, copyedit, kind='misc')
+
+		#	for _file in request.FILES.getlist('copyedit_file_upload'):
+		#		new_file = handle_copyedit_file(_file, book, copyedit, 'copyedit')
+		#		copyedit.author_files.add(new_file)
 
 			copyedit.author_completed = timezone.now()
 			copyedit.save()
@@ -505,6 +507,7 @@ def copyedit_review(request, submission_id, copyedit_id):
 	context = {
 		'submission': book,
 		'copyedit': copyedit,
+		'author_files': True,
 		'author_include': 'author/copyedit.html',
 		'submission_files': 'author/copyedit_review.html',
 		'form': form,

@@ -563,6 +563,84 @@ def proposal_forms(request):
 	}
 	return render(request, template, context)
 
+
+@is_press_editor
+def reorder_proposal_form(request, form_id, field_1_id, field_2_id):
+
+	form = get_object_or_404(core_models.ProposalForm, pk=form_id)
+
+	field_1 = get_object_or_404(core_models.ProposalFormElementsRelationship, pk=field_1_id)
+	field_2 = get_object_or_404(core_models.ProposalFormElementsRelationship, pk=field_2_id)
+
+	order_1 = field_1.order
+	order_2 = field_2.order
+
+	field_1.order = order_2
+	field_2.order = order_1
+
+	field_1.save()
+	field_2.save()
+
+	return redirect(reverse('manager_edit_proposal_form', kwargs={'form_id': form_id}))
+
+@is_press_editor
+def reorder_review_form(request, form_id, field_1_id, field_2_id):
+
+	form = get_object_or_404(review_models.Form, pk=form_id)
+
+	field_1 = get_object_or_404(review_models.FormElementsRelationship, pk=field_1_id)
+	field_2 = get_object_or_404(review_models.FormElementsRelationship, pk=field_2_id)
+
+	order_1 = field_1.order
+	order_2 = field_2.order
+
+	field_1.order = order_2
+	field_2.order = order_1
+
+	field_1.save()
+	field_2.save()
+
+	return redirect(reverse('manager_edit_review_form', kwargs={'form_id': form_id}))
+
+
+def proposal_order_field_list(form_id):
+	form = get_object_or_404(core_models.ProposalForm, pk=form_id)
+	relations = core_models.ProposalFormElementsRelationship.objects.filter(form = form).order_by('order')
+	fields = []
+	if relations>0:
+		for t,relation in enumerate(relations):
+			above = -1
+			below = -1
+			if t<relations.count()-1:
+				below = relations[t + 1].pk
+			if relations.count() > 1 and t == 0:
+				above = -1
+			elif relations.count() >= 1 and t>0:
+				above = relations[t - 1].pk
+
+			fields.append({'field':relation,'above':above,'below':below})
+
+	return fields
+
+def review_order_field_list(form_id):
+	form = get_object_or_404(review_models.Form, pk=form_id)
+	relations = review_models.FormElementsRelationship.objects.filter(form = form).order_by('order')
+	fields = []
+	if relations>0:
+		for t,relation in enumerate(relations):
+			above = -1
+			below = -1
+			if t<relations.count()-1:
+				below = relations[t + 1].pk
+			if relations.count() > 1 and t == 0:
+				above = -1
+			elif relations.count() >= 1 and t>0:
+				above = relations[t - 1].pk
+
+			fields.append({'field':relation,'above':above,'below':below})
+
+	return fields
+
 @is_press_editor
 def edit_proposal_form(request, form_id, relation_id=None):
 
@@ -599,6 +677,7 @@ def edit_proposal_form(request, form_id, relation_id=None):
 	template = 'manager/proposal/edit_form.html'
 	context = {
 		'form': form,
+		'fields': proposal_order_field_list(form_id),
 		'element_form': element_form,
 		'relation_form': relation_form,
 	}
@@ -678,6 +757,7 @@ def edit_review_form(request, form_id, relation_id=None):
 	template = 'manager/review/edit_form.html'
 	context = {
 		'form': form,
+		'fields': review_order_field_list(form_id),
 		'element_form': element_form,
 		'relation_form': relation_form,
 	}

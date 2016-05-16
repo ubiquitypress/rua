@@ -66,7 +66,9 @@ body {
                     <select name="filter" class="form-control" onchange="this.form.submit()">
                         <option value="">------</option>
                         {% for filter in filters %}
-                        <option value="{{filter}}" {% ifequal filterby filter %}selected="selected"{% endifequal %}>{{filter|capfirst}}</option>
+
+                        <option value="{{filter}}" {% ifequal filterby filter %}selected="selected"{% endifequal %}>
+                        {% ifequal filter 'proposal_review' %} Proposal Review {% else %}{{filter|capfirst}} {% endifequal %}</option>
                         {% endfor %}
                     </select>
                 </div>
@@ -80,7 +82,7 @@ body {
       <ul class="timeline">
         {% for item in email_list %}
           <li {% if forloop.counter|divisibleby:2 %}class="timeline-inverted"{% endif %}>
-              <div class="timeline-badge">
+              <div class="timeline-badge email-badge-{{item.kind}}">
               </div>
               <div class="timeline-panel">
                   <div class="timeline-heading">
@@ -93,6 +95,8 @@ body {
                          <p>
        Attachment: {% for attachment in item.attachment.all %}<a  href="{% url 'serve_file' submission.id attachment.id %}">{{ attachment }}</a>{% empty %} None. {% endfor %}</p>
                   </div>
+                  <hr>
+                   <div class="email-border-{{item.kind}}"></div>
               </div>
           </li>
           {% endfor %}

@@ -8,17 +8,17 @@
 
  <div class="col-md-12">
   <div class="dash-container other-heading container-fluid" style="margin-top:-20px">
-         <h2>{% if revise%} Revise {%else%}Submit a{%endif%} Proposal{% if revise%}
-          {% if overdue %} <b style="color:rgb(255,64,64)" class="small">{% else %}<b style="color:rgb(237,183,38)" class="small">{% endif %} Due: {{ proposal.revision_due_date }}</b>{%endif%}<a href="{% url 'author_dashboard' %}" class="btn  btn-transparent-white" style="position: absolute;right:25px;margin-top:-8px">Go back</a></h2>
+         <h2>{% if incomplete %}Incomplete Proposal #{{incomplete_proposal.pk}}<a href="{% url 'delete_incomplete_proposal' incomplete_proposal.pk %}" class="btn btn-danger btn-round" style="margin-left:15px"> &nbsp; Delete &nbsp;</a>{% else %}{% if revise%} Revise {%else%}Submit a{%endif%} Proposal{% if revise%}
+          {% if overdue %} <b style="color:rgb(255,64,64)" class="small">{% else %}<b style="color:rgb(237,183,38)" class="small">{% endif %} Due: {{ proposal.revision_due_date }}</b>{%endif%}{% endif %}<a href="{% url 'author_dashboard' %}" class="btn  btn-transparent-white" style="position: absolute;right:25px;margin-top:-8px">Go back</a></h2>
 
 </div>
-
+    
+<h5>{% if errors %} <div class='alert alert-danger' style='font-color:black;color:black;width:100%'>{% for field in default_fields %}  <a href='#id_{{field.name}}'>{{field.label}}</a> is required <br> {% endfor %}   {% for field in proposal_form %}  <a href='#{{field.field.label}}'>{{field.field.label}}</a> is required <br> {% endfor %} </div> {% endif %}</h5>
    <p id="#top">{{core_proposal.intro_text|safe}}</p>
     <hr />
    <label id="error_fields" class="red" style="width:100%"></label>
     <form method="post" class="form" enctype="multipart/form-data">
-      {% csrf_token %}     
-
+      {% csrf_token %} 
       <div class="dash-container   bottom-space">
       <div class="well" style="overflow:auto">
           <div class="row">
@@ -59,6 +59,12 @@
       </select>
       <br>
         </div> 
+        {% if revise%}
+         <div class="form-group">
+          <label class="control-label" for="id_note_to_author">Email to Editor</label>
+          <textarea class="form-control" cols="40" id="email_text" name="email_text" rows="10" title="">{{ email_text }}</textarea>
+        </div>
+        {% endif %}
       {% buttons %}
       <div class="dash-container">
           <button name="book_submit" id="book_submit" type="submit" class="btn btn-other pull-right" style="width:120px">
@@ -70,10 +76,10 @@
       </div>
       {% endbuttons %}
     </form>
-        {% if proposal.requestor %}
     <br>
     <br>
     <br>
+        {% if proposal.requestor %} 
    <table class="table table-bordered">
     <thead>
         <tr>
@@ -86,6 +92,20 @@
     </tr>
   </tbody>
   </table>
+  {% else %}
+          <table class="table table-bordered">
+          <thead>
+              <tr>
+                <th>Contact</th>
+              </tr>
+          </thead>
+          <tbody>
+          <tr>
+            <td>Primary contact <sup> <a href="core/email.html" onclick="return popitup('/email/primary-contact/','primary')"class="fa fa-envelope-o btn btn-xs btn-default"></a></sup></td>
+          </tr>
+        </tbody>
+        </table>
+  {% endif %}
   <br>
   {% if notes %}
 <div class="dash-container">
@@ -121,7 +141,6 @@
     </ul>
   {% endif %}
   <br>
-  {% endif %}
   </div>
 {% endblock body %}
 
@@ -155,16 +174,6 @@ function popitup(url,title) {
 }
 
 // -->
-</script>
-<script type="text/javascript">
-  $(document).on("click", ":button", function(){
-        var error_msg = "<div class='alert alert-danger' style='font-color:black;color:black;width:100%'>{% for field in default_fields %}  <a href='#id_{{field.name}}'>{{field.label}}</a> is required <br> {% endfor %}   {% for field in proposal_form %}  <a href='#{{field.field.label}}'>{{field.field.label}}</a> is required <br> {% endfor %} </div>";
-
-        (document.getElementById('error_fields')).innerHTML = error_msg;
-        window.open("#error_fields","_self")
-
-      
-    });
 </script>
 
 <script type="text/javascript">

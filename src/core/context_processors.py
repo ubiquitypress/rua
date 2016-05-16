@@ -2,7 +2,7 @@ from core import logic
 from core.cache import cache_result
 
 from django.contrib.auth.models import Group
-from core import logic
+from core import logic,models as core_models
 from author.logic import author_tasks
 
 @cache_result(300)
@@ -18,11 +18,12 @@ def task_count(request):
 def switch_account(request):
 
 	if request.user.is_authenticated():
-		user_roles = [role.slug for role in request.user.profile.roles.all()]
-		if 'press-editor' in user_roles:
-			return {'switch_account': True}
-		else:
-			return {'switch_account': False}
+		if core_models.Profile.objects.filter(user = request.user):
+			user_roles = [role.slug for role in request.user.profile.roles.all()]
+			if 'press-editor' in user_roles:
+				return {'switch_account': True}
+			else:
+				return {'switch_account': False}
 	else:
 		return {'switch_account': False}
 

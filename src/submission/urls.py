@@ -25,6 +25,8 @@ urlpatterns = patterns('',
 
 	url(r'^proposal/$', 'submission.views.start_proposal', name='proposal_start'),
 	url(r'^incomplete-proposal/(?P<proposal_id>\d+)/$', 'submission.views.incomplete_proposal', name='incomplete_proposal'),
+	url(r'^incomplete-proposal/delete/(?P<proposal_id>\d+)/$', 'submission.views.delete_incomplete_proposal', name='delete_incomplete_proposal'),
+	
 	url(r'^proposal/(?P<proposal_id>\d+)/view/$', 'submission.views.proposal_view', name='proposal_view_submitted'),
 	url(r'^proposal/(?P<proposal_id>\d+)/history/$', 'submission.views.proposal_history', name='proposal_history_submitted'),
 	url(r'^proposal/(?P<proposal_id>\d+)/history/(?P<history_id>\d+)/$', 'submission.views.proposal_history_view', name='proposal_history_view_submitted'),

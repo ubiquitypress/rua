@@ -113,7 +113,7 @@ class Profile(models.Model):
 	
 	def is_editor(self):
 		user_roles = [role.slug for role in self.roles.all()]
-		if 'press-editor' in user_roles or 'book-editor' in user_roles or 'production-editor' in user_roles:
+		if 'press-editor' in user_roles or 'book-editor' in user_roles or 'production-editor' in user_roles  or 'series-editor' in user_roles :
 			return True
 		else:
 			False
@@ -129,6 +129,20 @@ class Profile(models.Model):
 			return u"%s %s" % (self.salutation, self.user.last_name)
 		else:
 			return u"%s %s" % (self.user.first_name, self.user.last_name)
+	
+	def number_books_assigned_to(self):
+		books = Book.objects.filter(book_editors__id=self.user.pk)
+		if books:
+			return books.count()
+		else:
+			return 0
+
+	def number_proposals_assigned_to(self):
+		proposals = submission_models.Proposal.objects.filter(book_editors__id=self.user.pk)
+		if proposals:
+			return proposals.count()
+		else:
+			return 0
 
 	def initials(self):
 		if self.middle_name:
@@ -238,6 +252,9 @@ class Book(models.Model):
 
 	def __repr__(self):
 		return u'%s' % self.title
+
+	def review_type_verbose(self):
+		return dict(book_review_type_choices())[self.review_type]
 
 	def get_latest_review_round(self):
 		try:
@@ -1120,6 +1137,7 @@ emaillog_choices = (
 	('file', 'File'),
 	('copyedit', 'Copyedit'),
 	('review', 'Review'),
+	('proposal_review', 'Proposal Review'),
 	('index', 'Index'),
 	('typeset', 'Typeset'),
 	('revisions', 'Revisions'),
@@ -1127,6 +1145,7 @@ emaillog_choices = (
 	('production', 'Production'),
 	('proposal', 'Proposal'),
 	('general', 'General'),
+	('reminder', 'Reminder'),
 )
 
 class EmailLog(models.Model):

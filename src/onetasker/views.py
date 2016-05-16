@@ -145,7 +145,7 @@ def task_hub_decline(request, assignment_type, assignment_id,):
 
 
 @csrf_exempt
-def upload(request, assignment_type, assignment_id, type_to_handle):
+def upload(request, assignment_type, assignment_id, type_to_handle, author=None):
 
 	assignment = logic.get_assignment(assignment_type, assignment_id)
 	book = assignment.book
@@ -162,9 +162,32 @@ def upload(request, assignment_type, assignment_id, type_to_handle):
 			'ruaId': new_file.pk,
 			'original_name': new_file.original_filename,
 		}
-		assignment = logic.add_file(assignment, new_file)
+		assignment = logic.add_file(assignment, new_file, author)
 		return UploadResponse( request, file_dict )
 	return HttpResponse('No file')
+
+@csrf_exempt
+def upload_author(request, assignment_type, assignment_id, type_to_handle):
+
+	assignment = logic.get_assignment(assignment_type, assignment_id)
+	book = assignment.book
+	file = upload_receive(request)
+	new_file = handle_file(file, book, type_to_handle, request.user)
+	if new_file:
+
+		file_dict = {
+			'name' : new_file.uuid_filename,
+			'size' : file.size,
+			'deleteUrl': reverse('assignment_jfu_delete', kwargs = { 'assignment_type':assignment_type,'assignment_id':assignment_id, 'file_pk': new_file.pk }),
+			'url': reverse('serve_file', kwargs = {'submission_id': book.id, 'file_id': new_file.pk }),
+			'deleteType': 'POST',
+			'ruaId': new_file.pk,
+			'original_name': new_file.original_filename,
+		}
+		assignment = logic.add_file(assignment, new_file, True)
+		return UploadResponse( request, file_dict )
+	return HttpResponse('No file')
+
 
 @csrf_exempt
 def upload_delete(request, assignment_type, assignment_id, file_pk):

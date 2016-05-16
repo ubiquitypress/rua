@@ -45,6 +45,7 @@
                 <div class="row">
                 <div class="col-md-8 pull-right form-group">
                     <select name="order" class="form-control" onchange="this.form.submit()">
+                        <option value="pk" {% if order = 'pk' %}selected="selected"{% endif %}>Book ID</option>
                         <option value="title" {% if order = 'title' %}selected="selected"{% endif %}>Alpha A-Z</option>
                         <option value="submission_date" {% if order = 'submission_date' %}selected="selected"{% endif %}>Date Submitted</option>
                       </select>

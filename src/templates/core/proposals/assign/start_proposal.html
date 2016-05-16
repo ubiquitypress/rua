@@ -9,7 +9,22 @@
  <div class="col-md-12">
   <div class="dash-container other-heading container-fluid" style="margin-top:-20px">
          <h2>{% if revise%} Revise {%else%}Submit an Unassigned{%endif%} Proposal: Stage 1{% if revise%}
-          {% if overdue %} <b style="color:rgb(255,64,64)" class="small">{% else %}<b style="color:rgb(237,183,38)" class="small">{% endif %} Due: {{ proposal.revision_due_date }}</b>{%endif%}<a href="{% url 'proposals' %}" class="btn  btn-transparent-white" style="position: absolute;right:25px;margin-top:-8px">Go back</a></h2>
+          {% if overdue %} <b style="color:rgb(255,64,64)" class="small">{% else %}<b style="color:rgb(237,183,38)" class="small">{% endif %} Due: {{ proposal.revision_due_date }}</b>{%endif%}
+{% if proposal %}
+  {% if proposal.owner %}
+
+            <a href="{% url 'view_proposal' proposal.id %}" class="btn  btn-transparent-white" style="position: absolute;right:25px;margin-top:-8px">Go back</a>
+  {% else %}
+          {% if unassigned %}
+            <a href="{% url 'proposals' %}" class="btn  btn-transparent-white" style="position: absolute;right:25px;margin-top:-8px">Go back</a>
+          {% else %}
+            <a href="{% url 'proposal_assign_view_submitted' proposal.id %}" class="btn  btn-transparent-white" style="position: absolute;right:25px;margin-top:-8px">Go back</a>
+          {% endif %}
+         
+  {% endif %}
+{% endif %}
+
+</h2>
 
 </div>
 
