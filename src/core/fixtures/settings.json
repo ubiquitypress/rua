@@ -617,7 +617,7 @@
 },
 {
     "fields": {
-        "value": "<p>Dear {{receiver.profile.full_name}},\r\n</p><p>\r\nProposal {{proposal.title}}&lt;{{proposal.id}}&gt; has been updated by {{sender.profile.full_name}}. All updates have been recorded via the book management system.<br></p><p>\r\nRegards,\r\n</p><p>\r\n{{ sender.profile.signature }}</p>",
+        "value": "<p>Dear {{receiver.profile.full_name}},\r\n</p><p>\r\nProposal {{proposal.title}} &lt;{{proposal.id}}&gt; has been updated by {{sender.profile.full_name}}. All updates have been recorded via the book management system.<br></p><p>\r\nRegards,\r\n</p><p>\r\n{{ sender.profile.signature|safe }}</p>",
         "group": 3,
         "name": "proposal_update_ack",
         "types": "rich_text",

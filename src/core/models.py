@@ -349,11 +349,11 @@ class Book(models.Model):
 
 	def full_title(self):
 		if self.prefix and self.subtitle:
-			return '%s %s %s' % (self.prefix, self.title, self.subtitle)
+			return '%s %s: %s' % (self.prefix, self.title, self.subtitle)
 		elif self.prefix and not self.subtitle:
 			return '%s %s' % (self.prefix, self.title)
 		elif self.subtitle and not self.prefix:
-			return '%s %s' % (self.title, self.subtitle)
+			return '%s: %s' % (self.title, self.subtitle)
 		else:
 			return self.title
 

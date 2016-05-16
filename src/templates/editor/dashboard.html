@@ -79,7 +79,7 @@
             {% for book in book_list %}
             <div class="project">
                 <a href="{% url 'editor_status' book.id %}">
-                <h5>Book {{ book.id }}: {{ book.full_title }}</h5>
+                <h5>Book {{ book.id }} - {{ book.full_title }}</h5>
                 <p>{{ book.owner.profile.full_name }}</p>
                 {% if book.stage.current_stage %}
                 <p class="pull-right small {% if book.revisions_requested %}revisions{% else %}{{ book.stage.current_stage }}{% endif %}">{% if book.revisions_requested %}REVISIONS{% else %}{{ book.stage.get_current_stage_display }}{% endif %}</p>
