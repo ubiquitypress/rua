@@ -204,7 +204,7 @@ class Book(models.Model):
 	cover = models.ImageField(upload_to=cover_images_upload_path, null=True, blank=True)
 	pages = models.CharField(max_length=10, null=True, blank=True)
 	slug = models.CharField(max_length=1000, null=True, blank=True)
-	cover_letter = models.TextField(null=True, blank=True, help_text="A covering letter for the Editors.")
+	cover_letter = models.TextField(null=True, blank=True)
 	reviewer_suggestions = models.TextField(null=True, blank=True)
 	competing_interests = models.TextField(null=True, blank=True, help_text=mark_safe("If any there are any competing interests please add them here. EG. 'This study was paid for by corp xyz.'. <a href='/page/competing_interests/'>More info</a>"))
 	book_type = models.CharField(max_length=50, null=True, blank=True, choices=book_type_choices(), help_text="A monograph is a work authored, in its entirety, by one or more authors. An edited volume has different authors for each chapter.")

@@ -644,7 +644,7 @@ def build_time_line(book):
 			if isinstance(time['date'], datetime.datetime):
 				time['date'] = time['date'].date()
 			clean_timeline.append(time)
-	return sorted(clean_timeline, key=lambda k: k['date']) 
+	return sorted(clean_timeline, key=lambda k: k['date'], reverse=True) 
 
 # Email handler - should be moved to logic!
 def send_proposal_review_request(request, proposal, review_assignment, email_text, attachment = None):

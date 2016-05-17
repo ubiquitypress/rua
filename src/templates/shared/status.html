@@ -52,7 +52,7 @@ Edit on
 	    <p class="timeline-date">{{ item.date|date:"Y-m-d" }}</p>
 	    <div class="timeline-content">
 	      <h3>{{ item.stage }}</h3>
-	      <p>{% if forloop.last %}Current Stage{% else %}&nbsp;{% endif %}</p>
+	      <p>{% if forloop.first %}Current Stage{% else %}&nbsp;{% endif %}</p>
 	    </div>
 	  </li>
 	{% endif %}
