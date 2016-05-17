@@ -1,8 +1,10 @@
 {% if current_note %}
 
 <div class="dash-container"><h3>Note #{{note_id}} <sup><a href="{% url 'editor_notes_update' submission.id current_note.id %}" class="btn btn-primary btn-sm btn-round pull-right"> Edit Note</a></sup></h3></div>
+
 <div class="well border-note" style="overflow:auto;">
-   {{ current_note.text|safe }}
+  <b>Subject:</b> {{ current_note.subject }}<br /><br />
+  {{ current_note.text|safe }}
 </div>
 <div class="container-fluid">
   <table class="table table-bordered table-condensed small">
