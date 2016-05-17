@@ -387,6 +387,7 @@ class Note(models.Model):
 	user = models.ForeignKey(User)
 	date_submitted = models.DateTimeField(auto_now_add=True)
 	date_last_updated = models.DateTimeField(auto_now=True)
+	subject = models.CharField(max_length=300, blank=True, null=True)
 	text = models.TextField(null=True, blank=True)
 
 	def truncated_content(self):

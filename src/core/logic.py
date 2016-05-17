@@ -761,9 +761,9 @@ def send_decision_ack(book, decision, email_text, url=None, attachment=None):
 		}
 		kind = "submission"
 		if attachment:
-			email.send_email(get_setting('submission_decision_update_subject','email_subject','Submission decision update: %s') % decision_full, context, from_email.value, author.author_email, email_text, kind = kind, book=book, attachment=attachment)
+			email.send_email(get_setting('submission_decision_update_subject','email_subject','Submission decision update: %s' % decision_full), context, from_email.value, author.author_email, email_text, kind = kind, book=book, attachment=attachment)
 		else:
-			email.send_email(get_setting('submission_decision_update_subject','email_subject','Submission decision update: %s')% decision_full, context, from_email.value, author.author_email, email_text, kind = kind, book=book)
+			email.send_email(get_setting('submission_decision_update_subject','email_subject','Submission decision update: %s' % decision_full), context, from_email.value, author.author_email, email_text, kind = kind, book=book)
 
 def send_editorial_decision_ack(review_assignment, contact, decision, email_text, url=None, attachment=None):
 	from_email = models.Setting.objects.get(group__name='email', name='from_address')

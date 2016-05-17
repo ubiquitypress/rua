@@ -42,7 +42,7 @@ class NoteForm(ModelForm):
 
 	class Meta:
 		model = core_models.Note
-		fields = ('text',)
+		fields = ('subject', 'text',)
 	def __init__(self, *args, **kwargs):
 		super(NoteForm, self).__init__(*args, **kwargs)
 		self.fields['text'].required = True
