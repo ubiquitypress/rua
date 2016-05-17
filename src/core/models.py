@@ -3,6 +3,8 @@ from django.core.files.storage import FileSystemStorage
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.utils import timezone
+from django.utils.html import strip_tags
+
 import uuid
 import os
 from decimal import Decimal
@@ -391,7 +393,7 @@ class Note(models.Model):
 		content = str(self.text)
 		if len(content)>=22:
 			content = content[:22]+'...'
-		return content
+		return strip_tags(content)
 
 
 class Identifier(models.Model):
