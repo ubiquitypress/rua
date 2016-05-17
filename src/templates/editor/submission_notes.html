@@ -19,7 +19,7 @@
                     <strong class="primary-font">{{ note.user.profile.full_name}}</strong> <small class="pull-right text-muted" style="margin-top:-12px">
                         <span class="glyphicon glyphicon-time" ></span>{{ note.date_submitted|date:"Y-m-d - H:i" }}</small>
                 </div>
-                {{ note.truncated_content }}
+                {{ note.truncated_content|striptags }}
             </div>
             <div class="pull-right" style="margin-top:-15px">
               <a href="{% url 'editor_notes_view' submission.id note.id %}" class="btn btn-task btn-sm pull-right">View Note</a>
