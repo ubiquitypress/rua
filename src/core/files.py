@@ -1,6 +1,7 @@
 from django.shortcuts import Http404
 from django.conf import settings
 from django.utils import timezone
+from django.utils.encoding import smart_text
 
 from core import models
 import mimetypes as mime
@@ -208,7 +209,7 @@ def handle_email_file(file, kind, owner, label=None):
 
 def handle_proposal_review_file(file, proposal_review, kind, owner, label=None):
 
-	original_filename = str(file._get_name())
+	original_filename = smart_text(file._get_name())
 	filename = str(uuid4()) + str(os.path.splitext(original_filename)[1])
 	folder_structure = os.path.join(settings.BASE_DIR, 'files', 'proposals', str(proposal_review.proposal.id))
 
