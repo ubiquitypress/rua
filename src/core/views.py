@@ -1080,7 +1080,7 @@ def serve_all_files(request, submission_id):
 
 
 @is_onetasker
-def serve_all_review_files(request, submission_id,review_type):
+def serve_all_review_files(request, submission_id, review_type):
     book = get_object_or_404(models.Book, pk=submission_id)
     internal_review_files = book.internal_review_files.all()
     external_review_files = book.external_review_files.all()

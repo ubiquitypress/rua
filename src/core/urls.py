@@ -85,7 +85,7 @@ urlpatterns = patterns('',
     
     url(r'^files/user/submission/(?P<submission_id>\d+)/file/(?P<file_id>\d+)/download/$', 'core.views.serve_file', name='serve_file'),
     url(r'^files/user/submission/(?P<submission_id>\d+)/files/download/$', 'core.views.serve_all_files', name='serve_all_files'),
-    url(r'^files/user/submission/(?P<submission_id>\d+)/review-files/(?P<review_type>[-\w]+)//download/$', 'core.views.serve_all_review_files', name='serve_all_review_files'),
+    url(r'^files/user/submission/(?P<submission_id>\d+)/review-files/(?P<review_type>[-\w]+)/download/$', 'core.views.serve_all_review_files', name='serve_all_review_files'),
     
     url(r'^files/submission/(?P<submission_id>\d+)/file/upload/additional/$', 'core.views.upload_additional', name='upload_additional'),
     url(r'^files/submission/(?P<submission_id>\d+)/file/upload/manuscript/$', 'core.views.upload_manuscript', name='upload_manuscript'),
