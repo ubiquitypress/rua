@@ -10,6 +10,7 @@ from django.template import Context, Template
 from django.utils.encoding import smart_text
 from django.shortcuts import redirect, render, get_object_or_404
 from django.core.urlresolvers import reverse
+
 from operator import itemgetter
 from core.decorators import is_copyeditor, is_typesetter, is_indexer
 from core import models
@@ -17,11 +18,12 @@ from core.cache import cache_result
 from revisions import models as revisions_models
 from submission import logic as submission_logic, models as submission_models
 from core.files import handle_file,handle_copyedit_file,handle_marc21_file
-import datetime
 from setting_util import get_setting
+from core import email
+
+import datetime
 import json
 from pymarc import Record, Field
-from core import email
 from pymarc import *
 import os
 from uuid import uuid4
@@ -780,7 +782,7 @@ def send_editorial_decision_ack(review_assignment, contact, decision, email_text
 				'link_to_page': url,
 			}
 
-			email.send_email(get_setting('submission_decision_update_subject','email_subject','Submission decision update: %s') % decision_full, context, from_email.value, editor.email, email_text, book=review_assignment.book, attachment=attachment, kind = 'submission')
+			email.send_email(get_setting('submission_decision_update_subject','email_subject','Submission decision update: %s' % decision_full), context, from_email.value, editor.email, email_text, book=review_assignment.book, attachment=attachment, kind = 'submission')
 	elif contact == 'author':
 		authors = review_assignment.book.author.all()
 		for author in authors:
@@ -791,7 +793,7 @@ def send_editorial_decision_ack(review_assignment, contact, decision, email_text
 				'link_to_page': url,
 			}
 
-			email.send_email(get_setting('submission_decision_update_subject','email_subject','Submission decision update: %s') % decision_full, context, from_email.value, author.author_email, email_text, book=review_assignment.book, attachment=attachment, kind = 'submission')
+			email.send_email(get_setting('submission_decision_update_subject','email_subject','Submission decision update: %s' % decision_full), context, from_email.value, author.author_email, email_text, book=review_assignment.book, attachment=attachment, kind = 'submission')
 	elif contact == 'publishing-committee':
 		emails = clean_email_list(publishing_committee.split(';'))
 		context = {
@@ -801,7 +803,7 @@ def send_editorial_decision_ack(review_assignment, contact, decision, email_text
 				'link_to_page': url,
 			}
 		for current_email in emails:
-			email.send_email(get_setting('submission_decision_update_subject','email_subject','Submission decision update: %s')% decision_full, context, from_email.value, current_email, email_text, book=review_assignment.book, attachment=attachment, kind = 'submission')
+			email.send_email(get_setting('submission_decision_update_subject','email_subject','Submission decision update: %s' % decision_full), context, from_email.value, current_email, email_text, book=review_assignment.book, attachment=attachment, kind = 'submission')
 
 
 		
@@ -817,7 +819,7 @@ def send_production_editor_ack(book, editor, email_text, attachment=None):
 		'editor': editor,
 	}
 
-	email.send_email(get_setting('production_editor_subject','email_subject','Production Editor for %s ') % book.full_title, context, from_email.value, editor.email, email_text, book=book, attachment=attachment, kind = 'production')
+	email.send_email(get_setting('production_editor_subject','email_subject','Production Editor for {0}'.format(book.full_title)), context, from_email.value, editor.email, email_text, book=book, attachment=attachment, kind = 'production')
 
 def send_review_request(book, review_assignment, email_text, attachment=None):
 	from_email = models.Setting.objects.get(group__name='email', name='from_address')
