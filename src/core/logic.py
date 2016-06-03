@@ -771,6 +771,7 @@ def send_editorial_decision_ack(review_assignment, contact, decision, email_text
 	from_email = models.Setting.objects.get(group__name='email', name='from_address')
 	base_url = models.Setting.objects.get(group__name='general', name='base_url')
 	publishing_committee = models.Setting.objects.get(group__name='general', name='publishing_committee').value
+	
 	decision_full = decision
 	if contact == 'editorial-board':
 		editors = review_assignment.editorial_board.all()

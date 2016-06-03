@@ -14,6 +14,7 @@ from django.conf import settings
 from django.template import Context, Template
 from django.db import IntegrityError
 from django.utils.encoding import smart_text
+
 from editor import forms as editor_forms
 from review import models as review_models
 from core import log, models, forms, logic
@@ -2163,13 +2164,14 @@ def add_proposal_reviewers(request, proposal_id):
     if request.POST:
         start_form = submission_forms.ProposalStart(request.POST, request.FILES, instance=proposal)
         updated_proposal = None
+        
         if start_form.is_valid():
             updated_proposal = start_form.save(commit=False)
         if request.FILES.get('attachment'):
             attachment = handle_proposal_file(request.FILES.get('attachment'), proposal, 'misc', request.user)
         else:
             attachment = None
-        print request.FILES
+
         due_date = request.POST.get('due_date')
         blind = request.POST.get('blind')
         reviewers = User.objects.filter(pk__in=request.POST.getlist('reviewer'))
