@@ -63,7 +63,14 @@ body {
                       <p><small>{{ item.content|safe }}</small></p>
                          <hr>
                          <p>
-       Attachment: {% for attachment in item.attachment.all %}<a  href="{% url 'serve_file' submission.id attachment.id %}">{{ attachment }}</a>{% empty %} None. {% endfor %}</p>
+       Attachment: {% for attachment in item.attachment.all %}
+        {% if submission %}
+        <a  href="{% url 'serve_file' submission.id attachment.id %}">{{ attachment }}</a>
+        {% else %}
+        <a href="{% url 'serve_proposal_file_id' proposal.id attachment.id %}">{{ attachment }}</a>
+        {% endif %}
+        {% empty %} None. 
+        {% endfor %}</p>
                   </div>
               </div>
           </li>
