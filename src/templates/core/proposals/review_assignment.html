@@ -100,7 +100,7 @@
     
 
 
-      {% if form.errors %}
+      {% if form.errors or recommendation_form.errors %}
       <div class="alert alert-info">
           Please correct errors below. Note, you'll have to reselect any files you want uploaded.
         </div>

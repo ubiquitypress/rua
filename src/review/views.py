@@ -63,7 +63,7 @@ def reviewer_dashboard(request):
 	return render(request, template, context)
 
 @is_reviewer
-def reviewer_decision(request, review_type, submission_id, review_assignment_id, decision=None,access_key=None):
+def reviewer_decision(request, review_type, submission_id, review_assignment_id, decision=None, access_key=None):
 
 	# Check the review assignment as not been completed and is being accessed by the assigned user
 	review_assignment = None
@@ -102,6 +102,15 @@ def reviewer_decision(request, review_type, submission_id, review_assignment_id,
 		editors = logic.get_editors(review_assignment)
 	else:
 		editors = None
+
+	if review_assignment.accepted:
+		if access_key:
+			return redirect(reverse('review_with_access_key', kwargs={'review_type': review_type, 'submission_id': submission.pk,'access_key':access_key,'review_round':review_assignment.review_round.round_number}))
+		else:
+			return redirect(reverse('review_without_access_key', kwargs={'review_type': review_type, 'submission_id': submission.pk,'review_round':review_assignment.review_round.round_number}))
+	elif review_assignment.declined:
+		return redirect(reverse('reviewer_dashboard'))
+
 	if decision and decision == 'accept':
 		review_assignment.accepted = timezone.now()
 		message = "Review Assignment request for '%s' has been accepted by %s %s."  % (submission.title,review_assignment.user.first_name, review_assignment.user.last_name)

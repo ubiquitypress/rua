@@ -1811,7 +1811,10 @@ def view_proposal_review_decision(request, proposal_id, assignment_id):
         intial_data[k] = v[0]
 
     proposal_form.initial=intial_data
-    review_assignment = get_object_or_404(submission_models.ProposalReview, pk=assignment_id, withdrawn = False)
+    review_assignment = get_object_or_404(submission_models.ProposalReview, pk=assignment_id, withdrawn=False)
+
+    if review_assignment.accepted:
+        return redirect(reverse('view_proposal_review', kwargs={'proposal_id': proposal.id,'assignment_id': assignment_id}))
     
     if request.POST:
         if 'accept' in request.POST:
@@ -1840,7 +1843,7 @@ def view_proposal_review_decision(request, proposal_id, assignment_id):
                 for editor in editors:
                     notification = models.Task(assignee=editor,creator=request.user,text=message,workflow='proposal')
                     notification.save()
-            return redirect(reverse('view_proposal_review', kwargs={'proposal_id': proposal.id,'assignment_id': assignment_id}))
+            return redirect(reverse('reviewer_dashboard'))
 
 
     

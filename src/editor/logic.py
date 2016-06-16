@@ -228,6 +228,7 @@ def send_review_request(book, review_assignment, email_text, sender, attachment=
 	from_email = models.Setting.objects.get(group__name='email', name='from_address')
 	base_url = models.Setting.objects.get(group__name='general', name='base_url')
 	press_name = models.Setting.objects.get(group__name='general', name='press_name').value
+	
 	if access_key:
 		decision_url = 'http://%s/review/%s/%s/assignment/%s/access_key/%s/decision/' % (base_url.value, review_assignment.review_type, book.id, review_assignment.id, access_key)
 	else:
