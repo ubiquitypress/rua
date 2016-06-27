@@ -4,13 +4,10 @@
 
 {% block css %}
   <link href="{% static "css/timeline.css" %}" rel="stylesheet">
-
-  <link type='text/css' href="{% static "css/jq-ui.css" %}" rel="stylesheet">
-  <link type='text/css' href="{% static "css/jquery.tagit.css" %}" rel="stylesheet">
 {% endblock %}
 </br>
 <div class="col-md-12 file-heading container-fluid" style="margin-top:-10px">
-          <h4>Add Chapters</h4>
+          <h4>Add Author</h4>
     </div>
 
 <div class="col-md-12 dash-container bottom-space">
@@ -20,18 +17,13 @@
         <div class="col-md-12">
           <form method="POST" enctype="multipart/form-data">
             {% csrf_token %}
-            {% bootstrap_form_errors chapter_form layout='inline' %}
+            {% bootstrap_form_errors form layout='inline' %}
               <div class="form-group">
                   <div class="row">
                     <div class="col-md-12">
-                    {% bootstrap_field chapter_form.blurbs %}
 
-                    {% bootstrap_field chapter_form.sequence %}
-                   <div class="aside"><strong>Keywords</strong> Hit Enter to add a new keyword.</div>
-                      <input type="text" id="tags" name="tags" value=""/>
-                      <div class="aside"><strong>Disciplines</strong> Hit Enter to add a new discipline.</div>
-                        <input type="text" id="stags" name="stags" value=""/>
-                      </div>
+                    {% bootstrap_form form %}
+                    
                       <div class="input-group pull-right ">
                           <br />
                           <button class="btn btn-task  btn-round-half" type="submit" name="update" id="update">Submit</button>
@@ -42,4 +34,6 @@
         </div>
       </div>
 
-
+{% block js %}
+<script type="text/javascript" src="{% static "js/fancyfile.js" %}"></script>
+{% endblock %}

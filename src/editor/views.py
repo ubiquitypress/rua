@@ -1492,6 +1492,7 @@ def update_chapter(request, submission_id, chapter_id):
 			new_chapter = chapter_form.save(commit=False)
 			chapter.sequence = new_chapter.sequence
 			chapter.blurbs = new_chapter.blurbs
+			chapter.name = new_chapter.name
 			
 			for keyword in chapter.keywords.all():
 				chapter.keywords.remove(keyword)
@@ -1508,7 +1509,7 @@ def update_chapter(request, submission_id, chapter_id):
 				chapter.disciplines.add(new_subject)
 			chapter.save()
 			log.add_log_entry(book=book, user=request.user, kind='production', message='%s %s updated a chapter, %s' % (request.user.first_name, request.user.last_name, chapter.sequence), short_name='New Chapter Loaded')
-			return redirect(reverse('editor_production', kwargs={'submission_id': book.id}))
+			return redirect(reverse('editor_view_chapter', kwargs={'submission_id': book.id, 'chapter_id': chapter_id}))
 
 
 	template = 'editor/submission.html'
@@ -1594,7 +1595,7 @@ def add_chapter_format(request, submission_id, chapter_id, file_id=None):
 			chapter.formats.add(new_chapter_format)
 			chapter.save()
 			log.add_log_entry(book=book, user=request.user, kind='production', message='%s %s loaded a new chapter, %s' % (request.user.first_name, request.user.last_name, new_chapter_format.identifier), short_name='New Chapter Loaded')
-			return redirect(reverse('editor_production', kwargs={'submission_id': book.id}))
+			return redirect(reverse('editor_view_chapter', kwargs={'submission_id': book.id, 'chapter_id': chapter_id}))
 		else:
 			print chapter_form.errors
 
@@ -1606,7 +1607,6 @@ def add_chapter_format(request, submission_id, chapter_id, file_id=None):
 		'author_include': 'editor/production/view.html',
 		'submission_files': 'editor/production/add_chapter_format.html',
 		'active': 'production',
-		'submission': book,
 		'existing_file':exist_file,
 		'format_list': models.Format.objects.filter(book=book).select_related('file'),
 		'chapter_list': models.Chapter.objects.filter(book=book).order_by('sequence'),
@@ -1615,6 +1615,48 @@ def add_chapter_format(request, submission_id, chapter_id, file_id=None):
 
 	return render(request, template, context)
 
+@is_book_editor
+def add_chapter_author(request, submission_id, chapter_id, author_id=None):
+	book = get_object_or_404(models.Book, pk=submission_id)
+	chapter = get_object_or_404(models.Chapter, pk=chapter_id, book=book)
+
+	if author_id:
+		author = get_object_or_404(models.Author, pk=author_id)
+		form = submission_forms.AuthorForm(instance=author)
+	else:
+		author = None
+		form = submission_forms.AuthorForm()
+
+	if request.POST:
+
+		if author_id:
+			form = submission_forms.AuthorForm(request.POST, instance=author)
+			message = 'Author edited.'
+		else:
+			form = submission_forms.AuthorForm(request.POST)
+			message = 'Author added.'
+
+		if form.is_valid():
+			new_chapter_author = form.save()
+			chapter.authors.add(new_chapter_author)
+
+			messages.add_message(request, messages.INFO, message)
+
+		return redirect(reverse('editor_view_chapter', kwargs={'submission_id': book.id, 'chapter_id': chapter_id}))
+
+	template = 'editor/submission.html'
+	context = {
+		'submission': book,
+		'chapter': chapter,
+		'active': 'production',
+		'author_include': 'editor/production/view.html',
+		'submission_files': 'editor/production/add_chapter_author.html',
+		'format_list': models.Format.objects.filter(book=book).select_related('file'),
+		'chapter_list': models.Chapter.objects.filter(book=book).order_by('sequence'),
+		'form': form,
+	}
+
+	return render(request, template, context)
 
 @is_book_editor
 def add_physical(request, submission_id):

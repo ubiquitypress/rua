@@ -108,6 +108,12 @@ class KeywordSerializer(serializers.HyperlinkedModelSerializer):
          model = models.Keyword
          fields = ('name',)
 
+class DisciplineSerializer(serializers.HyperlinkedModelSerializer):
+
+     class Meta:
+         model = models.Subject
+         fields = ('name',)
+
 class SubjectSerializer(serializers.HyperlinkedModelSerializer):
 
      class Meta:
@@ -144,7 +150,28 @@ class FormatSerializer(serializers.HyperlinkedModelSerializer):
         )
 
 
+class ChapterFormatSerializer(serializers.HyperlinkedModelSerializer):
+
+    file = FileSerializer(many=False)
+
+    class Meta:
+        model = models.ChapterFormat
+        fields = (
+            'id',
+            'file',
+            'name',
+            'identifier',
+            'file_type',
+            'sequence',
+        )
+
+
 class ChapterSerializer(serializers.HyperlinkedModelSerializer):
+
+    authors = AuthorSerializer(many=True)
+    keywords = KeywordSerializer(many=True)
+    disciplines = DisciplineSerializer(many=True)
+    formats = ChapterFormatSerializer(many=True)
 
     class Meta:
         model = models.Chapter
@@ -155,6 +182,7 @@ class ChapterSerializer(serializers.HyperlinkedModelSerializer):
             'keywords',
             'disciplines',
             'sequence',
+            'authors',
         )
 
 
@@ -261,7 +289,7 @@ class JuraBookSerializer(serializers.HyperlinkedModelSerializer):
     keywords = KeywordSerializer(many=True)
     subject = SubjectSerializer(many=True)
     formats = FormatSerializer(many=True)
-    chapters = serializers.SerializerMethodField('chapters_retrieve')
+    chapters = ChapterSerializer(many=True)
     physical_formats = PhysicalFormatSerializer(many=True,  source='physicalformat_set')
     stage = StageSerializer(many=False)
     identifier = IdentiferSerializer(many=True, source='identifier_set', required=False)
@@ -298,46 +326,6 @@ class JuraBookSerializer(serializers.HyperlinkedModelSerializer):
             'peer_review_override',
             'review_assignments',
             )
-    def chapters_retrieve(self, book):
-        chapter_list = []
-        chapters =  models.Chapter.objects.filter(book=book)
-        for chapter in chapters:
-            chapter_dict = {}
-
-            keywords_list = []
-            for keyword in chapter.keywords.all():
-                keywords_list.append(keyword.name)
-
-            disciplines_list = []
-            for discipline in chapter.disciplines.all():
-                disciplines_list.append(discipline.name)
-
-            chapter_dict['keywords'] = keywords_list
-            chapter_dict['disciplines'] = disciplines_list
-            chapter_dict['sequence'] = chapter.sequence
-            chapter_dict['blurbs'] = chapter.blurbs
-            formats = chapter.formats.all()
-            format_list = []
-            for chapter_format in formats:
-                chapter_format_dict = {}
-                chapter_format_dict['name'] = chapter_format.name
-                chapter_format_dict['sequence'] = chapter_format.sequence
-                chapter_format_dict['file_type'] = chapter_format.file_type
-                chapter_format_dict['identifier'] = chapter_format.identifier
-                file_dict = {}
-                file_dict['id'] = chapter_format.file.pk
-                file_dict['label'] = chapter_format.file.label
-                file_dict['original_filename'] = chapter_format.file.original_filename
-                file_dict['uuid_filename'] = chapter_format.file.uuid_filename
-                file_dict['mime_type'] = chapter_format.file.mime_type
-                file_dict['kind'] = chapter_format.file.kind
-                file_dict['sequence'] = chapter_format.file.sequence
-                chapter_format_dict['file'] = file_dict
-                format_list.append(chapter_format_dict)
-            chapter_dict['formats'] = format_list
-            chapter_list.append(chapter_dict)
-
-        return chapter_list
 
     def create(self, validated_data):
         author_data = validated_data.pop('author')
@@ -345,8 +333,6 @@ class JuraBookSerializer(serializers.HyperlinkedModelSerializer):
         lang_data = validated_data.pop('languages')
         subject_data = validated_data.pop('subject')
         stage_data = validated_data.pop('stage')
-
-        pprint(validated_data)
 
         book = models.Book.objects.create(**validated_data)
 

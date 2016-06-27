@@ -27,6 +27,8 @@
                         <div class="form-group">
                             <div class="row">
                               <div class="col-md-12">
+                              {% bootstrap_field chapter_form.name %}
+
                               {% bootstrap_field chapter_form.blurbs %}
 
                               {% bootstrap_field chapter_form.sequence %}
@@ -43,20 +45,28 @@
                             </div>
                     </form>
                     {% else %}
-                    <label>Blurbs</label>
-                     <input class="form-control" type="text" value="{{chapter.blurbs}}" readonly="" /> 
-                    <label>Sequence</label>
-                     <input class="form-control" type="text" value="{{chapter.sequence}}" readonly="" /> 
+                    <label>Name:</label><br />{{chapter.name}}
+                    <hr />
+                    <label>Blurb:</label><br />{{chapter.blurbs|safe}} 
+                    <hr />
+                    <label>Sequence: </label>
+                     {{chapter.sequence}}
+                     <hr />
                    <div class="aside"><strong>Keywords</strong></div>
                       <input type="text" id="disabled-tags" name="tags" value="{% for keyword in chapter.keywords.all %}{{ keyword }}{% if not forloop.last %},{% endif %}{% endfor %}" />
+                      <hr />
                       <div class="aside"><strong>Disciplines</strong></div>
                         <input type="text" id="disabled-stags" name="stags" value="{% for subject in chapter.disciplines.all %}{{ subject }}{% if not forloop.last %},{% endif %}{% endfor %}"/>
                       </div>
                   
                     </div>
                   </div>
-                    <h4><strong>Chapter Formats</strong> <a href="{% url 'add_chapter_format' submission.id chapter.id %}" class="btn btn-info btn-sm"> + Add Format</a></h4>
-          {% include "editor/production/chapter_public_files.html" %}
+                  <hr />
+                    <h4><strong>Chapter Authors</strong> <a href="{% url 'add_chapter_author' submission.id chapter.id %}" class="btn btn-info btn-xs pull-right"> + Add Author</a></h4>
+                    {% include "editor/production/chapter_authors.html" %}
+                    <hr />
+                    <h4><strong>Chapter Formats</strong> <a href="{% url 'add_chapter_format' submission.id chapter.id %}" class="btn btn-info btn-xs pull-right"> + Add Format</a></h4>
+                    {% include "editor/production/chapter_public_files.html" %}
 
                     {% endif %}
           

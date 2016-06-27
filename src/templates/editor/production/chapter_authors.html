@@ -1,0 +1,22 @@
+<table class="table table-bordered table-condensed small">
+	<tr>
+		<th>Name</th>
+		<th>Sequence</th>
+		<th></th>
+		<th></th>
+	</tr>
+
+	{% for author in chapter.authors.all %}
+	<tr>
+		<td>{{ author.full_name }}</td>
+		<td>{{ author.sequence }}</td>
+		<td><a href="{% url 'edit_chapter_author' submission.id chapter.id author.id %}" class="btn btn-xs btn-warning"><i class="fa fa-edit"></i></a></td>
+		<td><a href="" class="btn btn-xs btn-danger"><i class="fa fa-trash"></i></a></td>
+	</tr>
+	{% empty %}
+	<tr>
+		<td colspan="3">No Authors</td>
+	</tr>
+	{% endfor %}
+	
+</table>

@@ -8,46 +8,24 @@
   <a href="{% url 'add_format' submission.id %}" class="btn btn-primary btn-round-half"><i class="fa fa-plus">&nbsp;</i>Add New Format</a>
   <hr />
   <h4>Publication Chapters</h4>
-<ul class="media-list manuscript-upload-states">
-  {% for chapter in chapter_list %}
-  <li class="media" style="background-color:rgb(230,230,230)">
-    <div class="media-left">
-      <span> <h2>
-        &nbsp; &nbsp;   <i class="fa fa-file-text-o" style="padding-bottom:5px"></i> <strong style="font-size: 22px">Chapter {{ chapter.sequence }}</strong> 
-      </span></h2>
-    </div>
-    <div class="media-body">
 
-        <div class="col-md-12">
-          <h4><a href="{% url 'editor_view_chapter' submission.id chapter.id %}" class="btn btn-task pull-right" style="width:100px">View</a></h4>
-        </div>
-         
-    </div>
-    
-    <div class="button-block-center">
-     <hr />
-     <div class="col-md-6">
+    <table class="table table-bordered table-condensed small">
+      <tr>
+        <th>Name</th>
+        <th>Formats</th>
+        <th>Sequence</th>
+        <th></th>
+      </tr>
 
-            <strong>Blurb</strong>
-          <h5><strong>{% if chapter.blurb %}{{ chapter.blurb }}{% else %}None.{% endif %}</strong></h5>
-          </div>
-     <div class="col-md-6">
-
-           <div class="list-group">
-            <strong>Formats</strong>
-          {% for format in chapter.formats.all %}
-            <a class="list-group-item" href='{% url 'editor_view_chapter_format' submission.id chapter.id format.id %}'><span class="badge">{{format.file_type}}</span>{{format.name}}</a>
-          {% endfor %}
-          </div>
-        </div>
-    
-    </div>
-    </li>
-    {% empty %}
-     <li style="background-color:rgb(230,230,230)">
-      <h5>&nbsp;&nbsp;&nbsp;No Chapters</h5>
-   </li>
-  {% endfor %}
+      {% for chapter in chapter_list %}
+      <tr>
+        <td>{{ chapter.name }}</td>
+        <td>{{ chapter.formats.all|length }}</td>
+        <td>{{ chapter.sequence }}</td>
+        <td><a class="btn btn-success btn-xs" href="{% url 'editor_view_chapter' submission.id chapter.id %}"><i class="fa fa-eye">&nbsp;</i>View</a></td>
+      </tr>
+      {% endfor %}
+    </table>
 </ul>
 
 

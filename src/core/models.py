@@ -212,7 +212,7 @@ class Book(models.Model):
 	book_type = models.CharField(max_length=50, null=True, blank=True, choices=book_type_choices(), help_text="A monograph is a work authored, in its entirety, by one or more authors. An edited volume has different authors for each chapter.")
 	review_type = models.CharField(max_length=50, choices=book_review_type_choices(), default='closed')
 	languages = models.ManyToManyField('Language', null=True, blank=True)
-	table_contents = models.CharField(max_length=100, choices=table_contents_options())
+	table_contents = models.CharField(max_length=100, choices=table_contents_options(), null=True, blank=True)
 	
 	# Book Owner
 	owner = models.ForeignKey(User, null=True, blank=True)
@@ -299,6 +299,9 @@ class Book(models.Model):
 
 	def formats(self):
 		return self.format_set.all()
+
+	def chapters(self):
+		return self.chapter_set.all()
 
 	def onetaskers(self):
 		copyedit_assignments = CopyeditAssignment.objects.filter(book=self)
@@ -1016,11 +1019,13 @@ class Format(models.Model):
 
 class Chapter(models.Model):
 	book = models.ForeignKey(Book)
-	formats = models.ManyToManyField('ChapterFormat', null = True, blank = True, related_name = 'formats')
-	blurbs = models.CharField(max_length=200, null=True, blank=True)
+	name = models.CharField(max_length=300, null=True, blank=True)
+	formats = models.ManyToManyField('ChapterFormat', null = True, blank = True, related_name='formats')
+	blurbs = models.TextField(null=True, blank=True, verbose_name='blurb')
 	keywords = models.ManyToManyField('Keyword', null=True, blank=True) 
 	disciplines = models.ManyToManyField('Subject', null=True, blank=True)
 	sequence = models.IntegerField(default=999)
+	authors = models.ManyToManyField('Author', null=True, blank=True)
 
 	class Meta:
 		ordering = ('sequence',)
@@ -1032,7 +1037,7 @@ class Chapter(models.Model):
 		return u'%s - %s' % (self.book, self.sequence)
 
 class ChapterFormat(models.Model):
-	chapter = models.ForeignKey(Chapter, related_name = 'format_chapter')
+	chapter = models.ForeignKey(Chapter, related_name='format_chapter')
 	book = models.ForeignKey(Book)
 	file = models.ForeignKey(File)
 	name = models.CharField(max_length=200)
