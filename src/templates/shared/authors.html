@@ -26,12 +26,14 @@
 		<th width="25%">Twitter</th>
 		<th width="25%">Facebook</th>
 		<th width="25%">Linkedin</th>
+		<th>ID</th>
 	</tr>
 	<tr>
 		<td colspan="2">{{ author.orcid }}</td>
 		<td>{{ author.twitter }}</td>
 		<td>{{ author.facebook }}</td>
 		<td>{{ author.linkedin }}</td>
+		<td>{{ author.pk }}</td>
 	</tr>
 	</table>
 	<a href="{% url 'update_contributor' submission.id 'author' author.id %}" class="btn btn-small btn-primary"><i class="fa fa-edit">&nbsp;</i>Edit Author</a>&nbsp;<a href="{% url 'delete_contributor' submission.id 'author' author.id %}" class="btn btn-small btn-primary"><i class="fa fa-trash">&nbsp;</i>Delete Author</a>

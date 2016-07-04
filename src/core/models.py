@@ -1026,6 +1026,7 @@ class Chapter(models.Model):
 	disciplines = models.ManyToManyField('Subject', null=True, blank=True)
 	sequence = models.IntegerField(default=999)
 	authors = models.ManyToManyField('Author', null=True, blank=True)
+	doi = models.CharField(max_length=300, null=True, blank=True)
 
 	class Meta:
 		ordering = ('sequence',)

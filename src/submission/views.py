@@ -916,7 +916,7 @@ def handle_file(file, book, kind, user):
 
 	if file:
 
-		original_filename = str(file._get_name())
+		original_filename = smart_text(file._get_name())
 		filename = str(uuid4()) + str(os.path.splitext(file._get_name())[1])
 		folder_structure = os.path.join(settings.BASE_DIR, 'files', 'books', str(book.id))
 

@@ -46,7 +46,7 @@ def handle_marc21_file(content,name, book, owner):
 
 def handle_onetasker_file(file, book, assignment, kind):
 
-	original_filename = str(file._get_name())
+	original_filename = smart_text(file._get_name())
 	filename = str(uuid4()) + str(os.path.splitext(original_filename)[1])
 	folder_structure = os.path.join(settings.BASE_DIR, 'files', 'books', str(book.id))
 
@@ -85,7 +85,7 @@ def handle_onetasker_file(file, book, assignment, kind):
 ## File helpers
 def handle_file_update(file, old_file, book, kind, owner, label=None):
 
-	original_filename = str(file._get_name())
+	original_filename = smart_text(file._get_name())
 	filename = str(uuid4()) + str(os.path.splitext(original_filename)[1])
 	folder_structure = os.path.join(settings.BASE_DIR, 'files', 'books', str(book.id))
 
@@ -132,7 +132,7 @@ def handle_file_update(file, old_file, book, kind, owner, label=None):
 ## File helpers
 def handle_file(file, book, kind, owner, label=None):
 
-	original_filename = str(file._get_name())
+	original_filename = smart_text(file._get_name())
 	filename = str(uuid4()) + str(os.path.splitext(original_filename)[1])
 	folder_structure = os.path.join(settings.BASE_DIR, 'files', 'books', str(book.id))
 
@@ -171,7 +171,7 @@ def handle_file(file, book, kind, owner, label=None):
 ## File helpers
 def handle_email_file(file, kind, owner, label=None):
 
-	original_filename = str(file._get_name())
+	original_filename = smart_text(file._get_name())
 	filename = str(uuid4()) + str(os.path.splitext(original_filename)[1])
 	folder_structure = os.path.join(settings.BASE_DIR, 'files', 'email','general')
 
@@ -247,7 +247,7 @@ def handle_proposal_review_file(file, proposal_review, kind, owner, label=None):
 
 def handle_proposal_file(file, proposal, kind, owner, label=None):
 
-	original_filename = str(file._get_name())
+	original_filename = smart_text(file._get_name())
 	filename = str(uuid4()) + str(os.path.splitext(original_filename)[1])
 	folder_structure = os.path.join(settings.BASE_DIR, 'files', 'proposals', str(proposal.id))
 
@@ -285,7 +285,7 @@ def handle_proposal_file(file, proposal, kind, owner, label=None):
 	
 def handle_proposal_file_form(file, proposal, kind, owner, label=None):
 
-	original_filename = str(file._get_name())
+	original_filename = smart_text(file._get_name())
 	filename = str(uuid4()) + str(os.path.splitext(original_filename)[1])
 	folder_structure = os.path.join(settings.BASE_DIR, 'files', 'proposals', str(proposal.id))
 
@@ -330,7 +330,7 @@ def handle_attachment(request, submission):
 
 def handle_copyedit_file(file, book, copyedit, kind):
 
-	original_filename = str(file._get_name())
+	original_filename = smart_text(file._get_name())
 	filename = str(uuid4()) + str(os.path.splitext(original_filename)[1])
 	folder_structure = os.path.join(settings.BASE_DIR, 'files', 'books', str(book.id))
 
@@ -367,7 +367,7 @@ def handle_copyedit_file(file, book, copyedit, kind):
 
 def handle_index_file(file, book, index, kind):
 
-	original_filename = str(file._get_name())
+	original_filename = smart_text(file._get_name())
 	filename = str(uuid4()) + str(os.path.splitext(original_filename)[1])
 	folder_structure = os.path.join(settings.BASE_DIR, 'files', 'books', str(book.id))
 
@@ -405,7 +405,7 @@ def handle_index_file(file, book, index, kind):
 
 def handle_typeset_file(file, book, typeset, kind):
 
-	original_filename = str(file._get_name())
+	original_filename = smart_text(file._get_name())
 	filename = str(uuid4()) + str(os.path.splitext(original_filename)[1])
 	folder_structure = os.path.join(settings.BASE_DIR, 'files', 'books', str(book.id))
 

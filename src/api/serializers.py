@@ -38,6 +38,7 @@ class AuthorSerializer(serializers.HyperlinkedModelSerializer):
         'linkedin',
         'facebook',
         'sequence',
+        'full_name',
         )
 
 class EditorSerializer(serializers.HyperlinkedModelSerializer):
@@ -177,6 +178,8 @@ class ChapterSerializer(serializers.HyperlinkedModelSerializer):
         model = models.Chapter
         fields = (
             'id',
+            'doi',
+            'name',
             'formats',
             'blurbs',
             'keywords',

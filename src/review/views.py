@@ -809,7 +809,7 @@ def serve_file(request, file_path):
 
 def handle_review_file(file, proposal, review_assignment, kind):
 
-	original_filename = str(file._get_name())
+	original_filename = smart_text(file._get_name())
 	filename = str(uuid4()) + str(os.path.splitext(original_filename)[1])
 	folder_structure = os.path.join(settings.BASE_DIR, 'files', 'proposals', str(proposal.id))
 
@@ -846,7 +846,7 @@ def handle_review_file(file, proposal, review_assignment, kind):
 
 def handle_editorial_review_file(file, proposal, review_assignment, kind, editorial):
 
-	original_filename = str(file._get_name())
+	original_filename = smart_text(file._get_name())
 	filename = str(uuid4()) + str(os.path.splitext(original_filename)[1])
 	folder_structure = os.path.join(settings.BASE_DIR, 'files', 'books', str(review_assignment.book.id))
 

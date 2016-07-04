@@ -28,6 +28,7 @@
                             <div class="row">
                               <div class="col-md-12">
                               {% bootstrap_field chapter_form.name %}
+                              {% bootstrap_field chapter_form.doi %}
 
                               {% bootstrap_field chapter_form.blurbs %}
 
@@ -46,6 +47,8 @@
                     </form>
                     {% else %}
                     <label>Name:</label><br />{{chapter.name}}
+                    <hr />
+                    <label>DOI:</label><br />{{chapter.doi}}
                     <hr />
                     <label>Blurb:</label><br />{{chapter.blurbs|safe}} 
                     <hr />

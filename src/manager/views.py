@@ -796,7 +796,7 @@ def delete_review_form_element(request, form_id, relation_id):
 @is_press_editor
 def handle_file(request, file):
 
-	original_filename = str(file._get_name())
+	original_filename = smart_text(file._get_name())
 	filename = str(uuid4()) + '.' + str(os.path.splitext(original_filename)[1])
 	folder_structure = os.path.join(settings.BASE_DIR, 'media', 'settings')
 

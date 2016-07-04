@@ -1437,7 +1437,7 @@ def add_chapter(request, submission_id, chapter_id=None):
 				new_chapter.disciplines.add(new_subject)
 			new_chapter.save()
 			log.add_log_entry(book=book, user=request.user, kind='production', message='%s %s loaded a new chapter, %s' % (request.user.first_name, request.user.last_name, new_chapter.sequence), short_name='New Chapter Loaded')
-			return redirect(reverse('editor_production', kwargs={'submission_id': book.id}))
+			return redirect(reverse('editor_view_chapter', kwargs={'submission_id': book.id, 'chapter_id': new_chapter.id}))
 
 	template = 'editor/submission.html'
 	context = {
@@ -1493,6 +1493,7 @@ def update_chapter(request, submission_id, chapter_id):
 			chapter.sequence = new_chapter.sequence
 			chapter.blurbs = new_chapter.blurbs
 			chapter.name = new_chapter.name
+			chapter.doi = new_chapter.doi
 			
 			for keyword in chapter.keywords.all():
 				chapter.keywords.remove(keyword)

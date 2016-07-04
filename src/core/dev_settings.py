@@ -189,6 +189,8 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 DATE_FORMAT = 'Y-m-d'
 DATETIME_FORMAT = 'Y-m-d H:m'
 
+SESSION_COOKIE_NAME = 'rua_cookie'
+
 SUMMERNOTE_CONFIG = {
     # Using SummernoteWidget - iframe mode
     'iframe': False,  # or set False to use SummernoteInplaceWidget - no iframe mode
