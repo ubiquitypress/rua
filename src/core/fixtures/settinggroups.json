@@ -38,5 +38,13 @@
     },
     "model": "core.settinggroup",
     "pk": 5
+},
+    {
+  "fields": {
+    "enabled": true,
+    "name": "email_subject"
+  },
+  "model": "core.settinggroup",
+  "pk": null
 }
 ]
