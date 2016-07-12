@@ -1799,6 +1799,31 @@ def start_proposal_review(request, proposal_id):
 
     return render(request, template, context)
 
+@is_editor
+def change_review_due_date(request, proposal_id, assignment_id):
+
+    proposal = get_object_or_404(submission_models.Proposal, pk=proposal_id)
+    assignment= get_object_or_404(submission_models.ProposalReview, pk=assignment_id, withdrawn=False)
+    due_date = proposal.revision_due_date
+    form = forms.ChangeReviewDueDateForm(instance=assignment)
+
+    if request.method == 'POST':
+        form = forms.ChangeReviewDueDateForm(request.POST, instance=assignment)
+
+        if form.is_valid():
+            form.save()
+            messages.add_message(request, messages.SUCCESS, "Due date updated for review: {0} to {1}".format(assignment.pk, assignment.due))
+            return redirect(reverse('view_proposal', kwargs={'proposal_id': proposal.id}))
+
+    template = 'core/proposals/change_review_due_date.html'
+    context = {
+        'form': form,
+        'proposal': proposal,
+        'due date': due_date,
+    }
+
+    return render(request, template, context)
+
 
 @is_reviewer
 def view_proposal_review_decision(request, proposal_id, assignment_id):
