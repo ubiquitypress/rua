@@ -34,7 +34,7 @@
 },
 {
   "fields": {
-    "value": "Submission decision update:%s",
+    "value": "Submission decision update: %s",
     "group": 6,
     "name": "submission_decision_update_subject",
     "types": "text",
