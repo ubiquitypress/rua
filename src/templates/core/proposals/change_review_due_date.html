@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% load static from staticfiles %}
+{% load bootstrap3 %}
+
+{% block title %}Book Proposals{% endblock %}
+
+
+{% block css %}
+<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/plug-ins/1.10.7/integration/bootstrap/3/dataTables.bootstrap.css">
+{% endblock css %}
+
+{% block body %}
+<div class="col-md-12 primary-heading container-fluid" style="margin-top:-20px">
+<h3>Change due date of proposal: {{ proposal.title }}</h3>
+</div>
+
+<p>Select new due date:</p>
+<form method="POST">
+    {% csrf_token %}
+    {% bootstrap_form form %}
+    <button class="btn btn-success" type="submit" name="Submit">Update</button>
+</form>
+
+{% endblock body %}
+
+{% block js %}
+<script type="text/javascript">
+    $(document).ready(function() {
+          $('#id_due').datepicker({ dateFormat: 'yy-mm-dd' }).val();
+      });
+</script>
+{% endblock js %}

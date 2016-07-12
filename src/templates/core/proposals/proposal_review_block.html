@@ -16,7 +16,7 @@
     <td>{{ reviewer.user.first_name }} {% if author.middle_name %}{{ reviewer.user.middle_name}} {% endif %}{{ reviewer.user.last_name }} <sup> <a href="core/email.html" onclick="return popitup('/email/proposal/{{proposal.id}}/user/{{reviewer.user.id}}/','proposal_{{reviewer.user.id}}')"class="fa fa-envelope-o btn btn-xs btn-default"></a></sup></td>
     <td>{{ reviewer.assigned }}</td>
     <td>{% if reviewer.accepted %}{{ reviewer.accepted }}{% else %}--{% endif %}</td>
-    <td>{{ reviewer.due }}</td>
+    <td>{{ reviewer.due }} <a href="{% url 'change_review_due_date' proposal.id reviewer.id %}"><i class="fa fa-edit">&nbsp;</i></a></td>
     <td>{% if reviewer.completed %}{{ reviewer.completed }}{% else %}--{% endif %}</td>
     <td>{% if reviewer.completed %}{{ reviewer.get_recommendation_display }}{% else %}--{% endif %}</td>
 

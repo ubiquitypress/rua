@@ -6,6 +6,7 @@ from django.core.mail import EmailMultiAlternatives
 from django.conf import settings
 from functools import partial
 
+from submission import models as submission_models
 from core import models, logic, email
 
 import uuid
@@ -267,5 +268,11 @@ class RetailerForm(forms.ModelForm):
 	class Meta:
 		model = models.Retailer
 		fields = ('name', 'link', 'price', 'enabled')
+
+class ChangeReviewDueDateForm(forms.ModelForm):
+
+	class Meta:
+		model = submission_models.ProposalReview
+		fields = ('due',)
 
 		
