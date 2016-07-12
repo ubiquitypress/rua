@@ -25,8 +25,8 @@ def send_author_invite(submission, copyedit, email_text, sender, attachment=None
 		'copyedit': copyedit,
 		'sender': sender,
 	}
-
-	email.send_email(get_setting('copyediting_completed_subject','email_subject','Copyediting Completed'), context, from_email.value, submission.owner.email, email_text, book=submission, attachment=attachment, kind = 'copyedit')
+	subject = get_setting('copyediting_completed_subject','email_subject','Copyediting Completed')
+	email.send_email(subject, context, from_email.value, submission.owner.email, email_text, book=submission, attachment=attachment, kind = 'copyedit')
 
 
 def send_new_user_ack(submission, email_text, new_user, code):
