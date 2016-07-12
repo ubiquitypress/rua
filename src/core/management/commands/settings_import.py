@@ -1,12 +1,10 @@
+import os
+import json
 
 from django.core.management.base import BaseCommand, CommandError
 from django.conf import settings
 
-from pprint import pprint
 from core import models
-
-import os
-import json
 
 def sync_groups():
 
