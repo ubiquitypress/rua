@@ -1305,30 +1305,32 @@ def view_log(request, submission_id):
         query_list.append(Q(message__icontains=search) | Q(short_name__icontains=search) | Q(kind__icontains=search))
    
     if query_list:
-        log_list =  models.Log.objects.filter(Q(book=book) | Q(proposal=book.proposal)).filter(*query_list).order_by('-date_logged')
+        log_list =  models.Log.objects.filter(Q(book=book)).filter(*query_list).order_by('-date_logged')
     else:
-        log_list = models.Log.objects.filter(Q(book=book) | Q(proposal=book.proposal)).order_by('-date_logged')
+        log_list = models.Log.objects.filter(Q(book=book)).order_by('-date_logged')
 
     if email_query_list:
-        email_list =  models.EmailLog.objects.filter(Q(book=book) | Q(proposal=book.proposal)).filter(*email_query_list).order_by('-sent')
+        print email_query_list
+        email_list =  models.EmailLog.objects.filter(Q(book=book)).filter(*email_query_list).order_by('-sent')
     else:
-        email_list = models.EmailLog.objects.filter(Q(book=book) | Q(proposal=book.proposal)).order_by('-sent')
+        email_list = models.EmailLog.objects.filter(Q(book=book)).order_by('-sent')
+
 
     filters = [
-    'submission',
-    'workflow',
-    'file',
-    'copyedit',
-    'review',
-    'proposal_review',
-    'index',
-    'typeset',
-    'revisions',
-    'editing',
-    'production',
-    'proposal',
-    'general',
-    'reminder',
+        'submission',
+        'workflow',
+        'file',
+        'copyedit',
+        'review',
+        'proposal_review',
+        'index',
+        'typeset',
+        'revisions',
+        'editing',
+        'production',
+        'proposal',
+        'general',
+        'reminder',
     ]
 
     template = 'editor/log.html'
