@@ -114,6 +114,7 @@ class EditMetadata(forms.ModelForm):
 			'peer_review_override',
 			'book_type',
 			'table_contents',
+			'publisher_location',
 		)
 
 		exclude = (
