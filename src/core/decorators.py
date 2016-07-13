@@ -332,8 +332,7 @@ def is_typesetter(function):
 
 def is_onetasker(function):
 		def wrap(request, *args, **kwargs):
-			
-		
+
 			if not request.user.is_authenticated():
 				messages.add_message(request, messages.ERROR, 'You need to log in to view this page.')
 				raise exceptions.PermissionDenied 
@@ -344,15 +343,15 @@ def is_onetasker(function):
 			if kwargs.get('submission_id'):
 				submission_id = kwargs.get('submission_id')
 
-			# Check if the user is a press-editor, if not, check if they are they are assigend as an editor to this book, or check if the user is the series editor for this book.
+			# Check if the user is a press-editor, if not, check if they are they are assigned as an editor to this book, or check if the user is the series editor for this book.
 			if 'press-editor' in user_roles:
 				return function(request, *args, **kwargs)
 			elif submission_id:
 				book = get_object_or_404(models.Book, pk=submission_id)
-				if request.user in book.onetaskers() or book.owner == request.user:
+				if request.user in book.onetaskers() or request.user in book.all_editors() or book.owner == request.user:
 					return function(request, *args, **kwargs)
 				else:
-					messages.add_message(request, messages.ERROR, 'you don.')
+					messages.add_message(request, messages.ERROR, 'You do not have permission to access this resource.')
 					raise exceptions.PermissionDenied 
 			elif not submission_id and (set(user_roles) & set(['copyeditor', 'typesetter', 'indexer'])):
 				return function(request, *args, **kwargs)
