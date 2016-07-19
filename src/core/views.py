@@ -211,7 +211,12 @@ def register(request):
     })
 
 def activate(request, code):
-    profile = get_object_or_404(models.Profile, activation_code=code)
+
+    try:
+        profile = models.Profile.objects.get(activation_code=code)
+    except models.Profile.DoesNotExist:
+        return HttpResponse(
+            '<h2>This activation code either does not exist has already been used. You should attempt to login.</h2><p><a href="/login/">Login Here</a>')
     if profile:
         profile.user.is_active = True   
         if not profile.roles.filter(slug='reader').exists():
@@ -859,7 +864,7 @@ def email_users_proposal(request, proposal_id, user_id):
     if user.profile.is_editor():
         to_value="%s;" % (user.email)
 
-    source = "/email/user/proposal/%s/" % proposal_id
+    source = "/email/user/proposal/%s/" % proposal_id3
 
 
     template = 'core/email.html'
