@@ -29,7 +29,16 @@ body {
   <!-- Tab panes -->
   <div class="tab-content">
     <div role="tabpanel"  class="tab-pane active" id="activity">
-      <ul class="timeline">
+      <br>
+                <form method="POST">
+                  {% csrf_token %}
+                 <div class="input-group">
+                  <input type="text" class="form-control" id="search" name="search" placeholder="Search for an activity log...">
+                  <div class="input-group-addon"><i class="fa fa-search"></i></div>
+                </div>
+                </form>
+                <br />
+        <ul class="timeline">
         {% for item in log_list %}
           <li {% if forloop.counter|divisibleby:2 %}class="timeline-inverted"{% endif %}>
               <div class="timeline-badge">
@@ -50,6 +59,27 @@ body {
     </div>
  <div role="tabpanel"  class="tab-pane" id="email">   
       <ul class="timeline">
+           <br>
+                <form method="POST">
+                  {% csrf_token %}
+                <div class="col-md-6 pull-right form-group">
+                <strong>Filter By</strong>
+                    <select name="filter" class="form-control" onchange="this.form.submit()">
+                        <option value="">------</option>
+                        {% for filter in filters %}
+
+                        <option value="{{filter}}" {% ifequal filterby filter %}selected="selected"{% endifequal %}>
+                        {% ifequal filter 'proposal_review' %} Proposal Review {% else %}{{filter|capfirst}} {% endifequal %}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                 <div class="input-group col-md-12">
+                  <input type="text" class="form-control" id="email_search" name="email_search" placeholder="Search for an email log...">
+                  <div class="input-group-addon"><i class="fa fa-search"></i></div>
+                </div>
+                </form>
+                <br />
         {% for item in email_list %}
           <li {% if forloop.counter|divisibleby:2 %}class="timeline-inverted"{% endif %}>
               <div class="timeline-badge">

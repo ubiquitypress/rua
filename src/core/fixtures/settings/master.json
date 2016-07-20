@@ -1145,7 +1145,7 @@
 },
 {
     "fields": {
-        "value": "<p>Dear {{user.profile.full_name}},</p><p>A profile has been created for you on the {{press_name}} book management system. The details are below:</p><p>\r\n\r\nUsername: {{user.username}}</p><p>Password: {{code}}</p><p>Please click this link if you to reset your password: {{base_url}}/user/profile/resetpassword/\r\n</p><p>If you did not create this account then please let us know.<br></p><p>Kind regards,</p><p>{{principal_contact_name}}\r\n{{press_name}}</p><p><br></p>",
+        "value": "<p>Dear {{user.profile.full_name}},</p><p>Thank you for registering an account on our book management system. To validate your account, please click on the link below:</p><p>\r\n\r\nhttp://{{ base_url }}/login/activate/{{ user.profile.activation_code }}</p><p>Once this is complete, you will be able to access the system using the details you entered upon registration./\r\n</p><p>Kind regards,</p><p>\r\n{{press_name}}</p><p><br></p>",
         "group": 3,
         "name": "new_user_email",
         "types": "rich_text",
