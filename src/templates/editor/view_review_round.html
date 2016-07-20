@@ -48,13 +48,16 @@
                         <strong>Assigned on: </strong>{{ review.assigned }}
                         {% endif %}
                     </p>
-                    {% endif %}
 
+                    {% else %}
+                    <p>
+                        <strong>No active internal review assignments.</strong>
+                    </p>
+                    {% endif %}
                     {% empty %}
                     <p>
                         <strong>No internal review assignments.</strong>
                     </p>
-
                     {% endfor %}
                 </div>
 
@@ -82,13 +85,16 @@
                      <p>
                         <strong>Assigned on: </strong>{{ review.assigned }}
                      </p>
-                    {% endif %}
 
+                    {% else %}
+                    <p>
+                        <strong>No declined internal review assignments.</strong>
+                    </p>
+                    {% endif %}
                     {% empty %}
                     <p>
                         <strong>No internal review assignments.</strong>
                     </p>
-
                     {% endfor %}
 
                 </div>
@@ -148,13 +154,16 @@
                         <strong>Assigned on: </strong>{{ review.assigned }}
                         {% endif %}
                     </p>
-                    {% endif %}
 
+                    {% else %}
+                    <p>
+                        <strong>No active external review assignments.</strong>
+                    </p>
+                    {% endif %}
                     {% empty %}
                     <p>
                         <strong>No external review assignments.</strong>
                     </p>
-
                     {% endfor %}
                 </div>
 
@@ -182,12 +191,16 @@
                      <p>
                         <strong>Assigned on: </strong>{{ review.assigned }}
                      </p>
-                    {% endif %}
 
-                    {% empty %}
+                    {% else %}
                       <p>
-                        <strong>No external review assignments.</strong>
+                        <strong>No declined external review assignments.</strong>
                       </p>
+                    {% endif %}
+                    {% empty %}
+                    <p>
+                        <strong>No external review assignments.</strong>
+                    </p>
                     {% endfor %}
 
                 </div>
