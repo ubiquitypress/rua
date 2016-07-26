@@ -77,6 +77,9 @@
 					      <th>Last Name</th>
 					      <th>Email</th>
 						  <th>Profile</th>
+                          <th>Review History</th>
+                          <th>Reviews Completed</th>
+                          <th>Reviews Declined</th>
 					      <th>Select</th>
 					    </tr>
 					    </thead>
@@ -88,6 +91,9 @@
 					      <td>{{ reviewer.email }}</td>
 						  <td><a href="{% url 'view_profile_readonly' reviewer.id %}">
                               {{ reviewer.first_name }} {{ reviewer.last_name }}</a></td>
+						  <td><a href="{% url 'view_review_history' reviewer.id %}" target="_blank">View</a></td>
+                          <td>{{ reviewer.number_reviews_completed }}</td>
+                          <td>{{ reviewer.number_reviews_declined }}</td>
 					      <td><input type="checkbox" name="reviewer" value="{{ reviewer.id }}"/></td>
 					    </tr>
 					    {% endfor %}

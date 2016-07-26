@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% load static from staticfiles %}
+{% load bootstrap3 %}
+
+{% block title %}Reviewer History{% endblock %}
+
+{% block body %}
+
+<div class="col-md-12 primary-heading container-fluid" style="margin-top:-20px">
+    <h2>Review History: {{ reviewer.full_name }}</h2>
+</div>
+
+<h4>Book Submission Reviews</h4>
+<table class="table table-striped small" cellspacing="0" width="100%" id='submission-review-history'>
+    <thead>
+    <tr>
+      <th>Review Type</th>
+      <th>Title</th>
+      <th>Assigned</th>
+      <th>Status</th>
+      <th>Decision</th>
+    </tr>
+    </thead>
+
+{% for review in reviewer.review_history.all %}
+    <tr>
+      <td>{{ review.get_review_type_display }}</td>
+      <td>{{ review.book }}</td>
+      <td>{{ review.assigned }}</td>
+      <td>{% if review.completed %}Completed {{ review.completed }}
+          {% elif review.declined %}Declined {{ review.declined }}
+          {% else %}In progress, due {{ review.due }}{% endif %}</td>
+      <td>{{ review.get_recommendation_display }}</td>
+    </tr>
+    {% empty %}
+    <p>
+        No reviews found
+    </p>
+    {% endfor %}
+</table>
+
+<h4>Proposal Reviews</h4>
+<table class="table table-striped small" cellspacing="0" width="100%" id='proposal-review-history'>
+    <thead>
+    <tr>
+      <th>Title</th>
+      <th>Assigned</th>
+      <th>Status</th>
+      <th>Decision</th>
+    </tr>
+    </thead>
+
+{% for review in reviewer.proposal_review_history.all %}
+    <tr>
+      <td>{{ review.proposal.title }}</td>
+      <td>{{ review.assigned }}</td>
+      <td>{% if review.completed %}Completed {{ review.completed }}
+          {% elif review.declined %}Declined {{ review.declined }}
+          {% else %}In progress, due {{ review.due }}{% endif %}</td>
+      <td>{{ review.get_recommendation_display }}</td>
+    </tr>
+    {% empty %}
+    <p>
+        No reviews found
+    </p>
+    {% endfor %}
+</table>
+
+{% endblock %}
