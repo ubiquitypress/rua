@@ -246,19 +246,22 @@ class Profile(models.Model):
         else:
             return "No reviews found"
 
-    def number_reviews_completed(self):
-        reviews = ReviewAssignment.objects.get(user__pk=self, completed=True)
-        if reviews:
-            return reviews.count()
-        else:
-            return 0
+    def number_active_reviews(self):
+        submission_reviews = ReviewAssignment.objects.filter(user=self.user.pk, accepted__isnull=False,
+                                                             declined__isnull=True, completed__isnull=True)
+        proposal_reviews = submission_models.ProposalReview.objects.filter(user=self.user.pk, accepted__isnull=False,
+                                                                           declined__isnull=True, completed__isnull=True)
+        return len(submission_reviews) + len(proposal_reviews)
 
-    def number_reviews_declined(self):
-        reviews = ReviewAssignment.objects.get(user__pk=self, declined=True)
-        if reviews:
-            return reviews.count()
-        else:
-            return 0
+    def number_completed_reviews(self):
+        submission_reviews = ReviewAssignment.objects.filter(user=self.user.pk, completed__isnull=False)
+        proposal_reviews = submission_models.ProposalReview.objects.filter(user=self.user.pk, completed__isnull=False)
+        return len(submission_reviews) + len(proposal_reviews)
+
+    def number_declined_reviews(self):
+        submission_reviews = ReviewAssignment.objects.filter(user=self.user.pk, declined__isnull=False)
+        proposal_reviews = submission_models.ProposalReview.objects.filter(user=self.user.pk, declined__isnull=False)
+        return len(submission_reviews) + len(proposal_reviews)
 
 
 class Author(models.Model):

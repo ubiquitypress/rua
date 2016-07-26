@@ -2,7 +2,7 @@
 {% load static from staticfiles %}
 {% load bootstrap3 %}
 
-{% block title %}Reviewer History{% endblock %}
+{% block title %}Review History{% endblock %}
 
 {% block body %}
 
@@ -10,7 +10,7 @@
     <h2>Review History: {{ reviewer.full_name }}</h2>
 </div>
 
-<h4>Book Submission Reviews</h4>
+<h4 style="background-color: #A9BCF5; padding: 5px">Book Submission Reviews</h4>
 <table class="table table-striped small" cellspacing="0" width="100%" id='submission-review-history'>
     <thead>
     <tr>
@@ -39,7 +39,7 @@
     {% endfor %}
 </table>
 
-<h4>Proposal Reviews</h4>
+<h4 style="background-color: #A9BCF5; padding: 5px">Proposal Reviews</h4>
 <table class="table table-striped small" cellspacing="0" width="100%" id='proposal-review-history'>
     <thead>
     <tr>
