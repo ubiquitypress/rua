@@ -45,6 +45,6 @@
     "name": "email_subject"
   },
   "model": "core.settinggroup",
-  "pk": null
+  "pk": 6
 }
 ]
