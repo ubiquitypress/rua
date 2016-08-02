@@ -910,7 +910,7 @@ def email_users_proposal(request, proposal_id, user_id):
     if user.profile.is_editor():
         to_value = "%s;" % (user.email)
 
-    source = "/email/user/proposal/%s/" % proposal_id3
+    source = "/email/user/proposal/%s/" % proposal_id
 
     template = 'core/email.html'
     context = {

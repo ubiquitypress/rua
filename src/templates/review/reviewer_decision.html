@@ -22,7 +22,7 @@
     <b>License: </b>{{submission.license}} </br>
     <b>Review Type: </b>{{submission.get_review_type_display}} </br>
     
-    <b>Expected Completion Date</b>{% if submission.expected_completion_date %}{{ submission.expected_completion_date|date:"Y-m-d" }}{% else %} None {% endif %}</br>
+    <b>Expected Completion Date: </b>{% if submission.expected_completion_date %}{{ submission.expected_completion_date|date:"Y-m-d" }}{% else %} None {% endif %}</br>
     </div> </br>
              <div class="band {{ submission.stage.current_stage }}">
                         {{ submission.stage.get_current_stage_display }}
@@ -57,7 +57,10 @@
              <input class="btn btn-lg btn-decline" type="submit" name="decline" value="I Decline"id="decline" style="width:120px; font-size: 14px;">
              <input class="btn btn-lg btn-accept" type="submit"  name="accept" id="accept" value="I Accept" style="width:120px; font-size: 14px;" >
              </form>
-            </div> 
+            </div>
+
+          {% include "review/contact_editors.html"  %}
+
         <p> <h4>Abstract</h4>
          {{ submission.description|safe }}</p>
          {% if file_preview %}
@@ -65,11 +68,6 @@
         {% endif %}
         </div>
 
-              
-   
-        
-                   {% include "review/contact_editors.html"  %}
-  
 </div>
 </div>
 
