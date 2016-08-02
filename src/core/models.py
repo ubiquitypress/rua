@@ -620,7 +620,7 @@ class ReviewAssignment(models.Model):
     review_round = models.ForeignKey(ReviewRound, blank=True, null=True)
     review_type = models.CharField(max_length=15, choices=review_type_choices())
     user = models.ForeignKey(User)
-    assigned = models.DateField(auto_now=True)
+    assigned = models.DateField(auto_now_add=True)
     accepted = models.DateField(blank=True, null=True)
     declined = models.DateField(blank=True, null=True)
     due = models.DateField(blank=True, null=True)
@@ -660,7 +660,7 @@ class ReviewAssignment(models.Model):
 class EditorialReviewAssignment(models.Model):
     book = models.ForeignKey(Book)  # TODO: Remove this as it is already linked to the book through the review round
 
-    assigned = models.DateField(auto_now=True)
+    assigned = models.DateField(auto_now_add=True)
     due = models.DateField(blank=True, null=True)
     completed = models.DateField(blank=True, null=True)
 
