@@ -2031,6 +2031,8 @@ def view_proposal_review_decision(request, proposal_id, assignment_id):
             review_assignment.save()
             message = "Review Assignment request for proposal '%s' has been accepted by %s %s." % (
             proposal.title, review_assignment.user.first_name, review_assignment.user.last_name)
+            log.add_proposal_log_entry(proposal=proposal, user=review_assignment.user, kind='proposal', message=message,
+                              short_name='Assignment accepted')
             if proposal.requestor:
                 notification = models.Task(assignee=proposal.requestor, creator=request.user, text=message,
                                            workflow='proposal')
@@ -2048,6 +2050,8 @@ def view_proposal_review_decision(request, proposal_id, assignment_id):
             review_assignment.save()
             message = "Review Assignment request for proposal '%s' has been declined by %s %s." % (
             proposal.title, review_assignment.user.first_name, review_assignment.user.last_name)
+            log.add_proposal_log_entry(proposal=proposal, user=review_assignment.user, kind='proposal', message=message,
+                              short_name='Assignment declined')
             if proposal.requestor:
                 notification = models.Task(assignee=proposal.requestor, creator=request.user, text=message,
                                            workflow='proposal')
