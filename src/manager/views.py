@@ -26,790 +26,800 @@ import os
 import requests
 import json
 
+
 @is_press_editor
 def index(request):
-	template = 'manager/index.html'
-	context = {}
+    template = 'manager/index.html'
+    context = {}
 
-	return render(request, template, context)
+    return render(request, template, context)
+
 
 @is_press_editor
 def about(request):
-	template = 'manager/about.html'
-	context = {}
+    template = 'manager/about.html'
+    context = {}
 
-	return render(request, template, context)
+    return render(request, template, context)
+
 
 @is_press_editor
 def groups(request):
+    template = 'manager/groups.html'
+    context = {
+        'groups': models.Group.objects.all()
+    }
 
-	template = 'manager/groups.html'
-	context = {
-		'groups': models.Group.objects.all()
-	}
+    return render(request, template, context)
 
-	return render(request, template, context)
 
 @is_press_editor
 def group(request, group_id=None):
+    form = forms.GroupForm()
 
-	form = forms.GroupForm()
+    if group_id:
+        group = get_object_or_404(models.Group, pk=group_id)
+        form = forms.GroupForm(instance=group)
+    else:
+        group = None
 
-	if group_id:
-		group = get_object_or_404(models.Group, pk=group_id)
-		form = forms.GroupForm(instance=group)
-	else:
-		group = None
+    if request.method == 'POST':
+        if group_id:
+            form = forms.GroupForm(request.POST, instance=group)
+        else:
+            form = forms.GroupForm(request.POST)
 
-	if request.method == 'POST':
-		if group_id:
-			form = forms.GroupForm(request.POST, instance=group)
-		else:
-			form = forms.GroupForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('manager_groups')
 
-		if form.is_valid():
-			form.save()
-			return redirect('manager_groups')
+    template = 'manager/group.html'
+    context = {
+        'form': form,
+        'group': group,
+    }
 
-	template = 'manager/group.html'
-	context = {
-		'form': form,
-		'group': group,
-	}
+    return render(request, template, context)
 
-	return render(request, template, context)
 
 @is_press_editor
 def group_delete(request, group_id):
+    group = get_object_or_404(models.Group, pk=group_id)
+    group.delete()
 
-	group = get_object_or_404(models.Group, pk=group_id)
-	group.delete()
+    return redirect('manager_groups')
 
-	return redirect('manager_groups')
 
 @is_press_editor
 def group_members(request, group_id):
+    group = get_object_or_404(models.Group, pk=group_id)
+    members = models.GroupMembership.objects.filter(group=group)
+    users = User.objects.all().order_by('last_name')
 
-	group = get_object_or_404(models.Group, pk=group_id)
-	members = models.GroupMembership.objects.filter(group=group)
-	users = User.objects.all().order_by('last_name')
+    template = 'manager/members.html'
+    context = {
+        'group': group,
+        'members': members,
+        'users': users,
+    }
 
-	template = 'manager/members.html'
-	context = {
-		'group': group,
-		'members': members,
-		'users': users,
-	}
+    return render(request, template, context)
 
-	return render(request, template, context)
 
 @is_press_editor
 def group_members_assign(request, group_id, user_id):
+    group = get_object_or_404(models.Group, pk=group_id)
+    user = get_object_or_404(User, pk=user_id)
 
-	group = get_object_or_404(models.Group, pk=group_id)
-	user = get_object_or_404(User, pk=user_id)
+    if not models.GroupMembership.objects.filter(user=user, group=group):
+        member = models.GroupMembership(user=user, group=group, sequence=9999)
+        member.save()
+    else:
+        messages.add_message(request, messages.WARNING, 'This user is already a member of %s' % group.name)
 
-	if not models.GroupMembership.objects.filter(user=user, group=group):
-		member = models.GroupMembership(user=user, group=group, sequence=9999)
-		member.save()
-	else:
-		messages.add_message(request, messages.WARNING, 'This user is already a member of %s' % group.name)
+    return redirect(reverse('manager_group_members', kwargs={'group_id': group.id}))
 
-
-	return redirect(reverse('manager_group_members', kwargs={'group_id': group.id}))
 
 @is_press_editor
 def manager_membership_delete(request, group_id, member_id):
+    group = get_object_or_404(models.Group, pk=group_id)
+    membership = get_object_or_404(models.GroupMembership, pk=member_id)
 
-	group = get_object_or_404(models.Group, pk=group_id)
-	membership = get_object_or_404(models.GroupMembership, pk=member_id)
+    membership.delete()
 
-	membership.delete()
+    return redirect(reverse('manager_group_members', kwargs={'group_id': group.id}))
 
-	return redirect(reverse('manager_group_members', kwargs={'group_id': group.id}))
 
 @is_press_editor
 @csrf_exempt
 def roles(request):
+    template = 'manager/roles.html'
+    context = {
+        'roles': core_models.Role.objects.all(),
+    }
 
-	template = 'manager/roles.html'
-	context = {
-		'roles': core_models.Role.objects.all(),
-	}
+    return render(request, template, context)
 
-	return render(request, template, context)
 
 @is_press_editor
 def role(request, slug):
+    role = get_object_or_404(core_models.Role, slug=slug)
+    users_with_role = User.objects.filter(profile__roles__slug=slug)
+    users = User.objects.all().order_by('last_name').exclude(profile__roles__slug=slug)
 
-	role = get_object_or_404(core_models.Role, slug=slug)
-	users_with_role = User.objects.filter(profile__roles__slug=slug)
-	users = User.objects.all().order_by('last_name').exclude(profile__roles__slug=slug)
+    template = 'manager/role.html'
+    context = {
+        'role': role,
+        'users': users,
+        'users_with_role': users_with_role,
+    }
 
-	template = 'manager/role.html'
-	context = {
-		'role': role,
-		'users': users,
-		'users_with_role': users_with_role,
-	}
+    return render(request, template, context)
 
-	return render(request, template, context)
 
 @is_press_editor
 def role_action(request, slug, user_id, action):
+    user = get_object_or_404(User, pk=user_id)
+    role = get_object_or_404(core_models.Role, slug=slug)
 
-	user = get_object_or_404(User, pk=user_id)
-	role = get_object_or_404(core_models.Role, slug=slug)
+    if action == 'add':
+        user.profile.roles.add(role)
+    elif action == 'remove':
+        user.profile.roles.remove(role)
 
-	if action == 'add':
-		user.profile.roles.add(role)
-	elif action == 'remove':
-		user.profile.roles.remove(role)
+    user.save()
 
-	user.save()
+    return redirect(reverse('manager_role', kwargs={'slug': role.slug}))
 
-	return redirect(reverse('manager_role', kwargs={'slug': role.slug}))
 
 @is_press_editor
 def flush_cache(request):
-	cache._cache.flush_all()
-	messages.add_message(request, messages.SUCCESS, 'Memcached has been flushed.')
+    cache._cache.flush_all()
+    messages.add_message(request, messages.SUCCESS, 'Memcached has been flushed.')
 
-	return redirect(reverse('manager_index'))
+    return redirect(reverse('manager_index'))
+
 
 @is_press_editor
 def settings_index(request):
-	
-	template = 'manager/settings/index.html'
-	context = {
-		'settings': [{group.name: core_models.Setting.objects.filter(group=group).order_by('name')} for group in core_models.SettingGroup.objects.all().order_by('name')],
-	}
+    template = 'manager/settings/index.html'
+    context = {
+        'settings': [{group.name: core_models.Setting.objects.filter(group=group).order_by('name')} for group in
+                     core_models.SettingGroup.objects.all().order_by('name')],
+    }
 
-	return render(request, template, context)
+    return render(request, template, context)
+
 
 @is_press_editor
 def edit_setting(request, setting_group, setting_name):
-	group = get_object_or_404(core_models.SettingGroup, name=setting_group)
-	setting = get_object_or_404(core_models.Setting, group=group, name=setting_name)
+    group = get_object_or_404(core_models.SettingGroup, name=setting_group)
+    setting = get_object_or_404(core_models.Setting, group=group, name=setting_name)
 
-	edit_form = forms.EditKey(key_type=setting.types, value=setting.value)
+    edit_form = forms.EditKey(key_type=setting.types, value=setting.value)
 
-	if request.POST and 'delete' in request.POST:
-		setting.value = ''
-		setting.save()
+    if request.POST and 'delete' in request.POST:
+        setting.value = ''
+        setting.save()
 
-		return redirect(reverse('settings_index'))
+        return redirect(reverse('settings_index'))
 
-	if request.POST:
-		value = smart_text(request.POST.get('value'))
+    if request.POST:
+        value = smart_text(request.POST.get('value'))
 
-		if setting.types == 'boolean' and value != 'on':
-			value = ''
-			
-		if request.FILES:
-			value = handle_file(request, request.FILES['value'])
+        if setting.types == 'boolean' and value != 'on':
+            value = ''
 
-		setting.value = value
-		setting.save()
+        if request.FILES:
+            value = handle_file(request, request.FILES['value'])
 
-		cache._cache.flush_all()
+        setting.value = value
+        setting.save()
 
-		return redirect(reverse('settings_index'))
+        cache._cache.flush_all()
+
+        return redirect(reverse('settings_index'))
+
+    template = 'manager/settings/edit_setting.html'
+    context = {
+        'setting': setting,
+        'group': group,
+        'edit_form': edit_form,
+    }
+
+    return render(request, template, context)
 
 
-	template = 'manager/settings/edit_setting.html'
-	context = {
-		'setting': setting,
-		'group': group,
-		'edit_form': edit_form,
-	}
+def edit_submission_checklist(request, item_id):
+    item = get_object_or_404(submission_models.SubmissionChecklistItem, pk=item_id)
+    checkitem_form = submission_forms.CreateSubmissionChecklistItem(instance=item)
 
-	return render(request, template, context)
+    if request.POST:
+        checkitem_form = submission_forms.CreateSubmissionChecklistItem(request.POST, instance=item)
+        if checkitem_form.is_valid():
+            new_check_item = checkitem_form.save()
+            return redirect(reverse('submission_checklist'))
 
-def edit_submission_checklist(request,item_id):
-	item = get_object_or_404(submission_models.SubmissionChecklistItem, pk=item_id)
-	checkitem_form = submission_forms.CreateSubmissionChecklistItem(instance=item)
+    template = 'manager/submission/checklist.html'
+    context = {
+        'checkitem_form': checkitem_form,
+        'editing': True,
+        'item': item,
+        'checklist_items': submission_models.SubmissionChecklistItem.objects.all()
+    }
 
-	if request.POST:
-		checkitem_form = submission_forms.CreateSubmissionChecklistItem(request.POST,instance=item)
-		if checkitem_form.is_valid():
-			new_check_item = checkitem_form.save()
-			return redirect(reverse('submission_checklist'))
+    return render(request, template, context)
 
-	template = 'manager/submission/checklist.html'
-	context = {
-		'checkitem_form': checkitem_form,
-		'editing':True,
-		'item':item,
-		'checklist_items': submission_models.SubmissionChecklistItem.objects.all()
-	}
 
-	return render(request, template, context)
+def delete_submission_checklist(request, item_id):
+    item = get_object_or_404(submission_models.SubmissionChecklistItem, pk=item_id)
+    item.delete()
 
-def delete_submission_checklist(request,item_id):
-	item = get_object_or_404(submission_models.SubmissionChecklistItem, pk=item_id)
-	item.delete()
-	
-	return redirect(reverse('submission_checklist'))
+    return redirect(reverse('submission_checklist'))
+
 
 def submission_checklist(request):
+    checkitem_form = submission_forms.CreateSubmissionChecklistItem()
 
-	checkitem_form = submission_forms.CreateSubmissionChecklistItem()
+    if request.POST:
+        checkitem_form = submission_forms.CreateSubmissionChecklistItem(request.POST)
+        if checkitem_form.is_valid():
+            new_check_item = checkitem_form.save()
+            return redirect(reverse('submission_checklist'))
 
-	if request.POST:
-		checkitem_form = submission_forms.CreateSubmissionChecklistItem(request.POST)
-		if checkitem_form.is_valid():
-			new_check_item = checkitem_form.save()
-			return redirect(reverse('submission_checklist'))
+    template = 'manager/submission/checklist.html'
+    context = {
+        'checkitem_form': checkitem_form,
+        'checklist_items': submission_models.SubmissionChecklistItem.objects.all()
+    }
 
-	template = 'manager/submission/checklist.html'
-	context = {
-		'checkitem_form': checkitem_form,
-		'checklist_items': submission_models.SubmissionChecklistItem.objects.all()
-	}
-
-	return render(request, template, context)
+    return render(request, template, context)
 
 
 @is_press_editor
 def series(request):
-	send_enabled = False
-	if request.user.is_staff:
-		send_enabled = True
+    send_enabled = False
+    if request.user.is_staff:
+        send_enabled = True
 
-	template = 'manager/series/index.html'
-	context = {
-		'all_series': core_models.Series.objects.all(),
-		'send_enabled': send_enabled,
-	}
-	return render(request, template, context)
+    template = 'manager/series/index.html'
+    context = {
+        'all_series': core_models.Series.objects.all(),
+        'send_enabled': send_enabled,
+    }
+    return render(request, template, context)
+
 
 @is_press_editor
 def send_series(request, series_id):
-	if request.user.is_staff:
-		credentials = get_object_or_404(core_models.APIConnector, slug = "jura")
-		series = get_object_or_404(core_models.Series, pk=series_id)
-		requests.post(
-			"http://localhost:8080/api/series/",
-			auth=(credentials.username, credentials.password),
-			data={ 'press_code': 'up',
-					'omp_series_id': series.pk,
-					'title': series.name,
-					'slug': slugify(series.name),
-					'editor': series.editor.profile.full_name,
-					'editor_email': series.editor.email,
-					'description': series.description
-					})
-		return redirect(reverse('series'))
+    if request.user.is_staff:
+        credentials = get_object_or_404(core_models.APIConnector, slug="jura")
+        series = get_object_or_404(core_models.Series, pk=series_id)
+        requests.post(
+            "http://localhost:8080/api/series/",
+            auth=(credentials.username, credentials.password),
+            data={'press_code': 'up',
+                  'omp_series_id': series.pk,
+                  'title': series.name,
+                  'slug': slugify(series.name),
+                  'editor': series.editor.profile.full_name,
+                  'editor_email': series.editor.email,
+                  'description': series.description
+                  })
+        return redirect(reverse('series'))
 
 
 @is_press_editor
 def users(request):
+    template = 'manager/users/index.html'
+    context = {
+        'users': User.objects.all(),
+        'password': request.GET.get('password', None),
+        'username': request.GET.get('username', None),
+    }
+    return render(request, template, context)
 
-	template = 'manager/users/index.html'
-	context = {
-		'users': User.objects.all(),
-		'password': request.GET.get('password', None),
-		'username': request.GET.get('username', None),
-	}
-	return render(request, template, context)
 
 @is_press_editor
 def series_edit(request, series_id):
-	books = core_models.Book.objects.all()
-	series = core_models.Series.objects.get(pk=series_id)
-	series_form = forms.SeriesForm(instance=series)
-	
-	if request.method == 'POST':
-		series_form = forms.SeriesForm(request.POST, instance=series)
-		if series_form.is_valid():
-			series = series_form.save()
-			return redirect(reverse('series'))
+    books = core_models.Book.objects.all()
+    series = core_models.Series.objects.get(pk=series_id)
+    series_form = forms.SeriesForm(instance=series)
 
+    if request.method == 'POST':
+        series_form = forms.SeriesForm(request.POST, instance=series)
+        if series_form.is_valid():
+            series = series_form.save()
+            return redirect(reverse('series'))
 
-	template = 'manager/series/edit.html'
-	context = {
-		'series': series,
-		'books': books,
-		'series_form' : series_form,
-		'active': 'update',
-	}
-	return render(request, template, context)
+    template = 'manager/series/edit.html'
+    context = {
+        'series': series,
+        'books': books,
+        'series_form': series_form,
+        'active': 'update',
+    }
+    return render(request, template, context)
+
 
 @is_press_editor
-def series_submission_add(request,submission_id, series_id):
-	book = get_object_or_404(core_models.Book, pk = submission_id)
-	series = get_object_or_404(core_models.Series, pk = series_id)
-	book.series = series
-	book.save()
-	return redirect(reverse('series_edit',kwargs={'series_id':series_id}))
+def series_submission_add(request, submission_id, series_id):
+    book = get_object_or_404(core_models.Book, pk=submission_id)
+    series = get_object_or_404(core_models.Series, pk=series_id)
+    book.series = series
+    book.save()
+    return redirect(reverse('series_edit', kwargs={'series_id': series_id}))
+
 
 @is_press_editor
-def series_submission_remove(request,submission_id):
-	book = get_object_or_404(core_models.Book, pk = submission_id)
-	book.series = None
-	book.save()
-	return redirect(reverse('series'))
-
+def series_submission_remove(request, submission_id):
+    book = get_object_or_404(core_models.Book, pk=submission_id)
+    book.series = None
+    book.save()
+    return redirect(reverse('series'))
 
 
 @is_press_editor
 def series_add(request):
-	series_form = forms.SeriesForm()
-	
-	if request.method == 'POST':
-		series_form = forms.SeriesForm(request.POST)
-		if series_form.is_valid():
-			series = series_form.save()
-			return redirect(reverse('series'))
+    series_form = forms.SeriesForm()
 
-	template = 'manager/series/edit.html'
-	context = {
-		'series_form' : series_form,
-		'active': 'add',
-	}
-	return render(request, template, context)
+    if request.method == 'POST':
+        series_form = forms.SeriesForm(request.POST)
+        if series_form.is_valid():
+            series = series_form.save()
+            return redirect(reverse('series'))
+
+    template = 'manager/series/edit.html'
+    context = {
+        'series_form': series_form,
+        'active': 'add',
+    }
+    return render(request, template, context)
+
 
 @is_press_editor
-def series_delete(request,series_id):
-	series = get_object_or_404(core_models.Series, pk = series_id)
-	books = core_models.Book.objects.filter(series = series)
-	
-	if request.method == 'POST':
-		for book in books:
-			book.series = None
-			book.save()
-		series.delete()
-		return redirect(reverse('series'))
+def series_delete(request, series_id):
+    series = get_object_or_404(core_models.Series, pk=series_id)
+    books = core_models.Book.objects.filter(series=series)
 
-	template = 'manager/series/delete.html'
-	context = {
-		'series' : series,
-		'books': books,
-	}
-	return render(request, template, context)
+    if request.method == 'POST':
+        for book in books:
+            book.series = None
+            book.save()
+        series.delete()
+        return redirect(reverse('series'))
+
+    template = 'manager/series/delete.html'
+    context = {
+        'series': series,
+        'books': books,
+    }
+    return render(request, template, context)
+
 
 @is_press_editor
 def add_user(request):
-	user_form = core_forms.FullUserProfileForm()
-	profile_form = core_forms.FullProfileForm()
+    user_form = core_forms.FullUserProfileForm()
+    profile_form = core_forms.FullProfileForm()
 
-	if request.method == 'POST':
-		user_form = core_forms.FullUserProfileForm(request.POST)
-		profile_form = core_forms.FullProfileForm(request.POST, request.FILES)
-		if profile_form.is_valid() and user_form.is_valid():
-			user = user_form.save()
+    if request.method == 'POST':
+        user_form = core_forms.FullUserProfileForm(request.POST)
+        profile_form = core_forms.FullProfileForm(request.POST, request.FILES)
+        if profile_form.is_valid() and user_form.is_valid():
+            user = user_form.save()
 
-			new_pass = None
+            new_pass = None
 
-			if 'new_password' in request.POST:
-				new_pass = logic.generate_password()
-				user.set_password(new_pass)
-				user.is_active = True
-				user.save()
-				messages.add_message(request, messages.SUCCESS, 'New user %s, password set to %s.' % (user.username, new_pass))
-				email_text = core_models.Setting.objects.get(group__name='email', name='new_user_email').value
-				setting = core_models.Setting.objects.filter(name='send_new_user_email', group__name='general')
-				if setting:
-					send_email = setting[0].value
-					if send_email == 'on':
-						logic.send_new_user_ack(email_text, user, new_pass)
-				else:
-					logic.send_new_user_ack(email_text, user, new_pass)
+            if 'new_password' in request.POST:
+                new_pass = logic.generate_password()
+                user.set_password(new_pass)
+                user.is_active = True
+                user.save()
+                messages.add_message(request, messages.SUCCESS,
+                                     'New user %s, password set to %s.' % (user.username, new_pass))
+                email_text = core_models.Setting.objects.get(group__name='email', name='new_user_email').value
+                setting = core_models.Setting.objects.filter(name='send_new_user_email', group__name='general')
+                if setting:
+                    send_email = setting[0].value
+                    if send_email == 'on':
+                        logic.send_new_user_ack(email_text, user, new_pass)
+                else:
+                    logic.send_new_user_ack(email_text, user, new_pass)
 
-			user.save()
+            user.save()
 
-			profile = profile_form.save(commit=False)
-			profile.user = user
-			profile.save()
+            profile = profile_form.save(commit=False)
+            profile.user = user
+            profile.save()
 
-			roles = request.POST.getlist('roles')
+            roles = request.POST.getlist('roles')
 
-			for role in roles:
-				role_object = core_models.Role.objects.get(pk=role)
-				profile.roles.add(role_object)
+            for role in roles:
+                role_object = core_models.Role.objects.get(pk=role)
+                profile.roles.add(role_object)
 
-			for interest in profile.interest.all():
-				profile.interest.remove(interest)
-			
-			interests = []
-			if 'interests' in request.POST:
-				interests = request.POST.get('interests').split(',')
-			
-			for interest in interests:
-				new_interest, c = core_models.Interest.objects.get_or_create(name=interest)
-				profile.interest.add(new_interest)
+            for interest in profile.interest.all():
+                profile.interest.remove(interest)
 
-			profile.save()
+            interests = []
+            if 'interests' in request.POST:
+                interests = request.POST.get('interests').split(',')
 
-			if request.GET.get('next'):
-				return redirect(request.GET.get('next'))
-			else:
-				return redirect("%s?username=%s&password=%s" % (reverse('manager_users'), user.username, new_pass))
+            for interest in interests:
+                new_interest, c = core_models.Interest.objects.get_or_create(name=interest)
+                profile.interest.add(new_interest)
 
-	template = 'manager/users/edit.html'
-	context = {
-		'profile_form' : profile_form,
-		'user_form': user_form,
-		'active': 'add',
-		'return': request.GET.get('return', False)
-	}
-	return render(request, template, context)
+            profile.save()
+
+            if request.GET.get('next'):
+                return redirect(request.GET.get('next'))
+            else:
+                return redirect("%s?username=%s&password=%s" % (reverse('manager_users'), user.username, new_pass))
+
+    template = 'manager/users/edit.html'
+    context = {
+        'profile_form': profile_form,
+        'user_form': user_form,
+        'active': 'add',
+        'return': request.GET.get('return', False)
+    }
+    return render(request, template, context)
+
 
 @is_press_editor
 def user_edit(request, user_id):
-	user = User.objects.get(pk=user_id)
-	user_form = core_forms.UserProfileForm(instance=user)
-	profile_form = core_forms.FullProfileForm(instance=user.profile)
+    user = User.objects.get(pk=user_id)
+    user_form = core_forms.UserProfileForm(instance=user)
+    profile_form = core_forms.FullProfileForm(instance=user.profile)
 
-	if request.method == 'POST':
-		user_form = core_forms.UserProfileForm(request.POST, instance=user)
-		profile_form = core_forms.FullProfileForm(request.POST, request.FILES, instance=user.profile)
-		if profile_form.is_valid() and user_form.is_valid():
-			user = user_form.save()
-			profile = profile_form.save()
-			for interest in profile.interest.all():
-				profile.interest.remove(interest)
-			
-			interests = request.POST.get('interests')
-			if interests:
-				for interest in interests.split(','):
-					new_interest, c = core_models.Interest.objects.get_or_create(name=interest)
-					profile.interest.add(new_interest)
-			profile.save()
-			
-			return redirect(reverse('manager_users'))
+    if request.method == 'POST':
+        user_form = core_forms.UserProfileForm(request.POST, instance=user)
+        profile_form = core_forms.FullProfileForm(request.POST, request.FILES, instance=user.profile)
+        if profile_form.is_valid() and user_form.is_valid():
+            user = user_form.save()
+            profile = profile_form.save()
+            for interest in profile.interest.all():
+                profile.interest.remove(interest)
 
-	template = 'manager/users/edit.html'
-	context = {
-		'user': user,
-		'profile_form' : profile_form,
-		'user_form': user_form,
-		'active': 'update',
-	}
-	return render(request, template, context)
+            interests = request.POST.get('interests')
+            if interests:
+                for interest in interests.split(','):
+                    new_interest, c = core_models.Interest.objects.get_or_create(name=interest)
+                    profile.interest.add(new_interest)
+            profile.save()
+
+            return redirect(reverse('manager_users'))
+
+    template = 'manager/users/edit.html'
+    context = {
+        'user': user,
+        'profile_form': profile_form,
+        'user_form': user_form,
+        'active': 'update',
+    }
+    return render(request, template, context)
+
 
 @is_press_editor
 def inactive_users(request):
+    users = User.objects.filter(is_active=False)
 
-	users = User.objects.filter(is_active=False)
+    template = 'manager/users/inactive.html'
+    context = {
+        'users': users,
+    }
 
-	template = 'manager/users/inactive.html'
-	context = {
-		'users': users,
-	}
+    return render(request, template, context)
 
-	return render(request, template, context)
 
 @is_press_editor
 def activate_user(request, user_id):
+    user = get_object_or_404(models.User, pk=user_id, is_active=False)
+    user.is_active = True
+    if not user.profile.roles.filter(slug='reader').exists():
+        user.profile.roles.add(core_models.Role.objects.get(slug="reader"))
+    if not user.profile.roles.filter(slug='author').exists():
+        user.profile.roles.add(core_models.Role.objects.get(slug="author"))
+    user.profile.save()
+    user.save()
 
-	user = get_object_or_404(models.User, pk=user_id, is_active=False)
-	user.is_active = True    
-	if not user.profile.roles.filter(slug='reader').exists():
-		user.profile.roles.add(core_models.Role.objects.get(slug="reader"))
-	if not user.profile.roles.filter(slug='author').exists():
-		user.profile.roles.add(core_models.Role.objects.get(slug="author"))
-	user.profile.save()
-	user.save()
+    return redirect(reverse('manager_inactive_users'))
 
-	return redirect(reverse('manager_inactive_users'))
 
 @is_press_editor
 def key_help(request):
-	import json
-	with open('%s%s' % (settings.BASE_DIR, '/core/fixtures/key_help.json')) as data_file:    
-		data = json.load(data_file)
+    import json
+    with open('%s%s' % (settings.BASE_DIR, '/core/fixtures/key_help.json')) as data_file:
+        data = json.load(data_file)
 
-	template = "manager/keys.html"
-	context = {
-		'data': data,
-		'data_render': smart_text(json.dumps(data, indent=4))
-	}
-	return render(request, template, context)
+    template = "manager/keys.html"
+    context = {
+        'data': data,
+        'data_render': smart_text(json.dumps(data, indent=4))
+    }
+    return render(request, template, context)
+
 
 @is_press_editor
 def add_new_form(request, form_type):
+    if form_type == 'review':
+        form = forms.ReviewForm()
+    else:
+        form = forms.ProposalForms()
 
-	if form_type == 'review':
-		form = forms.ReviewForm()
-	else:
-		form = forms.ProposalForms()
+    if request.POST:
+        if form_type == 'review':
+            form = forms.ReviewForm(request.POST)
+        else:
+            form = forms.ProposalForms(request.POST)
 
-	if request.POST:
-		if form_type == 'review':
-			form = forms.ReviewForm(request.POST)
-		else:
-			form = forms.ProposalForms(request.POST)
+        if form.is_valid:
+            form.save()
 
-		if form.is_valid:
-			form.save()
+        return redirect(reverse('manager_%s_forms' % form_type))
 
-		return redirect(reverse('manager_%s_forms' % form_type))
+    template = 'manager/add_new_form.html'
+    context = {
+        'form': form,
+        'form_type': form_type,
+    }
+    return render(request, template, context)
 
-	template = 'manager/add_new_form.html'
-	context = {
-		'form': form,
-		'form_type': form_type,
-	}
-	return render(request, template, context)
 
 @is_press_editor
 def proposal_forms(request):
-
-	template = 'manager/proposal/forms.html'
-	context = {
-		'proposal_forms': core_models.ProposalForm.objects.all()
-	}
-	return render(request, template, context)
+    template = 'manager/proposal/forms.html'
+    context = {
+        'proposal_forms': core_models.ProposalForm.objects.all()
+    }
+    return render(request, template, context)
 
 
 @is_press_editor
 def reorder_proposal_form(request, form_id, field_1_id, field_2_id):
+    form = get_object_or_404(core_models.ProposalForm, pk=form_id)
 
-	form = get_object_or_404(core_models.ProposalForm, pk=form_id)
+    field_1 = get_object_or_404(core_models.ProposalFormElementsRelationship, pk=field_1_id)
+    field_2 = get_object_or_404(core_models.ProposalFormElementsRelationship, pk=field_2_id)
 
-	field_1 = get_object_or_404(core_models.ProposalFormElementsRelationship, pk=field_1_id)
-	field_2 = get_object_or_404(core_models.ProposalFormElementsRelationship, pk=field_2_id)
+    order_1 = field_1.order
+    order_2 = field_2.order
 
-	order_1 = field_1.order
-	order_2 = field_2.order
+    field_1.order = order_2
+    field_2.order = order_1
 
-	field_1.order = order_2
-	field_2.order = order_1
+    field_1.save()
+    field_2.save()
 
-	field_1.save()
-	field_2.save()
+    return redirect(reverse('manager_edit_proposal_form', kwargs={'form_id': form_id}))
 
-	return redirect(reverse('manager_edit_proposal_form', kwargs={'form_id': form_id}))
 
 @is_press_editor
 def reorder_review_form(request, form_id, field_1_id, field_2_id):
+    form = get_object_or_404(review_models.Form, pk=form_id)
 
-	form = get_object_or_404(review_models.Form, pk=form_id)
+    field_1 = get_object_or_404(review_models.FormElementsRelationship, pk=field_1_id)
+    field_2 = get_object_or_404(review_models.FormElementsRelationship, pk=field_2_id)
 
-	field_1 = get_object_or_404(review_models.FormElementsRelationship, pk=field_1_id)
-	field_2 = get_object_or_404(review_models.FormElementsRelationship, pk=field_2_id)
+    order_1 = field_1.order
+    order_2 = field_2.order
 
-	order_1 = field_1.order
-	order_2 = field_2.order
+    field_1.order = order_2
+    field_2.order = order_1
 
-	field_1.order = order_2
-	field_2.order = order_1
+    field_1.save()
+    field_2.save()
 
-	field_1.save()
-	field_2.save()
-
-	return redirect(reverse('manager_edit_review_form', kwargs={'form_id': form_id}))
+    return redirect(reverse('manager_edit_review_form', kwargs={'form_id': form_id}))
 
 
 def proposal_order_field_list(form_id):
-	form = get_object_or_404(core_models.ProposalForm, pk=form_id)
-	relations = core_models.ProposalFormElementsRelationship.objects.filter(form = form).order_by('order')
-	fields = []
-	if relations>0:
-		for t,relation in enumerate(relations):
-			above = -1
-			below = -1
-			if t<relations.count()-1:
-				below = relations[t + 1].pk
-			if relations.count() > 1 and t == 0:
-				above = -1
-			elif relations.count() >= 1 and t>0:
-				above = relations[t - 1].pk
+    form = get_object_or_404(core_models.ProposalForm, pk=form_id)
+    relations = core_models.ProposalFormElementsRelationship.objects.filter(form=form).order_by('order')
+    fields = []
+    if relations > 0:
+        for t, relation in enumerate(relations):
+            above = -1
+            below = -1
+            if t < relations.count() - 1:
+                below = relations[t + 1].pk
+            if relations.count() > 1 and t == 0:
+                above = -1
+            elif relations.count() >= 1 and t > 0:
+                above = relations[t - 1].pk
 
-			fields.append({'field':relation,'above':above,'below':below})
+            fields.append({'field': relation, 'above': above, 'below': below})
 
-	return fields
+    return fields
+
 
 def review_order_field_list(form_id):
-	form = get_object_or_404(review_models.Form, pk=form_id)
-	relations = review_models.FormElementsRelationship.objects.filter(form = form).order_by('order')
-	fields = []
-	if relations>0:
-		for t,relation in enumerate(relations):
-			above = -1
-			below = -1
-			if t<relations.count()-1:
-				below = relations[t + 1].pk
-			if relations.count() > 1 and t == 0:
-				above = -1
-			elif relations.count() >= 1 and t>0:
-				above = relations[t - 1].pk
+    form = get_object_or_404(review_models.Form, pk=form_id)
+    relations = review_models.FormElementsRelationship.objects.filter(form=form).order_by('order')
+    fields = []
+    if relations > 0:
+        for t, relation in enumerate(relations):
+            above = -1
+            below = -1
+            if t < relations.count() - 1:
+                below = relations[t + 1].pk
+            if relations.count() > 1 and t == 0:
+                above = -1
+            elif relations.count() >= 1 and t > 0:
+                above = relations[t - 1].pk
 
-			fields.append({'field':relation,'above':above,'below':below})
+            fields.append({'field': relation, 'above': above, 'below': below})
 
-	return fields
+    return fields
+
 
 @is_press_editor
 def edit_proposal_form(request, form_id, relation_id=None):
+    form = get_object_or_404(core_models.ProposalForm, pk=form_id)
 
-	form = get_object_or_404(core_models.ProposalForm, pk=form_id)
+    if relation_id:
+        relation = get_object_or_404(core_models.ProposalFormElementsRelationship, pk=relation_id)
+        element_form = forms.ProposalElement(instance=relation.element)
+        relation_form = forms.ProposalElementRelationship(instance=relation)
+    else:
+        element_form = forms.ProposalElement()
+        relation_form = forms.ProposalElementRelationship()
 
-	if relation_id:
-		relation = get_object_or_404(core_models.ProposalFormElementsRelationship, pk=relation_id)
-		element_form = forms.ProposalElement(instance=relation.element)
-		relation_form = forms.ProposalElementRelationship(instance=relation)
-	else:
-		element_form = forms.ProposalElement()
-		relation_form = forms.ProposalElementRelationship()
+    if request.POST:
+        if relation_id:
+            element_form = forms.ProposalElement(request.POST, instance=relation.element)
+            relation_form = forms.ProposalElementRelationship(request.POST, instance=relation)
+        else:
+            element_form = forms.ProposalElement(request.POST)
+            relation_form = forms.ProposalElementRelationship(request.POST)
 
-	if request.POST:
-		if relation_id:
-			element_form = forms.ProposalElement(request.POST, instance=relation.element)
-			relation_form = forms.ProposalElementRelationship(request.POST, instance=relation)
-		else:
-			element_form = forms.ProposalElement(request.POST)
-			relation_form = forms.ProposalElementRelationship(request.POST)
+        if element_form.is_valid() and relation_form.is_valid():
+            new_element = element_form.save()
 
-		if element_form.is_valid() and relation_form.is_valid():
-			new_element = element_form.save()
+            new_relation = relation_form.save(commit=False)
+            new_relation.form = form
+            new_relation.element = new_element
+            new_relation.save()
 
-			new_relation = relation_form.save(commit=False)
-			new_relation.form = form
-			new_relation.element = new_element
-			new_relation.save()
+            form.proposal_fields.add(new_relation)
 
-			form.proposal_fields.add(new_relation)
+            return redirect(reverse('manager_edit_proposal_form', kwargs={'form_id': form_id}))
 
-			return redirect(reverse('manager_edit_proposal_form', kwargs={'form_id': form_id}))
+    template = 'manager/proposal/edit_form.html'
+    context = {
+        'form': form,
+        'fields': proposal_order_field_list(form_id),
+        'element_form': element_form,
+        'relation_form': relation_form,
+    }
+    return render(request, template, context)
 
-	template = 'manager/proposal/edit_form.html'
-	context = {
-		'form': form,
-		'fields': proposal_order_field_list(form_id),
-		'element_form': element_form,
-		'relation_form': relation_form,
-	}
-	return render(request, template, context)
 
 @is_press_editor
 def preview_proposal_form(request, form_id):
+    form = get_object_or_404(core_models.ProposalForm, pk=form_id)
 
-	form = get_object_or_404(core_models.ProposalForm, pk=form_id)
+    preview_form = forms.GeneratedForm(form=core_models.ProposalForm.objects.get(pk=form_id))
+    fields = core_models.ProposalFormElementsRelationship.objects.filter(form=form)
+    default_fields = forms.DefaultForm()
 
-	preview_form = forms.GeneratedForm(form=core_models.ProposalForm.objects.get(pk=form_id))
-	fields = core_models.ProposalFormElementsRelationship.objects.filter(form=form)
-	default_fields = forms.DefaultForm()
+    template = 'manager/proposal/preview_form.html'
+    context = {
+        'form': form,
+        'preview_form': preview_form,
+        'fields': fields,
+        'default_fields': default_fields,
+    }
+    return render(request, template, context)
 
-	template = 'manager/proposal/preview_form.html'
-	context = {
-		'form': form,
-		'preview_form': preview_form,
-		'fields': fields,
-		'default_fields': default_fields,
-	}
-	return render(request, template, context)
 
 @is_press_editor
 def delete_proposal_form_element(request, form_id, relation_id):
+    form = get_object_or_404(core_models.ProposalForm, pk=form_id)
+    relation = get_object_or_404(core_models.ProposalFormElementsRelationship, pk=relation_id)
 
-	form = get_object_or_404(core_models.ProposalForm, pk=form_id)
-	relation = get_object_or_404(core_models.ProposalFormElementsRelationship, pk=relation_id)
+    relation.element.delete()
+    relation.delete()
 
-	relation.element.delete()
-	relation.delete()
+    return redirect(reverse('manager_edit_proposal_form', kwargs={'form_id': form_id}))
 
-	return redirect(reverse('manager_edit_proposal_form', kwargs={'form_id': form_id}))
 
 @is_press_editor
 def review_forms(request):
+    template = 'manager/review/forms.html'
+    context = {
+        'review_forms': review_models.Form.objects.all()
+    }
+    return render(request, template, context)
 
-	template = 'manager/review/forms.html'
-	context = {
-		'review_forms': review_models.Form.objects.all()
-	}
-	return render(request, template, context)
 
 @is_press_editor
 def edit_review_form(request, form_id, relation_id=None):
+    form = get_object_or_404(review_models.Form, pk=form_id)
 
-	form = get_object_or_404(review_models.Form, pk=form_id)
+    if relation_id:
+        relation = get_object_or_404(review_models.FormElementsRelationship, pk=relation_id)
+        element_form = forms.FormElement(instance=relation.element)
+        relation_form = forms.FormElementsRelationship(instance=relation)
+    else:
+        element_form = forms.ProposalElement()
+        relation_form = forms.FormElementsRelationship()
 
-	if relation_id:
-		relation = get_object_or_404(review_models.FormElementsRelationship, pk=relation_id)
-		element_form = forms.FormElement(instance=relation.element)
-		relation_form = forms.FormElementsRelationship(instance=relation)
-	else:
-		element_form = forms.ProposalElement()
-		relation_form = forms.FormElementsRelationship()
+    if request.POST:
+        if relation_id:
+            element_form = forms.FormElement(request.POST, instance=relation.element)
+            relation_form = forms.FormElementsRelationship(request.POST, instance=relation)
+        else:
+            element_form = forms.FormElement(request.POST)
+            relation_form = forms.FormElementsRelationship(request.POST)
 
-	if request.POST:
-		if relation_id:
-			element_form = forms.FormElement(request.POST, instance=relation.element)
-			relation_form = forms.FormElementsRelationship(request.POST, instance=relation)
-		else:
-			element_form = forms.FormElement(request.POST)
-			relation_form = forms.FormElementsRelationship(request.POST)
+        if element_form.is_valid() and relation_form.is_valid():
+            new_element = element_form.save()
 
-		if element_form.is_valid() and relation_form.is_valid():
-			new_element = element_form.save()
+            new_relation = relation_form.save(commit=False)
+            new_relation.form = form
+            new_relation.element = new_element
+            new_relation.save()
 
-			new_relation = relation_form.save(commit=False)
-			new_relation.form = form
-			new_relation.element = new_element
-			new_relation.save()
+            form.form_fields.add(new_relation)
 
-			form.form_fields.add(new_relation)
+            return redirect(reverse('manager_edit_review_form', kwargs={'form_id': form_id}))
 
-			return redirect(reverse('manager_edit_review_form', kwargs={'form_id': form_id}))
+    template = 'manager/review/edit_form.html'
+    context = {
+        'form': form,
+        'fields': review_order_field_list(form_id),
+        'element_form': element_form,
+        'relation_form': relation_form,
+    }
+    return render(request, template, context)
 
-	template = 'manager/review/edit_form.html'
-	context = {
-		'form': form,
-		'fields': review_order_field_list(form_id),
-		'element_form': element_form,
-		'relation_form': relation_form,
-	}
-	return render(request, template, context)
 
 @is_press_editor
 def preview_review_form(request, form_id):
+    form = get_object_or_404(review_models.Form, pk=form_id)
 
-	form = get_object_or_404(review_models.Form, pk=form_id)
+    preview_form = forms.GeneratedReviewForm(form=review_models.Form.objects.get(pk=form_id))
+    fields = review_models.FormElementsRelationship.objects.filter(form=form)
 
-	preview_form = forms.GeneratedReviewForm(form=review_models.Form.objects.get(pk=form_id))
-	fields = review_models.FormElementsRelationship.objects.filter(form=form)
+    template = 'manager/review/preview_form.html'
+    context = {
+        'form': form,
+        'preview_form': preview_form,
+        'fields': fields,
+    }
+    return render(request, template, context)
 
-	template = 'manager/review/preview_form.html'
-	context = {
-		'form': form,
-		'preview_form': preview_form,
-		'fields': fields,
-	}
-	return render(request, template, context)
 
 @is_press_editor
 def delete_review_form_element(request, form_id, relation_id):
+    form = get_object_or_404(review_models.Form, pk=form_id)
+    relation = get_object_or_404(review_models.FormElementsRelationship, pk=relation_id)
 
-	form = get_object_or_404(review_models.Form, pk=form_id)
-	relation = get_object_or_404(review_models.FormElementsRelationship, pk=relation_id)
+    relation.element.delete()
+    relation.delete()
 
-	relation.element.delete()
-	relation.delete()
-
-	return redirect(reverse('manager_edit_review_form', kwargs={'form_id': form_id}))
+    return redirect(reverse('manager_edit_review_form', kwargs={'form_id': form_id}))
 
 
 ## File handler
 
 @is_press_editor
 def handle_file(request, file):
+    original_filename = smart_text(file._get_name())
+    filename = str(uuid4()) + '.' + str(os.path.splitext(original_filename)[1])
+    folder_structure = os.path.join(settings.BASE_DIR, 'media', 'settings')
 
-	original_filename = smart_text(file._get_name())
-	filename = str(uuid4()) + '.' + str(os.path.splitext(original_filename)[1])
-	folder_structure = os.path.join(settings.BASE_DIR, 'media', 'settings')
+    if not os.path.exists(folder_structure):
+        os.makedirs(folder_structure)
 
-	if not os.path.exists(folder_structure):
-		os.makedirs(folder_structure)
+    path = os.path.join(folder_structure, str(filename))
+    fd = open(path, 'wb')
+    for chunk in file.chunks():
+        fd.write(chunk)
+    fd.close()
 
-	path = os.path.join(folder_structure, str(filename))
-	fd = open(path, 'wb')
-	for chunk in file.chunks():
-		fd.write(chunk)
-	fd.close()
-
-	return filename
+    return filename
 
 
 ## AJAX Handler
@@ -817,62 +827,61 @@ def handle_file(request, file):
 @is_press_editor
 @csrf_exempt
 def groups_order(request):
+    groups = models.Group.objects.all()
 
-	groups = models.Group.objects.all()
+    if request.POST:
+        ids = request.POST.getlist('%s[]' % 'group')
+        ids = [int(_id) for _id in ids]
+        for group in groups:
+            # Get the index:
+            group.sequence = ids.index(group.id)
+            group.save()
 
-	if request.POST:
-		ids = request.POST.getlist('%s[]' % 'group')
-		ids = [int(_id) for _id in ids]
-		for group in groups:
-			# Get the index:
-			group.sequence = ids.index(group.id)
-			group.save()
+        response = 'Thanks'
 
-		response = 'Thanks'
+    else:
+        response = 'Nothing to process, post required'
 
-	else:
-		response = 'Nothing to process, post required'
+    return HttpResponse(response)
 
-	return HttpResponse(response)
 
 @is_press_editor
 @csrf_exempt
 def group_members_order(request, group_id):
+    group = get_object_or_404(models.Group, pk=group_id)
+    memberships = models.GroupMembership.objects.filter(group=group)
 
-	group = get_object_or_404(models.Group, pk=group_id)
-	memberships = models.GroupMembership.objects.filter(group=group)
+    if request.POST:
+        ids = request.POST.getlist('%s[]' % 'member')
+        ids = [int(_id) for _id in ids]
+        for membership in memberships:
+            # Get the index:
+            membership.sequence = ids.index(membership.id)
+            membership.save()
 
-	if request.POST:
-		ids = request.POST.getlist('%s[]' % 'member')
-		ids = [int(_id) for _id in ids]
-		for membership in memberships:
-			# Get the index:
-			membership.sequence = ids.index(membership.id)
-			membership.save()
+        response = 'Thanks'
 
-		response = 'Thanks'
+    else:
+        response = 'Nothing to process, post required'
 
-	else:
-		response = 'Nothing to process, post required'
+    return HttpResponse(response)
 
-	return HttpResponse(response)
-	
+
 @is_press_editor
 @csrf_exempt
 def checklist_order(request):
+    checklist_items = submission_models.SubmissionChecklistItem.objects.all()
 
-	checklist_items = submission_models.SubmissionChecklistItem.objects.all()
+    if request.POST:
+        ids = request.POST.getlist('%s[]' % 'check')
+        ids = [int(_id) for _id in ids]
 
-	if request.POST:
-		ids = request.POST.getlist('%s[]' % 'check')
-		ids = [int(_id) for _id in ids]
+        for item in checklist_items:
+            item.sequence = ids.index(item.id)
+            item.save()
 
-		for item in checklist_items:
-			item.sequence = ids.index(item.id)
-			item.save()
+        response = 'Thanks'
+    else:
+        response = 'Nothing to process, POST required.'
 
-		response = 'Thanks'
-	else:
-		response = 'Nothing to process, POST required.'
-
-	return HttpResponse(response)
+    return HttpResponse(response)
