@@ -1,0 +1,23 @@
+<h3>Select Additional Files for Typesetting</h3>
+
+<table class="table table-condensed table-bordered table-responsive" style="font-size:14px">
+    <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th></th>
+    </tr>
+    {% for file in files %}
+    <tr>
+        <th>{{ file.label }}</th>
+        <th>{{ file.kind }}</th>
+        <th>
+            <form method="POST">{% csrf_token %}
+                <input type="hidden" name="file_id" value={{ file.id }}/>
+                <button name="add_file" type="submit" class="btn btn-task">Add to List</button>
+            </form>
+        </th>
+    </tr>
+    {% empty %}
+    No files added
+    {% endfor %}
+</table>

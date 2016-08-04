@@ -814,6 +814,7 @@ def editor_decision(request, submission_id, decision):
 			elif 'skip' in request.POST:
 				print "Skip"
 			return redirect(reverse('editor_editing', kwargs={'submission_id': submission_id}))
+
 		elif decision == 'production':
 			if not book.stage.production:
 				log.add_log_entry(book=book, user=request.user, kind='production', message='Submission moved to Production', short_name='Submission in Production')
@@ -2259,3 +2260,38 @@ def view_new_submission(request, submission_id):
 	}
 
 	return render(request, template, context)
+
+@is_editor
+def files_for_production(request, submission_id):
+    submission = get_object_or_404(models.Book, pk=submission_id)
+    files = submission.files.all()
+    production_files = submission.production_files.all()
+
+    if request.POST:
+        if 'add_file' in request.POST:
+
+            file_id = request.POST.get('file_id')[:-1]
+            file = models.File.objects.get(pk=file_id)
+            submission.production_files.add(file)
+
+        if 'remove_file' in request.POST:
+
+            file_id = request.POST.get('file_id')[:-1]
+            file = models.File.objects.get(pk=file_id)
+            submission.production_files.remove(file)
+
+        return redirect(reverse('files_for_production', kwargs={'submission_id': submission.id}))
+
+    template = 'editor/submission.html'
+    context = {
+        'submission': submission,
+        'files': files,
+        'production_files': production_files,
+        'author_include': 'editor/file_list.html',
+        'submission_files': 'editor/files_for_production.html'
+    }
+
+    return render(request, template, context)
+
+
+

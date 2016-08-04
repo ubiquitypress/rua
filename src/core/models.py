@@ -359,6 +359,7 @@ class Book(models.Model):
 
     # Files
     files = models.ManyToManyField('File', null=True, blank=True)
+    production_files = models.ManyToManyField('File', null=True, blank=True, related_name='production_files')
     internal_review_files = models.ManyToManyField('File', null=True, blank=True, related_name='internal_review_files')
     external_review_files = models.ManyToManyField('File', null=True, blank=True, related_name='external_review_files')
     misc_files = models.ManyToManyField('File', null=True, blank=True, related_name='misc_files')
