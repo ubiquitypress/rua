@@ -372,6 +372,8 @@ class Book(models.Model):
 
     peer_review_override = models.BooleanField(default=False,
                                                help_text="If enabled, this will mark a book as Peer Reviewed even if there is no Reviews in the Rua database.")
+    # First Run
+    first_run = models.BooleanField(default=True)
 
     def __unicode__(self):
         return u'%s' % self.title

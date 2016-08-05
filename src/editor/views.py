@@ -2431,8 +2431,11 @@ def view_new_submission(request, submission_id):
 @is_editor
 def files_for_production(request, submission_id):
     submission = get_object_or_404(models.Book, pk=submission_id)
-    files = submission.files.order_by('-date_modified')
-    production_files = submission.production_files.all()
+    files = submission.files.all()
+    internal_review_files = submission.internal_review_files.all()
+    external_review_files = submission.external_review_files.all()
+    misc_files = submission.misc_files.all()
+    production_files = submission.production_files.order_by('kind')
 
     primary_files = sorted(
         chain(files.filter(kind='manuscript')),
@@ -2440,17 +2443,26 @@ def files_for_production(request, submission_id):
     )
 
     for copyedit in submission.copyeditassignment_set.all():
-        for file in copyedit.copyedit_files.all():
+        for file in chain(copyedit.copyedit_files.all(), copyedit.author_files.all()):
             primary_files.append(file)
 
     for index in submission.indexassignment_set.all():
-        for file in index.index_files.all():
+        for file in chain(index.index_files.all()):
             primary_files.append(file)
 
-    submission.production_files.add(primary_files[0])
+    #Pre-populate production_files with most recently modified primary file, run only once so user can remove it.
+    if submission.first_run == True:
+        submission.production_files.add(primary_files[0])
+        submission.first_run = False
+        submission.save()
 
-    additional_files = [x for x in files if not primary_files]
+    #All files associated with book, apart from those already in primary files, sorted by type.
+    additional_files = sorted(
+        set(chain(files, internal_review_files, external_review_files, misc_files)) - set(primary_files),
+        key=attrgetter('kind')
+    )
 
+    #Handle adding and removing files to production_files list
     if request.POST:
         if 'add_file' in request.POST:
             file_id = request.POST.get('file_id')[:-1]
