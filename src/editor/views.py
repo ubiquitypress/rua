@@ -2446,7 +2446,7 @@ def files_for_production(request, submission_id):
     for index in submission.indexassignment_set.all():
         for file in index.index_files.all():
             primary_files.append(file)
-    
+
     submission.production_files.add(primary_files[0])
 
     additional_files = [x for x in files if not primary_files]
