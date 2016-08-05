@@ -30,48 +30,21 @@
       <tr>
         <th>Label</th>
         <th>Original File Name</th>
-        <th>File Type</th>
+        <th>Update</th>
         <th>Select</th>
       </tr>
     </thead>
     <tbody>
-    {% for file in submission.files.all %}
+    {% for file in submission.production_files.all %}
       <tr>
         <td>{{ file.label }}</td>
         <td>{{ file.original_filename }}</td>
-        <td>{{file.kind }}</td>
-        <td><input type="checkbox" name="file" value="{{ file.id }}"/></td>
+        <td><a href="{% url 'update_file' submission.id file.id 'editor'  %}"  class="btn btn-sm btn-accept">&nbsp;
+            <i class="fa fa-cloud-upload">&nbsp;</i>Update&nbsp;</a>
+        <td><input type="checkbox" name="file" value="{{ file.id }}" checked/></td>
       </tr>
     {% endfor %}
 
-    {% for copyedit in submission.copyeditassignment_set.all %}
-    {% for file in copyedit.copyedit_files.all %}
-    <tr>
-        <td>{{ file.label }}</td>
-        <td>{{ file.original_filename }}</td>
-        <td>{{file.kind }}</td>
-        <td><input type="checkbox" name="file" value="{{ file.id }}"/></td>
-    </tr>
-    {% endfor %}
-    {% for file in copyedit.author_files.all %}
-    <tr>
-        <td>{{ file.label }}</td>
-        <td>{{ file.original_filename }}</td>
-        <td>{{file.kind }}</td>
-        <td><input type="checkbox" name="file" value="{{ file.id }}"/></td>
-    </tr>
-    {% endfor %}
-    {% endfor %}
-    {% for index in submission.indexassignment_set.all %}
-    {% for file in index.index_files.all %}
-    <tr>
-        <td>{{ file.label }}</td>
-        <td>{{ file.original_filename }}</td>
-        <td>{{file.kind }}</td>
-        <td><input type="checkbox" name="file" value="{{ file.id }}"/></td>
-    </tr>
-    {% endfor %}
-    {% endfor %}
   </tbody>
   </table>
   <p class="small">Or you can upload a new file(s) and use it.</p>
