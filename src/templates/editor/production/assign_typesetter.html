@@ -30,6 +30,7 @@
       <tr>
         <th>Label</th>
         <th>Original File Name</th>
+        <th>Type</th>
         <th>Update</th>
         <th>Select</th>
       </tr>
@@ -39,8 +40,9 @@
       <tr>
         <td>{{ file.label }}</td>
         <td>{{ file.original_filename }}</td>
+        <td>{{ file.kind }}</td>
         <td><a href="{% url 'update_file' submission.id file.id 'editor'  %}"  class="btn btn-sm btn-accept">&nbsp;
-            <i class="fa fa-cloud-upload">&nbsp;</i>Update&nbsp;</a>
+            <i class="fa fa-cloud-upload">&nbsp;</i>&nbsp;</a>
         <td><input type="checkbox" name="file" value="{{ file.id }}" checked/></td>
       </tr>
     {% endfor %}
@@ -68,7 +70,7 @@
   <textarea class="form-control" rows="10" id="message" name="message">{{ email_text.value }}</textarea>
   <br />
   <label class="control-label" for="id_label">Attachment</label>
-  <p class="small">Please add any additonal files here.</p>
+  <p class="small">Please add any additional files here.</p>
   <div class="input-group">
       <span class="input-group-btn">
         <span class="btn btn-browse btn-task btn-file">

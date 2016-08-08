@@ -2435,42 +2435,42 @@ def files_for_production(request, submission_id):
     internal_review_files = submission.internal_review_files.all()
     external_review_files = submission.external_review_files.all()
     misc_files = submission.misc_files.all()
+    manuscript_files = files.filter(kind='manuscript')
     production_files = submission.production_files.order_by('kind')
 
+    copyedit_files = [x for copyedit in submission.copyeditassignment_set.all()
+                      for x in chain(copyedit.copyedit_files.all(),  copyedit.author_files.all())]
+
+    index_files = [x for index in submission.indexassignment_set.all() for x in index.index_files.all()]
+
+    #'Primary Files' formed of manuscript, copyedit and index files, excluding those already in production_files.
     primary_files = sorted(
-        chain(files.filter(kind='manuscript')),
-        key=attrgetter('date_modified'), reverse=True
+        set(chain(manuscript_files, copyedit_files, index_files)) - set(production_files),
+        key=attrgetter('date_uploaded'), reverse=True
+        )
+
+    #All files associated with book, excluding those already in primary files and production files, sorted by type.
+    additional_files = sorted(
+        set(chain(files, internal_review_files, external_review_files, misc_files))
+        - set(primary_files) - set(production_files),
+        key=attrgetter('kind')
     )
 
-    for copyedit in submission.copyeditassignment_set.all():
-        for file in chain(copyedit.copyedit_files.all(), copyedit.author_files.all()):
-            primary_files.append(file)
-
-    for index in submission.indexassignment_set.all():
-        for file in chain(index.index_files.all()):
-            primary_files.append(file)
-
-    #Pre-populate production_files with most recently modified primary file, run only once so user can remove it.
+    # Pre-populate production_files with most recently modified primary file, run only once so user can remove it.
     if submission.first_run == True:
         submission.production_files.add(primary_files[0])
         submission.first_run = False
         submission.save()
 
-    #All files associated with book, apart from those already in primary files, sorted by type.
-    additional_files = sorted(
-        set(chain(files, internal_review_files, external_review_files, misc_files)) - set(primary_files),
-        key=attrgetter('kind')
-    )
-
     #Handle adding and removing files to production_files list
     if request.POST:
         if 'add_file' in request.POST:
-            file_id = request.POST.get('file_id')[:-1]
+            file_id = request.POST.get('file_id')[:-1] #[:-1] to ignore trailing slash
             file = models.File.objects.get(pk=file_id)
             submission.production_files.add(file)
 
         if 'remove_file' in request.POST:
-            file_id = request.POST.get('file_id')[:-1]
+            file_id = request.POST.get('file_id')[:-1] #[:-1] to ignore trailing slash
             file = models.File.objects.get(pk=file_id)
             submission.production_files.remove(file)
 

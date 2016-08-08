@@ -269,7 +269,7 @@ class Author(models.Model):
     middle_name = models.CharField(max_length=100, null=True, blank=True)
     last_name = models.CharField(max_length=100)
     salutation = models.CharField(max_length=10, choices=SALUTATION_CHOICES, null=True, blank=True)
-    institution = models.CharField(max_length=1000)
+    institution = models.CharField(max_length=1000, null=True, blank=True)
     department = models.CharField(max_length=300, null=True, blank=True)
     country = models.CharField(max_length=300, choices=COUNTRY_CHOICES)
     author_email = models.CharField(max_length=100)
