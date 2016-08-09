@@ -269,7 +269,7 @@ class Author(models.Model):
     middle_name = models.CharField(max_length=100, null=True, blank=True)
     last_name = models.CharField(max_length=100)
     salutation = models.CharField(max_length=10, choices=SALUTATION_CHOICES, null=True, blank=True)
-    institution = models.CharField(max_length=1000)
+    institution = models.CharField(max_length=1000, null=True, blank=True)
     department = models.CharField(max_length=300, null=True, blank=True)
     country = models.CharField(max_length=300, choices=COUNTRY_CHOICES)
     author_email = models.CharField(max_length=100)
@@ -359,6 +359,7 @@ class Book(models.Model):
 
     # Files
     files = models.ManyToManyField('File', null=True, blank=True)
+    production_files = models.ManyToManyField('File', null=True, blank=True, related_name='production_files')
     internal_review_files = models.ManyToManyField('File', null=True, blank=True, related_name='internal_review_files')
     external_review_files = models.ManyToManyField('File', null=True, blank=True, related_name='external_review_files')
     misc_files = models.ManyToManyField('File', null=True, blank=True, related_name='misc_files')
@@ -371,6 +372,8 @@ class Book(models.Model):
 
     peer_review_override = models.BooleanField(default=False,
                                                help_text="If enabled, this will mark a book as Peer Reviewed even if there is no Reviews in the Rua database.")
+    # First Run
+    first_run = models.BooleanField(default=True)
 
     def __unicode__(self):
         return u'%s' % self.title
@@ -620,7 +623,7 @@ class ReviewAssignment(models.Model):
     review_round = models.ForeignKey(ReviewRound, blank=True, null=True)
     review_type = models.CharField(max_length=15, choices=review_type_choices())
     user = models.ForeignKey(User)
-    assigned = models.DateField(auto_now=True)
+    assigned = models.DateField(auto_now_add=True)
     accepted = models.DateField(blank=True, null=True)
     declined = models.DateField(blank=True, null=True)
     due = models.DateField(blank=True, null=True)
@@ -660,7 +663,7 @@ class ReviewAssignment(models.Model):
 class EditorialReviewAssignment(models.Model):
     book = models.ForeignKey(Book)  # TODO: Remove this as it is already linked to the book through the review round
 
-    assigned = models.DateField(auto_now=True)
+    assigned = models.DateField(auto_now_add=True)
     due = models.DateField(blank=True, null=True)
     completed = models.DateField(blank=True, null=True)
 

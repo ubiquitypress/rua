@@ -1,0 +1,51 @@
+<h3>Add Files for Typesetting</h3>
+
+<h4>Manuscript, Copyedited and Indexed Files</h4>
+<table id="primary-files" class="table table-bordered small">
+    <tr>
+        <th>Label</th>
+        <th>Name</th>
+        <th>Type</th>
+        <th></th>
+    </tr>
+    {% for file in primary_files %}
+    <tr>
+        <th>{{ file.label }}</th>
+        <td>{{ file.original_filename }}</td>
+        <th>{{ file.kind }}</th>
+        <th>
+            <form method="POST">{% csrf_token %}
+                <input type="hidden" name="file_id" value={{ file.id }}/>
+                <button name="add_file" type="submit" class="btn btn-task">Add to List</button>
+            </form>
+        </th>
+    </tr>
+    {% empty %}
+    No files added
+    {% endfor %}
+</table>
+
+<h4>Additional Files</h4>
+<table id="additional-files" class="table table-bordered small">
+    <tr>
+        <th>Label</th>
+        <th>Name</th>
+        <th>Type</th>
+        <th></th>
+    </tr>
+    {% for file in additional_files %}
+    <tr>
+        <th>{{ file.label }}</th>
+        <td>{{ file.original_filename }}</td>
+        <th>{{ file.kind }}</th>
+        <th>
+            <form method="POST">{% csrf_token %}
+                <input type="hidden" name="file_id" value={{ file.id }}/>
+                <button name="add_file" type="submit" class="btn btn-task">Add to List</button>
+            </form>
+        </th>
+    </tr>
+    {% empty %}
+    No files added
+    {% endfor %}
+</table>

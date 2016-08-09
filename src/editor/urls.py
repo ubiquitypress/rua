@@ -51,6 +51,7 @@ urlpatterns = patterns('',
 
     # Production
     url(r'^submission/(?P<submission_id>\d+)/publish/$', 'editor.views.editor_publish', name='editor_publish'),
+    url(r'^submission/(?P<submission_id>\d+)/files/$', 'editor.views.files_for_production', name='files_for_production'),
     url(r'^submission/(?P<submission_id>\d+)/production/$', 'editor.views.editor_production', name='editor_production'),
     url(r'^submission/(?P<submission_id>\d+)/production/add/format/$', 'editor.views.add_format', name='add_format'),
     url(r'^submission/(?P<submission_id>\d+)/production/add/chapter/$', 'editor.views.add_chapter', name='add_chapter'),

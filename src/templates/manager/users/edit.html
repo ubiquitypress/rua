@@ -53,7 +53,7 @@
 		  		<div class="col-md-4">{% bootstrap_field profile_form.country %}</div>
 		  		<div class="col-md-12">
                       <div class="aside "><strong>Interests</strong></div>
-                        <input type="text" id="interests" name="interests" value="{% for interest in user.profile.interest.all %}{{ interest }}{% if not forloop.last %},{% endif %}{% endfor %}"/> Hit Enter to add a new interest.
+                        <input type="text" id="interests" name="interests"/> Hit Enter to add a new interest.
 		  		</div>
 		  	</div>
 		  </div>

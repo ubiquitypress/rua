@@ -6,106 +6,117 @@
 
 {% block body %}
 <div class="row">
-<div class="col-md-12 other-heading container-fluid" style="margin-top:-20px">
-      <h3>Book Proposal :  {{ proposal.title }} {% if proposal.subtitle%}: {{ proposal.subtitle }}{%endif%}</h3>
+    <div class="col-md-12 other-heading container-fluid" style="margin-top:-20px">
+        <h3>Book Proposal : {{ proposal.title }} {% if proposal.subtitle%}: {{ proposal.subtitle }}{%endif%}</h3>
 
-</div>
-	 <div class="col-md-8 dash-center bottom-space">
-  <div class="dash-container" >
-                       
+    </div>
+    <div class="col-md-8 dash-center bottom-space">
         <div class="dash-container">
 
-        <h4><b>INSTRUCTIONS FOR TASK</b></h4>
+            <div class="dash-container">
+
+                <h4><b>INSTRUCTIONS FOR TASK</b></h4>
+                </br>
+                <p class="task-info-text">{{instructions|safe}}</p>
+
+                <h5> Task Due <span class="subtitle-text">{{ review.due }}</span></h5>
+
+
+            </div>
+
+            <div class="col-md-12 container-fluid decision-info-undecided">
+
+                <p>You can accept or reject this task</p>
+
+            </div>
+            </br>
+            </br>
+            <div class="dash-container col-md-12">
+                <form method="post">
+                    {% csrf_token %}
+                    <input class="btn btn-lg btn-decline" type="submit" name="decline" value="I Decline" id="decline"
+                           style="width:120px; font-size: 14px;">
+                    <input class="btn btn-lg btn-accept" type="submit" name="accept" id="accept" value="I Accept"
+                           style="width:120px; font-size: 14px;">
+                    {% if proposal.requestor %}
+                    <a href="core/email.html"
+                    onclick="return popitup('/email/proposal/{{ proposal.id }}/user/{{ proposal.requestor.id }}/','proposal_{{ proposal.requestor.id }}')"
+                    class="btn btn-lg btn-other btn-contact" type="submit">Contact Editor</a>
+                    {% else %}
+                    <a href="core/email.html"
+                    onclick="return popitup('/email/primary-contact')"
+                    class="btn btn-lg btn-other btn-contact" type="submit">Contact Press (No Editor Assigned)</a>
+                    {% endif %}
+                </form>
+            </div>
+        </div>
+        <hr>
         </br>
-        <p class="task-info-text">{{instructions|safe}}</p>
-     
-         <h5> Task Due <span class="subtitle-text">{{ review.due }}</span></h5>
+        <div class="dash-container">
+            <h4 class="header-text">Proposal details</h4>
+        </div>
+        <table class="table table-bordered table-condensed">
+            <thead>
+            <tr>
 
-   
-           </div>
+                <th>Book Title</th>
+                <th>Subtitle</th>
+                {% if not review.blind %}
+                <th>Submitting Author/Editor</th>
+                {% endif %}
+                <th>Status</th>
+                <th>Date Submitted</th>
 
-              <div class="col-md-12 container-fluid decision-info-undecided">                 
-  
-                     <p>You can accept or reject this task</p>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>{{ proposal.title }}</td>
+                <td>{{ proposal.subtitle }}</td>
+                {% if not review.blind %}
+                <td>{{ proposal.author }}</td>
+                {% endif %}
+                <td>{% if proposal.in_review %} {% if proposal.reviews_completed %} Reviews Completed {% else %} In
+                    Review {% endif %}{% else %}{{ proposal.get_status_display }}{% endif %}
+                </td>
+                <td>{{ proposal.date_submitted }}</td>
+            </tr>
+            </tbody>
+        </table>
+        </hr>
+        <div class="container" style="width:100%;left:0%;right:20%;position:relative;">
+            <div class="row">
+                {% for field in relationships %}
 
+                <div class="{{ field.width }}">
+                    <div class="row">
+                        <div class="panel panel-default ">
+                            <div class="panel-heading"><span
+                                    class="panel-heading"><b>{{ field.element.name }}</b></span></div>
+                            <div class="panel-body">{% for k,v in data.items %}{% if k == field.element.name %}{{
+                                v.0|safe }}{% endif %}{% endfor %}
+                            </div>
+                        </div>
                     </div>
-</br>
-</br>
-          <div class="dash-container col-md-12" >
-          <form method="post">
-          {% csrf_token %}
-             <input class="btn btn-lg btn-decline" type="submit" name="decline" value="I Decline"id="decline" style="width:120px; font-size: 14px;">
-             <input class="btn btn-lg btn-accept" type="submit"  name="accept" id="accept" value="I Accept" style="width:120px; font-size: 14px;" >
-             </form>
-            </div> 
-      
-        
-</div>
-<hr>
-  </br>
-   <div class="dash-container" >
-            <h4 class="header-text">Proposal details</h4> 
+                </div>
+                {% endfor %}
+            </div>
         </div>
-  <table class="table table-bordered table-condensed">
-    <thead>
-  <tr>
- 
-    <th>Book Title</th>
-    <th>Subtitle</th>
-    {% if not review.blind %}
-    <th>Submitting Author/Editor</th>
-    {% endif %}
-    <th>Contact Editor</th>
-    <th>Status</th>
-    <th>Date Submitted</th>
-    
-  </tr>
-  </thead>
-  <tbody>
-  <tr>
-    <td>{{ proposal.title }}</td>
-    <td>{{ proposal.subtitle }}</td>
-    {% if not review.blind %}
-    <td>{{ proposal.author }}</td>
-    {% endif %}
-    <td>{{ proposal.requestor.username }} <sup> <a href="core/email.html" onclick="return popitup('/email/proposal/{{proposal.id}}/user/{{proposal.requestor.id}}/','proposal_{{proposal.requestor.id}}')"class="fa fa-envelope-o btn btn-xs btn-default"></a></sup></td>
-    <td>{% if proposal.in_review %} {% if proposal.reviews_completed %} Reviews Completed {% else %} In Review {% endif %}{% else %}{{ proposal.get_status_display }}{% endif %}</td>
-    <td>{{ proposal.date_submitted }}</td>
-  </tr>
-</tbody>
-</table>
-</hr>
-<div class="container" style="width:100%;left:0%;right:20%;position:relative;">
-<div class="row">
-  {% for field in relationships %}
-
-  <div class="{{ field.width }}">
-  <div class="row">
-    <div class="panel panel-default ">
-      <div class="panel-heading"><span class="panel-heading"><b>{{ field.element.name }}</b></span></div>
-      <div class="panel-body">{% for k,v in data.items %}{% if k == field.element.name %}{{ v.0|safe }}{% endif %}{% endfor %}</div>
     </div>
-  </div>
-  </div>
-{% endfor %}
-</div>
-</div>
-</div>
 
 
-       <div class="col-md-4 dash-right bottom-space">
-           <div class="dash-container" >
-       <div class="dash-container" >
+    <div class="col-md-4 dash-right bottom-space">
+        <div class="dash-container">
+            <div class="dash-container">
+            </div>
         </div>
-        </div>
-        </div>
- 
+    </div>
 
- 
-{% endblock body %}
 
-{% block js %}
-<script language="javascript" type="text/javascript">
+    {% endblock body %}
+
+    {% block js %}
+    <script language="javascript" type="text/javascript">
 <!--
 function popitup(url,title) {
     newwindow=window.open(url,title,'height=750,width=600');
@@ -114,6 +125,9 @@ function popitup(url,title) {
 }
 
 // -->
-</script>
-<script type="text/javascript" src="{% static "js/fancyfile.js" %}"></script>
+
+
+    </script>
+    <script type="text/javascript" src="{% static " js
+    /fancyfile.js" %}"></script>
 {% endblock js %}

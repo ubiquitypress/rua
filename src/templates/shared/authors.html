@@ -1,42 +1,115 @@
+{% load static from staticfiles %}
+{% block body %}
+
 {% for author in submission.author.all %}
 <div class="well">
-	<table class="table table-striped">
-	<tr>
-		<th width="20%">Name</th>
-		<th width="20%">Institution</th>
-		<th width="20%">Department</th>
-		<th width="20%">Country</th>
-		<th width="20%">Email</th>
-	</tr>
-	<tr>
-		<td>{{ author.first_name }} {% if author.middle_name %}{{ author.middle_name}} {% endif %}{{ author.last_name }}</td>
-		<td>{{ author.institution }}</td>
-		<td>{{ author.department }}</td>
-		<td>{{ author.country }}</td>
-		<td>{{ author.author_email }}</td>
-	</tr>
-	<tr>
-		<th colspan="5">Biography</th>
-	</tr>
-	<tr>
-		<td colspan="5">{{ author.biography|safe }}</td>
-	</tr>
-	<tr>
-		<th width="25%" colspan="2">ORCiD</th>
-		<th width="25%">Twitter</th>
-		<th width="25%">Facebook</th>
-		<th width="25%">Linkedin</th>
-		<th>ID</th>
-	</tr>
-	<tr>
-		<td colspan="2">{{ author.orcid }}</td>
-		<td>{{ author.twitter }}</td>
-		<td>{{ author.facebook }}</td>
-		<td>{{ author.linkedin }}</td>
-		<td>{{ author.pk }}</td>
-	</tr>
-	</table>
-	<a href="{% url 'update_contributor' submission.id 'author' author.id %}" class="btn btn-small btn-primary"><i class="fa fa-edit">&nbsp;</i>Edit Author</a>&nbsp;<a href="{% url 'delete_contributor' submission.id 'author' author.id %}" class="btn btn-small btn-primary"><i class="fa fa-trash">&nbsp;</i>Delete Author</a>
+    <table class="table table-striped">
+        <tr>
+            <th width="20%">Name</th>
+            <th width="20%">Institution</th>
+            <th width="20%">Department</th>
+            <th width="20%">Country</th>
+            <th width="20%">Email</th>
+        </tr>
+        <tr>
+            <td>{{ author.first_name }} {% if author.middle_name %}
+                {{ author.middle_name}} {% endif %}{{ author.last_name }}
+            </td>
+            <td>{{ author.institution }}</td>
+            <td>{{ author.department }}</td>
+            <td>{{ author.country }}</td>
+            <td>{{ author.author_email }}</td>
+        </tr>
+        <tr>
+            <th colspan="5">Biography</th>
+        </tr>
+        <tr>
+            <td colspan="5">{{ author.biography|safe }}</td>
+        </tr>
+        <tr>
+            <th width="25%" colspan="2">ORCiD</th>
+            <th width="25%">Twitter</th>
+            <th width="25%">Facebook</th>
+            <th width="25%">Linkedin</th>
+            <th>ID</th>
+        </tr>
+        <tr>
+            <td colspan="2">{{ author.orcid }}</td>
+            <td>{{ author.twitter }}</td>
+            <td>{{ author.facebook }}</td>
+            <td>{{ author.linkedin }}</td>
+            <td>{{ author.pk }}</td>
+        </tr>
+    </table>
+    <a href="{% url 'update_contributor' submission.id 'author' author.id %}" class="btn btn-small btn-primary"><i
+            class="fa fa-edit">&nbsp;</i>Edit Author</a>&nbsp;<a
+        href="{% url 'delete_contributor' submission.id 'author' author.id %}" class="btn btn-small btn-primary"><i
+        class="fa fa-trash">&nbsp;</i>Delete Author</a>
 </div>
 {% endfor %}
-<a href="{% url 'add_contributor' submission.id 'author' %}" class="btn btn-small btn-primary"><i class="fa fa-plus">&nbsp;</i>Add New Author</a>
+<a href="{% url 'add_contributor' submission.id 'author' %}" class="btn btn-small btn-primary"><i class="fa fa-plus">
+    &nbsp;</i>Add New Author</a>
+<hr>
+
+<h4>Current Order</h4>
+<form method="post" class="form" enctype="multipart/form-data">
+    {% if submission.book_type == 'monograph' %}
+    <p>You can reorder your submitted authors by dragging and dropping them into the correct order.</p>
+    <ul class="list-group" id="auth_order">
+        {% for author in submission.author.all %}
+        <li id="auth-{{ author.id }}" class="list-group-item"><i class="fa fa-sort">&nbsp;&nbsp;</i><i class="fa fa-user">
+            &nbsp;&nbsp;</i>{{ author.first_name }} {{ author.last_name }}
+        </li>
+        {% endfor %}
+    </ul>
+    {% elif submission.book_type == 'edited_volume' %}
+    <p>You can reorder your submitted editors by dragging and dropping them into the correct order.</p>
+    <ul class="list-group" id="edit_order">
+        {% for author in submission.editor.all %}
+        <li id="edit-{{ author.id }}" class="list-group-item"><i class="fa fa-sort">&nbsp;&nbsp;</i><i class="fa fa-user">
+            &nbsp;&nbsp;</i>{{ author.first_name }} {{ author.last_name }}
+        </li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+</form>
+<br/><br/>
+{% endblock body %}
+
+{% block js %}
+<script type="text/javascript" src="{% static "js/jquery.js" %}"></script>
+<script src="{% static "js/jq-ui.js" %}"></script>
+
+<script>
+$( "#auth_order" ).sortable({
+  placeholder: "ui-state-highlight",
+  update: function (event, ui) {
+      var data = $(this).sortable('serialize');
+      console.log(data);
+
+      // POST to server using $.post or $.ajax
+      $.ajax({
+          data: data,
+          type: 'POST',
+          url: '/submission/book/{{ submission.id }}/order/author/'
+      });
+  }
+});
+
+$( "#edit_order" ).sortable({
+  placeholder: "ui-state-highlight",
+  update: function (event, ui) {
+      var data = $(this).sortable('serialize');
+      console.log(data);
+
+      // POST to server using $.post or $.ajax
+      $.ajax({
+          data: data,
+          type: 'POST',
+          url: '/submission/book/{{ submission.id }}/order/editor/'
+      });
+  }
+});
+</script>
+{% endblock %}
+

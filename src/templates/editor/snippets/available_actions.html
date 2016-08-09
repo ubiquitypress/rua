@@ -15,6 +15,6 @@
 	<a href="{% url 'editor_decision' submission.id 'decline' %}" class="btn btn-sm btn-decline btn-action">Reject<br />Submission</a>
 	
 	{% elif submission.stage.current_stage == 'editing' %}
-	<a href="{% url 'editor_decision' submission.id 'production' %}" class="btn btn-sm btn-accept btn-action">Move to<br />Production</a>
+	<a href="{% url 'files_for_production' submission.id %}" class="btn btn-sm btn-accept btn-action">Move to<br />Production</a>
 	{% endif %}
 </div>

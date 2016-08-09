@@ -1,0 +1,29 @@
+<h3>Files for Typesetting</h3>
+
+<table id="files-for-production" class="table table-bordered small">
+    <tr>
+        <th>Label</th>
+        <th>Name</th>
+        <th>Type</th>
+        <th></th>
+    </tr>
+    {% for file in production_files %}
+    <tr>
+        <td>{{ file.label }}</td>
+        <td>{{ file.original_filename }}</td>
+        <td>{{ file.kind }}</td>
+        <td>
+            <form method="POST">{% csrf_token %}
+                <input type="hidden" name="file_id" value={{ file.id }}/>
+                <button name="remove_file" type="submit" class="btn btn-task">Remove from List</button>
+            </form>
+        </td>
+    </tr>
+    {% empty %}
+    No files staged yet
+    {% endfor %}
+</table>
+
+<a href="{% url 'editor_decision' submission.id 'production' %}"
+   class="btn btn-sm btn-accept btn-action">Submit</a>
+
