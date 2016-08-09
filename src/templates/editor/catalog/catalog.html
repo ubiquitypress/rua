@@ -404,4 +404,35 @@ $(function() {
       $('#id_expected_completion_date').datepicker({ dateFormat: 'yy-mm-dd' }).val();
   });
 </script>
+<script>
+$( "#auth_order" ).sortable({
+  placeholder: "ui-state-highlight",
+  update: function (event, ui) {
+      var data = $(this).sortable('serialize');
+      console.log(data);
+
+      // POST to server using $.post or $.ajax
+      $.ajax({
+          data: data,
+          type: 'POST',
+          url: '/submission/book/{{ submission.id }}/order/author/'
+      });
+  }
+});
+
+$( "#edit_order" ).sortable({
+  placeholder: "ui-state-highlight",
+  update: function (event, ui) {
+      var data = $(this).sortable('serialize');
+      console.log(data);
+
+      // POST to server using $.post or $.ajax
+      $.ajax({
+          data: data,
+          type: 'POST',
+          url: '/submission/book/{{ submission.id }}/order/editor/'
+      });
+  }
+});
+</script>
 {% endblock js %}
