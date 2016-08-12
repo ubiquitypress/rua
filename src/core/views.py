@@ -224,7 +224,6 @@ def register(request):
 
 
 def activate(request, code):
-    view_review
     if profile:
         profile.user.is_active = True
         if not profile.roles.filter(slug='reader').exists():
