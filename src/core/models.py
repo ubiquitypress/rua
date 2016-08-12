@@ -314,6 +314,7 @@ class Book(models.Model):
     editor = models.ManyToManyField('Editor', null=True, blank=True)
     book_editors = models.ManyToManyField(User, null=True, blank=True, related_name='book_editors')
     press_editors = models.ManyToManyField(User, null=True, blank=True, related_name='press_editors')
+    publisher_name = models.CharField(max_length=100, null=True, blank=True)
     publisher_location = models.CharField(max_length=100, null=True, blank=True,
                                           help_text='Location of publisher imprint.')
     production_editors = models.ManyToManyField(User, null=True, blank=True, related_name='production_editors')
