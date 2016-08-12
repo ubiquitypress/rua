@@ -224,6 +224,12 @@ def register(request):
 
 
 def activate(request, code):
+     try:
+        profile = models.Profile.objects.get(activation_code=code)
+    except models.Profile.DoesNotExist:
+        return HttpResponse(
+            '<h2>This activation code either does not exist has already been used. You should attempt to login.</h2><p><a href="/login/">Login Here</a>')
+        
     if profile:
         profile.user.is_active = True
         if not profile.roles.filter(slug='reader').exists():
