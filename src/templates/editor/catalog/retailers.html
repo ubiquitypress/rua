@@ -25,30 +25,33 @@
             </div>
             <div class="col-md-6">
               <br />
-              <table class="table table-bordered table-condensed">
-                <tr>
-                  <th>Name</th>
-                  <th>Link</th>
-                  <th>Price</th>
-                  <th>Enabled</th>
-                  <th>Action</th>
-                </tr>
-                {% for retailer in submission.retailer_set.all %}
-                <tr class="small">
-                  <td>{{ retailer.name }}</td>
-                  <td>{{ retailer.link }}</td>
-                  <td>{{ retailer.price }}</td>
-                  <td>{% if retailer.enabled %}<i style="color:green;" class="fa fa-check-circle"></i>{% else %}<i style="color:red;" class="fa fa-times-circle"></i>{% endif %}</td>
-                  <td>
-                    <a href="{% url 'retailer_with_id' submission.id retailer.id %}"><i class="fa fa-edit">&nbsp;&nbsp;&nbsp;</i></a>
-                    <a href="{% url 'retailer_with_id' submission.id retailer.id %}?delete=true"><i class="fa fa-trash">&nbsp;&nbsp;</i></a>
-                  </td>
-                {% empty %}
-                <tr>
-                  <td colspan="5">Use the form to add a new retailer.</td>
-                </tr>
-                {% endfor %}
-              </table>
+              <div style="overflow-x:auto;">
+                  (Scrollable)
+                  <table class="table table-bordered table-responsive">
+                    <tr>
+                      <th>Name</th>
+                      <th>Link</th>
+                      <th>Price</th>
+                      <th>Enabled</th>
+                      <th>Action</th>
+                    </tr>
+                    {% for retailer in submission.retailer_set.all %}
+                    <tr class="small">
+                      <td>{{ retailer.name }}</td>
+                      <td style="word-wrap: break-word">{{ retailer.link }}</td>
+                      <td>{{ retailer.price }}</td>
+                      <td>{% if retailer.enabled %}<i style="color:green;" class="fa fa-check-circle"></i>{% else %}<i style="color:red;" class="fa fa-times-circle"></i>{% endif %}</td>
+                      <td>
+                        <a href="{% url 'retailer_with_id' submission.id retailer.id %}"><i class="fa fa-edit">&nbsp;&nbsp;&nbsp;</i></a>
+                        <a href="{% url 'retailer_with_id' submission.id retailer.id %}?delete=true"><i class="fa fa-trash">&nbsp;&nbsp;</i></a>
+                      </td>
+                    {% empty %}
+                    <tr>
+                      <td colspan="5">Use the form to add a new retailer.</td>
+                    </tr>
+                    {% endfor %}
+                  </table>
+              </div>
             </div>
           </div>
         </div>
