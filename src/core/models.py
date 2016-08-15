@@ -314,9 +314,10 @@ class Book(models.Model):
     editor = models.ManyToManyField('Editor', null=True, blank=True)
     book_editors = models.ManyToManyField(User, null=True, blank=True, related_name='book_editors')
     press_editors = models.ManyToManyField(User, null=True, blank=True, related_name='press_editors')
-    publisher_name = models.CharField(max_length=100, null=True, blank=True)
+    publisher_name = models.CharField(max_length=100, null=True, blank=True,
+                                      help_text='If not default press name.')
     publisher_location = models.CharField(max_length=100, null=True, blank=True,
-                                          help_text='Location of publisher imprint.')
+                                          help_text='If not default press location.')
     production_editors = models.ManyToManyField(User, null=True, blank=True, related_name='production_editors')
     description = models.TextField(max_length=5000, null=True, blank=True, verbose_name="Abstract",
                                    help_text="This is used for metadata, the website text and the back cover of the book")
