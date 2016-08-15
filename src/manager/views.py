@@ -522,8 +522,7 @@ def merge_users(request, user_id, secondary_user_id):
     primary_object = User.objects.get(pk=user_id)
     alias_object = User.objects.get(pk=secondary_user_id)
 
-    # (From https://djangosnippets.org/snippets/2283/)
-    # check that all aliases are the same class as primary one and that
+    # Check that all aliases are the same class as primary one and that
     # they are subclass of model
     primary_class = primary_object.__class__
 
@@ -545,7 +544,6 @@ def merge_users(request, user_id, secondary_user_id):
     blank_profile_local_fields = set([field.attname for field in primary_object.profile._meta.local_fields
                               if getattr(primary_object.profile, field.attname) in [None, '']])
 
-
     # Migrate all foreign key references from alias object to primary object.
     for related_object in alias_object._meta.get_all_related_objects():
         # The variable name on the alias_object model.
@@ -553,7 +551,9 @@ def merge_users(request, user_id, secondary_user_id):
         # The variable name on the related model.
         obj_varname = related_object.field.name
         related_objects = getattr(alias_object, alias_varname)
-        setattr(related_objects, obj_varname, primary_object)
+        for obj in related_objects.all():
+            setattr(obj, obj_varname, primary_object)
+            obj.save()
 
     # Migrate all many to many references from alias object to primary object.
     for related_many_object in alias_object._meta.get_all_related_many_to_many_objects():
@@ -588,12 +588,13 @@ def merge_users(request, user_id, secondary_user_id):
             filled_up.add(field_name)
     blank_local_fields -= filled_up
 
+    profile_filled_up = set()
     for field_name in blank_profile_local_fields:
         val = getattr(alias_object.profile, field_name)
         if val not in [None, '']:
             setattr(primary_object.profile, field_name, val)
-            filled_up.add(field_name)
-    blank_profile_local_fields -= filled_up
+            profile_filled_up.add(field_name)
+    blank_profile_local_fields -= profile_filled_up
 
     alias_object.is_active = False
     alias_object.save()
