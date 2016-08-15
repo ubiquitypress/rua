@@ -512,6 +512,7 @@ def identifier_choices():
         ('doi', 'DOI'),
         ('isbn-10', 'ISBN 10'),
         ('isbn-13', 'ISBN 13'),
+        ('issn', 'ISSN'),
         ('urn', 'URN'),
         ('pub_id', 'Publisher ID'),
     )
