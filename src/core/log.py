@@ -53,7 +53,6 @@ def add_email_log_entry(subject, from_address, to, bcc, cc, content, attachments
     new_log_entry.save()
 
     if attachments:
-        attachments = list_to_text(attachments)
         for attachment in attachments:
             new_log_entry.attachments.add(attachment)
     new_log_entry.save()
