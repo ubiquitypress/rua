@@ -740,14 +740,15 @@ def email_users(request, group, submission_id=None, user_id=None):
         bcc_list = logic.clean_email_list(bcc_addresses)
 
         if attachments:
-            for a in attachments:
-                attachment = handle_file(a, submission, 'other', request.user,
+            for attachment in attachments:
+                attachment = handle_file(attachment, submission, 'other', request.user,
                                          "Attachment: Uploaded by %s" % (request.user.username))
+                attachment.save()
 
         if to_addresses:
             if attachments:
                 send_email(subject=subject, context={}, from_email=request.user.email, to=to_list, bcc=bcc_list,
-                           cc=cc_list, html_template=body, book=submission, attachment=attachment)
+                           cc=cc_list, html_template=body, book=submission, attachments=attachments)
             else:
                 send_email(subject=subject, context={}, from_email=request.user.email, to=to_list, bcc=bcc_list,
                            cc=cc_list, html_template=body, book=submission)

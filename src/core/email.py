@@ -16,7 +16,7 @@ def filepath_proposal(proposal, attachment):
 def filepath_general(attachment):
     return '%s/%s' % (settings.EMAIL_DIR, attachment.uuid_filename)
 
-def send_email(subject, context, from_email, to, html_template, bcc=None, cc=None, book=None, attachment=None, proposal=None, request=None, kind = None):
+def send_email(subject, context, from_email, to, html_template, bcc=None, cc=None, book=None, attachments=None, proposal=None, request=None, kind = None):
 
     html_template.replace('\n', '<br />')
 
@@ -35,19 +35,20 @@ def send_email(subject, context, from_email, to, html_template, bcc=None, cc=Non
     msg = EmailMessage(subject, html_content, from_email, to, bcc=bcc, cc=cc, headers={'Reply-To': reply_to})
 
     if book:
-        log.add_email_log_entry(book = book, subject = subject, from_address = from_email, to = to, bcc = bcc, cc = cc, content = html_content, attachment = attachment, kind = kind)
+        log.add_email_log_entry(book=book, subject=subject, from_address=from_email, to=to, bcc=bcc, cc=cc, content=html_content, attachments=attachments, kind=kind)
     if proposal:
-        log.add_email_log_entry(proposal = proposal, subject = subject, from_address = from_email, to = to, bcc = bcc, cc = cc, content = html_content, attachment = attachment, kind = kind)
+        log.add_email_log_entry(proposal=proposal, subject=subject, from_address=from_email, to=to, bcc=bcc, cc=cc, content=html_content, attachments=attachments, kind = kind)
 
     msg.content_subtype = "html"
 
-    if attachment:
-        if book:
-            msg.attach_file(filepath(book, attachment))
-        elif proposal:
-            msg.attach_file(filepath_proposal(proposal, attachment))
-        else:
-            msg.attach_file(filepath_general(attachment))
+    if attachments:
+        for attachment in attachments:
+            if book:
+                msg.attach_file(filepath(book, attachment))
+            elif proposal:
+                msg.attach_file(filepath_proposal(proposal, attachment))
+            else:
+                msg.attach_file(filepath_general(attachment))
 
     msg.send()
 
