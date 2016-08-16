@@ -727,7 +727,7 @@ def email_users(request, group, submission_id=None, user_id=None):
     sent = False
     if request.POST:
 
-        attachment = request.FILES.get('attachment')
+        attachments = request.FILES.getlist('attachment')
         subject = request.POST.get('subject')
         body = request.POST.get('body')
 
@@ -739,12 +739,13 @@ def email_users(request, group, submission_id=None, user_id=None):
         cc_list = logic.clean_email_list(cc_addresses)
         bcc_list = logic.clean_email_list(bcc_addresses)
 
-        if attachment:
-            attachment = handle_file(attachment, submission, 'other', request.user,
-                                     "Attachment: Uploaded by %s" % (request.user.username))
+        if attachments:
+            for a in attachments:
+                attachment = handle_file(a, submission, 'other', request.user,
+                                         "Attachment: Uploaded by %s" % (request.user.username))
 
         if to_addresses:
-            if attachment:
+            if attachments:
                 send_email(subject=subject, context={}, from_email=request.user.email, to=to_list, bcc=bcc_list,
                            cc=cc_list, html_template=body, book=submission, attachment=attachment)
             else:
