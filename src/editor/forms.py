@@ -115,6 +115,7 @@ class EditMetadata(forms.ModelForm):
 			'book_type',
 			'table_contents',
 			'publisher_location',
+			'publisher_name'
 		)
 
 		exclude = (
