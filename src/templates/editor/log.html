@@ -93,7 +93,10 @@ body {
                       <p><small>{{ item.content|safe }}</small></p>
                          <hr>
                          <p>
-       Attachment: {% for attachment in item.attachment.all %}<a  href="{% url 'serve_file' submission.id attachment.id %}">{{ attachment }}</a>{% empty %} None. {% endfor %}</p>
+                            Attachments: {% for attachment in item.attachments.all %}
+                             <a  href="{% url 'serve_file' submission.id attachment.id %}">{{ attachment }}; </a>
+                             {% empty %} None. {% endfor %}
+                         </p>
                   </div>
                   <hr>
                    <div class="email-border-{{item.kind}}"></div>
