@@ -762,7 +762,7 @@ def send_decision_ack(book, decision, email_text, url=None, attachment=None):
 			'link_to_page': url,
 		}
 		kind = "submission"
-		subject = get_setting('submission_decision_update_subject','email_subject','Submission decision update: %s') % decision_full
+		subject = get_setting('submission_decision_update_subject','email_subject','Submission decision update: %s' % decision_full)
 		if attachment:
 			email.send_email(subject, context, from_email.value, author.author_email, email_text, kind = kind, book=book, attachment=attachment)
 		else:
