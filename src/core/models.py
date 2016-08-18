@@ -271,7 +271,7 @@ class Author(models.Model):
     salutation = models.CharField(max_length=10, choices=SALUTATION_CHOICES, null=True, blank=True)
     institution = models.CharField(max_length=1000, null=True, blank=True)
     department = models.CharField(max_length=300, null=True, blank=True)
-    country = models.CharField(max_length=300, choices=COUNTRY_CHOICES)
+    country = models.CharField(max_length=300, choices=COUNTRY_CHOICES, null=True, blank=True)
     author_email = models.CharField(max_length=100)
     biography = models.TextField(max_length=3000, null=True, blank=True)
     orcid = models.CharField(max_length=40, null=True, blank=True, verbose_name="ORCiD")
