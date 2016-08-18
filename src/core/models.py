@@ -1342,7 +1342,6 @@ emaillog_choices = (
     ('reminder', 'Reminder'),
 )
 
-
 class EmailLog(models.Model):
     book = models.ForeignKey(Book, null=True, blank=True)
     proposal = models.ForeignKey(submission_models.Proposal, null=True, blank=True)

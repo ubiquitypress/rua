@@ -438,9 +438,6 @@ def add_user(request):
                 role_object = core_models.Role.objects.get(pk=role)
                 profile.roles.add(role_object)
 
-            for interest in profile.interest.all():
-                profile.interest.remove(interest)
-
             interests = []
             if 'interests' in request.POST:
                 interests = request.POST.get('interests').split(',')
@@ -456,7 +453,7 @@ def add_user(request):
             else:
                 return redirect("%s?username=%s&password=%s" % (reverse('manager_users'), user.username, new_pass))
 
-    template = 'manager/users/edit.html'
+    template = 'manager/users/add.html'
     context = {
         'profile_form': profile_form,
         'user_form': user_form,
@@ -478,8 +475,6 @@ def user_edit(request, user_id):
         if profile_form.is_valid() and user_form.is_valid():
             user = user_form.save()
             profile = profile_form.save()
-            for interest in profile.interest.all():
-                profile.interest.remove(interest)
 
             interests = request.POST.get('interests')
             if interests:

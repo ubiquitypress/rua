@@ -192,23 +192,22 @@ def register(request):
 
     if request.method == 'POST':
         form = forms.UserCreationForm(request.POST)
-        if form.is_valid():
+        profile_form = forms.RegistrationProfileForm(request.POST)
+
+        if form.is_valid() and profile_form.is_valid():
             author_role = models.Role.objects.get(slug='author')
             new_user = form.save()
-            profile_form = forms.RegistrationProfileForm(request.POST, instance=new_user.profile)
+            profile_form.instance = new_user.profile
+            profile_form.save()
+            new_user.profile.roles.add(author_role)
+            interests = []
+            if 'interests' in request.POST:
+                interests = request.POST.get('interests').split(',')
 
-            if profile_form.is_valid():
-                profile_form.save()
-                new_user.profile.roles.add(author_role)
-                new_user.profile.save()
-                interests = []
-                if 'interests' in request.POST:
-                    interests = request.POST.get('interests').split(',')
-
-                for interest in interests:
-                    new_interest, c = models.Interest.objects.get_or_create(name=interest)
-                    new_user.profile.interest.add(new_interest)
-                new_user.profile.save()
+            for interest in interests:
+                new_interest, c = models.Interest.objects.get_or_create(name=interest)
+                new_user.profile.interest.add(new_interest)
+            new_user.profile.save()
 
             messages.add_message(request, messages.INFO,
                                  models.Setting.objects.get(group__name='general', name='registration_message').value)
