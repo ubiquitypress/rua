@@ -32,7 +32,7 @@ body {
       <br>
                 <form method="POST">
                   {% csrf_token %}  
-                 <div class="input-group">
+                 <div class= "col-md-6 input-group">
                   <input type="text" class="form-control" id="search" name="search" placeholder="Search for an activity log...">
                   <div class="input-group-addon"><i class="fa fa-search"></i></div>
                 </div>
@@ -72,7 +72,7 @@ body {
                         {% endfor %}
                     </select>
                 </div>
-
+                <strong>Search</strong>
                  <div class="input-group col-md-6">
                   <input type="text" class="form-control" id="email_search" name="email_search" placeholder="Search for an email log...">
                   <div class="input-group-addon"><i class="fa fa-search"></i></div>
