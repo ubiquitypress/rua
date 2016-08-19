@@ -187,19 +187,22 @@ def logout(request):
 
 
 def register(request):
-    profile_form = forms.RegistrationProfileForm()
     form = forms.UserCreationForm()
+    profile_form = forms.RegistrationProfileForm()
+    display_interests = []
 
     if request.method == 'POST':
         form = forms.UserCreationForm(request.POST)
         profile_form = forms.RegistrationProfileForm(request.POST)
+        display_interests = request.POST.get('interests').split(',')  # To keep interests field filled if validation error is raised.
 
         if form.is_valid() and profile_form.is_valid():
             author_role = models.Role.objects.get(slug='author')
             new_user = form.save()
-            profile_form.instance = new_user.profile
+            profile_form = forms.RegistrationProfileForm(request.POST, instance=new_user.profile)
             profile_form.save()
             new_user.profile.roles.add(author_role)
+            new_user.profile.save()
             interests = []
             if 'interests' in request.POST:
                 interests = request.POST.get('interests').split(',')
@@ -219,6 +222,7 @@ def register(request):
     return render(request, "core/register.html", {
         'form': form,
         'profile_form': profile_form,
+        'display_interests': display_interests,
     })
 
 
