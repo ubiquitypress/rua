@@ -24,7 +24,7 @@ def list_to_text(email_list):
     return emails
 
 
-def add_email_log_entry(subject, from_address, to, bcc, cc, content, attachment=None, proposal=None, book=None,
+def add_email_log_entry(subject, from_address, to, bcc, cc, content, attachments=None, proposal=None, book=None,
                         kind=None):
     if proposal:
         log_dict = {
@@ -51,7 +51,10 @@ def add_email_log_entry(subject, from_address, to, bcc, cc, content, attachment=
         }
     new_log_entry = models.EmailLog(**log_dict)
     new_log_entry.save()
-    if attachment:
-        new_log_entry.attachment.add(attachment)
+
+    if attachments:
+        for attachment in attachments:
+            new_log_entry.attachments.add(attachment)
     new_log_entry.save()
+
     return new_log_entry

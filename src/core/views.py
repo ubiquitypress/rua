@@ -734,7 +734,7 @@ def email_users(request, group, submission_id=None, user_id=None):
     sent = False
     if request.POST:
 
-        attachment = request.FILES.get('attachment')
+        attachment_files = request.FILES.getlist('attachment')
         subject = request.POST.get('subject')
         body = request.POST.get('body')
 
@@ -746,14 +746,18 @@ def email_users(request, group, submission_id=None, user_id=None):
         cc_list = logic.clean_email_list(cc_addresses)
         bcc_list = logic.clean_email_list(bcc_addresses)
 
-        if attachment:
-            attachment = handle_file(attachment, submission, 'other', request.user,
-                                     "Attachment: Uploaded by %s" % (request.user.username))
+        attachments = [] #To create list of attachment objects, rather than InMemoryUploadedFiles
+
+        if attachment_files:
+            for attachment in attachment_files:
+                attachment = handle_file(attachment, submission, 'other', request.user,
+                                         "Attachment: Uploaded by %s" % (request.user.username))
+                attachments.append(attachment)
 
         if to_addresses:
-            if attachment:
+            if attachments:
                 send_email(subject=subject, context={}, from_email=request.user.email, to=to_list, bcc=bcc_list,
-                           cc=cc_list, html_template=body, book=submission, attachment=attachment)
+                           cc=cc_list, html_template=body, book=submission, attachments=attachments)
             else:
                 send_email(subject=subject, context={}, from_email=request.user.email, to=to_list, bcc=bcc_list,
                            cc=cc_list, html_template=body, book=submission)
@@ -825,7 +829,7 @@ def email_general(request, user_id=None):
     sent = False
     if request.POST:
 
-        attachment = request.FILES.get('attachment')
+        attachment_files = request.FILES.getlist('attachment')
         subject = request.POST.get('subject')
         body = request.POST.get('body')
 
@@ -837,14 +841,18 @@ def email_general(request, user_id=None):
         cc_list = logic.clean_email_list(cc_addresses)
         bcc_list = logic.clean_email_list(bcc_addresses)
 
-        if attachment:
-            attachment = handle_email_file(attachment, 'other', request.user,
-                                           "Attachment: Uploaded by %s" % (request.user.username))
+        attachments = [] #To create list of attachment objects, rather than InMemoryUploadedFiles.
+
+        if attachment_files:
+            for attachment in attachment_files:
+                attachment = handle_email_file(attachment, 'other', request.user,
+                                        "Attachment: Uploaded by %s" % (request.user.username))
+                attachments.append(attachment)
 
         if to_addresses:
-            if attachment:
+            if attachment_files:
                 send_email(subject=subject, context={}, from_email=request.user.email, to=to_list, bcc=bcc_list,
-                           cc=cc_list, html_template=body, attachment=attachment)
+                           cc=cc_list, html_template=body, attachments=attachments)
             else:
                 send_email(subject=subject, context={}, from_email=request.user.email, to=to_list, bcc=bcc_list,
                            cc=cc_list, html_template=body)
@@ -882,7 +890,7 @@ def email_users_proposal(request, proposal_id, user_id):
     sent = False
     if request.POST:
 
-        attachment = request.FILES.get('attachment')
+        attachment_files = request.FILES.getlist('attachment')
         subject = request.POST.get('subject')
         body = request.POST.get('body')
 
@@ -894,14 +902,18 @@ def email_users_proposal(request, proposal_id, user_id):
         cc_list = logic.clean_email_list(cc_addresses)
         bcc_list = logic.clean_email_list(bcc_addresses)
 
-        if attachment:
-            attachment = handle_proposal_file(attachment, proposal, 'other', request.user,
+        attachments = [] #To create list of attachment objects, rather than InMemoryUploadedFiles
+
+        if attachment_files:
+            for attachment in attachment_files:
+                attachment = handle_proposal_file(attachment, proposal, 'other', request.user,
                                               "Attachment: Uploaded by %s" % (request.user.username))
+                attachments.append(attachment)
 
         if to_addresses:
-            if attachment:
+            if attachment_files:
                 send_email(subject=subject, context={}, from_email=request.user.email, to=to_list, bcc=bcc_list,
-                           cc=cc_list, html_template=body, proposal=proposal, attachment=attachment)
+                           cc=cc_list, html_template=body, proposal=proposal, attachments=attachments)
             else:
                 send_email(subject=subject, context={}, from_email=request.user.email, to=to_list, bcc=bcc_list,
                            cc=cc_list, html_template=body, proposal=proposal)
@@ -940,7 +952,7 @@ def email_primary_contact(request):
     sent = False
     if request.POST:
 
-        attachment = request.FILES.get('attachment')
+        attachment_files = request.FILES.get('attachment')
         subject = request.POST.get('subject')
         body = request.POST.get('body')
 
@@ -952,14 +964,18 @@ def email_primary_contact(request):
         cc_list = logic.clean_email_list(cc_addresses)
         bcc_list = logic.clean_email_list(bcc_addresses)
 
-        if attachment:
-            attachment = handle_proposal_file(attachment, proposal, 'other', request.user,
-                                              "Attachment: Uploaded by %s" % (request.user.username))
+        attachments = [] #To create list of attachment objects, rather than InMemoryUploadedFiles
+
+        if attachment_files:
+            for attachment in attachment_files:
+                attachment = handle_proposal_file(attachment, proposal, 'other', request.user,
+                                                  "Attachment: Uploaded by %s" % (request.user.username))
+                attachments.append(attachment)
 
         if to_addresses:
-            if attachment:
+            if attachment_files:
                 send_email(subject=subject, context={}, from_email=request.user.email, to=to_list, bcc=bcc_list,
-                           cc=cc_list, html_template=body, proposal=proposal, attachment=attachment)
+                           cc=cc_list, html_template=body, proposal=proposal, attachments=attachments)
             else:
                 send_email(subject=subject, context={}, from_email=request.user.email, to=to_list, bcc=bcc_list,
                            cc=cc_list, html_template=body, proposal=proposal)
