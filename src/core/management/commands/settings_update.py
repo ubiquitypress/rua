@@ -8,35 +8,32 @@ from core import models
 
 
 class Command(BaseCommand):
-    help = "Run 'python manage.py settings_update <setting_name>' to update or create the specified setting."
+    help = "Run 'python manage.py settings_update <setting_name>' to update or create the specified setting model from master.json."
 
     def add_arguments(self, parser):
         parser.add_argument('setting_name')
 
     def handle(self, *args, **options):
-        file = os.path.join(settings.BASE_DIR, 'core/fixtures/settinggroups.json')
+        file = os.path.join(settings.BASE_DIR, 'core/fixtures/settings/master.json')
 
         with open(file) as json_data:
             default_data = json.load(json_data)
-            setting = default_data.get('name' == args[0])
 
-            try:
-                group = models.SettingGroup.objects.get(pk=int(setting['fields'].get('group')))
+            for setting in default_data:
+                 if setting['fields']['name'] == options['setting_name']:
 
-                defaults = {
-                    'group': group,
-                    'types': setting['fields'].get('types'),
-                    'value': setting['fields'].get('value'),
-                    'description': setting['fields'].get('description'),
-                },
+                    group = models.SettingGroup.objects.get(pk=int(setting['fields']['group']))
+                    defaults = {
+                        'types': setting['fields']['types'],
+                        'value': setting['fields']['value'],
+                        'description': setting['fields']['description'],
+                        'group': group,
+                    }
 
-                s, created = models.Setting.objects.update_or_create(
-                    name=setting['fields'].get('name'),
-                    defaults=defaults
-                )
+                    s, created = models.Setting.objects.update_or_create(
+                        name=setting['fields']['name'],
+                        defaults=defaults
+                    )
 
-                if created:
-                    print 'Created setting {0}'.format(s.name)
-
-            except setting.DoesNotExist:
-                raise CommandError('Setting {0} not found'.format(setting))
+                    if created:
+                        print 'Created setting {0}'.format(s.name)
