@@ -17,7 +17,7 @@
 <div class="col-md-12">
 	<div class="row">
 		<div class="col-md-11">
-	
+
 		</div>
     </div>
 	<br />
@@ -53,9 +53,7 @@
 		  		<div class="col-md-4">{% bootstrap_field profile_form.country %}</div>
 		  		<div class="col-md-12">
                       <div class="aside "><strong>Interests</strong></div>
-                        <input type="text" id="interests" name="interests"
-							   value="{% for interest in user.profile.interest.all %}{{ interest }}
-							   {% if not forloop.last %},{% endif %}{% endfor %}"/> Hit Enter to add a new interest.
+                        <input type="text" id="interests" name="interests"/> Hit Enter to add a new interest.
 		  		</div>
 		  	</div>
 		  </div>
@@ -96,10 +94,10 @@
 		            </div>
 				</div>
 		  		</div>
-		  		
+
 		  		<div class="row">
 		  			<div class="col-md-6">{% bootstrap_field profile_form.website %}</div>
-		  		
+
 		  		</div>
 		  	</div>
 		  	<div class="form-group">
@@ -148,19 +146,19 @@ $('option').mousedown(function(e) {
 </script>
 
 <script language="javascript" type="text/javascript">
-$(document).ready(function () {    
+$(document).ready(function () {
        {%for field in profile_form%}
-          {% if field.field.required %} 
+          {% if field.field.required %}
          var required_text=$('label[for="' + "id_{{field.name}}"+ '"]').html()+" *";
          var current_field = $('label[for="' + "id_{{field.name}}"+ '"]');
-         current_field.text(required_text); 
+         current_field.text(required_text);
           {% endif %}
        {% endfor %}
        {%for field in user_form%}
-          {% if field.field.required %} 
+          {% if field.field.required %}
          var required_text=$('label[for="' + "id_{{field.name}}"+ '"]').html()+" *";
          var current_field = $('label[for="' + "id_{{field.name}}"+ '"]');
-         current_field.text(required_text); 
+         current_field.text(required_text);
           {% endif %}
        {% endfor %}
 
