@@ -478,6 +478,8 @@ def user_edit(request, user_id):
         if profile_form.is_valid() and user_form.is_valid():
             user = user_form.save()
             profile = profile_form.save()
+            for interest in profile.interest.all():
+                profile.interest.remove(interest)
 
             interests = request.POST.get('interests')
             if interests:
