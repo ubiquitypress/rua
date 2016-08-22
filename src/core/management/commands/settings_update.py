@@ -20,7 +20,7 @@ class Command(BaseCommand):
             default_data = json.load(json_data)
 
             for setting in default_data:
-                 if setting['fields']['name'] == options['setting_name']:
+                if setting['fields']['name'] == options['setting_name']:
 
                     group = models.SettingGroup.objects.get(pk=int(setting['fields']['group']))
                     defaults = {
@@ -37,3 +37,7 @@ class Command(BaseCommand):
 
                     if created:
                         print 'Created setting {0}'.format(s.name)
+
+                
+
+
