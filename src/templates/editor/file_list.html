@@ -11,7 +11,7 @@
     {% for file in primary_files %}
     <tr>
         <th>{{ file.label }}</th>
-        <td>{{ file.original_filename }}</td>
+        <td><a href="{% url 'serve_file' submission.id file.id %}">{{ file.original_filename }}</a></td>
         <th>{{ file.kind }}</th>
         <th>
             <form method="POST">{% csrf_token %}
@@ -36,7 +36,7 @@
     {% for file in additional_files %}
     <tr>
         <th>{{ file.label }}</th>
-        <td>{{ file.original_filename }}</td>
+        <td><a href="{% url 'serve_file' submission.id file.id %}">{{ file.original_filename }}</a></td>
         <th>{{ file.kind }}</th>
         <th>
             <form method="POST">{% csrf_token %}
