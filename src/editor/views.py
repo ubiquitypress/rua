@@ -1886,7 +1886,7 @@ def update_format_or_chapter(request, submission_id, format_or_chapter, id):
                     handle_file_update(request.FILES.get('chapter_file'), file_update, book, item.file.kind,
                                        request.user)
                 else:
-                    handle_file_update(request.FILES.get('file'), file_update, book, item.file.kind, request.user)
+                    handle_file_update(request.FILES.get('chapter_file'), file_update, book, item.file.kind, request.user)
             return redirect(reverse('editor_production', kwargs={'submission_id': book.id}))
 
     template = 'editor/submission.html'

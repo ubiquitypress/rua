@@ -230,8 +230,8 @@ def activate(request, code):
     try:
         profile = models.Profile.objects.get(activation_code=code)
     except models.Profile.DoesNotExist:
-        return HttpResponse(
-            '<h2>This activation code either does not exist has already been used. You should attempt to login.</h2><p><a href="/login/">Login Here</a>')
+        return HttpResponse('<h2>This activation code either does not exist or has already been used. You should attempt to login.</h2><p><a href="/login/">Login Here</a>')
+
     if profile:
         profile.user.is_active = True
         if not profile.roles.filter(slug='reader').exists():
@@ -2768,7 +2768,7 @@ def create_completed_proposal_review_form(proposal, review_id):
         for relation in relations:
             v = data[relation.element.name]
             document.add_heading(relation.element.name, level=1)
-            text = BeautifulSoup(str(v[0]), "html.parser").get_text()
+            text = BeautifulSoup(smart_text(v[0]), "html.parser").get_text()
             document.add_paragraph(text).bold = True
             recommendations = {'accept': 'Accept', 'reject': 'Reject', 'revisions': 'Revisions Required'}
 
