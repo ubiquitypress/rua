@@ -16,7 +16,7 @@ def filepath_proposal(proposal, attachment):
 def filepath_general(attachment):
     return '%s/%s' % (settings.EMAIL_DIR, attachment.uuid_filename)
 
-def send_email(subject, context, from_email, to, html_template, bcc=None, cc=None, book=None, attachments=None, proposal=None, request=None, kind = None):
+def send_email(subject, context, from_email, to, html_template, bcc=None, cc=None, book=None, attachment=None, proposal=None, request=None, kind = None):
 
     html_template.replace('\n', '<br />')
 
@@ -35,9 +35,45 @@ def send_email(subject, context, from_email, to, html_template, bcc=None, cc=Non
     msg = EmailMessage(subject, html_content, from_email, to, bcc=bcc, cc=cc, headers={'Reply-To': reply_to})
 
     if book:
-        log.add_email_log_entry(book=book, subject=subject, from_address=from_email, to=to, bcc=bcc, cc=cc, content=html_content, attachments=attachments, kind=kind)
+        log.add_email_log_entry(book=book, subject=subject, from_address=from_email, to=to, bcc=bcc, cc=cc, content=html_content, attachment=attachment, kind=kind)
     if proposal:
-        log.add_email_log_entry(proposal=proposal, subject=subject, from_address=from_email, to=to, bcc=bcc, cc=cc, content=html_content, attachments=attachments, kind = kind)
+        log.add_email_log_entry(proposal=proposal, subject=subject, from_address=from_email, to=to, bcc=bcc, cc=cc, content=html_content, attachment=attachment, kind = kind)
+
+    msg.content_subtype = "html"
+
+    if attachment:
+        if book:
+            msg.attach_file(filepath(book, attachment))
+        elif proposal:
+            msg.attach_file(filepath_proposal(proposal, attachment))
+        else:
+            msg.attach_file(filepath_general(attachment))
+
+    msg.send()
+
+def send_email_multiple(subject, context, from_email, to, html_template, bcc=None, cc=None, book=None, attachments=None, proposal=None, request=None, kind = None):
+
+    # A temporary function while all email forms are converted to handle multiple attachments.
+    html_template.replace('\n', '<br />')
+
+    htmly = Template(html_template)
+    con = Context(context)
+    html_content = htmly.render(con)
+
+    if not type(to) in [list,tuple]:
+        to = [to]
+
+    if request:
+        reply_to = request.user.email
+    else:
+        reply_to = models.Setting.objects.get(group__name='email', name='from_address')
+
+    msg = EmailMessage(subject, html_content, from_email, to, bcc=bcc, cc=cc, headers={'Reply-To': reply_to})
+
+    if book:
+        log.add_email_log_entry_multiple(book=book, subject=subject, from_address=from_email, to=to, bcc=bcc, cc=cc, content=html_content, attachments=attachments, kind=kind)
+    if proposal:
+        log.add_email_log_entry_multiple(proposal=proposal, subject=subject, from_address=from_email, to=to, bcc=bcc, cc=cc, content=html_content, attachments=attachments, kind = kind)
 
     msg.content_subtype = "html"
 

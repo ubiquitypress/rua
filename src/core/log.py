@@ -24,8 +24,43 @@ def list_to_text(email_list):
     return emails
 
 
-def add_email_log_entry(subject, from_address, to, bcc, cc, content, attachments=None, proposal=None, book=None,
+def add_email_log_entry(subject, from_address, to, bcc, cc, content, attachment=None, proposal=None, book=None,
                         kind=None):
+    if proposal:
+        log_dict = {
+            'proposal': proposal,
+            'kind': kind if kind else 'general',
+            'subject': subject,
+            'from_address': from_address,
+            'to': list_to_text(to) if to else '',
+            'cc': list_to_text(cc) if cc else '',
+            'bcc': list_to_text(bcc) if bcc else '',
+            'content': content,
+        }
+
+    else:
+        log_dict = {
+            'book': book,
+            'kind': kind if kind else 'general',
+            'subject': subject,
+            'from_address': from_address,
+            'to': list_to_text(to) if to else '',
+            'cc': list_to_text(cc) if cc else '',
+            'bcc': list_to_text(bcc) if bcc else '',
+            'content': content,
+        }
+    new_log_entry = models.EmailLog(**log_dict)
+    new_log_entry.save()
+
+    if attachment:
+        new_log_entry.attachment.add(attachment)
+    new_log_entry.save()
+
+    return new_log_entry
+
+# Temporary function while all email forms are tweaked to handle multiple attachments
+def add_email_log_entry_multiple(subject, from_address, to, bcc, cc, content, attachments=None, proposal=None, book=None,
+                            kind=None):
     if proposal:
         log_dict = {
             'proposal': proposal,
@@ -54,7 +89,7 @@ def add_email_log_entry(subject, from_address, to, bcc, cc, content, attachments
 
     if attachments:
         for attachment in attachments:
-            new_log_entry.attachments.add(attachment)
+            new_log_entry.attachment.add(attachment)
     new_log_entry.save()
 
     return new_log_entry

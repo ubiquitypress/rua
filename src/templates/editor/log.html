@@ -93,7 +93,7 @@ body {
                       <p><small>{{ item.content|safe }}</small></p>
                          <hr>
                          <p>
-                             Attachments: {% for attachment in item.attachments.all %}
+                             Attachments: {% for attachment in item.attachment.all %}
                              <a href="{% url 'serve_file' submission.id attachment.id %}">
                              {% if forloop.last %}{{ attachment }}{% else %}{{ attachment }}, {% endif %}</a>
                              {% empty %} None. {% endfor %}</p>

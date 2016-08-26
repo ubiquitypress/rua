@@ -1351,7 +1351,7 @@ class EmailLog(models.Model):
     from_address = models.EmailField(max_length=1000)
     subject = models.CharField(max_length=1000)
     content = models.TextField()
-    attachments = models.ManyToManyField('File', null=True, blank=True, related_name="email_attachments")
+    attachment = models.ManyToManyField('File', null=True, blank=True, related_name="email_attachment")
     sent = models.DateTimeField(auto_now_add=True)
     kind = models.CharField(max_length=100, choices=emaillog_choices, default='general')
 

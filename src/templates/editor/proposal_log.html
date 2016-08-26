@@ -92,7 +92,7 @@ body {
                       <p><small>{{ item.content|safe }}</small></p>
                          <hr>
                          <p>
-       Attachments: {% for attachment in item.attachments.all %}
+       Attachments: {% for attachment in item.attachment.all %}
         {% if submission %}
         <a  href="{% url 'serve_file' submission.id attachment.id %}">{{ attachment }} </a>
         {% else %}

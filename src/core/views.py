@@ -19,7 +19,7 @@ from editor import forms as editor_forms
 from review import models as review_models
 from core import log, models, forms, logic
 from author import orcid
-from email import send_email, send_reset_email, get_email_content
+from email import send_email, send_email_multiple, send_reset_email, get_email_content
 from files import handle_file_update, handle_attachment, handle_file, handle_email_file, handle_proposal_review_file, \
     handle_proposal_file, handle_proposal_file_form
 from submission import models as submission_models
@@ -755,8 +755,8 @@ def email_users(request, group, submission_id=None, user_id=None):
                 attachments.append(attachment)
 
         if to_addresses:
-            if attachments:
-                send_email(subject=subject, context={}, from_email=request.user.email, to=to_list, bcc=bcc_list,
+            if attachments: # send_email_multiple is temporary function while email forms changed to allow multiple attachments
+                send_email_multiple(subject=subject, context={}, from_email=request.user.email, to=to_list, bcc=bcc_list,
                            cc=cc_list, html_template=body, book=submission, attachments=attachments)
             else:
                 send_email(subject=subject, context={}, from_email=request.user.email, to=to_list, bcc=bcc_list,
@@ -1400,7 +1400,6 @@ def view_log(request, submission_id):
         log_list = models.Log.objects.filter(Q(book=book)).order_by('-date_logged')
 
     if email_query_list:
-        print email_query_list
         email_list = models.EmailLog.objects.filter(Q(book=book)).filter(*email_query_list).order_by('-sent')
     else:
         email_list = models.EmailLog.objects.filter(Q(book=book)).order_by('-sent')

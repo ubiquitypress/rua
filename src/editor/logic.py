@@ -408,7 +408,6 @@ def send_requests_revisions(book, revision, email_text, attachments=None):
 	base_url = models.Setting.objects.get(group__name='general', name='base_url').value
 	press_name = models.Setting.objects.get(group__name='general', name='press_name').value
 
-
 	context = {
 		'book': book,
 		'revision': revision,
@@ -416,4 +415,4 @@ def send_requests_revisions(book, revision, email_text, attachments=None):
 		'revision_url': "http://%s/author/submission/%s/revisions/%s" % (base_url, book.id, revision.id)
 	}
 
-	email.send_email(get_setting('revisions_requested_subject','email_subject','Revisions Requested'), context, from_email.value, book.owner.email, email_text, book=book, attachments=attachments, kind = 'revisions')
+	email.send_email_multiple(get_setting('revisions_requested_subject','email_subject','Revisions Requested'), context, from_email.value, book.owner.email, email_text, book=book, attachments=attachments, kind = 'revisions')
