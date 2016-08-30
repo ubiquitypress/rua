@@ -1,5 +1,6 @@
 <h3>Files for Typesetting</h3>
 
+<div style="overflow-x:auto">
 <table id="files-for-production" class="table table-bordered small">
     <tr>
         <th>Label</th>
@@ -10,7 +11,7 @@
     {% for file in production_files %}
     <tr>
         <td>{{ file.label }}</td>
-        <td>{{ file.original_filename }}</td>
+        <td><a href="{% url 'serve_file' submission.id file.id %}">{{ file.original_filename }}</a></td>
         <td>{{ file.kind }}</td>
         <td>
             <form method="POST">{% csrf_token %}
@@ -23,6 +24,7 @@
     No files staged yet
     {% endfor %}
 </table>
+</div>
 
 <a href="{% url 'editor_decision' submission.id 'production' %}"
    class="btn btn-sm btn-accept btn-action">Submit</a>

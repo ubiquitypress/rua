@@ -403,11 +403,10 @@ def send_book_editors(book, added_editors,removed_editors,email_text):
 	if added_editors or removed_editors:
 		email.send_email(get_setting('book_editors_subject','email_subject','Book Editors have been updated'), context, from_email.value, book.owner.email, email_text, book=book, kind = 'general')
 
-def send_requests_revisions(book, revision, email_text):
+def send_requests_revisions(book, revision, email_text, attachments=None):
 	from_email = models.Setting.objects.get(group__name='email', name='from_address')
 	base_url = models.Setting.objects.get(group__name='general', name='base_url').value
 	press_name = models.Setting.objects.get(group__name='general', name='press_name').value
-
 
 	context = {
 		'book': book,
@@ -416,4 +415,4 @@ def send_requests_revisions(book, revision, email_text):
 		'revision_url': "http://%s/author/submission/%s/revisions/%s" % (base_url, book.id, revision.id)
 	}
 
-	email.send_email(get_setting('revisions_requested_subject','email_subject','Revisions Requested'), context, from_email.value, book.owner.email, email_text, book=book, kind = 'revisions')
+	email.send_email_multiple(get_setting('revisions_requested_subject','email_subject','Revisions Requested'), context, from_email.value, book.owner.email, email_text, book=book, attachments=attachments, kind = 'revisions')

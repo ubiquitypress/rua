@@ -19,7 +19,7 @@ from editor import forms as editor_forms
 from review import models as review_models
 from core import log, models, forms, logic
 from author import orcid
-from email import send_email, send_reset_email, get_email_content
+from email import send_email, send_email_multiple, send_reset_email, get_email_content
 from files import handle_file_update, handle_attachment, handle_file, handle_email_file, handle_proposal_review_file, \
     handle_proposal_file, handle_proposal_file_form
 from submission import models as submission_models
@@ -187,28 +187,30 @@ def logout(request):
 
 
 def register(request):
-    profile_form = forms.RegistrationProfileForm()
     form = forms.UserCreationForm()
+    profile_form = forms.RegistrationProfileForm()
+    display_interests = []
 
     if request.method == 'POST':
         form = forms.UserCreationForm(request.POST)
-        if form.is_valid():
+        profile_form = forms.RegistrationProfileForm(request.POST)
+        display_interests = request.POST.get('interests').split(',')  # To keep interests field filled if validation error is raised.
+
+        if form.is_valid() and profile_form.is_valid():
             author_role = models.Role.objects.get(slug='author')
             new_user = form.save()
             profile_form = forms.RegistrationProfileForm(request.POST, instance=new_user.profile)
+            profile_form.save()
+            new_user.profile.roles.add(author_role)
+            new_user.profile.save()
+            interests = []
+            if 'interests' in request.POST:
+                interests = request.POST.get('interests').split(',')
 
-            if profile_form.is_valid():
-                profile_form.save()
-                new_user.profile.roles.add(author_role)
-                new_user.profile.save()
-                interests = []
-                if 'interests' in request.POST:
-                    interests = request.POST.get('interests').split(',')
-
-                for interest in interests:
-                    new_interest, c = models.Interest.objects.get_or_create(name=interest)
-                    new_user.profile.interest.add(new_interest)
-                new_user.profile.save()
+            for interest in interests:
+                new_interest, c = models.Interest.objects.get_or_create(name=interest)
+                new_user.profile.interest.add(new_interest)
+            new_user.profile.save()
 
             messages.add_message(request, messages.INFO,
                                  models.Setting.objects.get(group__name='general', name='registration_message').value)
@@ -220,6 +222,7 @@ def register(request):
     return render(request, "core/register.html", {
         'form': form,
         'profile_form': profile_form,
+        'display_interests': display_interests,
     })
 
 
@@ -227,7 +230,7 @@ def activate(request, code):
     try:
         profile = models.Profile.objects.get(activation_code=code)
     except models.Profile.DoesNotExist:
-        return HttpResponse('<h2>This activation code either does not exist has already been used. You should attempt to login.</h2><p><a href="/login/">Login Here</a>')
+        return HttpResponse('<h2>This activation code either does not exist or has already been used. You should attempt to login.</h2><p><a href="/login/">Login Here</a>')
 
     if profile:
         profile.user.is_active = True
@@ -731,7 +734,7 @@ def email_users(request, group, submission_id=None, user_id=None):
     sent = False
     if request.POST:
 
-        attachment = request.FILES.get('attachment')
+        attachment_files = request.FILES.getlist('attachment')
         subject = request.POST.get('subject')
         body = request.POST.get('body')
 
@@ -743,14 +746,18 @@ def email_users(request, group, submission_id=None, user_id=None):
         cc_list = logic.clean_email_list(cc_addresses)
         bcc_list = logic.clean_email_list(bcc_addresses)
 
-        if attachment:
-            attachment = handle_file(attachment, submission, 'other', request.user,
-                                     "Attachment: Uploaded by %s" % (request.user.username))
+        attachments = [] #To create list of attachment objects, rather than InMemoryUploadedFiles
+
+        if attachment_files:
+            for attachment in attachment_files:
+                attachment = handle_file(attachment, submission, 'other', request.user,
+                                         "Attachment: Uploaded by %s" % (request.user.username))
+                attachments.append(attachment)
 
         if to_addresses:
-            if attachment:
-                send_email(subject=subject, context={}, from_email=request.user.email, to=to_list, bcc=bcc_list,
-                           cc=cc_list, html_template=body, book=submission, attachment=attachment)
+            if attachments: # send_email_multiple is temporary function while email forms changed to allow multiple attachments
+                send_email_multiple(subject=subject, context={}, from_email=request.user.email, to=to_list, bcc=bcc_list,
+                           cc=cc_list, html_template=body, book=submission, attachments=attachments)
             else:
                 send_email(subject=subject, context={}, from_email=request.user.email, to=to_list, bcc=bcc_list,
                            cc=cc_list, html_template=body, book=submission)
@@ -822,7 +829,7 @@ def email_general(request, user_id=None):
     sent = False
     if request.POST:
 
-        attachment = request.FILES.get('attachment')
+        attachment_files = request.FILES.getlist('attachment')
         subject = request.POST.get('subject')
         body = request.POST.get('body')
 
@@ -834,14 +841,18 @@ def email_general(request, user_id=None):
         cc_list = logic.clean_email_list(cc_addresses)
         bcc_list = logic.clean_email_list(bcc_addresses)
 
-        if attachment:
-            attachment = handle_email_file(attachment, 'other', request.user,
-                                           "Attachment: Uploaded by %s" % (request.user.username))
+        attachments = [] #To create list of attachment objects, rather than InMemoryUploadedFiles.
+
+        if attachment_files:
+            for attachment in attachment_files:
+                attachment = handle_email_file(attachment, 'other', request.user,
+                                        "Attachment: Uploaded by %s" % (request.user.username))
+                attachments.append(attachment)
 
         if to_addresses:
-            if attachment:
+            if attachment_files:
                 send_email(subject=subject, context={}, from_email=request.user.email, to=to_list, bcc=bcc_list,
-                           cc=cc_list, html_template=body, attachment=attachment)
+                           cc=cc_list, html_template=body, attachments=attachments)
             else:
                 send_email(subject=subject, context={}, from_email=request.user.email, to=to_list, bcc=bcc_list,
                            cc=cc_list, html_template=body)
@@ -879,7 +890,7 @@ def email_users_proposal(request, proposal_id, user_id):
     sent = False
     if request.POST:
 
-        attachment = request.FILES.get('attachment')
+        attachment_files = request.FILES.getlist('attachment')
         subject = request.POST.get('subject')
         body = request.POST.get('body')
 
@@ -891,14 +902,18 @@ def email_users_proposal(request, proposal_id, user_id):
         cc_list = logic.clean_email_list(cc_addresses)
         bcc_list = logic.clean_email_list(bcc_addresses)
 
-        if attachment:
-            attachment = handle_proposal_file(attachment, proposal, 'other', request.user,
+        attachments = [] #To create list of attachment objects, rather than InMemoryUploadedFiles
+
+        if attachment_files:
+            for attachment in attachment_files:
+                attachment = handle_proposal_file(attachment, proposal, 'other', request.user,
                                               "Attachment: Uploaded by %s" % (request.user.username))
+                attachments.append(attachment)
 
         if to_addresses:
-            if attachment:
+            if attachment_files:
                 send_email(subject=subject, context={}, from_email=request.user.email, to=to_list, bcc=bcc_list,
-                           cc=cc_list, html_template=body, proposal=proposal, attachment=attachment)
+                           cc=cc_list, html_template=body, proposal=proposal, attachments=attachments)
             else:
                 send_email(subject=subject, context={}, from_email=request.user.email, to=to_list, bcc=bcc_list,
                            cc=cc_list, html_template=body, proposal=proposal)
@@ -937,7 +952,7 @@ def email_primary_contact(request):
     sent = False
     if request.POST:
 
-        attachment = request.FILES.get('attachment')
+        attachment_files = request.FILES.get('attachment')
         subject = request.POST.get('subject')
         body = request.POST.get('body')
 
@@ -949,14 +964,18 @@ def email_primary_contact(request):
         cc_list = logic.clean_email_list(cc_addresses)
         bcc_list = logic.clean_email_list(bcc_addresses)
 
-        if attachment:
-            attachment = handle_proposal_file(attachment, proposal, 'other', request.user,
-                                              "Attachment: Uploaded by %s" % (request.user.username))
+        attachments = [] #To create list of attachment objects, rather than InMemoryUploadedFiles
+
+        if attachment_files:
+            for attachment in attachment_files:
+                attachment = handle_proposal_file(attachment, proposal, 'other', request.user,
+                                                  "Attachment: Uploaded by %s" % (request.user.username))
+                attachments.append(attachment)
 
         if to_addresses:
-            if attachment:
+            if attachment_files:
                 send_email(subject=subject, context={}, from_email=request.user.email, to=to_list, bcc=bcc_list,
-                           cc=cc_list, html_template=body, proposal=proposal, attachment=attachment)
+                           cc=cc_list, html_template=body, proposal=proposal, attachments=attachments)
             else:
                 send_email(subject=subject, context={}, from_email=request.user.email, to=to_list, bcc=bcc_list,
                            cc=cc_list, html_template=body, proposal=proposal)
@@ -1381,7 +1400,6 @@ def view_log(request, submission_id):
         log_list = models.Log.objects.filter(Q(book=book)).order_by('-date_logged')
 
     if email_query_list:
-        print email_query_list
         email_list = models.EmailLog.objects.filter(Q(book=book)).filter(*email_query_list).order_by('-sent')
     else:
         email_list = models.EmailLog.objects.filter(Q(book=book)).order_by('-sent')

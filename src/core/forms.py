@@ -40,7 +40,6 @@ class UserCreationForm(forms.ModelForm):
         model = User
         fields = ("username", "first_name", "last_name", "email")
 
-
     def clean_email(self):
         email = self.cleaned_data.get("email")
         username = self.cleaned_data.get("username")
@@ -83,6 +82,12 @@ class UserProfileForm(forms.ModelForm):
         model = User
         fields = ("first_name", "last_name", "email")
 
+
+class FullUserProfileForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ("username", "first_name", "last_name", "email")
+
     def clean_email(self):
         email = self.cleaned_data.get("email")
         username = self.cleaned_data.get("username")
@@ -91,16 +96,10 @@ class UserProfileForm(forms.ModelForm):
         return email
 
 
-class FullUserProfileForm(forms.ModelForm):
-    class Meta:
-        model = User
-        fields = ("username", "first_name", "last_name", "email")
-
-
 class RegistrationProfileForm(forms.ModelForm):
     class Meta:
         model = models.Profile
-        fields = ("salutation", "middle_name", "biography", "orcid", "institution", "department", "country", "twitter",
+        fields = ("salutation", "middle_name", "biography", "orcid", "institution", "department", "country", "interest", "twitter",
                   "facebook", "linkedin", "impactstory", "github", "profile_image", "signature", "website")
 
 

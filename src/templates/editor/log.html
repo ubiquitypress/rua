@@ -32,7 +32,7 @@ body {
       <br>
                 <form method="POST">
                   {% csrf_token %}  
-                 <div class="input-group">
+                 <div class= "col-md-6 input-group">
                   <input type="text" class="form-control" id="search" name="search" placeholder="Search for an activity log...">
                   <div class="input-group-addon"><i class="fa fa-search"></i></div>
                 </div>
@@ -60,8 +60,8 @@ body {
  <div role="tabpanel"  class="tab-pane" id="email"> 
                   <br>
                 <form method="POST">
-                  {% csrf_token %}  
-                <div class="col-md-6 pull-right form-group">
+                  {% csrf_token %}
+                <div class="col-md-6 form-group">
                 <strong>Filter By</strong>
                     <select name="filter" class="form-control" onchange="this.form.submit()">
                         <option value="">------</option>
@@ -72,8 +72,8 @@ body {
                         {% endfor %}
                     </select>
                 </div>
-
-                 <div class="input-group col-md-12">
+                <strong>Search</strong>
+                 <div class="input-group col-md-6">
                   <input type="text" class="form-control" id="email_search" name="email_search" placeholder="Search for an email log...">
                   <div class="input-group-addon"><i class="fa fa-search"></i></div>
                 </div>
@@ -93,7 +93,10 @@ body {
                       <p><small>{{ item.content|safe }}</small></p>
                          <hr>
                          <p>
-       Attachment: {% for attachment in item.attachment.all %}<a  href="{% url 'serve_file' submission.id attachment.id %}">{{ attachment }}</a>{% empty %} None. {% endfor %}</p>
+                             Attachments: {% for attachment in item.attachment.all %}
+                             <a href="{% url 'serve_file' submission.id attachment.id %}">
+                             {% if forloop.last %}{{ attachment }}{% else %}{{ attachment }}, {% endif %}</a>
+                             {% empty %} None. {% endfor %}</p>
                   </div>
                   <hr>
                    <div class="email-border-{{item.kind}}"></div>

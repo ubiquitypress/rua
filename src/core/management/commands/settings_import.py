@@ -7,15 +7,12 @@ from django.conf import settings
 from core import models
 
 def sync_groups():
-
         file = os.path.join(settings.BASE_DIR, 'core/fixtures/settinggroups.json')
 
         with open(file) as json_data:
-
             default_data = json.load(json_data)
 
             for entry in default_data:
-
                 defaults = {
                     'name': entry['fields'].get('name'),
                     'enabled': entry['fields'].get('enabled')
@@ -30,15 +27,12 @@ def sync_groups():
                     print 'Created setting group {0}'.format(setting_group.name)
 
 def sync_settings():
-
     file = os.path.join(settings.BASE_DIR, 'core/fixtures/settings/master.json')
 
     with open(file) as json_data:
-
         default_data = json.load(json_data)
 
         for entry in default_data:
-
             group = models.SettingGroup.objects.get(pk=int(entry['fields'].get('group')))
 
             defaults = {
@@ -59,8 +53,6 @@ def sync_settings():
 class Command(BaseCommand):
 
     help = "Run settings_import to sync settings and setting groups."
-
-
 
     def handle(self, *args, **options):
         sync_groups()

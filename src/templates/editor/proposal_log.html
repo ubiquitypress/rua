@@ -32,7 +32,7 @@ body {
       <br>
                 <form method="POST">
                   {% csrf_token %}
-                 <div class="input-group">
+                 <div class="input-group col-md-6">
                   <input type="text" class="form-control" id="search" name="search" placeholder="Search for an activity log...">
                   <div class="input-group-addon"><i class="fa fa-search"></i></div>
                 </div>
@@ -50,7 +50,6 @@ body {
                   </div>
                   <div class="timeline-body">
                       <p>{{ item.message }}</p>
-                   
                   </div>
               </div>
           </li>
@@ -58,11 +57,10 @@ body {
       </ul>
     </div>
  <div role="tabpanel"  class="tab-pane" id="email">   
-      <ul class="timeline">
            <br>
                 <form method="POST">
                   {% csrf_token %}
-                <div class="col-md-6 pull-right form-group">
+                <div class="col-md-6 form-group">
                 <strong>Filter By</strong>
                     <select name="filter" class="form-control" onchange="this.form.submit()">
                         <option value="">------</option>
@@ -73,13 +71,14 @@ body {
                         {% endfor %}
                     </select>
                 </div>
-
-                 <div class="input-group col-md-12">
+                <strong>Search</strong>
+                 <div class="input-group col-md-6">
                   <input type="text" class="form-control" id="email_search" name="email_search" placeholder="Search for an email log...">
                   <div class="input-group-addon"><i class="fa fa-search"></i></div>
-                </div>
+                  </div>
                 </form>
-                <br />
+            <br />
+       <ul class="timeline">
         {% for item in email_list %}
           <li {% if forloop.counter|divisibleby:2 %}class="timeline-inverted"{% endif %}>
               <div class="timeline-badge">
@@ -93,11 +92,11 @@ body {
                       <p><small>{{ item.content|safe }}</small></p>
                          <hr>
                          <p>
-       Attachment: {% for attachment in item.attachment.all %}
+       Attachments: {% for attachment in item.attachment.all %}
         {% if submission %}
-        <a  href="{% url 'serve_file' submission.id attachment.id %}">{{ attachment }}</a>
+        <a  href="{% url 'serve_file' submission.id attachment.id %}">{{ attachment }} </a>
         {% else %}
-        <a href="{% url 'serve_proposal_file_id' proposal.id attachment.id %}">{{ attachment }}</a>
+        <a href="{% url 'serve_proposal_file_id' proposal.id attachment.id %}">{{ attachment }} </a>
         {% endif %}
         {% empty %} None. 
         {% endfor %}</p>

@@ -401,10 +401,12 @@ def series_delete(request, series_id):
 def add_user(request):
     user_form = core_forms.FullUserProfileForm()
     profile_form = core_forms.FullProfileForm()
+    display_interests = [] #To keep displaying interests if registration page is reloaded.
 
     if request.method == 'POST':
         user_form = core_forms.FullUserProfileForm(request.POST)
         profile_form = core_forms.FullProfileForm(request.POST, request.FILES)
+        display_interests = request.POST.get('interests').split(',')
         if profile_form.is_valid() and user_form.is_valid():
             user = user_form.save()
 
@@ -438,9 +440,6 @@ def add_user(request):
                 role_object = core_models.Role.objects.get(pk=role)
                 profile.roles.add(role_object)
 
-            for interest in profile.interest.all():
-                profile.interest.remove(interest)
-
             interests = []
             if 'interests' in request.POST:
                 interests = request.POST.get('interests').split(',')
@@ -456,10 +455,11 @@ def add_user(request):
             else:
                 return redirect("%s?username=%s&password=%s" % (reverse('manager_users'), user.username, new_pass))
 
-    template = 'manager/users/edit.html'
+    template = 'manager/users/add.html'
     context = {
         'profile_form': profile_form,
         'user_form': user_form,
+        'display_interests': display_interests,
         'active': 'add',
         'return': request.GET.get('return', False)
     }

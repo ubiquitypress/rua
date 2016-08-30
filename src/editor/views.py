@@ -931,10 +931,18 @@ def request_revisions(request, submission_id, returner):
             new_revision_request.revision_type = returner
             new_revision_request.requestor = request.user
             new_revision_request.save()
-            print new_revision_request.revision_type
 
             email_text = request.POST.get('id_email_text')
-            logic.send_requests_revisions(book, new_revision_request, email_text)
+            attachment_files = request.FILES.getlist('attachment')
+            attachments = []
+
+            if attachment_files:
+                for attachment in attachment_files:
+                    attachment = handle_file(attachment, book, 'other', request.user,
+                                             "Attachment: Uploaded by %s" % (request.user.username))
+                    attachments.append(attachment)
+
+            logic.send_requests_revisions(book, new_revision_request, email_text, attachments)
             log.add_log_entry(book, request.user, 'revisions', '%s %s requested revisions for %s' % (
             request.user.first_name, request.user.last_name, book.title), 'Revisions Requested')
 
