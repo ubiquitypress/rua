@@ -1226,7 +1226,7 @@ button.accordion.active, button.accordion:hover {
     background-color: #ddd;
 }
 
-div.panel {
+div.review-panel {
     padding: 0 18px;
     background-color: white;
     max-height: 0;
@@ -1235,7 +1235,7 @@ div.panel {
     opacity: 0;
 }
 
-div.panel.show {
+div.review-panel.show {
     display: block !important;
     opacity: 1;
     max-height: 500px; /* Change according to screen size */
