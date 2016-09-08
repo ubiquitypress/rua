@@ -59,7 +59,7 @@
                 </div>
 
                 <button type="button" class="accordion">Declined Assignments:</button>
-                <div class="panel">
+                <div class="review-panel">
                     {% for review in internal_review_assignments %}
                     {% if review.declined %}
                      <p>
@@ -160,7 +160,7 @@
                 </div>
 
                 <button type="button" class="accordion">Declined Assignments:</button>
-                <div class="panel">
+                <div class="review-panel">
                     {% for review in external_review_assignments %}
                     {% if review.declined %}
                      <p>
