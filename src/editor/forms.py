@@ -219,3 +219,9 @@ class CoverImageReviewForm(forms.ModelForm):
 	class Meta:
 		model = models.CoverImageProof
 		fields = ('note_to_author', )
+
+class ChangeRevisionDueDateForm(forms.ModelForm):
+
+	class Meta:
+		model = revision_models.Revision
+		fields = ('due',)

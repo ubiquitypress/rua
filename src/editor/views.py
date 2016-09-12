@@ -496,6 +496,30 @@ def editor_review_round_cancel(request, submission_id, round_number):
 
 
 @is_book_editor
+def editor_change_revision_due_date(request, submission_id, revision_id):
+    book = get_object_or_404(models.Book, pk=submission_id)
+    assignment = revision_models.Revision.objects.get(book=book, pk=revision_id)
+    form = forms.ChangeRevisionDueDateForm(instance=assignment)
+
+    if request.method == 'POST':
+        form = forms.ChangeRevisionDueDateForm(request.POST, instance=assignment)
+
+        if form.is_valid():
+            form.save()
+            messages.add_message(request, messages.SUCCESS,
+                                 "Due date updated for revision request {0}: {1}".format(assignment.pk, assignment.due))
+            return redirect(reverse('editor_review', kwargs={'submission_id': submission_id}))
+
+    template = 'editor/change_revision_due_date.html'
+    context = {
+        'form': form,
+        'book': book,
+    }
+
+    return render(request, template, context)
+
+
+@is_book_editor
 def editorial_review_view(request, submission_id, review_id):
     book = get_object_or_404(models.Book, pk=submission_id)
     review = get_object_or_404(models.EditorialReviewAssignment, book=book, pk=review_id)
