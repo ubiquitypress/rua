@@ -50,7 +50,7 @@
       <td
       {% endifequal %} width="25%">{% if revision.completed %}
           <a class="btn btn-task" href="{% url 'editor_view_revisions' submission.id revision.id %}">View</a>
-          {% else %}<small>{{ revision.due }}</small>{% endif %}</td>
+          {% else %}<small>{{ revision.due }} <a href="{% url 'editor_change_revision_due_date' submission.id revision.id %}"><i class="fa fa-edit">&nbsp;</i></a></small>{% endif %}</td>
     </tr>
     {% endfor %}
   </table>
