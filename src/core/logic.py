@@ -824,19 +824,32 @@ def send_production_editor_ack(book, editor, email_text, attachment=None):
 	subject = get_setting('production_editor_subject','email_subject','Production Editor for {0}'.format(book.full_title))
 	email.send_email(subject, context, from_email.value, editor.email, email_text, book=book, attachment=attachment, kind = 'production')
 
-def send_review_request(book, review_assignment, email_text, attachment=None):
+
+def send_review_request(book, review_assignment, email_text, sender, attachment=None, access_key=None):
 	from_email = models.Setting.objects.get(group__name='email', name='from_address')
 	base_url = models.Setting.objects.get(group__name='general', name='base_url')
+	press_name = models.Setting.objects.get(group__name='general', name='press_name').value
 
-	decision_url = 'http://%s/review/%s/%s/assignment/%s/decision/' % (base_url.value, review_assignment.review_type, book.id, review_assignment.id)
+	if access_key:
+		decision_url = 'http://%s/review/%s/%s/assignment/%s/access_key/%s/decision/' % (
+		base_url.value, review_assignment.review_type, book.id, review_assignment.id, access_key)
+	else:
+		decision_url = 'http://%s/review/%s/%s/assignment/%s/decision/' % (
+		base_url.value, review_assignment.review_type, book.id, review_assignment.id)
 
 	context = {
 		'book': book,
 		'review': review_assignment,
 		'decision_url': decision_url,
+		'sender': sender,
+		'base_url': base_url.value,
+		'press_name': press_name,
 	}
-	subject = get_setting('review_request_subject','email_subject','Review Request')
-	email.send_email(subject, context, from_email.value, review_assignment.user.email, email_text, book=book, attachment=attachment, kind = 'review')
+
+	email.send_email(subject=get_setting('review_request_subject', 'email_subject', 'Review Request'), context=context,
+					 from_email=from_email.value, to=review_assignment.user.email, html_template=email_text, book=book,
+					 attachment=attachment, kind='review')
+
 
 def send_proposal_book_editor(request, proposal, email_text, sender):
 	from_email = models.Setting.objects.get(group__name='email', name='from_address')

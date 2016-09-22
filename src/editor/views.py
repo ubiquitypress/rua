@@ -966,7 +966,7 @@ def request_revisions(request, submission_id, returner):
                                              "Attachment: Uploaded by %s" % (request.user.username))
                     attachments.append(attachment)
 
-            logic.send_requests_revisions(book, new_revision_request, email_text, attachments)
+            logic.send_requests_revisions(book, request.user, new_revision_request, email_text, attachments)
             log.add_log_entry(book, request.user, 'revisions', '%s %s requested revisions for %s' % (
             request.user.first_name, request.user.last_name, book.title), 'Revisions Requested')
 
