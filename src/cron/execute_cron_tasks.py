@@ -4,6 +4,7 @@ from revisions import models as revision_models
 
 from django.utils import timezone
 from django.db.models import Q
+from django.contrib.auth.models import User
 
 from core.setting_util import get_setting
 
@@ -91,15 +92,17 @@ def reminder_notifications_not_emailed(task):
 			task_list = task_list +'- '+ notification.text + "\n"
 			notification.emailed = True
 			notification.save()
+
+		if task_list:
 			
-		context = {
-			'user': editor,
-			'notifications': task_list,
-			'notification_count': tasks.count(),
-			'press_name': press_name,
-			'base_url': models.Setting.objects.get(group__name='general', name='base_url').value,	
-		}
-		email.send_email(get_setting('weekly_notification_reminder_subject','email_subject','Weekly Notification Reminder'), context, from_email.value, editor.email, email_text)
+			context = {
+				'user': editor,
+				'notifications': task_list,
+				'notification_count': tasks.count(),
+				'press_name': press_name,
+				'base_url': models.Setting.objects.get(group__name='general', name='base_url').value,	
+			}
+			email.send_email(get_setting('weekly_notification_reminder_subject','email_subject','Weekly Notification Reminder'), context, from_email.value, editor.email, email_text)
 
 # Utils
 
