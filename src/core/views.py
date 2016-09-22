@@ -1427,6 +1427,8 @@ def view_log(request, submission_id):
         'log_list': log_list,
         'email_list': email_list,
         'active': 'log',
+        'search': search,
+        'email_search': email_search,
         'filters': filters,
         'filterby': filterby,
     }
@@ -1509,6 +1511,8 @@ def view_proposal_log(request, proposal_id):
         'proposal': proposal,
         'log_list': log_list,
         'email_list': email_list,
+        'search': search,
+        'email_search': email_search,
         'active': 'log',
         'filters': filters,
         'filterby': filterby,
