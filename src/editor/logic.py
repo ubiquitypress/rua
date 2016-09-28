@@ -169,7 +169,7 @@ def cancel_review_round(book):
 	cancel_round = models.ReviewRound.objects.get(book=book,round_number=latest_round.get('max'))
 	cancel_round.delete()
 
-def handle_review_assignment(request,book, reviewer, review_type, due_date, review_round, user, email_text, review_form, attachment=None, access_key = None):
+def handle_review_assignment(request,book, reviewer, review_type, due_date, review_round, user, email_text, review_form, attachment=None, access_key=None):
 	obj, created = models.ReviewAssignment.objects.get_or_create(
 			review_type=review_type,
 			user=reviewer,

@@ -1285,5 +1285,14 @@
   },
   "model": "core.setting",
   "pk": 82
+},
+{
+  "fields": {
+    "value": "on",
+    "group": 1,
+    "name": "one_click_review_url",
+    "types": "boolean",
+    "description": "One-click review assignments can be turned on or off."
+  }
 }
 ]
