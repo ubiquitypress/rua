@@ -11,11 +11,13 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.utils.encoding import smart_text
 from django.template.defaultfilters import slugify
 from django.db import transaction
-from django.db.models import get_models, Model
+from django.db.models import get_models, Model, Q
 from django.contrib.contenttypes.generic import GenericForeignKey
 
-from manager import models
+from manager import models as manager_models
 from review import models as review_models
+from submission import models as submission_models
+from revisions import models as revisions_models
 from review import forms as review_f
 from manager import forms, logic
 from django.conf import settings
@@ -519,86 +521,32 @@ def select_merge(request, user_id):
 
 @is_press_editor
 def merge_users(request, user_id, secondary_user_id):
-    primary_object = User.objects.get(pk=user_id)
-    alias_object = User.objects.get(pk=secondary_user_id)
+    primary_user = User.objects.get(pk=user_id)
+    secondary_user = User.objects.get(pk=secondary_user_id)
+    related_objects = secondary_user._meta.get_all_related_objects()
 
-    # Check that all aliases are the same class as primary one and that
-    # they are subclass of model
-    primary_class = primary_object.__class__
+    blank_profile_local_fields = set([field.attname for field in primary_user.profile._meta.local_fields
+                                      if getattr(primary_user.profile, field.attname) in [None, '']])
 
-    if not issubclass(primary_class, Model):
-        raise TypeError('Only django.db.models.Model subclasses can be merged')
-
-    if not isinstance(alias_object, primary_class):
-        raise TypeError('Only models of same class can be merged')
-
-    # Get a list of all GenericForeignKeys in all models
-    generic_fields = []
-    for model in get_models():
-        for field_name, field in filter(lambda x: isinstance(x[1], GenericForeignKey), model.__dict__.iteritems()):
-            generic_fields.append(field)
-
-    blank_local_fields = set([field.attname for field in primary_object._meta.local_fields
-                              if getattr(primary_object, field.attname) in [None, '']])
-    #Temporary fix to deal with profile fields as well as user ones
-    blank_profile_local_fields = set([field.attname for field in primary_object.profile._meta.local_fields
-                              if getattr(primary_object.profile, field.attname) in [None, '']])
-
-    # Migrate all foreign key references from alias object to primary object.
-    for related_object in alias_object._meta.get_all_related_objects():
-        # The variable name on the alias_object model.
-        alias_varname = related_object.get_accessor_name()
-        # The variable name on the related model.
-        obj_varname = related_object.field.name
-        related_objects = getattr(alias_object, alias_varname)
-        for obj in related_objects.all():
-            setattr(obj, obj_varname, primary_object)
-            obj.save()
-
-    # Migrate all many to many references from alias object to primary object.
-    for related_many_object in alias_object._meta.get_all_related_many_to_many_objects():
-        alias_varname = related_many_object.get_accessor_name()
-        obj_varname = related_many_object.field.name
-
-        if alias_varname is not None:
-            # standard case
-            related_many_objects = getattr(alias_object, alias_varname).all()
-        else:
-            # special case, symmetrical relation, no reverse accessor
-            related_many_objects = getattr(alias_object, obj_varname).all()
-        for obj in related_many_objects.all():
-            getattr(obj, obj_varname).remove(alias_object)
-            getattr(obj, obj_varname).add(primary_object)
-
-    # Migrate all generic foreign key references from alias object to primary object.
-    for field in generic_fields:
-        filter_kwargs = {}
-        filter_kwargs[field.fk_field] = alias_object._get_pk_val()
-        filter_kwargs[field.ct_field] = field.get_content_type(alias_object)
-        for generic_related_object in field.model.objects.filter(**filter_kwargs):
-            setattr(generic_related_object, field.name, primary_object)
-            generic_related_object.save()
-
-    # Try to fill all missing values in primary object by values of duplicates
     filled_up = set()
-    for field_name in blank_local_fields:
-        val = getattr(alias_object, field_name)
-        if val not in [None, '']:
-            setattr(primary_object, field_name, val)
-            filled_up.add(field_name)
-    blank_local_fields -= filled_up
-
-    profile_filled_up = set()
     for field_name in blank_profile_local_fields:
-        val = getattr(alias_object.profile, field_name)
+        val = getattr(secondary_user.profile, field_name)
         if val not in [None, '']:
-            setattr(primary_object.profile, field_name, val)
-            profile_filled_up.add(field_name)
-    blank_profile_local_fields -= profile_filled_up
+            setattr(primary_user.profile, field_name, val)
+            filled_up.add(field_name)
+    blank_profile_local_fields -= filled_up
+    secondary_user.profile.delete()
 
-    alias_object.is_active = False
-    alias_object.save()
-    primary_object.save()
+    for object in related_objects:
+        old_values = {object.field.attname: secondary_user_id}
+        new_values = {object.field.attname: user_id}
+
+        model = object.field.model
+        model.objects.filter(Q(**old_values)).update(**new_values)
+
+    secondary_user.delete()
+    primary_user.profile.save()
+    primary_user.save()
 
     return redirect(reverse('select_merge', kwargs={'user_id': user_id}))
 
