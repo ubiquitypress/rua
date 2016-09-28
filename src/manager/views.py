@@ -10,9 +10,14 @@ from django.core.cache import cache
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils.encoding import smart_text
 from django.template.defaultfilters import slugify
+from django.db import transaction
+from django.db.models import get_models, Model, Q
+from django.contrib.contenttypes.generic import GenericForeignKey
 
-from manager import models
+from manager import models as manager_models
 from review import models as review_models
+from submission import models as submission_models
+from revisions import models as revisions_models
 from review import forms as review_f
 from manager import forms, logic
 from django.conf import settings
@@ -20,10 +25,12 @@ from core import models as core_models, forms as core_forms
 from core.decorators import is_press_editor
 from submission import forms as submission_forms
 from submission import models as submission_models
+from itertools import chain
 
 from uuid import uuid4
 import os
 import requests
+
 import json
 
 
@@ -498,6 +505,50 @@ def user_edit(request, user_id):
         'active': 'update',
     }
     return render(request, template, context)
+
+@is_press_editor
+def select_merge(request, user_id):
+    user = User.objects.get(pk=user_id)
+    secondary_users = User.objects.exclude(pk=user_id)
+
+    template='manager/users/select_merge.html'
+    context = {
+        'user': user,
+        'secondary_users': secondary_users
+    }
+
+    return render(request, template, context)
+
+@is_press_editor
+def merge_users(request, user_id, secondary_user_id):
+    primary_user = User.objects.get(pk=user_id)
+    secondary_user = User.objects.get(pk=secondary_user_id)
+    related_objects = secondary_user._meta.get_all_related_objects()
+
+    blank_profile_local_fields = set([field.attname for field in primary_user.profile._meta.local_fields
+                                      if getattr(primary_user.profile, field.attname) in [None, '']])
+
+    filled_up = set()
+    for field_name in blank_profile_local_fields:
+        val = getattr(secondary_user.profile, field_name)
+        if val not in [None, '']:
+            setattr(primary_user.profile, field_name, val)
+            filled_up.add(field_name)
+    blank_profile_local_fields -= filled_up
+    secondary_user.profile.delete()
+
+    for object in related_objects:
+        old_values = {object.field.attname: secondary_user_id}
+        new_values = {object.field.attname: user_id}
+
+        model = object.field.model
+        model.objects.filter(Q(**old_values)).update(**new_values)
+
+    secondary_user.delete()
+    primary_user.profile.save()
+    primary_user.save()
+
+    return redirect(reverse('select_merge', kwargs={'user_id': user_id}))
 
 
 @is_press_editor
