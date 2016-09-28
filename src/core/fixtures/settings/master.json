@@ -1292,7 +1292,7 @@
     "group": 1,
     "name": "one_click_review_url",
     "types": "boolean",
-    "description": "One-click review assignments can be turned on or off."
+    "description": "Allow reviewers to access and complete assignments without registering an account.<br>WARNING: Enabling this option makes data less secure."
   }
 }
 ]

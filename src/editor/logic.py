@@ -243,17 +243,19 @@ def send_review_request(book, review_assignment, email_text, sender, attachment=
 		'press_name':press_name,
 	}
 
-	email.send_email(subject = get_setting('review_request_subject','email_subject','Review Request'), context = context, from_email = from_email.value, to = review_assignment.user.email, html_template = email_text, book=book, attachment=attachment, kind = 'review')
+	email.send_email(subject=get_setting('review_request_subject','email_subject','Review Request'), context=context, from_email=from_email.value, to=review_assignment.user.email, html_template = email_text, book=book, attachment=attachment, kind='review', access_key=access_key)
 
 def send_editorial_review_request(book, review_assignment, email_text, sender, attachment=None):
 	from_email = models.Setting.objects.get(group__name='email', name='from_address')
 	base_url = models.Setting.objects.get(group__name='general', name='base_url')
 	press_name = models.Setting.objects.get(group__name='general', name='press_name').value
-	
+
 	if review_assignment.publishing_committee_access_key:
 		decision_url = 'http://%s/editorial/submission/%s/access_key/%s/' % (base_url.value, book.id, review_assignment.publishing_committee_access_key)
+		access_key = review_assignment.publishing_committee_access_key
 	else:
 		decision_url = 'http://%s/editorial/submission/%s/access_key/%s/' % (base_url.value, book.id, review_assignment.editorial_board_access_key)
+		access_key = review_assignment.editorial_board_access_key
 
 	context = {
 		'book': book,
@@ -264,7 +266,7 @@ def send_editorial_review_request(book, review_assignment, email_text, sender, a
 		'press_name':press_name,
 	}
 	for editor in review_assignment.editorial_board.all():
-		email.send_email(get_setting('editorial_review_request','email_subject','Editorial Review Request'), context, from_email.value, editor.email, email_text, book=book, attachment=attachment, kind = 'review')
+		email.send_email(get_setting('editorial_review_request','email_subject','Editorial Review Request'), context, from_email.value, editor.email, email_text, book=book, attachment=attachment, kind='review', access_key=access_key)
 
 def send_editorial_review_update(book, review_assignment, email_text, sender, attachment=None):
 	from_email = models.Setting.objects.get(group__name='email', name='from_address')
