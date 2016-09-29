@@ -649,15 +649,22 @@ def build_time_line(book):
 	return sorted(clean_timeline, key=lambda k: k['date'], reverse=True) 
 
 # Email handler - should be moved to logic!
-def send_proposal_review_request(request, proposal, review_assignment, email_text, attachment = None):
+def send_proposal_review_request(request, proposal, review_assignment, email_text, attachment=None, access_key=None):
 	from_email = models.Setting.objects.get(group__name='email', name='from_address')
 	base_url = models.Setting.objects.get(group__name='general', name='base_url')
 	press_name = models.Setting.objects.get(group__name='general', name='press_name').value
-	
+
+	if access_key:
+		review_url = "http://{0}{1}".format(base_url.value, reverse('view_proposal_review_decision_access_key',
+																	kwargs={'proposal_id': proposal.id,
+																			'assignment_id': review_assignment.id,
+																			'access_key': access_key}))
+	else:
+		review_url = "http://{0}{1}".format(base_url.value, reverse('view_proposal_review_decision',
+																	kwargs={'proposal_id': proposal.id,
+																			'assignment_id': review_assignment.id}))
 	if request:
 		from_email = "%s <%s>" % (request.user.profile.full_name(),from_email.value)
-	
-	review_url = "http://{0}{1}".format(base_url.value, reverse('view_proposal_review_decision', kwargs={'proposal_id': proposal.id, 'assignment_id': review_assignment.id}))
 
 	context = {
 		'review': review_assignment,
@@ -665,9 +672,9 @@ def send_proposal_review_request(request, proposal, review_assignment, email_tex
 		'proposal': proposal,
 		'press_name': press_name,
 	}
-	email.send_email(get_setting('proposal_review_request_subject','email_subject','Proposal Review Request'), context, from_email, review_assignment.user.email, email_text, proposal = proposal, attachment = attachment, request = request, kind = 'proposal_review')
+	email.send_email(get_setting('proposal_review_request_subject','email_subject','Proposal Review Request'), context, from_email, review_assignment.user.email, email_text, proposal=proposal, attachment=attachment, request=request, kind='proposal_review', access_key=access_key)
 
-def send_proposal_review_reopen_request(request, proposal, review_assignment, email_text, attachment = None):
+def send_proposal_review_reopen_request(request, proposal, review_assignment, email_text, attachment=None):
 	from_email = models.Setting.objects.get(group__name='email', name='from_address')
 	base_url = models.Setting.objects.get(group__name='general', name='base_url')
 	press_name = models.Setting.objects.get(group__name='general', name='press_name').value

@@ -65,7 +65,7 @@ def reviewer_dashboard(request):
 @is_reviewer
 def reviewer_decision(request, review_type, submission_id, review_assignment_id, decision=None, access_key=None):
 
-    # Check the review assignment as not been completed and is being accessed by the assigned user
+    # Check the review assignment has not been completed and is being accessed by the assigned user
     review_assignment = None
 
     submission = get_object_or_404(core_models.Book, pk=submission_id)
@@ -99,7 +99,6 @@ def reviewer_decision(request, review_type, submission_id, review_assignment_id,
             review_assignment = get_object_or_404(core_models.ReviewAssignment, access_key=access_key,pk=review_assignment_id, declined__isnull=True, review_type=review_type, withdrawn=False)
         else:
             review_assignment = get_object_or_404(core_models.ReviewAssignment, Q(user=user), Q(book=submission),Q(pk=review_assignment_id), Q(declined__isnull=True), Q(review_type=review_type),Q(withdrawn=False),Q(access_key__isnull=True) | Q(access_key__exact=''))
-
 
     if review_assignment:
         editors = logic.get_editors(review_assignment)

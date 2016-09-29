@@ -3,6 +3,7 @@ from django.contrib import messages
 from django.shortcuts import redirect, render, get_object_or_404
 from django.core.urlresolvers import reverse
 from core import models
+from submission import models as submission_models
 
 from pprint import pprint
 from itertools import chain
@@ -156,24 +157,23 @@ def is_book_editor_or_author(function):
 
 def is_reviewer(function):
 	def wrap(request, *args, **kwargs):
-		one_click_no_login = models.Setting.objects.filter(name = 'one_click_review_url')
+		one_click_no_login = models.Setting.objects.filter(name='one_click_review_url')
 		if one_click_no_login:
 			if one_click_no_login[0].value == 'on':
-				full_url = request.get_full_path()	
+				full_url = request.get_full_path()
 				if 'access_key' in full_url:
 					if 'decision' in full_url:
 						access_key = full_url[full_url.rfind('key/')+4:]
-						access_key = access_key[:-10]
+						access_key = access_key[:-1]
 					elif 'complete' in full_url:
 						access_key = full_url[full_url.rfind('key/')+4:]
-						access_key = access_key[:-10]
-						print access_key						
+						access_key = access_key[:-1]
 					else:
 						access_key = full_url[full_url.rfind('key/')+4:]
 						access_key = access_key[:access_key.rfind('/')]
 					review_assignments = models.ReviewAssignment.objects.filter(access_key=access_key)
-					print review_assignments
-					if review_assignments:
+					proposal_review_assignments = submission_models.ProposalReview.objects.filter(access_key=access_key)
+					if review_assignments or proposal_review_assignments:
 						return function(request, *args, **kwargs)
 
 

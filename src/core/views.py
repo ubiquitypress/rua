@@ -2090,7 +2090,7 @@ def change_review_due_date(request, proposal_id, assignment_id):
 
 
 @is_reviewer
-def view_proposal_review_decision(request, proposal_id, assignment_id):
+def view_proposal_review_decision(request, proposal_id, assignment_id, access_key=None):
     proposal = get_object_or_404(submission_models.Proposal, pk=proposal_id)
     proposal_form = manager_forms.GeneratedForm(form=models.ProposalForm.objects.get(pk=proposal.form.id))
     default_fields = manager_forms.DefaultForm(
@@ -2102,7 +2102,17 @@ def view_proposal_review_decision(request, proposal_id, assignment_id):
         intial_data[k] = v[0]
 
     proposal_form.initial = intial_data
-    review_assignment = get_object_or_404(submission_models.ProposalReview, pk=assignment_id, withdrawn=False)
+
+    if request.user.is_authenticated():
+        review_assignment = get_object_or_404(submission_models.ProposalReview, pk=assignment_id,
+                                              declined__isnull=True, withdrawn=False)
+        user = request.user
+    elif access_key:
+        review_assignment = get_object_or_404(submission_models.ProposalReview, access_key=access_key,
+                                              pk=assignment_id, declined__isnull=True, withdrawn=False)
+        user = review_assignment.user
+    else:
+        raise Http404
 
     if review_assignment.accepted:
         return redirect(
@@ -2152,6 +2162,7 @@ def view_proposal_review_decision(request, proposal_id, assignment_id):
         'proposal_form': proposal_form,
         'review': review_assignment,
         'data': data,
+        'access_key': access_key,
         'active': 'proposal_review',
         'relationships': relationships,
         'instructions': models.Setting.objects.get(group__name='general', name='instructions_for_task_proposal').value
@@ -2489,24 +2500,51 @@ def add_proposal_reviewers(request, proposal_id):
         committees = manager_models.Group.objects.filter(pk__in=request.POST.getlist('committee'))
         email_text = request.POST.get('email_text')
 
+        if 'access_key' in request.POST:
+            generate = True
+        else:
+            generate = False
+
         # Handle reviewers
         for reviewer in reviewers:
-            new_review_assignment = submission_models.ProposalReview(
-                user=reviewer,
-                proposal=proposal,
-                review_form=updated_proposal.review_form,
-                due=due_date,
-                blind=blind,
-                requestor=request.user
-            )
+            if generate:
+                access_key = uuid4()
+                new_review_assignment = submission_models.ProposalReview(
+                    user=reviewer,
+                    proposal=proposal,
+                    review_form=updated_proposal.review_form,
+                    due=due_date,
+                    blind=blind,
+                    requestor=request.user,
+                    access_key=access_key
+                )
 
-            try:
-                new_review_assignment.save()
-                proposal.review_assignments.add(new_review_assignment)
-                logic.send_proposal_review_request(request, proposal, new_review_assignment, email_text, attachment)
-            except IntegrityError:
-                messages.add_message(request, messages.WARNING,
-                                     '%s %s is already a reviewer' % (reviewer.first_name, reviewer.last_name))
+                try:
+                    new_review_assignment.save()
+                    proposal.review_assignments.add(new_review_assignment)
+                    logic.send_proposal_review_request(request, proposal, new_review_assignment,
+                                                       email_text, attachment, access_key)
+                except IntegrityError:
+                    messages.add_message(request, messages.WARNING,
+                                         '%s %s is already a reviewer' % (reviewer.first_name, reviewer.last_name))
+
+            else:
+                new_review_assignment = submission_models.ProposalReview(
+                    user=reviewer,
+                    proposal=proposal,
+                    review_form=updated_proposal.review_form,
+                    due=due_date,
+                    blind=blind,
+                    requestor=request.user
+                )
+
+                try:
+                    new_review_assignment.save()
+                    proposal.review_assignments.add(new_review_assignment)
+                    logic.send_proposal_review_request(request, proposal, new_review_assignment, email_text, attachment)
+                except IntegrityError:
+                    messages.add_message(request, messages.WARNING,
+                                         '%s %s is already a reviewer' % (reviewer.first_name, reviewer.last_name))
 
         # Handle committees
         for committee in committees:

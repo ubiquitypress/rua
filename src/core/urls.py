@@ -121,6 +121,7 @@ urlpatterns = patterns('',
     
     url(r'^proposals/(?P<proposal_id>\d+)/review/start/$', 'core.views.start_proposal_review', name='start_proposal_review'),
     url(r'^proposals/(?P<proposal_id>\d+)/review/add/$', 'core.views.add_proposal_reviewers', name='add_proposal_reviewers'),
+    url(r'^proposals/(?P<proposal_id>\d+)/assignment/decision/(?P<assignment_id>\d+)/access_key/(?P<access_key>[-\w+]+)/$', 'core.views.view_proposal_review_decision', name='view_proposal_review_decision_access_key'),
     url(r'^proposals/(?P<proposal_id>\d+)/assignment/decision/(?P<assignment_id>\d+)/$', 'core.views.view_proposal_review_decision', name='view_proposal_review_decision'),
     url(r'^proposals/(?P<proposal_id>\d+)/assignment/(?P<assignment_id>\d+)/$', 'core.views.view_proposal_review', name='view_proposal_review'),
     url(r'^proposals/(?P<proposal_id>\d+)/assignment/(?P<assignment_id>\d+)/hide/$', 'core.views.hide_review', name='hide_proposal_review'),
