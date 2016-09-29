@@ -1,5 +1,5 @@
 
-<h5><b>Review Files:</b>  <a href="{% url 'serve_all_review_files' submission.id review_assignment.review_type %}" class="btn btn-xs btn-task pull-right"><i class="fa fa-cloud-download">&nbsp;</i>Download All</a></h5>
+<h5><b>Review Files:</b>  <a href="{% if one_click %}{% url 'serve_all_review_files_one_click' submission.id review_assignment.review_type review_assignment.id access_key %}{% else %}{% url 'serve_all_review_files' submission.id review_assignment.review_type %}{% endif %}" class="btn btn-xs btn-task pull-right"><i class="fa fa-cloud-download">&nbsp;</i>Download All</a></h5>
 <br>
 {% if review_assignment.review_type == 'internal' %}
 <ul class="media-list manuscript-upload-states">
@@ -26,8 +26,7 @@
 			</div>
     </div>
         <div class="media-right">
-      <a href="{% url 'serve_file' submission.id file.id %}" class="btn btn-sm btn-task pull-right download-small" ><i class="fa fa-cloud-download"> &nbsp; Download</i></a>
-    </div>
+        <a href="{% if one_click %}{% url 'serve_file_one_click' submission.id file.id review_assignment.id access_key %}{% else %}{% url 'serve_file' submission.id file.id %}{% endif %}" class="btn btn-sm btn-task pull-right download-small" ><i class="fa fa-cloud-download"> &nbsp; Download</i></a>    </div>
   	</li>
 	  {% empty %}
      <li class="grey-container">
@@ -60,7 +59,7 @@
       </div>
     </div>
         <div class="media-right">
-      <a href="{% url 'serve_file' submission.id file.id %}" class="btn btn-sm btn-task pull-right download-small" ><i class="fa fa-cloud-download"> &nbsp; Download</i></a>
+        <a href="{% if one_click %}{% url 'serve_file_one_click' submission.id file.id review_assignment.id access_key %}{% else %}{% url 'serve_file' submission.id file.id %}{% endif %}" class="btn btn-sm btn-task pull-right download-small" ><i class="fa fa-cloud-download"> &nbsp; Download</i></a>    </div>
     </div>
     </li>
     {% empty %}

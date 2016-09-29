@@ -1200,8 +1200,65 @@ def serve_all_review_files(request, submission_id, review_type):
     return resp
 
 
+def serve_all_review_files_one_click(request, submission_id, review_type, review_id, access_key):
+    review = get_object_or_404(models.ReviewAssignment, pk=review_id, access_key=access_key)
+    book = get_object_or_404(models.Book, pk=submission_id)
+    internal_review_files = book.internal_review_files.all()
+    external_review_files = book.external_review_files.all()
+
+    zip_subdir = "Files of Submission #%s" % submission_id
+    zip_filename = "%s.zip" % zip_subdir
+
+    # Open StringIO to grab in-memory ZIP contents
+    s = StringIO.StringIO()
+
+    # The zip compressor
+    zf = zipfile.ZipFile(s, "w")
+
+    if review_type == "external":
+        for file in external_review_files:
+            fpath = os.path.join(settings.BOOK_DIR, submission_id, file.uuid_filename)
+            fdir, fname = os.path.split(fpath)
+            zip_path = os.path.join(zip_subdir, fname)
+            zf.write(fpath, zip_path)
+
+    else:
+        for file in internal_review_files:
+            fpath = os.path.join(settings.BOOK_DIR, submission_id, file.uuid_filename)
+            fdir, fname = os.path.split(fpath)
+            zip_path = os.path.join(zip_subdir, fname)
+            zf.write(fpath, zip_path)
+
+    zf.close()
+    fd = open(os.path.join(settings.BOOK_DIR, submission_id, zip_filename), 'wb')
+    fd.write(s.getvalue())
+    fd.close()
+    fsock = open(os.path.join(settings.BOOK_DIR, submission_id, zip_filename), 'r')
+    resp = StreamingHttpResponse(fsock, content_type="application/x-zip-compressed")
+    os.remove(os.path.join(settings.BOOK_DIR, submission_id, zip_filename))
+    resp['Content-Disposition'] = 'attachment; filename=%s' % zip_filename
+    return resp
+
+
 @is_onetasker
 def serve_file(request, submission_id, file_id):
+    book = get_object_or_404(models.Book, pk=submission_id)
+    _file = get_object_or_404(models.File, pk=file_id)
+    file_path = os.path.join(settings.BOOK_DIR, submission_id, _file.uuid_filename)
+
+    try:
+        fsock = open(file_path, 'r')
+        mimetype = mimetypes.guess_type(file_path)
+        response = StreamingHttpResponse(fsock, content_type=mimetype)
+        response['Content-Disposition'] = "attachment; filename=%s" % (_file.original_filename)
+        # log.add_log_entry(book=book, user=request.user, kind='file', message='File %s downloaded.' % _file.original_filename, short_name='Download')
+        return response
+    except IOError:
+        messages.add_message(request, messages.ERROR, 'File not found. %s' % (file_path))
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+def serve_file_one_click(request, submission_id, file_id, review_id, access_key):
+    review = get_object_or_404(models.ReviewAssignment, pk=review_id, access_key=access_key)
     book = get_object_or_404(models.Book, pk=submission_id)
     _file = get_object_or_404(models.File, pk=file_id)
     file_path = os.path.join(settings.BOOK_DIR, submission_id, _file.uuid_filename)

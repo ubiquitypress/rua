@@ -73,6 +73,7 @@ def reviewer_decision(request, review_type, submission_id, review_assignment_id,
 
     if one_click_no_login:
         if one_click_no_login[0].value == 'on':
+            one_click = True
             if access_key:
                 review_assignment = get_object_or_404(core_models.ReviewAssignment, access_key=access_key,pk=review_assignment_id, declined__isnull=True, review_type=review_type, withdrawn=False)
                 user = review_assignment.user
@@ -83,6 +84,7 @@ def reviewer_decision(request, review_type, submission_id, review_assignment_id,
                 else:
                     raise Http404
         else:
+            one_click = False
             if access_key:
                 review_assignment = get_object_or_404(core_models.ReviewAssignment, access_key=access_key,pk=review_assignment_id, declined__isnull=True, review_type=review_type, withdrawn=False)
                 user = review_assignment.user
@@ -157,6 +159,8 @@ def reviewer_decision(request, review_type, submission_id, review_assignment_id,
         'review_assignment': review_assignment,
         'has_additional_files': logic.has_additional_files(submission),
         'editors': editors,
+        'access_key': access_key,
+        'one_click': one_click,
         'file_preview': core_models.Setting.objects.get(group__name='general', name='preview_review_files').value,
         'instructions': core_models.Setting.objects.get(group__name='general', name='instructions_for_task_review').value
 
@@ -168,9 +172,10 @@ def reviewer_decision(request, review_type, submission_id, review_assignment_id,
 def review(request, review_type, submission_id, review_round, access_key=None):
 
     ci_required = core_models.Setting.objects.get(group__name='general', name='ci_required')
-    one_click_no_login = core_models.Setting.objects.filter(name = 'one_click_review_url')
+    one_click_no_login = core_models.Setting.objects.filter(name='one_click_review_url')
     if one_click_no_login:
         if one_click_no_login[0].value == 'on':
+            one_click = True
             if access_key:
                 review_assignment = get_object_or_404(core_models.ReviewAssignment, access_key=access_key,review_round__round_number=review_round, declined__isnull=True, review_type=review_type, withdrawn = False)
                 submission = get_object_or_404(core_models.Book, pk=submission_id)
@@ -180,6 +185,7 @@ def review(request, review_type, submission_id, review_round, access_key=None):
             else:
                 raise Http404
         else:
+            one_click = False
             user = request.user
             if access_key:
                 review_assignment = get_object_or_404(core_models.ReviewAssignment, access_key=access_key,review_round__round_number=review_round, declined__isnull=True, review_type=review_type, withdrawn = False)
@@ -320,7 +326,9 @@ def review(request, review_type, submission_id, review_round, access_key=None):
         'form': form,
         'form_info': review_assignment.review_form,
         'recommendation_form': recommendation_form,
-        'editors':editors,
+        'editors': editors,
+        'access_key': access_key,
+        'one_click': one_click,
         'has_additional_files': logic.has_additional_files(submission),
         'instructions': core_models.Setting.objects.get(group__name='general', name='instructions_for_task_review').value
 
