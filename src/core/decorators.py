@@ -160,6 +160,7 @@ def is_reviewer(function):
 		one_click_no_login = models.Setting.objects.filter(name='one_click_review_url')
 		if one_click_no_login:
 			if one_click_no_login[0].value == 'on':
+				print request
 				full_url = request.get_full_path()
 				if 'access_key' in full_url:
 					if 'decision' in full_url:
@@ -187,7 +188,7 @@ def is_reviewer(function):
 		if kwargs.get('submission_id'):
 			submission_id = kwargs.get('submission_id')
 
-		# Check if the user is a press-editor, if not, check if they are they are assigend as an editor to this book, or check if the user is the series editor for this book.
+		# Check if the user is a press-editor, if not, check if they are they are assigned as an editor to this book, or check if the user is the series editor for this book.
 		if 'press-editor' in user_roles:
 			return function(request, *args, **kwargs)
 		elif submission_id:

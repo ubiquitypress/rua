@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% load static from staticfiles %}
+{% load bootstrap3 %}
+
+{% block title %}Proposal Review Declined{% endblock %}
+
+
+{% block css %}
+<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/plug-ins/1.10.7/integration/bootstrap/3/dataTables.bootstrap.css">
+{% endblock css %}
+
+{% block body %}
+<h3>You have declined this proposal review request.</h3>
+<br>
+<a href="{% url 'login' %}" class="btn btn-primary">Go to Login page</a>
+
+{% endblock body %}

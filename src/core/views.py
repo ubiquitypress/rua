@@ -2115,8 +2115,14 @@ def view_proposal_review_decision(request, proposal_id, assignment_id, access_ke
         raise Http404
 
     if review_assignment.accepted:
-        return redirect(
-            reverse('view_proposal_review', kwargs={'proposal_id': proposal.id, 'assignment_id': assignment_id}))
+        if access_key:
+            return redirect(
+                reverse('view_proposal_review_access_key', kwargs={'proposal_id': proposal.id,
+                                                                   'assignment_id': assignment_id,
+                                                                   'access_key': access_key}))
+        else:
+            return redirect(
+                reverse('view_proposal_review', kwargs={'proposal_id': proposal.id, 'assignment_id': assignment_id}))
 
     if request.POST:
         if 'accept' in request.POST:
@@ -2124,19 +2130,26 @@ def view_proposal_review_decision(request, proposal_id, assignment_id, access_ke
             review_assignment.save()
             message = "Review Assignment request for proposal '%s' has been accepted by %s %s." % (
             proposal.title, review_assignment.user.first_name, review_assignment.user.last_name)
-            log.add_proposal_log_entry(proposal=proposal, user=review_assignment.user, kind='proposal', message=message,
+            log.add_proposal_log_entry(proposal=proposal, user=user, kind='proposal', message=message,
                               short_name='Assignment accepted')
             if proposal.requestor:
-                notification = models.Task(assignee=proposal.requestor, creator=request.user, text=message,
+                notification = models.Task(assignee=proposal.requestor, creator=user, text=message,
                                            workflow='proposal')
                 notification.save()
             else:
                 editors = User.objects.filter(profile__roles__slug='press-editor')
                 for editor in editors:
-                    notification = models.Task(assignee=editor, creator=request.user, text=message, workflow='proposal')
+                    notification = models.Task(assignee=editor, creator=user, text=message, workflow='proposal')
                     notification.save()
-            return redirect(
-                reverse('view_proposal_review', kwargs={'proposal_id': proposal.id, 'assignment_id': assignment_id}))
+            if access_key:
+                return redirect(
+                    reverse('view_proposal_review_access_key', kwargs={'proposal_id': proposal.id,
+                                                                       'assignment_id': assignment_id,
+                                                                       'access_key': access_key}))
+            else:
+                return redirect(
+                    reverse('view_proposal_review', kwargs={'proposal_id': proposal.id,
+                                                            'assignment_id': assignment_id}))
 
         elif 'decline' in request.POST:
             review_assignment.declined = timezone.now()
@@ -2146,15 +2159,19 @@ def view_proposal_review_decision(request, proposal_id, assignment_id, access_ke
             log.add_proposal_log_entry(proposal=proposal, user=review_assignment.user, kind='proposal', message=message,
                               short_name='Assignment declined')
             if proposal.requestor:
-                notification = models.Task(assignee=proposal.requestor, creator=request.user, text=message,
+                notification = models.Task(assignee=proposal.requestor, creator=user, text=message,
                                            workflow='proposal')
                 notification.save()
             else:
                 editors = User.objects.filter(profile__roles__slug='press-editor')
                 for editor in editors:
-                    notification = models.Task(assignee=editor, creator=request.user, text=message, workflow='proposal')
+                    notification = models.Task(assignee=editor, creator=user, text=message, workflow='proposal')
                     notification.save()
-            return redirect(reverse('reviewer_dashboard'))
+
+            if access_key:
+                return redirect(reverse('proposal_review_declined'))
+            else:
+                return redirect(reverse('reviewer_dashboard'))
 
     template = 'core/proposals/decision_review_assignment.html'
     context = {
@@ -2169,6 +2186,14 @@ def view_proposal_review_decision(request, proposal_id, assignment_id, access_ke
     }
 
     return render(request, template, context)
+
+def proposal_review_submitted(request):
+
+    return render(request, 'core/proposals/proposal_review_submitted.html')
+
+def proposal_review_declined(request):
+
+    return render(request, 'core/proposals/proposal_review_declined.html')
 
 
 @is_reviewer
@@ -2356,7 +2381,7 @@ def hide_review(request, proposal_id, assignment_id):
 
 
 @is_reviewer
-def view_proposal_review(request, proposal_id, assignment_id):
+def view_proposal_review(request, proposal_id, assignment_id, access_key=None):
     proposal = get_object_or_404(submission_models.Proposal, pk=proposal_id)
     proposal_form = manager_forms.GeneratedForm(form=models.ProposalForm.objects.get(pk=proposal.form.id))
     default_fields = manager_forms.DefaultForm(
@@ -2369,8 +2394,20 @@ def view_proposal_review(request, proposal_id, assignment_id):
         intial_data[k] = v[0]
 
     proposal_form.initial = intial_data
-    review_assignment = get_object_or_404(submission_models.ProposalReview, pk=assignment_id, withdrawn=False)
+
+    if request.user.is_authenticated():
+        review_assignment = get_object_or_404(submission_models.ProposalReview, pk=assignment_id,
+                                              declined__isnull=True, withdrawn=False)
+        user = request.user
+    elif access_key:
+        review_assignment = get_object_or_404(submission_models.ProposalReview, access_key=access_key,
+                                              pk=assignment_id, declined__isnull=True, withdrawn=False)
+        user = review_assignment.user
+    else:
+        raise Http404
+
     result = review_assignment.results
+
     if review_assignment.review_form:
         form = review_forms.GeneratedForm(form=review_assignment.review_form)
     else:
@@ -2407,7 +2444,7 @@ def view_proposal_review(request, proposal_id, assignment_id):
         path = create_proposal_form(proposal)
         return serve_proposal_file(request, path)
     elif not request.POST and request.GET.get('download') == 'docx':
-        path = create_proposal_review_form(review_assignment)
+        path = create_proposal_review_form(request, review_assignment)
         return serve_proposal_file(request, path)
     elif request.POST:
         form = review_forms.GeneratedForm(request.POST, request.FILES, form=review_assignment.review_form)
@@ -2437,7 +2474,7 @@ def view_proposal_review(request, proposal_id, assignment_id):
             review_file = None
             if request.FILES.get('review_file_upload'):
                 review_file = handle_proposal_review_file(request.FILES.get('review_file_upload'), review_assignment,
-                                                          'reviewer', request.user)
+                                                          'reviewer', user)
 
             review_assignment.completed = timezone.now()
             if not review_assignment.accepted:
@@ -2451,11 +2488,14 @@ def view_proposal_review(request, proposal_id, assignment_id):
             review_assignment.save()
             message = "Review assignment for proposal '%s' has been completed by %s ." % (
             review_assignment.proposal.title, review_assignment.user.profile.full_name())
-            notification = models.Task(assignee=review_assignment.proposal.requestor, creator=request.user,
+            notification = models.Task(assignee=review_assignment.proposal.requestor, creator=user,
                                        text=message, workflow='proposal')
             notification.save()
 
-            return redirect(reverse('user_dashboard'))
+            if access_key:
+                return redirect(reverse('proposal_review_submitted'))
+            else:
+                return redirect(reverse('user_dashboard'))
 
     template = 'core/proposals/review_assignment.html'
     context = {
@@ -2809,7 +2849,7 @@ def render_choices(choices):
 
 
 @is_reviewer
-def create_proposal_review_form(proposal):
+def create_proposal_review_form(request, proposal):
     document = Document()
     document.add_heading(proposal.proposal.title, 0)
     p = document.add_paragraph('You should complete this form and then use the review page to upload it.')
