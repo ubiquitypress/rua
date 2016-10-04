@@ -1616,6 +1616,13 @@ def view_chapter(request, submission_id, chapter_id):
     chapter = get_object_or_404(models.Chapter, pk=chapter_id, book=book)
     chapter_formats = models.ChapterFormat.objects.filter(chapter=chapter)
 
+    if request.POST and 'remove_author' in request.POST:
+        author_id = request.POST.get('author_id')[:-1]
+        author = models.Author.objects.get(pk=author_id)
+        chapter.authors.remove(author)
+
+        return redirect(reverse('editor_view_chapter', kwargs={'submission_id': book.id, 'chapter_id': chapter.id}))
+
     template = 'editor/submission.html'
     context = {
         'submission': book,

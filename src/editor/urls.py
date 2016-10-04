@@ -74,6 +74,7 @@ urlpatterns = patterns('',
     url(r'^submission/(?P<submission_id>\d+)/production/chapter/(?P<chapter_id>\d+)/add/author/$', 'editor.views.add_chapter_author', name='add_chapter_author'),
     url(r'^submission/(?P<submission_id>\d+)/production/chapter/(?P<chapter_id>\d+)/edit/author/(?P<author_id>\d+)/$', 'editor.views.add_chapter_author', name="edit_chapter_author"),
 
+
     # Catalog
     url(r'^submission/(?P<submission_id>\d+)/catalog/$', 'editor.views.catalog', name='catalog'),
     url(r'^submission/(?P<submission_id>\d+)/catalog/marc21/$', 'editor.views.catalog_marc21', name='catalog_marc21'),
