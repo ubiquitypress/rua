@@ -416,8 +416,8 @@ def add_user(request):
         display_interests = request.POST.get('interests').split(',')
         if profile_form.is_valid() and user_form.is_valid():
             user = user_form.save()
-
             new_pass = None
+            user.is_active = True
 
             if 'new_password' in request.POST:
                 new_pass = logic.generate_password()
@@ -426,17 +426,8 @@ def add_user(request):
                 user.save()
                 messages.add_message(request, messages.SUCCESS,
                                      'New user %s, password set to %s.' % (user.username, new_pass))
-                email_text = core_models.Setting.objects.get(group__name='email', name='new_user_email').value
-                setting = core_models.Setting.objects.filter(name='send_new_user_email', group__name='general')
-                if setting:
-                    send_email = setting[0].value
-                    if send_email == 'on':
-                        logic.send_new_user_ack(email_text, user, new_pass)
-                else:
-                    logic.send_new_user_ack(email_text, user, new_pass)
 
             user.save()
-
             profile = profile_form.save(commit=False)
             profile.user = user
             profile.save()

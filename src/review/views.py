@@ -150,7 +150,7 @@ def reviewer_decision(request, review_type, submission_id, review_assignment_id,
             else:
                 return redirect(reverse('review_without_access_key', kwargs={'review_type': review_type, 'submission_id': submission.pk,'review_round':review_assignment.review_round.round_number}))
         elif review_assignment.declined:
-            return redirect(reverse('reviewer_dashboard'))
+            return redirect(reverse('review_request_declined'))
 
     template = 'review/reviewer_decision.html'
     context = {
@@ -334,6 +334,10 @@ def review(request, review_type, submission_id, review_round, access_key=None):
     }
 
     return render(request, template, context)
+
+def review_request_declined(request):
+    template = 'review/review_request_declined.html'
+    return render(request, template)
 
 @is_reviewer
 def review_complete(request, review_type, submission_id,review_round,access_key=None):

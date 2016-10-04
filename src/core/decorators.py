@@ -160,15 +160,14 @@ def is_reviewer(function):
 		one_click_no_login = models.Setting.objects.filter(name='one_click_review_url')
 		if one_click_no_login:
 			if one_click_no_login[0].value == 'on':
-				print request
 				full_url = request.get_full_path()
 				if 'access_key' in full_url:
 					if 'decision' in full_url:
 						access_key = full_url[full_url.rfind('key/')+4:]
-						access_key = access_key[:-1]
+						access_key = access_key.split('/', 1)[0]
 					elif 'complete' in full_url:
 						access_key = full_url[full_url.rfind('key/')+4:]
-						access_key = access_key[:-1]
+						access_key = access_key.split('/', 1)[0]
 					else:
 						access_key = full_url[full_url.rfind('key/')+4:]
 						access_key = access_key[:access_key.rfind('/')]
