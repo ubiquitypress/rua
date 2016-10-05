@@ -150,6 +150,7 @@ class ProposalReview(models.Model):
     blind = models.NullBooleanField(default=False, blank=True, null=True)
     requestor = models.ForeignKey(User, null=True, blank=True, related_name="review_requestor")
     review_form = models.ForeignKey('review.Form', null=True, blank=True)
+    access_key = models.CharField(max_length=200, blank=True, null=True)
 
     hide = models.BooleanField(default=False)
 

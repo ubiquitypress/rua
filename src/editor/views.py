@@ -497,6 +497,30 @@ def editor_review_round_cancel(request, submission_id, round_number):
 
 
 @is_book_editor
+def editor_change_revision_due_date(request, submission_id, revision_id):
+    book = get_object_or_404(models.Book, pk=submission_id)
+    assignment = revision_models.Revision.objects.get(book=book, pk=revision_id)
+    form = forms.ChangeRevisionDueDateForm(instance=assignment)
+
+    if request.method == 'POST':
+        form = forms.ChangeRevisionDueDateForm(request.POST, instance=assignment)
+
+        if form.is_valid():
+            form.save()
+            messages.add_message(request, messages.SUCCESS,
+                                 "Due date updated for revision request {0}: {1}".format(assignment.pk, assignment.due))
+            return redirect(reverse('editor_review', kwargs={'submission_id': submission_id}))
+
+    template = 'editor/change_revision_due_date.html'
+    context = {
+        'form': form,
+        'book': book,
+    }
+
+    return render(request, template, context)
+
+
+@is_book_editor
 def editorial_review_view(request, submission_id, review_id):
     book = get_object_or_404(models.Book, pk=submission_id)
     review = get_object_or_404(models.EditorialReviewAssignment, book=book, pk=review_id)
@@ -943,7 +967,7 @@ def request_revisions(request, submission_id, returner):
                                              "Attachment: Uploaded by %s" % (request.user.username))
                     attachments.append(attachment)
 
-            logic.send_requests_revisions(book, new_revision_request, email_text, attachments)
+            logic.send_requests_revisions(book, request.user, new_revision_request, email_text, attachments)
             log.add_log_entry(book, request.user, 'revisions', '%s %s requested revisions for %s' % (
             request.user.first_name, request.user.last_name, book.title), 'Revisions Requested')
 
@@ -1592,6 +1616,13 @@ def view_chapter(request, submission_id, chapter_id):
     book = get_object_or_404(models.Book, pk=submission_id)
     chapter = get_object_or_404(models.Chapter, pk=chapter_id, book=book)
     chapter_formats = models.ChapterFormat.objects.filter(chapter=chapter)
+
+    if request.POST and 'remove_author' in request.POST:
+        author_id = request.POST.get('author_id')[:-1]
+        author = models.Author.objects.get(pk=author_id)
+        chapter.authors.remove(author)
+
+        return redirect(reverse('editor_view_chapter', kwargs={'submission_id': book.id, 'chapter_id': chapter.id}))
 
     template = 'editor/submission.html'
     context = {

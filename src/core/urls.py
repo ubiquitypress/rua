@@ -84,11 +84,12 @@ urlpatterns = patterns('',
     # Files
     url(r'^files/submission/(?P<submission_id>\d+)/get/marc21/(?P<type>[-\w]+)/$', 'core.views.serve_marc21_file', name='serve_marc21_file'),
     url(r'^files/proposal/(?P<proposal_id>\d+)/file/(?P<file_id>\d+)/download/$', 'core.views.serve_proposal_file_id', name='serve_proposal_file_id'),
-    
+
+    url(r'^files/user/submission/(?P<submission_id>\d+)/file/(?P<file_id>\d+)/download/review/(?P<review_id>\d+)/access-key/(?P<access_key>[-\w+]+)/$','core.views.serve_file_one_click', name='serve_file_one_click'),
     url(r'^files/user/submission/(?P<submission_id>\d+)/file/(?P<file_id>\d+)/download/$', 'core.views.serve_file', name='serve_file'),
     url(r'^files/user/submission/(?P<submission_id>\d+)/files/download/$', 'core.views.serve_all_files', name='serve_all_files'),
+    url(r'^files/user/submission/(?P<submission_id>\d+)/review-files/(?P<review_type>[-\w]+)/download/review/(?P<review_id>\d+)/access-key/(?P<access_key>[-\w+]+)/$', 'core.views.serve_all_review_files_one_click', name='serve_all_review_files_one_click'),
     url(r'^files/user/submission/(?P<submission_id>\d+)/review-files/(?P<review_type>[-\w]+)/download/$', 'core.views.serve_all_review_files', name='serve_all_review_files'),
-    
     url(r'^files/submission/(?P<submission_id>\d+)/file/upload/additional/$', 'core.views.upload_additional', name='upload_additional'),
     url(r'^files/submission/(?P<submission_id>\d+)/file/upload/manuscript/$', 'core.views.upload_manuscript', name='upload_manuscript'),
     url(r'^files/submission/(?P<submission_id>\d+)/file/(?P<revision_id>\d+)/download_versioned_file/$', 'core.views.serve_versioned_file', name='serve_versioned_file'),
@@ -121,7 +122,9 @@ urlpatterns = patterns('',
     
     url(r'^proposals/(?P<proposal_id>\d+)/review/start/$', 'core.views.start_proposal_review', name='start_proposal_review'),
     url(r'^proposals/(?P<proposal_id>\d+)/review/add/$', 'core.views.add_proposal_reviewers', name='add_proposal_reviewers'),
+    url(r'^proposals/(?P<proposal_id>\d+)/assignment/decision/(?P<assignment_id>\d+)/access_key/(?P<access_key>[-\w+]+)/$', 'core.views.view_proposal_review_decision', name='view_proposal_review_decision_access_key'),
     url(r'^proposals/(?P<proposal_id>\d+)/assignment/decision/(?P<assignment_id>\d+)/$', 'core.views.view_proposal_review_decision', name='view_proposal_review_decision'),
+    url(r'^proposals/(?P<proposal_id>\d+)/assignment/(?P<assignment_id>\d+)/access_key/(?P<access_key>[-\w+]+)/$', 'core.views.view_proposal_review', name='view_proposal_review_access_key'),
     url(r'^proposals/(?P<proposal_id>\d+)/assignment/(?P<assignment_id>\d+)/$', 'core.views.view_proposal_review', name='view_proposal_review'),
     url(r'^proposals/(?P<proposal_id>\d+)/assignment/(?P<assignment_id>\d+)/hide/$', 'core.views.hide_review', name='hide_proposal_review'),
     url(r'^proposals/(?P<proposal_id>\d+)/assignment/(?P<assignment_id>\d+)/completed/$', 'core.views.view_completed_proposal_review', name='view_completed_proposal_review'),
@@ -132,6 +135,8 @@ urlpatterns = patterns('',
     url(r'^proposals/(?P<proposal_id>\d+)/accept/$', 'core.views.accept_proposal', name='accept_proposal'),
     url(r'^proposals/(?P<proposal_id>\d+)/revisions/$', 'core.views.request_proposal_revisions', name='request_proposal_revisions'),
     url(r'^proposals/(?P<proposal_id>\d+)/decline/$', 'core.views.decline_proposal', name='decline_proposal'),
+    url(r'^proposals/review-submitted/$', 'core.views.proposal_review_submitted', name='proposal_review_submitted'),
+    url(r'^proposals/review-declined/$', 'core.views.proposal_review_declined', name='proposal_review_declined'),
     # Contract
     url(r'^proposals/(?P<proposal_id>\d+)/manage/contract/$', 'core.views.contract_manager', name='proposal_contract_manager'),
     url(r'^proposals/(?P<proposal_id>\d+)/manage/contract/(?P<contract_id>\d+)/$', 'core.views.contract_manager', name='proposal_contract_manager_edit'),

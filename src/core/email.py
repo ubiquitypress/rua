@@ -16,7 +16,7 @@ def filepath_proposal(proposal, attachment):
 def filepath_general(attachment):
     return '%s/%s' % (settings.EMAIL_DIR, attachment.uuid_filename)
 
-def send_email(subject, context, from_email, to, html_template, bcc=None, cc=None, book=None, attachment=None, proposal=None, request=None, kind = None):
+def send_email(subject, context, from_email, to, html_template, bcc=None, cc=None, book=None, attachment=None, proposal=None, request=None, kind=None, access_key=None):
 
     html_template.replace('\n', '<br />')
 
@@ -34,10 +34,20 @@ def send_email(subject, context, from_email, to, html_template, bcc=None, cc=Non
 
     msg = EmailMessage(subject, html_content, from_email, to, bcc=bcc, cc=cc, headers={'Reply-To': reply_to})
 
-    if book:
-        log.add_email_log_entry(book=book, subject=subject, from_address=from_email, to=to, bcc=bcc, cc=cc, content=html_content, attachment=attachment, kind=kind)
-    if proposal:
-        log.add_email_log_entry(proposal=proposal, subject=subject, from_address=from_email, to=to, bcc=bcc, cc=cc, content=html_content, attachment=attachment, kind = kind)
+    if access_key:
+        # Hide access key in email log
+        html_content = html_content.replace(str(access_key), '')
+        if book:
+            log.add_email_log_entry(book=book, subject=subject, from_address=from_email, to=to, bcc=bcc, cc=cc, content=html_content, attachment=attachment, kind=kind)
+        if proposal:
+            log.add_email_log_entry(proposal=proposal, subject=subject, from_address=from_email, to=to, bcc=bcc, cc=cc, content=html_content, attachment=attachment, kind=kind)
+    else:
+        if book:
+            log.add_email_log_entry(book=book, subject=subject, from_address=from_email, to=to, bcc=bcc, cc=cc,
+                                    content=html_content, attachment=attachment, kind=kind)
+        if proposal:
+            log.add_email_log_entry(proposal=proposal, subject=subject, from_address=from_email, to=to, bcc=bcc, cc=cc,
+                                    content=html_content, attachment=attachment, kind=kind)
 
     msg.content_subtype = "html"
 
@@ -51,7 +61,7 @@ def send_email(subject, context, from_email, to, html_template, bcc=None, cc=Non
 
     msg.send()
 
-def send_email_multiple(subject, context, from_email, to, html_template, bcc=None, cc=None, book=None, attachments=None, proposal=None, request=None, kind = None):
+def send_email_multiple(subject, context, from_email, to, html_template, bcc=None, cc=None, book=None, attachments=None, proposal=None, request=None, kind=None):
 
     # A temporary function while all email forms are converted to handle multiple attachments.
     html_template.replace('\n', '<br />')
