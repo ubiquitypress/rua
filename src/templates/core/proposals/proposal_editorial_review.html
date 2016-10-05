@@ -1,0 +1,23 @@
+{% if press.general.editorial_assignment_feature %}
+<hr>
+<div class="col-md-12 other-sub-heading"><h4>Editorial Review Assignments</h4><a href="{% url 'add_editorial_review' 'proposal' proposal.id %}" class="btn  btn-transparent-white" style="position: absolute;right:20;margin-top:-37px"><i class="fa fa-plus">&nbsp;</i>Create</a></div>
+
+  <table class="table table-bordered small">
+    <tr>
+      <th>ID</th>
+      <th>Assigned</th>
+      <th>Status</th>
+      <th></th>
+    </tr>
+  {% for review in editorial_review_assignments %}
+    <tr>
+      <td>{{review.pk}}</td>
+      <td>{{review.assigned}}</td>
+      <td width="25%">{% if review.completed %}Completed {{ review.completed }}{% else %}Due on {{ review.due }}{% endif %}</td>
+      <td width="25%">{% if review.completed %}<a class="btn btn-task" href="{% url 'view_editorial_review' review.id %}">View</a>{% else %}Awaiting Review{% endif %}</td>
+    </tr>
+    {% empty %}
+    <td colspan="4"> No assignments found.</td>
+    {% endfor %}
+    </table>
+{% endif %}

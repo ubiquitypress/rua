@@ -89,7 +89,8 @@ def add_email_log_entry_multiple(subject, from_address, to, bcc, cc, content, at
 
     if attachments:
         for attachment in attachments:
-            new_log_entry.attachment.add(attachment)
+            if attachment:
+                new_log_entry.attachment.add(attachment)
     new_log_entry.save()
 
     return new_log_entry

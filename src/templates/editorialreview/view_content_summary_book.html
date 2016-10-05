@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% load static from staticfiles %}
+{% load bootstrap3 %}
+{% load dict_lookup %}
+
+{% block css %}
+	<link href="{% static "css/timeline.css" %}" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/plug-ins/1.10.7/integration/bootstrap/3/dataTables.bootstrap.css">
+{% endblock %}
+
+{% block body %}
+<div class="col-md-12 file-heading  container-fluid" style="margin-top:-20px">
+	<h4>Editorial Review for {{ review.content_object.title }} ({{ review.content_type|capfirst }})</h4>
+	Viewing summary<br /><br />
+</div>
+<div class="row">
+	<div class="col-md-6">
+		<h4>EDITORS</h4>
+	     <h5 class="author-note">
+	     {% for editor in submission.book_editors.all %}
+	         {{ editor.profile.full_name }}<sup> <a href="core/email.html" onclick="return popitup('/email/editors/submission/{{submission.id}}/user/{{editor.pk}}/','editors_{{editor.pk}}')"class="fa fa-envelope-o btn btn-xs btn-default"></a></sup>{% if not forloop.last %}, {% endif %}
+	     {% empty %}
+	      No book editors have been assigned yet.
+	     {% endfor %}
+	     </h4>
+	</div>
+	<div class="col-md-6">
+		<h4>AUTHORS</h4>
+		{% if submission.book_type == 'monograph' %}
+			<h5 class="author-note">
+			{% for author in submission.author.all %}
+				{{ author.full_name }}{% if not forloop.last %}, {% endif %}
+			{% endfor %}
+			</h5>
+		{% else %}
+			<h5 class="author-note">
+			{% for editor in submission.editor.all %}
+				{{ editor.full_name }}{% if not forloop.last %}, {% endif %}
+			{% endfor %}
+			</h5>
+		{% endif %}
+	</div>
+</div>
+<hr />  
+<div class="row">
+	<div class="col-md-6">
+		<h4>Abstract</h4>
+		{{ submission.description|safe }}
+	</div>
+	<div class="col-md-6">
+		<h4>COVER LETTER</h4>
+		{{ submission.cover_letter|safe }}
+	</div>
+</div>
+<hr />  
+<div class="row">
+	<div class="col-md-6">
+		<h4>REVIEWER SUGGESTIONS</h4>
+		{{ submission.reviewer_suggestions|safe }}
+	</div>
+	<div class="col-md-6">
+		<h4>COMPETING INTERESTS</h4>
+		{{ submission.competing_interests|safe }}
+	</div>
+</div>
+<hr />
+<div class="row">
+	<div class="col-md-12">
+		{% include "editorialreview/submission_files.html" %}
+	</div>
+</div>
+
+
+
+{% endblock body %}
+
+{% block js %}
+<script type="text/javascript">$("textarea").jqte();</script>
+<script type="text/javascript" src="{% static "js/fancyfile.js" %}"></script>
+{% endblock js %}

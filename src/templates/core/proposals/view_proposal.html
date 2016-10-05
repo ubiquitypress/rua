@@ -90,6 +90,7 @@ No book editors have been assigned
   <div class="col-md-12 other-sub-heading"><h4>Review</h4>{% if proposal.status = 'accepted' or proposal.status = 'declined'%} {% else %}<a href="{% url 'add_proposal_reviewers' proposal.id %}" class="btn  btn-transparent-white" style="position: absolute;right:20;margin-top:-37px"><i class="fa fa-plus">&nbsp;</i>Add Reviewers</a>{% endif %}</div>
 
   {% include "core/proposals/proposal_review_block.html" with review_data=proposal.review_assignments.all %}
+  {% include "core/proposals/proposal_editorial_review.html" %}
 
 
   {% endif %}

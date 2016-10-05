@@ -30,6 +30,7 @@ from datetime import datetime
 from manager import models as manager_models
 from manager import forms as manager_forms
 from submission import forms as submission_forms
+from editorialreview import models as er_models
 
 from docx import Document
 from docx.shared import Inches
@@ -1832,6 +1833,7 @@ def proposal_history(request):
 @is_editor
 def view_proposal(request, proposal_id):
     proposal = get_object_or_404(submission_models.Proposal, pk=proposal_id)
+    editorial_review_assignments = er_models.EditorialReview.objects.filter(content_type__model='proposal', object_id=proposal_id).order_by('-pk')
     relationships = models.ProposalFormElementsRelationship.objects.filter(form=proposal.form)
 
     if proposal.data:
@@ -1847,6 +1849,7 @@ def view_proposal(request, proposal_id):
         'proposal': proposal,
         'relationships': relationships,
         'data': data,
+        'editorial_review_assignments': editorial_review_assignments,
     }
 
     return render(request, template, context)

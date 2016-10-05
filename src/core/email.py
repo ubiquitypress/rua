@@ -103,6 +103,36 @@ def send_reset_email(user, email_text, reset_code):
 
     send_email(get_setting('reset_code_subject','email_subject','[abp] Reset Code'), context, from_email.value, user.email, email_text, kind = 'general')
 
+def send_prerendered_email(request, html_template, subject, to, bcc=None, cc=None, attachments=None, book=None, proposal=None):
+
+    html_content = html_template
+
+    if not type(to) in [list,tuple]:
+        to = [to]
+
+    if request:
+        reply_to = request.user.email
+    else:
+        reply_to = models.Setting.objects.get(group__name='email', name='from_address')
+
+    from_email = get_setting('from_address','general','noreply@rua.re')
+
+    msg = EmailMessage(subject, html_content, from_email, to, bcc=bcc, cc=cc, headers={'Reply-To': reply_to})
+
+    if book:
+        log.add_email_log_entry_multiple(book=book, subject=subject, from_address=reply_to, to=to, bcc=bcc, cc=cc, content=html_content, attachments=attachments if attachments else None)
+    if proposal:
+        log.add_email_log_entry_multiple(proposal=proposal, subject=subject, from_address=reply_to, to=to, bcc=bcc, cc=cc, content=html_content, attachments=attachments if attachments else None)
+
+    msg.content_subtype = "html"
+
+    if attachments:
+        for attachment in attachments:
+            if attachment:
+                msg.attach_file(filepath_general(attachment))
+
+    msg.send()
+
 def get_email_content(request, setting_name, context):
 
     try:
