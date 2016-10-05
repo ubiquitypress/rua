@@ -10,6 +10,12 @@
   </div>
   <hr>
 		<div class="col-md-12">
+      <p>This page allows you to create a group. Specific group types are used for:</p>
+      <ul>
+        <li>Review Comittee - A group of reviewers, this group appears when you are assigning reviewers.</li>
+        <li>Editorial Group - A group of editorial reviewes, this group appears when you are assigning an editorial review after peer review</li>
+        <li>Generic Group - Currently do not have a use but will be utilised for displaying editorial boards/teams later</li>
+      </ul>
       <form method="post" class="form">
         {% csrf_token %}
         {% bootstrap_form form %}

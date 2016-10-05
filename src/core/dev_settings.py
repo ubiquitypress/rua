@@ -63,6 +63,7 @@ INSTALLED_APPS = (
     'onetasker',
     'editor',
     'swiftsubmit',
+    'editorialreview',
 
     # 3rd Party
     'bootstrap3',

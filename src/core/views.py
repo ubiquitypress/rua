@@ -30,6 +30,7 @@ from datetime import datetime
 from manager import models as manager_models
 from manager import forms as manager_forms
 from submission import forms as submission_forms
+from editorialreview import models as er_models
 
 from docx import Document
 from docx.shared import Inches
@@ -1295,7 +1296,7 @@ def serve_proposal_file_id(request, proposal_id, file_id):
 def serve_proposal_file(request, proposal_id, file_id):
     proposal = get_object_or_404(submission_models.Proposal, pk=proposal_id)
     _file = get_object_or_404(models.File, pk=file_id)
-    file_path = os.path.join(settings.PROPOSAL_DIR, proposal_id, _file.original_filename)
+    file_path = os.path.join(settings.PROPOSAL_DIR, proposal_id, _file.uuid_filename)
 
     try:
         fsock = open(file_path, 'r')
@@ -1313,7 +1314,9 @@ def serve_proposal_file(request, proposal_id, file_id):
 def serve_versioned_file(request, submission_id, revision_id):
     book = get_object_or_404(models.Book, pk=submission_id)
     versions_file = get_object_or_404(models.FileVersion, pk=revision_id)
-    file_path = os.path.join(settings.BOOK_DIR, submission_id, versions_file.original_filename)
+    file_path = os.path.join(settings.BOOK_DIR, submission_id, versions_file.uuid_filename)
+
+    print file_path
 
     try:
         fsock = open(file_path, 'r')
@@ -1891,6 +1894,7 @@ def proposal_history(request):
 @is_editor
 def view_proposal(request, proposal_id):
     proposal = get_object_or_404(submission_models.Proposal, pk=proposal_id)
+    editorial_review_assignments = er_models.EditorialReview.objects.filter(content_type__model='proposal', object_id=proposal_id).order_by('-pk')
     relationships = models.ProposalFormElementsRelationship.objects.filter(form=proposal.form)
 
     if proposal.data:
@@ -1906,6 +1910,7 @@ def view_proposal(request, proposal_id):
         'proposal': proposal,
         'relationships': relationships,
         'data': data,
+        'editorial_review_assignments': editorial_review_assignments,
     }
 
     return render(request, template, context)

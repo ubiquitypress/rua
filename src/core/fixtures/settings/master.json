@@ -243,7 +243,7 @@
 },
 {
   "fields": {
-    "value": "Book Managers have been updated",
+    "value": "Book Editors have been updated",
     "group": 6,
     "name": "book_editors_subject",
     "types": "text",
@@ -375,7 +375,7 @@
 },
 {
   "fields": {
-    "value": "<p>Dear {{ name }},\r\n</p><p>The management editor at&nbsp;{{press_name}} have recorded a decision on an editorial assignment that you are either assigned to or is part of your book submission {{submission.title}}.\r\n</p><p>\r\nThe press decision is:</p><p>[PRESS MANAGER TO COMPLETE DECISION AND GIVE MORE DETAIL ON WHY THE DECISION HAS BEEN MADE HERE]</p><p><span style=\"line-height: 1.42857;\">\r\n{{ link_to_page }} [DO NOT REMOVE link_to_page] </span></p><p>Regards,\r\n</p><p>{{sender.first_name}}\r\n{% if sender %}{{ sender.profile.signature|safe }}{% endif %}<br></p>",
+    "value": "<p>Dear {{ name }},\r\n</p><p>The management editor at&nbsp;{{press_name}} have recorded a decision on an editorial assignment that you are either assigned to or is part of your book submission {{submission.title}}.\r\n</p><p>\r\nThe press decision is:</p><p>[PRESS EDITOR TO COMPLETE DECISION AND GIVE MORE DETAIL ON WHY THE DECISION HAS BEEN MADE HERE]</p><p><span style=\"line-height: 1.42857;\">\r\n{{ link_to_page }} [DO NOT REMOVE link_to_page] </span></p><p>Regards,\r\n</p><p>{{sender.first_name}}\r\n{% if sender %}{{ sender.profile.signature|safe }}{% endif %}<br></p>",
     "group": 3,
     "name": "editorial_decision_ack",
     "types": "rich_text",
@@ -474,7 +474,7 @@
 },
 {
     "fields": {
-        "value": "<p>Dear {{review.user.profile.salutation_name}},</p><p>You have been recommended as a potential peer reviewer for a book submitted to {{press_name}}. The book has been provisionally titled {{book.title}}.</p><p>The contents to review has been summarised as below:</p><p>{{book.description|safe}}</p><p>As part of the editorial process with all {{press_name}} publications, books are reviewed according to the following general principles:</p><ul><li>that conclusions are presented in an appropriate fashion and are supported by the data</li><li>that the manuscript is presented in an intelligible fashion</li><li>that the Foreword and Epilogue tie in with the book contents well</li></ul><p>We aim to publish books that are solid works of scholarship, irrespective of potential 'impact'. The text is available now for review / will be available from <span style=\"background-color: yellow;\">[add start date] [DELETE AS APPROPRIATE]</span>. If you would like to accept or decline this invitation simply click the link below and select the appropriate option. If accepting the invitation you will then have full access to the review files and peer review details.</p><p>{{decision_url}}</p><p>We are aiming to have the review completed by {{review.due}}, therefore&nbsp;please&nbsp;consider whether this would be possible if accepting the invitation. If you require a different schedule then please let me know.</p><p>Thank you for considering this request. As always, the efforts of all peer reviewers are greatly appreciated. If you are unable to undertake this review, we would greatly appreciate any thoughts you might have on others who we might approach.</p><p>Many thanks for your time and consideration of this invitation,</p><p>Kind regards,</p><p>{{sender.first_name}}{% if sender %}{{ sender.profile.signature|safe }}{% endif %}</p>",
+        "value": "<p>Dear {{book.owner.profile.salutation_name}},</p><p>You have been recommended as a potential peer reviewer for a book submitted to {{press_name}}. The book has been provisionally titled {{book.title}}.</p><p>The contents to review has been summarised as below:</p><p>{{book.description|safe}}</p><p>As part of the editorial process with all {{press_name}} publications, books are reviewed according to the following general principles:</p><ul><li>that conclusions are presented in an appropriate fashion and are supported by the data</li><li>that the manuscript is presented in an intelligible fashion</li><li>that the Foreword and Epilogue tie in with the book contents well</li></ul><p>We aim to publish books that are solid works of scholarship, irrespective of potential 'impact'. The text is available now for review / will be available from <span style=\"background-color: yellow;\">[add start date] [DELETE AS APPROPRIATE]</span>. If you would like to accept or decline this invitation simply click the link below and select the appropriate option. If accepting the invitation you will then have full access to the review files and peer review details.</p><p>{{decision_url}}</p><p>We are aiming to have the review completed by {{review.due}}, therefore&nbsp;please&nbsp;consider whether this would be possible if accepting the invitation. If you require a different schedule then please let me know.</p><p>Thank you for considering this request. As always, the efforts of all peer reviewers are greatly appreciated. If you are unable to undertake this review, we would greatly appreciate any thoughts you might have on others who we might approach.</p><p>Many thanks for your time and consideration of this invitation,</p><p>Kind regards,</p><p>{{sender.first_name}}{% if sender %}{{ sender.profile.signature|safe }}{% endif %}</p>",
         "group": 3,
         "name": "review_request",
         "types": "rich_text",
@@ -518,7 +518,7 @@
 },
 {
     "fields": {
-        "value": "<p>Dear {{review.user.profile.salutation_name}},</p><p>You have been recommended as a potential peer reviewer for a book submitted to {{press_name}}. The book has been provisionally titled {{book.title}}.</p><p>The contents to review has been summarised as below:</p><p>{{book.description|safe}}</p><p>As part of the editorial process with all {{press_name}} publications, books are reviewed according to the following general principles:</p><ul><li>that conclusions are presented in an appropriate fashion and are supported by the data</li><li>that the manuscript is presented in an intelligible fashion</li><li>that the Foreword and Epilogue tie in with the book contents well</li></ul><p>We aim to publish books that are solid works of scholarship, irrespective of potential 'impact'. The text is available now for review / will be available from <span style=\"background-color: yellow;\">[add start date] [DELETE AS APPROPRIATE]</span>. If you would like to accept or decline this invitation simply click the link below and select the appropriate option. If accepting the invitation you will then have full access to the review files and peer review details.</p><p>{{decision_url}}</p><p>We are aiming to have the review completed by {{review.due}}, therefore&nbsp;please&nbsp;consider whether this would be possible if accepting the invitation. If you require a different schedule then please let me know.</p><p>Thank you for considering this request. As always, the efforts of all peer reviewers are greatly appreciated. If you are unable to undertake this review, we would greatly appreciate any thoughts you might have on others who we might approach.</p><p>Many thanks for your time and consideration of this invitation,</p><p>Kind regards,</p><p>{{sender.first_name}}{% if sender %}{{ sender.profile.signature|safe }}{% endif %}</p>",
+        "value": "<p>Dear {{book.owner.profile.salutation_name}},</p><p>You have been recommended as a potential peer reviewer for a book submitted to {{press_name}}. The book has been provisionally titled {{book.title}}.</p><p>The contents to review has been summarised as below:</p><p>{{book.description|safe}}</p><p>As part of the editorial process with all {{press_name}} publications, books are reviewed according to the following general principles:</p><ul><li>that conclusions are presented in an appropriate fashion and are supported by the data</li><li>that the manuscript is presented in an intelligible fashion</li><li>that the Foreword and Epilogue tie in with the book contents well</li></ul><p>We aim to publish books that are solid works of scholarship, irrespective of potential 'impact'. The text is available now for review / will be available from <span style=\"background-color: yellow;\">[add start date] [DELETE AS APPROPRIATE]</span>. If you would like to accept or decline this invitation simply click the link below and select the appropriate option. If accepting the invitation you will then have full access to the review files and peer review details.</p><p>{{decision_url}}</p><p>We are aiming to have the review completed by {{review.due}}, therefore&nbsp;please&nbsp;consider whether this would be possible if accepting the invitation. If you require a different schedule then please let me know.</p><p>Thank you for considering this request. As always, the efforts of all peer reviewers are greatly appreciated. If you are unable to undertake this review, we would greatly appreciate any thoughts you might have on others who we might approach.</p><p>Many thanks for your time and consideration of this invitation,</p><p>Kind regards,</p><p>{{sender.first_name}}{% if sender %}{{ sender.profile.signature|safe }}{% endif %}</p>",
         "group": 3,
         "name": "external_review_request",
         "types": "rich_text",
@@ -639,7 +639,7 @@
 },
 {
     "fields": {
-        "value": "<p><span style=\"line-height: 1.42857;\">Dear &nbsp;</span>{{ book.owner.profile.salutation_name }},</p><p><span style=\"line-height: 1.42857;\">After review, we have reached a decision regarding your book, \u2018{{book.title}}\u2019 to {{press_name}}. Our decision is to request some revisions prior to a final editorial decision. A summary of the requested edits from the editorial team can be found below <span style=\"background-color: yellow;\">[OR SEE ATTACHED FILES = PRESS MANAGER TO EDIT AS REQUIRED PRIOR TO SENDING EMAIL]</span>. Please consider these points and revise the proposal details accordingly:</span></p><p><span style=\"line-height: 1.42857;\">Editorial Revision Requests:</span></p><p><span style=\"line-height: 1.42857;\">Major revisions: [XXXX EDITOR TO INSERT LIST OF MAJOR REVISIONS HERE, IF ANY XXXX]</span></p><p><span style=\"line-height: 1.42857;\"><br></span><span style=\"line-height: 1.42857;\">Minor revisions: [XXXX EDITOR TO INSERT LIST OF MINOR REVISIONS HERE, IF ANY XXXX]</span></p><p><span style=\"line-height: 1.42857;\"><br></span></p><p><span style=\"line-height: 1.42857;\">You can access the book details and submit your revisions via the book management system: {{revision_url }}</span><span style=\"line-height: 1.42857;\"><br></span></p><p><span style=\"line-height: 1.42857;\">Should you disagree with any of these requests, or have any questions, then please get in touch and we can discuss the options available.</span></p><p><span style=\"line-height: 1.42857;\">Please could you have the revisions submitted by</span> {{revision.due|date:\"Y-m-d\"}}<span style=\"line-height: 1.42857;\">. If you cannot make this deadline, please let us know as early as possible.</span></p><p><span style=\"line-height: 1.42857;\">Kind regards,</span></p><p><span style=\"line-height: 1.42857;\">{{sender.first_name}} {% if sender %}{{ sender.profile.signature|safe }}{% endif %}</span><br></p>",
+        "value": "<p><span style=\"line-height: 1.42857;\">Dear &nbsp;</span>{{ author.full_name }},</p><p><span style=\"line-height: 1.42857;\">After review, we have reached a decision regarding your book, \u2018{{book.title}}\u2019 to {{press_name}}. Our decision is to request some revisions prior to a final editorial decision. A summary of the requested edits from the editorial team can be found below <span style=\"background-color: yellow;\">[OR SEE ATTACHED FILES = PRESS EDITOR TO EDIT AS REQUIRED PRIOR TO SENDING EMAIL]</span>. Please consider these points and revise the proposal details accordingly:</span></p><p><span style=\"line-height: 1.42857;\">Editorial Revision Requests:</span></p><p><span style=\"line-height: 1.42857;\">Major revisions: [XXXX EDITOR TO INSERT LIST OF MAJOR REVISIONS HERE, IF ANY XXXX]</span></p><p><span style=\"line-height: 1.42857;\"><br></span><span style=\"line-height: 1.42857;\">Minor revisions: [XXXX EDITOR TO INSERT LIST OF MINOR REVISIONS HERE, IF ANY XXXX]</span></p><p><span style=\"line-height: 1.42857;\"><br></span></p><p><span style=\"line-height: 1.42857;\">You can access the book details and submit your revisions via the book management system: {{revision_url }}</span><span style=\"line-height: 1.42857;\"><br></span></p><p><span style=\"line-height: 1.42857;\">Should you disagree with any of these requests, or have any questions, then please get in touch and we can discuss the options available.</span></p><p><span style=\"line-height: 1.42857;\">Please could you have the revisions submitted by</span> {{revision.due|date:\"Y-m-d\"}}<span style=\"line-height: 1.42857;\">. If you cannot make this deadline, please let us know as early as possible.</span></p><p><span style=\"line-height: 1.42857;\">Kind regards,</span></p><p><span style=\"line-height: 1.42857;\">{{sender.first_name}} {% if sender %}{{ sender.profile.signature|safe }}{% endif %}</span><br></p>",
         "group": 3,
         "name": "request_revisions",
         "types": "rich_text",
@@ -804,7 +804,7 @@
 },
 {
     "fields": {
-        "value": "<p>Dear {{proposal.owner.profile.salutation_name}},</p><p>After review of your proposal to {{press_name}}, we have reached a decision to accept the book, {{proposal.title}}, for full submission and peer review. We hope that you are pleased with this news.</p><p>[DETAIL TO BE ADDED BY THE PRESS MANAGER ON HOW/WHEN TO SUBMIT THE FULL BOOK FOR REVIEW]</p><p>Kind regards,</p><p>{{sender.first_name}} {% if sender %}{{ sender.profile.signature|safe }}{% endif %}</p>",
+        "value": "<p>Dear {{proposal.owner.profile.salutation_name}},</p><p>After review of your proposal to {{press_name}}, we have reached a decision to accept the book, {{proposal.title}}, for full submission and peer review. We hope that you are pleased with this news.</p><p>[DETAIL TO BE ADDED BY THE PRESS EDITOR ON HOW/WHEN TO SUBMIT THE FULL BOOK FOR REVIEW]</p><p>Kind regards,</p><p>{{sender.first_name}} {% if sender %}{{ sender.profile.signature|safe }}{% endif %}</p>",
         "group": 3,
         "name": "proposal_accept",
         "types": "rich_text",
@@ -881,7 +881,7 @@
 },
 {
     "fields": {
-        "value": "<p></p><p><span style=\"line-height: 1.42857;\">The book manager(s) assigned to submission {{submission.title}}<submission id:{{submission.id}}=\"\"> has been updated.</submission></span></p>\r\n{% if added_editors %}\r\n<p>These book managers have been added: </p>\r\n--------\r\n  {% for editor in added_editors %}\r\n        {{editor.first_name}} {% if editor.middle_name %}{{editor.middle_name}} {% endif %}{{editor.last_name}}&gt;{% if not forloop.last %}, {% endif %}\r\n\r\n    {% endfor %}\r\n----------\r\n\r\n{% endif %}\r\n{% if removed_editors %}<p></p><p>These book managers have been removed:</p><p>--------\r\n  {% for editor in removed_editors %}\r\n        {{editor.first_name}} {% if editor.middle_name %}{{editor.middle_name}} {% endif %}{{editor.last_name}}&gt;{% if not forloop.last %}, {% endif %}\r\n\r\n    {% endfor %}\r\n----------\r\n{% endif %}\r\n</p><p> \r\nTo view the submission, use the following link: http://{{base_url}}/editor/submission/{{submission.id}}/\r\n<br></p><p><span style=\"line-height: 1.42857;\">Regards,\r\n<br><br>RUA notification system</span><br></p><p></p>",
+        "value": "<p></p><p><span style=\"line-height: 1.42857;\">The book editor(s) assigned to submission {{submission.title}}<submission id:{{submission.id}}=\"\"> has been updated.</submission></span></p>\r\n{% if added_editors %}\r\n<p>These book editors have been added: </p>\r\n--------\r\n  {% for editor in added_editors %}\r\n        {{editor.first_name}} {% if editor.middle_name %}{{editor.middle_name}} {% endif %}{{editor.last_name}}&gt;{% if not forloop.last %}, {% endif %}\r\n\r\n    {% endfor %}\r\n----------\r\n\r\n{% endif %}\r\n{% if removed_editors %}<p></p><p>These book editors have been removed:</p><p>--------\r\n  {% for editor in removed_editors %}\r\n        {{editor.first_name}} {% if editor.middle_name %}{{editor.middle_name}} {% endif %}{{editor.last_name}}&gt;{% if not forloop.last %}, {% endif %}\r\n\r\n    {% endfor %}\r\n----------\r\n{% endif %}\r\n</p><p> \r\nTo view the submission, use the following link: http://{{base_url}}/editor/submission/{{submission.id}}/\r\n<br></p><p><span style=\"line-height: 1.42857;\">Regards,\r\n<br><br>RUA notification system</span><br></p><p></p>",
         "group": 3,
         "name": "book_editor_ack",
         "types": "rich_text",
@@ -892,7 +892,7 @@
 },
 {
     "fields": {
-        "value": "<p>Dear {{ author.full_name }},\r\n</p><p>The Editorial team at&nbsp;{{press_name}} have recorded a decision on your book submission {{submission.title}}.\r\n</p><p>\r\nThe press decision is:</p><p>[PRESS MANAGER TO COMPLETE DECISION AND GIVE MORE DETAIL ON WHY THE DECISION HAS BEEN MADE HERE]<br>{{ link_to_page }}<br></p><p>\r\nRegards,\r\n</p><p>{{sender.first_name}}\r\n{% if sender %}{{ sender.profile.signature|safe }}{% endif %}<br></p>",
+        "value": "<p>Dear {{ author.full_name }},\r\n</p><p>The Editorial team at&nbsp;{{press_name}} have recorded a decision on your book submission {{submission.title}}.\r\n</p><p>\r\nThe press decision is:</p><p>[PRESS EDITOR TO COMPLETE DECISION AND GIVE MORE DETAIL ON WHY THE DECISION HAS BEEN MADE HERE]<br>{{ link_to_page }}<br></p><p>\r\nRegards,\r\n</p><p>{{sender.first_name}}\r\n{% if sender %}{{ sender.profile.signature|safe }}{% endif %}<br></p>",
         "group": 3,
         "name": "decision_ack",
         "types": "rich_text",
@@ -1222,7 +1222,7 @@
 },
 {
   "fields": {
-    "value": "<p>Dear {{ name }},\r\n</p><p>The management editor at&nbsp;{{press_name}} have recorded a decision on an editorial assignment that you are either assigned to or is part of your book submission {{submission.title}}.\r\n</p><p>\r\nThe press decision is:</p><p>[PRESS MANAGER TO COMPLETE DECISION AND GIVE MORE DETAIL ON WHY THE DECISION HAS BEEN MADE HERE]</p><p><span style=\"line-height: 1.42857;\">\r\n{{ link_to_page }} [DO NOT REMOVE link_to_page] </span></p><p>Regards,\r\n</p><p>{{sender.first_name}}\r\n{% if sender %}{{ sender.profile.signature|safe }}{% endif %}<br></p>",
+    "value": "<p>Dear {{ name }},\r\n</p><p>The management editor at&nbsp;{{press_name}} have recorded a decision on an editorial assignment that you are either assigned to or is part of your book submission {{submission.title}}.\r\n</p><p>\r\nThe press decision is:</p><p>[PRESS EDITOR TO COMPLETE DECISION AND GIVE MORE DETAIL ON WHY THE DECISION HAS BEEN MADE HERE]</p><p><span style=\"line-height: 1.42857;\">\r\n{{ link_to_page }} [DO NOT REMOVE link_to_page] </span></p><p>Regards,\r\n</p><p>{{sender.first_name}}\r\n{% if sender %}{{ sender.profile.signature|safe }}{% endif %}<br></p>",
     "group": 3,
     "name": "editorial_decision_ack",
     "types": "rich_text",
@@ -1288,11 +1288,24 @@
 },
 {
   "fields": {
-    "value": "on",
-    "group": 1,
-    "name": "one_click_review_url",
-    "types": "boolean",
-    "description": "Allow reviewers to access and complete assignments without registering an account.<br>WARNING: Enabling this option makes data less secure."
-  }
+    "value": "<p>Dear {{ review.user.profile.salutation_name }},</p><p>The book proposal \u2018{{ review.content_object.title }}\u2019 has been submitted and requires you to assess the information and provide us with your feedback. By clicking on the below link, you will have access to the relevant proposal data, along with completed peer reviewer information. There will also be a review form available for you to provide to us your comments and overall decision.</p><p>{{ task_url }}?access_key={{ review.access_key }}</p><p>Please could you review the proposal details and complete the review form by {{ review.due }}, or let me know if you require an alternative deadline.</p><p>Kind regards,</p><p>{{sender.first_name}}</p><p>{% if sender %}{{ sender.profile.signature|safe }}{% endif %}</p>",
+    "group": 3,
+    "name": "editorial_review_proposal",
+    "types": "rich_text",
+    "description": "Email sent as part of the Editorial Review request process."
+  },
+  "model": "core.setting",
+  "pk": 122
+},
+{
+  "fields": {
+    "value": "<p>Dear {{ review.user.profile.salutation_name }},<br></p><p>The book title \u2018{{ review.content_object.title }}\u2019 has been submitted and requires you to assess the information and provide us with your feedback. By clicking on the below link, you will have access to the relevant submission data, along with completed peer reviewer information. There will also be a review form available for you to provide to us your comments and overall decision.</p><p>{{ task_url }}?access_key={{ review.access_key }}</p><p>Please could you review the proposal details and complete the review form by {{ review.due }}, or let me know if you require an alternative deadline.</p><p>Kind regards,</p><p>{{sender.first_name}}<br>{% if sender %}{{ sender.profile.signature|safe }}{% endif %}</p>",
+    "group": 3,
+    "name": "editorial_review_book",
+    "types": "rich_text",
+    "description": "Email sent as part of the Editorial Review process."
+  },
+  "model": "core.setting",
+  "pk": 123
 }
 ]

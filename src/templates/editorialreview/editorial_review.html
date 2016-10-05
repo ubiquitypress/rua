@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% load static from staticfiles %}
+{% load bootstrap3 %}
+
+{% block css %}
+	<link href="{% static "css/timeline.css" %}" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/plug-ins/1.10.7/integration/bootstrap/3/dataTables.bootstrap.css">
+{% endblock %}
+
+{% block body %}
+<div class="col-md-12 file-heading  container-fluid" style="margin-top:-20px">
+	<h3>Editorial Review for {{ review.content_object.title }} ({{ review.content_type|capfirst }})</h3>
+</div>
+	<br /><br />
+	<form method="POST" enctype="multipart/form-data">
+	{% csrf_token %}
+
+	<h4><b>COMPLETE REVIEW</b></h4>
+		<h4>1. View summary of this {{ review.content_type }}</h4>
+		<ul>
+			<li><a href="{% url 'view_content_summary' review.id %}?access_key={{ review.access_key }}" target="_blank">View Summary in New Tab</a></li>
+		</ul>
+
+		<h4>2. View reviews for this {{ review.content_type }}</h4>
+		<ul>
+		{% for pr in peer_reviews %}
+			<li><a href="{% url 'view_non_editorial_review' review.id pr.id %}?access_key={{ review.access_key }}" target="_blank">{{ pr.user.profile.full_name }} - {{ pr.id }}</a></li>
+		{% endfor %}
+		</ul>
+
+    	<h4>3. Completed the Review Form</h4>
+    	<p class="subtitle-form-text"><em> {{ form_info.intro_text|safe }} </em></p>
+      	{% if form.errors %}
+      	<div class="alert alert-info">
+          	Please correct errors below. Note, you'll have to reselect any files you want uploaded.
+        	</div>
+      	{% endif %}
+      	<div class="row">
+      	{% for field in form %}
+        <div class="{% if field.field.widget.attrs.div_class %}{{ field.field.widget.attrs.div_class }}{% else %}col-md-12{% endif %}">
+        {% if field.field.widget.attrs.is_checkbox %}
+          {% if field.errors %}<span class="red">{{ field.errors|join:", " }}</span><br />{% endif %}
+          {{ field }} &nbsp;{% if field.field.help_text %}{{ field.field.help_text|safe }}{% endif %}
+        {% else %}
+             {% if field.errors %}<span class="red">{{ field.errors|join:", " }}</span>{% endif %}
+             {% bootstrap_field field %}
+        {% endif %}
+          </div>
+      	{% endfor %}
+      </div>
+  
+      {% csrf_token %}
+
+	    <h4>4. Upload Review File</h4>
+	    	<div class="form-group">
+	          	<div class="row">
+	            	<div class="col-md-12">
+	               		<div class="input-group">
+	                  		<span class="input-group-btn">
+	                      	<span class="btn btn-primary btn-file">
+	                         	 Browse&hellip; <input type="file" id="review_file_upload" name="review_file_upload" multiple>
+	                      	</span>
+	                  	</span>
+	                  	<input type="text" class="form-control" readonly>
+	              	</div>
+	              	<span class="help-block"><small>If you want to attach a file, you may do so here. This is not required.</small></span>
+	            </div>
+	          </div>
+	        </div>
+	        <hr />
+	        <h4>5. Make a recommendation</h4>
+	        {% bootstrap_field recommendation_form.recommendation %}
+	        <hr />
+	        <h4>6. Competing interests</h4>
+	        {% bootstrap_field recommendation_form.competing_interests %}</small><br><br>
+	      <input class="btn btn-success" type="submit" value="Submit your review" id="poster" required>
+	      <br/><br/>
+
+	      </form>
+
+		</div>
+
+{% endblock body %}
+
+{% block js %}
+<script type="text/javascript">$("textarea").jqte();</script>
+<script type="text/javascript" src="{% static "js/fancyfile.js" %}"></script>
+{% endblock js %}

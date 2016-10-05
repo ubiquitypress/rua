@@ -24,6 +24,7 @@ from review import models as review_models
 from manager import models as manager_models, logic as manager_logic
 from submission import forms as submission_forms
 from editor import forms, models as editor_models
+from editorialreview import models as editorial_models
 
 
 @login_required
@@ -411,7 +412,7 @@ def editor_tasks(request, submission_id):
 def editor_review(request, submission_id):
     book = get_object_or_404(models.Book, pk=submission_id)
     review_rounds = models.ReviewRound.objects.filter(book=book).order_by('-round_number')
-    editorial_review_assignments = models.EditorialReviewAssignment.objects.filter(book=book).order_by('-pk')
+    editorial_review_assignments = editorial_models.EditorialReview.objects.filter(content_type__model='book', object_id=submission_id).order_by('-pk')
 
     if request.POST and 'new_round' in request.POST:
         new_round = logic.create_new_review_round(book)

@@ -9,6 +9,12 @@
 
 		<h3>{{ press.general.press_name }} Groups <a href="{% url 'manager_group_add' %}" class="btn btn-transparent-white"  style="position: absolute;right:110px;margin-top:-8px;width:100px">+ Add</i></a><a href="{% url 'manager_index' %}" class="btn  btn-transparent-white" style="position: absolute;right:30px;margin-top:-8px">Go back</a></h3></div>
     <p class="small">Drag and drop groups to re-order them</p><hr>
+    <p>This page allows you to create a group. Specific group types are used for:</p>
+      <ul>
+        <li>Review Comittee - A group of reviewers, this group appears when you are assigning reviewers.</li>
+        <li>Editorial Group - A group of editorial reviewes, this group appears when you are assigning an editorial review after peer review</li>
+        <li>Generic Group - Currently do not have a use but will be utilised for displaying editorial boards/teams later</li>
+      </ul>
     <ul class="list-group" id="group_files_sort">
       {% for group in groups %}<li id="group-{{ group.id }}" class="list-group-item ui-sortable-handle"><i class="fa fa-sort">&nbsp;&nbsp;</i><i class="fa fa-users">&nbsp;&nbsp;</i>{{ group.name }} - {{ group.get_group_type_display }}<span style="float: right;"><a href="{% url 'manager_group_members' group.id %}"><i class="fa fa-users">&nbsp;&nbsp;</i></a><a href="{% url 'manager_group_edit' group.id %}"><i class="fa fa-edit"></i></a>&nbsp;&nbsp;<a href="{% url 'manager_group_delete' group.id %}"><i class="fa fa-trash-o"></i></a></span></li>{% endfor %}
     </ul>
