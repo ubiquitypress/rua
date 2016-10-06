@@ -11,7 +11,12 @@
 		<td>{{ author.full_name }}</td>
 		<td>{{ author.sequence }}</td>
 		<td><a href="{% url 'edit_chapter_author' submission.id chapter.id author.id %}" class="btn btn-xs btn-warning"><i class="fa fa-edit"></i></a></td>
-		<td><a href="" class="btn btn-xs btn-danger"><i class="fa fa-trash"></i></a></td>
+		<td>
+			<form method="POST">{% csrf_token %}
+				<input type="hidden" name="author_id" value={{ author.id }}/>
+                <button name="remove_author" type="submit" class="btn btn-xs btn-danger"><i class="fa fa-trash"></i></button>
+			</form>
+		</td>
 	</tr>
 	{% empty %}
 	<tr>

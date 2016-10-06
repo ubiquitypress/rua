@@ -56,6 +56,8 @@ urlpatterns = patterns('',
     url(r'^user/inactive/(?P<user_id>\d+)/activate/$', 'manager.views.activate_user', name='manager_activate_user'),
     url(r'^user/add/$', 'manager.views.add_user', name='add_user'),
     url(r'^user/(?P<user_id>\d+)/edit/$', 'manager.views.user_edit', name='user_edit'),
+    url(r'^user/(?P<user_id>\d+)/edit/select_merge/$', 'manager.views.select_merge', name='select_merge'),
+    url(r'^user/(?P<user_id>\d+)/edit/merge_users/(?P<secondary_user_id>\d+)/$', 'manager.views.merge_users', name='merge_users'),
 
     # Key help
     url(r'^key_help/$', 'manager.views.key_help', name='manager_key_help'),

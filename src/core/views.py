@@ -1201,8 +1201,65 @@ def serve_all_review_files(request, submission_id, review_type):
     return resp
 
 
+def serve_all_review_files_one_click(request, submission_id, review_type, review_id, access_key):
+    review = get_object_or_404(models.ReviewAssignment, pk=review_id, access_key=access_key)
+    book = get_object_or_404(models.Book, pk=submission_id)
+    internal_review_files = book.internal_review_files.all()
+    external_review_files = book.external_review_files.all()
+
+    zip_subdir = "Files of Submission #%s" % submission_id
+    zip_filename = "%s.zip" % zip_subdir
+
+    # Open StringIO to grab in-memory ZIP contents
+    s = StringIO.StringIO()
+
+    # The zip compressor
+    zf = zipfile.ZipFile(s, "w")
+
+    if review_type == "external":
+        for file in external_review_files:
+            fpath = os.path.join(settings.BOOK_DIR, submission_id, file.uuid_filename)
+            fdir, fname = os.path.split(fpath)
+            zip_path = os.path.join(zip_subdir, fname)
+            zf.write(fpath, zip_path)
+
+    else:
+        for file in internal_review_files:
+            fpath = os.path.join(settings.BOOK_DIR, submission_id, file.uuid_filename)
+            fdir, fname = os.path.split(fpath)
+            zip_path = os.path.join(zip_subdir, fname)
+            zf.write(fpath, zip_path)
+
+    zf.close()
+    fd = open(os.path.join(settings.BOOK_DIR, submission_id, zip_filename), 'wb')
+    fd.write(s.getvalue())
+    fd.close()
+    fsock = open(os.path.join(settings.BOOK_DIR, submission_id, zip_filename), 'r')
+    resp = StreamingHttpResponse(fsock, content_type="application/x-zip-compressed")
+    os.remove(os.path.join(settings.BOOK_DIR, submission_id, zip_filename))
+    resp['Content-Disposition'] = 'attachment; filename=%s' % zip_filename
+    return resp
+
+
 @is_onetasker
 def serve_file(request, submission_id, file_id):
+    book = get_object_or_404(models.Book, pk=submission_id)
+    _file = get_object_or_404(models.File, pk=file_id)
+    file_path = os.path.join(settings.BOOK_DIR, submission_id, _file.uuid_filename)
+
+    try:
+        fsock = open(file_path, 'r')
+        mimetype = mimetypes.guess_type(file_path)
+        response = StreamingHttpResponse(fsock, content_type=mimetype)
+        response['Content-Disposition'] = "attachment; filename=%s" % (_file.original_filename)
+        # log.add_log_entry(book=book, user=request.user, kind='file', message='File %s downloaded.' % _file.original_filename, short_name='Download')
+        return response
+    except IOError:
+        messages.add_message(request, messages.ERROR, 'File not found. %s' % (file_path))
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+def serve_file_one_click(request, submission_id, file_id, review_id, access_key):
+    review = get_object_or_404(models.ReviewAssignment, pk=review_id, access_key=access_key)
     book = get_object_or_404(models.Book, pk=submission_id)
     _file = get_object_or_404(models.File, pk=file_id)
     file_path = os.path.join(settings.BOOK_DIR, submission_id, _file.uuid_filename)
@@ -1430,6 +1487,8 @@ def view_log(request, submission_id):
         'log_list': log_list,
         'email_list': email_list,
         'active': 'log',
+        'search': search,
+        'email_search': email_search,
         'filters': filters,
         'filterby': filterby,
     }
@@ -1512,6 +1571,8 @@ def view_proposal_log(request, proposal_id):
         'proposal': proposal,
         'log_list': log_list,
         'email_list': email_list,
+        'search': search,
+        'email_search': email_search,
         'active': 'log',
         'filters': filters,
         'filterby': filterby,
@@ -2034,7 +2095,7 @@ def change_review_due_date(request, proposal_id, assignment_id):
 
 
 @is_reviewer
-def view_proposal_review_decision(request, proposal_id, assignment_id):
+def view_proposal_review_decision(request, proposal_id, assignment_id, access_key=None):
     proposal = get_object_or_404(submission_models.Proposal, pk=proposal_id)
     proposal_form = manager_forms.GeneratedForm(form=models.ProposalForm.objects.get(pk=proposal.form.id))
     default_fields = manager_forms.DefaultForm(
@@ -2046,11 +2107,27 @@ def view_proposal_review_decision(request, proposal_id, assignment_id):
         intial_data[k] = v[0]
 
     proposal_form.initial = intial_data
-    review_assignment = get_object_or_404(submission_models.ProposalReview, pk=assignment_id, withdrawn=False)
+
+    if request.user.is_authenticated():
+        review_assignment = get_object_or_404(submission_models.ProposalReview, pk=assignment_id,
+                                              declined__isnull=True, withdrawn=False)
+        user = request.user
+    elif access_key:
+        review_assignment = get_object_or_404(submission_models.ProposalReview, access_key=access_key,
+                                              pk=assignment_id, declined__isnull=True, withdrawn=False)
+        user = review_assignment.user
+    else:
+        raise Http404
 
     if review_assignment.accepted:
-        return redirect(
-            reverse('view_proposal_review', kwargs={'proposal_id': proposal.id, 'assignment_id': assignment_id}))
+        if access_key:
+            return redirect(
+                reverse('view_proposal_review_access_key', kwargs={'proposal_id': proposal.id,
+                                                                   'assignment_id': assignment_id,
+                                                                   'access_key': access_key}))
+        else:
+            return redirect(
+                reverse('view_proposal_review', kwargs={'proposal_id': proposal.id, 'assignment_id': assignment_id}))
 
     if request.POST:
         if 'accept' in request.POST:
@@ -2058,19 +2135,26 @@ def view_proposal_review_decision(request, proposal_id, assignment_id):
             review_assignment.save()
             message = "Review Assignment request for proposal '%s' has been accepted by %s %s." % (
             proposal.title, review_assignment.user.first_name, review_assignment.user.last_name)
-            log.add_proposal_log_entry(proposal=proposal, user=review_assignment.user, kind='proposal', message=message,
+            log.add_proposal_log_entry(proposal=proposal, user=user, kind='proposal', message=message,
                               short_name='Assignment accepted')
             if proposal.requestor:
-                notification = models.Task(assignee=proposal.requestor, creator=request.user, text=message,
+                notification = models.Task(assignee=proposal.requestor, creator=user, text=message,
                                            workflow='proposal')
                 notification.save()
             else:
                 editors = User.objects.filter(profile__roles__slug='press-editor')
                 for editor in editors:
-                    notification = models.Task(assignee=editor, creator=request.user, text=message, workflow='proposal')
+                    notification = models.Task(assignee=editor, creator=user, text=message, workflow='proposal')
                     notification.save()
-            return redirect(
-                reverse('view_proposal_review', kwargs={'proposal_id': proposal.id, 'assignment_id': assignment_id}))
+            if access_key:
+                return redirect(
+                    reverse('view_proposal_review_access_key', kwargs={'proposal_id': proposal.id,
+                                                                       'assignment_id': assignment_id,
+                                                                       'access_key': access_key}))
+            else:
+                return redirect(
+                    reverse('view_proposal_review', kwargs={'proposal_id': proposal.id,
+                                                            'assignment_id': assignment_id}))
 
         elif 'decline' in request.POST:
             review_assignment.declined = timezone.now()
@@ -2080,15 +2164,19 @@ def view_proposal_review_decision(request, proposal_id, assignment_id):
             log.add_proposal_log_entry(proposal=proposal, user=review_assignment.user, kind='proposal', message=message,
                               short_name='Assignment declined')
             if proposal.requestor:
-                notification = models.Task(assignee=proposal.requestor, creator=request.user, text=message,
+                notification = models.Task(assignee=proposal.requestor, creator=user, text=message,
                                            workflow='proposal')
                 notification.save()
             else:
                 editors = User.objects.filter(profile__roles__slug='press-editor')
                 for editor in editors:
-                    notification = models.Task(assignee=editor, creator=request.user, text=message, workflow='proposal')
+                    notification = models.Task(assignee=editor, creator=user, text=message, workflow='proposal')
                     notification.save()
-            return redirect(reverse('reviewer_dashboard'))
+
+            if access_key:
+                return redirect(reverse('proposal_review_declined'))
+            else:
+                return redirect(reverse('reviewer_dashboard'))
 
     template = 'core/proposals/decision_review_assignment.html'
     context = {
@@ -2096,12 +2184,21 @@ def view_proposal_review_decision(request, proposal_id, assignment_id):
         'proposal_form': proposal_form,
         'review': review_assignment,
         'data': data,
+        'access_key': access_key,
         'active': 'proposal_review',
         'relationships': relationships,
         'instructions': models.Setting.objects.get(group__name='general', name='instructions_for_task_proposal').value
     }
 
     return render(request, template, context)
+
+def proposal_review_submitted(request):
+
+    return render(request, 'core/proposals/proposal_review_submitted.html')
+
+def proposal_review_declined(request):
+
+    return render(request, 'core/proposals/proposal_review_declined.html')
 
 
 @is_reviewer
@@ -2289,7 +2386,7 @@ def hide_review(request, proposal_id, assignment_id):
 
 
 @is_reviewer
-def view_proposal_review(request, proposal_id, assignment_id):
+def view_proposal_review(request, proposal_id, assignment_id, access_key=None):
     proposal = get_object_or_404(submission_models.Proposal, pk=proposal_id)
     proposal_form = manager_forms.GeneratedForm(form=models.ProposalForm.objects.get(pk=proposal.form.id))
     default_fields = manager_forms.DefaultForm(
@@ -2302,8 +2399,20 @@ def view_proposal_review(request, proposal_id, assignment_id):
         intial_data[k] = v[0]
 
     proposal_form.initial = intial_data
-    review_assignment = get_object_or_404(submission_models.ProposalReview, pk=assignment_id, withdrawn=False)
+
+    if request.user.is_authenticated():
+        review_assignment = get_object_or_404(submission_models.ProposalReview, pk=assignment_id,
+                                              declined__isnull=True, withdrawn=False)
+        user = request.user
+    elif access_key:
+        review_assignment = get_object_or_404(submission_models.ProposalReview, access_key=access_key,
+                                              pk=assignment_id, declined__isnull=True, withdrawn=False)
+        user = review_assignment.user
+    else:
+        raise Http404
+
     result = review_assignment.results
+
     if review_assignment.review_form:
         form = review_forms.GeneratedForm(form=review_assignment.review_form)
     else:
@@ -2340,7 +2449,7 @@ def view_proposal_review(request, proposal_id, assignment_id):
         path = create_proposal_form(proposal)
         return serve_proposal_file(request, path)
     elif not request.POST and request.GET.get('download') == 'docx':
-        path = create_proposal_review_form(review_assignment)
+        path = create_proposal_review_form(request, review_assignment)
         return serve_proposal_file(request, path)
     elif request.POST:
         form = review_forms.GeneratedForm(request.POST, request.FILES, form=review_assignment.review_form)
@@ -2370,7 +2479,7 @@ def view_proposal_review(request, proposal_id, assignment_id):
             review_file = None
             if request.FILES.get('review_file_upload'):
                 review_file = handle_proposal_review_file(request.FILES.get('review_file_upload'), review_assignment,
-                                                          'reviewer', request.user)
+                                                          'reviewer', user)
 
             review_assignment.completed = timezone.now()
             if not review_assignment.accepted:
@@ -2384,11 +2493,14 @@ def view_proposal_review(request, proposal_id, assignment_id):
             review_assignment.save()
             message = "Review assignment for proposal '%s' has been completed by %s ." % (
             review_assignment.proposal.title, review_assignment.user.profile.full_name())
-            notification = models.Task(assignee=review_assignment.proposal.requestor, creator=request.user,
+            notification = models.Task(assignee=review_assignment.proposal.requestor, creator=user,
                                        text=message, workflow='proposal')
             notification.save()
 
-            return redirect(reverse('user_dashboard'))
+            if access_key:
+                return redirect(reverse('proposal_review_submitted'))
+            else:
+                return redirect(reverse('user_dashboard'))
 
     template = 'core/proposals/review_assignment.html'
     context = {
@@ -2433,24 +2545,51 @@ def add_proposal_reviewers(request, proposal_id):
         committees = manager_models.Group.objects.filter(pk__in=request.POST.getlist('committee'))
         email_text = request.POST.get('email_text')
 
+        if 'access_key' in request.POST:
+            generate = True
+        else:
+            generate = False
+
         # Handle reviewers
         for reviewer in reviewers:
-            new_review_assignment = submission_models.ProposalReview(
-                user=reviewer,
-                proposal=proposal,
-                review_form=updated_proposal.review_form,
-                due=due_date,
-                blind=blind,
-                requestor=request.user
-            )
+            if generate:
+                access_key = uuid4()
+                new_review_assignment = submission_models.ProposalReview(
+                    user=reviewer,
+                    proposal=proposal,
+                    review_form=updated_proposal.review_form,
+                    due=due_date,
+                    blind=blind,
+                    requestor=request.user,
+                    access_key=access_key
+                )
 
-            try:
-                new_review_assignment.save()
-                proposal.review_assignments.add(new_review_assignment)
-                logic.send_proposal_review_request(request, proposal, new_review_assignment, email_text, attachment)
-            except IntegrityError:
-                messages.add_message(request, messages.WARNING,
-                                     '%s %s is already a reviewer' % (reviewer.first_name, reviewer.last_name))
+                try:
+                    new_review_assignment.save()
+                    proposal.review_assignments.add(new_review_assignment)
+                    logic.send_proposal_review_request(request, proposal, new_review_assignment,
+                                                       email_text, attachment, access_key)
+                except IntegrityError:
+                    messages.add_message(request, messages.WARNING,
+                                         '%s %s is already a reviewer' % (reviewer.first_name, reviewer.last_name))
+
+            else:
+                new_review_assignment = submission_models.ProposalReview(
+                    user=reviewer,
+                    proposal=proposal,
+                    review_form=updated_proposal.review_form,
+                    due=due_date,
+                    blind=blind,
+                    requestor=request.user
+                )
+
+                try:
+                    new_review_assignment.save()
+                    proposal.review_assignments.add(new_review_assignment)
+                    logic.send_proposal_review_request(request, proposal, new_review_assignment, email_text, attachment)
+                except IntegrityError:
+                    messages.add_message(request, messages.WARNING,
+                                         '%s %s is already a reviewer' % (reviewer.first_name, reviewer.last_name))
 
         # Handle committees
         for committee in committees:
@@ -2715,7 +2854,7 @@ def render_choices(choices):
 
 
 @is_reviewer
-def create_proposal_review_form(proposal):
+def create_proposal_review_form(request, proposal):
     document = Document()
     document.add_heading(proposal.proposal.title, 0)
     p = document.add_paragraph('You should complete this form and then use the review page to upload it.')

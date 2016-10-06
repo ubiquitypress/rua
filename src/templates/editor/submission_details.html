@@ -5,7 +5,7 @@
      {% for editor in submission.book_editors.all %}
          {{ editor.profile.full_name }}<sup> <a href="core/email.html" onclick="return popitup('/email/editors/submission/{{submission.id}}/user/{{editor.pk}}/','editors_{{editor.pk}}')"class="fa fa-envelope-o btn btn-xs btn-default"></a></sup>{% if not forloop.last %}, {% endif %}
      {% empty %}
-      No book editors have been assigned yet.
+      No book managers have been assigned yet.
      {% endfor %}
      </h4>
      

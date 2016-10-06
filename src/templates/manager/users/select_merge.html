@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% load static from staticfiles %}
+{% load bootstrap3 %}
+
+{% block css %}
+<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/plug-ins/1.10.7/integration/bootstrap/3/dataTables.bootstrap.css">
+{% endblock css %}
+
+{% block body %}
+<div class="col-md-12 primary-heading container-fluid" style="margin-top:-20px">
+  <h3>Merge Users
+      <span class="pull-right"><a href="{% url 'user_edit' user.id %}" class="btn  btn-transparent-white" style="position: absolute;right:20px;margin-top:-8px">Go back</a>
+  </h3>
+</div>
+<div class="col-md-12 container-fluid" style="color:white; background-color:#999999; margin-bottom:5px">
+    <p>Select a secondary user to import data, tasks and submissions from, to be added to primary user:
+        {{ user.first_name }} {{ user.last_name }}.<br />
+        Any empty fields in the primary profile will be filled using the secondary profile and the secondary profile will be deactivated.</p>
+</div>
+</br>
+</br>
+<div>
+<table class="table table-bordered" cellspacing="0" width="100%" id='users'>
+  <thead>
+  <tr>
+    <th width="15%">Username</th>
+    <th width="15%">First Name</th>
+    <th width="15%">Last Name</th>
+    <th width="30%">Email</th>
+    <th width="20%"></th>
+  </tr>
+  </thead>
+  {% for secondary_user in secondary_users %}
+  <tr>
+    <td>{{ secondary_user.username }}</td>
+    <td>{{ secondary_user.first_name }}</td>
+    <td>{{ secondary_user.last_name }}</td>
+    <td>{{ secondary_user.email }}</td>
+    <td><a class="btn btn-primary btn-round-half"style="width:75px"
+           href="{% url 'merge_users' user.id secondary_user.id %}">Merge</a>
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+</div>
+{% endblock body %}
+
+
+{% block js %}
+<script type="text/javascript" language="javascript" src="//cdn.datatables.net/1.10.7/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" language="javascript" src="//cdn.datatables.net/plug-ins/1.10.7/integration/bootstrap/3/dataTables.bootstrap.js"></script>
+<script>
+  $(document).ready(function() {
+      $('#users').DataTable({
+        "lengthMenu": [[10, 15, 20, -1], [10, 15, 20, "All"]]
+      });
+  } );
+</script>
+
+
+{% endblock js %}

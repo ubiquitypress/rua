@@ -33,8 +33,11 @@ body {
                 <form method="POST">
                   {% csrf_token %}  
                  <div class= "col-md-6 input-group">
-                  <input type="text" class="form-control" id="search" name="search" placeholder="Search for an activity log...">
+                  <input type="text" class="form-control" id="search" name="search" {% if search %} value="{{ search }}" {% else %} placeholder="Search for an activity log..."{% endif %}>
                   <div class="input-group-addon"><i class="fa fa-search"></i></div>
+                  <div class="input-group-addon" style="padding: 0px">
+                     <a href="{% url 'view_log' submission.id %}" style="border: none; background-color: #eeeeee" class="btn btn-default" id="clear_search" name="clear_search"><i class="fa fa-times"></i></a>
+                  </div>
                 </div>
                 </form>
                 <br />
@@ -74,8 +77,11 @@ body {
                 </div>
                 <strong>Search</strong>
                  <div class="input-group col-md-6">
-                  <input type="text" class="form-control" id="email_search" name="email_search" placeholder="Search for an email log...">
+                  <input type="text" class="form-control" id="email_search" name="email_search" {% if email_search %} value="{{ email_search }}" {% else %} placeholder="Search for an email log..."{% endif %}>
                   <div class="input-group-addon"><i class="fa fa-search"></i></div>
+                  <div class="input-group-addon" style="padding: 0px">
+                     <a href="{% url 'view_log' submission.id %}" style="border: none; background-color: #eeeeee" class="btn btn-default" id="clear_email_search" name="clear_email_search"><i class="fa fa-times"></i></a>
+                  </div>
                 </div>
                 </form>
                 <br />

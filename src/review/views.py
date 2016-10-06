@@ -65,38 +65,40 @@ def reviewer_dashboard(request):
 @is_reviewer
 def reviewer_decision(request, review_type, submission_id, review_assignment_id, decision=None, access_key=None):
 
-    # Check the review assignment as not been completed and is being accessed by the assigned user
+    # Check the review assignment has not been completed and is being accessed by the assigned user
     review_assignment = None
 
     submission = get_object_or_404(core_models.Book, pk=submission_id)
-    one_click_no_login = core_models.Setting.objects.filter(name = 'one_click_review_url')
+    one_click_no_login = core_models.Setting.objects.filter(name='one_click_review_url')
+
     if one_click_no_login:
         if one_click_no_login[0].value == 'on':
+            one_click = True
             if access_key:
-                review_assignment = get_object_or_404(core_models.ReviewAssignment, access_key=access_key,pk=review_assignment_id, declined__isnull=True, review_type=review_type, withdrawn = False)
+                review_assignment = get_object_or_404(core_models.ReviewAssignment, access_key=access_key,pk=review_assignment_id, declined__isnull=True, review_type=review_type, withdrawn=False)
                 user = review_assignment.user
             else:
                 if request.user.is_authenticated():
-                    review_assignment = get_object_or_404(core_models.ReviewAssignment, Q(user=request.user), Q(book=submission),Q(pk=review_assignment_id), Q(declined__isnull=True), Q(review_type=review_type),Q(withdrawn = False),Q(access_key__isnull=True) | Q(access_key__exact=''))
+                    review_assignment = get_object_or_404(core_models.ReviewAssignment, Q(user=request.user), Q(book=submission),Q(pk=review_assignment_id), Q(declined__isnull=True), Q(review_type=review_type),Q(withdrawn=False),Q(access_key__isnull=True) | Q(access_key__exact=''))
                     user = request.user
                 else:
                     raise Http404
         else:
+            one_click = False
             if access_key:
-                review_assignment = get_object_or_404(core_models.ReviewAssignment, access_key=access_key,pk=review_assignment_id, declined__isnull=True, review_type=review_type, withdrawn = False)
+                review_assignment = get_object_or_404(core_models.ReviewAssignment, access_key=access_key,pk=review_assignment_id, declined__isnull=True, review_type=review_type, withdrawn=False)
                 user = review_assignment.user
             elif request.user.is_authenticated():
-                review_assignment = get_object_or_404(core_models.ReviewAssignment, Q(user=request.user), Q(book=submission),Q(pk=review_assignment_id), Q(declined__isnull=True), Q(review_type=review_type),Q(withdrawn = False),Q(access_key__isnull=True) | Q(access_key__exact=''))
+                review_assignment = get_object_or_404(core_models.ReviewAssignment, Q(user=request.user), Q(book=submission),Q(pk=review_assignment_id), Q(declined__isnull=True), Q(review_type=review_type),Q(withdrawn=False),Q(access_key__isnull=True) | Q(access_key__exact=''))
                 user = request.user
             else:
                 raise Http404
     else:
         user = request.user
         if access_key:
-            review_assignment = get_object_or_404(core_models.ReviewAssignment, access_key=access_key,pk=review_assignment_id, declined__isnull=True, review_type=review_type, withdrawn = False)
+            review_assignment = get_object_or_404(core_models.ReviewAssignment, access_key=access_key,pk=review_assignment_id, declined__isnull=True, review_type=review_type, withdrawn=False)
         else:
-            review_assignment = get_object_or_404(core_models.ReviewAssignment, Q(user=user), Q(book=submission),Q(pk=review_assignment_id), Q(declined__isnull=True), Q(review_type=review_type),Q(withdrawn = False),Q(access_key__isnull=True) | Q(access_key__exact=''))
-
+            review_assignment = get_object_or_404(core_models.ReviewAssignment, Q(user=user), Q(book=submission),Q(pk=review_assignment_id), Q(declined__isnull=True), Q(review_type=review_type),Q(withdrawn=False),Q(access_key__isnull=True) | Q(access_key__exact=''))
 
     if review_assignment:
         editors = logic.get_editors(review_assignment)
@@ -148,7 +150,7 @@ def reviewer_decision(request, review_type, submission_id, review_assignment_id,
             else:
                 return redirect(reverse('review_without_access_key', kwargs={'review_type': review_type, 'submission_id': submission.pk,'review_round':review_assignment.review_round.round_number}))
         elif review_assignment.declined:
-            return redirect(reverse('reviewer_dashboard'))
+            return redirect(reverse('review_request_declined'))
 
     template = 'review/reviewer_decision.html'
     context = {
@@ -156,6 +158,8 @@ def reviewer_decision(request, review_type, submission_id, review_assignment_id,
         'review_assignment': review_assignment,
         'has_additional_files': logic.has_additional_files(submission),
         'editors': editors,
+        'access_key': access_key,
+        'one_click': one_click,
         'file_preview': core_models.Setting.objects.get(group__name='general', name='preview_review_files').value,
         'instructions': core_models.Setting.objects.get(group__name='general', name='instructions_for_task_review').value
 
@@ -167,9 +171,10 @@ def reviewer_decision(request, review_type, submission_id, review_assignment_id,
 def review(request, review_type, submission_id, review_round, access_key=None):
 
     ci_required = core_models.Setting.objects.get(group__name='general', name='ci_required')
-    one_click_no_login = core_models.Setting.objects.filter(name = 'one_click_review_url')
+    one_click_no_login = core_models.Setting.objects.filter(name='one_click_review_url')
     if one_click_no_login:
         if one_click_no_login[0].value == 'on':
+            one_click = True
             if access_key:
                 review_assignment = get_object_or_404(core_models.ReviewAssignment, access_key=access_key,review_round__round_number=review_round, declined__isnull=True, review_type=review_type, withdrawn = False)
                 submission = get_object_or_404(core_models.Book, pk=submission_id)
@@ -179,6 +184,7 @@ def review(request, review_type, submission_id, review_round, access_key=None):
             else:
                 raise Http404
         else:
+            one_click = False
             user = request.user
             if access_key:
                 review_assignment = get_object_or_404(core_models.ReviewAssignment, access_key=access_key,review_round__round_number=review_round, declined__isnull=True, review_type=review_type, withdrawn = False)
@@ -319,7 +325,9 @@ def review(request, review_type, submission_id, review_round, access_key=None):
         'form': form,
         'form_info': review_assignment.review_form,
         'recommendation_form': recommendation_form,
-        'editors':editors,
+        'editors': editors,
+        'access_key': access_key,
+        'one_click': one_click,
         'has_additional_files': logic.has_additional_files(submission),
         'instructions': core_models.Setting.objects.get(group__name='general', name='instructions_for_task_review').value
 
@@ -327,10 +335,14 @@ def review(request, review_type, submission_id, review_round, access_key=None):
 
     return render(request, template, context)
 
+def review_request_declined(request):
+    template = 'review/review_request_declined.html'
+    return render(request, template)
+
 @is_reviewer
 def review_complete(request, review_type, submission_id,review_round,access_key=None):
 
-    one_click_no_login = core_models.Setting.objects.filter(name = 'one_click_review_url')
+    one_click_no_login = core_models.Setting.objects.filter(name='one_click_review_url')
     if one_click_no_login:
         if one_click_no_login[0].value == 'on':
             if access_key:

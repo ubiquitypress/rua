@@ -15,11 +15,11 @@ def sync_groups():
             for entry in default_data:
                 defaults = {
                     'name': entry['fields'].get('name'),
-                    'enabled': entry['fields'].get('enabled')
+                    'enabled': entry['fields'].get('enabled'),
                 }
 
                 setting_group, created = models.SettingGroup.objects.get_or_create(
-                    name=entry['fields'].get('name'),
+                    id=entry['pk'],
                     defaults=defaults
                 )
 
@@ -33,7 +33,7 @@ def sync_settings():
         default_data = json.load(json_data)
 
         for entry in default_data:
-            group = models.SettingGroup.objects.get(pk=int(entry['fields'].get('group')))
+            group = models.SettingGroup.objects.get(id=int(entry['fields'].get('group')))
 
             defaults = {
                 'group': group,
