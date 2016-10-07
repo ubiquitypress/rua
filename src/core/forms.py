@@ -36,6 +36,8 @@ class UserCreationForm(forms.ModelForm):
                                 widget=forms.PasswordInput,
                                 help_text=("Enter the same password as above, for verification."))
 
+    email = forms.CharField(max_length=100, required=True)
+
     class Meta:
         model = User
         fields = ("username", "first_name", "last_name", "email")
@@ -99,8 +101,8 @@ class FullUserProfileForm(forms.ModelForm):
 class RegistrationProfileForm(forms.ModelForm):
     class Meta:
         model = models.Profile
-        fields = ("salutation", "middle_name", "biography", "orcid", "institution", "department", "country", "interest", "twitter",
-                  "facebook", "linkedin", "impactstory", "github", "profile_image", "signature", "website")
+        fields = ("salutation", "middle_name", "orcid", "institution", "department", "country", "twitter",
+                  "facebook", "linkedin", "impactstory", "github", "website")
 
 
 class ProfileForm(forms.ModelForm):
