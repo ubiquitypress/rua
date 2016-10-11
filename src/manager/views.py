@@ -14,7 +14,7 @@ from django.db import transaction
 from django.db.models import get_models, Model, Q
 from django.contrib.contenttypes.generic import GenericForeignKey
 
-from manager import models as manager_models
+from manager import models as models
 from review import models as review_models
 from submission import models as submission_models
 from revisions import models as revisions_models
