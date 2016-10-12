@@ -1287,6 +1287,28 @@
   "pk": 82
 },
 {
+   "fields": {
+    "value": "<p>Dear {{ review.user.profile.salutation_name }},</p><p>The book proposal \u2018{{ review.content_object.title }}\u2019 has been submitted and requires you to assess the information and provide us with your feedback. By clicking on the below link, you will have access to the relevant proposal data, along with completed peer reviewer information. There will also be a review form available for you to provide to us your comments and overall decision.</p><p>{{ task_url }}?access_key={{ review.access_key }}</p><p>Please could you review the proposal details and complete the review form by {{ review.due }}, or let me know if you require an alternative deadline.</p><p>Kind regards,</p><p>{{sender.first_name}}</p><p>{% if sender %}{{ sender.profile.signature|safe }}{% endif %}</p>",
+    "group": 3,
+    "name": "editorial_review_proposal",
+    "types": "rich_text",
+    "description": "Email sent as part of the Editorial Review request process."
+  },
+  "model": "core.setting",
+  "pk": 122
+},
+{
+    "fields": {
+      "value": "<p>Dear {{ review.user.profile.salutation_name }},<br></p><p>The book title \u2018{{ review.content_object.title }}\u2019 has been submitted and requires you to assess the information and provide us with your feedback. By clicking on the below link, you will have access to the relevant submission data, along with completed peer reviewer information. There will also be a review form available for you to provide to us your comments and overall decision.</p><p>{{ task_url }}?access_key={{ review.access_key }}</p><p>Please could you review the proposal details and complete the review form by {{ review.due }}, or let me know if you require an alternative deadline.</p><p>Kind regards,</p><p>{{sender.first_name}}<br>{% if sender %}{{ sender.profile.signature|safe }}{% endif %}</p>",
+      "group": 3,
+      "name": "editorial_review_book",
+      "types": "rich_text",
+      "description": "Email sent as part of the Editorial Review process."
+    },
+    "model": "core.setting",
+    "pk": 123
+},
+{
   "fields": {
     "value": "on",
     "group": 1,
@@ -1294,5 +1316,6 @@
     "types": "boolean",
     "description": "Allow reviewers to access and complete assignments without registering an account.<br>WARNING: Enabling this option makes data less secure."
   }
-}
+ }
+
 ]
