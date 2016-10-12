@@ -51,10 +51,10 @@
     &nbsp;</i>Add New Author</a>
 <hr>
 
-<h4>Current Order</h4>
+<h4>Author/Editor List</h4>
 <form method="post" class="form" enctype="multipart/form-data">
     {% if submission.book_type == 'monograph' %}
-    <p>You can reorder your submitted authors by dragging and dropping them into the correct order.</p>
+    <p>The authors will be published online in the below order. You can reorder your submitted authors by dragging and dropping them.</p>
     <ul class="list-group" id="auth_order">
         {% for author in submission.author.all %}
         <li id="auth-{{ author.id }}" class="list-group-item"><i class="fa fa-sort">&nbsp;&nbsp;</i><i class="fa fa-user">
