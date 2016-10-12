@@ -242,7 +242,7 @@
 
             <div role="tabpanel" class="tab-pane" id="identifiers">
               <br />
-              <a href="{% url 'identifiers' submission.id %}" class="btn btn-small btn-primary pull-right">Add/Manage Identifers</a>
+              <a href="{% url 'identifiers' submission.id %}" class="btn btn-small btn-primary pull-right">Add/Manage Identifiers</a>
               <br /><br />
               <table class="table table-bordered">
                 <tr>
@@ -337,7 +337,7 @@
               <h4>Summary</h4>
               <p>NB. This page only shows completed reviews.</p>
               <ul>
-                {% if internal_review_assignments.count > 1 %}<li>This Book was internally reviewed.</li>{% else %}<li>No internal reivew undertaken.</li>{% endif %}
+                {% if internal_review_assignments.count > 1 %}<li>This Book was internally reviewed.</li>{% else %}<li>No internal review undertaken.</li>{% endif %}
                 {% if external_review_assignments.count > 1 %}<li>This Book was externally reviewed.</li>{% else %}<li>No external review undertaken.</li>{% endif %}
               </ul>
               <h4>Internal</h4>
