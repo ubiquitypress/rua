@@ -80,6 +80,7 @@ TECH_EMAIL = 'tech@ubiquitypress.com'
 ADMINS = (
     ('Andy Byers', 'andy.byers@ubiquitypress.com'),
     ('Mauro Sanchez', 'mauro.sanchez@ubiquitypress.com'),
+    ('UP Tech', 'tech@ubiquitypress.com')
 )
 
 
