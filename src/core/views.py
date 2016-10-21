@@ -195,7 +195,9 @@ def register(request):
     if request.method == 'POST':
         form = forms.UserCreationForm(request.POST)
         profile_form = forms.RegistrationProfileForm(request.POST)
-        display_interests = request.POST.get('interests').split(',')  # To keep interests field filled if validation error is raised.
+
+        if 'interests' in request.POST:
+            display_interests = request.POST.get('interests').split(',')  # To keep interests field filled if validation error is raised.
 
         if form.is_valid() and profile_form.is_valid():
             author_role = models.Role.objects.get(slug='author')
