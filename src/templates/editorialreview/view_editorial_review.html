@@ -18,7 +18,7 @@
 	{% for item in data_ordered %}
 	<div>
 	  <label>{{ item.0 }}</label>
-	  <p>{% lookup result.data item.0 %}</p>
+	  <p>{% lookup_safe result.data item.0 %}</p>
 	</div>
 	{% endfor %}
 	<br /><br />
