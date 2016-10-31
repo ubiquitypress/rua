@@ -12,7 +12,7 @@
   <h3>Book Proposal :  {{ proposal.title }}{% if proposal.subtitle%} : {{ proposal.subtitle }}{%endif%}
 
   <a class="btn  btn-transparent-white btn-proposal-header" href="?download=docx"> <i class="fa fa-cloud-download"> &nbsp; Download Proposal</i></a>
-    <a class="btn  btn-transparent-white btn-proposal-header" href="{% url 'proposal_add_editors' proposal.id %}"><h5 class="btn-proposal-text">&nbsp; Book Managers</h5></a>
+    <a class="btn  btn-transparent-white btn-proposal-header" href="{% url 'proposal_add_editors' proposal.id %}"><h5 class="btn-proposal-text">&nbsp; Book Editors</h5></a>
      <a class="btn  btn-transparent-white btn-proposal-header" href="{% url 'view_proposal_log' proposal.id %}"><h5 class="btn-proposal-text"> &nbsp; Log &nbsp;</h5></a>
      <a href="{% url 'proposal_contract_manager' proposal.id %}" class="btn btn-proposal-header btn-transparent-white"><h5 class="btn-proposal-text"> Contract</h5></a>
 {% if proposal.status = 'accepted' or proposal.status = 'declined'%} 
@@ -62,7 +62,7 @@
 {% endfor %}
 </div>
 <hr>
-<h5> <b>Book Manager</b></h5>
+<h5> <b>Book Editor</b></h5>
 <table class="table table-bordered">
 <thead>
 <tr>
@@ -75,7 +75,7 @@
 <td>{{editor.profile.full_name}}</td>
 </tr>
 {% empty %}
-No book managers have been assigned
+No book editors have been assigned
 {% endfor %}
 
 </tbody>
