@@ -15,7 +15,7 @@
                 class="btn btn-danger btn-round" style="margin-left:15px"> &nbsp; Delete &nbsp;</a>
             {% else %}
                 {% if revise %}
-                Revise
+                    Revise
                 {% else %}Submit a {% endif %}Proposal
                 {% if revise %}
                     {% if overdue %}
@@ -61,7 +61,8 @@
                 <div class="row">
                     {% for field in proposal_form %}
                     <div id="{{ field.field.label }}"
-                         class="{% if field.field.widget.attrs.div_class %}{{ field.field.widget.attrs.div_class }}{% else %}col-md-12{% endif %}">
+                         class="{% if field.field.widget.attrs.div_class %}{{ field.field.widget.attrs.div_class }}
+                         {% else %}col-md-12{% endif %}">
                         {% if field.field.widget.attrs.is_checkbox %}
                             {% if field.errors %}<span class="red">{{ field.errors|join:", " }}</span><br/>{% endif %}
                                 {{ field }}&nbsp;
