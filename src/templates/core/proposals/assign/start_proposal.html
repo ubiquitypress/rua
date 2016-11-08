@@ -40,8 +40,7 @@
         {% if proposal_form %}
           <div class="row">
           {% for field in proposal_form %}
-            <div class="{% if field.field.widget.attrs.div_class %}{{ field.field.widget.attrs.div_class }}
-            {% else %}col-md-12{% endif %}">
+            <div class="{{ field.field.widget.attrs.div_class|default:"col-md-12" }}">
             {% if field.field.widget.attrs.is_checkbox %}
               {% if field.errors %}
                 <span class="red">{{ field.errors|join:", " }}</span><br />
