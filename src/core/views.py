@@ -1316,8 +1316,6 @@ def serve_versioned_file(request, submission_id, revision_id):
     versions_file = get_object_or_404(models.FileVersion, pk=revision_id)
     file_path = os.path.join(settings.BOOK_DIR, submission_id, versions_file.uuid_filename)
 
-    print file_path
-
     try:
         fsock = open(file_path, 'r')
         mimetype = mimetypes.guess_type(file_path)

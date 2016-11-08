@@ -72,7 +72,7 @@
 <tbody>
 {% for editor in proposal.book_editors.all %}
 <tr>
-<td>{{editor.profile.full_name}}</td>
+<td>{{ editor.profile.full_name }}</td>
 </tr>
 {% empty %}
 No book editors have been assigned
@@ -84,20 +84,22 @@ No book editors have been assigned
 <h5> <b>Contract</b>  {% if proposal.contract %}(<a href="{% url 'proposal_contract_manager' proposal.id %}">View</a>) {% endif %}:</h5>
 {% include "core/proposals/contract/contract.html" %}
 <hr>
-  {% if not proposal.date_review_started %} 
-{% if proposal.status = 'accepted' or proposal.status = 'declined'%} {% else %}<a href="{% url 'start_proposal_review' proposal.id %}" class="btn btn-primary btn-round"><i class="fa fa-plus">&nbsp;</i>Start Review Process</a>{% endif %}{% else %}
 
-  <div class="col-md-12 other-sub-heading"><h4>Review</h4>{% if proposal.status = 'accepted' or proposal.status = 'declined'%} {% else %}<a href="{% url 'add_proposal_reviewers' proposal.id %}" class="btn  btn-transparent-white" style="position: absolute;right:20;margin-top:-37px"><i class="fa fa-plus">&nbsp;</i>Add Reviewers</a>{% endif %}</div>
+<div class="col-md-12 other-sub-heading"><h4>External Review Assignments</h4>
+{% if not proposal.status = 'accepted' and not proposal.status = 'declined'%}
+  <a href="{% url 'add_proposal_reviewers' proposal.id %}" class="btn  btn-transparent-white" style="position: absolute;right:20;margin-top:-37px">
+    <i class="fa fa-plus">&nbsp;</i>Add Reviewers</a>
+{% else %}
+{% endif %}
+</div>
 
-  {% include "core/proposals/proposal_review_block.html" with review_data=proposal.review_assignments.all %}
-  {% include "core/proposals/proposal_editorial_review.html" %}
+{% include "core/proposals/proposal_review_block.html" with review_data=proposal.review_assignments.all %}
+{% include "core/proposals/proposal_editorial_review.html" %}
 
-
-  {% endif %}
-{% if not proposal.status = 'accepted' or not proposal.status = 'declined'%} 
+{% if not proposal.status = 'accepted' or not proposal.status = 'declined'%}
 <hr>
   <h3>Action</h3>
-  <p>Once you have compeleted the review process, you can accept, decline or ask the author to submit revisions the proposal. Accepting the proposal will create a submission for the author to complete and allow you to send them some notes on the proposal. Declining will move the proposal to the archive. If revisions are requested, the author will be able to edit and resubmit their proposal.</p>
+  <p>Once you have completed the review process, you can accept, decline or ask the author to submit revisions the proposal. Accepting the proposal will create a submission for the author to complete and allow you to send them some notes on the proposal. Declining will move the proposal to the archive. If revisions are requested, the author will be able to edit and resubmit their proposal.</p>
   <div class="container col-md-12" style="width:80%;left:10%;right:10%;position:absolute;">
     
   {% include "core/proposals/proposal_action_buttons.html" %}
