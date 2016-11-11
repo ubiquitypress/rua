@@ -1325,6 +1325,7 @@
     "types": "boolean",
     "description": "An extra setting to test inclusion of the settings_import command in the Rua project update command."
   },
+  "model": "core.setting",
+  "pk": 125
 }
-
 ]
