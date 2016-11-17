@@ -1315,17 +1315,8 @@
     "name": "one_click_review_url",
     "types": "boolean",
     "description": "Allow reviewers to access and complete assignments without registering an account.<br>WARNING: Enabling this option makes data less secure."
-  }
- },
-{
-  "fields": {
-    "value": "on",
-    "group": 1,
-    "name": "meaningless_test_setting",
-    "types": "boolean",
-    "description": "An extra setting to test inclusion of the settings_import command in the Rua project update command."
   },
   "model": "core.setting",
-  "pk": 125
+  "pk": 124
 }
 ]
