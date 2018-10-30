@@ -1,4 +1,4 @@
-from base_settings import RUA_VERSION
+from settings import RUA_VERSION
 
 
 class Roles(object):

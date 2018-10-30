@@ -67,7 +67,6 @@ src/media/profile_images/*
 src/media/*
 src/files/*
 *.DS_Store
-src/core/settings.py
 src/core/common_private_settings.py
 
 # Docker related
