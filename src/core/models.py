@@ -2505,7 +2505,7 @@ class Log(models.Model):
         on_delete=models.CASCADE,
     )
     proposal = models.ForeignKey(
-        submission_models.Proposal,
+        Proposal,
         null=True,
         blank=True,
         related_name='proposal_log',
@@ -3054,7 +3054,7 @@ class EmailLog(models.Model):
         on_delete=models.CASCADE,
     )
     proposal = models.ForeignKey(
-        submission_models.Proposal,
+        Proposal,
         null=True,
         blank=True,
         on_delete=models.CASCADE,
