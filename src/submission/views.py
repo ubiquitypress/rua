@@ -1,4 +1,4 @@
-from __builtin__ import any as string_any
+from builtins import any as string_any
 from datetime import datetime
 import json
 import os
@@ -9,10 +9,18 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from django.core.urlresolvers import reverse
+from django.core.files.storage import default_storage
+from django.urls import reverse
 from django.db.models import Q
-from django.http import HttpResponse, HttpResponseForbidden
-from django.shortcuts import redirect, render, get_object_or_404
+from django.http import (
+    HttpResponse,
+    HttpResponseForbidden,
+)
+from django.shortcuts import (
+    get_object_or_404,
+    redirect,
+    render,
+)
 from django.template.defaultfilters import slugify
 from django.utils import timezone
 from django.utils.decorators import method_decorator
@@ -20,16 +28,24 @@ from django.utils.encoding import smart_text
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import FormView
 
-from jfu.http import upload_receive, UploadResponse, JFUResponse
+from jfu.http import (
+    JFUResponse,
+    upload_receive,
+    UploadResponse,
+)
 
 from core import (
-    email,
     forms as core_forms,
     log,
     logic as core_logic,
     models as core_models,
 )
 from core.decorators import is_book_editor_or_author
+from core.email import (
+    get_email_body,
+    get_email_subject,
+    send_prerendered_email,
+)
 from core.files import (
     handle_proposal_file_form,
     handle_multiple_email_files,
@@ -49,6 +65,8 @@ def start_submission(request, book_id=None):
     ci_required = get_setting('ci_required', 'general')
 
     checklist_items = submission_models.SubmissionChecklistItem.objects.all()
+
+    # import ipdb; ipdb.set_trace()
 
     if book_id:
         book = get_object_or_404(
@@ -103,7 +121,7 @@ def start_submission(request, book_id=None):
             if not review_type_selection:
                 book.review_type = default_review_type
 
-            if not book.submission_stage > 2:
+            if not book.submission_stage or not book.submission_stage > 2:
                 book.submission_stage = 2
                 book.save()
                 log.add_log_entry(
@@ -290,11 +308,16 @@ def upload(request, book_id, type_to_handle):
 
 @csrf_exempt
 def upload_delete(request, book_id, file_pk):
+    # TODO: refactor duplicate logic
     success = True
     try:
         instance = core_models.File.objects.get(pk=file_pk)
-        os.unlink(
-            '%s/%s/%s' % (settings.BOOK_DIR, book_id, instance.uuid_filename)
+        default_storage.delete(
+            os.path.join(
+                settings.BOOK_DIR,
+                book_id,
+                instance.uuid_filename
+            )
         )
         instance.delete()
     except core_models.File.DoesNotExist:
@@ -406,12 +429,12 @@ class SubmissionCompleteEmail(FormView):
             'sender': self.request.user,
         }
         kwargs['initial'] = {
-            'email_subject': email.get_email_subject(
+            'email_subject': get_email_subject(
                 request=self.request,
                 setting_name='completed_submission_notification_subject',
                 context=email_context,
             ),
-            'email_body': email.get_email_body(
+            'email_body': get_email_body(
                 request=self.request,
                 setting_name='completed_submission_notification',
                 context=email_context,
@@ -440,11 +463,11 @@ class SubmissionCompleteEmail(FormView):
         ).order_by(
             '-first_name'
         )
-        email.send_prerendered_email(
+        send_prerendered_email(
             from_email=self.request.user.email,
             to=[
                 editor.email for editor in press_editors
-                if editor.username != settings.INTERNAL_USER
+                if editor.username != settings.ADMIN_USERNAME
             ],
             subject=form.cleaned_data['email_subject'],
             html_content=form.cleaned_data['email_body'],
@@ -866,12 +889,12 @@ class ProposalSubmissionEmail(FormView):
             'sender': self.request.user,
         }
         kwargs['initial'] = {
-            'email_subject': email.get_email_subject(
+            'email_subject': get_email_subject(
                 request=self.request,
                 setting_name='new_proposal_notification_subject',
                 context=email_context,
             ),
-            'email_body': email.get_email_body(
+            'email_body': get_email_body(
                 request=self.request,
                 setting_name='new_proposal_notification',
                 context=email_context,
@@ -901,11 +924,11 @@ class ProposalSubmissionEmail(FormView):
         ).order_by(
             '-first_name'
         )
-        email.send_prerendered_email(
+        send_prerendered_email(
             from_email=self.request.user.email,
             to=[
                 editor.email for editor in press_editors
-                if editor.username != settings.INTERNAL_USER
+                if editor.username != settings.ADMIN_USERNAME
             ],
             subject=form.cleaned_data['email_subject'],
             html_content=form.cleaned_data['email_body'],
@@ -1139,12 +1162,12 @@ class ProposalRevisionCompleteEmail(FormView):
             'sender': self.request.user,
         }
         kwargs['initial'] = {
-            'email_subject': email.get_email_subject(
+            'email_subject': get_email_subject(
                 request=self.request,
                 setting_name='revised_proposal_notification_subject',
                 context=email_context,
             ),
-            'email_body': email.get_email_body(
+            'email_body': get_email_body(
                 request=self.request,
                 setting_name='revised_proposal_notification',
                 context=email_context,
@@ -1162,7 +1185,7 @@ class ProposalRevisionCompleteEmail(FormView):
                 email=self.proposal.owner.email
             )
         ]
-        email.send_prerendered_email(
+        send_prerendered_email(
             from_email=self.request.user.email,
             to=self.proposal.owner.email,
             cc=other_editor_emails,
@@ -1519,6 +1542,7 @@ def proposal_history(request, proposal_id):
 
 
 def handle_file(file, book, kind, user):
+    # TODO: refactor duplicate logic
     if file:
         original_filename = smart_text(
             file._get_name()
@@ -1528,32 +1552,15 @@ def handle_file(file, book, kind, user):
             ';', '_'
         )
         filename = str(uuid4()) + str(os.path.splitext(file._get_name())[1])
-        folder_structure = os.path.join(
-            settings.BASE_DIR,
-            'files',
-            'books',
-            str(book.id)
+        file_mime = mime.guess_type(filename)[0] or 'application/octet-stream'
+        file_path = os.path.join(
+            settings.BOOK_DIR,
+            str(book.id),
+            filename,
         )
 
-        if not os.path.exists(folder_structure):
-            os.makedirs(folder_structure)
-
-        path = os.path.join(folder_structure, str(filename))
-        fd = open(path, 'wb')
-
-        for chunk in file.chunks():
-            fd.write(chunk)
-
-        fd.close()
-        file_mime = mime.guess_type(filename)
-
-        try:
-            file_mime = file_mime[0]
-        except IndexError:
-            file_mime = 'unknown'
-
-        if not file_mime:
-            file_mime = 'unknown'
+        with default_storage.open(file_path, 'wb') as file_stream:
+            file_stream.write(file.read())
 
         new_file = core_models.File(
             mime_type=file_mime,

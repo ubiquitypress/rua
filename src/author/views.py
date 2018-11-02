@@ -1,6 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.shortcuts import redirect, render, get_object_or_404
 from django.utils import timezone
 from django.utils.decorators import method_decorator
@@ -9,7 +9,12 @@ from django.views.generic import FormView
 from author import forms, logic
 from core import models, log, task, logic as core_logic, forms as core_forms
 from core.decorators import is_author
-from core import email
+from core.email import (
+    get_email_body,
+    get_email_greeting,
+    get_email_subject,
+    send_prerendered_email,
+)
 from core.files import (
     handle_attachment,
     handle_file_update,
@@ -377,7 +382,7 @@ class RevisionCompletionEmail(FormView):
         kwargs = super(RevisionCompletionEmail, self).get_form_kwargs()
 
         if self.revision.requestor:
-            recipient_greeting = email.get_email_greeting(
+            recipient_greeting = get_email_greeting(
                 recipients=[self.revision.requestor]
             )
         else:
@@ -389,12 +394,12 @@ class RevisionCompletionEmail(FormView):
             'sender': self.request.user,
         }
         kwargs['initial'] = {
-            'email_subject': email.get_email_subject(
+            'email_subject': get_email_subject(
                 request=self.request,
                 setting_name='author_revisions_completed_subject',
                 context=email_context,
             ),
-            'email_body': email.get_email_body(
+            'email_body': get_email_body(
                 request=self.request,
                 setting_name='author_revisions_completed',
                 context=email_context,
@@ -443,7 +448,7 @@ class RevisionCompletionEmail(FormView):
                 editor.email for editor in other_editors
             ]
 
-        email.send_prerendered_email(
+        send_prerendered_email(
             from_email=self.request.user.email,
             to=recipient_email_addresses,
             cc=copy_email_addresses,
@@ -1006,6 +1011,7 @@ def author_contract_signoff(request, submission_id, contract_id):
             request.POST,
             request.FILES,
         )
+
         if author_signoff_form.is_valid():
             if request.FILES.get('author_file'):
                 author_file = request.FILES.get('author_file')
@@ -1030,7 +1036,7 @@ def author_contract_signoff(request, submission_id, contract_id):
     context = {
         'submission': 'submission',
         'contract': 'contract',
-        'author_signoff_form': 'author_signoff_form',
+        'author_signoff_form': author_signoff_form,
     }
 
     return render(request, template, context)

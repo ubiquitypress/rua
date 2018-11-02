@@ -15,23 +15,25 @@ def cache_result(seconds=3600, expiry_variance=0.2, override_key=None):
                 return f(*args, **kwargs)
 
             # Generate the key from the function name and given arguments.
-            key = sha1(override_key or u"//".join((
-                unicode(f),
-                u"//".join(
-                    object_to_string(a) for a in args
-                ),
-                u"//".join(
-                    unicode(a.updated) for a in args if hasattr(a, "updated")
-                ),
-                u"//".join(
-                    unicode(k) + object_to_string(v)
-                    for k, v in kwargs.iteritems()
-                ),
-                u"//".join(
-                    unicode(v.updated)
-                    for k, v in kwargs.iteritems() if hasattr(v, "updated")
-                ),
-            )).encode("utf-8")).hexdigest()
+            key = sha1(override_key or u"//".join(
+                (
+                    str(f),
+                    u"//".join(
+                        object_to_string(a) for a in args
+                    ),
+                    u"//".join(
+                        str(a.updated) for a in args if hasattr(a, "updated")
+                    ),
+                    u"//".join(
+                        str(k) + object_to_string(v)
+                        for k, v in kwargs.items()
+                    ),
+                    u"//".join(
+                        str(v.updated)
+                        for k, v in kwargs.items() if hasattr(v, "updated")
+                    ),
+                )
+            ).encode("utf-8")).hexdigest()
             flag = key + "flag"
 
             # If a cached result exists, return it.
@@ -67,8 +69,8 @@ def cache_result(seconds=3600, expiry_variance=0.2, override_key=None):
             return ".".join((
                 object_class.__module__,
                 object_class.__name__,
-                unicode(obj.pk),
+                obj.pk,
             ))
         else:
-            return unicode(obj)
+            return str(obj)
     return doCache

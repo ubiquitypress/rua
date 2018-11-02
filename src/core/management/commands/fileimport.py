@@ -1,5 +1,6 @@
 from django.core.management.base import BaseCommand
 from django.conf import settings
+from django.core.files.storage import default_storage
 from django.contrib.auth.models import User
 
 from core import models
@@ -12,6 +13,7 @@ import shutil
 data_file_path = sys.argv[2]
 files_dir = sys.argv[3]
 press_code = sys.argv[4]
+
 
 class Command(BaseCommand):
 
@@ -26,9 +28,9 @@ class Command(BaseCommand):
 
         book_list = models.Book.objects.all()
         for book in book_list:
-            print book.pub_id()
+            print(book.pub_id())
 
-        with open(data_file_path) as data_file:
+        with default_storage.open(data_file_path) as data_file:
             formats = json.load(data_file)
 
         rua_dir = settings.BOOK_DIR

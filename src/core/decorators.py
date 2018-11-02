@@ -1,6 +1,8 @@
+from functools import wraps
+
 from django.contrib import messages
 from django.core import exceptions
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.shortcuts import redirect, get_object_or_404
 
 from core import models
@@ -9,9 +11,10 @@ from submission import models as submission_models
 
 
 def is_author(_function):
+    @wraps(_function)
     def wrap(request, *args, **kwargs):
 
-        if not request.user.is_authenticated():
+        if not request.user.is_authenticated:
             messages.add_message(
                 request,
                 messages.ERROR,
@@ -32,15 +35,14 @@ def is_author(_function):
         )
         raise exceptions.PermissionDenied
 
-    wrap.__doc__ = _function.__doc__
-    wrap.__name__ = _function.__name__
     return wrap
 
 
 def is_press_editor(_function):
+    @wraps(_function)
     def wrap(request, *args, **kwargs):
 
-        if not request.user.is_authenticated():
+        if not request.user.is_authenticated:
             messages.add_message(
                 request,
                 messages.ERROR,
@@ -63,16 +65,14 @@ def is_press_editor(_function):
         )
         raise exceptions.PermissionDenied
 
-    wrap.__doc__ = _function.__doc__
-    wrap.__name__ = _function.__name__
-
     return wrap
 
 
 def is_production_editor(_function):
+    @wraps(_function)
     def wrap(request, *args, **kwargs):
 
-        if not request.user.is_authenticated():
+        if not request.user.is_authenticated:
             messages.add_message(
                 request,
                 messages.ERROR,
@@ -95,16 +95,14 @@ def is_production_editor(_function):
         )
         raise exceptions.PermissionDenied
 
-    wrap.__doc__ = _function.__doc__
-    wrap.__name__ = _function.__name__
-
     return wrap
 
 
 def is_editor(_function):
+    @wraps(_function)
     def wrap(request, *args, **kwargs):
 
-        if not request.user.is_authenticated():
+        if not request.user.is_authenticated:
             messages.add_message(
                 request,
                 messages.ERROR,
@@ -130,16 +128,14 @@ def is_editor(_function):
         )
         raise exceptions.PermissionDenied
 
-    wrap.__doc__ = _function.__doc__
-    wrap.__name__ = _function.__name__
-
     return wrap
 
 
 def is_book_editor(_function):
+    @wraps(_function)
     def wrap(request, *args, **kwargs):
 
-        if not request.user.is_authenticated():
+        if not request.user.is_authenticated:
             messages.add_message(
                 request,
                 messages.ERROR,
@@ -185,16 +181,14 @@ def is_book_editor(_function):
                 )
             raise exceptions.PermissionDenied
 
-    wrap.__doc__ = _function.__doc__
-    wrap.__name__ = _function.__name__
-
     return wrap
 
 
 def is_book_editor_or_author(_function):
+    @wraps(_function)
     def wrap(request, *args, **kwargs):
 
-        if not request.user.is_authenticated():
+        if not request.user.is_authenticated:
             messages.add_message(
                 request,
                 messages.ERROR,
@@ -244,13 +238,11 @@ def is_book_editor_or_author(_function):
         )
         raise exceptions.PermissionDenied
 
-    wrap.__doc__ = _function.__doc__
-    wrap.__name__ = _function.__name__
-
     return wrap
 
 
 def is_reviewer(_function):
+    @wraps(_function)
     def wrap(request, *args, **kwargs):
         one_click_no_login = models.Setting.objects.filter(
             name='one_click_review_url'
@@ -282,7 +274,7 @@ def is_reviewer(_function):
                     if review_assignments or proposal_review_assignments:
                         return _function(request, *args, **kwargs)
 
-        if not request.user.is_authenticated():
+        if not request.user.is_authenticated:
             messages.add_message(
                 request,
                 messages.ERROR,
@@ -330,9 +322,6 @@ def is_reviewer(_function):
                 )
             raise exceptions.PermissionDenied
 
-    wrap.__doc__ = _function.__doc__
-    wrap.__name__ = _function.__name__
-
     return wrap
 
 
@@ -343,9 +332,10 @@ def is_editor_or_ed_reviewer(_function):
     handle editor permissions. Needs to be  improved so that ed reviewers can
     only see reviews for the submission they're reviewing.
     """
+    @wraps(_function)
     def wrap(request, *args, **kwargs):
         full_url = request.get_full_path()
-        if not request.user.is_authenticated():
+        if not request.user.is_authenticated:
             if 'access_key' in full_url:
                 # Get access key from URI.
                 access_key = full_url[full_url.rfind('access_key=') + 11:]
@@ -403,16 +393,14 @@ def is_editor_or_ed_reviewer(_function):
                 'an assigned editor or editorial reviewer.'
             )
 
-    wrap.__doc__ = _function.__doc__
-    wrap.__name__ = _function.__name__
-
     return wrap
 
 
 def has_reviewer_role(_function):
+    @wraps(_function)
     def wrap(request, *args, **kwargs):
 
-        if not request.user.is_authenticated():
+        if not request.user.is_authenticated:
             messages.add_message(
                 request,
                 messages.ERROR,
@@ -434,16 +422,14 @@ def has_reviewer_role(_function):
             )
             raise exceptions.PermissionDenied
 
-    wrap.__doc__ = _function.__doc__
-    wrap.__name__ = _function.__name__
-
     return wrap
 
 
 def is_indexer(_function):
+    @wraps(_function)
     def wrap(request, *args, **kwargs):
 
-        if not request.user.is_authenticated():
+        if not request.user.is_authenticated:
             messages.add_message(
                 request,
                 messages.ERROR,
@@ -491,16 +477,14 @@ def is_indexer(_function):
             )
             raise exceptions.PermissionDenied
 
-    wrap.__doc__ = _function.__doc__
-    wrap.__name__ = _function.__name__
-
     return wrap
 
 
 def is_copyeditor(_function):
+    @wraps(_function)
     def wrap(request, *args, **kwargs):
 
-        if not request.user.is_authenticated():
+        if not request.user.is_authenticated:
             messages.add_message(
                 request,
                 messages.ERROR,
@@ -549,16 +533,14 @@ def is_copyeditor(_function):
             )
             raise exceptions.PermissionDenied
 
-    wrap.__doc__ = _function.__doc__
-    wrap.__name__ = _function.__name__
-
     return wrap
 
 
 def is_typesetter(_function):
+    @wraps(_function)
     def wrap(request, *args, **kwargs):
 
-        if not request.user.is_authenticated():
+        if not request.user.is_authenticated:
             messages.add_message(
                 request,
                 messages.ERROR,
@@ -604,16 +586,14 @@ def is_typesetter(_function):
             )
             raise exceptions.PermissionDenied
 
-    wrap.__doc__ = _function.__doc__
-    wrap.__name__ = _function.__name__
-
     return wrap
 
 
 def is_onetasker(_function):
+    @wraps(_function)
     def wrap(request, *args, **kwargs):
 
-        if not request.user.is_authenticated():
+        if not request.user.is_authenticated:
             messages.add_message(request, messages.ERROR,
                                  'You need to log in to view this page.')
             raise exceptions.PermissionDenied
@@ -659,8 +639,5 @@ def is_onetasker(_function):
                 )
             )
             raise exceptions.PermissionDenied
-
-    wrap.__doc__ = _function.__doc__
-    wrap.__name__ = _function.__name__
 
     return wrap

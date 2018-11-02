@@ -826,7 +826,7 @@
     },
     {
         "fields": {
-            "value": "0791a2db-c180-4fe5-a951-dc002ae08fd6..ico",
+            "value": "",
             "group": "4",
             "name": "favicon",
             "types": "file",
@@ -1409,7 +1409,7 @@
     },
     {
         "fields": {
-            "value": "Proposal revised - {proposal.title}",
+            "value": "Proposal revised - {{ proposal.title }}",
             "group": "6",
             "name": "revised_proposal_notification_subject",
             "types": "text",
@@ -1524,6 +1524,16 @@
             "name": "proposal_editorial_review_completed_subject",
             "types": "text",
             "description": ""
+        },
+        "model": "core.setting",
+        "pk": null
+    },
+    {
+        "fields": {
+            "value": "Please undertake this copyedit. You may download the files below and upload the edited versions once completed. If you have feedback for the Editor/Author fill in the notes box and this will be presented to both.<p></p>",
+            "group": 1,
+            "name": "copyedit_instructions",
+            "types": "rich_text"
         },
         "model": "core.setting",
         "pk": null

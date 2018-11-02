@@ -1,3 +1,4 @@
+from configparser import ConfigParser
 import os
 
 from django.contrib import messages
@@ -5,26 +6,17 @@ from django.contrib import messages
 
 # ## GENERIC CONFIG ##
 
-TECH_EMAIL = os.getenv('TECH_EMAIL', 'tech@ubiquitypress.com')
+SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
+ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS', 'localhost').split(',')
 
-ADMINS = (
-    ('UP Tech', TECH_EMAIL)
-)
-
-# Username of upadmin
-INTERNAL_USER = 'tech'
-
-DEBUG = False  # SECURITY WARNING: don't run with debug turned on in production!
+ADMIN_USERNAME = os.getenv('DJANGO_ADMIN_USERNAME', 'tech')
+ADMIN_PASSWORD = os.getenv('DJANGO_ADMIN_PASSWORD')
+ADMIN_EMAIL = os.getenv('DJANGO_ADMIN_EMAIL')
 
 # Allow static files to be served by uwsgi/gunicorn?
 INCLUDE_STATIC_FILE_URLCONFS = False
 
 SITE_ID = 1
-
-BASE_DIR = os.path.dirname(os.path.dirname(__file__))
-BOOK_DIR = os.path.join(BASE_DIR, 'files', 'books')
-PROPOSAL_DIR = os.path.join(BASE_DIR, 'files', 'proposals')
-EMAIL_DIR = os.path.join(BASE_DIR, 'files', 'email', 'general')
 
 ROOT_URLCONF = 'core.urls'
 
@@ -58,6 +50,7 @@ INSTALLED_APPS = (
     'django_summernote',
     'rest_framework',
     'pymarc',
+    'storages',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
@@ -65,14 +58,14 @@ INSTALLED_APPS = (
     'allauth.socialaccount.providers.google',
     'allauth.socialaccount.providers.orcid',
     'allauth.socialaccount.providers.twitter',
+    'raven.contrib.django.raven_compat',
 )
 
-MIDDLEWARE_CLASSES = (
+MIDDLEWARE = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'core.middleware.Roles',
@@ -96,6 +89,9 @@ SILENCED_SYSTEM_CHECKS = (
     'fields.W340',
 )
 
+
+# ## SUMMERNOTE ##
+
 SUMMERNOTE_CONFIG = {
     # Using SummernoteWidget - iframe mode.
     'iframe': False,  # If False: use SummernoteInplaceWidget - no iframe mode.
@@ -116,7 +112,7 @@ SUMMERNOTE_CONFIG = {
 # ## CACHE ##
 
 REDIS_HOST = os.getenv('REDIS_HOST', '127.0.0.1')
-REDIS_PORT = int(os.getenv('REDIS_PORT'), 6379)
+REDIS_PORT = int(os.getenv('REDIS_PORT', 6379))
 
 CACHES = {
     'default': {
@@ -139,13 +135,18 @@ DATETIME_FORMAT = '%d %b, %Y %H:%M'
 
 # ## STATIC FILES ##
 
+BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 STATIC_ROOT = os.path.join(BASE_DIR, 'collected-static')
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static-assets'),
 )
-STATIC_URL = '/static/'
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+BOOK_DIR = os.path.join('files', 'books')
+PROPOSAL_DIR = os.path.join('files', 'proposals')
+EMAIL_DIR = os.path.join('files', 'email', 'general')
+
 MEDIA_URL = '/media/'
 
 TEMPLATES = [
@@ -159,13 +160,13 @@ TEMPLATES = [
             'context_processors': [
                 # Already defined Django-related contexts here
                 "django.contrib.auth.context_processors.auth",
-                "django.core.context_processors.debug",
-                "django.core.context_processors.i18n",
-                "django.core.context_processors.media",
-                "django.core.context_processors.static",
-                "django.core.context_processors.tz",
+                "django.template.context_processors.debug",
+                "django.template.context_processors.i18n",
+                "django.template.context_processors.media",
+                "django.template.context_processors.static",
+                "django.template.context_processors.tz",
+                "django.template.context_processors.request",
                 "django.contrib.messages.context_processors.messages",
-                "django.core.context_processors.request",
                 "core.context_processors.press",
                 "core.context_processors.task_count",
                 "core.context_processors.review_assignment_count",
@@ -214,8 +215,16 @@ LOGGING = {
             'class': 'logging.StreamHandler',
             'formatter': 'verbose'
         },
+        'null': {
+            'level': 'DEBUG',
+            'class': 'logging.NullHandler',
+        },
     },
     'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': 'INFO',
+        },
         'django.db.backends': {
             'level': 'ERROR',
             'handlers': ['console'],
@@ -231,14 +240,34 @@ LOGGING = {
             'handlers': ['console'],
             'propagate': False,
         },
+        'django.security.DisallowedHost': {
+            'handlers': ['null'],
+            'propagate': False,
+        },
     },
 }
 
-SENTRY_RELEASE = 'please_use_different_django_settings_file'
-SENTRY_DSN = os.getenv('SENTRY_DSN')
+
+# ## DATABASE ##
+
+DATABASES = {
+    'default': {
+        'ENGINE': os.getenv(
+            'DATABASE_ENGINE',
+            'django.db.backends.postgresql_psycopg2'
+        ),
+        'NAME': os.getenv('DATABASE_NAME', 'rua'),
+        'USER': os.getenv('DATABASE_USER', 'root'),
+        'PASSWORD': os.getenv('DATABASE_PASS', ''),
+        'HOST': os.getenv('DATABASE_HOST', '127.0.0.1'),
+        'PORT': os.getenv('DATABASE_PORT', '5432')
+    }
+}
 
 
 # ## EXTERNAL SERVICES ##
+
+# ORCID
 
 ORCID_API_URL = os.getenv('ORCID_API_URL', 'http://pub.orcid.org/v1.2_rc7/')
 ORCID_REDIRECT_URI = os.getenv(
@@ -249,14 +278,30 @@ ORCID_TOKEN_URL = os.getenv(
     'ORCID_TOKEN_URL',
     'https://pub.orcid.org/oauth/token'
 )
-ORCID_CLIENT_SECRET = os.getenv(
-    'ORCID_CLIENT_SECRET',
-    '6d1677b8-25c6-4d42-8a8d-e77a0ced56c6'
+ORCID_CLIENT_SECRET = os.getenv('ORCID_CLIENT_SECRET')
+ORCID_CLIENT_ID = os.getenv('ORCID_CLIENT_ID')
+
+# AMAZON S3
+
+AWS_ACCESS_KEY_ID = os.getenv('AWS_SECRET_ACCESS_KEY')
+AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
+AWS_S3_OBJECT_PARAMETERS = {"CacheControl": "max-age=86400"}
+AWS_STORAGE_BUCKET_NAME = os.getenv(
+    'AWS_STORAGE_BUCKET_NAME',
+    'service-rua'
 )
-ORCID_CLIENT_ID = os.getenv(
-    'ORCID_CLIENT_ID',
-    'APP-VXH2IGZ6ZH7Q71L9'
+AWS_S3_CUSTOM_DOMAIN = os.getenv(
+    'AWS_S3_CUSTOM_DOMAIN',
+    f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com',
 )
+AWS_LOCATION = os.getenv('AWS_LOCATION', '')
+
+if AWS_LOCATION:
+    AWS_STATIC_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{AWS_LOCATION}/'
+else:
+    AWS_STATIC_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/'
+
+# EMAIL
 
 EMAIL_BACKEND = os.getenv(
     'EMAIL_BACKEND',
@@ -265,8 +310,22 @@ EMAIL_BACKEND = os.getenv(
 EMAIL_USE_TLS = bool(os.getenv('EMAIL_USE_TLS', True))
 EMAIL_HOST = os.getenv('EMAIL_HOST', 'smtp.mailgun.org')
 EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', 'postmaster@ubiquity.press')
-EMAIL_HOST_PASSWORD = os.getenv(
-    'EMAIL_HOST_PASSWORD',
-    '4910364428769ec9a64fbcee94bd5d17'  # Fake API key.
-)
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 EMAIL_PORT = int(os.getenv('EMAIL_PORT', 587))
+
+# SENTRY
+
+SENTRY_DSN = os.getenv(
+    'SENTRY_DSN',
+    'https://6f4e629b9384499ea7d6aaa72c820839:'
+    '33c1f6db04914ee7bf7569f1f3e9cb61@sentry.ubiquity.press/5'
+)
+config_file = ConfigParser()
+config_file.read('sentry_version.ini')
+SENTRY_RELEASE = config_file.get('sentry', 'version', fallback='ERROR')
+
+RAVEN_CONFIG = {
+    'dsn': SENTRY_DSN,
+    'release': SENTRY_RELEASE,
+    'environment': 'production'
+}

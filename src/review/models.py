@@ -35,17 +35,20 @@ class Form(models.Model):
                   ' from use in proposal workflow.'
     )
 
-    def __unicode__(self):
+    def __str__(self):
         return u'%s' % self.name
 
 
 class FormResult(models.Model):
 
-    form = models.ForeignKey(Form)
+    form = models.ForeignKey(
+        Form,
+        on_delete=models.CASCADE,
+    )
     data = models.TextField()
     date = models.DateField(auto_now_add=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return '%s' % self.form.name
 
 
@@ -73,7 +76,7 @@ class FormElement(models.Model):
     field_type = models.CharField(max_length=100, choices=field_choices)
     required = models.BooleanField()
 
-    def __unicode__(self):
+    def __str__(self):
         return '%s' % self.name
 
     def __repr__(self):
@@ -92,9 +95,11 @@ class FormElementsRelationship(models.Model):
     )
     form = models.ForeignKey(
         Form,
+        on_delete=models.CASCADE,
     )
     element = models.ForeignKey(
         FormElement,
+        on_delete=models.CASCADE,
     )
     width = models.CharField(
         max_length=20,
@@ -107,7 +112,7 @@ class FormElementsRelationship(models.Model):
     )
     order = models.IntegerField()
 
-    def __unicode__(self):
+    def __str__(self):
         return '%s: %s' % (self.form.name, self.element.name)
 
     def __repr__(self):

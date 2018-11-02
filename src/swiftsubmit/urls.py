@@ -1,31 +1,37 @@
-from django.conf.urls import patterns, url
+from django.urls import re_path
 
+from .views import (
+    author,
+    editor,
+    formats,
+    index,
+    stage,
+)
 
-urlpatterns = patterns(
-    '',
-    url(
+urlpatterns = [
+    re_path(
         r'^$',
-        'swiftsubmit.views.index',
+        index,
         name='swiftsubmit_index'
     ),
-    url(
+    re_path(
         r'^book/(?P<book_id>\d+)/formats/$',
-        'swiftsubmit.views.formats',
+        formats,
         name='swiftsubmit_formats'
     ),
-    url(
+    re_path(
         r'^book/(?P<book_id>\d+)/authors/$',
-        'swiftsubmit.views.author',
+        author,
         name='swiftsubmit_authors'
     ),
-    url(
+    re_path(
         r'^book/(?P<book_id>\d+)/editors/$',
-        'swiftsubmit.views.editor',
+        editor,
         name='swiftsubmit_editors'
     ),
-    url(
+    re_path(
         r'^book/(?P<book_id>\d+)/stage/$',
-        'swiftsubmit.views.stage',
+        stage,
         name='swiftsubmit_stage'
     ),
-)
+]

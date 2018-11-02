@@ -1,14 +1,15 @@
 from __future__ import absolute_import
 import csv
 import ftplib
+from io import StringIO
 import os
-import StringIO
 
 from django.conf import settings
+from django.core.files.storage import default_storage
 
-from celery import task
-
-from core import models, email
+from core import email
+from core.celery import app
+from core.models import Identifier, Subject
 from services import ServiceHandler, JuraUpdateService
 from core.setting_util import get_setting
 
@@ -16,7 +17,7 @@ from core.setting_util import get_setting
 def _read_csv(path):
     """Read a CSV and return its rows, cleaning NUL bytes."""
 
-    with open(path, 'rb') as raw_csv:
+    with default_storage.open(path, 'rb') as raw_csv:
         data = raw_csv.read().replace('\00', '')
     if path != 'bisac.csv':
         os.remove(path)
@@ -25,10 +26,11 @@ def _read_csv(path):
     reader = csv.reader(
         _buffer.read().splitlines()
     )
+
     return reader
 
 
-@task(name='add-metadata')
+@app.task(name='add-metadata')
 def add_metadata():
     """Adds book metadata from CSVs on an FTP site.
 
@@ -50,9 +52,9 @@ def add_metadata():
 
         try:
             files = ftp.nlst()
-        except ftplib.error_perm, resp:
+        except ftplib.error_perm as resp:
             if str(resp) == '550 No files found':
-                print 'No files in this directory'
+                print('No files in this directory')
             else:
                 raise
 
@@ -86,9 +88,7 @@ def add_metadata():
                         )
                     bisacs = row[bisac_index]
                     description = row[description_index]
-                    identifier = models.Identifier.objects.filter(
-                        value=isbn
-                    ).first()
+                    identifier = Identifier.objects.filter(value=isbn).first()
 
                     if identifier and isbn not in isbns_processed:
                         book = identifier.book
@@ -102,7 +102,7 @@ def add_metadata():
                                 in _read_csv('bisac.csv') if bisac in row
                             ]
                             new_subject, _ = (
-                                models.Subject.objects.get_or_create(
+                                Subject.objects.get_or_create(
                                     name=bisac_lookup[0][1]
                                 )
                             )

@@ -1,122 +1,130 @@
-from django.conf.urls import patterns, url
+from django.urls import re_path
 
-import views
+from .views import (
+    RequestedReviewerDecisionEmail,
+    review,
+    review_complete,
+    review_complete_no_redirect,
+    review_request_declined,
+    ReviewCompletionEmail,
+    reviewer_dashboard,
+    reviewer_decision,
+)
+from review.logic import generate_review_form
 
-
-urlpatterns = patterns(
-    '',
-    url(
+urlpatterns = [
+    re_path(
         r'dashboard/$',
-        'review.views.reviewer_dashboard',
+        reviewer_dashboard,
         name='reviewer_dashboard'
     ),
-    url(  # Reviewer decision.
+    re_path(  # Reviewer decision.
         r'^(?P<review_type>[-\w]+)/(?P<submission_id>\d+)/assignment/'
         r'(?P<review_assignment_id>\d+)/decision/$',
-        'review.views.reviewer_decision',
+        reviewer_decision,
         name='reviewer_decision_without'
     ),
-    url(
+    re_path(
         r'^(?P<review_type>[-\w]+)/(?P<submission_id>\d+)/assignment/'
         r'(?P<review_assignment_id>\d+)/decision/(?P<decision>[-\w]+)/$',
-        'review.views.reviewer_decision',
+        reviewer_decision,
         name='reviewer_decision_with'
     ),
-    url(
+    re_path(
         r'^(?P<review_type>[-\w]+)/(?P<submission_id>\d+)/assignment/'
         r'(?P<review_assignment_id>\d+)/access_key/(?P<access_key>[-\w+]+)/'
         r'decision/$',
-        'review.views.reviewer_decision',
+        reviewer_decision,
         name='reviewer_decision_without_access_key'
     ),
-    url(
+    re_path(
         r'^(?P<review_type>[-\w]+)/(?P<submission_id>\d+)/assignment/'
         r'(?P<review_assignment_id>\d+)/access_key/(?P<access_key>[-\w+]+)/'
         r'decision/(?P<decision>[-\w]+)/$',
-        'review.views.reviewer_decision',
+        reviewer_decision,
         name='reviewer_decision_with_access_key'
     ),
-    url(
+    re_path(
         r'^(?P<review_type>[-\w]+)/(?P<submission_id>\d+)/assignment/'
         r'(?P<review_assignment_id>\d+)/decision-email/'
         r'(?P<decision>accept|decline)/$',
-        views.RequestedReviewerDecisionEmail.as_view(),
+        RequestedReviewerDecisionEmail.as_view(),
         name='reviewer_decision_email'
     ),
-    url(
+    re_path(
         r'^(?P<review_type>[-\w]+)/(?P<submission_id>\d+)/assignment/'
         r'(?P<review_assignment_id>\d+)/decision-email/'
         r'(?P<decision>accept|decline)/access_key/(?P<access_key>[-\w+]+)/$',
-        views.RequestedReviewerDecisionEmail.as_view(),
+        RequestedReviewerDecisionEmail.as_view(),
         name='reviewer_decision_email_with_access_key'
     ),
-    url(  # Review.
+    re_path(  # Review.
         r'^(?P<review_type>[-\w]+)/(?P<submission_id>\d+)/review-round/'
         r'(?P<review_round>\d+)/access_key/(?P<access_key>[-\w+]+)/$',
-        'review.views.review',
+        review,
         name='review_with_access_key'
     ),
-    url(
+    re_path(
         r'^(?P<review_type>[-\w]+)/(?P<submission_id>\d+)/'
         r'review-round/(?P<review_round>\d+)/$',
-        'review.views.review',
+        review,
         name='review_without_access_key'
     ),
-    url(
+    re_path(
         r'^(?P<review_type>[-\w]+)/(?P<submission_id>\d+)/'
         r'review-round/(?P<review_round>\d+)/assignment/'
         r'(?P<review_assignment_id>\d+)/completion-email/$',
-        views.ReviewCompletionEmail.as_view(),
+        ReviewCompletionEmail.as_view(),
         name='review_completion_email'
     ),
-    url(
+    re_path(
         r'^(?P<review_type>[-\w]+)/(?P<submission_id>\d+)'
         r'/review-round/(?P<review_round>\d+)/assignment/'
         r'(?P<review_assignment_id>\d+)/completion-email/'
         r'access_key/(?P<access_key>[-\w+]+)/$',
-        views.ReviewCompletionEmail.as_view(),
+        ReviewCompletionEmail.as_view(),
         name='review_completion_email_with_access_key'
     ),
-    url(
+    re_path(
         r'^(?P<review_type>[-\w]+)/(?P<submission_id>\d+)/review-round/'
         r'(?P<review_round>\d+)/complete/$',
-        'review.views.review_complete',
+        review_complete,
         name='review_complete'
     ),
-    url(
+    re_path(
         r'^(?P<review_type>[-\w]+)/(?P<submission_id>\d+)/review-round/'
         r'(?P<review_round>\d+)/access_key/(?P<access_key>[-\w+]+)/complete/$',
-        'review.views.review_complete',
+        review_complete,
         name='review_complete_with_access_key'
     ),
-    url(
+    re_path(
         r'^(?P<review_type>[-\w]+)/(?P<submission_id>\d+)/review-round/'
         r'(?P<review_round>\d+)/complete/no-redirect/$',
-        'review.views.review_complete_no_redirect',
+        review_complete_no_redirect,
         name='review_complete_no_redirect'
     ),
-    url(
+    re_path(
         r'^(?P<review_type>[-\w]+)/(?P<submission_id>\d+)/review-round/'
         r'(?P<review_round>\d+)/access_key/(?P<access_key>[-\w+]+)/'
         r'complete/no-redirect/$',
-        'review.views.review_complete_no_redirect',
+        review_complete_no_redirect,
         name='review_complete_with_access_key_no_redirect'
     ),
-    url(
+    re_path(
         r'^review/review-request-declined/$',
-        'review.views.review_request_declined',
+        review_request_declined,
         name='review_request_declined'
     ),
-    url(  # Other.
+    re_path(  # Other.
         r'^download/(?P<review_type>[-\w]+)/(?P<submission_id>\d+)/'
         r'assignment/(?P<review_id>\d+)/$',
-        'review.views.generate_review_form',
+        generate_review_form,
         name='generate_review_form'
     ),
-    url(
+    re_path(
         r'^download/(?P<review_type>[-\w]+)/(?P<submission_id>\d+)/'
         r'assignment/(?P<review_id>\d+)/access_key/(?P<access_key>[-\w+]+)/$',
-        'review.views.generate_review_form',
+        generate_review_form,
         name='generate_review_form_access_key'
     ),
-)
+]

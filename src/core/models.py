@@ -11,12 +11,13 @@ from django.utils.encoding import smart_text
 from django.utils.html import strip_tags
 from django.utils.safestring import mark_safe
 
-from revisions import models as revision_models
-from submission import models as submission_models
+from revisions.models import Revision
+from submission.models import Proposal, ProposalReview
 
 fs = FileSystemStorage(location=settings.MEDIA_ROOT)
 
 SALUTATION_CHOICES = (
+    ('Mx', 'Mx'),
     ('Miss', 'Miss'),
     ('Ms', 'Ms'),
     ('Mrs', 'Mrs'),
@@ -338,7 +339,7 @@ class Language(models.Model):
         max_length=300,
     )
 
-    def __unicode__(self):
+    def __str__(self):
         return u'%s' % self.display
 
     def __repr__(self):
@@ -366,7 +367,8 @@ class APIConnector(models.Model):
 class Profile(models.Model):
 
     user = models.OneToOneField(
-        User
+        User,
+        on_delete=models.CASCADE,
     )
     activation_code = models.CharField(
         max_length=100,
@@ -525,7 +527,7 @@ class Profile(models.Model):
         return 0
 
     def number_proposals_assigned_to(self):
-        proposals = submission_models.Proposal.objects.filter(
+        proposals = Proposal.objects.filter(
             book_editors__id=self.user.pk,
         )
         if proposals:
@@ -552,9 +554,7 @@ class Profile(models.Model):
         return "No reviews found"
 
     def proposal_review_history(self):
-        reviews = submission_models.ProposalReview.objects.filter(
-            user=self.user.pk,
-        )
+        reviews = ProposalReview.objects.filter(user=self.user.pk)
 
         if reviews:
             return reviews
@@ -567,7 +567,7 @@ class Profile(models.Model):
             declined__isnull=True,
             completed__isnull=True,
         )
-        proposal_reviews = submission_models.ProposalReview.objects.filter(
+        proposal_reviews = ProposalReview.objects.filter(
             user=self.user.pk,
             accepted__isnull=False,
             declined__isnull=True,
@@ -581,7 +581,7 @@ class Profile(models.Model):
             user=self.user.pk,
             completed__isnull=False,
         )
-        proposal_reviews = submission_models.ProposalReview.objects.filter(
+        proposal_reviews = ProposalReview.objects.filter(
             user=self.user.pk,
             completed__isnull=False,
         )
@@ -593,7 +593,7 @@ class Profile(models.Model):
             user=self.user.pk,
             declined__isnull=False,
         )
-        proposal_reviews = submission_models.ProposalReview.objects.filter(
+        proposal_reviews = ProposalReview.objects.filter(
             user=self.user.pk,
             declined__isnull=False,
         )
@@ -677,7 +677,7 @@ class Author(models.Model):
         blank=True,
     )
 
-    def __unicode__(self):
+    def __str__(self):
         return u'%s - %s %s' % (self.pk, self.first_name, self.last_name)
 
     def __repr__(self):
@@ -721,6 +721,7 @@ class Book(models.Model):
             "If you are submitting this work to an "
             "existing Series please select it."
         ),
+        on_delete=models.CASCADE,
     )
     author = models.ManyToManyField(
         'Author',
@@ -787,6 +788,7 @@ class Book(models.Model):
         null=True,
         blank=True,
         help_text="The license you recommend for this work.",
+        on_delete=models.CASCADE,
     )
     cover = models.ImageField(
         upload_to=cover_images_upload_path,
@@ -848,18 +850,19 @@ class Book(models.Model):
             'to individual chapter pages.'
         ),
     )
-    owner = models.ForeignKey(  # Book Owner.
+    owner = models.ForeignKey(
         User,
         null=True,
         blank=True,
+        on_delete=models.CASCADE,
     )
-    read_only_users = models.ManyToManyField(  # Read only users.
+    read_only_users = models.ManyToManyField(
         User,
         null=True,
         blank=True,
         related_name='read_only_users',
     )
-    submission_date = models.DateField(  # Dates.
+    submission_date = models.DateField(
         auto_now_add=True,
         null=True,
         blank=True,
@@ -872,16 +875,17 @@ class Book(models.Model):
         null=True,
         blank=True,
     )
-    stage = models.ForeignKey(  # Stage.
+    stage = models.ForeignKey(
         'Stage',
         null=True,
         blank=True,
+        on_delete=models.CASCADE,
     )
     submission_stage = models.IntegerField(
         null=True,
         blank=True,
     )
-    review_assignments = models.ManyToManyField(  # Review.
+    review_assignments = models.ManyToManyField(
         'ReviewAssignment',
         related_name='review',
         null=True,
@@ -897,8 +901,9 @@ class Book(models.Model):
         'review.Form',
         null=True,
         blank=True,
+        on_delete=models.CASCADE,
     )
-    files = models.ManyToManyField(  # Files.
+    files = models.ManyToManyField(
         'File',
         null=True,
         blank=True,
@@ -927,16 +932,18 @@ class Book(models.Model):
         blank=True,
         related_name='misc_files',
     )
-    contract = models.ForeignKey(  # Contract.
+    contract = models.ForeignKey(
         'Contract',
         null=True,
         blank=True,
         related_name='contract_of_book',
+        on_delete=models.CASCADE,
     )
-    proposal = models.ForeignKey(  # Proposal.
+    proposal = models.ForeignKey(
         'submission.Proposal',
         null=True,
         blank=True,
+        on_delete=models.CASCADE,
     )
 
     peer_review_override = models.BooleanField(
@@ -946,11 +953,11 @@ class Book(models.Model):
             "are no reviews in the Rua database.",
         ),
     )
-    first_run = models.BooleanField(  # First Run.
+    first_run = models.BooleanField(
         default=True,
     )
 
-    def __unicode__(self):
+    def __str__(self):
         return u'%s' % self.title
 
     def __repr__(self):
@@ -971,10 +978,7 @@ class Book(models.Model):
         return Note.objects.filter(book=self).count()
 
     def revisions_requested(self):
-        if revision_models.Revision.objects.filter(
-                book=self,
-                completed__isnull=True,
-        ):
+        if Revision.objects.filter(book=self, completed__isnull=True):
             return True
         return False
 
@@ -1134,8 +1138,14 @@ def identifier_choices():
 
 class Note(models.Model):
 
-    book = models.ForeignKey(Book)
-    user = models.ForeignKey(User)
+    book = models.ForeignKey(
+        Book,
+        on_delete=models.CASCADE,
+    )
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+    )
     date_submitted = models.DateTimeField(
         auto_now_add=True,
     )
@@ -1166,17 +1176,20 @@ class Identifier(models.Model):
         Book,
         null=True,
         blank=True,
+        on_delete=models.CASCADE,
     )
     digital_format = models.ForeignKey(
         'Format',
         related_name='digital_format',
         null=True,
         blank=True,
+        on_delete=models.CASCADE,
     )
     physical_format = models.ForeignKey(
         'PhysicalFormat',
         null=True,
         blank=True,
+        on_delete=models.CASCADE,
     )
     identifier = models.CharField(
         max_length=20,
@@ -1217,7 +1230,8 @@ def physical_book_types():
 class Retailer(models.Model):
 
     book = models.ForeignKey(
-        Book
+        Book,
+        on_delete=models.CASCADE,
     )
     name = models.CharField(
         max_length=300,
@@ -1254,12 +1268,14 @@ class Contract(models.Model):
         related_name='editor_file',
         blank=True,
         null=True,
+        on_delete=models.CASCADE,
     )
     author_file = models.ForeignKey(
         'File',
         related_name='author_file',
         blank=True,
         null=True,
+        on_delete=models.CASCADE,
     )
     editor_signed_off = models.DateField(
         blank=True,
@@ -1275,7 +1291,7 @@ class Contract(models.Model):
         default=Decimal('0.00'),
     )
 
-    def __unicode__(self):
+    def __str__(self):
         return u'%s' % self.title
 
     def __repr__(self):
@@ -1302,13 +1318,16 @@ class ReviewRound(models.Model):
     class Meta:
         unique_together = ('book', 'round_number')
 
-    book = models.ForeignKey(Book)
+    book = models.ForeignKey(
+        Book,
+        on_delete=models.CASCADE,
+    )
     round_number = models.IntegerField()
     date_started = models.DateTimeField(
         auto_now_add=True,
     )
 
-    def __unicode__(self):
+    def __str__(self):
         return u'%s - %s round_number: %s' % (
             self.pk,
             self.book.title,
@@ -1334,11 +1353,13 @@ class ReviewAssignment(models.Model):
 
     book = models.ForeignKey(
         Book,
+        on_delete=models.CASCADE,
     )
     review_round = models.ForeignKey(
         ReviewRound,
         blank=True,
         null=True,
+        on_delete=models.CASCADE,
     )
     review_type = models.CharField(
         max_length=15,
@@ -1346,12 +1367,14 @@ class ReviewAssignment(models.Model):
     )
     user = models.ForeignKey(
         User,
+        on_delete=models.CASCADE,
     )
     assigning_editor = models.ForeignKey(
         User,
         blank=True,
         null=True,
-        related_name='review_assignments'
+        related_name='review_assignments',
+        on_delete=models.CASCADE,
     )
     assigned = models.DateField(
         auto_now_add=True,
@@ -1390,6 +1413,7 @@ class ReviewAssignment(models.Model):
         'review.FormResult',
         null=True,
         blank=True,
+        on_delete=models.CASCADE,
     )
     recommendation = models.CharField(
         max_length=10,
@@ -1428,9 +1452,10 @@ class ReviewAssignment(models.Model):
         'review.Form',
         null=True,
         blank=True,
+        on_delete=models.CASCADE,
     )
 
-    def __unicode__(self):
+    def __str__(self):
         return u'%s - %s %s' % (self.pk, self.book.title, self.user.username)
 
     def __repr__(self):
@@ -1442,7 +1467,8 @@ class EditorialReviewAssignment(models.Model):
 
     # TODO: Remove this: already linked to the book through the review round.
     book = models.ForeignKey(
-        Book
+        Book,
+        on_delete=models.CASCADE,
     )
     assigned = models.DateField(
         auto_now_add=True,
@@ -1479,6 +1505,7 @@ class EditorialReviewAssignment(models.Model):
     management_editor = models.ForeignKey(
         User,
         related_name='management_editor',
+        on_delete=models.CASCADE,
     )
     editorial_board_access_key = models.CharField(
         max_length=258,
@@ -1501,12 +1528,14 @@ class EditorialReviewAssignment(models.Model):
         null=True,
         blank=True,
         related_name="eb_review_form_results",
+        on_delete=models.CASCADE,
     )
     publication_committee_results = models.ForeignKey(
         'review.FormResult',
         null=True,
         blank=True,
         related_name="pc_review_form_results",
+        on_delete=models.CASCADE,
     )
 
     editorial_board_recommendation = models.CharField(
@@ -1543,13 +1572,15 @@ class EditorialReviewAssignment(models.Model):
         'review.Form',
         null=True,
         blank=True,
-        related_name="eb_review_form"
+        related_name="eb_review_form",
+        on_delete=models.CASCADE,
     )
     publication_committee_review_form = models.ForeignKey(
         'review.Form',
         null=True,
         blank=True,
-        related_name="pc_review_form"
+        related_name="pc_review_form",
+        on_delete=models.CASCADE,
     )
     unaccepted_reminder = models.BooleanField(  # Ensure are sent only once.
         default=False,
@@ -1565,7 +1596,7 @@ class EditorialReviewAssignment(models.Model):
     withdrawn = models.BooleanField(
         default=False)
 
-    def __unicode__(self):
+    def __str__(self):
         return u'%s - %s %s' % (
             self.pk,
             self.book.title,
@@ -1582,14 +1613,19 @@ class EditorialReviewAssignment(models.Model):
 
 class CopyeditAssignment(models.Model):
 
-    book = models.ForeignKey(Book)
+    book = models.ForeignKey(
+        Book,
+        on_delete=models.CASCADE,
+    )
     copyeditor = models.ForeignKey(
         User,
         related_name='copyeditor',
+        on_delete=models.CASCADE,
     )
     requestor = models.ForeignKey(
         User,
         related_name='copyedit_requestor',
+        on_delete=models.CASCADE,
     )
     requested = models.DateField(
         auto_now_add=True,
@@ -1657,7 +1693,7 @@ class CopyeditAssignment(models.Model):
         related_name='author_copyedit_files'
     )
 
-    def __unicode__(self):
+    def __str__(self):
         return u'%s - %s %s' % (
             self.pk,
             self.book.title,
@@ -1714,14 +1750,19 @@ class CopyeditAssignment(models.Model):
 
 class IndexAssignment(models.Model):
 
-    book = models.ForeignKey(Book)
+    book = models.ForeignKey(
+        Book,
+        on_delete=models.CASCADE,
+    )
     indexer = models.ForeignKey(
         User,
-        related_name='indexer'
+        related_name='indexer',
+        on_delete=models.CASCADE,
     )
     requestor = models.ForeignKey(
         User,
-        related_name='index_requestor'
+        related_name='index_requestor',
+        on_delete=models.CASCADE,
     )
     requested = models.DateField(
         auto_now_add=True
@@ -1766,7 +1807,7 @@ class IndexAssignment(models.Model):
         related_name='index_files'
     )
 
-    def __unicode__(self):
+    def __str__(self):
         return u'%s - %s %s' % (self.pk, self.book.title, self.indexer.username)
 
     def __repr__(self):
@@ -1805,15 +1846,18 @@ class IndexAssignment(models.Model):
 class TypesetAssignment(models.Model):
 
     book = models.ForeignKey(
-        Book
+        Book,
+        on_delete=models.CASCADE,
     )
     typesetter = models.ForeignKey(
         User,
         related_name='typesetter',
+        on_delete=models.CASCADE,
     )
     requestor = models.ForeignKey(
         User,
         related_name='typeset_requestor',
+        on_delete=models.CASCADE,
     )
     requested = models.DateField(
         auto_now_add=True,
@@ -1906,7 +1950,7 @@ class TypesetAssignment(models.Model):
         related_name='typesetter_files',
     )
 
-    def __unicode__(self):
+    def __str__(self):
         return u'%s - %s %s' % (
             self.pk,
             self.book.title,
@@ -2005,8 +2049,11 @@ class License(models.Model):
         blank=True,
     )
 
-    def __unicode__(self):
+    def __str__(self):
         return u'%s' % self.short_name
+
+    def __str__(self):
+        return self.short_name
 
     def __repr__(self):
         return u'%s' % self.short_name
@@ -2025,6 +2072,7 @@ class Series(models.Model):
         User,
         null=True,
         blank=True,
+        on_delete=models.CASCADE,
     )
     issn = models.CharField(
         max_length=15,
@@ -2038,7 +2086,7 @@ class Series(models.Model):
         blank=True,
     )
 
-    def __unicode__(self):
+    def __str__(self):
         return u'%s' % self.title
 
     def __repr__(self):
@@ -2117,7 +2165,7 @@ class Editor(models.Model):
         blank=True
     )
 
-    def __unicode__(self):
+    def __str__(self):
         return u'%s - %s %s' % (self.pk, self.first_name, self.last_name)
 
     def __repr__(self):
@@ -2171,7 +2219,10 @@ class File(models.Model):
     sequence = models.IntegerField(
         default=1,
     )
-    owner = models.ForeignKey(User)
+    owner = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+    )
 
     def truncated_filename(self):
         name, extension = os.path.splitext(self.original_filename)
@@ -2201,7 +2252,7 @@ class File(models.Model):
 
         return name
 
-    def __unicode__(self):
+    def __str__(self):
         return u'%s' % self.original_filename
 
     def __repr__(self):
@@ -2213,7 +2264,10 @@ class FileVersion(models.Model):
     class Meta:
         ordering = ('-date_uploaded',)
 
-    file = models.ForeignKey(File)
+    file = models.ForeignKey(
+        File,
+        on_delete=models.CASCADE,
+    )
     original_filename = models.CharField(
         max_length=1000,
     )
@@ -2221,14 +2275,17 @@ class FileVersion(models.Model):
         max_length=100,
     )
     date_uploaded = models.DateTimeField()
-    owner = models.ForeignKey(User)
+    owner = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+    )
 
 
 class Subject(models.Model):
 
     name = models.CharField(max_length=250)
 
-    def __unicode__(self):
+    def __str__(self):
         return u'%s' % self.name
 
     def __repr__(self):
@@ -2239,7 +2296,7 @@ class Interest(models.Model):
 
     name = models.CharField(max_length=250)
 
-    def __unicode__(self):
+    def __str__(self):
         return u'%s' % self.name
 
     def __repr__(self):
@@ -2250,7 +2307,7 @@ class Keyword(models.Model):
 
     name = models.CharField(max_length=250)
 
-    def __unicode__(self):
+    def __str__(self):
         return u'%s' % self.name
 
     def __repr__(self):
@@ -2271,7 +2328,7 @@ stage_choices = (
 class Stage(models.Model):
 
     current_stage = models.CharField(
-        max_length="20",
+        max_length=20,
         choices=stage_choices,
         null=True,
         blank=True,
@@ -2329,7 +2386,7 @@ class Stage(models.Model):
         blank=True,
     )
 
-    def __unicode__(self):
+    def __str__(self):
         try:
             book = self.book_set.all()[0]
             return u'%s - %s' % (book.title, self.current_stage)
@@ -2346,14 +2403,17 @@ class Task(models.Model):
         Book,
         null=True,
         blank=True,
+        on_delete=models.CASCADE,
     )
     creator = models.ForeignKey(
         User,
         related_name='creator',
+        on_delete=models.CASCADE,
     )
     assignee = models.ForeignKey(
         User,
         related_name='assignee',
+        on_delete=models.CASCADE,
     )
     text = models.CharField(
         max_length=200,
@@ -2392,6 +2452,7 @@ class Task(models.Model):
         EditorialReviewAssignment,
         null=True,
         blank=True,
+        on_delete=models.CASCADE,
     )
 
     def status_color(self):
@@ -2410,7 +2471,10 @@ class Role(models.Model):
         max_length=100,
     )
 
-    def __unicode__(self):
+    def __str__(self):
+        return self.name
+
+    def __str__(self):
         return u'%s' % self.name
 
     def __repr__(self):
@@ -2438,15 +2502,18 @@ class Log(models.Model):
         Book,
         null=True,
         blank=True,
+        on_delete=models.CASCADE,
     )
     proposal = models.ForeignKey(
         submission_models.Proposal,
         null=True,
         blank=True,
         related_name='proposal_log',
+        on_delete=models.CASCADE,
     )
     user = models.ForeignKey(
         User,
+        on_delete=models.CASCADE,
     )
     kind = models.CharField(
         max_length=100,
@@ -2486,7 +2553,7 @@ class SettingGroup(models.Model):
         default=True,
     )
 
-    def __unicode__(self):
+    def __str__(self):
         return u'%s' % self.name
 
     def __repr__(self):
@@ -2504,6 +2571,7 @@ class Setting(models.Model):
     )
     group = models.ForeignKey(
         SettingGroup,
+        on_delete=models.CASCADE,
     )
     types = models.CharField(
         max_length=20,
@@ -2518,7 +2586,7 @@ class Setting(models.Model):
         blank=True,
     )
 
-    def __unicode__(self):
+    def __str__(self):
         return u'%s' % self.name
 
     def __repr__(self):
@@ -2557,9 +2625,11 @@ class Format(models.Model):
 
     book = models.ForeignKey(
         Book,
+        on_delete=models.CASCADE,
     )
     file = models.ForeignKey(
         File,
+        on_delete=models.CASCADE,
     )
     name = models.CharField(
         max_length=200,
@@ -2576,7 +2646,7 @@ class Format(models.Model):
         choices=digital_file_type(),
     )
 
-    def __unicode__(self):
+    def __str__(self):
         return u'%s - %s' % (self.book, self.identifier)
 
     def __repr__(self):
@@ -2588,7 +2658,10 @@ class Chapter(models.Model):
     class Meta:
         ordering = ('sequence',)
 
-    book = models.ForeignKey(Book)
+    book = models.ForeignKey(
+        Book,
+        on_delete=models.CASCADE,
+    )
     name = models.CharField(
         max_length=300,
         null=True,
@@ -2630,7 +2703,7 @@ class Chapter(models.Model):
         blank=True,
     )
 
-    def __unicode__(self):
+    def __str__(self):
         return u'%s - %s' % (self.book, self.sequence)
 
     def __repr__(self):
@@ -2647,6 +2720,7 @@ class ChapterAuthor(models.Model):
 
     chapter = models.ForeignKey(
         Chapter,
+        on_delete=models.CASCADE,
     )
     sequence = models.IntegerField(
         default=1,
@@ -2730,7 +2804,7 @@ class ChapterAuthor(models.Model):
         verbose_name="Facebook Profile",
     )
 
-    def __unicode__(self):
+    def __str__(self):
         return u'%s - %s %s' % (self.pk, self.first_name, self.last_name)
 
     def __repr__(self):
@@ -2755,12 +2829,15 @@ class ChapterFormat(models.Model):
     chapter = models.ForeignKey(
         Chapter,
         related_name='format_chapter',
+        on_delete=models.CASCADE,
     )
     book = models.ForeignKey(
-        Book
+        Book,
+        on_delete=models.CASCADE,
     )
     file = models.ForeignKey(
-        File
+        File,
+        on_delete=models.CASCADE,
     )
     name = models.CharField(
         max_length=200,
@@ -2777,7 +2854,7 @@ class ChapterFormat(models.Model):
         choices=digital_file_type(),
     )
 
-    def __unicode__(self):
+    def __str__(self):
         return u'%s - %s' % (self.book, self.identifier)
 
     def __repr__(self):
@@ -2790,7 +2867,8 @@ class PhysicalFormat(models.Model):
         ordering = ('sequence', 'name')
 
     book = models.ForeignKey(
-        Book
+        Book,
+        on_delete=models.CASCADE,
     )
     name = models.CharField(
         max_length=200,
@@ -2803,7 +2881,7 @@ class PhysicalFormat(models.Model):
         choices=pysical_file_type(),
     )
 
-    def __unicode__(self):
+    def __str__(self):
         return u'%s - %s' % (self.book, self.name)
 
     def __repr__(self):
@@ -2844,7 +2922,7 @@ class ProposalForm(models.Model):
                   ' from use in proposal workflow.'
     )
 
-    def __unicode__(self):
+    def __str__(self):
         return u'%s' % self.name
 
     def __repr__(self):
@@ -2878,7 +2956,7 @@ class ProposalFormElement(models.Model):
     )
     required = models.BooleanField()
 
-    def __unicode__(self):
+    def __str__(self):
         return '%s' % self.name
 
     def __repr__(self):
@@ -2898,9 +2976,11 @@ class ProposalFormElementsRelationship(models.Model):
 
     form = models.ForeignKey(
         ProposalForm,
+        on_delete=models.CASCADE,
     )
     element = models.ForeignKey(
         ProposalFormElement,
+        on_delete=models.CASCADE,
     )
     order = models.IntegerField()
     width = models.CharField(
@@ -2915,7 +2995,7 @@ class ProposalFormElementsRelationship(models.Model):
         blank=True,
     )
 
-    def __unicode__(self):
+    def __str__(self):
         return '%s: %s' % (self.form.name, self.element.name)
 
     def __repr__(self):
@@ -2930,14 +3010,20 @@ class Message(models.Model):
     class Meta:
         ordering = ('-date_sent',)
 
-    book = models.ForeignKey(Book)
-    sender = models.ForeignKey(User)
+    book = models.ForeignKey(
+        Book,
+        on_delete=models.CASCADE
+    )
+    sender = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+    )
     date_sent = models.DateTimeField(
         auto_now_add=True,
     )
     message = models.TextField()
 
-    def __unicode__(self):
+    def __str__(self):
         return u'%s' % self.message
 
 
@@ -2965,11 +3051,13 @@ class EmailLog(models.Model):
         Book,
         null=True,
         blank=True,
+        on_delete=models.CASCADE,
     )
     proposal = models.ForeignKey(
         submission_models.Proposal,
         null=True,
         blank=True,
+        on_delete=models.CASCADE,
     )
     to = models.EmailField(
         max_length=1000,
@@ -3006,7 +3094,7 @@ class EmailLog(models.Model):
         default='general',
     )
 
-    def __unicode__(self):
+    def __str__(self):
         return u"From: %s To: %s, CC: %s BCC: %s : Subject: %s" % (
             self.from_address,
             self.to,

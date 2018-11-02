@@ -1,4 +1,4 @@
-from __builtin__ import any as string_any
+from builtins import any as string_any
 import datetime
 import json
 import mimetypes
@@ -6,7 +6,7 @@ import re
 
 from django.contrib.auth.models import User
 from django.core.mail import EmailMultiAlternatives
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.db.models import Max, Q
 from django.shortcuts import get_object_or_404
 from django.template import Context
@@ -18,10 +18,13 @@ from pymarc import Record, Field, record_to_xml
 
 from core import email, models, log
 from core.cache import cache_result
-from core.files import handle_marc21_file
+from core.files import (
+    handle_email_file,
+    handle_marc21_file,
+)
 from editorialreview import models as editorialreview_models
 from revisions import models as revisions_models
-from setting_util import get_setting
+from .setting_util import get_setting
 from submission import logic as submission_logic, models as submission_models
 
 
@@ -622,7 +625,7 @@ def task_count(request):
     :param request: the request containing the user object used in the query
     :return: the number of incomplete talks assigned to the request's user
     """
-    if request.user.is_authenticated():
+    if request.user.is_authenticated:
         return models.Task.objects.filter(
             assignee=request.user,
             completed__isnull=True,
@@ -637,7 +640,7 @@ def review_assignment_count(request):
     :param request: the request containing the user object used in the query
     :return: the number of active reviews assigned to the request's user
     """
-    if request.user.is_authenticated():
+    if request.user.is_authenticated:
         return models.ReviewAssignment.objects.filter(
             user=request.user,
             completed__isnull=True,
@@ -670,7 +673,7 @@ def author_tasks(user):
     """
     task_list = []
 
-    if user.is_authenticated():
+    if user.is_authenticated:
         base_url = get_setting('base_url', 'general')
         revision_tasks = revisions_models.Revision.objects.filter(
             book__owner=user,
@@ -850,7 +853,9 @@ def create_new_review_round(book):
     )
     next_round = (
         latest_round.get('max') + 1 if
-        latest_round.get('max') > 0 else 1
+        latest_round.get('max') and
+        latest_round.get('max') > 0
+        else 1
     )
 
     return models.ReviewRound.objects.create(book=book, round_number=next_round)
@@ -1088,22 +1093,28 @@ def send_proposal_review_request(
     press_name = get_setting('press_name', 'general')
 
     if access_key:
-        review_url = "http://{0}{1}".format(base_url, reverse(
-            'view_proposal_review_decision_access_key',
-            kwargs={
-                'proposal_id': proposal.id,
-                'assignment_id': review_assignment.id,
-                'access_key': access_key,
-            }
-        ))
+        review_url = "http://{0}{1}".format(
+            base_url,
+            reverse(
+                'view_proposal_review_decision_access_key',
+                kwargs={
+                    'proposal_id': proposal.id,
+                    'assignment_id': review_assignment.id,
+                    'access_key': access_key,
+                }
+            )
+        )
     else:
-        review_url = "http://{0}{1}".format(base_url, reverse(
-            'view_proposal_review_decision',
-            kwargs={
-                'proposal_id': proposal.id,
-                'assignment_id': review_assignment.id,
-            }
-        ))
+        review_url = "http://{0}{1}".format(
+            base_url,
+            reverse(
+                'view_proposal_review_decision',
+                kwargs={
+                    'proposal_id': proposal.id,
+                    'assignment_id': review_assignment.id,
+                }
+            )
+        )
 
     if request:
         from_email = "%s <%s>" % (
@@ -1306,6 +1317,7 @@ def send_decision_ack(
         )
 
         if attachment:
+
             email.send_email(
                 subject,
                 context,
@@ -1648,7 +1660,7 @@ def send_proposal_change_owner_ack(request, proposal, email_text, owner):
 
 
 def send_task_decline(assignment, _type, email_text, sender, request):
-    if request.user.is_authenticated():
+    if request.user.is_authenticated:
         from_email = request.user.email
         from_email = "%s <%s>" % (
             request.user.profile.full_name(),
@@ -1870,9 +1882,10 @@ def get_file_content_dispostion(original_filename):
     # to avoid a bug where an unusable ZIP file is served
     return (
         "attachment; filename={file_name}".format(
-            file_name=original_filename.encode(
-                'ascii',
-                errors='ignore'
-            )
+            file_name=original_filename
         )
+        #     .encode(
+        #     'ascii',
+        #     errors='ignore'
+        # )
     )

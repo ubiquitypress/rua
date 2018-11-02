@@ -1,10 +1,9 @@
-from __builtin__ import any as string_any
+from builtins import any as string_any
 from datetime import datetime
 import json
 import mimetypes
 import os
-import string
-import StringIO
+from io import StringIO
 from uuid import uuid4
 
 from django.conf import settings
@@ -16,7 +15,8 @@ from django.contrib.auth import (
 )
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from django.core.urlresolvers import reverse
+from django.core.files.storage import default_storage
+from django.urls import reverse
 from django.db import IntegrityError
 from django.db.models import Q
 from django.http import (
@@ -38,7 +38,12 @@ from docx import Document
 import zipfile
 
 from author import orcid
-from core import log, models, forms, logic
+from core import (
+    log,
+    models,
+    forms,
+    logic
+)
 from core.decorators import (
     is_reviewer,
     is_editor,
@@ -50,13 +55,15 @@ from core.decorators import (
 )
 from editor import forms as editor_forms
 from editorialreview import models as er_models
-from email import (
+from .email import (
     send_email,
     send_email_multiple,
     send_reset_email,
     get_email_body,
+    get_email_subject,
+    send_prerendered_email,
 )
-from files import (
+from .files import (
     handle_attachment,
     handle_file,
     handle_file_update,
@@ -74,7 +81,7 @@ from review import (
     logic as review_logic
 )
 import email
-from setting_util import get_setting
+from .setting_util import get_setting
 
 
 def index(request):
@@ -89,7 +96,7 @@ def contact(request):
 
 
 def dashboard(request):  # Authentication Views.
-    if request.user.is_authenticated():
+    if request.user.is_authenticated:
         roles = request.user.profile.roles.all()
         if request.GET.get('next'):
             return redirect(request.GET.get('next'))
@@ -104,7 +111,7 @@ def dashboard(request):  # Authentication Views.
 
 
 def login(request):
-    if request.user.is_authenticated():
+    if request.user.is_authenticated:
         messages.info(request, 'You are already logged in.')
         if request.GET.get('next'):
             return redirect(request.GET.get('next'))
@@ -160,7 +167,7 @@ def login(request):
 
 @is_press_editor
 def switch_account(request):
-    if not request.user.is_authenticated():
+    if not request.user.is_authenticated:
         return redirect(reverse('login'))
 
     users = models.Profile.objects.all()
@@ -714,7 +721,7 @@ def unauth_reset_password(request, uuid):
     return render(request, template, context)
 
 
-def permission_denied(request):
+def permission_denied(request, **kwargs):
     template = 'core/403.html'
     context = {}
 
@@ -1539,7 +1546,7 @@ def serve_marc21_file(request, submission_id, type):
     )
 
     try:
-        fsock = open(file_path, 'r')
+        fsock = default_storage.open(file_path, 'r')
         mimetype = mimetypes.guess_type(file_path)
         response = StreamingHttpResponse(fsock, content_type=mimetype)
         response['Content-Disposition'] = (
@@ -1614,13 +1621,13 @@ def serve_all_files(request, submission_id):
         zf.write(fpath, zip_path)
 
     zf.close()
-    fd = open(
+    fd = default_storage.open(
         os.path.join(settings.BOOK_DIR, submission_id, zip_filename),
         'wb'
     )
     fd.write(s.getvalue())
     fd.close()
-    fsock = open(
+    fsock = default_storage.open(
         os.path.join(settings.BOOK_DIR, submission_id, zip_filename),
         'r'
     )
@@ -1668,14 +1675,18 @@ def serve_all_review_files(request, submission_id, review_type):
             zf.write(fpath, zip_path)
 
     zf.close()
-    fd = open(os.path.join(
+    fd = default_storage.open(os.path.join(
         settings.BOOK_DIR, submission_id, zip_filename),
         'wb'
     )
     fd.write(s.getvalue())
     fd.close()
-    fsock = open(os.path.join(
-        settings.BOOK_DIR, submission_id, zip_filename),
+    fsock = default_storage.open(
+        os.path.join(
+            settings.BOOK_DIR,
+            submission_id,
+            zip_filename
+        ),
         'r'
     )
     resp = StreamingHttpResponse(
@@ -1733,13 +1744,13 @@ def serve_all_review_files_one_click(
             zf.write(fpath, zip_path)
 
     zf.close()
-    fd = open(
+    fd = default_storage.open(
         os.path.join(settings.BOOK_DIR, submission_id, zip_filename),
         'wb'
     )
     fd.write(s.getvalue())
     fd.close()
-    fsock = open(
+    fsock = default_storage.open(
         os.path.join(settings.BOOK_DIR, submission_id, zip_filename),
         'r'
     )
@@ -1764,7 +1775,7 @@ def serve_file(request, submission_id, file_id):
     )
 
     try:
-        fsock = open(file_path, 'r')
+        fsock = default_storage.open(file_path, 'r')
         mimetype = logic.get_file_mimetype(file_path)
         response = StreamingHttpResponse(fsock, content_type=mimetype)
         response['Content-Disposition'] = logic.get_file_content_dispostion(
@@ -1788,9 +1799,9 @@ def serve_email_file(request, file_id):
     )
 
     try:
-        fsock = open(file_path, 'r')
+        file_stream = default_storage.open(file_path, 'r')
         mimetype = logic.get_file_mimetype(file_path)
-        response = StreamingHttpResponse(fsock, content_type=mimetype)
+        response = StreamingHttpResponse(file_stream, content_type=mimetype)
         response['Content-Disposition'] = logic.get_file_content_dispostion(
             _file.original_filename
         )
@@ -1825,7 +1836,7 @@ def serve_file_one_click(
     )
 
     try:
-        fsock = open(file_path, 'r')
+        fsock = default_storage.open(file_path, 'r')
         mimetype = logic.get_file_mimetype(file_path)
         response = StreamingHttpResponse(fsock, content_type=mimetype)
         response['Content-Disposition'] = logic.get_file_content_dispostion(
@@ -1845,17 +1856,17 @@ def serve_file_one_click(
 def serve_proposal_file_id(request, proposal_id, file_id):
     get_object_or_404(submission_models.Proposal, pk=proposal_id)
     _file = get_object_or_404(models.File, pk=file_id)
+
     file_path = os.path.join(
-        settings.BASE_DIR,
-        'files',
-        'proposals',
-        str(proposal_id), _file.uuid_filename
+        settings.PROPOSAL_DIR,
+        str(proposal_id),
+        _file.uuid_filename,
     )
 
     try:
-        fsock = open(file_path, 'r')
+        file_stream = default_storage.open(file_path, 'r')
         mimetype = mimetypes.guess_type(file_path)
-        response = StreamingHttpResponse(fsock, content_type=mimetype)
+        response = StreamingHttpResponse(file_stream, content_type=mimetype)
         response['Content-Disposition'] = logic.get_file_content_dispostion(
             _file.original_filename
         )
@@ -1880,7 +1891,7 @@ def serve_versioned_file(request, submission_id, revision_id):
     )
 
     try:
-        fsock = open(file_path, 'r')
+        fsock = default_storage.open(file_path, 'r')
         mimetype = logic.get_file_mimetype(file_path)
         response = StreamingHttpResponse(fsock, content_type=mimetype)
         response['Content-Disposition'] = logic.get_file_content_dispostion(
@@ -2719,14 +2730,12 @@ def create_proposal_form(proposal):
 
     document.add_page_break()
 
-    if not os.path.exists(os.path.join(settings.BASE_DIR, 'files', 'forms')):
-        os.makedirs(os.path.join(settings.BASE_DIR, 'files', 'forms'))
-    path = os.path.join(
-        settings.BASE_DIR, 'files', 'forms', '%s.docx' % str(uuid4())
-    )
-    document.save(path)
+    form_file_path = os.path.join(settings.FORM_DIR, f'{uuid4()}.docx')
 
-    return path
+    with default_storage.open(form_file_path, 'wb') as file_stream:
+        document.save(file_stream)
+
+    return form_file_path
 
 
 @is_editor
@@ -2963,7 +2972,7 @@ def view_proposal_review_decision(
 
     proposal_form.initial = intial_data
 
-    if request.user.is_authenticated():
+    if request.user.is_authenticated:
         review_assignment = get_object_or_404(
             submission_models.ProposalReview,
             pk=assignment_id,
@@ -2982,6 +2991,8 @@ def view_proposal_review_decision(
         user = review_assignment.user
     else:
         raise Http404
+
+    # import ipdb; ipdb.set_trace()
 
     if review_assignment.accepted:
         if access_key:
@@ -3193,13 +3204,13 @@ class RequestedReviewerDecisionEmail(FormView):
         else:
             email_body_setting_name = 'proposal_requested_reviewer_decline'
 
-        email_body = email.get_email_body(
+        email_body = get_email_body(
             request=self.request,
             setting_name=email_body_setting_name,
             context=email_context,
         )
         email_subject_setting_name = email_body_setting_name + '_subject'
-        email_subject = email.get_email_subject(
+        email_subject = get_email_subject(
             request=self.request,
             setting_name=email_subject_setting_name,
             context=email_context,
@@ -3226,14 +3237,14 @@ class RequestedReviewerDecisionEmail(FormView):
             editor.email
             for editor in self.proposal.book_editors.exclude(
                 email=assigning_editor_email,
-                username=settings.INTERNAL_USER
+                username=settings.ADMIN_USERNAME
             )
         ]
         from_email = self.proposal_review.user.email or get_setting(
             'from_address',
             'email'
         )
-        email.send_prerendered_email(
+        send_prerendered_email(
             html_content=form.cleaned_data['email_body'],
             subject=form.cleaned_data['email_subject'],
             from_email=from_email,
@@ -3528,7 +3539,7 @@ def view_proposal_review(request, proposal_id, assignment_id, access_key=None):
 
     proposal_form.initial = initial_data
 
-    if request.user.is_authenticated():
+    if request.user.is_authenticated:
         review_assignment = get_object_or_404(
             submission_models.ProposalReview,
             pk=assignment_id,
@@ -3786,12 +3797,12 @@ class ProposalReviewCompletionEmail(FormView):
             'sender': self.proposal_reivew.user,
         }
         kwargs['initial'] = {
-            'email_subject': email.get_email_subject(
+            'email_subject': get_email_subject(
                 request=self.request,
                 setting_name='proposal_peer_review_completed_subject',
                 context=email_context,
             ),
-            'email_body': email.get_email_body(
+            'email_body': get_email_body(
                 request=self.request,
                 setting_name='proposal_peer_review_completed',
                 context=email_context,
@@ -3813,14 +3824,14 @@ class ProposalReviewCompletionEmail(FormView):
             editor.email
             for editor in self.proposal.book_editors.exclude(
                 email=assigning_editor_email,
-                username=settings.INTERNAL_USER
+                username=settings.ADMIN_USERNAME
             )
         ]
         from_email = self.proposal_reivew.user.email or get_setting(
             'from_address',
             'email'
         )
-        email.send_prerendered_email(
+        send_prerendered_email(
             html_content=form.cleaned_data['email_body'],
             subject=form.cleaned_data['email_subject'],
             from_email=from_email,
@@ -3833,7 +3844,7 @@ class ProposalReviewCompletionEmail(FormView):
         return super(ProposalReviewCompletionEmail, self).form_valid(form)
 
     def get_success_url(self):
-        if self.request.user.is_authenticated():
+        if self.request.user.is_authenticated:
             return reverse('user_dashboard')
         return reverse('proposal_review_submitted')
 
@@ -3859,9 +3870,8 @@ def add_proposal_reviewers(request, proposal_id):
         if start_form.is_valid():
             updated_proposal = start_form.save(commit=False)
         if request.FILES.get('attachment'):
-            attachment = handle_proposal_file(
+            attachment = handle_email_file(
                 request.FILES.get('attachment'),
-                _proposal,
                 'misc',
                 request.user,
             )
@@ -3877,7 +3887,7 @@ def add_proposal_reviewers(request, proposal_id):
         email_text = request.POST.get('email_text')
         generate = True if 'access_key' in request.POST else False
 
-        for reviewer in reviewers:  # Handle reviewers.
+        for reviewer in reviewers:
             if generate:
                 access_key = uuid4()
                 new_review_assignment = submission_models.ProposalReview(
@@ -3938,7 +3948,7 @@ def add_proposal_reviewers(request, proposal_id):
                         )
                     )
 
-        for committee in committees:  # Handle committees.
+        for committee in committees:
             members = manager_models.GroupMembership.objects.filter(
                 group=committee
             )
@@ -4226,8 +4236,7 @@ def reopen_proposal_review(request, proposal_id, assignment_id):
         due_date = request.POST.get('due_date')
         review_assignment.due = datetime.strptime(due_date, "%Y-%m-%d")
         review_assignment.save()
-        email_updated_text = string.replace(
-            email_updated_text,
+        email_updated_text = email_updated_text.replace(
             '_due_date_',
             due_date,
         )
@@ -4279,8 +4288,7 @@ def request_proposal_revisions(request, proposal_id):
         due_date = request.POST.get('due_date')
         _proposal.revision_due_date = datetime.strptime(due_date, "%Y-%m-%d")
         _proposal.save()
-        email_updated_text = string.replace(
-            email_updated_text,
+        email_updated_text = email_updated_text.replace(
             '_due_date_',
             due_date,
         )
@@ -4482,7 +4490,7 @@ def create_completed_proposal_review_form(proposal, review_id):
 @is_reviewer
 def serve_proposal_file(request, file_path):
     try:
-        fsock = open(file_path, 'r')
+        fsock = default_storage.open(file_path, 'r')
         mimetype = logic.get_file_mimetype(file_path)
         response = StreamingHttpResponse(fsock, content_type=mimetype)
         response['Content-Disposition'] = (
