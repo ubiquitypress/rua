@@ -43,7 +43,13 @@ ENV PYTHONPATH=/app
 
 ENV DJANGO_SETTINGS_MODULE=core.settings
 
-ENV TECH_EMAIL=tech@ubiquitypress.com
+ENV DJANGO_SECRET_KEY='fake-django-secret-key'
+
+ENV CODE='fake-press-code'
+
+ENV DJANGO_ADMIN_USERNAME='defaul-admin'
+ENV DJANGO_ADMIN_EMAIL='default@admin.com'
+ENV DJANGO_ADMIN_PASSWORD='fake-default-admin'
 
 ENV DATABASE_HOST=Null
 ENV DATABASE_NAME=rua
