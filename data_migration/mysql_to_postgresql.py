@@ -1,19 +1,18 @@
+# -*- coding: utf-8 -*-
+"""SQLAlchemy-based scripts for migrating MySQL databases to PostgreSQL."""
 import logging
 import os
 import sys
 
-from sqlalchemy.ext.automap import automap_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import (
     create_engine,
     MetaData,
-    inspect,
     Table,
     Column,
     Boolean,
     DateTime,
     Float,
-    Integer
 )
 from sqlalchemy.types import (
     TIMESTAMP as POSTGRES_TIMESTAMP,
@@ -33,7 +32,6 @@ from sqlalchemy.dialects.mysql.base import (
 )
 
 from sqlalchemy.ext.declarative import declarative_base
-from sshtunnel import SSHTunnelForwarder
 
 MYSQL_PORT = int(os.getenv('MYSQL_PORT', '3306'))
 POSTGRES_PORT = int(os.getenv('POSTGRES_PORT', '5432'))
@@ -43,48 +41,6 @@ logger = logging.getLogger('sqlalchemy.pool.QueuePool')
 ch = logging.StreamHandler()
 logger.addHandler(ch)
 
-
-class Tunnel(object):
-    def __init__(
-            self,
-            ssh_host,
-            ssh_port,
-            ssh_username,
-            remote_host,
-            remote_port,
-            ssh_pkey='{home_directory}/.ssh/id_rsa'.format(
-                home_directory=os.getenv('HOME'),
-            )
-    ):
-        self._tunnel = SSHTunnelForwarder(
-            (
-                ssh_host,
-                ssh_port
-            ),
-            ssh_username=ssh_username,
-            ssh_pkey=ssh_pkey,
-            remote_bind_address=(
-                remote_host,
-                remote_port
-            ),
-            set_keepalive=1.0
-        )
-
-    def __enter__(self):
-        self.start()
-        return self
-
-    def __exit__(self, stype, svalue, straceback):
-        self.stop()
-
-    def start(self):
-        self._tunnel.start()
-
-    def get_local_bind_port(self):
-        return self._tunnel.local_bind_port
-
-    def stop(self):
-        self._tunnel.stop()
 
 
 def copy_table_schemas_to_postgresdb(mysql_metadata, postgres_engine):
@@ -218,12 +174,74 @@ def copy_table_data_to_postgresdb(
                 value = getattr(record, column)
                 if isinstance(table.columns[column].type, TINYINT):
                     value = bool(value)
-                elif isinstance(value, str):
+                elif isinstance(value, bytes):
                     value = value.decode('latin8')
 
                 data[str(column)] = value
             postgres_session.merge(NewRecord(**data))
         postgres_session.commit()
+
+
+def create_postgres_database(
+        database_name,
+        username,
+        password,
+        host='127.0.0.1',
+        port=POSTGRES_PORT
+):
+    postgres_engine = create_engine(
+        f'postgresql+psycopg2://{username}:{password}@{host}:{port}/postgres'
+    )
+
+    with postgres_engine.connect() as connection:
+        existing_databases = [
+            row[0] for row in connection.execute(
+                'SELECT datname FROM pg_database '
+                'WHERE datistemplate = false;'
+            )
+        ]
+        if database_name in existing_databases:
+            connection.execution_options(
+                isolation_level='AUTOCOMMIT'
+            ).execute(
+                f'DROP DATABASE {database_name};'
+            )
+
+        connection.execution_options(
+            isolation_level='AUTOCOMMIT'
+        ).execute(
+            f'CREATE DATABASE {database_name};'
+        )
+
+
+def create_mysql_database(
+        database_name,
+        username,
+        password,
+        host='127.0.0.1',
+        port=MYSQL_PORT
+):
+    postgres_engine = create_engine(
+        f'mysql+pymysql://{username}:{password}'
+        f'@{host}:{port}'
+    )
+
+    with postgres_engine.connect() as connection:
+        existing_databases = [
+            row[0] for row in connection.execute('SHOW DATABASES;')
+        ]
+        if database_name in existing_databases:
+            connection.execution_options(
+                isolation_level='AUTOCOMMIT'
+            ).execute(
+                f'DROP DATABASE {database_name};'
+            )
+
+        connection.execution_options(
+            isolation_level='AUTOCOMMIT'
+        ).execute(
+            f'CREATE DATABASE {database_name};'
+        )
 
 
 def copy_from_mysqldb_to_postgresdb(
@@ -235,38 +253,32 @@ def copy_from_mysqldb_to_postgresdb(
         postgres_user,
         postgres_pass,
         postgres_host,
-        ssh_username='',
-        ssh_pkey='{}/.ssh/id_rsa'.format(os.getenv('HOME'))
 ):
-    with Tunnel(
-        ssh_host=LOCALHOST,
-        ssh_port=22,
-        ssh_username=ssh_username,
-        remote_host=mysql_host,
-        remote_port=MYSQL_PORT,
-        ssh_pkey=ssh_pkey,
-    ) as tunnel:
-        mysql_engine = create_engine(
-            f'mysql+pymysql://{mysql_user}:{mysql_pass}'
-            f'@{mysql_host}:{tunnel.get_local_bind_port()}/{mysql_db_name}'
-        )
+    print(
+        f'\nCopying data from {mysql_host}:{MYSQL_PORT}/{mysql_db_name} '
+        f'to {postgres_host}:{POSTGRES_PORT}/{postgres_db_name}\n...\n'
+    )
+    mysql_engine = create_engine(
+        f'mysql+pymysql://{mysql_user}:{mysql_pass}'
+        f'@{mysql_host}:{MYSQL_PORT}/{mysql_db_name}'
+    )
 
-        postgres_engine = create_engine(
-            f'postgresql+psycopg2://{postgres_user}:{postgres_pass}'
-            f'@{postgres_host}:{POSTGRES_PORT}/{postgres_db_name}'
-        )
-        mysql_metadata = MetaData()
-        mysql_metadata.reflect(mysql_engine)
+    postgres_engine = create_engine(
+        f'postgresql+psycopg2://{postgres_user}:{postgres_pass}'
+        f'@{postgres_host}:{POSTGRES_PORT}/{postgres_db_name}'
+    )
+    mysql_metadata = MetaData()
+    mysql_metadata.reflect(mysql_engine)
 
-        copy_table_schemas_to_postgresdb(
-            mysql_metadata=mysql_metadata,
-            postgres_engine=postgres_engine
-        )
-        copy_table_data_to_postgresdb(
-            mysql_metadata=mysql_metadata,
-            mysql_engine=mysql_engine,
-            postgres_engine=postgres_engine
-        )
+    copy_table_schemas_to_postgresdb(
+        mysql_metadata=mysql_metadata,
+        postgres_engine=postgres_engine
+    )
+    copy_table_data_to_postgresdb(
+        mysql_metadata=mysql_metadata,
+        mysql_engine=mysql_engine,
+        postgres_engine=postgres_engine
+    )
 
 
 if __name__ == '__main__':
@@ -275,9 +287,8 @@ if __name__ == '__main__':
         mysql_db_name=sys.argv[2],
         mysql_user=sys.argv[3],
         mysql_pass=sys.argv[4],
-        ssh_username=sys.argv[5],
-        postgres_host=sys.argv[6],
-        postgres_db_name=sys.argv[7],
-        postgres_user=sys.argv[8],
-        postgres_pass=sys.argv[9],
+        postgres_host=sys.argv[5],
+        postgres_db_name=sys.argv[6],
+        postgres_user=sys.argv[7],
+        postgres_pass=sys.argv[8],
     )

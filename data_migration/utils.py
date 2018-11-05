@@ -1,4 +1,6 @@
+# -*- coding: utf-8 -*-
 """Shared functionality of migration scripts."""
+import subprocess
 
 
 def execute_bash_command(command_args):
