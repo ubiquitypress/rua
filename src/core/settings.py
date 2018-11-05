@@ -9,6 +9,8 @@ from django.contrib import messages
 SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
 ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS', 'localhost').split(',')
 
+CODE = os.getenv('CODE')
+
 ADMIN_USERNAME = os.getenv('DJANGO_ADMIN_USERNAME', 'tech')
 ADMIN_PASSWORD = os.getenv('DJANGO_ADMIN_PASSWORD')
 ADMIN_EMAIL = os.getenv('DJANGO_ADMIN_EMAIL')
@@ -256,7 +258,7 @@ DATABASES = {
             'DATABASE_ENGINE',
             'django.db.backends.postgresql_psycopg2'
         ),
-        'NAME': os.getenv('DATABASE_NAME', 'rua'),
+        'NAME': os.getenv('DATABASE_NAME', CODE),
         'USER': os.getenv('DATABASE_USER', 'root'),
         'PASSWORD': os.getenv('DATABASE_PASS', ''),
         'HOST': os.getenv('DATABASE_HOST', '127.0.0.1'),
@@ -294,7 +296,7 @@ AWS_S3_CUSTOM_DOMAIN = os.getenv(
     'AWS_S3_CUSTOM_DOMAIN',
     f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com',
 )
-AWS_LOCATION = os.getenv('AWS_LOCATION', '')
+AWS_LOCATION = CODE
 
 if AWS_LOCATION:
     AWS_STATIC_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{AWS_LOCATION}/'
