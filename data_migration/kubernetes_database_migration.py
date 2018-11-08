@@ -136,7 +136,9 @@ def migrate_rua_data_for_press(press_code):
     create_local_mysql_database(press_code)
     load_production_data_to_local_mysql_database(press_code, path_to_sql_dump)
 
-    create_remote_postgres_production_database(press_code)
+    # Call to create_remote_postgres_production_database missed
+    # as remote database creation precedes Django migrations,
+    # which precede this script
     copy_rua_production_mysql_database_to_postgresql(press_code)
 
 
@@ -146,4 +148,5 @@ def migrate_rua_data_for_presses(press_codes):
 
 
 if __name__ == '__main__':
-    migrate_rua_data_for_presses(sys.argv[1:])
+    # migrate_rua_data_for_presses(sys.argv[1:])
+    copy_rua_production_mysql_database_to_postgresql(sys.argv[1])

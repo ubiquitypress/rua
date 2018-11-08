@@ -10,27 +10,34 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
 
-        user = User.objects.create(
-            username=settings.ADMIN_USERNAME,
-            first_name=settings.ADMIN_USERNAME.title(),
-            last_name=settings.ADMIN_USERNAME.title(),
-            email=settings.ADMIN_EMAIL,
-            is_staff=True,
-            is_active=True,
-            is_superuser=True,
-        )
-        user.set_password(settings.ADMIN_PASSWORD)
-        user.save()
+        if not User.objects.filter(username=settings.ADMIN_USERNAME):
+            user = User.objects.create(
+                username=settings.ADMIN_USERNAME,
+                first_name=settings.ADMIN_USERNAME.title(),
+                last_name=settings.ADMIN_USERNAME.title(),
+                email=settings.ADMIN_EMAIL,
+                is_staff=True,
+                is_active=True,
+                is_superuser=True,
+            )
+            user.set_password(settings.ADMIN_PASSWORD)
+            user.save()
 
-        profile = models.Profile.objects.create(
-            user=user,
-            salutation='Mx',
-            country='GB',
-            institution='The Cloud',
-            department='Tech',
-        )
-        for role in models.Role.objects.all():
-            profile.roles.add(role)
-        profile.save()
+            profile = models.Profile.objects.create(
+                user=user,
+                salutation='Mx',
+                country='GB',
+                institution='The Cloud',
+                department='Tech',
+            )
+            for role in models.Role.objects.all():
+                profile.roles.add(role)
+            profile.save()
 
-        print(f'Admin user \'{user.username}\' created.')
+            print(f'Default admin user \'{user.username}\' created.')
+
+        else:
+            print(
+                'Default admin user not created. '
+                f'User \'{settings.ADMIN_USERNAME}\' already exists.'
+            )

@@ -37,10 +37,51 @@ MYSQL_PORT = int(os.getenv('MYSQL_PORT', '3306'))
 POSTGRES_PORT = int(os.getenv('POSTGRES_PORT', '5432'))
 LOCALHOST = '127.0.0.1'
 
+
+# Tables not to be copied -- Django automatically populates these on migration
+SKIP_DJANGO_TABLES = [
+    'auth_permission',
+    'django_content_type',
+    'django_migrations',
+]
+
+# Tables to be copied fist, due to foreign key constraints
+FIRST_DJANGO_TABLES = [
+    'core_license',
+    'core_stage',
+    'review_form',
+    'auth_user',
+    'core_file',
+    'core_contract',
+    'core_series',
+    'core_proposalform',
+    'submission_proposal',
+    'core_editor',
+    'core_keyword',
+    'core_language',
+    'core_book',
+    'core_reviewround',
+    'review_formresult',
+    'core_reviewassignment',
+    'core_subject',
+    'core_chapter',
+    'core_chapterformat',
+    'core_physicalformat',
+    'core_role',
+    'core_profile',
+    'core_profile_roles',
+    'core_proposalformelement',
+    'core_proposalformelementsrelationship',
+    'core_settinggroup',
+    'review_formelement',
+    'review_formelementsrelationship',
+    'submission_proposalreview',
+    'core_editorialreviewassignment',
+]
+
 logger = logging.getLogger('sqlalchemy.pool.QueuePool')
 ch = logging.StreamHandler()
 logger.addHandler(ch)
-
 
 
 def copy_table_schemas_to_postgresdb(mysql_metadata, postgres_engine):
@@ -156,30 +197,59 @@ def copy_table_data_to_postgresdb(
     MySQLSession = sessionmaker(bind=mysql_engine)
     mysql_session = MySQLSession()
 
-    for name, klass in mysql_metadata.tables.items():
-        print('copy', klass.name)
-        dest_table = Table(
-            klass.name,
-            MetaData(bind=postgres_engine),
-            autoload=True
+    for table_name in FIRST_DJANGO_TABLES:
+        copy_table_rows(
+            mysql_engine=mysql_engine,
+            mysql_session=mysql_session,
+            postgres_engine=postgres_engine,
+            postgres_session=postgres_session,
+            table_name=table_name
         )
-        dest_columns = dest_table.columns.keys()
 
-        table = Table(klass.name, MetaData(bind=mysql_engine), autoload=True)
-        NewRecord = quick_mapper(table)
+    for klass in mysql_metadata.tables.values():
+        if (
+                klass.name not in SKIP_DJANGO_TABLES and
+                klass.name not in FIRST_DJANGO_TABLES
+        ):
+            copy_table_rows(
+                mysql_engine=mysql_engine,
+                mysql_session=mysql_session,
+                postgres_engine=postgres_engine,
+                postgres_session=postgres_session,
+                table_name=klass.name
+            )
 
-        for record in mysql_session.query(table).all():
-            data = {}
-            for column in dest_columns:
-                value = getattr(record, column)
-                if isinstance(table.columns[column].type, TINYINT):
-                    value = bool(value)
-                elif isinstance(value, bytes):
-                    value = value.decode('latin8')
 
-                data[str(column)] = value
-            postgres_session.merge(NewRecord(**data))
-        postgres_session.commit()
+def copy_table_rows(
+        mysql_engine,
+        mysql_session,
+        postgres_engine,
+        postgres_session,
+        table_name,
+):
+    print('copy', table_name)
+    dest_table = Table(
+        table_name,
+        MetaData(bind=postgres_engine),
+        autoload=True
+    )
+    dest_columns = dest_table.columns.keys()
+
+    table = Table(table_name, MetaData(bind=mysql_engine), autoload=True)
+    NewRecord = quick_mapper(table)
+
+    for record in mysql_session.query(table).all():
+        data = {}
+        for column in dest_columns:
+            value = getattr(record, column)
+            if isinstance(table.columns[column].type, TINYINT):
+                value = bool(value)
+            elif isinstance(value, bytes):
+                value = value.decode('latin8')
+
+            data[str(column)] = value
+        postgres_session.merge(NewRecord(**data))
+    postgres_session.commit()
 
 
 def create_postgres_database(
@@ -270,10 +340,9 @@ def copy_from_mysqldb_to_postgresdb(
     mysql_metadata = MetaData()
     mysql_metadata.reflect(mysql_engine)
 
-    copy_table_schemas_to_postgresdb(
-        mysql_metadata=mysql_metadata,
-        postgres_engine=postgres_engine
-    )
+    # Call to copy_table_schemas_to_postgresdb missed as table creation
+    # is handled by Django migrations
+
     copy_table_data_to_postgresdb(
         mysql_metadata=mysql_metadata,
         mysql_engine=mysql_engine,
