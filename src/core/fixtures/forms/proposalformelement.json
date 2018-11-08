@@ -1,0 +1,362 @@
+[
+  {
+    "fields": {
+      "field_type": "email",
+      "required": true,
+      "name": "Email",
+      "choices": ""
+    },
+    "model": "core.proposalformelement",
+    "pk": 1
+  },
+  {
+    "fields": {
+      "field_type": "text",
+      "required": false,
+      "name": "ORCID ID",
+      "choices": ""
+    },
+    "model": "core.proposalformelement",
+    "pk": 2
+  },
+  {
+    "fields": {
+      "field_type": "text",
+      "required": true,
+      "name": "Institution",
+      "choices": ""
+    },
+    "model": "core.proposalformelement",
+    "pk": 3
+  },
+  {
+    "fields": {
+      "field_type": "text",
+      "required": false,
+      "name": "Series",
+      "choices": ""
+    },
+    "model": "core.proposalformelement",
+    "pk": 4
+  },
+  {
+    "fields": {
+      "field_type": "textarea",
+      "required": true,
+      "name": "Brief description",
+      "choices": ""
+    },
+    "model": "core.proposalformelement",
+    "pk": 5
+  },
+  {
+    "fields": {
+      "field_type": "textarea",
+      "required": true,
+      "name": "Outline",
+      "choices": ""
+    },
+    "model": "core.proposalformelement",
+    "pk": 6
+  },
+  {
+    "fields": {
+      "field_type": "textarea",
+      "required": true,
+      "name": "Author/editor details",
+      "choices": ""
+    },
+    "model": "core.proposalformelement",
+    "pk": 7
+  },
+  {
+    "fields": {
+      "field_type": "textarea",
+      "required": true,
+      "name": "Intended audience",
+      "choices": ""
+    },
+    "model": "core.proposalformelement",
+    "pk": 8
+  },
+  {
+    "fields": {
+      "field_type": "textarea",
+      "required": false,
+      "name": "Similar books",
+      "choices": ""
+    },
+    "model": "core.proposalformelement",
+    "pk": 9
+  },
+  {
+    "fields": {
+      "field_type": "text",
+      "required": true,
+      "name": "Illustrations and tables",
+      "choices": ""
+    },
+    "model": "core.proposalformelement",
+    "pk": 10
+  },
+  {
+    "fields": {
+      "field_type": "text",
+      "required": true,
+      "name": "Estimated word count",
+      "choices": ""
+    },
+    "model": "core.proposalformelement",
+    "pk": 11
+  },
+  {
+    "fields": {
+      "field_type": "select",
+      "required": true,
+      "name": "Copyediting required?",
+      "choices": "Yes|No"
+    },
+    "model": "core.proposalformelement",
+    "pk": 12
+  },
+  {
+    "fields": {
+      "field_type": "select",
+      "required": true,
+      "name": "Index creation required?",
+      "choices": "Yes|No|Maybe"
+    },
+    "model": "core.proposalformelement",
+    "pk": 13
+  },
+  {
+    "fields": {
+      "field_type": "date",
+      "required": true,
+      "name": "Estimated manuscript delivery date",
+      "choices": ""
+    },
+    "model": "core.proposalformelement",
+    "pk": 14
+  },
+  {
+    "fields": {
+      "field_type": "textarea",
+      "required": false,
+      "name": "Additional Information",
+      "choices": ""
+    },
+    "model": "core.proposalformelement",
+    "pk": 15
+  },
+  {
+    "fields": {
+      "field_type": "check",
+      "required": true,
+      "name": "cc-check",
+      "choices": ""
+    },
+    "model": "core.proposalformelement",
+    "pk": 16
+  },
+  {
+    "fields": {
+      "field_type": "check",
+      "required": true,
+      "name": "Peer-review",
+      "choices": ""
+    },
+    "model": "core.proposalformelement",
+    "pk": 17
+  },
+  {
+    "fields": {
+      "field_type": "check",
+      "required": true,
+      "name": "Book Processing Charge (BPC)",
+      "choices": ""
+    },
+    "model": "core.proposalformelement",
+    "pk": 18
+  },
+  {
+    "fields": {
+      "field_type": "email",
+      "required": true,
+      "name": "Email",
+      "choices": ""
+    },
+    "model": "core.proposalformelement",
+    "pk": 19
+  },
+  {
+    "fields": {
+      "field_type": "text",
+      "required": false,
+      "name": "ORCID ID",
+      "choices": ""
+    },
+    "model": "core.proposalformelement",
+    "pk": 20
+  },
+  {
+    "fields": {
+      "field_type": "text",
+      "required": true,
+      "name": "Institution",
+      "choices": ""
+    },
+    "model": "core.proposalformelement",
+    "pk": 21
+  },
+  {
+    "fields": {
+      "field_type": "text",
+      "required": false,
+      "name": "Series",
+      "choices": ""
+    },
+    "model": "core.proposalformelement",
+    "pk": 22
+  },
+  {
+    "fields": {
+      "field_type": "textarea",
+      "required": true,
+      "name": "Brief description",
+      "choices": ""
+    },
+    "model": "core.proposalformelement",
+    "pk": 23
+  },
+  {
+    "fields": {
+      "field_type": "textarea",
+      "required": true,
+      "name": "Outline",
+      "choices": ""
+    },
+    "model": "core.proposalformelement",
+    "pk": 24
+  },
+  {
+    "fields": {
+      "field_type": "textarea",
+      "required": true,
+      "name": "Author/editor details",
+      "choices": ""
+    },
+    "model": "core.proposalformelement",
+    "pk": 25
+  },
+  {
+    "fields": {
+      "field_type": "textarea",
+      "required": true,
+      "name": "Intended audience",
+      "choices": ""
+    },
+    "model": "core.proposalformelement",
+    "pk": 26
+  },
+  {
+    "fields": {
+      "field_type": "textarea",
+      "required": false,
+      "name": "Similar books",
+      "choices": ""
+    },
+    "model": "core.proposalformelement",
+    "pk": 27
+  },
+  {
+    "fields": {
+      "field_type": "text",
+      "required": true,
+      "name": "Illustrations and tables",
+      "choices": ""
+    },
+    "model": "core.proposalformelement",
+    "pk": 28
+  },
+  {
+    "fields": {
+      "field_type": "text",
+      "required": true,
+      "name": "Estimated word count",
+      "choices": ""
+    },
+    "model": "core.proposalformelement",
+    "pk": 29
+  },
+  {
+    "fields": {
+      "field_type": "select",
+      "required": true,
+      "name": "Copyediting required?",
+      "choices": "Yes|No"
+    },
+    "model": "core.proposalformelement",
+    "pk": 30
+  },
+  {
+    "fields": {
+      "field_type": "select",
+      "required": true,
+      "name": "Index creation required?",
+      "choices": "Yes|No|Maybe"
+    },
+    "model": "core.proposalformelement",
+    "pk": 31
+  },
+  {
+    "fields": {
+      "field_type": "date",
+      "required": true,
+      "name": "Estimated manuscript delivery date",
+      "choices": ""
+    },
+    "model": "core.proposalformelement",
+    "pk": 32
+  },
+  {
+    "fields": {
+      "field_type": "textarea",
+      "required": false,
+      "name": "Additional Information",
+      "choices": ""
+    },
+    "model": "core.proposalformelement",
+    "pk": 33
+  },
+  {
+    "fields": {
+      "field_type": "check",
+      "required": true,
+      "name": "cc-check",
+      "choices": ""
+    },
+    "model": "core.proposalformelement",
+    "pk": 34
+  },
+  {
+    "fields": {
+      "field_type": "check",
+      "required": true,
+      "name": "Peer-review",
+      "choices": ""
+    },
+    "model": "core.proposalformelement",
+    "pk": 35
+  },
+  {
+    "fields": {
+      "field_type": "check",
+      "required": true,
+      "name": "Book Processing Charge (BPC)",
+      "choices": ""
+    },
+    "model": "core.proposalformelement",
+    "pk": 36
+  }
+]

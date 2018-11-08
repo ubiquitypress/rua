@@ -1,0 +1,62 @@
+[
+  {
+    "fields": {
+      "text": "The submission has not been previously published, nor is it before another publisher for consideration (or an explanation has been provided in Comments to the Editor).",
+      "required": true,
+      "slug": "previous-publication",
+      "sequence": 1
+    },
+    "model": "submission.submissionchecklistitem",
+    "pk": 1
+  },
+  {
+    "fields": {
+      "text": "Any third-party-owned materials used have been identified with appropriate credit lines, and permission obtained from the copyright holder for all formats of the book..",
+      "required": true,
+      "slug": "permissions",
+      "sequence": 2
+    },
+    "model": "submission.submissionchecklistitem",
+    "pk": 2
+  },
+  {
+    "fields": {
+      "text": "All authors have given permission to be listed on the submitted book manuscript and satisfy the authorship guidelines.",
+      "required": true,
+      "slug": "authorship",
+      "sequence": 3
+    },
+    "model": "submission.submissionchecklistitem",
+    "pk": 3
+  },
+  {
+    "fields": {
+      "text": "Tables and figures are all cited in the text. Tables are included within the text document, whilst figure files are uploaded as separate files.",
+      "required": true,
+      "slug": "table-and-figures",
+      "sequence": 4
+    },
+    "model": "submission.submissionchecklistitem",
+    "pk": 4
+  },
+  {
+    "fields": {
+      "text": "Figures/images have a resolution of at least 300dpi. Each file is no more than 20MB per file. The files are in one of the following formats: JPG, TIFF, GIF, PNG, EPS, PDF (to maximise quality, the original source file is preferred).",
+      "required": true,
+      "slug": "image-quality",
+      "sequence": 5
+    },
+    "model": "submission.submissionchecklistitem",
+    "pk": 5
+  },
+  {
+    "fields": {
+      "text": "The text adheres to the stylistic and bibliographic requirements outlined in the Author Guidelines.",
+      "required": true,
+      "slug": "formatting",
+      "sequence": 6
+    },
+    "model": "submission.submissionchecklistitem",
+    "pk": 6
+  }
+]

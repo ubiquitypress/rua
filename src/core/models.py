@@ -2050,9 +2050,6 @@ class License(models.Model):
     )
 
     def __str__(self):
-        return u'%s' % self.short_name
-
-    def __str__(self):
         return self.short_name
 
     def __repr__(self):

@@ -1,0 +1,238 @@
+[
+  {
+    "fields": {
+      "name": "Proposal review form",
+      "intro_text": "<p>Many thanks for agreeing to review this book proposal, we are very grateful. Please complete each of the sections detailed in the review form. If you have any questions, then please contact us.</p>",
+      "in_edit": false,
+      "form_fields": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "completion_text": "<p>Many thanks for completing the review of this book proposal, your efforts are greatly appreciated. Should you have any questions, please get in touch.</p>",
+      "active": true,
+      "ref": "proposal-review-1"
+    },
+    "model": "review.form",
+    "pk": 1
+  },
+  {
+    "fields": {
+      "name": "Peer Review Form",
+      "intro_text": "<p>Many thanks for agreeing to review this proposed book title, we are very grateful. Please complete each of the sections in the review form in as much detail as possible. You are also able to upload an annotated version of the manuscript, should you wish to have comments directly associated with the text. For edited books, please provide a review for each chapter. If you have any questions, then please contact us.</p>",
+      "in_edit": false,
+      "form_fields": [
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13
+      ],
+      "completion_text": "<p>Many thanks for completing the review of this book proposal, your efforts are greatly appreciated. Should you have any questions, please get in touch.</p>",
+      "active": true,
+      "ref": "peer-review-form-1"
+    },
+    "model": "review.form",
+    "pk": 2
+  },
+  {
+    "fields": {
+      "name": "Additional Information",
+      "intro_text": "Thank you for providing your review feedback. There is some more information that we would like your opinion on. This has been detailed in our email to you. Please use the text box available in the review page to provide this information. Many thanks.",
+      "in_edit": false,
+      "form_fields": [
+        14
+      ],
+      "completion_text": "Many thanks for completing this task, it is much appreciated. Should the editor require further information then they will be in touch. If you have questions regarding this book then please feel free to get in touch with the editor.",
+      "active": true,
+      "ref": "additional-info"
+    },
+    "model": "review.form",
+    "pk": 3
+  },
+  {
+    "fields": {
+      "name": "Additional Information",
+      "intro_text": "Thank you for providing your review feedback. There is some more information that we would like your opinion on. This has been detailed in our email to you. Please use the text box available in the review page to provide this information. Many thanks.",
+      "in_edit": true,
+      "form_fields": [
+        43
+      ],
+      "completion_text": "Many thanks for completing this task, it is much appreciated. Should the editor require further information then they will be in touch. If you have questions regarding this book then please feel free to get in touch with the editor.",
+      "active": false,
+      "ref": "additional-info-4"
+    },
+    "model": "review.form",
+    "pk": 4
+  },
+  {
+    "fields": {
+      "help_text": "<p>Please give an overview of the book proposal. Please give your opinion on<br/>1) whether the objectives, themes and arguments of the proposed book would be a welcome addition to the subject;<br/>2) if there are obvious additions to the content of the book that would enhance the use and understanding of the subject area;<br/>3) if the structure of the book has been laid out in a logical manner;<br/>4) if the target audience would benefit from such a publication;<br/>5) if the author(s) are qualified/informed enough to publish content in this subject.</p>",
+      "width": "col-md-12",
+      "order": 1,
+      "form": 1,
+      "element": 1
+    },
+    "model": "review.formelementsrelationship",
+    "pk": 1
+  },
+  {
+    "fields": {
+      "help_text": "If you have specific feedback suggesting ways in which the proposal could be edited to enhance the quality of the book, please add comments here.",
+      "width": "col-md-12",
+      "order": 2,
+      "form": 1,
+      "element": 2
+    },
+    "model": "review.formelementsrelationship",
+    "pk": 2
+  },
+  {
+    "fields": {
+      "help_text": "<p>Do you believe that ethical approval from the author's institution is required for this research to be undertaken?</p>",
+      "width": "col-md-12",
+      "order": 3,
+      "form": 1,
+      "element": 3
+    },
+    "model": "review.formelementsrelationship",
+    "pk": 3
+  },
+  {
+    "fields": {
+      "help_text": "If the book is accepted for full submission and peer-review, would you be interested in reviewing the book? (note: a positive indication here does not commit you to any review task in the future)",
+      "width": "col-md-12",
+      "order": 4,
+      "form": 1,
+      "element": 4
+    },
+    "model": "review.formelementsrelationship",
+    "pk": 4
+  },
+  {
+    "fields": {
+      "help_text": "<p>If possible, please provide names/details of colleagues that you believe would be suitable as peer reviewers for this subject area, should the book go to full submission review.</p>",
+      "width": "col-md-12",
+      "order": 5,
+      "form": 1,
+      "element": 5
+    },
+    "model": "review.formelementsrelationship",
+    "pk": 5
+  },
+  {
+    "fields": {
+      "help_text": "",
+      "width": "col-md-12",
+      "order": 1,
+      "form": 2,
+      "element": 6
+    },
+    "model": "review.formelementsrelationship",
+    "pk": 6
+  },
+  {
+    "fields": {
+      "help_text": "",
+      "width": "col-md-12",
+      "order": 2,
+      "form": 2,
+      "element": 7
+    },
+    "model": "review.formelementsrelationship",
+    "pk": 7
+  },
+  {
+    "fields": {
+      "help_text": "",
+      "width": "col-md-12",
+      "order": 3,
+      "form": 2,
+      "element": 8
+    },
+    "model": "review.formelementsrelationship",
+    "pk": 8
+  },
+  {
+    "fields": {
+      "help_text": "",
+      "width": "col-md-12",
+      "order": 4,
+      "form": 2,
+      "element": 9
+    },
+    "model": "review.formelementsrelationship",
+    "pk": 9
+  },
+  {
+    "fields": {
+      "help_text": "",
+      "width": "col-md-12",
+      "order": 5,
+      "form": 2,
+      "element": 10
+    },
+    "model": "review.formelementsrelationship",
+    "pk": 10
+  },
+  {
+    "fields": {
+      "help_text": "",
+      "width": "col-md-12",
+      "order": 6,
+      "form": 2,
+      "element": 11
+    },
+    "model": "review.formelementsrelationship",
+    "pk": 11
+  },
+  {
+    "fields": {
+      "help_text": "",
+      "width": "col-md-12",
+      "order": 7,
+      "form": 2,
+      "element": 12
+    },
+    "model": "review.formelementsrelationship",
+    "pk": 12
+  },
+  {
+    "fields": {
+      "help_text": "The publisher offers the option for reviewers to be publicly acknowledged for their contribution. Please select whether you would like to have your name listed as a reviewer for this book.",
+      "width": "col-md-4",
+      "order": 8,
+      "form": 2,
+      "element": 13
+    },
+    "model": "review.formelementsrelationship",
+    "pk": 13
+  },
+  {
+    "fields": {
+      "help_text": "Please comment on the questions asked by the press Editor as fully as possible.",
+      "width": "col-md-12",
+      "order": 1,
+      "form": 3,
+      "element": 14
+    },
+    "model": "review.formelementsrelationship",
+    "pk": 14
+  },
+  {
+    "fields": {
+      "help_text": "Please comment on the questions asked by the press Editor as fully as possible.",
+      "width": "col-md-12",
+      "order": 1,
+      "form": 4,
+      "element": 43
+    },
+    "model": "review.formelementsrelationship",
+    "pk": 43
+  }
+]

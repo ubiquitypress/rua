@@ -5,7 +5,6 @@ from django.urls import (
 )
 import django.views.static
 from django.contrib import admin
-from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.views.generic import TemplateView
 
 
@@ -662,9 +661,6 @@ urlpatterns = [
     ),
 ]
 
-# For cases when Gunicorn/uwsgi is used to serve static files
-if settings.INCLUDE_STATIC_FILE_URLCONFS:
-    urlpatterns += staticfiles_urlpatterns()
 
 handler403 = permission_denied
 

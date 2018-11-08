@@ -1,0 +1,432 @@
+[
+  {
+    "fields": {
+      "field_type": "textarea",
+      "required": true,
+      "name": "General feedback to the publisher",
+      "choices": ""
+    },
+    "model": "review.formelement",
+    "pk": 1
+  },
+  {
+    "fields": {
+      "field_type": "textarea",
+      "required": false,
+      "name": "Feedback to the author(s)",
+      "choices": ""
+    },
+    "model": "review.formelement",
+    "pk": 2
+  },
+  {
+    "fields": {
+      "field_type": "text",
+      "required": true,
+      "name": "Ethical approval",
+      "choices": ""
+    },
+    "model": "review.formelement",
+    "pk": 3
+  },
+  {
+    "fields": {
+      "field_type": "select",
+      "required": true,
+      "name": "Full peer-review?",
+      "choices": "Yes|No|Maybe"
+    },
+    "model": "review.formelement",
+    "pk": 4
+  },
+  {
+    "fields": {
+      "field_type": "textarea",
+      "required": false,
+      "name": "Suggested Reviewers",
+      "choices": ""
+    },
+    "model": "review.formelement",
+    "pk": 5
+  },
+  {
+    "fields": {
+      "field_type": "textarea",
+      "required": false,
+      "name": "Are conclusions presented in an appropriate fashion and supported by the data?",
+      "choices": ""
+    },
+    "model": "review.formelement",
+    "pk": 6
+  },
+  {
+    "fields": {
+      "field_type": "textarea",
+      "required": false,
+      "name": "If present, are experiments, statistics, and other analyses performed to a high standard and are described in sufficient detail?",
+      "choices": ""
+    },
+    "model": "review.formelement",
+    "pk": 7
+  },
+  {
+    "fields": {
+      "field_type": "textarea",
+      "required": false,
+      "name": "Are chapters presented in an intelligible fashion and written to a high standard of English? Please indicate if further copyediting is required and if specific chapters require more attention than others",
+      "choices": ""
+    },
+    "model": "review.formelement",
+    "pk": 8
+  },
+  {
+    "fields": {
+      "field_type": "textarea",
+      "required": false,
+      "name": "Do you believe that any chapters have significant errors or weaknesses that should prevent publication? If yes, please state what.",
+      "choices": ""
+    },
+    "model": "review.formelement",
+    "pk": 9
+  },
+  {
+    "fields": {
+      "field_type": "textarea",
+      "required": false,
+      "name": "Does the book read well as a whole? Is the structure of the book easy to follow? Do you suggest editing the structure of the book?",
+      "choices": ""
+    },
+    "model": "review.formelement",
+    "pk": 10
+  },
+  {
+    "fields": {
+      "field_type": "textarea",
+      "required": false,
+      "name": "Do the Forward and Epilogue/Introduction and Conclusion introduce and summarise the content of the book and subject matter adequately? If not, please detail what information is missing, what contradictions are present, or where edits should be made to ensure that the introduction and conclusions represent the book content accurately and completely?",
+      "choices": ""
+    },
+    "model": "review.formelement",
+    "pk": 11
+  },
+  {
+    "fields": {
+      "field_type": "textarea",
+      "required": false,
+      "name": "General comments: Please provide a summary of your opinion on this submission and any further detail that is not provided above that you feel would be useful to the editors and authors.",
+      "choices": ""
+    },
+    "model": "review.formelement",
+    "pk": 12
+  },
+  {
+    "fields": {
+      "field_type": "select",
+      "required": true,
+      "name": "Public Acknowledgement",
+      "choices": "Yes|No"
+    },
+    "model": "review.formelement",
+    "pk": 13
+  },
+  {
+    "fields": {
+      "field_type": "textarea",
+      "required": false,
+      "name": "Additional information",
+      "choices": ""
+    },
+    "model": "review.formelement",
+    "pk": 14
+  },
+  {
+    "fields": {
+      "field_type": "textarea",
+      "required": true,
+      "name": "General feedback to the publisher",
+      "choices": ""
+    },
+    "model": "review.formelement",
+    "pk": 15
+  },
+  {
+    "fields": {
+      "field_type": "textarea",
+      "required": false,
+      "name": "Feedback to the author(s)",
+      "choices": ""
+    },
+    "model": "review.formelement",
+    "pk": 16
+  },
+  {
+    "fields": {
+      "field_type": "text",
+      "required": true,
+      "name": "Ethical approval",
+      "choices": ""
+    },
+    "model": "review.formelement",
+    "pk": 17
+  },
+  {
+    "fields": {
+      "field_type": "select",
+      "required": true,
+      "name": "Full peer-review?",
+      "choices": "Yes|No|Maybe"
+    },
+    "model": "review.formelement",
+    "pk": 18
+  },
+  {
+    "fields": {
+      "field_type": "textarea",
+      "required": false,
+      "name": "Suggested Reviewers",
+      "choices": ""
+    },
+    "model": "review.formelement",
+    "pk": 19
+  },
+  {
+    "fields": {
+      "field_type": "textarea",
+      "required": true,
+      "name": "General feedback to the publisher",
+      "choices": ""
+    },
+    "model": "review.formelement",
+    "pk": 20
+  },
+  {
+    "fields": {
+      "field_type": "textarea",
+      "required": false,
+      "name": "Feedback to the author(s)",
+      "choices": ""
+    },
+    "model": "review.formelement",
+    "pk": 21
+  },
+  {
+    "fields": {
+      "field_type": "text",
+      "required": true,
+      "name": "Ethical approval",
+      "choices": ""
+    },
+    "model": "review.formelement",
+    "pk": 22
+  },
+  {
+    "fields": {
+      "field_type": "select",
+      "required": true,
+      "name": "Full peer-review?",
+      "choices": "Yes|No|Maybe"
+    },
+    "model": "review.formelement",
+    "pk": 23
+  },
+  {
+    "fields": {
+      "field_type": "textarea",
+      "required": false,
+      "name": "Suggested Reviewers",
+      "choices": ""
+    },
+    "model": "review.formelement",
+    "pk": 24
+  },
+  {
+    "fields": {
+      "field_type": "textarea",
+      "required": true,
+      "name": "General feedback to the publisher",
+      "choices": ""
+    },
+    "model": "review.formelement",
+    "pk": 25
+  },
+  {
+    "fields": {
+      "field_type": "textarea",
+      "required": false,
+      "name": "Feedback to the author(s)",
+      "choices": ""
+    },
+    "model": "review.formelement",
+    "pk": 26
+  },
+  {
+    "fields": {
+      "field_type": "text",
+      "required": true,
+      "name": "Ethical approval",
+      "choices": ""
+    },
+    "model": "review.formelement",
+    "pk": 27
+  },
+  {
+    "fields": {
+      "field_type": "select",
+      "required": true,
+      "name": "Full peer-review?",
+      "choices": "Yes|No|Maybe"
+    },
+    "model": "review.formelement",
+    "pk": 28
+  },
+  {
+    "fields": {
+      "field_type": "textarea",
+      "required": false,
+      "name": "Suggested Reviewers",
+      "choices": ""
+    },
+    "model": "review.formelement",
+    "pk": 29
+  },
+  {
+    "fields": {
+      "field_type": "textarea",
+      "required": true,
+      "name": "General feedback to the publisher",
+      "choices": ""
+    },
+    "model": "review.formelement",
+    "pk": 30
+  },
+  {
+    "fields": {
+      "field_type": "textarea",
+      "required": false,
+      "name": "Feedback to the author(s)",
+      "choices": ""
+    },
+    "model": "review.formelement",
+    "pk": 31
+  },
+  {
+    "fields": {
+      "field_type": "text",
+      "required": true,
+      "name": "Ethical approval",
+      "choices": ""
+    },
+    "model": "review.formelement",
+    "pk": 32
+  },
+  {
+    "fields": {
+      "field_type": "select",
+      "required": true,
+      "name": "Full peer-review?",
+      "choices": "Yes|No|Maybe"
+    },
+    "model": "review.formelement",
+    "pk": 33
+  },
+  {
+    "fields": {
+      "field_type": "textarea",
+      "required": false,
+      "name": "Suggested Reviewers",
+      "choices": ""
+    },
+    "model": "review.formelement",
+    "pk": 34
+  },
+  {
+    "fields": {
+      "field_type": "textarea",
+      "required": false,
+      "name": "Are conclusions presented in an appropriate fashion and supported by the data?",
+      "choices": ""
+    },
+    "model": "review.formelement",
+    "pk": 35
+  },
+  {
+    "fields": {
+      "field_type": "textarea",
+      "required": false,
+      "name": "If present, are experiments, statistics, and other analyses performed to a high standard and are described in sufficient detail?",
+      "choices": ""
+    },
+    "model": "review.formelement",
+    "pk": 36
+  },
+  {
+    "fields": {
+      "field_type": "textarea",
+      "required": false,
+      "name": "Are chapters presented in an intelligible fashion and written to a high standard of English? Please indicate if further copyediting is required and if specific chapters require more attention than others",
+      "choices": ""
+    },
+    "model": "review.formelement",
+    "pk": 37
+  },
+  {
+    "fields": {
+      "field_type": "textarea",
+      "required": false,
+      "name": "Do you believe that any chapters have significant errors or weaknesses that should prevent publication? If yes, please state what.",
+      "choices": ""
+    },
+    "model": "review.formelement",
+    "pk": 38
+  },
+  {
+    "fields": {
+      "field_type": "textarea",
+      "required": false,
+      "name": "Does the book read well as a whole? Is the structure of the book easy to follow? Do you suggest editing the structure of the book?",
+      "choices": ""
+    },
+    "model": "review.formelement",
+    "pk": 39
+  },
+  {
+    "fields": {
+      "field_type": "textarea",
+      "required": false,
+      "name": "Do the Forward and Epilogue/Introduction and Conclusion introduce and summarise the content of the book and subject matter adequately? If not, please detail what information is missing, what contradictions are present, or where edits should be made to ensure that the introduction and conclusions represent the book content accurately and completely?",
+      "choices": ""
+    },
+    "model": "review.formelement",
+    "pk": 40
+  },
+  {
+    "fields": {
+      "field_type": "textarea",
+      "required": false,
+      "name": "General comments: Please provide a summary of your opinion on this submission and any further detail that is not provided above that you feel would be useful to the editors and authors.",
+      "choices": ""
+    },
+    "model": "review.formelement",
+    "pk": 41
+  },
+  {
+    "fields": {
+      "field_type": "select",
+      "required": true,
+      "name": "Public Acknowledgement",
+      "choices": "Yes|No"
+    },
+    "model": "review.formelement",
+    "pk": 42
+  },
+  {
+    "fields": {
+      "field_type": "textarea",
+      "required": false,
+      "name": "Additional information",
+      "choices": ""
+    },
+    "model": "review.formelement",
+    "pk": 43
+  }
+]

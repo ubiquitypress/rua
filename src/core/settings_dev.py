@@ -13,12 +13,9 @@ ALLOWED_HOSTS = [
 
 SESSION_COOKIE_NAME = 'rua_cookie'
 
-INSTALLED_APPS += (
-    'debug_toolbar',
-)
+MIDDLEWARE += 'debug_toolbar.middleware.DebugToolbarMiddleware',
+INSTALLED_APPS += 'debug_toolbar',
 
-# Allow static files to be served by uwsgi/gunicorn?
-INCLUDE_STATIC_FILE_URLCONFS = True
 
 # ## DATABASE ##
 

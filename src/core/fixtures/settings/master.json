@@ -8,7 +8,7 @@
             "description": ""
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 1
     },
     {
         "fields": {
@@ -19,7 +19,7 @@
             "description": "Email subject. Do not remove '%s' or other string format related parts. "
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 2
     },
     {
         "fields": {
@@ -30,7 +30,7 @@
             "description": "Email subject. Do not remove '%s' or other string format related parts. "
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 3
     },
     {
         "fields": {
@@ -41,7 +41,7 @@
             "description": "Email subject. Do not remove '%s' or other string format related parts. "
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 4
     },
     {
         "fields": {
@@ -52,7 +52,7 @@
             "description": "Email subject. Do not remove '%s' or other string format related parts. "
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 5
     },
     {
         "fields": {
@@ -63,7 +63,7 @@
             "description": "Email subject. Do not remove '%s' or other string format related parts. "
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 6
     },
     {
         "fields": {
@@ -74,7 +74,7 @@
             "description": "Email subject. Do not remove '%s' or other string format related parts. "
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 7
     },
     {
         "fields": {
@@ -85,7 +85,7 @@
             "description": "Email subject. Do not remove '%s' or other string format related parts. "
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 8
     },
     {
         "fields": {
@@ -96,7 +96,7 @@
             "description": "Email subject. Do not remove '%s' or other string format related parts. "
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 9
     },
     {
         "fields": {
@@ -107,7 +107,7 @@
             "description": "Email subject. Do not remove '%s' or other string format related parts. "
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 10
     },
     {
         "fields": {
@@ -118,7 +118,7 @@
             "description": "Email subject. Do not remove '%s' or other string format related parts. "
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 11
     },
     {
         "fields": {
@@ -129,7 +129,7 @@
             "description": "Email subject. Do not remove '%s' or other string format related parts. "
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 12
     },
     {
         "fields": {
@@ -140,7 +140,7 @@
             "description": "Email subject. Do not remove '%s' or other string format related parts. "
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 13
     },
     {
         "fields": {
@@ -151,7 +151,7 @@
             "description": "Email subject. Do not remove '%s' or other string format related parts. "
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 14
     },
     {
         "fields": {
@@ -162,7 +162,7 @@
             "description": "Email subject. Do not remove '%s' or other string format related parts. "
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 15
     },
     {
         "fields": {
@@ -173,7 +173,7 @@
             "description": "Email subject. Do not remove '%s' or other string format related parts. "
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 16
     },
     {
         "fields": {
@@ -184,7 +184,7 @@
             "description": "Email subject. Do not remove '%s' or other string format related parts. "
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 17
     },
     {
         "fields": {
@@ -195,7 +195,7 @@
             "description": "Email subject. Do not remove '%s' or other string format related parts. "
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 18
     },
     {
         "fields": {
@@ -206,7 +206,7 @@
             "description": "Email subject. Do not remove '%s' or other string format related parts. "
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 19
     },
     {
         "fields": {
@@ -217,7 +217,7 @@
             "description": "Email subject. Do not remove '%s' or other string format related parts. "
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 20
     },
     {
         "fields": {
@@ -228,7 +228,7 @@
             "description": "Email subject. Do not remove '%s' or other string format related parts. "
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 21
     },
     {
         "fields": {
@@ -239,7 +239,7 @@
             "description": "Email subject. Do not remove '%s' or other string format related parts. "
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 22
     },
     {
         "fields": {
@@ -250,7 +250,7 @@
             "description": "Email subject. Do not remove '%s' or other string format related parts. "
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 23
     },
     {
         "fields": {
@@ -261,7 +261,7 @@
             "description": "Email subject. Do not remove '%s' or other string format related parts. "
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 24
     },
     {
         "fields": {
@@ -272,7 +272,7 @@
             "description": "Email subject. Do not remove '%s' or other string format related parts. "
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 25
     },
     {
         "fields": {
@@ -283,7 +283,7 @@
             "description": "Email subject. Do not remove '%s' or other string format related parts. "
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 26
     },
     {
         "fields": {
@@ -294,7 +294,7 @@
             "description": "Email subject. Do not remove '%s' or other string format related parts. "
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 27
     },
     {
         "fields": {
@@ -305,7 +305,7 @@
             "description": "Email subject. Do not remove '%s' or other string format related parts. "
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 28
     },
     {
         "fields": {
@@ -316,7 +316,7 @@
             "description": "Email subject. Do not remove '%s' or other string format related parts. "
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 29
     },
     {
         "fields": {
@@ -327,7 +327,7 @@
             "description": ""
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 30
     },
     {
         "fields": {
@@ -338,7 +338,7 @@
             "description": "Sent when review assignment has reopened"
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 31
     },
     {
         "fields": {
@@ -349,7 +349,7 @@
             "description": "Email subject. Do not remove '%s' or other string format related parts. "
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 32
     },
     {
         "fields": {
@@ -360,7 +360,7 @@
             "description": "If enabled login details will be sent to the user. If disabled an email will not be sent."
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 33
     },
     {
         "fields": {
@@ -371,7 +371,7 @@
             "description": "Publishing committee contacted during an editorial review assignment. Separate email addresses with this character ';'"
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 34
     },
     {
         "fields": {
@@ -382,7 +382,7 @@
             "description": "Email sent when a decision is made on an editorial review assignment."
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 35
     },
     {
         "fields": {
@@ -393,7 +393,7 @@
             "description": "If enabled, authors/editors can submit proposals to the press. If disabled, authors/editors cannot submit proposals."
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 36
     },
     {
         "fields": {
@@ -404,7 +404,7 @@
             "description": "If enabled the review_type selection will appear on the start new submission page. if disabled, the default review type from the 'default_review_type' setting will be assigned to new submissions and review_type list will be hidden"
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 37
     },
     {
         "fields": {
@@ -415,7 +415,7 @@
             "description": "Default review type used when review type selection is disabled"
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 38
     },
     {
         "fields": {
@@ -426,7 +426,7 @@
             "description": "Editorial review assignment feature can be turned on or off."
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 39
     },
     {
         "fields": {
@@ -437,7 +437,7 @@
             "description": "Name of the press, will be displayed throughout the system."
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 40
     },
     {
         "fields": {
@@ -448,7 +448,7 @@
             "description": "Footer text."
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 41
     },
     {
         "fields": {
@@ -459,7 +459,7 @@
             "description": "Set of guidelines that appear on the submission start page."
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 42
     },
     {
         "fields": {
@@ -470,7 +470,7 @@
             "description": "General description of the press. Will be displayed on the Index page."
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 43
     },
     {
         "fields": {
@@ -481,7 +481,7 @@
             "description": null
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 44
     },
     {
         "fields": {
@@ -492,7 +492,7 @@
             "description": "The Press's Acronym. Used to prefix email subjects etc."
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 45
     },
     {
         "fields": {
@@ -503,7 +503,7 @@
             "description": "Base URL of the system. Used in emails and links."
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 46
     },
     {
         "fields": {
@@ -514,7 +514,7 @@
             "description": "Main From Address for the system."
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 47
     },
     {
         "fields": {
@@ -525,7 +525,7 @@
             "description": "External review request email."
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 48
     },
     {
         "fields": {
@@ -536,7 +536,7 @@
             "description": "Determines whether users are required to enter Competing Interests statements."
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 49
     },
     {
         "fields": {
@@ -547,7 +547,7 @@
             "description": null
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 50
     },
     {
         "fields": {
@@ -558,7 +558,7 @@
             "description": "The number of days since the initial invitation that a reminder will be sent."
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 51
     },
     {
         "fields": {
@@ -569,7 +569,7 @@
             "description": null
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 52
     },
     {
         "fields": {
@@ -580,7 +580,7 @@
             "description": "The number of days before the due date to remind a user who has accepted a review."
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 53
     },
     {
         "fields": {
@@ -591,7 +591,7 @@
             "description": "A reminder email sent to users who have accepted a review but not completed it."
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 54
     },
     {
         "fields": {
@@ -602,7 +602,7 @@
             "description": "The number of days after a review due date to send another reminder."
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 55
     },
     {
         "fields": {
@@ -613,7 +613,7 @@
             "description": "Email sent wheen a peer review is overdue."
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 56
     },
     {
         "fields": {
@@ -624,7 +624,7 @@
             "description": null
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 57
     },
     {
         "fields": {
@@ -635,7 +635,7 @@
             "description": "The number of days before a revision's due date to remind the user."
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 58
     },
     {
         "fields": {
@@ -646,7 +646,7 @@
             "description": null
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 59
     },
     {
         "fields": {
@@ -657,7 +657,7 @@
             "description": "Email to copyeditor requesting their services."
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 60
     },
     {
         "fields": {
@@ -668,7 +668,7 @@
             "description": "Copyedit email sent to the user after copyediting is completed."
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 61
     },
     {
         "fields": {
@@ -679,7 +679,7 @@
             "description": "Instructions for the Author in the Copyediting stage."
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 62
     },
     {
         "fields": {
@@ -690,7 +690,7 @@
             "description": "Index request email"
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 63
     },
     {
         "fields": {
@@ -701,7 +701,7 @@
             "description": "Instructions for the indexer."
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 64
     },
     {
         "fields": {
@@ -712,7 +712,7 @@
             "description": null
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 65
     },
     {
         "fields": {
@@ -723,7 +723,7 @@
             "description": "Instructions for the typesetter."
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 66
     },
     {
         "fields": {
@@ -734,7 +734,7 @@
             "description": null
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 67
     },
     {
         "fields": {
@@ -745,7 +745,7 @@
             "description": "Instructions displayed on the Author Typeset screen."
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 68
     },
     {
         "fields": {
@@ -756,7 +756,7 @@
             "description": null
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 69
     },
     {
         "fields": {
@@ -767,7 +767,7 @@
             "description": null
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 70
     },
     {
         "fields": {
@@ -778,7 +778,7 @@
             "description": "Email sent automatically to editors."
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 71
     },
     {
         "fields": {
@@ -789,7 +789,7 @@
             "description": null
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 72
     },
     {
         "fields": {
@@ -800,7 +800,7 @@
             "description": null
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 73
     },
     {
         "fields": {
@@ -811,7 +811,7 @@
             "description": null
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 74
     },
     {
         "fields": {
@@ -822,7 +822,7 @@
             "description": "Press brand image. Should be around 160x40 pixels."
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 75
     },
     {
         "fields": {
@@ -833,7 +833,7 @@
             "description": "Journal favicon. Can be .ico or .jpg, should be 16x16 or 32x32 pixels."
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 76
     },
     {
         "fields": {
@@ -844,7 +844,7 @@
             "description": "City the the publisher is based in. eg. Edinburgh or London"
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 77
     },
     {
         "fields": {
@@ -855,7 +855,7 @@
             "description": "Help text for the submission checklist."
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 78
     },
     {
         "fields": {
@@ -866,7 +866,7 @@
             "description": "Email sent to editors when they are assigned to a book."
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 79
     },
     {
         "fields": {
@@ -877,7 +877,7 @@
             "description": "Email sent when a decision is made on a book."
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 80
     },
     {
         "fields": {
@@ -888,7 +888,7 @@
             "description": "The Press' OAI identifier."
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 81
     },
     {
         "fields": {
@@ -899,7 +899,7 @@
             "description": null
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 82
     },
     {
         "fields": {
@@ -910,7 +910,7 @@
             "description": "If enabled, authors/editors can make direct submissions to the press. If disabled, authors/editors must for make a proposal. "
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 83
     },
     {
         "fields": {
@@ -921,7 +921,7 @@
             "description": "Select to enable the suggest reviewers field during the first stage of a new submission. Deselect to disable the field."
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 84
     },
     {
         "fields": {
@@ -932,7 +932,7 @@
             "description": null
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 85
     },
     {
         "fields": {
@@ -943,7 +943,7 @@
             "description": "Set of guidelines to help the user upload a manuscript."
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 86
     },
     {
         "fields": {
@@ -954,7 +954,7 @@
             "description": null
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 87
     },
     {
         "fields": {
@@ -965,7 +965,7 @@
             "description": "Select to enable previewing of assignment files before accepting or declining an assignment. Deselect to disable previewing of assignment files."
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 88
     },
     {
         "fields": {
@@ -976,7 +976,7 @@
             "description": "This is the primary email address of the system."
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 89
     },
     {
         "fields": {
@@ -987,7 +987,7 @@
             "description": "Primary contact, will be used in the footer of some system emails."
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 90
     },
     {
         "fields": {
@@ -998,7 +998,7 @@
             "description": null
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 91
     },
     {
         "fields": {
@@ -1009,7 +1009,7 @@
             "description": "Email sent to user when they request a password reset token."
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 92
     },
     {
         "fields": {
@@ -1020,7 +1020,7 @@
             "description": null
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 93
     },
     {
         "fields": {
@@ -1031,7 +1031,7 @@
             "description": null
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 94
     },
     {
         "fields": {
@@ -1042,7 +1042,7 @@
             "description": null
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 95
     },
     {
         "fields": {
@@ -1053,7 +1053,7 @@
             "description": null
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 96
     },
     {
         "fields": {
@@ -1064,7 +1064,7 @@
             "description": "Email sent when the ownership of a book is changed."
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 97
     },
     {
         "fields": {
@@ -1075,7 +1075,7 @@
             "description": null
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 98
     },
     {
         "fields": {
@@ -1086,7 +1086,7 @@
             "description": "Set of instructions displayed on the Proposal Review screen."
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 99
     },
     {
         "fields": {
@@ -1097,7 +1097,7 @@
             "description": "Set of instructions displayed on the Typeset screen."
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 100
     },
     {
         "fields": {
@@ -1108,7 +1108,7 @@
             "description": "Set of instructions displayed on the Indexing screen."
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 101
     },
     {
         "fields": {
@@ -1119,7 +1119,7 @@
             "description": "Set of instructions displayed on the Copyedit screen,."
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 102
     },
     {
         "fields": {
@@ -1130,7 +1130,7 @@
             "description": "Email sent to a new user."
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 103
     },
     {
         "fields": {
@@ -1141,7 +1141,7 @@
             "description": "dfdsf"
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 104
     },
     {
         "fields": {
@@ -1152,7 +1152,7 @@
             "description": ""
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 105
     },
     {
         "fields": {
@@ -1163,7 +1163,7 @@
             "description": ""
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 106
     },
     {
         "fields": {
@@ -1174,7 +1174,7 @@
             "description": "Message that will be shown to users when they register."
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 107
     },
     {
         "fields": {
@@ -1185,7 +1185,7 @@
             "description": "Users need to agree to this at registration"
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 108
     },
     {
         "fields": {
@@ -1196,7 +1196,7 @@
             "description": "Email sent as part of the Editorial Review request process."
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 109
     },
     {
         "fields": {
@@ -1207,7 +1207,7 @@
             "description": "Email sent as part of the Editorial Review process."
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 110
     },
     {
         "fields": {
@@ -1218,7 +1218,7 @@
             "description": "Allow reviewers to access and complete assignments without registering an account.<br>WARNING: Enabling this option makes data less secure."
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 111
     },
     {
         "fields": {
@@ -1229,7 +1229,7 @@
             "description": "Email sent as part of the Editorial Review process."
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 112
     },
     {
         "fields": {
@@ -1240,7 +1240,7 @@
             "description": "Email subject from the Editorial Review process."
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 113
     },
     {
         "fields": {
@@ -1251,7 +1251,7 @@
             "description": "Email sent after metadata is updated through the FTP site."
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 114
     },
     {
         "fields": {
@@ -1262,7 +1262,7 @@
             "description": "Email sent to editors when they are assigned to a proposal."
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 115
     },
     {
         "fields": {
@@ -1273,7 +1273,7 @@
             "description": ""
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 116
     },
     {
         "fields": {
@@ -1284,7 +1284,7 @@
             "description": ""
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 117
     },
     {
         "fields": {
@@ -1295,7 +1295,7 @@
             "description": ""
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 118
     },
     {
         "fields": {
@@ -1306,7 +1306,7 @@
             "description": ""
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 119
     },
     {
         "fields": {
@@ -1317,7 +1317,7 @@
             "description": ""
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 120
     },
     {
         "fields": {
@@ -1328,7 +1328,7 @@
             "description": ""
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 121
     },
     {
         "fields": {
@@ -1339,7 +1339,7 @@
             "description": ""
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 122
     },
     {
         "fields": {
@@ -1350,7 +1350,7 @@
             "description": ""
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 123
     },
     {
         "fields": {
@@ -1361,7 +1361,7 @@
             "description": ""
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 124
     },
     {
         "fields": {
@@ -1372,7 +1372,7 @@
             "description": ""
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 125
     },
     {
         "fields": {
@@ -1383,7 +1383,7 @@
             "description": ""
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 126
     },
     {
         "fields": {
@@ -1394,7 +1394,7 @@
             "description": ""
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 127
     },
     {
         "fields": {
@@ -1405,7 +1405,7 @@
             "description": ""
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 128
     },
     {
         "fields": {
@@ -1416,7 +1416,7 @@
             "description": ""
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 129
     },
     {
         "fields": {
@@ -1427,7 +1427,7 @@
             "description": ""
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 130
     },
     {
         "fields": {
@@ -1438,7 +1438,7 @@
             "description": ""
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 131
     },
     {
         "fields": {
@@ -1449,7 +1449,7 @@
             "description": ""
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 132
     },
     {
         "fields": {
@@ -1460,7 +1460,7 @@
             "description": ""
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 133
     },
     {
         "fields": {
@@ -1471,7 +1471,7 @@
             "description": ""
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 134
     },
     {
         "fields": {
@@ -1482,7 +1482,7 @@
             "description": ""
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 135
     },
     {
         "fields": {
@@ -1493,7 +1493,7 @@
             "description": ""
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 136
     },
     {
         "fields": {
@@ -1504,7 +1504,7 @@
             "description": ""
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 137
     },
     {
         "fields": {
@@ -1515,7 +1515,7 @@
             "description": ""
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 138
     },
     {
         "fields": {
@@ -1526,7 +1526,7 @@
             "description": ""
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 139
     },
     {
         "fields": {
@@ -1536,6 +1536,6 @@
             "types": "rich_text"
         },
         "model": "core.setting",
-        "pk": null
+        "pk": 140
     }
 ]
