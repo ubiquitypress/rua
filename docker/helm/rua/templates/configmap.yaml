@@ -1,0 +1,34 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.metadata.name }}
+  namespace: {{ .Values.namespace }}
+data:
+  AWS_ACCESS_KEY_ID: AKIAJ7KZXRSXJKXBMJXQ
+  AWS_SECRET_ACCESS_KEY: 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
+  AWS_STORAGE_BUCKET_NAME: service-rua
+  CODE: {{ .Values.metadata.name }}
+  DATABASE_HOST: rua.cpyeaufavspw.eu-west-1.rds.amazonaws.com
+  DATABASE_NAME: {{ .Values.metadata.name }}
+  DATABASE_PASS: 56gvnZg7
+  DATABASE_USER: tech
+  DJANGO_ADMIN_EMAIL: tech@ubiquitypress.com
+  DJANGO_ADMIN_PASSWORD: 9K3E@ZzZ
+  DJANGO_ADMIN_USERNAME: tech
+  DJANGO_ALLOWED_HOSTS: {{ .Values.metadata.name }}.rua.re
+  DJANGO_SECRET_KEY: 7dVCn7wVgXwFD0zwEpj35kf0Nm5aBa8VaCk9chsiLjxNSofXeMjIRjNYLdUGarK
+  DJANGO_SETTINGS_MODULE: core.settings
+  EMAIL_BACKEND: django.core.mail.backends.smtp.EmailBackend
+  EMAIL_HOST_PASSWORD: 4910364428769ec9a64fbcee94bd5d17
+  EMAIL_HOST_USER: postmaster@ubiquity.press
+  EMAIL_PORT: "587"
+  EMAIL_USE_TLS: "True"
+  ORCHID_CLIENT_ID: APP-VXH2IGZ6ZH7Q71L9
+  ORCID_API_URL: http://pub.orcid.org/v1.2_rc7/
+  ORCID_CLIENT_SECRET: 6d1677b8-25c6-4d42-8a8d-e77a0ced56c6
+  ORCID_REDIRECT_URI: http://localhost:8002/login/orcid/
+  ORCID_TOKEN_URL: https://pub.orcid.org/oauth/token
+  PYTHONPATH: /app/src
+  REDIS_HOST: redis
+  REDIS_PORT: "6379"
+  SENTRY_DSN: https://6f4e629b9384499ea7d6aaa72c820839:33c1f6db04914ee7bf7569f1f3e9cb61@sentry.ubiquity.press/5

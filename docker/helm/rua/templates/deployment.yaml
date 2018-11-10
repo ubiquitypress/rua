@@ -1,0 +1,44 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: {{ .Values.metadata.name }}
+  labels:
+    upress.service: {{ include "rua.fullname" . }}
+    app: {{ include "rua.name" . }}
+    chart: {{ include "rua.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ include "rua.name" . }}
+      release: {{ .Release.Name }}
+  replicas: {{ .Values.replicaCount }}
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: {{ include "rua.name" . }}
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+      - name: {{ .Chart.Name }}
+        image: {{ .Values.image.repository }}:{{ .Chart.Version }}
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        ports:
+        - name: http
+          containerPort: 80
+          protocol: TCP
+        envFrom:
+        - configMapRef:
+            name: {{ .Values.metadata.name }}
+        resources:
+          limits:
+            cpu: 300m
+            memory: 800Mi
+          requests:
+            cpu: 250m
+            memory: 600Mi
+      imagePullSecrets:
+      - name: upress-docker-registry

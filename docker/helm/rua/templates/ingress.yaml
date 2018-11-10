@@ -1,0 +1,27 @@
+{{- if .Values.ingress.enabled -}}
+{{- $fullName := include "rua.fullname" . -}}
+{{- $ingressPath := .Values.ingress.path -}}
+{{- $ingressServiceName := .Values.metadata.name -}}
+apiVersion: extensions/v1beta1
+kind: Ingress
+namespace: {{ .Values.namespace }}
+metadata:
+  name: ingress-{{ .Values.metadata.name }}
+  labels:
+    app: {{ include "rua.name" . }}
+    chart: {{ include "rua.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+{{- with .Values.ingress.annotations }}
+  annotations:
+{{ toYaml . | indent 4 }}
+{{- end }}
+spec:
+  rules:
+  - host: {{ .Values.metadata.name}}.rua.re
+    http:
+      paths:
+      - backend:
+          serviceName: {{ .Values.metadata.name }}
+          servicePort: 80
+{{- end }}
