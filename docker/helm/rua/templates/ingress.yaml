@@ -4,9 +4,9 @@
 {{- $ingressServiceName := .Values.metadata.name -}}
 apiVersion: extensions/v1beta1
 kind: Ingress
-namespace: {{ .Values.namespace }}
 metadata:
   name: ingress-{{ .Values.metadata.name }}
+  namespace: {{ .Values.namespace }}
   labels:
     app: {{ include "rua.name" . }}
     chart: {{ include "rua.chart" . }}

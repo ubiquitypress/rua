@@ -2,6 +2,7 @@ apiVersion: apps/v1beta1
 kind: Deployment
 metadata:
   name: {{ .Values.metadata.name }}
+  namespace: {{ .Values.namespace }} 
   labels:
     upress.service: {{ include "rua.fullname" . }}
     app: {{ include "rua.name" . }}
@@ -31,6 +32,8 @@ spec:
           containerPort: 80
           protocol: TCP
         envFrom:
+        - configMapRef:
+            name: rua-generic
         - configMapRef:
             name: {{ .Values.metadata.name }}
         resources:

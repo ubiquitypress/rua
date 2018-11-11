@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.metadata.name }}
+  namespace: {{ .Values.namespace }}
+data:
+  CODE: {{ .Values.metadata.name }}
+  DATABASE_NAME: {{ .Values.metadata.name }}
+  DJANGO_ALLOWED_HOSTS: {{ .Values.metadata.name }}.rua.re
