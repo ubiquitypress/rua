@@ -37,6 +37,6 @@ def index(request):
 
 class JuraBookViewSet(viewsets.ModelViewSet):
 
-    permission_classes = (IsAuthenticated,)
+    permission_classes = IsAuthenticated,
     queryset = Book.objects.all().order_by('id')
     serializer_class = serializers.JuraBookSerializer

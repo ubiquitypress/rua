@@ -405,6 +405,7 @@ class JuraBookSerializer(serializers.HyperlinkedModelSerializer):
             'peer_review_override',
             'review_assignments',
             'table_contents_linked',
+            'uses_s3_storage',
         )
 
     license = serializers.ReadOnlyField(
@@ -449,6 +450,13 @@ class JuraBookSerializer(serializers.HyperlinkedModelSerializer):
     review_assignments = ReviewAssignmentSerializer(
         many=True,
     )
+    # Flag temporarily added to aid JURA's book scraper
+    # in knowing whether to download book files from local storage or AWS s3.
+    # TODO: if JURA no longer exists, feel free to delete this
+    uses_s3_storage = serializers.SerializerMethodField()
+
+    def get_uses_s3_storage(self, obj):
+        return True
 
     def create(self, validated_data):
         author_data = validated_data.pop('author')
