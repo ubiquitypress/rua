@@ -37,16 +37,38 @@ MYSQL_PORT = int(os.getenv('MYSQL_PORT', '3306'))
 POSTGRES_PORT = int(os.getenv('POSTGRES_PORT', '5432'))
 LOCALHOST = '127.0.0.1'
 
+SQL_QUERIES_BEFORE = [
+    # 'alter table auth_permission disable_constraints constraint '
+    # 'auth_permission_content_type_id_2f476e4b_fk_django_co;'
+]
 
-# Tables not to be copied -- Django automatically populates these on migration
+SQL_QUERIES_AFTER = [
+    # 'alter table auth_permission enable_constraints constraint '
+    # 'auth_permission_content_type_id_2f476e4b_fk_django_co;'
+]
+
+# Tables not to be copied
+# Django's automatically generated content is needed in these cases
 SKIP_DJANGO_TABLES = [
+    'django_migrations',
+]
+
+# Triggers disabled due to mutually referencing foreign keys & other constraints
+DISABLE_TRIGGERS_TABLES = [
+    # 'auth_permission',
+    # 'django_content_type',
+]
+
+# Tables to be cleared of content automatically generated upon first migration
+CLEAR_FIRST_DJANGO_TABLES = [
     'auth_permission',
     'django_content_type',
-    'django_migrations',
 ]
 
 # Tables to be copied fist, due to foreign key constraints
 FIRST_DJANGO_TABLES = [
+    'django_content_type',
+    'auth_permission',
     'core_license',
     'core_stage',
     'review_form',
@@ -187,37 +209,17 @@ def quick_mapper(table):
     return GenericMapper
 
 
-def copy_table_data_to_postgresdb(
-        mysql_metadata,
-        mysql_engine,
-        postgres_engine
+def execure_custom_sql(
+        database_engine,
+        query,
 ):
-    PostgresSession = sessionmaker(bind=postgres_engine, autoflush=False)
-    postgres_session = PostgresSession()
-    MySQLSession = sessionmaker(bind=mysql_engine)
-    mysql_session = MySQLSession()
-
-    for table_name in FIRST_DJANGO_TABLES:
-        copy_table_rows(
-            mysql_engine=mysql_engine,
-            mysql_session=mysql_session,
-            postgres_engine=postgres_engine,
-            postgres_session=postgres_session,
-            table_name=table_name
+    print('executing', query)
+    with database_engine.connect() as connection:
+        connection.execution_options(
+            isolation_level='AUTOCOMMIT'
+        ).execute(
+            query
         )
-
-    for klass in mysql_metadata.tables.values():
-        if (
-                klass.name not in SKIP_DJANGO_TABLES and
-                klass.name not in FIRST_DJANGO_TABLES
-        ):
-            copy_table_rows(
-                mysql_engine=mysql_engine,
-                mysql_session=mysql_session,
-                postgres_engine=postgres_engine,
-                postgres_session=postgres_session,
-                table_name=klass.name
-            )
 
 
 def copy_table_rows(
@@ -250,6 +252,69 @@ def copy_table_rows(
             data[str(column)] = value
         postgres_session.merge(NewRecord(**data))
     postgres_session.commit()
+
+
+def copy_table_data_to_postgresdb(
+        mysql_metadata,
+        mysql_engine,
+        postgres_engine
+):
+    PostgresSession = sessionmaker(bind=postgres_engine, autoflush=False)
+    postgres_session = PostgresSession()
+    MySQLSession = sessionmaker(bind=mysql_engine)
+    mysql_session = MySQLSession()
+
+    for query in SQL_QUERIES_BEFORE:
+        execure_custom_sql(
+            database_engine=postgres_engine,
+            query=query
+        )
+
+    for table_name in CLEAR_FIRST_DJANGO_TABLES:
+        execure_custom_sql(
+            database_engine=postgres_engine,
+            query=f'DELETE FROM {table_name};'
+        )
+
+    for table_name in DISABLE_TRIGGERS_TABLES:
+        execure_custom_sql(
+            database_engine=postgres_engine,
+            query=f'ALTER TABLE {table_name} DISABLE TRIGGER ALL;'
+        )
+
+    for table_name in FIRST_DJANGO_TABLES:
+        copy_table_rows(
+            mysql_engine=mysql_engine,
+            mysql_session=mysql_session,
+            postgres_engine=postgres_engine,
+            postgres_session=postgres_session,
+            table_name=table_name
+        )
+
+    for klass in mysql_metadata.tables.values():
+        if (
+                klass.name not in SKIP_DJANGO_TABLES and
+                klass.name not in FIRST_DJANGO_TABLES
+        ):
+            copy_table_rows(
+                mysql_engine=mysql_engine,
+                mysql_session=mysql_session,
+                postgres_engine=postgres_engine,
+                postgres_session=postgres_session,
+                table_name=klass.name
+            )
+
+    for table_name in DISABLE_TRIGGERS_TABLES:
+        execure_custom_sql(
+            database_engine=postgres_engine,
+            query=f'ALTER TABLE {table_name} ENABLE TRIGGER ALL;'
+        )
+
+    for query in SQL_QUERIES_AFTER:
+        execure_custom_sql(
+            database_engine=postgres_engine,
+            query=query
+        )
 
 
 def create_postgres_database(
@@ -340,6 +405,7 @@ def copy_from_mysqldb_to_postgresdb(
     mysql_metadata = MetaData()
     mysql_metadata.reflect(mysql_engine)
 
+    # IMPORTANT:
     # Call to copy_table_schemas_to_postgresdb missed as table creation
     # is handled by Django migrations
 
