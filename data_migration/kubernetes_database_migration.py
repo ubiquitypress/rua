@@ -148,5 +148,4 @@ def migrate_rua_data_for_presses(press_codes):
 
 
 if __name__ == '__main__':
-    # migrate_rua_data_for_presses(sys.argv[1:])
-    copy_rua_production_mysql_database_to_postgresql(sys.argv[1])
+    migrate_rua_data_for_presses(sys.argv[1:])
