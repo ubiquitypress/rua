@@ -2965,12 +2965,12 @@ def view_proposal_review_decision(
         form=_proposal.form
     )
     data = json.loads(_proposal.data)
-    intial_data = {}
+    initial_data = {}
 
     for k, v in data.items():
-        intial_data[k] = v[0]
+        initial_data[k] = v[0]
 
-    proposal_form.initial = intial_data
+    proposal_form.initial = initial_data
 
     if request.user.is_authenticated:
         review_assignment = get_object_or_404(

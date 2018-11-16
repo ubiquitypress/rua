@@ -590,16 +590,16 @@ def incomplete_proposal(request, proposal_id):
             'author': _incomplete_journal.author,
             'subtitle': _incomplete_journal.subtitle}
     )
-    intial_data = {}
+    initial_data = {}
 
     if _incomplete_journal.data:
         data = json.loads(_incomplete_journal.data)
 
         for k, v in data.items():
-            intial_data[k] = v[0]
+            initial_data[k] = v[0]
 
-    proposal_form.initial = intial_data
-    proposal_form_validated.initial = intial_data
+    proposal_form.initial = initial_data
+    proposal_form_validated.initial = initial_data
 
     if request.method == 'POST' and 'book_submit' in request.POST:
         proposal_form = manager_forms.GeneratedForm(
@@ -1007,14 +1007,14 @@ def proposal_revisions(request, proposal_id):
         }
     )
     data = {}
-    intial_data = {}
+    initial_data = {}
 
     if proposal.data:
         data = json.loads(proposal.data)
         for k, v in data.items():
-            intial_data[k] = v[0]
+            initial_data[k] = v[0]
 
-    proposal_form.initial = intial_data
+    proposal_form.initial = initial_data
 
     if request.POST:
         proposal_form = manager_forms.GeneratedForm(
@@ -1317,15 +1317,15 @@ def proposal_view(request, proposal_id):
             'subtitle': proposal.subtitle}
     )
 
-    intial_data = {}
+    initial_data = {}
     data = {}
 
     if proposal.data:
         data = json.loads(proposal.data)
         for k, v in data.items():
-            intial_data[k] = v[0]
+            initial_data[k] = v[0]
 
-    proposal_form.initial = intial_data
+    proposal_form.initial = initial_data
     roles = request.user.profile.roles.all()
     user_roles = [role.slug for role in request.user.profile.roles.all()]
 
@@ -1494,15 +1494,15 @@ def proposal_history(request, proposal_id):
             'subtitle': proposal.subtitle
         }
     )
-    intial_data = {}
+    initial_data = {}
     data = {}
 
     if proposal.data:
         data = json.loads(proposal.data)
         for k, v in data.items():
-            intial_data[k] = v[0]
+            initial_data[k] = v[0]
 
-    proposal_form.initial = intial_data
+    proposal_form.initial = initial_data
     roles = request.user.profile.roles.all()
     user_roles = [role.slug for role in request.user.profile.roles.all()]
 
