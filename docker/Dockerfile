@@ -18,6 +18,7 @@ RUN apk update && \
         patch \
         libffi-dev \
         openssh-client \
+        ca-certificates \
         supervisor \
         postgresql-dev && \
     rm -rf /var/cache/apk/* && \
