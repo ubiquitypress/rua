@@ -19,4 +19,5 @@ DATABASES = {
 
 DEBUG = False
 DEFAULT_FILE_STORAGE = 'inmemorystorage.InMemoryStorage'
+STATICFILES_STORAGE = 'inmemorystorage.InMemoryStorage'
 LOGGING = {}
