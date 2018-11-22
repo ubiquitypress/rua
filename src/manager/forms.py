@@ -4,7 +4,7 @@ from django.utils.encoding import smart_text
 
 from django_summernote.widgets import SummernoteWidget
 
-from core import models as core_models, logic as core_logic
+from core import models as core_models
 from manager import models
 from review import models as review_models
 

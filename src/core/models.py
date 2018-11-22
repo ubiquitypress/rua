@@ -11,7 +11,6 @@ from django.utils.encoding import smart_text
 from django.utils.html import strip_tags
 from django.utils.safestring import mark_safe
 
-from editorialreview import models as er_models
 from revisions.models import Revision
 from submission.models import Proposal, ProposalReview
 
@@ -2457,9 +2456,6 @@ class Role(models.Model):
 
     def __str__(self):
         return self.name
-
-    def __str__(self):
-        return u'%s' % self.name
 
     def __repr__(self):
         return u'%s' % self.name

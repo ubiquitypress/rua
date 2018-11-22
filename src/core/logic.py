@@ -18,10 +18,8 @@ from pymarc import Record, Field, record_to_xml
 
 from core import email, models, log
 from core.cache import cache_result
-from core.files import (
-    handle_email_file,
-    handle_marc21_file,
-)
+from core.files import handle_marc21_file
+
 from editorialreview import models as editorialreview_models
 from revisions import models as revisions_models
 from .setting_util import get_setting
@@ -194,12 +192,12 @@ def book_to_mark21_file(book, owner, xml=False):
     title = book.title  # Add record to file.
     if not xml:
         filename = 'book_' + str(book.id) + '_' + re.sub(
-            '[^a-zA-Z0-9\n\.]', '', title.lower()
+            r'[^a-zA-Z0-9\n\.]', '', title.lower()
         ) + '_marc21.dat'
         _file = handle_marc21_file(record.as_marc(), filename, book, owner)
     else:
         filename = 'book_' + str(book.id) + '_' + re.sub(
-            '[^a-zA-Z0-9\n\.]', '', title.lower()
+            r'[^a-zA-Z0-9\n\.]', '', title.lower()
         ) + '_marc21.xml'
         content = record_to_xml(record, quiet=False, namespace=False)
         _file = handle_marc21_file(content, filename, book, owner)
@@ -216,12 +214,12 @@ def book_to_mark21_file_download_content(book, owner, content, xml=False):
 
     if not xml:
         filename = 'book_' + str(book.id) + '_' + re.sub(
-            '[^a-zA-Z0-9\n\.]', '', title.lower()
+            r'[^a-zA-Z0-9\n\.]', '', title.lower()
         ) + '_marc21.dat'
         _file = handle_marc21_file(content, filename, book, owner)
     else:
         filename = 'book_' + str(book.id) + '_' + re.sub(
-            '[^a-zA-Z0-9\n\.]', '', title.lower()
+            r'[^a-zA-Z0-9\n\.]', '', title.lower()
         ) + '_marc21.xml'
         _file = handle_marc21_file(content, filename, book, owner)
 
@@ -395,13 +393,13 @@ def book_to_mark21_file_content(book, owner, xml=False):
 
     if not xml:
         filename = 'book_' + str(book.id) + '_' + re.sub(
-            '[^a-zA-Z0-9\n\.]', '', title.lower()
+            r'[^a-zA-Z0-9\n\.]', '', title.lower()
         ) + '_marc21.dat'
         handle_marc21_file(record.as_marc(), filename, book, owner)
         content = record.as_marc()
     else:
         filename = 'book_' + str(book.id) + '_' + re.sub(
-            '[^a-zA-Z0-9\n\.]', '', title.lower()
+            r'[^a-zA-Z0-9\n\.]', '', title.lower()
         ) + '_marc21.xml'
         content = record_to_xml(record, quiet=False, namespace=False)
         handle_marc21_file(content, filename, book, owner)
@@ -1199,7 +1197,6 @@ def send_proposal_review_reopen_request(
 def order_data(data, relations):
     ordered_data = []
     for relation in relations:
-        relation_name = relation.element.name
         if relation.element.name in data:
             ordered_data.append(
                 [relation.element.name, data[relation.element.name]]

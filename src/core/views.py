@@ -80,7 +80,6 @@ from review import (
     models as review_models,
     logic as review_logic
 )
-import email
 from .setting_util import get_setting
 
 

@@ -10,4 +10,3 @@ for book in books:
     if book.cover and 'files/media' not in book.cover.name:
         book.cover = f'files/media/{book.cover.name}'
         book.save()
-

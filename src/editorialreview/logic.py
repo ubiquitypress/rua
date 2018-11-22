@@ -3,14 +3,13 @@ import mimetypes as mime
 import os
 from uuid import uuid4
 
-from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
 from django.core.files.storage import default_storage
 from django.urls import reverse
 from django.db.models import Q
 from django.utils.encoding import smart_text
 
-from core import models as core_models, logic as core_logic
+from core import models as core_models
 from review import models as review_models
 from submission import models as submission_models
 

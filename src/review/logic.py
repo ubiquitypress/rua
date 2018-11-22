@@ -14,7 +14,7 @@ from django.utils.encoding import smart_text
 from bs4 import BeautifulSoup
 from docx import Document
 
-from core import models as core_models, logic as core_logic
+from core import models as core_models
 from core.decorators import is_reviewer
 from review import models
 

@@ -1,10 +1,7 @@
 from django import forms
 from django.forms import ModelForm
 
-from core import (
-    models as core_models,
-    logic as core_logic
-)
+from core import models as core_models
 from review import models as review_models
 from submission.models import SubmissionChecklistItem, Proposal, ProposalNote
 
