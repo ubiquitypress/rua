@@ -833,7 +833,6 @@ class CoreTests(TestCase):
         self.assertEqual(b"403" in content, False)
 
     def test_ajax_email_calls(self):
-
         self.assertEqual(len(models.Book.objects.all()) == 1, True)
         self.book = models.Book.objects.get(pk=1)
         self.book.save()
@@ -841,36 +840,84 @@ class CoreTests(TestCase):
         self.author.save()
 
         resp = self.client.get(
-            reverse('get_authors', kwargs={'submission_id': self.book.id}),
-            {'term': 'rua', }, content_type="application/json",
-            HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+            reverse(
+                'get_authors',
+                kwargs={
+                    'submission_id': self.book.id
+                }
+            ),
+            {
+                'term': 'rua',
+            },
+            content_type="application/json",
+            HTTP_X_REQUESTED_WITH='XMLHttpRequest'
+        )
         json_data = json.loads(resp.content)
         self.assertEqual(self.author.author_email == json_data[0]["value"],
                          True)
         resp = self.client.get(
-            reverse('get_editors', kwargs={'submission_id': self.book.id}),
-            {'term': 'rua', }, content_type="application/json",
-            HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+            reverse(
+                'get_editors',
+                kwargs={
+                    'submission_id': self.book.id
+                }
+            ),
+            {
+                'term': 'rua',
+            },
+            content_type="application/json",
+            HTTP_X_REQUESTED_WITH='XMLHttpRequest'
+        )
         json_data = json.loads(resp.content)
         editors = self.book.press_editors.all()
         self.assertEqual(editors[0].email == json_data[0]["value"], True)
+
         resp = self.client.get(
-            reverse('get_onetaskers', kwargs={'submission_id': self.book.id}),
-            {'term': 'rua', }, content_type="application/json",
-            HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+            reverse(
+                'get_onetaskers',
+                kwargs={
+                    'submission_id': self.book.id
+                }
+            ),
+            {
+                'term': 'rua',
+            },
+            content_type="application/json",
+            HTTP_X_REQUESTED_WITH='XMLHttpRequest'
+        )
         json_data = json.loads(resp.content)
-        onetasker = User.objects.get(pk=5)
+        onetasker = User.objects.get(pk=4)
         self.assertEqual(onetasker.email == json_data[0]["value"], True)
+
         resp = self.client.get(
-            reverse('get_all', kwargs={'submission_id': self.book.id}),
-            {'term': 'rua', }, content_type="application/json",
-            HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+            reverse(
+                'get_all',
+                kwargs={
+                    'submission_id': self.book.id
+                }
+            ),
+            {
+                'term': 'rua',
+            },
+            content_type="application/json",
+            HTTP_X_REQUESTED_WITH='XMLHttpRequest'
+        )
         json_data = json.loads(resp.content)
         self.assertEqual(len(json_data) == 3, True)
+
         resp = self.client.get(
-            reverse('get_all', kwargs={'submission_id': self.book.id}),
-            {'term': 'none_term', }, content_type="application/json",
-            HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+            reverse(
+                'get_all',
+                kwargs={
+                    'submission_id': self.book.id
+                }
+            ),
+            {
+                'term': 'none_term',
+            },
+            content_type="application/json",
+            HTTP_X_REQUESTED_WITH='XMLHttpRequest'
+        )
         json_data = json.loads(resp.content)
         self.assertEqual(len(json_data) == 0, True)
 
