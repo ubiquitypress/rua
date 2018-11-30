@@ -179,20 +179,6 @@ TEMPLATES = [
 RUA_VERSION = '1.9.12'
 
 
-# ## DATABASE ##
-
-DATABASES = {
-    'default': {
-        'ENGINE': os.getenv('DATABASE_ENGINE', 'django.db.backends.mysql'),
-        'NAME': os.getenv('DATABASE_NAME', 'rua'),
-        'USER': os.getenv('DATABASE_USER', 'root'),
-        'PASSWORD': os.getenv('DATABASE_PASS', ''),
-        'HOST': os.getenv('DATABASE_HOST', '127.0.0.1'),
-        'PORT': os.getenv('DATABASE_PORT', '3306')
-    }
-}
-
-
 # ## EXTERNAL SERVICES ##
 
 ORCID_API_URL = 'http://pub.orcid.org/v1.2_rc7/'
