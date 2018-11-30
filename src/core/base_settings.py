@@ -9,12 +9,6 @@ TECH_EMAIL = 'tech@ubiquitypress.com'
 ADMINS = (
     ('UP Tech', TECH_EMAIL)
 )
-ALLOWED_HOSTS = [
-    host.strip() for host in
-    os.getenv('DJANGO_ALLOWED_HOSTS', 'localhost').split(',')
-]
-
-
 # Username of upadmin
 INTERNAL_USER = 'tech'
 
