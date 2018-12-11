@@ -13,6 +13,8 @@ ADMINS = (
 INTERNAL_USER = 'tech'
 
 
+SITE_ID = 1
+
 # Allow static files to be served by uwsgi/gunicorn?
 INCLUDE_STATIC_FILE_URLCONFS = False
 
