@@ -253,7 +253,7 @@ def send_prerendered_email(
         to,
         bcc=bcc,
         cc=cc,
-        reply_to=from_email,
+        reply_to=[from_email],
     )
 
     if book:
