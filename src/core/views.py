@@ -4097,5 +4097,3 @@ def request_proposal_revisions(request, proposal_id):
     context = {'proposal': _proposal, 'email_text': email_text}
 
     return render(request, template, context)
-
-

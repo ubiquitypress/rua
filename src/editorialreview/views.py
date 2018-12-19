@@ -24,7 +24,6 @@ from core import (
     forms as core_forms,
     models as core_models,
     logic as core_logic,
-    views as core_views
 )
 from core.decorators import is_editor, is_editor_or_ed_reviewer
 from core.email import (

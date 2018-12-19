@@ -28,14 +28,16 @@ from core import email, models, log, forms
 from core.cache import cache_result
 from core.decorators import is_reviewer
 from core.files import handle_marc21_file
-from core.util import get_setting, strip_html_tags
+from core.util import (
+    get_setting,
+    strip_html_tags,
+)
 
 from editorialreview import models as editorialreview_models
 from manager import forms as manager_forms
 from review import forms as review_forms, models as review_models, \
     logic as review_logic
 from revisions import models as revisions_models
-from .util import get_setting
 from submission import logic as submission_logic, models as submission_models
 
 
