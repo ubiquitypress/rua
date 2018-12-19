@@ -44,7 +44,7 @@ from .logic import (
     notify_editors,
 )
 from submission import models as submission_models
-from core.setting_util import get_setting
+from core.util import get_setting
 
 
 @has_reviewer_role

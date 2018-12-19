@@ -28,7 +28,7 @@ from editor import models as editor_models
 from review import models as review_models
 from revisions import models as revision_models
 from submission import models as submission_models, logic as submission_logic
-from core.setting_util import get_setting
+from core.util import get_setting
 
 
 @is_author

@@ -366,13 +366,15 @@ def is_editor_or_ed_reviewer(_function):
             ):
                 return _function(request, *args, **kwargs)
 
-            user_roles = [r.slug for r in request.user.profile.roles.all()]
+            user_roles = {r.slug for r in request.user.profile.roles.all()}
 
-            if (
-                    'press-editor' in user_roles or
-                    'series-editor' in user_roles or
-                    'production-editor' in user_roles or
-                    'book-editor' in user_roles
+            if user_roles.intersection(
+                    {
+                        'press-editor',
+                        'series-editor',
+                        'production-editor',
+                        'book-editor'
+                    }
             ):
                 return _function(request, *args, **kwargs)
 

@@ -11,7 +11,7 @@ from core import email
 from core.celery import app
 from core.models import Identifier, Subject
 from services import ServiceHandler, JuraUpdateService
-from core.setting_util import get_setting
+from core.util import get_setting
 
 
 def _read_csv(path):

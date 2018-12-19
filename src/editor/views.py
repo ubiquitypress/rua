@@ -47,7 +47,7 @@ from manager import (
 from review import models as review_models
 from revisions import models as revision_models
 from submission import forms as submission_forms
-from core.setting_util import get_setting
+from core.util import get_setting
 
 
 @login_required

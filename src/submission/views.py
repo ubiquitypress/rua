@@ -50,11 +50,11 @@ from core.files import (
     handle_proposal_file_form,
     handle_multiple_email_files,
 )
-from core.views import create_proposal_form, serve_proposal_file
+from core.logic import create_proposal_form, serve_proposal_file
 from manager import forms as manager_forms
 from submission import forms
 from submission import logic, models as submission_models
-from core.setting_util import get_setting
+from core.util import get_setting
 
 
 @login_required

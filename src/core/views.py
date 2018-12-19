@@ -33,8 +33,6 @@ from django.utils.encoding import smart_text
 from django.views.generic import FormView
 from django.core.exceptions import ObjectDoesNotExist
 
-from bs4 import BeautifulSoup
-from docx import Document
 import zipfile
 
 from author import orcid
@@ -53,6 +51,8 @@ from core.decorators import (
     is_press_editor,
     is_editor_or_ed_reviewer
 )
+from core.logic import get_list_of_editors, create_proposal_form, \
+    serve_proposal_file, create_proposal_review_form
 from editor import forms as editor_forms
 from editorialreview import models as er_models
 from .email import (
@@ -80,7 +80,9 @@ from review import (
     models as review_models,
     logic as review_logic
 )
-from .setting_util import get_setting
+from .util import (
+    get_setting,
+)
 
 
 def index(request):
@@ -2685,44 +2687,6 @@ def view_proposal(request, proposal_id):
     return render(request, template, context)
 
 
-def create_proposal_form(proposal):
-    document = Document()
-    document.add_heading(proposal.title, 0)
-    document.add_paragraph(
-        'You should complete this form and then '
-        'use the proposal page to upload it.'
-    )
-    relations = models.ProposalFormElementsRelationship.objects.filter(
-        form=proposal.form
-    ).order_by(
-        'order'
-    )
-    document.add_heading("Title", level=1)
-    document.add_paragraph(proposal.title).italic = True
-    document.add_heading("Subtitle", level=1)
-    document.add_paragraph(proposal.subtitle).italic = True
-    document.add_heading("Author", level=1)
-    document.add_paragraph(proposal.author).italic = True
-
-    data = json.loads(proposal.data)
-
-    for relation in relations:
-        v = data.get(relation.element.name)
-        if v:
-            document.add_heading(relation.element.name, level=1)
-            text = BeautifulSoup(smart_text(v[0]), "html.parser").get_text()
-            document.add_paragraph(text).bold = True
-
-    document.add_page_break()
-
-    form_file_path = os.path.join(settings.FORM_DIR, f'{uuid4()}.docx')
-
-    with default_storage.open(form_file_path, 'wb') as file_stream:
-        document.save(file_stream)
-
-    return form_file_path
-
-
 @is_editor
 def withdraw_proposal_review(request, proposal_id, review_id):
     get_object_or_404(submission_models.Proposal, pk=proposal_id)
@@ -3265,170 +3229,6 @@ def proposal_review_submitted(request):
 
 def proposal_review_declined(request):
     return render(request, 'core/proposals/proposal_review_declined.html')
-
-
-@is_reviewer
-def view_completed_proposal_review(request, proposal_id, assignment_id):
-    _proposal = get_object_or_404(submission_models.Proposal, pk=proposal_id)
-    proposal_form = manager_forms.GeneratedForm(
-        form=models.ProposalForm.objects.get(pk=_proposal.form.id)
-    )
-    relationships = models.ProposalFormElementsRelationship.objects.filter(
-        form=_proposal.form
-    )
-    data = json.loads(_proposal.data)
-    initial_data = {}
-
-    for k, v in data.items():
-        initial_data[k] = v[0]
-
-    proposal_form.initial = initial_data
-    review_assignment = get_object_or_404(
-        submission_models.ProposalReview,
-        pk=assignment_id,
-        withdrawn=False,
-    )
-    result = review_assignment.results
-
-    if review_assignment.review_form:
-        form = review_forms.GeneratedForm(form=review_assignment.review_form)
-    else:
-        review_assignment.review_form = _proposal.review_form
-        review_assignment.save()
-        form = review_forms.GeneratedForm(form=_proposal.review_form)
-
-    ci_required = get_setting('ci_required', 'general')
-    recommendation_form = forms.RecommendationForm(
-        ci_required=ci_required
-    )
-
-    if result:
-        relations = review_models.FormElementsRelationship.objects.filter(
-            form=result.form
-        )
-        data_ordered = logic.order_data(
-            logic.decode_json(result.data),
-            relations
-        )
-    else:
-        data_ordered = None
-
-    if not request.POST and request.GET.get('download') == 'proposal':
-        path = create_proposal_form(_proposal)
-        return serve_proposal_file(request, path)
-
-    elif not request.POST and request.GET.get('download') == 'docx':
-        path = create_completed_proposal_review_form(
-            _proposal,
-            review_assignment.pk
-        )
-        return serve_proposal_file(request, path)
-
-    elif request.POST:
-        form = review_forms.GeneratedForm(
-            request.POST,
-            request.FILES,
-            form=review_assignment.review_form
-        )
-        recommendation_form = forms.RecommendationForm(
-            request.POST,
-            ci_required=ci_required
-        )
-        if form.is_valid() and recommendation_form.is_valid():
-            save_dict = {}
-            file_fields = review_models.FormElementsRelationship.objects.filter(
-                form=review_assignment.review_form,
-                element__field_type='upload'
-            )
-            data_fields = review_models.FormElementsRelationship.objects.filter(
-                ~Q(element__field_type='upload'),
-                form=review_assignment.review_form
-            )
-
-            for field in file_fields:
-                if field.element.name in request.FILES:
-                    save_dict[field.element.name] = [
-                        review_logic.handle_review_file(
-                            request.FILES[field.element.name],
-                            'proposal',
-                            review_assignment,
-                            'reviewer'
-                        )
-                    ]
-
-            for field in data_fields:
-                if field.element.name in request.POST:
-                    save_dict[field.element.name] = [
-                        request.POST.get(field.element.name),
-                        'text'
-                    ]
-
-            json_data = smart_text(json.dumps(save_dict))
-            form_results = review_models.FormResult(
-                form=review_assignment.review_form,
-                data=json_data
-            )
-            form_results.save()
-
-            if request.FILES.get('review_file_upload'):
-                review_logic.handle_review_file(
-                    request.FILES.get('review_file_upload'), 'proposal',
-                    review_assignment, 'reviewer')
-
-            review_assignment.completed = timezone.now()
-
-            if not review_assignment.accepted:
-                review_assignment.accepted = timezone.now()
-            review_assignment.recommendation = request.POST.get(
-                'recommendation'
-            )
-            review_assignment.competing_interests = request.POST.get(
-                'competing_interests'
-            )
-            review_assignment.results = form_results
-            review_assignment.save()
-
-            return redirect(reverse('user_dashboard'))
-
-    template = 'core/proposals/completed_review_assignment.html'
-    context = {
-        'proposal': _proposal,
-        'proposal_form': proposal_form,
-        'review_assignment': review_assignment,
-        'data_ordered': data_ordered,
-        'data_ordered_size': len(data_ordered),
-        'result': result,
-        'form': form,
-        'recommendation_form': recommendation_form,
-        'active': 'proposal_review',
-        'relationships': relationships,
-        'instructions': get_setting(
-            'instructions_for_task_proposal',
-            'general'
-        ),
-        'data': data,
-    }
-
-    return render(request, template, context)
-
-
-def get_list_of_editors(proposal):
-    book_editors = proposal.book_editors.all()
-    previous_editors = []
-    [previous_editors.append(book_editor) for book_editor in book_editors]
-    all_book_editors = User.objects.filter(profile__roles__slug='book-editor')
-    list_of_editors = [{} for t in range(0, len(all_book_editors))]
-
-    for t, editor in enumerate(all_book_editors):
-        already_added = False
-        if editor in previous_editors:
-            already_added = True
-        list_of_editors[t] = {
-            'editor': editor,
-            'already_added': already_added,
-        }
-
-    return list_of_editors
 
 
 @is_press_editor
@@ -4299,185 +4099,3 @@ def request_proposal_revisions(request, proposal_id):
     return render(request, template, context)
 
 
-def render_choices(choices):
-    c_split = choices.split('|')
-    return [(choice.capitalize(), choice) for choice in c_split]
-
-
-@is_reviewer
-def create_proposal_review_form(request, proposal):
-    document = Document()
-    document.add_heading(proposal.proposal.title, 0)
-    p = document.add_paragraph(
-        'You should complete this form and then '
-        'use the review page to upload it.'
-    )
-    relations = review_models.FormElementsRelationship.objects.filter(
-        form=proposal.review_form
-    ).order_by(
-        'order'
-    )
-
-    for relation in relations:
-
-        if relation.element.field_type in ['text', 'textarea', 'date', 'email']:
-            document.add_heading(
-                relation.element.name + ": _______________________________",
-                level=1
-            )
-            document.add_paragraph(relation.help_text).italic = True
-
-        if relation.element.field_type in ['select', 'check']:
-            document.add_heading(relation.element.name, level=1)
-
-            if relation.element.field_type == 'select':
-                choices = render_choices(relation.element.choices)
-            else:
-                choices = ['Y', 'N']
-
-            p = document.add_paragraph(relation.help_text)
-            p.add_run(
-                ' Mark your choice however you like, as long as it is clear.'
-            ).italic = True
-            table = document.add_table(rows=2, cols=len(choices))
-            hdr_cells = table.rows[0].cells
-
-            for i, choice in enumerate(choices):
-                hdr_cells[i].text = choice[0]
-
-            table.style = 'TableGrid'
-
-    document.add_page_break()
-
-    if not os.path.exists(os.path.join(settings.BASE_DIR, 'files', 'forms')):
-        os.makedirs(os.path.join(settings.BASE_DIR, 'files', 'forms'))
-
-    path = os.path.join(
-        settings.BASE_DIR, 'files', 'forms', '%s.docx' % str(uuid4())
-    )
-
-    document.save(path)
-    return path
-
-
-def create_completed_proposal_review_form(proposal, review_id):
-    document = Document()
-
-    if proposal.subtitle:
-        document.add_heading("%s: %s" % (proposal.title, proposal.subtitle), 0)
-    else:
-        document.add_heading(proposal.title, 0)
-
-    review_assignment = get_object_or_404(
-        submission_models.ProposalReview,
-        pk=review_id,
-    )
-    if review_assignment.review_form:
-        relations = review_models.FormElementsRelationship.objects.filter(
-            form=review_assignment.review_form
-        ).order_by(
-            'order'
-        )
-    else:
-        review_assignment.review_form = proposal.review_form
-        review_assignment.save()
-        relations = review_models.FormElementsRelationship.objects.filter(
-            form=proposal.review_form
-        ).order_by(
-            'order'
-        )
-
-    if review_assignment.results:
-        p = document.add_paragraph(
-            '%s completed this review assignment form.' %
-            review_assignment.user.profile.full_name()
-        )
-
-        data = json.loads(review_assignment.results.data)
-
-        for relation in relations:
-            v = data.get(relation.element.name)
-            document.add_heading(relation.element.name, level=1)
-            text = BeautifulSoup(smart_text(v[0]), "html.parser").get_text()
-            document.add_paragraph(text).bold = True
-            recommendations = {
-                'accept': 'Accept',
-                'reject': 'Reject',
-                'revisions': 'Revisions Required'
-            }
-
-        document.add_heading("Recommendation", level=1)
-        document.add_paragraph(
-            recommendations[review_assignment.recommendation]
-        ).italic = True
-        document.add_heading("Competing Interests", level=1)
-        document.add_paragraph(
-            review_assignment.competing_interests
-        ).italic = True
-
-    else:
-        p = document.add_paragraph(
-            'You should complete this form and then '
-            'use the review assignment page to upload it.'
-        )
-
-        for relation in relations:
-
-            if (
-                    relation.element.field_type in
-                    ['text', 'textarea', 'date', 'email']
-            ):
-                document.add_heading(
-                    relation.element.name +
-                    ": _______________________________", level=1
-                )
-                document.add_paragraph(relation.help_text).italic = True
-
-            if relation.element.field_type in ['select', 'check']:
-                document.add_heading(relation.element.name, level=1)
-
-                if relation.element.field_type == 'select':
-                    choices = render_choices(relation.element.choices)
-                else:
-                    choices = ['Y', 'N']
-
-                p = document.add_paragraph(relation.help_text)
-                p.add_run(
-                    ' Mark your choice however you like, '
-                    'as long as it is clear.'
-                ).italic = True
-                table = document.add_table(rows=2, cols=len(choices))
-                hdr_cells = table.rows[0].cells
-
-                for i, choice in enumerate(choices):
-                    hdr_cells[i].text = choice[0]
-
-                table.style = 'TableGrid'
-
-    document.add_page_break()
-
-    if not os.path.exists(os.path.join(settings.BASE_DIR, 'files', 'forms')):
-        os.makedirs(os.path.join(settings.BASE_DIR, 'files', 'forms'))
-
-    path = os.path.join(
-        settings.BASE_DIR, 'files', 'forms', '%s.docx' % str(uuid4())
-    )
-
-    document.save(path)
-
-    return path
-
-
-@is_reviewer
-def serve_proposal_file(request, file_path):
-    try:
-        fsock = default_storage.open(file_path, 'r')
-        mimetype = logic.get_file_mimetype(file_path)
-        response = StreamingHttpResponse(fsock, content_type=mimetype)
-        response['Content-Disposition'] = (
-            "attachment; filename=proposal_form.docx"
-        )
-        return response
-    except IOError:
-        messages.add_message(request, messages.ERROR, 'File not found.')
-        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))

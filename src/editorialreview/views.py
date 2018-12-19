@@ -17,8 +17,9 @@ from django.utils import timezone
 from django.utils.decorators import method_decorator
 from django.views.generic import FormView
 
+import core.logic
 from core import (
-    setting_util,
+    util,
     log,
     forms as core_forms,
     models as core_models,
@@ -36,7 +37,7 @@ from core.files import (
     handle_email_file,
     handle_multiple_email_files,
 )
-from core.setting_util import get_setting
+from core.util import get_setting
 from editor import logic as editor_logic
 from editorialreview import logic, forms, models
 from manager import models as manager_models
@@ -275,7 +276,7 @@ def email_editorial_review(request, review_id):
             'task_url': task_url
         }
     )
-    subject = setting_util.get_setting(
+    subject = util.get_setting(
         setting_name='editorial_review',
         setting_group_name='email_subject',
         default='Editorial Review Request',
@@ -711,8 +712,8 @@ def view_content_summary(request, review_id):
         )
 
         if not request.POST and request.GET.get('download') == 'docx':
-            path = core_views.create_proposal_form(proposal)
-            return core_views.serve_proposal_file(request, path)
+            path = core.logic.create_proposal_form(proposal)
+            return core.logic.serve_proposal_file(request, path)
 
         template = 'editorialreview/view_content_summary_proposal.html'
         context = {

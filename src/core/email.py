@@ -7,7 +7,7 @@ from django.core.mail import EmailMessage
 from django.template import Context, Template, RequestContext
 
 from core import log
-from .setting_util import get_setting
+from .util import get_setting
 
 
 def file_path_book(book, attachment):

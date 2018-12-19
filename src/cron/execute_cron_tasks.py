@@ -5,7 +5,7 @@ from django.db.models import Q
 from django.utils import timezone
 
 from core import models, email
-from core.setting_util import get_setting
+from core.util import get_setting
 from revisions import models as revision_models
 
 

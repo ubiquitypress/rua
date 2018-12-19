@@ -4,7 +4,7 @@ from core import models
 from editor import models as editor_models
 from revisions import models as revisions_models
 from submission import models as submission_models
-from core.setting_util import get_setting
+from core.util import get_setting
 
 
 def author_tasks(user):

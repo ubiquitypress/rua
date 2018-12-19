@@ -3,7 +3,7 @@ from django.db.models import Max, Q
 from django.utils.encoding import smart_text
 
 from core import models, email, log
-from core.setting_util import get_setting
+from core.util import get_setting
 
 
 def generate_digital_choices(digital_formats):

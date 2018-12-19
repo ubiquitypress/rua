@@ -95,7 +95,6 @@ from .views import (
     user_proposal,
     user_submission,
     versions_file,
-    view_completed_proposal_review,
     view_file,
     view_log,
     view_profile,
@@ -107,6 +106,7 @@ from .views import (
     view_review_history,
     withdraw_proposal_review,
 )
+from core.logic import view_completed_proposal_review
 
 urlpatterns = [
     re_path(  # Core Site.

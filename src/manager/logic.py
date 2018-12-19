@@ -1,7 +1,7 @@
 import random
 
 from core import email
-from core.setting_util import get_setting
+from core.util import get_setting
 
 
 def generate_password():

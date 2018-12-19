@@ -24,7 +24,7 @@ from jfu.http import (
 from core import logic as core_logic, models, log
 from core.decorators import is_onetasker
 from core.email import get_email_body
-from core.setting_util import get_setting
+from core.util import get_setting
 from submission.logic import handle_book_labels
 
 from .logic import (
