@@ -10,3 +10,17 @@ for book in books:
     if book.cover and 'files/media' not in book.cover.name:
         book.cover = f'files/media/{book.cover.name}'
         book.save()
+
+
+# Fix brand-header and favicon settings
+from core.models import Setting
+
+brand_header_setting = Setting.objects.get(name='brand_header')
+if 'files/media/settings' not in brand_header_setting.value:
+    brand_header_setting.value = f'files/media/settings/{brand_header_setting.value}'
+    brand_header_setting.save()
+
+favicon_setting = Setting.objects.get(name='favicon')
+if 'files/media/settings' not in favicon_setting.value:
+    favicon_setting.value = f'files/media/settings/{brand_header_setting.value}'
+    favicon_setting.save()
