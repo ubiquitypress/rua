@@ -16,11 +16,21 @@ for book in books:
 from core.models import Setting
 
 brand_header_setting = Setting.objects.get(name='brand_header')
-if 'files/media/settings' not in brand_header_setting.value:
-    brand_header_setting.value = f'files/media/settings/{brand_header_setting.value}'
+if (
+        brand_header_setting.value and
+        'files/media/settings' not in brand_header_setting.value
+):
+    brand_header_setting.value = (
+        f'files/media/settings/{brand_header_setting.value}'
+    )
     brand_header_setting.save()
 
 favicon_setting = Setting.objects.get(name='favicon')
-if 'files/media/settings' not in favicon_setting.value:
-    favicon_setting.value = f'files/media/settings/{brand_header_setting.value}'
+if (
+        favicon_setting.value and
+        'files/media/settings' not in favicon_setting.value
+):
+    favicon_setting.value = (
+        f'files/media/settings/{brand_header_setting.value}'
+    )
     favicon_setting.save()
