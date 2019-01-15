@@ -460,6 +460,7 @@ class AuthorTests(TestCase):
     def test_contract_sign_off(self):
         self.book.contract = core_models.Contract.objects.get(pk=1)
         self.book.save()
+
         resp = self.client.get(
             reverse(
                 'author_submission',
@@ -472,6 +473,7 @@ class AuthorTests(TestCase):
         self.assertEqual(b"Sign Off" in content, False)
         self.book.contract.author_signed_off = None
         self.book.contract.save()
+
         resp = self.client.get(
             reverse(
                 'author_submission',
@@ -482,12 +484,14 @@ class AuthorTests(TestCase):
         self.assertEqual(resp.status_code, 200)
         self.assertEqual(b"403" in content, False)
         self.assertEqual(b"Sign Off" in content, True)
+
         resp = self.client.get(
             reverse(
                 'author_contract_signoff',
                 kwargs={
                     'submission_id': self.book.id,
-                    'contract_id': self.book.contract.id}
+                    'contract_id': self.book.contract.id
+                }
             )
         )
         content = resp.content
