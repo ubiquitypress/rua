@@ -282,7 +282,7 @@ COUNTRY_CHOICES = [
 
 def profile_images_upload_path(instance, filename):
     try:
-        filename = str(uuid.uuid4()) + '.' + str(filename.split('.')[1])
+        filename = str(uuid.uuid4()) + '.' + str(filename.split('.')[-1])
     except IndexError:
         filename = str(uuid.uuid4())
 
@@ -291,7 +291,7 @@ def profile_images_upload_path(instance, filename):
 
 def cover_images_upload_path(instance, filename):
     try:
-        filename = str(uuid.uuid4()) + '.' + str(filename.split('.')[1])
+        filename = str(uuid.uuid4()) + '.' + str(filename.split('.')[-1])
     except IndexError:
         filename = str(uuid.uuid4())
 
