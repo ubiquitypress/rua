@@ -1,8 +1,13 @@
-# RUA
+RUA
+===
+
 Rua - the Simple Monograph Workflow
 
-# Context
-Rua is an Open Source application designed to assist with the Monograph publishing life cycle. Stages include:
+Context
+-------
+
+Rua is an Open Source application designed to assist with the Monograph
+publishing life cycle. Stages include:
 
 - optional proposal
 - submission
@@ -12,12 +17,16 @@ Rua is an Open Source application designed to assist with the Monograph publishi
 - production
 - publication
 
-Rua is completely free to use under the GNU GENERAL PUBLIC LICENSE v2 (see LICENSE). [Ubiquity Press](http://ubiquitypress.com/site/contact/) also offers a paid for hosted service for Rua.
+Rua is completely free to use under the GNU GENERAL PUBLIC LICENSE v2 (see
+LICENSE). [Ubiquity Press](http://ubiquitypress.com/site/contact/) also offers a paid for hosted service for Rua.
 
-# Technology
+Technology
+----------
+
 RUA is written in Python using the Django Web Application framework and follows a MTV (that is, “model”, “template”, and “view.”) style. The template system is simple, easy to modify and uses Twitter Bootstrap 3.
 
-# Installation
+Installation
+------------
 
 If you want to hack on Rua, getting it set up is easy. You'll need a unix machine (you can set it up on Windows if you're super hard core). We recommend you use [VirtualEnvironment](https://virtualenv.pypa.io/en/latest/). 
 
@@ -35,7 +44,8 @@ And install with:
 
 This will install a small number of requirements including Django.
 
-# Development
+Development
+-----------
 
 To start hacking run (from the src folder):
 
@@ -43,7 +53,8 @@ To start hacking run (from the src folder):
 
 You'll now be able to access the server from http://localhost:8000
 
-# Testing
+Testing
+-------
 
 Run the unit tests with:
 
@@ -59,5 +70,7 @@ Core developers:
 - Ioannis Cleary
 - Paige MacKay
 
-# Milestones
+Milestones
+----------
+
 We're currently working on the Alpha, which is the backend release, this will be followed by the initial front end release then others.
