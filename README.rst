@@ -3,6 +3,10 @@ RUA
 
 Rua - the Simple Monograph Workflow
 
+Moved
+-----
+This project has moved to GitLab: https://gitlab.com/ubiquitypress/rua
+
 Context
 -------
 
